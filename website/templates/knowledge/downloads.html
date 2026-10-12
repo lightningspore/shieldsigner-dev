@@ -1,1 +1,16 @@
-{% extends 'base.html' %}{% block content %}<section class="section"><p class="eyebrow">DESIGN SOURCES & DRAWINGS</p><h1 class="page-title">Board files.</h1><p class="lede">Native KiCad sources, manufacturing review outputs and saved datasheets. Gerbers remain for review: assembly, paste and LCD qualification are pending.</p><div class="downloads">{% for file in files %}<a href="/files/{{ file.name }}" hx-boost="false"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↗</span></a>{% endfor %}</div><p><a href="/files/manifest.json" hx-boost="false">SHA-256 manifest →</a></p></section>{% endblock %}
+{% extends 'base.html' %}
+{% block content %}
+<section class="section">
+  <p class="eyebrow">FILES FOR THE NEXT STEP</p>
+  <h1 class="page-title">Downloads.</h1>
+  <p class="lede">Ordering a PCB? Start with the matching order bundle. The task guide shows what to upload and what still needs review.</p>
+  <div class="actions"><a class="button" href="/files/shieldsigner-jlcpcb-order.zip" hx-boost="false">JLC order bundle ↓</a><a href="/build/pcb/">Ordering steps →</a></div>
+  <h2>Board & assembly</h2>
+  <div class="downloads">{% for file in primary_files %}<a href="/files/{{ file.name }}" hx-boost="false"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>
+  <div class="actions"><a href="/files/manufacturing/jlcpcb/bom-carrier-jlcpcb.csv" hx-boost="false">Assembly BOM ↓</a><a href="/files/manufacturing/jlcpcb/cpl-carrier-jlcpcb.csv" hx-boost="false">Placement CPL ↓</a><a href="/build/flash/">Firmware & flash instructions →</a></div>
+  <h2>Datasheets & drawings</h2>
+  <p class="parts-note">Nine saved supplier/manufacturer PDFs. <a href="/guides/pdf-references/">See which component each document covers →</a></p>
+  <div class="downloads">{% for file in pdfs %}<a href="/files/{{ file.name }}" hx-boost="false"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↗</span></a>{% endfor %}</div>
+  <details class="reference-details"><summary>All individual source files and SHA-256 hashes</summary><div class="downloads">{% for file in files %}<a href="/files/{{ file.name }}" hx-boost="false"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }}</span></a>{% endfor %}</div><a href="/files/manifest.json" hx-boost="false">SHA-256 manifest ↓</a></details>
+</section>
+{% endblock %}

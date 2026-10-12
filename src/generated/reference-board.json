@@ -1,7 +1,7 @@
 {
   "source": {
     "path": "kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb",
-    "sha256": "eaaeeef427f2798f501171d7d0dc5b881bf12c812559c5813e1d43e89255cabf"
+    "sha256": "a1b6fede88be919cc29972df1420720c8d2a90d6fc756f5c4919001c57086596"
   },
   "origin": {
     "x": 128.23309999999984,
@@ -2540,8 +2540,8 @@
       "layer": "bottom",
       "dnp": false,
       "excludeFromBom": false,
-      "lcsc": "C49678",
-      "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
+      "lcsc": "C28323",
+      "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf",
       "description": "Unpolarized capacitor",
       "x": 0.3669,
       "y": 14.075525,
@@ -2897,8 +2897,8 @@
       "layer": "bottom",
       "dnp": false,
       "excludeFromBom": false,
-      "lcsc": "C49678",
-      "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
+      "lcsc": "C28323",
+      "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf",
       "description": "Unpolarized capacitor",
       "x": 20.8141,
       "y": 9.365525,

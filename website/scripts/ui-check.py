@@ -1,38 +1,101 @@
-"""Focused desktop/mobile, HTMX and no-JavaScript verification."""
+"""Six real task journeys, responsive layouts, HTMX updates and no-JS fallbacks."""
+import csv
+import io
 import os
 from pathlib import Path
+from zipfile import ZipFile
 from playwright.sync_api import sync_playwright
-base = os.environ.get('UI_BASE_URL', 'http://127.0.0.1:8030')
+
+base = os.environ.get('UI_BASE_URL', 'http://127.0.0.1:8031')
 artifacts = Path('artifacts'); artifacts.mkdir(exist_ok=True)
+slugs = ['pcb','parts','compile','flash','use','cards']
 with sync_playwright() as p:
     browser = p.chromium.launch()
-    for width, height in [(1440, 1000), (390, 844)]:
-        page = browser.new_page(viewport={'width':width,'height':height})
+    for width, height in [(1440,1000),(390,844)]:
+        context = browser.new_context(viewport={'width':width,'height':height}, permissions=['clipboard-read','clipboard-write'])
+        page = context.new_page()
+        errors = []
+        page.on('pageerror', lambda error: errors.append(str(error)))
         page.goto(base)
         page.locator('.board-frame img').wait_for()
         assert page.locator('.board-frame img').evaluate('(img) => img.complete && img.naturalWidth > 0')
+        assert page.locator('.task-card').count() == 6
+        assert '0.0.2-dev' in page.locator('footer').inner_text()
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Homepage overflows'
         page.screenshot(path=str(artifacts/f'home-{width}.png'), full_page=True)
-        if width == 390:
+        page.locator('.task-card[href="/build/pcb/"]').click()
+        page.wait_for_url('**/build/pcb/')
+        page.locator('.step-check input').first.check()
+        page.reload()
+        assert page.locator('.step-check input').first.is_checked(), 'Checklist did not persist'
+        with page.expect_download() as download:
+            page.locator('.order-launch').get_by_role('link',name='Download JLC order files').click()
+        target = artifacts/f'order-{width}.zip'
+        download.value.save_as(target)
+        with ZipFile(target) as archive:
+            bom = list(csv.DictReader(io.StringIO(archive.read('bom-carrier-jlcpcb.csv').decode())))
+            assert len(bom)==21
+        for slug in slugs:
+            page.goto(base+f'/build/{slug}/')
+            page.locator('h1').wait_for()
+            assert page.locator('h1').count()==1
+            assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), f'{slug} overflows'
+            if slug in {'pcb','parts','compile','flash','cards'}:
+                page.screenshot(path=str(artifacts/f'{slug}-{width}.png'), full_page=True)
+        page.goto(base+'/build/parts/?scope=carrier')
+        page.locator('#part-query').fill('C603')
+        page.locator('#board-quantity').fill('5')
+        page.locator('#board-quantity').dispatch_event('change')
+        page.wait_for_function("document.querySelector('#parts-results').innerText.includes('C602,C603,C604') && document.querySelector('#parts-results').innerText.includes('15')")
+        assert page.locator('#parts-results tbody tr').count()==1
+        assert 'C28323' in page.locator('#parts-results').inner_text()
+        assert '1 µF' in page.locator('#parts-results').inner_text()
+        assert '50 V' in page.locator('#parts-results').inner_text()
+        page.locator('#part-query').fill('not-a-part')
+        page.wait_for_function("document.querySelector('#parts-results').innerText.includes('No matching parts')")
+        page.locator('#part-query').fill('')
+        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===21")
+        page.locator('#part-scope').select_option('system')
+        page.wait_for_function("document.querySelectorAll('#parts-results .system-part').length===10")
+        page.goto(base+'/build/compile/')
+        page.locator('.copy-command').first.click()
+        page.wait_for_function("document.querySelector('.copy-feedback').textContent==='Copied'")
+        assert 'mise run os:prepare' in page.evaluate('navigator.clipboard.readText()')
+        page.goto(base+'/build/cards/')
+        page.locator('.card-tabs').get_by_role('link',name='Satochip',exact=True).click()
+        page.wait_for_url('**/build/cards/?card=satochip#card-workflow')
+        assert 'initialize and export' in page.locator('#card-workflow h3').inner_text()
+        page.locator('.card-tabs').get_by_role('link',name='DIY JavaCard',exact=True).click()
+        page.wait_for_url('**/build/cards/?card=diy#card-workflow')
+        assert 'install an applet' in page.locator('#card-workflow h3').inner_text()
+        if width==390:
             page.get_by_role('button',name='Toggle navigation').click()
-            page.locator('#mobile-nav').get_by_role('link',name='Guides', exact=True).click()
-        else:
-            page.locator('header').get_by_role('link',name='Guides', exact=True).click()
-        page.wait_for_url('**/guides/')
+            page.locator('#mobile-nav').get_by_role('link',name='Flash',exact=True).click()
+            page.wait_for_url('**/build/flash/')
+            assert not page.locator('#mobile-nav').is_visible()
+        page.goto(base+'/guides/')
         page.locator('#query').fill('SEC1210')
         page.wait_for_function("document.querySelector('#results').innerText.includes('matching')")
         page.locator('#results').get_by_role('link').filter(has_text='Cards & the Linux reader').click()
         page.wait_for_url('**/guides/smartcards/')
         assert page.locator('h1').inner_text().startswith('Smartcards')
-        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Guide overflows'
-        page.screenshot(path=str(artifacts/f'smartcards-{width}.png'), full_page=True)
-        page.close()
-    page = browser.new_page(java_script_enabled=False,viewport={'width':390,'height':844})
-    page.goto(base+'/guides/')
-    page.locator('#query').fill('SeedKeeper')
-    page.get_by_role('button',name='Search', exact=True).click()
-    assert 'matching' in page.locator('#results').inner_text()
-    page.locator('#results').get_by_role('link').filter(has_text='Cards & the Linux reader').click()
-    assert page.locator('h1').inner_text().startswith('Smartcards')
+        assert not errors, errors
+        context.close()
+    context = browser.new_context(java_script_enabled=False,viewport={'width':390,'height':844})
+    page = context.new_page()
+    page.goto(base)
+    for slug in slugs:
+        assert page.locator(f'.task-card[href="/build/{slug}/"]').count()==1
+    page.locator('.task-card[href="/build/parts/"]').click()
+    page.locator('#part-scope').select_option('carrier')
+    page.locator('#part-query').fill('C603')
+    page.locator('#board-quantity').fill('5')
+    page.get_by_role('button',name='Update',exact=True).click()
+    assert 'C28323' in page.locator('#parts-results').inner_text()
+    assert '15' in page.locator('#parts-results').inner_text()
+    page.goto(base+'/build/cards/?card=diy')
+    assert 'install an applet' in page.locator('#card-workflow h3').inner_text()
+    assert not page.locator('.copy-command').is_visible() if page.locator('.copy-command').count() else True
+    context.close()
     browser.close()
-print('Passed desktop/mobile navigation, HTMX search, no-JS search, imagery and overflow checks.')
+print('Passed six task journeys, order download, parts quantities/filters, command copy, checklist persistence, card selection, mobile navigation, reference search and no-JS fallback.')

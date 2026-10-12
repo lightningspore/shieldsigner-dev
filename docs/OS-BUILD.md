@@ -1,5 +1,14 @@
 # Luckfox OS build trial
 
+## Current carrier build command
+
+Use the [compile walkthrough](https://shieldsigner.dev/build/compile/) for the shortest route. The wrapper now defaults to `SHIELDSIGNER_READER_VARIANT=UR2`, prepares the one Luckfox reader configuration file at the pinned OS revision, and writes `dist/os/UR2/reader-config.json`. `mise run os:prepare` performs this preparation without compiling. The Raspberry Pi overlay is unchanged; unknown source edits are rejected.
+
+Preparation, the UR2/URT round-trip and rejection of unknown edits have been tested. A full UR2 image compilation/boot has not been qualified here. The historical two successful builds and matching hashes below used unchanged upstream **URT**; they remain baseline evidence. Use `SHIELDSIGNER_READER_VARIANT=URT mise run os:build` only for that baseline or URT hardware.
+
+Current output is `dist/os/<reader-variant>/`, with `build.log` and `reader-config.json`. Keep the reader manifest with your image/checksum files. A new UR2 image is expected to differ from the historical URT checksum.
+
+
 ## Notes: faster iteration and a possible Linux-free variant
 
 These are development options, not changes made to the current build. A PyPI mirror is deferred.

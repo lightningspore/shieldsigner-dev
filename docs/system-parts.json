@@ -1,0 +1,121 @@
+{
+  "checkedAt": "2026-10-12",
+  "parts": [
+    {
+      "id": "luckfox",
+      "name": "Luckfox Pico Mini",
+      "qty": 1,
+      "required": true,
+      "status": "Confirm storage variant",
+      "spec": "Mini RV1103, compatible microSD boot; excluded U202 host module.",
+      "source": "https://cryptoguide.tips/product-category/luckfox-pico/",
+      "sourceLabel": "Mini options",
+      "detail": "https://wiki.luckfox.com/Luckfox-Pico/Luckfox-Pico-RV1103/",
+      "detailLabel": "Official board variants"
+    },
+    {
+      "id": "lcd",
+      "name": "2.8-inch ST7789 bare LCD",
+      "qty": 1,
+      "required": true,
+      "status": "Exact panel not yet qualified",
+      "spec": "240\u00d7320, 40-pin 0.5 mm FPC; reference envelope 47.8\u00d766.95\u00d72.13 mm. Contact orientation/backlight must match.",
+      "source": "https://www.alibaba.com/x/B1E3wJ",
+      "sourceLabel": "Upstream panel lead",
+      "detail": "https://github.com/3rdIteration/seedsigner-hardware/blob/main/display_hats/plus_hat/README.md",
+      "detailLabel": "Panel requirements",
+      "warning": "Not a confirmed buy-ready substitute. Reject HS280S010B/C2939938 14-pin board; request exact panel drawing before buying."
+    },
+    {
+      "id": "camera",
+      "name": "Low-profile SC3336 camera + ribbon",
+      "qty": 1,
+      "required": true,
+      "status": "Confirm case and cable fit",
+      "spec": "Luckfox-compatible 3 MP SC3336, low-profile assembly; plugs into the module, not the carrier.",
+      "source": "https://cryptoguide.tips/product/luckfox-pico-camera-module-3pm-sc3336/",
+      "sourceLabel": "Camera listing",
+      "detail": "https://wiki.luckfox.com/Luckfox-Pico/Luckfox-Pico-RV1103/",
+      "detailLabel": "Board camera interface"
+    },
+    {
+      "id": "case",
+      "name": "Matching enclosure + hardware",
+      "qty": 1,
+      "required": false,
+      "status": "Mechanical fit pending",
+      "spec": "Pico Mini all-in-one carrier case, matching PCB revision and soldered/header mounting. Camera mounting uses the upstream M2 arrangement; verify hardware lengths.",
+      "source": "https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/enclosures/luckfox_pico/plus-hat-smartcard-pico-zero",
+      "sourceLabel": "Print files & assembly",
+      "detail": "https://cryptoguide.tips/product-category/luckfox-pico/",
+      "detailLabel": "Case options",
+      "warning": "Our selected 2.5 mm switches differ from upstream TE actuator height. Check button alignment before printing a batch."
+    },
+    {
+      "id": "sd",
+      "name": "microSD + USB card reader",
+      "qty": 1,
+      "required": true,
+      "status": "Match boot medium",
+      "spec": "Removable microSD with enough capacity for the selected image; card reader for your Mac. Use a known-good card from a reputable supplier.",
+      "source": "https://3rditeration.github.io/seedsigner/quickstarts/10-flash-microsd.html",
+      "sourceLabel": "Card / flashing requirements"
+    },
+    {
+      "id": "power",
+      "name": "Regulated 5 V USB-C supply + cable",
+      "qty": 1,
+      "required": true,
+      "status": "Power budget requires bench test",
+      "spec": "One regulated 5 V source. This carrier is not a charger or USB-PD design; do not power multiple inputs together.",
+      "source": "/guides/bringup/",
+      "sourceLabel": "Power checks"
+    },
+    {
+      "id": "seedkeeper",
+      "name": "Contact SeedKeeper card",
+      "qty": 1,
+      "required": false,
+      "status": "Storage option",
+      "spec": "Factory-installed applet; contact-capable product. Loading a secret brings it into host memory.",
+      "source": "https://satochip.io/product/seedkeeper/",
+      "sourceLabel": "SeedKeeper vendor",
+      "detail": "/build/cards/?card=seedkeeper",
+      "detailLabel": "Storage workflow"
+    },
+    {
+      "id": "satochip",
+      "name": "Contact Satochip card",
+      "qty": 1,
+      "required": false,
+      "status": "Signing option",
+      "spec": "Factory-installed applet; contact-capable product. On-card derivation/signing; choose this instead of SeedKeeper when that is your goal.",
+      "source": "https://satochip.io/shop/",
+      "sourceLabel": "Satochip vendor",
+      "detail": "/build/cards/?card=satochip",
+      "detailLabel": "Signing workflow"
+    },
+    {
+      "id": "javacard",
+      "name": "Blank supported JavaCard",
+      "qty": 1,
+      "required": false,
+      "status": "DIY alternative",
+      "spec": "J3H145 or reviewed JCOP SECID alternative with known GlobalPlatform management keys. Install an applet before use.",
+      "source": "https://cryptoguide.tips/product/j3h145-javacard/",
+      "sourceLabel": "J3H145 listing",
+      "detail": "/build/cards/?card=diy",
+      "detailLabel": "DIY provisioning"
+    },
+    {
+      "id": "mounting",
+      "name": "Module mounting + insulation",
+      "qty": 1,
+      "required": true,
+      "status": "Assembly operation",
+      "spec": "Direct solder or compatible shortened 11-pin socket strips per upstream. Protect pins under the LCD. Socket strips are not in this default PCBA BOM.",
+      "source": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/readme.md",
+      "sourceLabel": "Mounting instructions"
+    }
+  ]
+}

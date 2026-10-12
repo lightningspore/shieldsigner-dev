@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.utils.safestring import mark_safe
 from markdown import markdown
 from .catalog import GUIDES
+from . import workflows
 
 def entries(query=""):
     result = []
@@ -17,7 +18,7 @@ def entries(query=""):
     return result
 
 def home(request):
-    return render(request, "knowledge/home.html", {"featured": [p for p in entries() if p["slug"] in {"hardware", "smartcards", "bom", "os-build"}]})
+    return render(request, "knowledge/home.html", {"tasks": workflows.tasks()})
 
 def guides(request):
     query = request.GET.get("q", "").strip()[:200]
@@ -35,9 +36,32 @@ def detail(request, slug):
     html = markdown(body, extensions=["extra", "sane_lists", "toc"])
     return render(request, "knowledge/detail.html", {**item, "body": mark_safe(html), "guides": entries()})
 
+def workflow(request, slug):
+    tasks = workflows.tasks()
+    task = next((p for p in tasks if p['slug']==slug), None)
+    if task is None: raise Http404
+    context = {'task':task, 'tasks':tasks, 'title':task['title'], 'description':task['summary'], 'next_task':next((p for p in tasks if p['slug']==task.get('next')),None)}
+    if slug=='pcb': context['pcb_spec']=workflows.load('pcb-spec')
+    if slug=='parts':
+        context.update(workflows.shopping(request.GET))
+        if request.headers.get('HX-Request')=='true' and request.headers.get('HX-Boosted')!='true':
+            response=render(request, 'knowledge/parts-results.html',context)
+            response.headers['Vary']='HX-Request, HX-Boosted'
+            return response
+    if slug=='cards':
+        card=request.GET.get('card','seedkeeper')
+        flows=workflows.load('card-workflows')
+        if card not in flows: card='seedkeeper'
+        context.update(card=card, card_flow=flows[card])
+    response=render(request,'knowledge/workflow.html',context)
+    response.headers['Vary']='HX-Request, HX-Boosted'
+    return response
+
+
 def downloads(request):
     files = json.loads((settings.PUBLIC_DIR / "manifest.json").read_text())
-    return render(request, "knowledge/downloads.html", {"files": files, "title": "Board files & sources", "description": "Native KiCad files, manufacturing review outputs and saved datasheets."})
+    primary_names = {"shieldsigner-jlcpcb-order.zip", "shieldsigner-carrier-gerbers.zip", "shieldsigner-luckfox-kicad.zip", "schematic.pdf"}
+    return render(request, "knowledge/downloads.html", {"files": files, "primary_files":[p for p in files if p["name"] in primary_names], "pdfs":[p for p in files if p["name"].startswith("reference/pdfs/")], "title": "Board files & sources", "description": "Native KiCad files, manufacturing review outputs and saved datasheets."})
 
 def file(request, name):
     root = settings.PUBLIC_DIR.resolve()
@@ -45,8 +69,10 @@ def file(request, name):
     if not candidate.is_relative_to(root) or not candidate.is_file(): raise Http404
     return FileResponse(candidate.open("rb"), as_attachment=candidate.suffix not in {".pdf", ".svg"}, filename=candidate.name)
 
-def health(request): return JsonResponse({"status": "ok", "guides": len(entries())})
+def health(request):
+    version=workflows.load('site-version')
+    return JsonResponse({'status':'ok','guides':len(entries()),'tasks':len(workflows.tasks()),'version':version['version'],'revision':version['revision'][:7]})
 def robots(request): return HttpResponse("User-agent: *\nAllow: /\nSitemap: https://shieldsigner.dev/sitemap.xml\n", content_type="text/plain")
 def sitemap(request):
-    paths = ["/", "/guides/", "/downloads/", *(f"/guides/{p['slug']}/" for p in entries())]
+    paths = ["/", "/guides/", "/downloads/", *(f"/build/{task['slug']}/" for task in workflows.tasks()), *(f"/guides/{p['slug']}/" for p in entries())]
     return HttpResponse('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f"<url><loc>https://shieldsigner.dev{escape(p)}</loc></url>" for p in paths)+"</urlset>", content_type="application/xml")

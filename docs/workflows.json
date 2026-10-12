@@ -1,0 +1,622 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-12",
+  "tasks": [
+    {
+      "slug": "pcb",
+      "number": 1,
+      "title": "Make & order the PCB",
+      "summary": "Get the three JLCPCB files, check assembly, and request a quote.",
+      "needs": [
+        "Carrier without Luckfox selected",
+        "JLCPCB account for your quote"
+      ],
+      "result": "Gerbers + matching BOM/CPL ready for a reviewed prototype quote.",
+      "steps": [
+        {
+          "title": "Choose bare PCB or assembled carrier",
+          "items": [
+            "Bare PCB: upload Gerbers; you assemble the 43 fitted parts.",
+            "Assembled carrier: upload Gerbers + BOM + CPL. Default files omit the Luckfox, LCD, camera and case."
+          ],
+          "choices": [
+            {
+              "title": "Bare PCB",
+              "text": "You solder the parts.",
+              "url": "/build/parts/?scope=carrier"
+            },
+            {
+              "title": "Carrier PCBA",
+              "text": "JLC assembles the carrier; module/display remain separate.",
+              "url": "/build/parts/?scope=system"
+            }
+          ]
+        },
+        {
+          "title": "Download the matching order files",
+          "items": [
+            "Use this bundle as one set. Do not mix a BOM from the original upstream board with these Gerbers.",
+            "Unzip the order bundle once. Upload the inner shieldsigner-carrier-gerbers.zip to JLC; keep the two CSV files for its assembly step.",
+            "Keep R404, R408 and J302 unpopulated. U202 is excluded; solder-jumper copper is already on the PCB."
+          ],
+          "downloads": [
+            {
+              "label": "All three files + review notes",
+              "url": "/files/shieldsigner-jlcpcb-order.zip"
+            },
+            {
+              "label": "Gerbers & drills",
+              "url": "/files/shieldsigner-carrier-gerbers.zip"
+            },
+            {
+              "label": "Assembly BOM",
+              "url": "/files/manufacturing/jlcpcb/bom-carrier-jlcpcb.csv"
+            },
+            {
+              "label": "Placement CPL",
+              "url": "/files/manufacturing/jlcpcb/cpl-carrier-jlcpcb.csv"
+            }
+          ]
+        },
+        {
+          "title": "Upload Gerbers to JLCPCB",
+          "items": [
+            "Start a PCB quote and upload the Gerber ZIP, not the KiCad source ZIP.",
+            "Check the detected outline and two copper layers. The native stackup is 1.6 mm; confirm dimensions against the preview.",
+            "Enable PCB assembly for PCBA. The carrier uses parts on both sides; confirm the quoted assembly service supports them."
+          ],
+          "links": [
+            {
+              "label": "Start JLCPCB quote",
+              "url": "https://jlcpcb.com/"
+            },
+            {
+              "label": "JLC ordering walkthrough",
+              "url": "https://jlcpcb.com/help/article/how-do-i-place-a-pcba-order"
+            }
+          ]
+        },
+        {
+          "title": "Match parts and inspect placement",
+          "items": [
+            "Upload BOM/CPL and process both. Expect 43 fitted references across 21 catalog parts.",
+            "Confirm C603/C604 are C28323 (1 \u00b5F), U601 is C633309 (UR2), and J401 is C2931360 (top-contact).",
+            "Inspect rotation, bottom-side placement, USB/FPC/card connector orientation and all eight switches in JLC\u2019s assembly viewer. No substitutions without reviewing footprint and electrical compatibility."
+          ],
+          "links": [
+            {
+              "label": "Interactive carrier parts",
+              "url": "/build/parts/?scope=carrier"
+            },
+            {
+              "label": "JLC matching rules",
+              "url": "https://jlcpcb.com/help/article/component-matching-guidelines-for-pcba-orders"
+            }
+          ]
+        },
+        {
+          "title": "Resolve the remaining quote/DFM items",
+          "items": [
+            "Ask JLC to review extended switch lands/paste and 2.5 mm actuator height. Verify the enclosure accepts the selected switches.",
+            "Confirm the exact LCD/contact orientation and backlight ratings separately. The screen is outside the PCBA BOM.",
+            "Review stock, assembly preview, DFM and final quote before payment. These files are review-only; no manufactured board has passed bring-up here."
+          ],
+          "links": [
+            {
+              "label": "Electrical review details",
+              "url": "/guides/electrical-review/"
+            },
+            {
+              "label": "Assembly limitations",
+              "url": "/guides/bom/"
+            }
+          ]
+        },
+        {
+          "title": "If you change the board, regenerate everything",
+          "items": [
+            "Use KiCad 10 and the local libraries. Run these commands from the repo root.",
+            "Inspect the exported preview before using the regenerated order files."
+          ],
+          "commands": [
+            {
+              "label": "Regenerate checks and manufacturing files",
+              "text": "mise run kicad:check\nmise run bom:generate\nmise run kicad:fab\nmise run review:build"
+            }
+          ],
+          "links": [
+            {
+              "label": "Open native design sources",
+              "url": "https://github.com/lightningspore/shieldsigner-dev/tree/main/kicad"
+            },
+            {
+              "label": "KiCad editing tools",
+              "url": "/guides/kicad/"
+            }
+          ]
+        }
+      ],
+      "notice": "You can prepare a quote now. Assembly qualification, LCD fit and physical testing still need review.",
+      "next": "parts",
+      "references": [
+        {
+          "label": "BOM and assembly evidence",
+          "url": "/guides/bom/"
+        },
+        {
+          "label": "Native KiCad checks",
+          "url": "/guides/kicad/"
+        }
+      ]
+    },
+    {
+      "slug": "parts",
+      "number": 2,
+      "title": "Buy & source the parts",
+      "summary": "A complete shopping list: carrier components and the separate system parts.",
+      "needs": [
+        "Your PCB/PCBA route",
+        "Luckfox Mini storage variant"
+      ],
+      "result": "Every carrier line identified, plus the parts needed to finish the device.",
+      "steps": [
+        {
+          "title": "Use the carrier table for PCB components",
+          "items": [
+            "For PCBA, JLC sources the 43 fitted carrier pieces from the uploaded BOM. You do not need a second loose set.",
+            "For hand assembly, filter Carrier parts and buy the listed quantities. All C-codes link to their supplier listing."
+          ]
+        },
+        {
+          "title": "Buy the separate system parts",
+          "items": [
+            "Luckfox Pico Mini; verify SD boot compatibility. Pro/Max/Pi modules are different targets.",
+            "Exact 2.8-inch ST7789 bare 40-pin FPC panel; compatible SC3336 camera/ribbon; case; microSD; regulated 5 V USB power.",
+            "Add a contact SeedKeeper for storage or Satochip for on-card signing. Cards are optional for ordinary host signing."
+          ]
+        },
+        {
+          "title": "Confirm the unresolved substitutions before checkout",
+          "items": [
+            "HS280S010B / C2939938 is not a drop-in LCD: it is a 14-pin module.",
+            "Do not use a bottom-contact LCD connector in place of J401\u2019s selected top-contact part.",
+            "A case or retail carrier may have a different revision/reader suffix from this variant. Confirm its bundle contents and firmware configuration."
+          ],
+          "links": [
+            {
+              "label": "Exact LCD requirements",
+              "url": "/guides/bom/#lcd-candidate-qualification-11-october-2026"
+            },
+            {
+              "label": "Compatible card families",
+              "url": "/guides/smartcards/"
+            }
+          ]
+        }
+      ],
+      "special": "parts",
+      "next": "compile",
+      "references": [
+        {
+          "label": "Per-component rationale",
+          "url": "/guides/components/"
+        },
+        {
+          "label": "Catalog snapshot",
+          "url": "/guides/bom-table/"
+        }
+      ]
+    },
+    {
+      "slug": "compile",
+      "number": 3,
+      "title": "Compile the software",
+      "summary": "Build the pinned Mini microSD image with the reader variant for your board.",
+      "needs": [
+        "x86_64 Linux builder with Docker",
+        "Git, mise and uv",
+        "Internet for first-build downloads"
+      ],
+      "result": "A flashable .img, build.log and recorded reader configuration.",
+      "steps": [
+        {
+          "title": "Choose your target",
+          "items": [
+            "This carrier uses Luckfox Pico Mini + microSD + SEC1210/PV-UR2.",
+            "Apple Silicon is rejected by the pinned upstream Docker runner. Use an x86_64 Linux machine/VM; clone the public repo there.",
+            "Mini NAND, Pro/Max and Pico Pi are different build/flash routes. Do not pick them by a similar filename."
+          ],
+          "links": [
+            {
+              "label": "Upstream Luckfox target matrix",
+              "url": "https://3rditeration.github.io/seedsigner/os/luckfox/README.html"
+            }
+          ]
+        },
+        {
+          "title": "Clone the project and prepare the reader",
+          "items": [
+            "Run from the repo root on your builder. Preparation checks the OS commit and applies only the reviewed Luckfox UR2 reader setting.",
+            "The manifest records the exact reader file hash; unrelated source changes are rejected."
+          ],
+          "commands": [
+            {
+              "label": "Prepare carrier sources",
+              "text": "git clone https://github.com/lightningspore/shieldsigner-dev.git\ncd shieldsigner-dev\nmise run os:prepare"
+            },
+            {
+              "label": "Inspect the recorded reader variant",
+              "text": "cat dist/os/UR2/reader-config.json\ncat tools/os/seedsigner-os/opt/luckfox/files/sec1210"
+            }
+          ]
+        },
+        {
+          "title": "Start the build",
+          "items": [
+            "Six general jobs were used on our x86 builder. Rust/LLVM can dominate the first build; keep the named Docker caches.",
+            "The carrier wrapper now defaults to UR2. The previously benchmarked images were unchanged upstream URT builds."
+          ],
+          "commands": [
+            {
+              "label": "Build the UR2 Mini SD image",
+              "text": "SHIELDSIGNER_BUILD_JOBS=6 mise run os:build"
+            },
+            {
+              "label": "Follow current work from another terminal",
+              "text": "tail -f dist/os/UR2/build.log\ndocker stats"
+            }
+          ]
+        },
+        {
+          "title": "Collect and verify the output",
+          "items": [
+            "Successful exit is necessary: a log file alone is not a finished image.",
+            "Locate the .img and sha256sums.txt under dist/os/UR2. Keep reader-config.json with them.",
+            "The new UR2 preparation was tested, but a complete UR2 image build and hardware boot have not been qualified here."
+          ],
+          "commands": [
+            {
+              "label": "Locate images and calculate hashes",
+              "text": "find dist/os/UR2 -type f \\( -name '*.img' -o -name 'sha256sums.txt' \\)\nfind dist/os/UR2 -type f -name '*.img' -exec sha256sum {} \\;"
+            }
+          ],
+          "links": [
+            {
+              "label": "Baseline build evidence and hashes",
+              "url": "/guides/os-build/#completed-cache-benchmark"
+            }
+          ]
+        },
+        {
+          "title": "Iterate without discarding caches",
+          "items": [
+            "Run the same build again to reuse Docker/Rust/source caches. Our baseline rerun took 27m 5s instead of 2h 28m 26s.",
+            "Avoid the upstream clean task during ordinary iteration. Keep full rebuilds for toolchain/architecture changes."
+          ],
+          "links": [
+            {
+              "label": "Caching and targeted rebuild notes",
+              "url": "/guides/os-build/"
+            }
+          ]
+        }
+      ],
+      "notice": "Compile on x86_64 Linux. The UR2 wrapper prepares the right reader setting; the historical benchmark proves the upstream baseline, not this new patched image.",
+      "next": "flash",
+      "references": [
+        {
+          "label": "Detailed Buildroot notes",
+          "url": "/guides/os-build/"
+        }
+      ]
+    },
+    {
+      "slug": "flash",
+      "number": 4,
+      "title": "Flash & boot the software",
+      "summary": "Select the correct image, verify it, write microSD, and check the first boot.",
+      "needs": [
+        "Luckfox Pico Mini with SD boot",
+        "microSD + reader",
+        "Matching Mini SD .img"
+      ],
+      "result": "A verified microSD and a first-boot hardware checklist.",
+      "steps": [
+        {
+          "title": "Choose a local build or upstream image",
+          "items": [
+            "For our UR2 carrier, build with the previous workflow. Do not substitute the historical URT baseline hash for a new UR2 image.",
+            "The pinned upstream B13 Mini SD image is a convenient reference release; its stock reader setting is URT and still needs adaptation for this UR2 carrier.",
+            "Do not flash an SD .img as a NAND/eMMC update, or a Pro/Max/Pi image onto Mini."
+          ],
+          "choices": [
+            {
+              "title": "Our UR2 carrier",
+              "text": "Prepare and compile the carrier image.",
+              "url": "/build/compile/"
+            },
+            {
+              "title": "Upstream Mini SD reference",
+              "text": "B13, signed with a public development key; reader adaptation needed.",
+              "url": "https://github.com/3rdIteration/seedsigner/releases/download/SeSi-0.8.7%2BShSi-B13/seedsigner-luckfox-pico-mini-sd-SeSi-0.8.7_ShSi-B13-osproduction-signed-devkey.img"
+            }
+          ],
+          "downloads": [
+            {
+              "label": "Upstream B13 release and verification material",
+              "url": "https://github.com/3rdIteration/seedsigner/releases/tag/SeSi-0.8.7%2BShSi-B13"
+            }
+          ]
+        },
+        {
+          "title": "Verify the image before writing",
+          "items": [
+            "For the exact B13 upstream file below, the expected SHA-256 is 0b6ae5c48c952b614e515c042e58b9b8527c3a8ff8e7a7894ffa9e6196ff4ebf.",
+            "For your own build, use its generated checksum manifest; its hash is expected to differ.",
+            "A checksum proves file identity. Verify release signatures/signer identity using the upstream guide; the public dev key does not establish exclusive trust."
+          ],
+          "commands": [
+            {
+              "label": "macOS \u2014 hash the selected file",
+              "text": "cd ~/Downloads\nshasum -a 256 seedsigner-luckfox-pico-mini-sd-SeSi-0.8.7_ShSi-B13-osproduction-signed-devkey.img"
+            }
+          ],
+          "links": [
+            {
+              "label": "Upstream image verification",
+              "url": "https://3rditeration.github.io/seedsigner/os/luckfox/verifying-a-release.html"
+            }
+          ]
+        },
+        {
+          "title": "Write the microSD on your Mac",
+          "items": [
+            "Open balenaEtcher, choose Flash from file and select the .img.",
+            "Select the removable microSD by its capacity/name. Flashing erases that selected device; remove unrelated external drives first.",
+            "Flash and wait for verification to finish. Eject the card. If macOS offers to initialize an unfamiliar Linux partition, choose Ignore."
+          ],
+          "links": [
+            {
+              "label": "Get balenaEtcher",
+              "url": "https://etcher.balena.io/"
+            },
+            {
+              "label": "Upstream microSD flashing guide",
+              "url": "https://3rditeration.github.io/seedsigner/quickstarts/10-flash-microsd.html"
+            }
+          ]
+        },
+        {
+          "title": "First boot: verify one subsystem at a time",
+          "items": [
+            "With power off, insert the card and connect the qualified LCD/camera/ribbon. Insulate module pins under the screen.",
+            "Use one regulated 5 V supply. Check screen, all eight keys and a harmless camera QR before testing cards.",
+            "Confirm System Info matches your image. A blank screen is a hardware/driver diagnostic, not permission to keep reflashing random images."
+          ],
+          "links": [
+            {
+              "label": "Full bring-up steps",
+              "url": "/guides/bringup/"
+            },
+            {
+              "label": "Record actual test results",
+              "url": "/guides/bringup-results/"
+            }
+          ]
+        },
+        {
+          "title": "If the card reader is missing",
+          "items": [
+            "UR2 hardware needs /dev/ttyS2:SEC1210UR2 in the reader file. Keep the UART2 console disabled.",
+            "On a shell-enabled bench image, inspect the reader file and pcscd status. Production images may deliberately have no shell.",
+            "Secure-boot fuse provisioning is separate and irreversible; it is not a step in this first flash."
+          ],
+          "commands": [
+            {
+              "label": "Inspect on a development image",
+              "text": "cat /etc/reader.conf.d/sec1210\n/etc/init.d/S60pcscd status"
+            }
+          ],
+          "links": [
+            {
+              "label": "Reader diagnostics",
+              "url": "/guides/smartcards/#how-the-reader-works-with-linux"
+            }
+          ]
+        }
+      ],
+      "next": "use",
+      "references": [
+        {
+          "label": "Boot and power diagnosis",
+          "url": "/guides/bringup/"
+        }
+      ]
+    },
+    {
+      "slug": "use",
+      "number": 5,
+      "title": "Use SeedSigner",
+      "summary": "Create a test seed, connect a watch-only wallet, and practice the QR signing loop.",
+      "needs": [
+        "Working display/buttons/camera",
+        "Sparrow on your computer",
+        "A new test seed"
+      ],
+      "result": "A watch-only wallet and a practiced offline signing workflow.",
+      "steps": [
+        {
+          "title": "Create and back up a test seed",
+          "items": [
+            "On the device: Tools \u2192 New seed (camera entropy or dice entropy). Choose the length and complete the prompts.",
+            "Record and verify the words offline. The ordinary SeedSigner flow holds the loaded seed in memory, so you need its backup again after power-off.",
+            "Use a disposable seed and an unfunded wallet for your first run. The website never asks you to enter a seed or PIN."
+          ],
+          "links": [
+            {
+              "label": "Fork seed-generation walkthrough",
+              "url": "https://3rditeration.github.io/seedsigner/quickstarts/02-mnemonic-seedkeeper.html"
+            }
+          ]
+        },
+        {
+          "title": "Export public wallet information",
+          "items": [
+            "Open the loaded seed\u2019s options and export an xpub for Single Sig and the script type you intend to use. Choose Sparrow as the QR format.",
+            "In Sparrow: create a new wallet, choose the air-gapped hardware wallet route, and scan the signer\u2019s public export.",
+            "Keep network, derivation path and script type consistent. This is a watch-only wallet; never type the seed into Sparrow just to make scanning work."
+          ],
+          "links": [
+            {
+              "label": "Sparrow documentation",
+              "url": "https://sparrowwallet.com/docs/"
+            },
+            {
+              "label": "SeedSigner custody guide",
+              "url": "https://seedsigner.com/seedsigner-independent-custody-guide/"
+            }
+          ]
+        },
+        {
+          "title": "Verify a receive address",
+          "items": [
+            "Display a receive address in Sparrow and use the signer\u2019s address-verification/scan flow to confirm it belongs to your loaded seed and wallet settings.",
+            "Compare the complete address and network. For multisig, import the correct wallet descriptor; a single cosigner seed alone does not define the wallet.",
+            "Do this before any real deposit. This prototype still needs its hardware validation."
+          ]
+        },
+        {
+          "title": "Practice the transaction handoff",
+          "items": [
+            "Sparrow builds an unsigned transaction (PSBT) and displays it as an animated QR. Scan that QR with the signer.",
+            "On the signer, review destination addresses, amounts, change and fee before approving.",
+            "Display the signed QR, scan it back into Sparrow, then review there. Sparrow\u2014not the offline signer\u2014broadcasts when you explicitly choose to do so."
+          ],
+          "diagram": "signing",
+          "links": [
+            {
+              "label": "SeedSigner signing walkthrough",
+              "url": "https://seedsigner.com/seedsigner-independent-custody-guide/"
+            }
+          ]
+        },
+        {
+          "title": "Finish the session",
+          "items": [
+            "Exit the loaded seed/session and power off when done. Retain a verified backup; an xpub or fingerprint cannot recover a lost seed.",
+            "A SeedQR encodes the secret, unlike a public wallet-export QR. Keep a printed SeedQR private just like the words.",
+            "For card storage or card signing, follow the separate smartcard task."
+          ],
+          "links": [
+            {
+              "label": "Use a smartcard",
+              "url": "/build/cards/"
+            }
+          ]
+        }
+      ],
+      "notice": "This is an operating walkthrough, not a claim that our untested carrier is ready to hold funds.",
+      "next": "cards",
+      "references": [
+        {
+          "label": "SeedSigner official docs",
+          "url": "https://seedsigner.com/"
+        },
+        {
+          "label": "Fork quick starts",
+          "url": "https://3rditeration.github.io/seedsigner/quickstarts/"
+        }
+      ]
+    },
+    {
+      "slug": "cards",
+      "number": 6,
+      "title": "Use smartcards",
+      "summary": "Choose storage or on-card signing, then verify the reader and card applet.",
+      "needs": [
+        "Contact-capable card",
+        "UR2 reader configured",
+        "Working device; spare/test card"
+      ],
+      "result": "Card detection, applet identity and a verified store/load or public-export test.",
+      "steps": [
+        {
+          "title": "Choose what the card should do",
+          "items": [
+            "SeedKeeper stores secrets; loading one puts it in the Luckfox\u2019s memory for host signing.",
+            "Satochip derives/signs on the card; the host still reviews the transaction and requests a signature.",
+            "This PCB has a contact socket and no NFC reader. Buy a contact-capable retail card, or a supported blank JavaCard for deliberate DIY provisioning."
+          ],
+          "choices": [
+            {
+              "title": "SeedKeeper: storage",
+              "text": "PIN-protected seeds/passphrases.",
+              "url": "/build/cards/?card=seedkeeper#card-workflow"
+            },
+            {
+              "title": "Satochip: signing",
+              "text": "On-card derivation and signatures.",
+              "url": "/build/cards/?card=satochip#card-workflow"
+            },
+            {
+              "title": "Blank JavaCard",
+              "text": "Install an applet first.",
+              "url": "/build/cards/?card=diy#card-workflow"
+            }
+          ]
+        },
+        {
+          "title": "Verify the reader before changing the card",
+          "items": [
+            "Insert a spare card and inspect Tools \u2192 Smartcard Tools. Card presence/ATR only prove transport, not the right applet.",
+            "J601 is the Amphenol 7312P0225A13LF contact socket. Only SEC1210 SC1 is wired; UR2 may enumerate another empty slot.",
+            "If no card is detected, check seating and the UR2/UART configuration before installing applets or guessing PINs."
+          ],
+          "diagram": "reader",
+          "links": [
+            {
+              "label": "Socket contacts & Linux stack",
+              "url": "/guides/smartcards/"
+            },
+            {
+              "label": "Reader bring-up",
+              "url": "/guides/bringup/#stage-6-reader-configuration-before-inserting-a-card"
+            }
+          ]
+        },
+        {
+          "title": "Follow the workflow for your card",
+          "items": [
+            "Select a card type below. Use disposable test secrets; the checklist is not a verification of the card or prototype."
+          ],
+          "special": "card-flow"
+        },
+        {
+          "title": "Check the result and keep a recovery copy",
+          "items": [
+            "After loading a SeedKeeper secret, compare its fingerprint. For Satochip, compare the card\u2019s master fingerprint/public export with the intended seed.",
+            "A wrong fingerprint is a reason to stop and check setup, not to overwrite the card.",
+            "Keep PINs, management keys and wallet backups offline. Do not reset a card containing a seed as a transport diagnostic."
+          ],
+          "links": [
+            {
+              "label": "Compatibility and applet versions",
+              "url": "/guides/smartcards/"
+            }
+          ]
+        }
+      ],
+      "special": "cards",
+      "references": [
+        {
+          "label": "SeedKeeper instructions",
+          "url": "https://3rditeration.github.io/seedsigner/seedkeeper.html"
+        },
+        {
+          "label": "Satochip instructions",
+          "url": "https://3rditeration.github.io/seedsigner/satochip.html"
+        }
+      ]
+    }
+  ]
+}

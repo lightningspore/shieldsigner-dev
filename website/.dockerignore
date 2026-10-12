@@ -10,3 +10,5 @@
 !content/**
 !public/**
 **/__pycache__
+
+!version.json

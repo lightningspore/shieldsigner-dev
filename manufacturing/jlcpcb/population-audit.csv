@@ -5,8 +5,8 @@ C302,10u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB c
 C401,100n,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C49678,CC0805KRX7R9BB104,YAGEO
 C601,100n,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C49678,CC0805KRX7R9BB104,YAGEO
 C602,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C28323,CL21B105KBFNNNE,Samsung Electro-Mechanics
-C603,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C49678,CC0805KRX7R9BB104,YAGEO
-C604,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C49678,CC0805KRX7R9BB104,YAGEO
+C603,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C28323,CL21B105KBFNNNE,Samsung Electro-Mechanics
+C604,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C28323,CL21B105KBFNNNE,Samsung Electro-Mechanics
 C605,33p,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C107115,CC0805JRNPO9BN330,YAGEO
 C606,33p,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C107115,CC0805JRNPO9BN330,YAGEO
 D301,SMF5.0CA,Diode_SMD:D_SOD-123F,B.Cu,JLCPCB carrier assembly,C19077498,SMF5.0CA,hongjiacheng

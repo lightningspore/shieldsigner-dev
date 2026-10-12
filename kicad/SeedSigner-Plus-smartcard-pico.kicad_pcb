@@ -7889,7 +7889,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -7926,7 +7926,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC" "C49678"
+		(property "LCSC" "C28323"
 			(at 0 0 180)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -7940,7 +7940,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "CC0805KRX7R9BB104"
+		(property "MPN" "CL21B105KBFNNNE"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -7952,7 +7952,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "YAGEO"
+		(property "Manufacturer" "Samsung Electro-Mechanics"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -9083,7 +9083,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -9120,7 +9120,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC" "C49678"
+		(property "LCSC" "C28323"
 			(at 0 0 0)
 			(unlocked yes)
 			(layer "B.Fab")
@@ -9134,7 +9134,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "CC0805KRX7R9BB104"
+		(property "MPN" "CL21B105KBFNNNE"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)
@@ -9146,7 +9146,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "YAGEO"
+		(property "Manufacturer" "Samsung Electro-Mechanics"
 			(at 0 0 0)
 			(layer "B.Fab")
 			(hide yes)

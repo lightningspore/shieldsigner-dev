@@ -84,3 +84,11 @@ run = "uv run scripts/verify-pcb-editor.py"
 [tasks."dev:source"]
 description = "Preview editable TSX without imported copper on localhost:3022"
 run = "bun run dev:source"
+
+[tasks."os:prepare"]
+description = "Prepare pinned OS sources and the UR2 reader configuration; does not compile or flash"
+run = "SHIELDSIGNER_PREPARE_ONLY=1 bash scripts/build-os.sh"
+
+[tasks."bom:check"]
+description = "Verify fitted passive nominal values agree with their selected catalog parts"
+run = "uv run scripts/check-bom-values.py"

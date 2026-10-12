@@ -7,7 +7,7 @@ root = Path(__file__).resolve().parents[1]
 paths = []
 for name in ['siteconfig', 'knowledge', 'templates', 'static', 'content', 'public']:
     paths += [p for p in (root/name).rglob('*') if p.is_file() and '__pycache__' not in p.parts]
-paths += [root/name for name in ['manage.py', 'pyproject.toml', 'uv.lock', 'Dockerfile', '.dockerignore', 'Caddyfile', 'compose.production.yml']]
+paths += [root/name for name in ['manage.py', 'version.json', 'pyproject.toml', 'uv.lock', 'Dockerfile', '.dockerignore', 'Caddyfile', 'compose.production.yml']]
 digest = hashlib.sha256()
 for path in sorted(paths):
     digest.update(str(path.relative_to(root)).encode()+b'\0'+path.read_bytes())

@@ -60,23 +60,23 @@
     "population": "fit"
   },
   "C603": {
-    "lcsc": "C49678",
-    "mpn": "CC0805KRX7R9BB104",
-    "manufacturer": "YAGEO",
+    "lcsc": "C28323",
+    "mpn": "CL21B105KBFNNNE",
+    "manufacturer": "Samsung Electro-Mechanics",
     "package": "0805",
-    "source": "https://jlcpcb.com/partdetail/C49678",
-    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
-    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "source": "https://jlcpcb.com/partdetail/C28323",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf",
+    "status": "native 1 uF regulator/card-supply decoupling; selected C28323 as C602",
     "population": "fit"
   },
   "C604": {
-    "lcsc": "C49678",
-    "mpn": "CC0805KRX7R9BB104",
-    "manufacturer": "YAGEO",
+    "lcsc": "C28323",
+    "mpn": "CL21B105KBFNNNE",
+    "manufacturer": "Samsung Electro-Mechanics",
     "package": "0805",
-    "source": "https://jlcpcb.com/partdetail/C49678",
-    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
-    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "source": "https://jlcpcb.com/partdetail/C28323",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf",
+    "status": "native 1 uF regulator/card-supply decoupling; selected C28323 as C602",
     "population": "fit"
   },
   "C605": {

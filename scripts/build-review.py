@@ -33,7 +33,7 @@ with ZipFile(OUT/'shieldsigner-luckfox-kicad.zip','w',ZIP_DEFLATED) as archive:
    rel=path.relative_to(ROOT)
    if not path.is_file() or '__pycache__' in rel.parts or path.suffix in ['.lck','.kicad_prl'] or ('reference' in rel.parts and 'research' in rel.parts):continue
    archive.write(path,rel)
- for name in ['README.md','KICAD.md','TELEGRAM.md','mise.toml','package.json','bun.lock','tsconfig.json']:
+ for name in ['README.md','KICAD.md','LICENSE','TELEGRAM.md','mise.toml','package.json','bun.lock','tsconfig.json']:
   path=ROOT/name
   if path.exists():archive.write(path,path.relative_to(ROOT))
  for path in OUT.rglob('*'):

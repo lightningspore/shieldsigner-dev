@@ -2644,7 +2644,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf"
 			(at 138.43 115.57 0)
 			(hide yes)
 			(show_name no)
@@ -2666,7 +2666,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C49678"
+		(property "LCSC" "C28323"
 			(at 142.24 114.2999 0)
 			(hide yes)
 			(show_name no)
@@ -2698,9 +2698,9 @@
 			)
 		)
 	
-(property "MPN" "CC0805KRX7R9BB104" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "CL21B105KBFNNNE" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "YAGEO" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "Manufacturer" "Samsung Electro-Mechanics" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_id "power:+5V")
@@ -3465,7 +3465,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf"
 			(at 128.27 138.43 0)
 			(hide yes)
 			(show_name no)
@@ -3487,7 +3487,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C49678"
+		(property "LCSC" "C28323"
 			(at 132.08 137.1599 0)
 			(hide yes)
 			(show_name no)
@@ -3519,9 +3519,9 @@
 			)
 		)
 	
-(property "MPN" "CC0805KRX7R9BB104" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "CL21B105KBFNNNE" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "YAGEO" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "Manufacturer" "Samsung Electro-Mechanics" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_name "GND_3")

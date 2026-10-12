@@ -43,3 +43,7 @@ Native verification: zero ERC errors (10 warnings); zero unconnected PCB items; 
 - Removed stale instance `lib_name` overrides, synchronized power symbols and the schematic-only U201 footprint field, converted duplicate local I2C labels to global labels, and declared SEC1210 TEST as input per the datasheet.
 - Final default-variant result: zero ERC errors/warnings, zero active DRC errors/warnings, two documented DNP exclusions, zero unconnected/parity issues.
 - Added backed-up recipe editing, native DRC regression rejection, track-net checks and replay preconditions. Deliberate bad-placement rollback was verified byte-for-byte.
+
+## 12 October 2026 — purchase metadata correction
+
+C603/C604 already had the reviewed 1 µF circuit value, but their purchase properties/selection still described the old 100 nF component. Corrected both to C28323 / Samsung CL21B105KBFNNNE, matching C602. Geometry and electrical connections are unchanged. Regenerated BOM/CPL, native reports and Gerbers; added a guard against losing approved value/catalog corrections. Supersedes the earlier preview’s incorrect purchase metadata.

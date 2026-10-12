@@ -1,0 +1,10 @@
+<div id="card-workflow" class="card-workflow">
+  <nav class="card-tabs" aria-label="Card workflow">
+    <a href="/build/cards/?card=seedkeeper#card-workflow" {% if card == 'seedkeeper' %}aria-current="true"{% endif %}>SeedKeeper</a>
+    <a href="/build/cards/?card=satochip#card-workflow" {% if card == 'satochip' %}aria-current="true"{% endif %}>Satochip</a>
+    <a href="/build/cards/?card=diy#card-workflow" {% if card == 'diy' %}aria-current="true"{% endif %}>DIY JavaCard</a>
+  </nav>
+  <h3>{{ card_flow.title }}</h3><p>{{ card_flow.summary }}</p>
+  <ol>{% for item in card_flow.steps %}<li>{{ item }}</li>{% endfor %}</ol>
+  <a href="{{ card_flow.source }}">Upstream walkthrough with screenshots ↗</a>
+</div>

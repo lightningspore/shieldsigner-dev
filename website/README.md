@@ -90,3 +90,29 @@ For deployment from this public checkout, set `SHIELDSIGNER_DEPLOY_HOST` to your
 ## Initial public release
 
 Repository: https://github.com/lightningspore/shieldsigner-dev. The first snapshot contains native/experimental designs, all component rationale and build notes, local libraries, reference sources, supplier PDFs via Git LFS, and this website. Private infrastructure Terraform remains in its existing DNS state/repository. Both shieldsigner.dev and www.shieldsigner.dev serve the site; canonical metadata uses the apex.
+
+## Task interface — 0.0.2-dev
+
+The homepage is organized around six jobs: PCB order, parts sourcing, compile, flash, ordinary
+SeedSigner use and smartcard use. `/build/<task>/` serves short steps with direct actions; `/guides/`
+retains the reference library. `docs/workflows.json`, `docs/system-parts.json` and
+`docs/card-workflows.json` are the single source of task content. The carrier table is generated from
+the matching native BOM/catalog, with human-readable units and ratings. It defaults to separate
+system parts for a PCBA buyer; select Carrier/PCBA for hand assembly. Quantities are calculated for
+1–100 boards; the assembly CSV always remains per PCB.
+
+The order ZIP has Gerbers, BOM, CPL, review notes and a checksum manifest. Publishing rejects stale
+board/readiness data and incorrect 1 µF purchase selections. A fresh clone can fetch release assets
+from the pinned URLs/hashes in `assets/downloads.json`; it does not require our ignored local exports.
+
+HTMX replaces only main content, preserving the header/footer and loaded script instances. Search
+forms request their own fragments. Checklist progress is browser-local, separately keyed per task;
+it is personal tracking, not hardware qualification. Commands have copy buttons with selectable
+text as the fallback. All tasks, searches and card choices have ordinary HTML navigation/form paths.
+
+`version.json` owns the visible development version. The packaged content records the Git revision
+and whether the checkout was dirty. Production should be deployed from a clean committed tree.
+Desktop/mobile tests exercise all six tasks, the actual downloaded order bundle, passive values,
+quantity/search changes, command clipboard copy, checklist persistence, card selection, navigation,
+reference search and no-JavaScript fallbacks. Response tests cover every internal workflow link and
+section anchor as well as sourcing/manifest invariants.

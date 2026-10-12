@@ -1,0 +1,20 @@
+{
+  "release": "workflow-preview-0.0.2-dev",
+  "assets": [
+    {
+      "name": "shieldsigner-carrier-gerbers.zip",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/workflow-preview-0.0.2-dev/shieldsigner-carrier-gerbers.zip",
+      "sha256": "b9f2760831af1d288e676f82f05acd4d320c8a69dc332cdf857705c6fb8bf853"
+    },
+    {
+      "name": "shieldsigner-luckfox-kicad.zip",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/workflow-preview-0.0.2-dev/shieldsigner-luckfox-kicad.zip",
+      "sha256": "2c98ec4c2a2a25983952672ecd72285a164dabf0eacd6cdf63ac8e777c90f0ec"
+    },
+    {
+      "name": "schematic.pdf",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/workflow-preview-0.0.2-dev/schematic.pdf",
+      "sha256": "ab3bc6dafca310278d4c1286fbbfa39c5b196c594b71386ec63351b9a24fd31e"
+    }
+  ]
+}

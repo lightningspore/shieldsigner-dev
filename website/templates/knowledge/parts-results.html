@@ -1,0 +1,25 @@
+<div id="parts-fragment">
+{% if quantity_error %}<p class="task-notice" role="alert">{{ quantity_error }}</p>{% endif %}
+<div class="parts-result-summary"><span>Quantities for <strong>{{ quantity }} board{{ quantity|pluralize }}</strong>{% if query %} · “{{ query }}”{% endif %}</span><a href="/files/manufacturing/jlcpcb/bom-carrier-jlcpcb.csv" hx-boost="false">BOM CSV · per PCB ↓</a></div>
+{% if system %}
+<h3>Buy separately · {{ system|length }} item{{ system|length|pluralize }}</h3>
+<p class="parts-note">These are outside the 43-piece PCBA BOM. Card choices are alternatives; buy the one that fits your workflow.</p>
+<div class="system-parts">
+{% for part in system %}<article class="system-part {% if part.warning %}needs-review{% endif %}">
+  <div class="part-top"><span class="part-status">{{ part.status }}</span><span>{{ part.total }} {% if part.required %}required{% else %}optional{% endif %}</span></div>
+  <h4>{{ part.name }}</h4><p>{{ part.spec }}</p>{% if part.warning %}<p class="part-warning">{{ part.warning }}</p>{% endif %}
+  <div class="part-links"><a href="{{ part.source }}">{{ part.sourceLabel }} ↗</a>{% if part.detail %}<a href="{{ part.detail }}">{{ part.detailLabel }} ↗</a>{% endif %}</div>
+</article>{% endfor %}
+</div>
+{% endif %}
+{% if carrier %}
+<h3>Carrier / PCBA · {{ carrier|length }} catalog line{{ carrier|length|pluralize }}</h3>
+<p class="parts-note">43 fitted pieces per carrier. JLC buys these for PCBA; use this list for hand assembly. Availability snapshot: 11 October 2026—open the listing for current stock and pricing.</p>
+<div class="parts-table-wrap"><table class="parts-table"><thead><tr><th scope="col">Value / ratings</th><th scope="col">Part / references</th><th scope="col">Qty / PCB</th><th scope="col">Your qty</th><th scope="col">Package</th><th scope="col">Source</th></tr></thead><tbody>
+{% for part in carrier %}<tr><td class="passive-value"><strong>{{ part.value }}</strong><small>{{ part.ratings|default:"—" }}</small></td><td><strong>{{ part.mpn }}</strong><span>{{ part.refs }}</span><small>{{ part.manufacturer }}</small></td><td>{{ part.qty }}</td><td><strong>{{ part.total }}</strong></td><td>{{ part.package }}</td><td><a href="{{ part.source }}">{{ part.code }} ↗</a><small>{{ part.library }}</small></td></tr>{% endfor %}
+</tbody></table></div>
+<p class="parts-note">Do not buy/populate R404, R408 or J302 for this variant. U202 is separate. PCB solder jumpers are copper, not purchased components.</p>
+{% endif %}
+{% if not carrier and not system %}<p class="empty-state">No matching parts. Try a reference such as C603 or clear the search.</p>{% endif %}
+
+</div>

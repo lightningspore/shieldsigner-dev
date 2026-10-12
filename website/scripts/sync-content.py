@@ -1,4 +1,9 @@
 """Package explicit public docs/assets; never copy private ingestion or research data."""
+import urllib.request
+import csv
+from zipfile import ZipFile, ZIP_DEFLATED
+import runpy
+import subprocess
 import hashlib
 import json
 import re
@@ -16,11 +21,22 @@ for directory in [content, public]:
     directory.mkdir()
 url_map = {str((ROOT / source).resolve()): f"/guides/{slug}/" for slug, source, *_ in GUIDES}
 files = [*(f"reference/pdfs/{p.name}" for p in sorted((ROOT / "reference/pdfs").glob("*.pdf"))),
-"docs/os-build-benchmark.json", "docs/pdf-references.json", "docs/drc-assembly-exceptions.json",
+"docs/workflows.json", "docs/system-parts.json", "docs/card-workflows.json", "docs/os-build-benchmark.json", "docs/pdf-references.json", "docs/drc-assembly-exceptions.json",
 "manufacturing/jlcpcb/bom-carrier-jlcpcb.csv", "manufacturing/jlcpcb/cpl-carrier-jlcpcb.csv"]
 # Hardware-only review bundle produced by review:build; no firmware/private archives.
-for name in ["shieldsigner-luckfox-kicad.zip", "shieldsigner-carrier-gerbers.zip", "pcb-top.svg", "pcb-bottom.svg"]:
+for name in ["shieldsigner-luckfox-kicad.zip", "shieldsigner-carrier-gerbers.zip", "pcb-top.svg", "pcb-bottom.svg", "schematic.pdf"]:
     source = ROOT / "dist/kicad" / name
+    if not source.exists() and name in {'shieldsigner-carrier-gerbers.zip','shieldsigner-luckfox-kicad.zip','schematic.pdf'}:
+        artifact = next(a for a in json.loads((ROOT/'assets/downloads.json').read_text())['assets'] if a['name']==name)
+        cache = ROOT/'.tools/website-downloads'/artifact['sha256']/name
+        if not cache.exists():
+            cache.parent.mkdir(parents=True,exist_ok=True)
+            request=urllib.request.Request(artifact['url'],headers={'User-Agent':'ShieldSigner-content-builder'})
+            with urllib.request.urlopen(request,timeout=60) as response: payload=response.read()
+            if hashlib.sha256(payload).hexdigest()!=artifact['sha256']: raise ValueError('Release asset checksum mismatch: '+name)
+            cache.write_bytes(payload)
+        if hashlib.sha256(cache.read_bytes()).hexdigest()!=artifact['sha256']: raise ValueError('Cached release asset changed: '+name)
+        source=cache
     if not source.exists() and name.endswith(".svg"):
         source = ROOT / "assets" / name
     if source.exists():
@@ -61,6 +77,42 @@ for slug, name, *_ in GUIDES:
     text = re.sub(r"[a-zA-Z0-9-]+\.tail[a-zA-Z0-9]+\.ts\.net", "private-tailnet-host", text)
     text = re.sub(r"http://(?:localhost|127\.0\.0\.1):\d+[^\s)]*", "/downloads/", text)
     (content / f"{slug}.md").write_text(text)
+version=json.loads((SITE/'version.json').read_text())
+version['revision']=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip()
+version['dirty']=bool(subprocess.check_output(['git','-C',str(ROOT),'status','--porcelain'],text=True).strip())
+(content/'site-version.json').write_text(json.dumps(version,indent=2)+'\n')
+# The task interface consumes authoritative data packaged into the same release.
+for name in ['workflows', 'system-parts', 'card-workflows']:
+    shutil.copyfile(ROOT / 'docs' / f'{name}.json', content / f'{name}.json')
+values=runpy.run_path(str(ROOT/'scripts/part-values.py'))
+rows = []
+with (ROOT / 'manufacturing/jlcpcb/bom-carrier-jlcpcb.csv').open() as file:
+    bom = list(csv.DictReader(file))
+catalog = {p['code']: p for p in json.loads((ROOT/'docs/jlc-catalog.json').read_text())['parts']}
+for row in bom:
+    code = row['LCSC Part #']; part = catalog[code]
+    rows.append({'refs': row['Designator'], 'qty': len(row['Designator'].split(',')), 'code': code,
+                 'value': values['nominal'](row['Comment'].split(';')[0],row['Designator'].split(',')),
+                 'ratings': values['ratings'](part,row['Designator'].split(',')), 'mpn': part['componentModelEn'],
+                 'manufacturer': part['componentBrandEn'], 'package': row['Footprint'],
+                 'source': part['url'], 'checkedAt': part['checkedAt'][:10],
+                 'library': 'Basic' if part['componentLibraryType']=='base' else 'Extended'})
+assert len(rows)==21 and sum(r['qty'] for r in rows)==43
+caps = next(r for r in rows if r['code']=='C28323')
+assert {'C602','C603','C604'}==set(caps['refs'].split(',')), '1 uF BOM correction missing'
+(content/'carrier-parts.json').write_text(json.dumps(rows,indent=2)+'\n')
+readiness = json.loads((ROOT/'manufacturing/jlcpcb/readiness.json').read_text())
+board_sha = hashlib.sha256((ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest()
+assert readiness['boardSha256']==board_sha, 'BOM/CPL readiness belongs to another board revision'
+geometry=json.loads((ROOT/'src/generated/reference-board.json').read_text())
+assert geometry['source']['sha256']==board_sha, 'Regenerate geometry before publishing'
+(content/'pcb-spec.json').write_text(json.dumps({'width':round(geometry['width'],2),'height':round(geometry['height'],2),'thickness':1.6,'layers':2,'boardSha256':board_sha},indent=2)+'\n')
+order_files = ['shieldsigner-carrier-gerbers.zip', 'manufacturing/jlcpcb/bom-carrier-jlcpcb.csv', 'manufacturing/jlcpcb/cpl-carrier-jlcpcb.csv']
+if all((public/name).is_file() for name in order_files):
+    with ZipFile(public/'shieldsigner-jlcpcb-order.zip','w',ZIP_DEFLATED) as bundle:
+        for name in order_files: bundle.write(public/name,arcname=Path(name).name)
+        bundle.writestr('README.txt','ShieldSigner carrier WITHOUT Luckfox: upload Gerber ZIP, then BOM/CPL for PCBA.\n43 fitted pieces / 21 catalog lines. J302, R404 and R408 DNP.\nC603/C604 are 1 uF C28323. UR2 reader config required.\nReview only: paste/rotation/LCD/enclosure/bench qualification pending.\n')
+        bundle.writestr('manifest.json',json.dumps({'boardSha256':board_sha,'releaseStatus':'review_only','files':[{'name':name,'sha256':hashlib.sha256((public/name).read_bytes()).hexdigest()} for name in order_files]},indent=2))
 manifest = [{"name": str(p.relative_to(public)), "size": p.stat().st_size, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(public.rglob("*")) if p.is_file()]
 (public / "manifest.json").write_text(json.dumps(manifest, indent=2)+"\n")
 print(f"Published allowlist: {len(GUIDES)} guides, {len(manifest)} public files; no private Telegram/session data.")

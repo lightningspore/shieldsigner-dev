@@ -1,3 +1,54 @@
-{% load static %}<!doctype html>
-<html lang="en" x-data="{ menuOpen: false }"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ title|default:'ShieldSigner — Build it. Understand it.' }}{% if title %} · ShieldSigner{% endif %}</title><meta name="description" content="{{ description|default:'An open hardware Bitcoin signer with a Luckfox processor and contact smartcards. Follow the board, firmware and build notes.' }}"><link rel="canonical" href="https://shieldsigner.dev{{ request.path }}"><meta name="theme-color" content="#10140f"><meta property="og:title" content="{{ title|default:'ShieldSigner' }}"><meta property="og:type" content="website"><meta property="og:url" content="https://shieldsigner.dev{{ request.path }}"><link rel="stylesheet" href="{% static 'css/site.css' %}"><link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml"></head>
-<body hx-boost="true"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="/"><span class="mark">S</span> ShieldSigner<span class="brand-note"> / build notes</span></a><nav aria-label="Primary"><a href="/guides/">Guides</a><a href="/guides/smartcards/">Smartcards</a><a href="/downloads/">Board files ↗</a></nav><button class="menu" @click="menuOpen = !menuOpen" :aria-expanded="menuOpen" aria-controls="mobile-nav" aria-label="Toggle navigation">Menu</button><nav id="mobile-nav" x-show="menuOpen" x-cloak aria-label="Mobile"><a href="/guides/" @click="menuOpen = false">Guides</a><a href="/guides/smartcards/" @click="menuOpen = false">Smartcards</a><a href="/downloads/" @click="menuOpen = false">Board files</a></nav></header><main id="main">{% block content %}{% endblock %}</main><footer><a class="brand" href="/">ShieldSigner</a><p>A LightningSpore project notebook.<br>Open hardware. Inspectable software. Documented decisions.</p><div><a href="https://github.com/lightningspore/shieldsigner-dev/tree/main/">Project source ↗</a><a href="https://github.com/3rdIteration/seedsigner">Upstream ShieldSigner ↗</a><a href="https://lightningspore.com/">LightningSpore ↗</a></div><small>Design checks pass. Assembly and hardware bring-up remain unverified.</small></footer><script src="{% static 'js/htmx.min.js' %}" defer></script><script src="{% static 'js/alpine.min.js' %}" defer></script></body></html>
+{% load static %}
+<!doctype html>
+<html lang="en" x-data="{ menuOpen: false }">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ title|default:'ShieldSigner — Build & use it' }}{% if title %} · ShieldSigner{% endif %}</title>
+  <meta name="description" content="{{ description|default:'Order the carrier, source the parts, build and flash firmware, then use SeedSigner and contact smartcards.' }}">
+  <link rel="canonical" href="https://shieldsigner.dev{{ request.path }}">
+  <meta name="theme-color" content="#10140f">
+  <meta property="og:title" content="{{ title|default:'ShieldSigner — Build & use it' }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://shieldsigner.dev{{ request.path }}">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+</head>
+<body hx-boost="true" hx-select="#main" hx-target="#main" hx-swap="outerHTML">
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <a class="brand" href="/"><span class="mark">S</span> ShieldSigner<span class="brand-note"> / build & use</span><span class="site-version">{{ site_version }}</span></a>
+    <nav aria-label="Primary">
+      <a href="/build/pcb/">Order PCB</a>
+      <a href="/build/parts/">Parts</a>
+      <a href="/build/flash/">Flash</a>
+      <a href="/build/use/">Use it</a>
+      <a href="/guides/">Reference</a>
+    </nav>
+    <button class="menu" @click="menuOpen = !menuOpen" :aria-expanded="menuOpen" aria-controls="mobile-nav" aria-label="Toggle navigation">Menu</button>
+    <nav id="mobile-nav" x-show="menuOpen" x-cloak aria-label="Mobile">
+      <a href="/build/pcb/" @click="menuOpen = false">Order PCB</a>
+      <a href="/build/parts/" @click="menuOpen = false">Parts</a>
+      <a href="/build/compile/" @click="menuOpen = false">Compile</a>
+      <a href="/build/flash/" @click="menuOpen = false">Flash</a>
+      <a href="/build/use/" @click="menuOpen = false">Use SeedSigner</a>
+      <a href="/build/cards/" @click="menuOpen = false">Smartcards</a>
+      <a href="/guides/" @click="menuOpen = false">Reference</a>
+    </nav>
+  </header>
+  <main id="main">{% block content %}{% endblock %}</main>
+  <footer>
+    <a class="brand" href="/">ShieldSigner</a>
+    <p>Luckfox Pico Mini · contact smartcards<br>A LightningSpore carrier variant based on 3rdIteration’s fork.</p>
+    <div>
+      <a href="https://github.com/lightningspore/shieldsigner-dev">Public design repo ↗</a>
+      <a href="/guides/">Reference docs →</a>
+      <a href="/downloads/">All files & datasheets →</a>
+    </div>
+    <small><span class="site-version">{{ site_version }}</span> · revision <a href="{{ site_revision_url }}">{{ site_revision }}</a>{% if site_dirty %} · local changes{% endif %} · Native design checks pass; physical bring-up remains unverified.</small>
+  </footer>
+  <script src="{% static 'js/htmx.min.js' %}" defer></script>
+  <script src="{% static 'js/site.js' %}" defer></script>
+  <script src="{% static 'js/alpine.min.js' %}" defer></script>
+</body>
+</html>

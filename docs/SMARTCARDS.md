@@ -14,7 +14,7 @@ Use the saved [Amphenol mechanical drawing](../reference/pdfs/C5417011.pdf) for 
 | C4 | Unconnected | Reserved/auxiliary contact unused |
 | C5 | GND | Card return |
 | C6 | Same switched supply as C1 | Legacy programming-voltage contact; confirm target-card compatibility |
-| C7 | U601 SC1_IO; R606 10 kΩ to ground | Bidirectional card data |
+| C7 | U601 SC1_IO; R606 100 kΩ to ground | Bidirectional card data |
 | C8 | Unconnected | Reserved/auxiliary contact unused |
 | COM / NO | GND / U601 SC1_PRSNT_N | Mechanical insertion detection; closes to ground |
 
@@ -52,7 +52,7 @@ FRIENDLYNAME      "SEC1210"
 LIBPATH           /usr/lib/pcsc/drivers/serial/libccidtwin.so
 ```
 
-The pinned OS copies its reader file to both `/etc/reader.conf.d/sec1210` and `/etc/readers.d/sec1210`. Keep those copies consistent when making a recorded firmware patch. **The two successfully built baseline images still contain `SEC1210URT`**, so they need this documented adjustment before UR2 carrier testing; this guide does not imply we already patched or boot-tested them. CCID 1.7.1 treats URT as one slot and UR2 as two. A second empty enumerated slot can be expected; identify the physically connected SC1 slot by insertion/removal rather than hardcoding a reader-list index. The serial driver starts at 9600 baud and negotiates 115200, so both rates can appear in a capture.
+The pinned OS copies its reader file to both `/etc/reader.conf.d/sec1210` and `/etc/readers.d/sec1210`. Keep those copies consistent when making a recorded firmware patch. The current carrier wrapper prepares UR2; its full image build remains unqualified. **The two successfully built historical baseline images still contain `SEC1210URT`**, so they need this documented adjustment before UR2 carrier testing; this guide does not imply we already patched or boot-tested them. CCID 1.7.1 treats URT as one slot and UR2 as two. A second empty enumerated slot can be expected; identify the physically connected SC1 slot by insertion/removal rather than hardcoding a reader-list index. The serial driver starts at 9600 baud and negotiates 115200, so both rates can appear in a capture.
 
 UART2 pinmux and the `/dev/ttyS2` device must be enabled, and its serial console/getty must be disabled. A second process opening the UART can corrupt reader traffic. This is a userspace serial driver, so there is no separate SEC1210 kernel module to load. The image's PC/SC library/driver locations and architecture must match; installing a desktop USB-reader package alone does not configure this UART reader.
 

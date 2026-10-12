@@ -55,11 +55,6 @@ Functional checks
 Check screen, buttons and camera; then verify reader and blank-card detection. Install SeedKeeper through Tools > Smartcard Tools > DIY Tools > Install Applet. The current guide recommends SeedKeeper-0.2-official.cap and the default 8 KB storage. Set a PIN, check Card Info, and test saving/loading a disposable seed and QR signing before loading a funded wallet.
 Source: https://3rditeration.github.io/seedsigner/quickstarts/01-install-applets-diy-javacard.html
 
-Group context
-
-The imported conversation covers 12 July–11 October 2026. On September 25, Crypto Guide announced the Luckfox hardware for beta testing and said cases must match carrier revision. By October 10, a member reported receiving a Luckfox ShieldSigner. The chat is useful troubleshooting context, but the board README supplies the mechanical assembly details.
-Local transcript: shieldsigner.txt
-
 Before ordering
 
 Confirm Mini storage variant, carrier revision, whether the screen and headers are included, camera/ribbon compatibility, and matching enclosure parts. Decide whether you want an assembled carrier or to fabricate the PCB using its BOM and placement files.

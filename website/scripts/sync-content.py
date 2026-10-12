@@ -41,7 +41,7 @@ for source in (ROOT / "kicad").rglob("*"):
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
         url_map[str(source.resolve())] = f"/files/{name}"
-repo_url = "https://github.com/lightningspore/shieldsigner/tree/main/"
+repo_url = "https://github.com/lightningspore/shieldsigner-dev/tree/main/"
 for slug, name, *_ in GUIDES:
     source = ROOT / name
     def link(match):
@@ -52,7 +52,7 @@ for slug, name, *_ in GUIDES:
         url = url_map.get(resolved)
         if url is None:
             try: relative = str(Path(resolved).relative_to(ROOT))
-            except ValueError: return f"[{label}](https://github.com/lightningspore/shieldsigner)"
+            except ValueError: return f"[{label}](https://github.com/lightningspore/shieldsigner-dev)"
             url = repo_url + relative
         return f"[{label}]({url}{'#' + anchor if sep else ''})"
     text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", link, source.read_text())

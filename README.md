@@ -55,3 +55,7 @@ The build writes `dist/validation-report.json` with preserved renderer warnings 
 ## License and provenance
 
 Derived from 3rdIteration/SeedSigner at the pinned revision in [reference/provenance.json](reference/provenance.json). The upstream MIT notice is retained in [LICENSE](LICENSE). Supplier PDFs remain their publishers’ documents; footprint-library notices are retained in place. This is a development variant, not a tested production signer.
+
+## Public repository
+
+Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. Downloadable design bundles are attached to the [initial design preview release](https://github.com/lightningspore/shieldsigner-dev/releases/tag/design-preview-2026-10-12); these remain review artifacts, not assembly-qualified production files.

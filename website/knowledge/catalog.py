@@ -1,5 +1,6 @@
 # Explicit public-content allowlist. Never crawl the repo or Telegram caches.
 GUIDES = [
+("build-overview", "docs/BUILD-OVERVIEW.md", "Build", "Whole-device build overview", "Module, camera, case and firmware choices beyond the carrier PCB."),
 ("overview", "README.md", "Start here", "Project overview", "The Luckfox carrier, current progress and project sources."),
 ("hardware", "docs/HARDWARE.md", "Hardware", "Hardware architecture", "Power, processor, screen, buttons and the card reader."),
 ("components", "docs/COMPONENTS.md", "Hardware", "Every component explained", "What each of the 53 parts does, why it was chosen and how it connects."),

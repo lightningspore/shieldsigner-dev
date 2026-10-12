@@ -86,3 +86,7 @@ claim a manufactured/bench-tested signer: LCD qualification, reflow/paste, UR2 i
 and electrical/card bring-up remain pending.
 
 For deployment from this public checkout, set `SHIELDSIGNER_DEPLOY_HOST` to your authorized SSH host. Cloudflare DNS Terraform and credentials remain in the private infrastructure repository; the public project contains no account access.
+
+## Initial public release
+
+Repository: https://github.com/lightningspore/shieldsigner-dev. The first snapshot contains native/experimental designs, all component rationale and build notes, local libraries, reference sources, supplier PDFs via Git LFS, and this website. Private infrastructure Terraform remains in its existing DNS state/repository. Both shieldsigner.dev and www.shieldsigner.dev serve the site; canonical metadata uses the apex.

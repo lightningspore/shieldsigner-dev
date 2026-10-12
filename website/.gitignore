@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+public/
+content/
+staticfiles/
+artifacts/
+.secrets/
+.env

@@ -1,0 +1,7 @@
+{
+  "purpose": "Expose the Amphenol LCD connector SMT mounting lands and include their paste apertures",
+  "edits": [
+    {"action":"pad-layers","ref":"J401","pads":["S1","S2"],"layers":["B_Cu","B_Mask","B_Paste"]}
+  ],
+  "syncFootprints": ["J401"]
+}

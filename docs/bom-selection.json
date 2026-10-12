@@ -1,0 +1,452 @@
+{
+  "C201": {
+    "lcsc": "C15850",
+    "mpn": "CL21A106KAYNNNE",
+    "manufacturer": "Samsung Electro-Mechanics",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C15850",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21A106KAYNNNE_C15850.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "C301": {
+    "lcsc": "C49678",
+    "mpn": "CC0805KRX7R9BB104",
+    "manufacturer": "YAGEO",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C49678",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "C302": {
+    "lcsc": "C15850",
+    "mpn": "CL21A106KAYNNNE",
+    "manufacturer": "Samsung Electro-Mechanics",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C15850",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21A106KAYNNNE_C15850.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "C401": {
+    "lcsc": "C49678",
+    "mpn": "CC0805KRX7R9BB104",
+    "manufacturer": "YAGEO",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C49678",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "C601": {
+    "lcsc": "C49678",
+    "mpn": "CC0805KRX7R9BB104",
+    "manufacturer": "YAGEO",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C49678",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "C602": {
+    "lcsc": "C28323",
+    "mpn": "CL21B105KBFNNNE",
+    "manufacturer": "Samsung Electro-Mechanics",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C28323",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "C603": {
+    "lcsc": "C49678",
+    "mpn": "CC0805KRX7R9BB104",
+    "manufacturer": "YAGEO",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C49678",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "C604": {
+    "lcsc": "C49678",
+    "mpn": "CC0805KRX7R9BB104",
+    "manufacturer": "YAGEO",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C49678",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "C605": {
+    "lcsc": "C107115",
+    "mpn": "CC0805JRNPO9BN330",
+    "manufacturer": "YAGEO",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C107115",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805JRNPO9BN330_C107115.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "C606": {
+    "lcsc": "C107115",
+    "mpn": "CC0805JRNPO9BN330",
+    "manufacturer": "YAGEO",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C107115",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805JRNPO9BN330_C107115.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "D301": {
+    "lcsc": "C19077498",
+    "mpn": "SMF5.0CA",
+    "manufacturer": "hongjiacheng",
+    "package": "SOD-123FL",
+    "source": "https://jlcpcb.com/partdetail/C19077498",
+    "datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2312041000_hongjiacheng-SMF5-0CA_C19077498.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "D302": {
+    "lcsc": "C2297",
+    "mpn": "KT-0805G",
+    "manufacturer": "Hubei KENTO Elec",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C2297",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_1806151820_Hubei-KENTO-Elec-KT-0805G_C2297.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "J301": {
+    "lcsc": "C668623",
+    "mpn": "TYPE-C 6P(073)",
+    "manufacturer": "SHOU HAN",
+    "package": "SMD",
+    "source": "https://jlcpcb.com/partdetail/C668623",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2006181823_SHOU-HAN-TYPE-C-6P-073_C668623.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "J401": {
+    "lcsc": "C2931360",
+    "mpn": "62684-402100ALF",
+    "manufacturer": "Amphenol ICC",
+    "package": "SMD,P=0.5mm,Surface Mount\uff0cRight Angle",
+    "source": "https://jlcpcb.com/partdetail/C2931360",
+    "datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2201201700_Amphenol-ICC-62684-402100ALF_C2931360.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "J601": {
+    "lcsc": "C5417011",
+    "mpn": "7312P0225A13LF",
+    "manufacturer": "Amphenol ICC",
+    "package": "SMD",
+    "source": "https://jlcpcb.com/partdetail/C5417011",
+    "datasheet": "",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "Q401": {
+    "lcsc": "C20917",
+    "mpn": "AO3400A",
+    "manufacturer": "Alpha & Omega Semicon",
+    "package": "SOT-23",
+    "source": "https://jlcpcb.com/partdetail/C20917",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_1811081213_Alpha---Omega-Semicon-AO3400A_C20917.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R301": {
+    "lcsc": "C27834",
+    "mpn": "0805W8F5101T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C27834",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010030_UNI-ROYAL-Uniroyal-Elec-0805W8F5101T5E_C27834.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R302": {
+    "lcsc": "C27834",
+    "mpn": "0805W8F5101T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C27834",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010030_UNI-ROYAL-Uniroyal-Elec-0805W8F5101T5E_C27834.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R303": {
+    "lcsc": "C28636",
+    "mpn": "0805W8F5600T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C28636",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010030_UNI-ROYAL-Uniroyal-Elec-0805W8F5600T5E_C28636.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R401": {
+    "lcsc": "C17630",
+    "mpn": "0805W8F3300T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17630",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2205311830_UNI-ROYAL-Uniroyal-Elec-0805W8F3300T5E_C17630.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R402": {
+    "lcsc": "C17633",
+    "mpn": "0805W8F3302T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17633",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2205311830_UNI-ROYAL-Uniroyal-Elec-0805W8F3302T5E_C17633.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R403": {
+    "lcsc": "C17477",
+    "mpn": "0805W8F0000T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17477",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010216_UNI-ROYAL-Uniroyal-Elec-0805W8F0000T5E_C17477.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R404": {
+    "lcsc": "C17477",
+    "mpn": "0805W8F0000T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17477",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010216_UNI-ROYAL-Uniroyal-Elec-0805W8F0000T5E_C17477.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "DNP"
+  },
+  "R405": {
+    "lcsc": "C17714",
+    "mpn": "0805W8F470JT5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17714",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010200_UNI-ROYAL-Uniroyal-Elec-0805W8F470JT5E_C17714.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R406": {
+    "lcsc": "C17714",
+    "mpn": "0805W8F470JT5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17714",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010200_UNI-ROYAL-Uniroyal-Elec-0805W8F470JT5E_C17714.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R407": {
+    "lcsc": "C17714",
+    "mpn": "0805W8F470JT5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17714",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010200_UNI-ROYAL-Uniroyal-Elec-0805W8F470JT5E_C17714.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R408": {
+    "lcsc": "C17477",
+    "mpn": "0805W8F0000T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17477",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010216_UNI-ROYAL-Uniroyal-Elec-0805W8F0000T5E_C17477.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "DNP"
+  },
+  "R409": {
+    "lcsc": "C17477",
+    "mpn": "0805W8F0000T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17477",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010216_UNI-ROYAL-Uniroyal-Elec-0805W8F0000T5E_C17477.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R410": {
+    "lcsc": "C17414",
+    "mpn": "0805W8F1002T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17414",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0805W8F1002T5E_C17414.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R601": {
+    "lcsc": "C149504",
+    "mpn": "0805W8F1003T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C149504",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2205312316_UNI-ROYAL-Uniroyal-Elec-0805W8F1003T5E_C149504.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R602": {
+    "lcsc": "C17408",
+    "mpn": "0805W8F1000T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17408",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0805W8F1000T5E_C17408.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R603": {
+    "lcsc": "C17408",
+    "mpn": "0805W8F1000T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17408",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0805W8F1000T5E_C17408.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R604": {
+    "lcsc": "C17714",
+    "mpn": "0805W8F470JT5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17714",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010200_UNI-ROYAL-Uniroyal-Elec-0805W8F470JT5E_C17714.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R605": {
+    "lcsc": "C17414",
+    "mpn": "0805W8F1002T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17414",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0805W8F1002T5E_C17414.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R606": {
+    "lcsc": "C149504",
+    "mpn": "0805W8F1003T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C149504",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2205312316_UNI-ROYAL-Uniroyal-Elec-0805W8F1003T5E_C149504.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "R607": {
+    "lcsc": "C17414",
+    "mpn": "0805W8F1002T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "package": "0805",
+    "source": "https://jlcpcb.com/partdetail/C17414",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0805W8F1002T5E_C17414.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "SW501": {
+    "lcsc": "C318938",
+    "mpn": "TS-1101-C-W",
+    "manufacturer": "XKB Connection",
+    "package": "SMD,6x3.6mm",
+    "source": "https://jlcpcb.com/partdetail/C318938",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "SW502": {
+    "lcsc": "C318938",
+    "mpn": "TS-1101-C-W",
+    "manufacturer": "XKB Connection",
+    "package": "SMD,6x3.6mm",
+    "source": "https://jlcpcb.com/partdetail/C318938",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "SW503": {
+    "lcsc": "C318938",
+    "mpn": "TS-1101-C-W",
+    "manufacturer": "XKB Connection",
+    "package": "SMD,6x3.6mm",
+    "source": "https://jlcpcb.com/partdetail/C318938",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "SW504": {
+    "lcsc": "C318938",
+    "mpn": "TS-1101-C-W",
+    "manufacturer": "XKB Connection",
+    "package": "SMD,6x3.6mm",
+    "source": "https://jlcpcb.com/partdetail/C318938",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "SW505": {
+    "lcsc": "C318938",
+    "mpn": "TS-1101-C-W",
+    "manufacturer": "XKB Connection",
+    "package": "SMD,6x3.6mm",
+    "source": "https://jlcpcb.com/partdetail/C318938",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "SW506": {
+    "lcsc": "C318938",
+    "mpn": "TS-1101-C-W",
+    "manufacturer": "XKB Connection",
+    "package": "SMD,6x3.6mm",
+    "source": "https://jlcpcb.com/partdetail/C318938",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "SW507": {
+    "lcsc": "C318938",
+    "mpn": "TS-1101-C-W",
+    "manufacturer": "XKB Connection",
+    "package": "SMD,6x3.6mm",
+    "source": "https://jlcpcb.com/partdetail/C318938",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "SW508": {
+    "lcsc": "C318938",
+    "mpn": "TS-1101-C-W",
+    "manufacturer": "XKB Connection",
+    "package": "SMD,6x3.6mm",
+    "source": "https://jlcpcb.com/partdetail/C318938",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  },
+  "U601": {
+    "lcsc": "C633309",
+    "mpn": "SEC1210/PV-UR2",
+    "manufacturer": "Microchip Tech",
+    "package": "QFN-24",
+    "source": "https://jlcpcb.com/partdetail/C633309",
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2410121852_Microchip-Tech-SEC1210-PV-UR2_C633309.pdf",
+    "status": "catalog identity and nominal specification verified; footprint/placement review required",
+    "population": "fit"
+  }
+}

@@ -1,0 +1,86 @@
+[tools]
+bun = "1.2.21"
+uv = "0.12.7"
+
+[tasks.setup]
+description = "Install pinned JavaScript dependencies"
+run = "bun install --frozen-lockfile"
+
+[tasks.generate]
+description = "Extract geometry, nets and assembly metadata from the current native KiCad board"
+run = "uv run scripts/generate-reference.py"
+
+[tasks.build]
+description = "Build native PCB and attach checked reference copper"
+run = "bun run build"
+
+[tasks.check]
+description = "Check PCB fidelity, assembly defaults and TypeScript"
+run = ["bun run check", "bunx tsc --noEmit"]
+
+[tasks.docs]
+description = "Regenerate the component guide from reference data and authored explanations"
+run = "uv run scripts/generate-component-docs.py"
+
+[tasks.dev]
+description = "Build and preview the routed tscircuit port on localhost:3020"
+run = ["uv run scripts/generate-reference.py", "bun run build", "bun run dev"]
+
+[settings]
+task.run_auto_install = false
+
+[tasks."kicad:setup"]
+description = "Cache and mount KiCad 10.0.7 locally; preserves installed KiCad 9"
+run = "uv run scripts/kicad.py setup"
+
+[tasks."kicad:open"]
+description = "Open the complete native KiCad project in KiCad 10"
+run = "uv run scripts/kicad.py open"
+
+[tasks."kicad:check"]
+description = "Run native ERC/DRC and fail when unresolved errors remain"
+run = "uv run scripts/kicad.py check"
+
+[tasks."kicad:export"]
+description = "Export native schematic PDF, PCB SVGs and netlist for review"
+run = "uv run scripts/kicad.py export"
+
+[tasks."kicad:preview"]
+description = "Serve native KiCad review outputs on localhost:3021"
+run = "uv run --python 3.11 python -m http.server 3021 --bind 127.0.0.1 --directory dist/kicad"
+
+[tasks."bom:refresh"]
+description = "Refresh public JLCPCB catalog identities and availability (no account writes)"
+run = "uv run scripts/refresh-jlc.py"
+
+[tasks."bom:generate"]
+description = "Export native positions and generate matching JLCPCB carrier BOM/CPL"
+run = ["uv run scripts/kicad.py export", "uv run scripts/generate-bom.py"]
+
+[tasks."review:build"]
+description = "Build readable local documentation and hardware-only review bundle"
+run = "uv run scripts/build-review.py"
+
+[tasks."os:build"]
+description = "Try the pinned upstream Luckfox Mini microSD build (requires x86_64 Docker host)"
+run = "bash scripts/build-os.sh"
+
+[tasks."os:remote:status"]
+description = "Read the ShieldSigner build status on Beelink2 container 610"
+run = "bash scripts/os-remote-status.sh"
+
+[tasks."kicad:edit"]
+description = "Apply an explicit JSON layout recipe with backup and edit audit"
+run = "uv run scripts/pcb-edit.py"
+
+[tasks."kicad:fab"]
+description = "Require native checks, then export Gerbers and separate PTH/NPTH drills"
+run = "uv run scripts/kicad.py fabricate"
+
+[tasks."kicad:tools:check"]
+description = "Verify editor acceptance, stale-recipe rejection and bad-placement rollback"
+run = "uv run scripts/verify-pcb-editor.py"
+
+[tasks."dev:source"]
+description = "Preview editable TSX without imported copper on localhost:3022"
+run = "bun run dev:source"

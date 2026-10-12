@@ -1,0 +1,3 @@
+# ShieldSigner contributor guide
+
+Read README.md, KICAD.md and docs/PORT-STATUS.md before changing the board. Use mise tasks; uv owns Python environments. Preserve upstream attribution and local library snapshots. Native KiCad is the reference design; regenerate the experimental tscircuit data after native edits. Run kicad:check for hardware changes; check for tscircuit changes. Preserve documented DNP strap exceptions and do not claim hardware qualification from software checks. Website docs are generated from an explicit allowlist, not edited in duplicate. Run website checks and desktop/mobile UI tests after UI changes. Never commit credentials, Telegram sessions/history, Terraform state, private infrastructure configuration, or OS build caches. PDFs use Git LFS.

@@ -1,0 +1,91 @@
+{
+  "purpose": "Move colliding decorative outlines to assembly layers; retain signal labels and relocate affected reference text",
+  "edits": [
+    {
+      "action": "layer",
+      "uuid": "67d4d063-5610-455c-99c5-5b877e00fbb1",
+      "layer": "F_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "30384d9a-8fa0-40c6-ba15-463690bebb28",
+      "layer": "F_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "0b3d9eb5-b6fb-45a8-b484-b9dcc5d20f19",
+      "layer": "F_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "ad25464a-a145-42ef-8344-4f443c82d882",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "e56f2fd6-2750-4cd8-960a-2752e15049ac",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "7996984e-8870-4a94-bb65-0fa696de1522",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "10504145-bcaf-4e2c-9bbb-6f20ab78a838",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "b76103b1-dbd1-4a36-b6de-d648eb3f8393",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "91001879-b6e7-4e9c-bf0a-47079f13330c",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "26c9223d-632a-4c05-85e7-c0fc43bd2e97",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "8353bdeb-de91-4593-8236-3faabd0ec832",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "text-position",
+      "uuid": "ef0922b9-5e4b-40c1-9eae-631c8a3d3d86",
+      "position": [
+        110.0,
+        77.5
+      ]
+    },
+    {
+      "action": "layer",
+      "uuid": "289138a2-91e0-41d7-96bd-a5d6aa1072ad",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "layer",
+      "uuid": "65ab0466-84c9-4294-ac64-f671d59598e1",
+      "layer": "B_Fab"
+    },
+    {
+      "action": "text-position",
+      "uuid": "7693d6c2-9793-464d-a6c6-24f0428825e0",
+      "position": [
+        99.5,
+        110.9
+      ]
+    },
+    {
+      "action": "layer",
+      "uuid": "061b06a4-a56c-4649-aeb3-9d883925acf2",
+      "layer": "B_Fab"
+    }
+  ]
+}

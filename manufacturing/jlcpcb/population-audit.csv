@@ -1,0 +1,54 @@
+ref,value,footprint,layer,population,lcsc,mpn,manufacturer
+C201,10u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C15850,CL21A106KAYNNNE,Samsung Electro-Mechanics
+C301,100n,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C49678,CC0805KRX7R9BB104,YAGEO
+C302,10u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C15850,CL21A106KAYNNNE,Samsung Electro-Mechanics
+C401,100n,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C49678,CC0805KRX7R9BB104,YAGEO
+C601,100n,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C49678,CC0805KRX7R9BB104,YAGEO
+C602,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C28323,CL21B105KBFNNNE,Samsung Electro-Mechanics
+C603,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C49678,CC0805KRX7R9BB104,YAGEO
+C604,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C49678,CC0805KRX7R9BB104,YAGEO
+C605,33p,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C107115,CC0805JRNPO9BN330,YAGEO
+C606,33p,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB carrier assembly,C107115,CC0805JRNPO9BN330,YAGEO
+D301,SMF5.0CA,Diode_SMD:D_SOD-123F,B.Cu,JLCPCB carrier assembly,C19077498,SMF5.0CA,hongjiacheng
+D302,KT-0805G,LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C2297,KT-0805G,Hubei KENTO Elec
+J301,TYPE-C 6P(073),Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-17,B.Cu,JLCPCB carrier assembly,C668623,TYPE-C 6P(073),SHOU HAN
+J302,Conn_01x02_Pin,Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Vertical,B.Cu,DNP,,,
+J401,62684-402100ALF,Seedsigner-plus-library:AMPHENOL_62684-402100ALF,B.Cu,JLCPCB carrier assembly,C2931360,62684-402100ALF,Amphenol ICC
+J601,7312P0225A13LF,Library:AMPHENOL_7312P0225A13LF_smrt2_combo_handsolder,B.Cu,JLCPCB carrier assembly,C5417011,7312P0225A13LF,Amphenol ICC
+JP201,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,,
+JP202,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,,
+JP203,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,,
+JP204,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,,
+JP205,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,,
+JP206,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,,
+Q401,AO3400A,Package_TO_SOT_SMD:SOT-23,B.Cu,JLCPCB carrier assembly,C20917,AO3400A,Alpha & Omega Semicon
+R301,5K1,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C27834,0805W8F5101T5E,UNI-ROYAL(Uniroyal Elec)
+R302,5K1,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C27834,0805W8F5101T5E,UNI-ROYAL(Uniroyal Elec)
+R303,560R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C28636,0805W8F5600T5E,UNI-ROYAL(Uniroyal Elec)
+R401,330R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17630,0805W8F3300T5E,UNI-ROYAL(Uniroyal Elec)
+R402,33k,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17633,0805W8F3302T5E,UNI-ROYAL(Uniroyal Elec)
+R403,0R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17477,0805W8F0000T5E,UNI-ROYAL(Uniroyal Elec)
+R404,0R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17477,0805W8F0000T5E,UNI-ROYAL(Uniroyal Elec)
+R405,47R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17714,0805W8F470JT5E,UNI-ROYAL(Uniroyal Elec)
+R406,47R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17714,0805W8F470JT5E,UNI-ROYAL(Uniroyal Elec)
+R407,47R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17714,0805W8F470JT5E,UNI-ROYAL(Uniroyal Elec)
+R408,0R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17477,0805W8F0000T5E,UNI-ROYAL(Uniroyal Elec)
+R409,0R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17477,0805W8F0000T5E,UNI-ROYAL(Uniroyal Elec)
+R410,10K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17414,0805W8F1002T5E,UNI-ROYAL(Uniroyal Elec)
+R601,100K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C149504,0805W8F1003T5E,UNI-ROYAL(Uniroyal Elec)
+R602,100R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17408,0805W8F1000T5E,UNI-ROYAL(Uniroyal Elec)
+R603,100R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17408,0805W8F1000T5E,UNI-ROYAL(Uniroyal Elec)
+R604,47R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17714,0805W8F470JT5E,UNI-ROYAL(Uniroyal Elec)
+R605,10K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17414,0805W8F1002T5E,UNI-ROYAL(Uniroyal Elec)
+R606,100K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C149504,0805W8F1003T5E,UNI-ROYAL(Uniroyal Elec)
+R607,10K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB carrier assembly,C17414,0805W8F1002T5E,UNI-ROYAL(Uniroyal Elec)
+SW501,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_extended,F.Cu,JLCPCB carrier assembly,C318938,TS-1101-C-W,XKB Connection
+SW502,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_extended,F.Cu,JLCPCB carrier assembly,C318938,TS-1101-C-W,XKB Connection
+SW503,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_extended,F.Cu,JLCPCB carrier assembly,C318938,TS-1101-C-W,XKB Connection
+SW504,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_extended,F.Cu,JLCPCB carrier assembly,C318938,TS-1101-C-W,XKB Connection
+SW505,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_extended,F.Cu,JLCPCB carrier assembly,C318938,TS-1101-C-W,XKB Connection
+SW506,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_extended,F.Cu,JLCPCB carrier assembly,C318938,TS-1101-C-W,XKB Connection
+SW507,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_extended,F.Cu,JLCPCB carrier assembly,C318938,TS-1101-C-W,XKB Connection
+SW508,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_extended,F.Cu,JLCPCB carrier assembly,C318938,TS-1101-C-W,XKB Connection
+U202,LuckFox_Pico_MINI,Library:LUCKFOX_PICO_MINI_reversed,B.Cu,optional host module,,,
+U601,SEC1210/PV-UR2,Package_DFN_QFN:QFN-24-1EP_5x5mm_P0.65mm_EP3.4x3.4mm,B.Cu,JLCPCB carrier assembly,C633309,SEC1210/PV-UR2,Microchip Tech

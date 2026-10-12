@@ -1,0 +1,73 @@
+{
+  "purpose": "Applied native edits: small placement corrections and switch assembly envelopes; copper switch lands retained",
+  "edits": [
+    {
+      "action": "move",
+      "ref": "C301",
+      "delta": [
+        0,
+        0.15
+      ],
+      "from": [
+        92.23,
+        111.29
+      ]
+    },
+    {
+      "action": "move",
+      "ref": "R607",
+      "delta": [
+        0,
+        0.03
+      ],
+      "from": [
+        129.65,
+        87.31
+      ]
+    },
+    {
+      "action": "move",
+      "ref": "J302",
+      "delta": [
+        -0.5,
+        0
+      ],
+      "from": [
+        85.7504,
+        122.047
+      ]
+    },
+    {
+      "action": "switch-courtyard",
+      "ref": "SW501"
+    },
+    {
+      "action": "switch-courtyard",
+      "ref": "SW502"
+    },
+    {
+      "action": "switch-courtyard",
+      "ref": "SW503"
+    },
+    {
+      "action": "switch-courtyard",
+      "ref": "SW504"
+    },
+    {
+      "action": "switch-courtyard",
+      "ref": "SW505"
+    },
+    {
+      "action": "switch-courtyard",
+      "ref": "SW506"
+    },
+    {
+      "action": "switch-courtyard",
+      "ref": "SW507"
+    },
+    {
+      "action": "switch-courtyard",
+      "ref": "SW508"
+    }
+  ]
+}

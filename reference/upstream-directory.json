@@ -1,0 +1,242 @@
+[
+  {
+    "name": "Footprints",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Footprints",
+    "sha": "06dd47e9801425ed22e88add0819261e77c468c3",
+    "size": 0,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Footprints?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Footprints",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/trees/06dd47e9801425ed22e88add0819261e77c468c3",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Footprints?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/trees/06dd47e9801425ed22e88add0819261e77c468c3",
+      "html": "https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Footprints"
+    }
+  },
+  {
+    "name": "Library.pretty",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Library.pretty",
+    "sha": "cc080fe524c1b3db0124a57343227239e126893f",
+    "size": 0,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Library.pretty?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Library.pretty",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/trees/cc080fe524c1b3db0124a57343227239e126893f",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Library.pretty?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/trees/cc080fe524c1b3db0124a57343227239e126893f",
+      "html": "https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Library.pretty"
+    }
+  },
+  {
+    "name": "Power.kicad_sch",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Power.kicad_sch",
+    "sha": "cce77c3a2d839f3f350e64e930d4a3c737d9729c",
+    "size": 59118,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Power.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Power.kicad_sch",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/cce77c3a2d839f3f350e64e930d4a3c737d9729c",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Power.kicad_sch",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Power.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/cce77c3a2d839f3f350e64e930d4a3c737d9729c",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/Power.kicad_sch"
+    }
+  },
+  {
+    "name": "SeedSigner-Plus-smartcard-pico.kicad_pcb",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pcb",
+    "sha": "d0476c0640823b3d33995c5d15b3db5dc21070fa",
+    "size": 808774,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pcb?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pcb",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/d0476c0640823b3d33995c5d15b3db5dc21070fa",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pcb",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pcb?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/d0476c0640823b3d33995c5d15b3db5dc21070fa",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pcb"
+    }
+  },
+  {
+    "name": "SeedSigner-Plus-smartcard-pico.kicad_pro",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pro",
+    "sha": "e690f46a7c58bcaeb1a55c6de5a0efaa9c0cd006",
+    "size": 17520,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pro?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pro",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/e690f46a7c58bcaeb1a55c6de5a0efaa9c0cd006",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pro",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pro?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/e690f46a7c58bcaeb1a55c6de5a0efaa9c0cd006",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_pro"
+    }
+  },
+  {
+    "name": "SeedSigner-Plus-smartcard-pico.kicad_sch",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_sch",
+    "sha": "e9d767dd2b30c1fbb582862d6b3a047643860299",
+    "size": 4215,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_sch",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/e9d767dd2b30c1fbb582862d6b3a047643860299",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_sch",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/e9d767dd2b30c1fbb582862d6b3a047643860299",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/SeedSigner-Plus-smartcard-pico.kicad_sch"
+    }
+  },
+  {
+    "name": "buttons.kicad_sch",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/buttons.kicad_sch",
+    "sha": "8373db5d410ae8b619233ef522dbc4220fe3ea6c",
+    "size": 32056,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/buttons.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/buttons.kicad_sch",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/8373db5d410ae8b619233ef522dbc4220fe3ea6c",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/buttons.kicad_sch",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/buttons.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/8373db5d410ae8b619233ef522dbc4220fe3ea6c",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/buttons.kicad_sch"
+    }
+  },
+  {
+    "name": "example-phohotos.jpg",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/example-phohotos.jpg",
+    "sha": "4840bbc30033b93210a8b7c497fe7c32313cd932",
+    "size": 3456557,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/example-phohotos.jpg?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/example-phohotos.jpg",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/4840bbc30033b93210a8b7c497fe7c32313cd932",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/example-phohotos.jpg",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/example-phohotos.jpg?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/4840bbc30033b93210a8b7c497fe7c32313cd932",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/example-phohotos.jpg"
+    }
+  },
+  {
+    "name": "fp-lib-table",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/fp-lib-table",
+    "sha": "2eda97b823ffa4d52d6483d13373ad2c3b11e4f8",
+    "size": 268,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/fp-lib-table?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/fp-lib-table",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/2eda97b823ffa4d52d6483d13373ad2c3b11e4f8",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/fp-lib-table",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/fp-lib-table?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/2eda97b823ffa4d52d6483d13373ad2c3b11e4f8",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/fp-lib-table"
+    }
+  },
+  {
+    "name": "jlcpcb",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/jlcpcb",
+    "sha": "c8bd13f512c5fd911f641764a30edd4ffa7a91ca",
+    "size": 0,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/jlcpcb?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/jlcpcb",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/trees/c8bd13f512c5fd911f641764a30edd4ffa7a91ca",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/jlcpcb?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/trees/c8bd13f512c5fd911f641764a30edd4ffa7a91ca",
+      "html": "https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/jlcpcb"
+    }
+  },
+  {
+    "name": "readme.md",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/readme.md",
+    "sha": "ee021f5d445ca57b2eb0b67760eb84898eeebedf",
+    "size": 7398,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/readme.md?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/readme.md",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/ee021f5d445ca57b2eb0b67760eb84898eeebedf",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/readme.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/readme.md?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/ee021f5d445ca57b2eb0b67760eb84898eeebedf",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/readme.md"
+    }
+  },
+  {
+    "name": "rpi_interface.kicad_sch",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/rpi_interface.kicad_sch",
+    "sha": "203944e998e7038926f41d451578b61f8d2c4773",
+    "size": 99078,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/rpi_interface.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/rpi_interface.kicad_sch",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/203944e998e7038926f41d451578b61f8d2c4773",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/rpi_interface.kicad_sch",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/rpi_interface.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/203944e998e7038926f41d451578b61f8d2c4773",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/rpi_interface.kicad_sch"
+    }
+  },
+  {
+    "name": "screen.kicad_sch",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/screen.kicad_sch",
+    "sha": "ecc4eea65214af5bded7021db45afd7da5bcf83b",
+    "size": 83236,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/screen.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/screen.kicad_sch",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/ecc4eea65214af5bded7021db45afd7da5bcf83b",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/screen.kicad_sch",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/screen.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/ecc4eea65214af5bded7021db45afd7da5bcf83b",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/screen.kicad_sch"
+    }
+  },
+  {
+    "name": "smartcard_reader.kicad_sch",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/smartcard_reader.kicad_sch",
+    "sha": "8b34916fdb6fbb5586aaedb3709664a619cfffdd",
+    "size": 84408,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/smartcard_reader.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/smartcard_reader.kicad_sch",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/8b34916fdb6fbb5586aaedb3709664a619cfffdd",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/smartcard_reader.kicad_sch",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/smartcard_reader.kicad_sch?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/8b34916fdb6fbb5586aaedb3709664a619cfffdd",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/smartcard_reader.kicad_sch"
+    }
+  },
+  {
+    "name": "sym-lib-table",
+    "path": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/sym-lib-table",
+    "sha": "277c1a19da6eb0ce720e4fc486f52dcab36e7dfb",
+    "size": 172,
+    "url": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/sym-lib-table?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "html_url": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/sym-lib-table",
+    "git_url": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/277c1a19da6eb0ce720e4fc486f52dcab36e7dfb",
+    "download_url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/sym-lib-table",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/3rdIteration/seedsigner/contents/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/sym-lib-table?ref=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "git": "https://api.github.com/repos/3rdIteration/seedsigner/git/blobs/277c1a19da6eb0ce720e4fc486f52dcab36e7dfb",
+      "html": "https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/sym-lib-table"
+    }
+  }
+]

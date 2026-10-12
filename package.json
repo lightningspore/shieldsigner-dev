@@ -1,0 +1,22 @@
+{
+  "name": "shieldsigner-luckfox-plus",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "uv run scripts/generate-reference.py",
+    "build": "bun scripts/build.tsx",
+    "check": "bun scripts/check.tsx",
+    "dev": "bun scripts/dev.ts",
+    "dev:source": "tsci dev src/index.tsx --port 3022"
+  },
+  "dependencies": {
+    "@tscircuit/core": "0.0.2130",
+    "@tscircuit/cli": "0.1.2298",
+    "circuit-to-svg": "0.0.447"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.2",
+    "typescript": "5.9.3"
+  }
+}

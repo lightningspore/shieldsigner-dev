@@ -1,0 +1,15 @@
+{
+  "repository": "https://github.com/3rdIteration/seedsigner",
+  "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+  "directory": "electronics/SeedSigner-Plus-smartcard-luckfoxpicozero/",
+  "files": [
+    "SeedSigner-Plus-smartcard-pico.kicad_pcb",
+    "SeedSigner-Plus-smartcard-pico.kicad_sch",
+    "Power.kicad_sch",
+    "buttons.kicad_sch",
+    "rpi_interface.kicad_sch",
+    "screen.kicad_sch",
+    "smartcard_reader.kicad_sch",
+    "readme.md"
+  ]
+}

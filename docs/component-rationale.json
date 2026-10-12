@@ -1,0 +1,320 @@
+{
+  "U202": {
+    "role": "Linux host module",
+    "works": "Runs the signer application and firmware, drives SPI display and GPIO inputs, and communicates with the smartcard bridge over UART. The module supplies the carrier 3.3 V rail from its 3V3(OUT) pin.",
+    "why": "The inherited Pico Mini interface combines Linux, camera CSI and the required digital interfaces on a small module. Mini A/B storage choice determines the firmware image; the carrier is not a discrete RV1103 design.",
+    "use": "Feed pin 1 with 5 V; pin 3 is a 3.3 V output, not a second power input. Mount microSD side upward and USB end toward the board edge. Camera plugs directly into the module. Leave the 1.8 V output unconnected. See the host pin table and module/version caveats in HARDWARE.md."
+  },
+  "U601": {
+    "role": "UART-to-smartcard bridge",
+    "works": "Converts host UART traffic into smartcard clock, reset, power, detection and bidirectional data transactions. Uses one card channel; USB and the second card channel are unused here.",
+    "why": "SEC1210 provides the card protocol/timing and voltage interface that a GPIO UART alone cannot provide. The upstream firmware supports this UART bridge. The exact preprogrammed suffix matters; a similarly named blank or differently configured device is not an established substitute.",
+    "use": "5 V enters pin 3; pin 18 has its own VDD33 decoupler. Host TX goes to RXD pin 11 and host RX comes from TXD pin 14. Use the upstream compatible reader driver and disable a competing serial console. The smartcard, not this bridge, provides Satochip/SeedKeeper key storage."
+  },
+  "J601": {
+    "role": "Smartcard socket",
+    "works": "Makes physical contact with the card; the normally-open presence switch connects the detect net to ground when actuated. It does not implement encryption or a protocol.",
+    "why": "The inherited Amphenol socket matches the footprint and enclosure, includes detection and has eight card contacts. The upstream README describes full-size/SIM support; verify the actual mechanics before assuming any small card fits without an adapter.",
+    "use": "C1 is switched card VCC, C2 reset, C3 clock, C5 ground, C7 I/O; C6 is also tied to card VCC in this design. C4/C8 are unconnected at the socket. Use a compatible card and the upstream insertion orientation. Do not treat this as an SD-card connector."
+  },
+  "J401": {
+    "role": "LCD FPC connector",
+    "works": "Routes power, SPI control and backlight connections into the external 2.8-inch ST7789 display; the connector itself is not a display controller.",
+    "why": "The inherited 40-position 0.5 mm Amphenol connector matches the reference LCD cable and physical layout. An arbitrary 40-pin LCD can have a different pinout, contact face, voltage or LED current requirement.",
+    "use": "Fit the exact compatible module and confirm cable contact orientation. Pins 9/10/11/13/15 carry CS/clock/DC/MOSI/reset. Parallel-data and touch pins are unused. Pins 38\u201340 set interface mode. Read the pinout discrepancy in HARDWARE.md before inserting a cable."
+  },
+  "J301": {
+    "role": "USB-C power input",
+    "works": "Brings VBUS onto +5V and grounds onto GND. CC pull-down resistors tell a USB-C source that a sink is attached.",
+    "why": "A power-only connector provides a compact 5 V input. It does not provide USB data, charging, or negotiated higher-voltage USB PD.",
+    "use": "Use a regulated 5 V USB supply. Its shield lands are grounded. Inspect all duplicated VBUS/GND contacts. The host module has a separate USB connector: this design has no demonstrated isolation for powering both at once."
+  },
+  "J302": {
+    "role": "Optional direct 5 V input header",
+    "works": "Provides +5V and ground as an alternate physical supply connection.",
+    "why": "A two-pin header is convenient on a bench, but the upstream default leaves it unpopulated. There is no regulator or battery charger on this input.",
+    "use": "DNP by default. If deliberately fitted, pin 1 is regulated 5 V and pin 2 ground. Do not apply a raw battery or a higher supply voltage; do not assume multiple power inputs are isolated."
+  },
+  "D301": {
+    "role": "5 V rail transient clamp",
+    "works": "A TVS across +5V and ground shunts transient current when its breakdown threshold is exceeded.",
+    "why": "The source specifies SMF5.0CA for transient protection. The 5.0 in its name does not mean the rail is tightly regulated or clamped to exactly 5 V.",
+    "use": "Keep its ground/current-return path short. This does not replace current limiting, reverse-polarity protection or a regulator. Confirm the fitted supplier part and clamp characteristics against the actual supply/load requirements."
+  },
+  "D302": {
+    "role": "Power indicator",
+    "works": "Conducts from +5V through the LED and R303 to ground, producing a visible power indication.",
+    "why": "A simple LED offers a direct check that the supply rail is present. LED colour, forward voltage and brightness must come from the actual supplier part; the generic value alone does not specify them.",
+    "use": "Respect polarity: pad 2 is the anode on +5V; pad 1 is the cathode feeding R303. A lit LED does not prove that Linux booted or that the 3.3 V/card rails are correct."
+  },
+  "R301": {
+    "role": "USB-C CC sink pull-down",
+    "works": "Each 5.1 k\u03a9 resistor connects one CC pin to ground. Separate resistors allow either plug orientation to advertise a sink.",
+    "why": "5.1 k\u03a9 is the conventional USB-C Rd value. Two independent pull-downs are required; connecting CC1 and CC2 together is not equivalent.",
+    "use": "R301 serves CC2 and R302 serves CC1. These are not series power resistors. If C-to-C power is absent, check both CC paths and soldering before changing firmware."
+  },
+  "R302": {
+    "role": "USB-C CC sink pull-down",
+    "works": "Each 5.1 k\u03a9 resistor connects one CC pin to ground. Separate resistors allow either plug orientation to advertise a sink.",
+    "why": "5.1 k\u03a9 is the conventional USB-C Rd value. Two independent pull-downs are required; connecting CC1 and CC2 together is not equivalent.",
+    "use": "R301 serves CC2 and R302 serves CC1. These are not series power resistors. If C-to-C power is absent, check both CC paths and soldering before changing firmware."
+  },
+  "R303": {
+    "role": "Power LED current limiter",
+    "works": "Limits the current through D302; approximately I=(5 V minus LED forward voltage)/560 \u03a9.",
+    "why": "560 \u03a9 is inherited and gives a modest indicator current for typical LEDs. For example, a 2 V LED drop gives about 5.4 mA; that is an estimate, not a measured current.",
+    "use": "Keep it in series with D302. Do not bridge it. Changing its resistance changes brightness and LED power."
+  },
+  "C201": {
+    "role": "5 V bulk decoupling",
+    "works": "A 10 \u00b5F capacitor between +5V and ground provides local charge for load transients; it cannot sustain a long power interruption.",
+    "why": "The source uses bulk storage at the host interface and power entry, complementing smaller high-frequency decouplers. Effective capacitance depends on dielectric, package and DC bias.",
+    "use": "C201 is associated with the host interface; C302 with power entry. Match the upstream supplier selection or qualify voltage rating, dielectric and effective capacitance; value alone is insufficient."
+  },
+  "C302": {
+    "role": "5 V bulk decoupling",
+    "works": "A 10 \u00b5F capacitor between +5V and ground provides local charge for load transients; it cannot sustain a long power interruption.",
+    "why": "The source uses bulk storage at the host interface and power entry, complementing smaller high-frequency decouplers. Effective capacitance depends on dielectric, package and DC bias.",
+    "use": "C201 is associated with the host interface; C302 with power entry. Match the upstream supplier selection or qualify voltage rating, dielectric and effective capacitance; value alone is insufficient."
+  },
+  "C301": {
+    "role": "5 V high-frequency decoupling",
+    "works": "A 100 nF capacitor shunts high-frequency rail noise to ground near the power block.",
+    "why": "Small ceramic decoupling complements the 10 \u00b5F bulk capacitor by providing a short high-frequency current loop. The value is inherited, not newly optimized.",
+    "use": "Populate alongside C302. Preserve the local rail/ground layout rather than moving it to a distant location."
+  },
+  "C401": {
+    "role": "LCD logic-supply decoupling",
+    "works": "A 100 nF capacitor from +3.3V to ground provides a local high-frequency current path for the LCD interface.",
+    "why": "The LCD logic rail benefits from local decoupling. The source chose 100 nF; retain appropriate voltage rating and ceramic dielectric.",
+    "use": "Keep near J401 and the supply-return path. It is not the backlight current-setting element."
+  },
+  "Q401": {
+    "role": "Low-side LCD backlight switch",
+    "works": "An N-channel MOSFET sinks current from three LCD LED-cathode resistor branches to ground. R401 drives the gate; R402 pulls it low when undriven.",
+    "why": "A MOSFET lets a logic control switch or PWM LED current without passing that current through the GPIO. The source generic symbol is not a purchase specification: supplier C20917 must be checked for actual device, pinout and conduction at a 3.3 V gate drive.",
+    "use": "Gate pad 1, source pad 2 to ground, drain pad 3 to backlight resistors. Default JP201 holds its control high for always-on light. PWM requires the compatible jumper and firmware configuration."
+  },
+  "R401": {
+    "role": "Backlight MOSFET gate series resistor",
+    "works": "330 \u03a9 is in series between RPI_BACKLIGHT and Q401 gate, limiting gate charging current and reducing edge ringing.",
+    "why": "The value is an inherited compromise between transition speed and drive current. It does not set steady-state LED current.",
+    "use": "Use together with R402. Trace the default jumper source before assuming RPI_BACKLIGHT is an active GPIO PWM signal."
+  },
+  "R402": {
+    "role": "Backlight gate pull-down",
+    "works": "33 k\u03a9 pulls Q401 gate to ground when the driving signal is floating, favouring an off state.",
+    "why": "A weak pull-down defines startup behaviour without heavily loading a driven high signal. This exact value is inherited.",
+    "use": "Populate from gate net to GND. A missing or wrong-value part may leave the backlight state undefined when the control is disconnected."
+  },
+  "R405": {
+    "role": "Individual backlight current limiter",
+    "works": "Each 47 \u03a9 resistor sits between one LED cathode and Q401 drain. Separate resistors limit the current in individual LED branches.",
+    "why": "This simple resistor arrangement is inherited for the reference LCD; it is not a constant-current driver. Current depends on LED forward voltage, 3.3 V rail and MOSFET drop.",
+    "use": "R405 serves LCD pad 36, R406 pad 35, R407 pad 34. Do not parallel the resistors into one branch or bypass them. Recalculate and measure currents when changing the LCD."
+  },
+  "R406": {
+    "role": "Individual backlight current limiter",
+    "works": "Each 47 \u03a9 resistor sits between one LED cathode and Q401 drain. Separate resistors limit the current in individual LED branches.",
+    "why": "This simple resistor arrangement is inherited for the reference LCD; it is not a constant-current driver. Current depends on LED forward voltage, 3.3 V rail and MOSFET drop.",
+    "use": "R405 serves LCD pad 36, R406 pad 35, R407 pad 34. Do not parallel the resistors into one branch or bypass them. Recalculate and measure currents when changing the LCD."
+  },
+  "R407": {
+    "role": "Individual backlight current limiter",
+    "works": "Each 47 \u03a9 resistor sits between one LED cathode and Q401 drain. Separate resistors limit the current in individual LED branches.",
+    "why": "This simple resistor arrangement is inherited for the reference LCD; it is not a constant-current driver. Current depends on LED forward voltage, 3.3 V rail and MOSFET drop.",
+    "use": "R405 serves LCD pad 36, R406 pad 35, R407 pad 34. Do not parallel the resistors into one branch or bypass them. Recalculate and measure currents when changing the LCD."
+  },
+  "R403": {
+    "role": "LCD IM1 mode strap",
+    "works": "These alternative 0 \u03a9 links connect J401 pad 39 to either +3.3V (R403) or ground (R404).",
+    "why": "A resistor strap allows manufacturing-time mode selection with the same PCB. The reference SPI mode requires IM1=1.",
+    "use": "Fit R403; leave R404 DNP. Fitting both directly shorts 3.3 V to ground. These are assembly alternatives, not two operating resistors that should both be purchased and fitted."
+  },
+  "R404": {
+    "role": "LCD IM1 mode strap",
+    "works": "These alternative 0 \u03a9 links connect J401 pad 39 to either +3.3V (R403) or ground (R404).",
+    "why": "A resistor strap allows manufacturing-time mode selection with the same PCB. The reference SPI mode requires IM1=1.",
+    "use": "Fit R403; leave R404 DNP. Fitting both directly shorts 3.3 V to ground. These are assembly alternatives, not two operating resistors that should both be purchased and fitted."
+  },
+  "R408": {
+    "role": "LCD IM0 mode strap",
+    "works": "These alternative 0 \u03a9 links connect J401 pad 38 to either +3.3V (R408) or ground (R409).",
+    "why": "The reference 4-line SPI configuration needs IM0=0, while alternative links allow another module mode without routing changes.",
+    "use": "Leave R408 DNP; fit R409. Fitting both shorts 3.3 V to ground. J401 pad 40 (IM2) is already high, giving IM2/IM1/IM0 = 1/1/0."
+  },
+  "R409": {
+    "role": "LCD IM0 mode strap",
+    "works": "These alternative 0 \u03a9 links connect J401 pad 38 to either +3.3V (R408) or ground (R409).",
+    "why": "The reference 4-line SPI configuration needs IM0=0, while alternative links allow another module mode without routing changes.",
+    "use": "Leave R408 DNP; fit R409. Fitting both shorts 3.3 V to ground. J401 pad 40 (IM2) is already high, giving IM2/IM1/IM0 = 1/1/0."
+  },
+  "R410": {
+    "role": "Unused LCD read-strobe pull-up",
+    "works": "10 k\u03a9 pulls J401 pad 12 (RDX in the schematic note) to +3.3V.",
+    "why": "In this SPI configuration the parallel read strobe is not used. A defined high level prevents an otherwise floating control input; retain the reference module mapping.",
+    "use": "Populate; it is not a MOSI or MISO termination resistor. Confirm pad numbering against the actual display cable."
+  },
+  "C601": {
+    "role": "SEC1210 reset startup network",
+    "works": "R601 (100 k\u03a9) pulls the reset net up to +5V and C601 (100 nF) initially holds it near ground. Their nominal RC time constant is 10 ms.",
+    "why": "The network biases active-low RESET_N and slows its release after power rises. The actual reset threshold, internal bias, rail ramp and permitted edge timing still require datasheet review; 10 ms is not a guaranteed reset pulse duration.",
+    "use": "Preserve the reset net on U601 pin 22. If the bridge fails to start, measure this waveform rather than assuming the RC alone guarantees a compliant reset."
+  },
+  "R601": {
+    "role": "SEC1210 reset startup network",
+    "works": "R601 (100 k\u03a9) pulls the reset net up to +5V and C601 (100 nF) initially holds it near ground. Their nominal RC time constant is 10 ms.",
+    "why": "The network biases active-low RESET_N and slows its release after power rises. The actual reset threshold, internal bias, rail ramp and permitted edge timing still require datasheet review; 10 ms is not a guaranteed reset pulse duration.",
+    "use": "Preserve the reset net on U601 pin 22. If the bridge fails to start, measure this waveform rather than assuming the RC alone guarantees a compliant reset."
+  },
+  "C602": {
+    "role": "SEC1210 input-rail decoupling",
+    "works": "1 \u00b5F from +5V to ground supplies local transient current for the bridge.",
+    "why": "The input-side local capacitor is inherited and supports the reader load near U601. It complements the board bulk capacitors.",
+    "use": "Keep its connection loop short. Check effective capacitance and voltage rating when substituting parts."
+  },
+  "C603": {
+    "role": "SEC1210 VDD33 decoupling",
+    "works": "The native variant uses 1 \u00b5F on the separate SEC1210_VDD33 output at U601 pin 18; upstream used 100 nF. This decouples the bridge internal regulator output, which is distinct from carrier +3.3V.",
+    "why": "Microchip DS00001561D table 6-4 note 6-3 calls for an external 1 \u00b5F at this node. The variant follows that requirement; check the selected ceramic capacitor retains sufficient effective capacitance at its DC operating voltage.",
+    "use": "Preserve the separate net and capacitor. Do not tie this node to Luckfox pin 3 just because both are described as 3.3 V."
+  },
+  "C604": {
+    "role": "Switched smartcard supply decoupling",
+    "works": "The native variant uses 1 \u00b5F from SEC1210_SC_VCC to ground at the active card supply output; upstream used 100 nF.",
+    "why": "Microchip DS00001561D table 6-4 note 6-2 calls for an external 1 \u00b5F at the card supply output. The variant aligns the nominal value with that requirement; capacitance under bias still needs qualification.",
+    "use": "Connect to the switched card supply, not +5V. Observe with a card inserted and an activation command; zero volts while inactive need not be a fault."
+  },
+  "C605": {
+    "role": "Card reset high-frequency shunt",
+    "works": "33 pF from card reset to ground loads very fast edges and noise. R605 also biases this line low.",
+    "why": "A small shunt is consistent with signal conditioning on the external card interface. This is an inferred role; no value-selection calculation was found in the source.",
+    "use": "Preserve placement and value. Increasing it arbitrarily can degrade required card reset transitions."
+  },
+  "C606": {
+    "role": "Card clock high-frequency shunt",
+    "works": "33 pF from the post-R604 card clock net to ground combines with the 47 \u03a9 series resistor to soften very fast edges.",
+    "why": "Signal conditioning can reduce ringing on the socket clock line. The simple R\u00d7C product is about 1.55 ns, but driver, trace and card capacitance determine the actual response.",
+    "use": "Keep on the socket side of R604. Do not treat it as a clock-generation capacitor or add a crystal to this net."
+  },
+  "R602": {
+    "role": "Host UART series damping",
+    "works": "Each 100 \u03a9 resistor is in series in a host/bridge UART path, moderating edge current and ringing.",
+    "why": "The bridge and host use compatible digital UART paths in the reference design. A series resistor is not a voltage-level translator. Exact values are inherited.",
+    "use": "R602 carries host TX to U601 RXD pin 11; R603 carries U601 TXD pin 14 to host RX. No RTS/CTS are routed. Verify baud rate, console conflicts and voltage compatibility before changing the circuit."
+  },
+  "R603": {
+    "role": "Host UART series damping",
+    "works": "Each 100 \u03a9 resistor is in series in a host/bridge UART path, moderating edge current and ringing.",
+    "why": "The bridge and host use compatible digital UART paths in the reference design. A series resistor is not a voltage-level translator. Exact values are inherited.",
+    "use": "R602 carries host TX to U601 RXD pin 11; R603 carries U601 TXD pin 14 to host RX. No RTS/CTS are routed. Verify baud rate, console conflicts and voltage compatibility before changing the circuit."
+  },
+  "R604": {
+    "role": "Card clock series damping",
+    "works": "47 \u03a9 is in series between U601 SC1_CLK and the card clock net at J601 C3.",
+    "why": "The external card clock path benefits from edge conditioning. Source values and geometry are retained; no signal-integrity simulation has been performed for the port.",
+    "use": "Keep near its intended source/route and preserve C606 on the post-resistor net. It does not divide the clock frequency."
+  },
+  "R605": {
+    "role": "Card reset pull-down",
+    "works": "10 k\u03a9 from SEC1210_SC_RST to ground biases the card reset line low when undriven.",
+    "why": "A low default is consistent with inactive/reset card behaviour. This exact strength is inherited, not a newly proven optimum.",
+    "use": "This is J601 card reset, not the separate U601 chip reset net serviced by R601/C601."
+  },
+  "R606": {
+    "role": "Card I/O weak pull-down",
+    "works": "100 k\u03a9 from the bidirectional card I/O net to ground provides a weak low bias when otherwise undriven.",
+    "why": "The source includes this bias. It is not a UART receive pull-up or a level shifter; card line behaviour depends on the SEC1210 driver and card.",
+    "use": "Preserve at J601 C7/U601 pin 6. Avoid replacing it with a much stronger pull-down, which would load the active card bus."
+  },
+  "R607": {
+    "role": "SEC1210 test-mode bias",
+    "works": "10 k\u03a9 pulls U601 TEST pin 15 to ground.",
+    "why": "A defined low on the test pin supports normal operation rather than an unintended test mode. Other boot/debug settings remain dependent on the exact device and firmware.",
+    "use": "Populate and keep this net low for the reference build. Do not use TEST as an application GPIO without reviewing startup mode selection."
+  },
+  "SW501": {
+    "role": "JoystickLeft input switch",
+    "works": "Pressing the normally-open switch connects its input net to ground. With a pull-up configured, the GPIO reads high when released and low when pressed.",
+    "why": "The inherited tactile switch footprint and supplier selection match the handheld button positions. The five joystick functions are separate switches, not an analog joystick.",
+    "use": "Connect pad 1 to JoystickLeft and pad 2 to ground. There are no external pull-up resistors in this button block: firmware must configure appropriate pulls and debounce. A floating or stuck input can be a pinmux/pull issue, not a missing series resistor."
+  },
+  "SW502": {
+    "role": "JoystickUp input switch",
+    "works": "Pressing the normally-open switch connects its input net to ground. With a pull-up configured, the GPIO reads high when released and low when pressed.",
+    "why": "The inherited tactile switch footprint and supplier selection match the handheld button positions. The five joystick functions are separate switches, not an analog joystick.",
+    "use": "Connect pad 1 to JoystickUp and pad 2 to ground. There are no external pull-up resistors in this button block: firmware must configure appropriate pulls and debounce. A floating or stuck input can be a pinmux/pull issue, not a missing series resistor."
+  },
+  "SW503": {
+    "role": "JoystickPress input switch",
+    "works": "Pressing the normally-open switch connects its input net to ground. With a pull-up configured, the GPIO reads high when released and low when pressed.",
+    "why": "The inherited tactile switch footprint and supplier selection match the handheld button positions. The five joystick functions are separate switches, not an analog joystick.",
+    "use": "Connect pad 1 to JoystickPress and pad 2 to ground. There are no external pull-up resistors in this button block: firmware must configure appropriate pulls and debounce. A floating or stuck input can be a pinmux/pull issue, not a missing series resistor."
+  },
+  "SW504": {
+    "role": "JoystickDown input switch",
+    "works": "Pressing the normally-open switch connects its input net to ground. With a pull-up configured, the GPIO reads high when released and low when pressed.",
+    "why": "The inherited tactile switch footprint and supplier selection match the handheld button positions. The five joystick functions are separate switches, not an analog joystick.",
+    "use": "Connect pad 1 to JoystickDown and pad 2 to ground. There are no external pull-up resistors in this button block: firmware must configure appropriate pulls and debounce. A floating or stuck input can be a pinmux/pull issue, not a missing series resistor."
+  },
+  "SW505": {
+    "role": "JoystickRight input switch",
+    "works": "Pressing the normally-open switch connects its input net to ground. With a pull-up configured, the GPIO reads high when released and low when pressed.",
+    "why": "The inherited tactile switch footprint and supplier selection match the handheld button positions. The five joystick functions are separate switches, not an analog joystick.",
+    "use": "Connect pad 1 to JoystickRight and pad 2 to ground. There are no external pull-up resistors in this button block: firmware must configure appropriate pulls and debounce. A floating or stuck input can be a pinmux/pull issue, not a missing series resistor."
+  },
+  "SW506": {
+    "role": "Key1 input switch",
+    "works": "Pressing the normally-open switch connects its input net to ground. With a pull-up configured, the GPIO reads high when released and low when pressed.",
+    "why": "The inherited tactile switch footprint and supplier selection match the handheld button positions. The five joystick functions are separate switches, not an analog joystick.",
+    "use": "Connect pad 1 to Key1 and pad 2 to ground. There are no external pull-up resistors in this button block: firmware must configure appropriate pulls and debounce. A floating or stuck input can be a pinmux/pull issue, not a missing series resistor."
+  },
+  "SW507": {
+    "role": "Key2 input switch",
+    "works": "Pressing the normally-open switch connects its input net to ground. With a pull-up configured, the GPIO reads high when released and low when pressed.",
+    "why": "The inherited tactile switch footprint and supplier selection match the handheld button positions. The five joystick functions are separate switches, not an analog joystick.",
+    "use": "Connect pad 1 to Key2 and pad 2 to ground. There are no external pull-up resistors in this button block: firmware must configure appropriate pulls and debounce. A floating or stuck input can be a pinmux/pull issue, not a missing series resistor."
+  },
+  "SW508": {
+    "role": "Key3 input switch",
+    "works": "Pressing the normally-open switch connects its input net to ground. With a pull-up configured, the GPIO reads high when released and low when pressed.",
+    "why": "The inherited tactile switch footprint and supplier selection match the handheld button positions. The five joystick functions are separate switches, not an analog joystick.",
+    "use": "Connect pad 1 to Key3 and pad 2 to ground. There are no external pull-up resistors in this button block: firmware must configure appropriate pulls and debounce. A floating or stuck input can be a pinmux/pull issue, not a missing series resistor."
+  },
+  "JP201": {
+    "role": "Default backlight source",
+    "works": "Bridges +3.3V to RPI_BACKLIGHT.",
+    "why": "The upstream schematic uses paired solder jumpers to reuse display-interface signals for different hat configurations. They are physical configuration choices, not fitted resistors.",
+    "use": "Closed by default; JP202 open. Gives always-on backlight through Q401. Never bridge both members of a pair. See HARDWARE.md for the missing logical bridge representation and source discrepancy."
+  },
+  "JP202": {
+    "role": "Alternative backlight source",
+    "works": "Can bridge MCU_BACKLIGHT to RPI_BACKLIGHT.",
+    "why": "The upstream schematic uses paired solder jumpers to reuse display-interface signals for different hat configurations. They are physical configuration choices, not fitted resistors.",
+    "use": "Open by default. For an intentional PWM alternative, open JP201/JP203/JP205 and close JP202/JP204/JP206: U202 pin 6 then reaches backlight control while LCD CS is grounded. Requires firmware that configures that pin for PWM and supports permanently asserted display CS. MCU_BACKLIGHT has no direct module pad; its connection is through the selected jumpers. Never bridge both members of a pair."
+  },
+  "JP203": {
+    "role": "Default module pin-6 function",
+    "works": "Bridges MCU_SPI_CS to Net-(JP203-B), which reaches U202 pin 6.",
+    "why": "The upstream schematic uses paired solder jumpers to reuse display-interface signals for different hat configurations. They are physical configuration choices, not fitted resistors.",
+    "use": "Closed by default; JP204 open. This selects the intended CS path in the inherited interface. Never bridge both members of a pair. See HARDWARE.md for the missing logical bridge representation and source discrepancy."
+  },
+  "JP204": {
+    "role": "Alternative module pin-6 function",
+    "works": "Can bridge MCU_BACKLIGHT to the U202 pin-6 node.",
+    "why": "The upstream schematic uses paired solder jumpers to reuse display-interface signals for different hat configurations. They are physical configuration choices, not fitted resistors.",
+    "use": "Open by default; JP203 closed. In the alternative configuration this connects U202 pin 6 to MCU_BACKLIGHT, which reaches Q401 through closed JP202. The default uses closed JP203 instead to reach MCU_SPI_CS. Never bridge both members of a pair."
+  },
+  "JP205": {
+    "role": "Default LCD chip-select source",
+    "works": "Bridges MCU_SPI_CS to RPI_SPI_CS at J401 pin 9.",
+    "why": "The upstream schematic uses paired solder jumpers to reuse display-interface signals for different hat configurations. They are physical configuration choices, not fitted resistors.",
+    "use": "Closed by default; JP206 open. Important: the PCB includes both ends as pads, but closed solder bridges are not native copper/net connections in this port. Never bridge both members of a pair. See HARDWARE.md for the missing logical bridge representation and source discrepancy."
+  },
+  "JP206": {
+    "role": "Alternative permanent LCD select",
+    "works": "Can bridge GND to RPI_SPI_CS, holding LCD CS low.",
+    "why": "The upstream schematic uses paired solder jumpers to reuse display-interface signals for different hat configurations. They are physical configuration choices, not fitted resistors.",
+    "use": "Open by default. Closing may be usable with the reference firmware mode, but changes bus-sharing and display-driver requirements; never close simultaneously with JP205. Never bridge both members of a pair. See HARDWARE.md for the missing logical bridge representation and source discrepancy."
+  }
+}

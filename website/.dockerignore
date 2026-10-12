@@ -1,0 +1,12 @@
+*
+!Dockerfile
+!pyproject.toml
+!uv.lock
+!manage.py
+!siteconfig/**
+!knowledge/**
+!templates/**
+!static/**
+!content/**
+!public/**
+**/__pycache__

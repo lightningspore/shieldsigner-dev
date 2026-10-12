@@ -1,0 +1,47 @@
+{
+  "edits": [
+    {
+      "action": "footprint-id",
+      "ref": "SW501",
+      "value": "ShieldSigner:XKB_TS1101_C_W_extended"
+    },
+    {
+      "action": "footprint-id",
+      "ref": "SW502",
+      "value": "ShieldSigner:XKB_TS1101_C_W_extended"
+    },
+    {
+      "action": "footprint-id",
+      "ref": "SW503",
+      "value": "ShieldSigner:XKB_TS1101_C_W_extended"
+    },
+    {
+      "action": "footprint-id",
+      "ref": "SW504",
+      "value": "ShieldSigner:XKB_TS1101_C_W_extended"
+    },
+    {
+      "action": "footprint-id",
+      "ref": "SW505",
+      "value": "ShieldSigner:XKB_TS1101_C_W_extended"
+    },
+    {
+      "action": "footprint-id",
+      "ref": "SW506",
+      "value": "ShieldSigner:XKB_TS1101_C_W_extended"
+    },
+    {
+      "action": "footprint-id",
+      "ref": "SW507",
+      "value": "ShieldSigner:XKB_TS1101_C_W_extended"
+    },
+    {
+      "action": "footprint-id",
+      "ref": "SW508",
+      "value": "ShieldSigner:XKB_TS1101_C_W_extended"
+    }
+  ],
+  "syncFootprints": [
+    "SW501"
+  ]
+}

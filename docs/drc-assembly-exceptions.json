@@ -1,0 +1,22 @@
+[
+  {
+    "type": "courtyards_overlap",
+    "refs": [
+      "R403",
+      "R404"
+    ],
+    "fitted": "R403",
+    "dnp": "R404",
+    "reason": "Mutually exclusive LCD mode straps: R403 populated, R404 DNP. Shared land is intentional; never populate both."
+  },
+  {
+    "type": "courtyards_overlap",
+    "refs": [
+      "R409",
+      "R408"
+    ],
+    "fitted": "R409",
+    "dnp": "R408",
+    "reason": "Mutually exclusive LCD mode straps: R409 populated, R408 DNP. Shared land is intentional; never populate both."
+  }
+]

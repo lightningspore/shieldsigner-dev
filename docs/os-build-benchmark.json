@@ -1,0 +1,30 @@
+{
+  "firstExitCode": 0,
+  "firstSeconds": 8906,
+  "secondExitCode": 0,
+  "secondSeconds": 1625,
+  "rustCacheRestoreObserved": true,
+  "secondFaster": true,
+  "artifactChecksumsMatch": true,
+  "speedup": 5.481,
+  "timeReductionPercent": 81.75,
+  "osCommit": "e7589465aff172f4f510ad46d18776ccc8d2c203",
+  "appCommit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+  "target": "mini-microsd-non-dev-unsigned",
+  "jobs": 6,
+  "localArtifactHashesVerified": true,
+  "artifacts": [
+    {
+      "run": "first",
+      "file": "seedsigner-luckfox-pico-mini-sd-efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f-osproduction-unsigned.img",
+      "sha256": "8ba8fa6bcad15514297a2e058bf06c94774ce4e3a891e5a0364527a458302761",
+      "bytes": 347537408
+    },
+    {
+      "run": "second",
+      "file": "seedsigner-luckfox-pico-mini-sd-efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f-osproduction-unsigned.img",
+      "sha256": "8ba8fa6bcad15514297a2e058bf06c94774ce4e3a891e5a0364527a458302761",
+      "bytes": 347537408
+    }
+  ]
+}

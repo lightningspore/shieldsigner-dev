@@ -1,0 +1,85 @@
+{
+  "C603": {
+    "value": "1u",
+    "lcsc": "C28323",
+    "reason": "Native KiCad variant changes upstream 100 nF to 1 \u00b5F: SEC1210 DS00001561D table 6-4, note 6-3 requires an external 1 \u00b5F on VDD33. Qualify effective capacitance under bias; supplier selection is inherited from the reference C602."
+  },
+  "C604": {
+    "value": "1u",
+    "lcsc": "C28323",
+    "reason": "Native KiCad variant changes upstream 100 nF to 1 \u00b5F: SEC1210 DS00001561D table 6-4, note 6-2 requires an external 1 \u00b5F on active card supply output. Qualify effective capacitance under bias; supplier selection is inherited from the reference C602."
+  },
+  "SW507": {
+    "value": "TS-1101-C-W",
+    "lcsc": "C318938",
+    "reason": "Selected XKB identity uses a dedicated native footprint with a 9.1 \u00d7 6.5 mm assembly courtyard based on the body/terminal/recommended-land envelope plus 0.25 mm. Existing extended 3.0 \u00d7 1.6 mm copper lands are retained; paste/reflow and 2.5 mm actuator height remain assembly qualification items.",
+    "footprint": "ShieldSigner:XKB_TS1101_C_W_extended"
+  },
+  "J401": {
+    "value": "62684-402100ALF",
+    "lcsc": "C2931360",
+    "reason": "Corrected LCD supplier ID: C19273935 is a bottom-contact Hong Cheng connector; C2931360 is the intended top-contact Amphenol 62684-402100ALF."
+  },
+  "SW503": {
+    "value": "TS-1101-C-W",
+    "lcsc": "C318938",
+    "reason": "Selected XKB identity uses a dedicated native footprint with a 9.1 \u00d7 6.5 mm assembly courtyard based on the body/terminal/recommended-land envelope plus 0.25 mm. Existing extended 3.0 \u00d7 1.6 mm copper lands are retained; paste/reflow and 2.5 mm actuator height remain assembly qualification items.",
+    "footprint": "ShieldSigner:XKB_TS1101_C_W_extended"
+  },
+  "SW508": {
+    "value": "TS-1101-C-W",
+    "lcsc": "C318938",
+    "reason": "Selected XKB identity uses a dedicated native footprint with a 9.1 \u00d7 6.5 mm assembly courtyard based on the body/terminal/recommended-land envelope plus 0.25 mm. Existing extended 3.0 \u00d7 1.6 mm copper lands are retained; paste/reflow and 2.5 mm actuator height remain assembly qualification items.",
+    "footprint": "ShieldSigner:XKB_TS1101_C_W_extended"
+  },
+  "D302": {
+    "value": "KT-0805G",
+    "lcsc": "C2297",
+    "reason": "Native value now states the exact JLCPCB catalog part selected by its supplier ID; electrical copper is unchanged. Footprint and assembly qualification are tracked in BOM.md."
+  },
+  "SW502": {
+    "value": "TS-1101-C-W",
+    "lcsc": "C318938",
+    "reason": "Selected XKB identity uses a dedicated native footprint with a 9.1 \u00d7 6.5 mm assembly courtyard based on the body/terminal/recommended-land envelope plus 0.25 mm. Existing extended 3.0 \u00d7 1.6 mm copper lands are retained; paste/reflow and 2.5 mm actuator height remain assembly qualification items.",
+    "footprint": "ShieldSigner:XKB_TS1101_C_W_extended"
+  },
+  "SW504": {
+    "value": "TS-1101-C-W",
+    "lcsc": "C318938",
+    "reason": "Selected XKB identity uses a dedicated native footprint with a 9.1 \u00d7 6.5 mm assembly courtyard based on the body/terminal/recommended-land envelope plus 0.25 mm. Existing extended 3.0 \u00d7 1.6 mm copper lands are retained; paste/reflow and 2.5 mm actuator height remain assembly qualification items.",
+    "footprint": "ShieldSigner:XKB_TS1101_C_W_extended"
+  },
+  "SW506": {
+    "value": "TS-1101-C-W",
+    "lcsc": "C318938",
+    "reason": "Selected XKB identity uses a dedicated native footprint with a 9.1 \u00d7 6.5 mm assembly courtyard based on the body/terminal/recommended-land envelope plus 0.25 mm. Existing extended 3.0 \u00d7 1.6 mm copper lands are retained; paste/reflow and 2.5 mm actuator height remain assembly qualification items.",
+    "footprint": "ShieldSigner:XKB_TS1101_C_W_extended"
+  },
+  "SW501": {
+    "value": "TS-1101-C-W",
+    "lcsc": "C318938",
+    "reason": "Selected XKB identity uses a dedicated native footprint with a 9.1 \u00d7 6.5 mm assembly courtyard based on the body/terminal/recommended-land envelope plus 0.25 mm. Existing extended 3.0 \u00d7 1.6 mm copper lands are retained; paste/reflow and 2.5 mm actuator height remain assembly qualification items.",
+    "footprint": "ShieldSigner:XKB_TS1101_C_W_extended"
+  },
+  "SW505": {
+    "value": "TS-1101-C-W",
+    "lcsc": "C318938",
+    "reason": "Selected XKB identity uses a dedicated native footprint with a 9.1 \u00d7 6.5 mm assembly courtyard based on the body/terminal/recommended-land envelope plus 0.25 mm. Existing extended 3.0 \u00d7 1.6 mm copper lands are retained; paste/reflow and 2.5 mm actuator height remain assembly qualification items.",
+    "footprint": "ShieldSigner:XKB_TS1101_C_W_extended"
+  },
+  "Q401": {
+    "value": "AO3400A",
+    "lcsc": "C20917",
+    "reason": "Native value now states the exact JLCPCB catalog part selected by its supplier ID; electrical copper is unchanged. Footprint and assembly qualification are tracked in BOM.md."
+  },
+  "J301": {
+    "value": "TYPE-C 6P(073)",
+    "lcsc": "C668623",
+    "reason": "Native value now states the exact JLCPCB catalog part selected by its supplier ID; electrical copper is unchanged. Footprint and assembly qualification are tracked in BOM.md."
+  },
+  "U601": {
+    "value": "SEC1210/PV-UR2",
+    "lcsc": "C633309",
+    "reason": "Native value now states the exact JLCPCB catalog part selected by its supplier ID; electrical copper is unchanged. Footprint and assembly qualification are tracked in BOM.md."
+  }
+}

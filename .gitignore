@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.tscircuit/
+tools/telegram/*.session*
+tools/telegram/*.sqlite3*
+tools/telegram/login-qr*.png
+tools/telegram/shieldsigner.txt
+
+__pycache__/
+
+.tools/
+tools/os/seedsigner-os/
+*.kicad_prl
+*.lck
+*-backups/
+reference/research/catalog-cache/
+reference/research/*-jlc.html
+reference/research/*-flight.txt
+
+# Local KiCad cache may also be a symlink.
+.tools

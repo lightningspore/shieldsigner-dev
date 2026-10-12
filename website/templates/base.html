@@ -11,7 +11,7 @@
   <meta property="og:title" content="{{ title|default:'ShieldSigner — Build & use it' }}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://shieldsigner.dev{{ request.path }}">
-  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}?v={{ site_revision }}">
   <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
 </head>
 <body hx-boost="true" hx-select="#main" hx-target="#main" hx-swap="outerHTML">
@@ -48,7 +48,7 @@
     <small><span class="site-version">{{ site_version }}</span> · revision <a href="{{ site_revision_url }}">{{ site_revision }}</a>{% if site_dirty %} · local changes{% endif %} · Native design checks pass; physical bring-up remains unverified.</small>
   </footer>
   <script src="{% static 'js/htmx.min.js' %}" defer></script>
-  <script src="{% static 'js/site.js' %}" defer></script>
+  <script src="{% static 'js/site.js' %}?v={{ site_revision }}" defer></script>
   <script src="{% static 'js/alpine.min.js' %}" defer></script>
 </body>
 </html>

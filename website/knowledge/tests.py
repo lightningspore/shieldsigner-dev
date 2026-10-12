@@ -84,6 +84,8 @@ class KnowledgeTests(SimpleTestCase):
         self.assertContains(self.client.get('/build/parts/?scope=carrier&q=1uF'), 'C28323')
         self.assertContains(self.client.get('/'), '0.0.2-dev')
         self.assertContains(self.client.get('/'), 'revision')
+        self.assertContains(self.client.get('/'), 'site.css?v=')
+        self.assertContains(self.client.get('/'), 'site.js?v=')
 
     def test_card_workflows_are_distinct_and_work_without_javascript(self):
         for card, text in [('seedkeeper','store and load'), ('satochip','initialize and export'), ('diy','install an applet')]:

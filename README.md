@@ -58,4 +58,8 @@ Derived from 3rdIteration/SeedSigner at the pinned revision in [reference/proven
 
 ## Public repository
 
-Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. Downloadable design bundles are attached to the [initial design preview release](https://github.com/lightningspore/shieldsigner-dev/releases/tag/design-preview-2026-10-12); these remain review artifacts, not assembly-qualified production files.
+Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. Downloadable design bundles are attached to the [0.0.2-dev workflow preview](https://github.com/lightningspore/shieldsigner-dev/releases/tag/workflow-preview-0.0.2-dev); these remain review artifacts, not assembly-qualified production files.
+
+## Build and use workflows
+
+The public site now starts with six tasks: [PCB order](https://shieldsigner.dev/build/pcb/), [parts](https://shieldsigner.dev/build/parts/), [compile](https://shieldsigner.dev/build/compile/), [flash](https://shieldsigner.dev/build/flash/), [SeedSigner use](https://shieldsigner.dev/build/use/) and [smartcards](https://shieldsigner.dev/build/cards/). The site is **0.0.2-dev**, with its Git revision visible. Passives show explicit units and catalog ratings. `mise run bom:check` validates the 28 fitted passive values against catalog electrical attributes. C603/C604 purchase identities are now the 1 µF C28323 parts, superseding the initial preview’s incorrect 100 nF metadata.

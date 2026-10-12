@@ -116,3 +116,5 @@ Desktop/mobile tests exercise all six tasks, the actual downloaded order bundle,
 quantity/search changes, command clipboard copy, checklist persistence, card selection, navigation,
 reference search and no-JavaScript fallbacks. Response tests cover every internal workflow link and
 section anchor as well as sourcing/manifest invariants.
+
+CSS and task JavaScript URLs include the displayed revision to avoid stale assets across development deployments. The live origin health response reports version, revision and six task routes.

@@ -46,7 +46,7 @@ with sync_playwright() as p:
         page.locator('#part-query').fill('C603')
         page.locator('#board-quantity').fill('5')
         page.locator('#board-quantity').dispatch_event('change')
-        page.wait_for_function("document.querySelector('#parts-results').innerText.includes('C602,C603,C604') && document.querySelector('#parts-results').innerText.includes('15')")
+        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===1 && document.querySelector('#parts-results tbody tr td:nth-child(4)').textContent.trim()==='15' && document.querySelector('#parts-results').innerText.includes('C602,C603,C604')")
         assert page.locator('#parts-results tbody tr').count()==1
         assert 'C28323' in page.locator('#parts-results').inner_text()
         assert '1 µF' in page.locator('#parts-results').inner_text()

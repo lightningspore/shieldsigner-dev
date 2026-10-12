@@ -72,7 +72,8 @@ class KnowledgeTests(SimpleTestCase):
         invalid = self.client.get('/build/parts/?quantity=-10')
         self.assertContains(invalid, 'Showing quantities for one board.')
         no_match = self.client.get('/build/parts/?q=not-a-real-part')
-        self.assertContains(no_match, 'No matching parts.')
+        self.assertContains(no_match, 'No matching parts in this category.')
+        self.assertContains(self.client.get('/build/parts/?scope=system&q=C603'), 'Show 1 matching carrier result')
 
     def test_passive_values_units_and_revision_are_visible(self):
         page=self.client.get('/build/parts/?scope=carrier')

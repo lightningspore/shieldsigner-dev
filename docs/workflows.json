@@ -230,6 +230,14 @@
             {
               "label": "Upstream Luckfox target matrix",
               "url": "https://3rditeration.github.io/seedsigner/os/luckfox/README.html"
+            },
+            {
+              "label": "Install Docker on Linux",
+              "url": "https://docs.docker.com/engine/install/"
+            },
+            {
+              "label": "Install mise",
+              "url": "https://mise.jdx.dev/getting-started.html"
             }
           ]
         },
@@ -242,7 +250,7 @@
           "commands": [
             {
               "label": "Prepare carrier sources",
-              "text": "git clone https://github.com/lightningspore/shieldsigner-dev.git\ncd shieldsigner-dev\nmise run os:prepare"
+              "text": "git clone https://github.com/lightningspore/shieldsigner-dev.git\ncd shieldsigner-dev\nmise install uv\nmise run os:prepare"
             },
             {
               "label": "Inspect the recorded reader variant",
@@ -467,6 +475,10 @@
             "Keep network, derivation path and script type consistent. This is a watch-only wallet; never type the seed into Sparrow just to make scanning work."
           ],
           "links": [
+            {
+              "label": "Download Sparrow",
+              "url": "https://sparrowwallet.com/download/"
+            },
             {
               "label": "Sparrow documentation",
               "url": "https://sparrowwallet.com/docs/"

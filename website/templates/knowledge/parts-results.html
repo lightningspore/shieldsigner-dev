@@ -20,6 +20,9 @@
 </tbody></table></div>
 <p class="parts-note">Do not buy/populate R404, R408 or J302 for this variant. U202 is separate. PCB solder jumpers are copper, not purchased components.</p>
 {% endif %}
-{% if not carrier and not system %}<p class="empty-state">No matching parts. Try a reference such as C603 or clear the search.</p>{% endif %}
+{% if not carrier and not system %}<p class="empty-state">No matching parts in this category.</p>
+{% if scope == 'system' and carrier_count %}<a href="/build/parts/?scope=carrier&q={{ query|urlencode }}&quantity={{ quantity }}">Show {{ carrier_count }} matching carrier result{{ carrier_count|pluralize }} →</a>
+{% elif scope == 'carrier' and system_count %}<a href="/build/parts/?scope=system&q={{ query|urlencode }}&quantity={{ quantity }}">Show {{ system_count }} matching system result{{ system_count|pluralize }} →</a>
+{% else %}<a href="/build/parts/?quantity={{ quantity }}">Clear the search →</a>{% endif %}{% endif %}
 
 </div>

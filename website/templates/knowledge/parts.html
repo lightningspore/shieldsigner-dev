@@ -1,7 +1,7 @@
 <section class="shopping" aria-labelledby="shopping-title">
   <h2 id="shopping-title">Your shopping list</h2>
   <p class="parts-note">Ordering an assembled carrier? Buy the separate system parts below. Hand assembling? Switch to Carrier / PCBA to see all 21 component lines.</p>
-  <form class="parts-form" method="get" action="/build/parts/" hx-get="/build/parts/" hx-replace-url="true" hx-target="#parts-results" hx-select="#parts-fragment" hx-swap="innerHTML" hx-trigger="submit, input changed delay:250ms from:#part-query, change from:select, change from:#board-quantity">
+  <form class="parts-form" method="get" action="/build/parts/" hx-get="/build/parts/" hx-sync="this:replace" hx-replace-url="true" hx-target="#parts-results" hx-select="#parts-fragment" hx-swap="innerHTML" hx-trigger="submit, input changed delay:250ms from:#part-query, change from:select, change from:#board-quantity">
     <div><label for="part-query">Find a part</label><input id="part-query" name="q" value="{{ query }}" placeholder="C603, reader, screen…"></div>
     <div><label for="part-scope">Show</label><select id="part-scope" name="scope"><option value="all" {% if scope == 'all' %}selected{% endif %}>All parts</option><option value="system" {% if scope == 'system' %}selected{% endif %}>Separate system parts</option><option value="carrier" {% if scope == 'carrier' %}selected{% endif %}>Carrier / PCBA</option></select></div>
     <div><label for="board-quantity">Boards</label><input id="board-quantity" name="quantity" type="number" min="1" max="100" value="{{ quantity }}"></div>

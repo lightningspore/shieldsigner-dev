@@ -65,7 +65,7 @@ for source in variant.rglob("*"):
         target = public / name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
-        url_map[str(source.resolve())] = f"/files/{name}"
+        url_map[str(source.resolve())] = f"/files/{name}" + (f"?v={hashlib.sha256(source.read_bytes()).hexdigest()[:12]}" if source.suffix == '.png' else '')
 # Release-pinned modular outputs remain reproducible in a fresh public checkout.
 modular_manifest = json.loads((ROOT / "assets/modular-downloads.json").read_text())
 board = ROOT / "variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb"

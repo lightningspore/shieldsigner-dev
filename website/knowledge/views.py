@@ -67,7 +67,9 @@ def file(request, name):
     root = settings.PUBLIC_DIR.resolve()
     candidate = (root / name).resolve()
     if not candidate.is_relative_to(root) or not candidate.is_file(): raise Http404
-    return FileResponse(candidate.open("rb"), as_attachment=candidate.suffix not in {".pdf", ".svg", ".png"}, filename=candidate.name)
+    response = FileResponse(candidate.open("rb"), as_attachment=candidate.suffix not in {".pdf", ".svg", ".png"}, filename=candidate.name)
+    response['Cache-Control'] = 'no-cache'
+    return response
 
 def health(request):
     version=workflows.load('site-version')

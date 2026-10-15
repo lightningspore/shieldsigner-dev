@@ -38,7 +38,7 @@ With the preview running, use `UI_BASE_URL=http://127.0.0.1:8031 mise run ui:tes
 
 Use pre-1.0 development versions while the hardware remains unqualified. The visible version and Git revision identify the content build; a dirty marker indicates uncommitted inputs. `assets/modular-downloads.json` pins modular release asset hashes and the exact PCB hash. Content packaging rejects a changed board with stale modular order files; missing local artifacts are fetched from the pinned public release and verified.
 
-Static CSS/JavaScript URLs include the revision to avoid retaining a previous site's assets through browser/Cloudflare caches.
+CSS/JavaScript and the hero image use revisioned URLs; guide images and individual downloads carry content hashes. File responses require cache revalidation. This prevents an older board render surviving a design deployment in browser/Cloudflare caches.
 
 The production route is Cloudflare HTTPS → dedicated outbound Tunnel → Caddy → Django/Gunicorn. The site uses a separate Compose project on the existing web host. Both apex and `www` serve the same site, with apex canonical metadata. All Cloudflare DNS remains in the existing shared DNS Terraform state in the private infrastructure repository. Public site sources contain no credentials or state.
 

@@ -143,6 +143,7 @@ class KnowledgeTests(SimpleTestCase):
         image = self.client.get('/files/variants/lcd-module-2.8/assembly-front.png')
         self.assertEqual(image.status_code, 200)
         self.assertTrue(image['Content-Disposition'].startswith('inline;'))
+        self.assertEqual(image['Cache-Control'], 'no-cache')
         image.close()
 
     def test_shopping_defaults_to_pill_and_preserves_standard_reference(self):

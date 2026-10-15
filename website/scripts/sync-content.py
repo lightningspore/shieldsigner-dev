@@ -127,6 +127,23 @@ assert len(rows)==21 and sum(r['qty'] for r in rows)==43
 caps = next(r for r in rows if r['code']=='C28323')
 assert {'C602','C603','C604'}==set(caps['refs'].split(',')), '1 uF BOM correction missing'
 (content/'carrier-parts.json').write_text(json.dumps(rows,indent=2)+'\n')
+modular_catalog = {p['code']: p for p in json.loads((variant/'jlc-catalog.json').read_text())['parts']}
+modular_rows = []
+with (variant/'manufacturing/bom-jlcpcb.csv').open() as file:
+    for row in csv.DictReader(file):
+        code = row['LCSC Part #']; part = modular_catalog[code]; refs = row['Designator'].split(',')
+        modular_rows.append({'refs':row['Designator'], 'qty':len(refs), 'code':code,
+            'value':row['Comment'].split(';')[0], 'ratings':values['ratings'](part,refs),
+            'mpn':part['componentModelEn'], 'manufacturer':part['componentBrandEn'],
+            'package':row['Footprint'], 'source':part['url'], 'checkedAt':part['checkedAt'][:10],
+            'library':'Basic' if part['componentLibraryType']=='base' else 'Extended'})
+assert len(modular_rows)==17 and sum(p['qty'] for p in modular_rows)==35
+(content/'modular-carrier-parts.json').write_text(json.dumps(modular_rows,indent=2)+'\n')
+shutil.copyfile(variant/'system-parts.json', content/'modular-system-parts.json')
+mechanics = json.loads((variant/'mechanical.json').read_text())
+(content/'modular-pcb-spec.json').write_text(json.dumps({'width':mechanics['board']['width'],
+    'height':mechanics['board']['height'], 'thickness':1.6, 'layers':2,
+    'boardSha256':modular_manifest['boardSha256']},indent=2)+'\n')
 readiness = json.loads((ROOT/'manufacturing/jlcpcb/readiness.json').read_text())
 board_sha = hashlib.sha256((ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest()
 assert readiness['boardSha256']==board_sha, 'BOM/CPL readiness belongs to another board revision'

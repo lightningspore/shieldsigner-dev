@@ -98,5 +98,25 @@
     "bytes": 1770440,
     "retainedOn": "2026-10-14",
     "provenance": "Manufacturer schematic for the separate header-LCD variant"
+  },
+  {
+    "file": "reference/pdfs/HOTHMI-HTM-TFT028A16-SPI.pdf",
+    "title": "HOTHMI HTM-TFT028A16-SPI module",
+    "source": "https://www.hothmi.com/wp-content/uploads/2026/08/2.8-inch-display-high-brightness-st7789-spi.pdf",
+    "catalog": null,
+    "sha256": "f83b8c12452eb9bd504ea3b6e7fac35ae2564f12ed56d7fd8f638771509fe002",
+    "bytes": 1349539,
+    "retainedOn": "2026-10-15",
+    "provenance": "Public manufacturer specification"
+  },
+  {
+    "file": "reference/pdfs/Diodes-AP2112.pdf",
+    "title": "Diodes AP2112 regulator",
+    "source": "https://www.diodes.com/datasheet/download/AP2112.pdf",
+    "catalog": null,
+    "sha256": "ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f",
+    "bytes": 755270,
+    "retainedOn": "2026-10-15",
+    "provenance": "Public manufacturer specification"
   }
 ]

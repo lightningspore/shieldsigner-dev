@@ -57,3 +57,9 @@ The XKB switch uses 1.2×1.0 mm lands at ±3.7 mm. The SHOUHAN 6P(073) USB lands
 Added 17 portable model files with source/hash records, including the complete Waveshare model, selected catalog device models, host and mating connectors. Socket and support envelopes are labeled simplified geometry. Updated silk identifies 0.0.3-dev and preserves upstream attribution. The native auxiliary origin is (50,130) mm for matching modular Gerbers, drills and CPL.
 
 Native ERC/DRC/connectivity/parity and independent land/model checks pass. The only courtyard exclusions remain the two inherited strap pairs, all four DNP. No physical or assembler qualification is implied.
+
+## 0.0.4-dev: eight-pin pill
+
+Replaced the Pico-format LCD bay with the user's reference eight-pin SPI interface and a 160×70 mm capsule. Centered controls around a larger 2.8-inch HTM-TFT028A16-SPI module. Added independent AP2112K-3.3 power with two 10 µF capacitors, four 12 mm supports, both-side 6 mm hardware keepouts and ground stitching. Moved input components clear of the lower-left support. Removed the obsolete bare-panel sheet/lands, J302 and inherited DNP courtyard exclusions. Refined routing without reducing clearance rules. Native ERC/DRC/connectivity/parity are clean with zero exclusions. The LCD power sheet uses conventional capacitors and visible wiring.
+
+Native model/land/geometry gates cover the revised interface and support clearance. New supplier/dimensional models replace the Pico display models, with local paths and provenance. Manufacturing changes from 32/16 to 35 SMT pieces/17 catalog lines; 47 total footprints. Physical fit, thermal/display bring-up and assembler placement/DFM qualification remain open.

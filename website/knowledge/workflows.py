@@ -17,6 +17,9 @@ def search_text(value):
 
 
 def shopping(params):
+    variant = params.get('variant', 'modular')
+    if variant not in {'modular', 'standard'}:
+        variant = 'modular'
     query = params.get("q", "").strip()[:200]
     scope = params.get("scope", "system")
     if scope not in {"all", "system", "carrier"}:
@@ -29,8 +32,11 @@ def shopping(params):
     except (ValueError, TypeError):
         quantity = 1
         error = "Choose 1–100 boards. Showing quantities for one board."
-    carrier = load("carrier-parts")
-    system = load("system-parts")["parts"]
+    carrier = load('modular-carrier-parts' if variant == 'modular' else 'carrier-parts')
+    system = load('modular-system-parts' if variant == 'modular' else 'system-parts')["parts"]
+    piece_count = sum(part['qty'] for part in carrier)
+    line_count = len(carrier)
+    checked_at = min(part['checkedAt'] for part in carrier)
     system.sort(key=lambda part: not part["required"])
     if query:
         carrier = [p for p in carrier if search_text(query) in search_text(" ".join(str(v) for v in p.values()))]
@@ -40,6 +46,8 @@ def shopping(params):
     for part in system:
         part["total"] = part["qty"] * quantity
     return {"query": query, "scope": scope, "quantity": quantity, "quantity_error": error,
+            "variant": variant, "piece_count": piece_count, "line_count": line_count, "checked_at": checked_at,
+            "bom_url": '/files/variants/lcd-module-2.8/manufacturing/bom-jlcpcb.csv' if variant == 'modular' else '/files/manufacturing/jlcpcb/bom-carrier-jlcpcb.csv',
             "carrier": carrier if scope != "system" else [],
             "system": system if scope != "carrier" else [],
             "carrier_count": len(carrier), "system_count": len(system)}

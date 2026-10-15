@@ -1,5 +1,7 @@
 # Component guide
 
+> **Standard FPC reference:** The current eight-pin pill carrier has its own [design, component changes and power review](LCD-MODULE-VARIANT.md), [35-part BOM](../variants/lcd-module-2.8/manufacturing/BOM.md) and [assembly guide](MODULAR-ASSEMBLY.md). The detailed standard-carrier reference below remains separate.
+
 Every physical component in the pinned PCB is covered below. Population flags, footprints and pin/net mappings come from the pinned KiCad PCB. Values and supplier IDs include the documented native variant overrides and catalog identity corrections; the experimental tscircuit reference still uses upstream values. Functional explanations are engineering interpretations unless the hardware guide explicitly attributes them to an upstream note or datasheet. This describes the inherited circuit; it does not claim the original designer compared alternatives or optimized each value.
 
 Use original KiCad pad numbers when wiring or probing. The tscircuit `pinN` names identify individual copper lands, not original package pin numbers. Repeated module pad numbers are intentional (castellated land plus through-hole).

@@ -1,5 +1,7 @@
 # Electrical review — ShieldSigner Luckfox Plus
 
+> **Standard FPC reference:** The current eight-pin pill carrier has its own [design, component changes and power review](LCD-MODULE-VARIANT.md), [35-part BOM](../variants/lcd-module-2.8/manufacturing/BOM.md) and [assembly guide](MODULAR-ASSEMBLY.md). The detailed standard-carrier reference below remains separate.
+
 Reviewed 2026-10-11 against the native KiCad working project, pinned upstream sources, supplier drawings and controller datasheets. This is a **desk review**: no physical board, load measurement, oscilloscope capture or card transaction has been tested in this session.
 
 The circuit is plausible, but it is not ready for manufacturing approval. The main unresolved questions concern the LCD connector/assembly, backlight load, supply protection and reader configuration. Native ERC currently has zero errors; PCB connectivity/parity checks also pass. Current native layout checks have zero active DRC errors/warnings, with two documented DNP courtyard exclusions; see [KICAD.md](../KICAD.md). This does not close the electrical bench items below. The [separate modular variant](LCD-MODULE-VARIANT.md) has its own reviewed lands, display power path and checks.

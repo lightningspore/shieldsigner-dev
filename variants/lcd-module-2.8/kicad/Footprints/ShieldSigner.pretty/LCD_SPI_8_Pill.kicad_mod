@@ -1,0 +1,230 @@
+(footprint "LCD_SPI_8_Pill"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(property "Reference" "J701"
+		(at -2.4 2.431 0)
+		(layer "F.SilkS")
+		(uuid "ef5aafd1-c66d-4a9e-b47a-c819fc25fa53")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" "LCD SPI 8-pin"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "a02dd80f-7e4b-49f2-bc3e-6c2a52a299d7")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "a6af40ea-72e8-463d-97d9-667bd07a8ff6")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "fc9fca10-d75a-44f4-b336-0a7200c3c23c")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.8 -19.5)
+		(end 1.8 -19.5)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "f449bda5-9f4d-4ddb-86ec-c24e3356f543")
+	)
+	(fp_line
+		(start -1.8 1.8)
+		(end -1.8 -19.5)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "83c7dc57-c47e-4b10-aa57-131151a33416")
+	)
+	(fp_line
+		(start 1.8 -19.5)
+		(end 1.8 1.8)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "05d422c8-76c4-426e-9c1b-0df555e98649")
+	)
+	(fp_line
+		(start 1.8 1.8)
+		(end -1.8 1.8)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "e3831d15-7256-4d55-aa1b-aea1de285115")
+	)
+	(fp_line
+		(start -1.27 -19.05)
+		(end 1.27 -19.05)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "146370ee-d497-4f9d-be2d-8eb5c5519a5e")
+	)
+	(fp_line
+		(start -1.27 1.27)
+		(end -1.27 -19.05)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "aff1c0eb-cc8d-4bf4-8497-fe49051c40f1")
+	)
+	(fp_line
+		(start 1.27 -19.05)
+		(end 1.27 1.27)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "26870a5a-172f-45d4-9b99-720a90dfab78")
+	)
+	(fp_line
+		(start 1.27 1.27)
+		(end -1.27 1.27)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "a138c022-bdec-4227-ac5f-a337c9a6ffa9")
+	)
+	(pad "1" thru_hole rect
+		(at 0 0)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(thermal_bridge_angle 45)
+		(uuid "6e344213-e2fc-4c3b-ba47-0bd0322bdb04")
+	)
+	(pad "2" thru_hole circle
+		(at 0 -2.54)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "4058466c-4fcb-40f9-9992-2588c627cbd0")
+	)
+	(pad "3" thru_hole circle
+		(at 0 -5.08)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "3e55672c-a184-4bb3-b6d8-c14cfa70a48b")
+	)
+	(pad "4" thru_hole circle
+		(at 0 -7.62)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "4d180431-932c-4a31-b847-336190c821e1")
+	)
+	(pad "5" thru_hole circle
+		(at 0 -10.16)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "b50e0bcf-607b-4f1d-9ba4-010b6cc58b5c")
+	)
+	(pad "6" thru_hole circle
+		(at 0 -12.7)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "de9e6718-c33e-485a-a2e7-177f30309790")
+	)
+	(pad "7" thru_hole circle
+		(at 0 -15.24)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "ab2ae711-9703-4357-b028-fe28fc6af579")
+	)
+	(pad "8" thru_hole circle
+		(at 0 -17.78)
+		(size 1.7 1.7)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "18258db3-c813-49d7-bf75-01ce045ad7f7")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/3dmodels/vendor/HOTHMI-HTM-TFT028A16-SPI-envelope.step"
+		(offset
+			(xyz -2.5 35.54 12)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+	(model "${KIPRJMOD}/3dmodels/kicad/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x08_P2.54mm_Vertical.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 180)
+		)
+	)
+	(model "${KIPRJMOD}/3dmodels/kicad/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x08_P2.54mm_Vertical.step"
+		(offset
+			(xyz 0 0 12)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 180 0 0)
+		)
+	)
+)

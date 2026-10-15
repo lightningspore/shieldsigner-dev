@@ -20,7 +20,7 @@ with sync_playwright() as p:
         page.locator('.board-frame img').wait_for()
         assert page.locator('.board-frame img').evaluate('(img) => img.complete && img.naturalWidth > 0')
         assert page.locator('.task-card').count() == 6
-        assert '0.0.3-dev' in page.locator('footer').inner_text()
+        assert '0.0.4-dev' in page.locator('footer').inner_text()
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Homepage overflows'
         page.screenshot(path=str(artifacts/f'home-{width}.png'), full_page=True)
         page.locator('.task-card[href="/build/pcb/"]').click()
@@ -33,8 +33,8 @@ with sync_playwright() as p:
         target = artifacts/f'order-{width}.zip'
         download.value.save_as(target)
         with ZipFile(target) as archive:
-            bom = list(csv.DictReader(io.StringIO(archive.read('bom-carrier-jlcpcb.csv').decode())))
-            assert len(bom)==21
+            bom = list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
+            assert len(bom)==17
         for slug in slugs:
             page.goto(base+f'/build/{slug}/')
             page.locator('h1').wait_for()
@@ -43,6 +43,12 @@ with sync_playwright() as p:
             if slug in {'pcb','parts','compile','flash','cards'}:
                 page.screenshot(path=str(artifacts/f'{slug}-{width}.png'), full_page=True)
         page.goto(base+'/build/parts/?scope=carrier')
+        assert page.locator('#parts-results tbody tr').count()==17
+        page.locator('#board-variant').select_option('standard')
+        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===21")
+        assert '43 fitted pieces' in page.locator('#parts-results').inner_text()
+        page.locator('#board-variant').select_option('modular')
+        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===17")
         page.locator('#part-query').fill('C603')
         page.locator('#board-quantity').fill('5')
         page.locator('#board-quantity').dispatch_event('change')
@@ -54,9 +60,9 @@ with sync_playwright() as p:
         page.locator('#part-query').fill('not-a-part')
         page.wait_for_function("document.querySelector('#parts-results').innerText.includes('No matching parts')")
         page.locator('#part-query').fill('')
-        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===21")
+        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===17")
         page.locator('#part-scope').select_option('system')
-        page.wait_for_function("document.querySelectorAll('#parts-results .system-part').length===10")
+        page.wait_for_function("document.querySelectorAll('#parts-results .system-part').length===16")
         page.goto(base+'/build/compile/')
         page.locator('.copy-command').first.click()
         page.wait_for_function("document.querySelector('.copy-feedback').textContent==='Copied'")
@@ -87,12 +93,12 @@ with sync_playwright() as p:
         page.screenshot(path=str(artifacts/f'modular-{width}.png'), full_page=True)
         page.goto(base+'/downloads/')
         with page.expect_download() as download:
-            page.get_by_role('link', name='Modular 2.8-inch order kit').click()
+            page.get_by_role('link', name='Eight-pin pill order kit').click()
         target = artifacts/f'modular-order-{width}.zip'
         download.value.save_as(target)
         with ZipFile(target) as archive:
             bom = list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
-            assert len(bom)==16 and sum(len(row['Designator'].split(',')) for row in bom)==32
+            assert len(bom)==17 and sum(len(row['Designator'].split(',')) for row in bom)==35
         assert not errors, errors
         context.close()
     context = browser.new_context(java_script_enabled=False,viewport={'width':390,'height':844})

@@ -92,57 +92,12 @@
 		(instances
 			(project "SeedSigner-Plus-smartcard-pico"
 				(path "/8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f"
-					(page "6")
+					(page "5")
 				)
 			)
 		)
 	)
-	(sheet
-		(at 187.96 88.9)
-		(size 16.51 8.89)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0)
-		)
-		(uuid "85d69276-db74-407d-b0d0-4d21c866381e")
-		(property "Sheetname" "Screen"
-			(at 187.96 88.1884 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "screen.kicad_sch"
-			(at 187.96 98.3746 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "SeedSigner-Plus-smartcard-pico"
-				(path "/8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f"
-					(page "4")
-				)
-			)
-		)
-	)
+	
 	(sheet
 		(at 187.96 71.12)
 		(size 16.51 10.16)
@@ -184,7 +139,7 @@
 		(instances
 			(project "SeedSigner-Plus-smartcard-pico"
 				(path "/8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f"
-					(page "5")
+					(page "4")
 				)
 			)
 		)
@@ -243,7 +198,7 @@
 	(embedded_fonts no)
 (sheet (at 190.5 100.33) (size 63.5 17.78) (fields_autoplaced yes)
       (stroke (width 0) (type default)) (fill (color 0 0 0 0)) (uuid "4fead130-596d-4414-bb04-d5dfc4d319ed")
-      (property "Sheetname" "2.8-inch header LCD" (at 190.5 99.6184 0) (effects (font (size 1.27 1.27)) (justify left bottom)))
+      (property "Sheetname" "SPI LCD + dedicated power" (at 190.5 99.6184 0) (effects (font (size 1.27 1.27)) (justify left bottom)))
       (property "Sheetfile" "lcd_module.kicad_sch" (at 190.5 118.8216 0) (effects (font (size 1.27 1.27)) (justify left top)))
-      (instances (project "SeedSigner-Plus-smartcard-pico" (path "/8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f" (page "7")))))
+      (instances (project "SeedSigner-Plus-smartcard-pico" (path "/8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f" (page "6")))))
 )

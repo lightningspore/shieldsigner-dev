@@ -1,0 +1,181 @@
+{
+  "checkedAt": "2026-10-15",
+  "parts": [
+    {
+      "id": "luckfox",
+      "name": "Luckfox Pico Mini",
+      "qty": 1,
+      "required": true,
+      "status": "Confirm storage variant",
+      "spec": "Mini RV1103, compatible microSD boot; excluded U202 host module.",
+      "source": "https://cryptoguide.tips/product-category/luckfox-pico/",
+      "sourceLabel": "Mini options",
+      "detail": "https://wiki.luckfox.com/Luckfox-Pico/Luckfox-Pico-RV1103/",
+      "detailLabel": "Official board variants"
+    },
+    {
+      "id": "lcd",
+      "name": "HOTHMI 2.8-inch eight-pin SPI LCD",
+      "qty": 1,
+      "required": true,
+      "status": "Selected drawing; physical fit pending",
+      "spec": "HTM-TFT028A16-SPI, no touch, ST7789V, 88×53.3 mm. Use J1 1×8 at 2.54 mm; 3.3 V supply.",
+      "source": "https://www.hothmi.com/product/2-8-inch-display-high-brightness-st7789-spi/",
+      "sourceLabel": "Exact module",
+      "detail": "/guides/lcd-module/",
+      "detailLabel": "Wiring & drawing",
+      "warning": "Carrier numbering is reversed from module J1. Its separate J2 connector is 2 mm and unused. Confirm purchased revision/header option."
+    },
+    {
+      "id": "camera",
+      "name": "Low-profile SC3336 camera + ribbon",
+      "qty": 1,
+      "required": true,
+      "status": "Confirm case and cable fit",
+      "spec": "Luckfox-compatible 3 MP SC3336, low-profile assembly; plugs into the module, not the carrier.",
+      "source": "https://cryptoguide.tips/product/luckfox-pico-camera-module-3pm-sc3336/",
+      "sourceLabel": "Camera listing",
+      "detail": "https://wiki.luckfox.com/Luckfox-Pico/Luckfox-Pico-RV1103/",
+      "detailLabel": "Board camera interface"
+    },
+    {
+      "id": "case",
+      "name": "New pill enclosure",
+      "qty": 1,
+      "required": false,
+      "status": "Mechanical fit pending",
+      "spec": "160×70 mm carrier, raised 2.8-inch module, button plungers and card/camera/USB openings.",
+      "source": "/guides/lcd-module/",
+      "sourceLabel": "Mechanical dimensions",
+      "detail": "/guides/modular-assembly/",
+      "detailLabel": "Fit checklist",
+      "warning": "Old standard/Pico-bay cases do not fit; enclosure is not yet qualified."
+    },
+    {
+      "id": "sd",
+      "name": "microSD + USB card reader",
+      "qty": 1,
+      "required": true,
+      "status": "Match boot medium",
+      "spec": "Removable microSD with enough capacity for the selected image; card reader for your Mac. Use a known-good card from a reputable supplier.",
+      "source": "https://3rditeration.github.io/seedsigner/quickstarts/10-flash-microsd.html",
+      "sourceLabel": "Card / flashing requirements"
+    },
+    {
+      "id": "power",
+      "name": "Regulated 5 V USB-C supply + cable",
+      "qty": 1,
+      "required": true,
+      "status": "Power budget requires bench test",
+      "spec": "One regulated 5 V source. This carrier is not a charger or USB-PD design; do not power multiple inputs together.",
+      "source": "/guides/bringup/",
+      "sourceLabel": "Power checks"
+    },
+    {
+      "id": "seedkeeper",
+      "name": "Contact SeedKeeper card",
+      "qty": 1,
+      "required": false,
+      "status": "Storage option",
+      "spec": "Factory-installed applet; contact-capable product. Loading a secret brings it into host memory.",
+      "source": "https://satochip.io/product/seedkeeper/",
+      "sourceLabel": "SeedKeeper vendor",
+      "detail": "/build/cards/?card=seedkeeper",
+      "detailLabel": "Storage workflow"
+    },
+    {
+      "id": "satochip",
+      "name": "Contact Satochip card",
+      "qty": 1,
+      "required": false,
+      "status": "Signing option",
+      "spec": "Factory-installed applet; contact-capable product. On-card derivation/signing; choose this instead of SeedKeeper when that is your goal.",
+      "source": "https://satochip.io/shop/",
+      "sourceLabel": "Satochip vendor",
+      "detail": "/build/cards/?card=satochip",
+      "detailLabel": "Signing workflow"
+    },
+    {
+      "id": "javacard",
+      "name": "Blank supported JavaCard",
+      "qty": 1,
+      "required": false,
+      "status": "DIY alternative",
+      "spec": "J3H145 or reviewed JCOP SECID alternative with known GlobalPlatform management keys. Install an applet before use.",
+      "source": "https://cryptoguide.tips/product/j3h145-javacard/",
+      "sourceLabel": "J3H145 listing",
+      "detail": "/build/cards/?card=diy",
+      "detailLabel": "DIY provisioning"
+    },
+    {
+      "id": "mounting",
+      "name": "Luckfox carrier sockets",
+      "qty": 2,
+      "required": true,
+      "status": "Customer header soldering",
+      "spec": "1×11 female, 2.54 mm pitch, 8.5 mm housing, accepts 0.64 mm square posts.",
+      "source": "/guides/modular-assembly/",
+      "sourceLabel": "Dimensions & fitting"
+    },
+    {
+      "id": "lcd-socket",
+      "name": "LCD carrier socket",
+      "qty": 1,
+      "required": true,
+      "status": "Confirm purchased dimensions",
+      "spec": "1×8 female, 2.54 mm pitch, 8.5 mm housing.",
+      "source": "/guides/modular-assembly/",
+      "sourceLabel": "Dimensions & assembly"
+    },
+    {
+      "id": "lcd-header",
+      "name": "LCD module male strip",
+      "qty": 1,
+      "required": true,
+      "status": "Confirm purchased dimensions",
+      "spec": "1×8 at 2.54 mm, 2.54 mm insulator, 6 mm posts; omit if J1 is correctly preheadered.",
+      "source": "/guides/modular-assembly/",
+      "sourceLabel": "Dimensions & assembly"
+    },
+    {
+      "id": "host-headers",
+      "name": "Luckfox male strips if bare",
+      "qty": 2,
+      "required": false,
+      "status": "Confirm purchased dimensions",
+      "spec": "1×11 at 2.54 mm; long posts toward carrier. Omit if correctly fitted.",
+      "source": "/guides/modular-assembly/",
+      "sourceLabel": "Dimensions & assembly"
+    },
+    {
+      "id": "spacers",
+      "name": "Display supports",
+      "qty": 4,
+      "required": true,
+      "status": "Confirm purchased dimensions",
+      "spec": "M2.5 female-female, 12 mm body, nominal 5 mm outside diameter.",
+      "source": "/guides/modular-assembly/",
+      "sourceLabel": "Dimensions & assembly"
+    },
+    {
+      "id": "screws",
+      "name": "Display mounting screws",
+      "qty": 8,
+      "required": true,
+      "status": "Confirm purchased dimensions",
+      "spec": "M2.5×4, four at each PCB; check engagement with any washers.",
+      "source": "/guides/modular-assembly/",
+      "sourceLabel": "Dimensions & assembly"
+    },
+    {
+      "id": "washers",
+      "name": "Mounting washers if needed",
+      "qty": 8,
+      "required": false,
+      "status": "Confirm purchased dimensions",
+      "spec": "M2.5, outside diameter no more than 5 mm in reserved hardware areas.",
+      "source": "/guides/modular-assembly/",
+      "sourceLabel": "Dimensions & assembly"
+    }
+  ]
+}

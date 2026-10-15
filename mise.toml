@@ -116,3 +116,7 @@ run = "uv run python scripts/open-modular.py"
 [tasks."variant:lcd:package"]
 description = "Package existing modular fabrication/review outputs and pin release checksums"
 run = "uv run python scripts/package-modular.py"
+
+[tasks."variant:lcd:display-model"]
+description = "Regenerate drawing-based LCD/support envelopes and hashes; follow with review/package"
+run = "uv run --python 3.11 --with cadquery==2.8.0 python scripts/model-pill-display.py"

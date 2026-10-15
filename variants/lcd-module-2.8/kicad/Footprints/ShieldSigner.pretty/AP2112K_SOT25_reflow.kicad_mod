@@ -1,0 +1,217 @@
+(footprint "AP2112K_SOT25_reflow"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(property "Reference" "U701"
+		(at 0 3 0)
+		(layer "F.SilkS")
+		(uuid "d19804d7-5bea-40fa-b0fb-765aef1e382a")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" "AP2112K-3.3TRG1"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b29d8df8-6601-46c7-9b8e-4c04423b5db4")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" "https://www.diodes.com/datasheet/download/AP2112.pdf"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f04f0a9f-5b7a-4828-9b58-9d424cf3e04c")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "fcc0b404-4677-4138-937e-5bf30efc394b")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "LCSC" "C51118"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "f6c08f57-7bab-4c9b-a30a-942eab7161ba")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "MPN" "AP2112K-3.3TRG1"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "5a0885ea-9660-4a93-be46-4bd295184b29")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer" "Diodes Incorporated"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "e6fd8d15-c7ef-4122-8d37-6a7232cbee75")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.8 -1.9)
+		(end 1.8 -1.9)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "442d0f25-56ec-45c5-b825-67f2a65a3069")
+	)
+	(fp_line
+		(start -1.8 1.9)
+		(end -1.8 -1.9)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "9bdb08b8-910c-494c-9fb6-acc9adc4c080")
+	)
+	(fp_line
+		(start 1.8 -1.9)
+		(end 1.8 1.9)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "5f6acd21-2231-44f4-9048-af45d7d80f2f")
+	)
+	(fp_line
+		(start 1.8 1.9)
+		(end -1.8 1.9)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "6aadad64-3955-4c7d-be99-1b5a5c89efc6")
+	)
+	(fp_line
+		(start -1.45 -0.8)
+		(end 1.45 -0.8)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "9556ecbe-6b74-41b2-85f0-63784363c7af")
+	)
+	(fp_line
+		(start -1.45 0.8)
+		(end -1.45 -0.8)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "015c057f-2fb8-4003-bdbe-f3b941c08e62")
+	)
+	(fp_line
+		(start 1.45 -0.8)
+		(end 1.45 0.8)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d1a3c90b-1dbb-4786-b009-1c2ce471efce")
+	)
+	(fp_line
+		(start 1.45 0.8)
+		(end -1.45 0.8)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "8c9bc7a9-1da1-4b4a-af7e-328bc044831f")
+	)
+	(pad "1" smd roundrect
+		(at -0.95 1.2)
+		(size 0.55 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0.2)
+		(thermal_bridge_angle 45)
+		(uuid "ace79c0d-e889-41c5-b5c0-44c7a0b53ace")
+	)
+	(pad "2" smd roundrect
+		(at 0 1.2)
+		(size 0.55 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0.2)
+		(thermal_bridge_angle 45)
+		(uuid "b83c68a0-ebe6-4da3-b62c-f8e7f4525586")
+	)
+	(pad "3" smd roundrect
+		(at 0.95 1.2)
+		(size 0.55 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0.2)
+		(thermal_bridge_angle 45)
+		(uuid "c76f935d-8ff9-4c90-91e3-dd5cc91aee64")
+	)
+	(pad "4" smd roundrect
+		(at 0.95 -1.2)
+		(size 0.55 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0.2)
+		(thermal_bridge_angle 45)
+		(uuid "99dd9bee-cc44-402b-8e56-5c6663d3e305")
+	)
+	(pad "5" smd roundrect
+		(at -0.95 -1.2)
+		(size 0.55 0.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(roundrect_rratio 0.2)
+		(thermal_bridge_angle 45)
+		(uuid "539d4834-ec2d-4518-bf14-840893f6e678")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/3dmodels/vendor/Diodes-AP2112K-SOT25.step"
+		(offset (xyz 0 0 0.15))
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

@@ -82,7 +82,7 @@ class KnowledgeTests(SimpleTestCase):
         self.assertContains(page, '125 mW · ±1%')
         self.assertContains(self.client.get('/guides/bom-table/'), '1 µF')
         self.assertContains(self.client.get('/build/parts/?scope=carrier&q=1uF'), 'C28323')
-        self.assertContains(self.client.get('/'), '0.0.3-dev')
+        self.assertContains(self.client.get('/'), '0.0.4-dev')
         self.assertContains(self.client.get('/'), 'revision')
         self.assertContains(self.client.get('/'), 'site.css?v=')
         self.assertContains(self.client.get('/'), 'site.js?v=')
@@ -134,7 +134,7 @@ class KnowledgeTests(SimpleTestCase):
             bom = list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
             refs = {ref for row in bom for ref in row['Designator'].split(',')}
             cpl = list(csv.DictReader(io.StringIO(archive.read('cpl-jlcpcb.csv').decode())))
-            self.assertEqual((len(bom), len(refs)), (16, 32))
+            self.assertEqual((len(bom), len(refs)), (17, 35))
             self.assertEqual(refs, {row['Designator'] for row in cpl})
             self.assertFalse(refs & {'J701', 'U202', 'J401', 'J302', 'Q401', 'R403', 'R404', 'R408', 'R409'})
             self.assertTrue(next(row for row in bom if row['LCSC Part #'] == 'C28323')['Comment'].startswith('1 µF;'))
@@ -144,6 +144,22 @@ class KnowledgeTests(SimpleTestCase):
         self.assertEqual(image.status_code, 200)
         self.assertTrue(image['Content-Disposition'].startswith('inline;'))
         image.close()
+
+    def test_shopping_defaults_to_pill_and_preserves_standard_reference(self):
+        pill = self.client.get('/build/parts/?scope=carrier&q=C701&quantity=5')
+        self.assertContains(pill, 'C201,C302,C701,C702')
+        self.assertContains(pill, '10 µF')
+        self.assertContains(pill, '<strong>20</strong>')
+        self.assertContains(pill, '35 fitted pieces / 17 catalog lines')
+        self.assertContains(self.client.get('/build/parts/?scope=carrier&q=U701'), 'C51118')
+        self.assertContains(self.client.get('/build/parts/?q=lcd'), 'HTM-TFT028A16-SPI')
+        standard = self.client.get('/build/parts/?variant=standard&scope=carrier')
+        self.assertContains(standard, '43 fitted pieces / 21 catalog lines')
+        self.assertNotContains(standard, 'C701,C702')
+        self.assertContains(self.client.get('/build/parts/?variant=unknown&scope=carrier'), '35 fitted pieces / 17 catalog lines')
+        order = self.client.get('/build/pcb/')
+        self.assertContains(order, '/files/shieldsigner-modular-order.zip')
+        self.assertContains(order, '160 × 70 mm')
 
     def test_workflow_internal_links_and_anchors(self):
         cache = {}

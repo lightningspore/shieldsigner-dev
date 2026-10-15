@@ -20,7 +20,7 @@
     <div class="task-facts"><div><span>You need</span><ul>{% for need in task.needs %}<li>{{ need }}</li>{% endfor %}</ul></div><div><span>You’ll have</span><p>{{ task.result }}</p></div></div>
     {% if task.notice %}<div class="task-notice">{{ task.notice }}</div>{% endif %}
     {% if task.slug == 'parts' %}{% include 'knowledge/parts.html' %}{% endif %}
-    {% if task.slug == 'pcb' %}<div class="order-launch"><a class="button" href="/files/shieldsigner-jlcpcb-order.zip" hx-boost="false">Download JLC order files ↓</a><a href="https://jlcpcb.com/" target="_blank" rel="noopener">Open JLCPCB quote ↗</a><span>Gerbers + BOM + CPL · {{ pcb_spec.layers }} layers · {{ pcb_spec.thickness }} mm · ≈{{ pcb_spec.width }} × {{ pcb_spec.height }} mm</span></div>{% endif %}
+    {% if task.slug == 'pcb' %}<div class="order-launch"><a class="button" href="/files/shieldsigner-modular-order.zip" hx-boost="false">Download JLC order files ↓</a><a href="https://jlcpcb.com/" target="_blank" rel="noopener">Open JLCPCB quote ↗</a><span>Pill Gerbers + BOM + CPL · {{ pcb_spec.layers }} layers · {{ pcb_spec.thickness }} mm · {{ pcb_spec.width }} × {{ pcb_spec.height }} mm</span></div>{% endif %}
     <nav class="step-jump" aria-label="Steps on this page">{% for step in task.steps %}<a href="#step-{{ forloop.counter }}">{{ forloop.counter }}. {{ step.title }}</a>{% endfor %}</nav>
     <div class="steps">
       {% for step in task.steps %}

@@ -4,8 +4,9 @@
   <p class="eyebrow">FILES FOR THE NEXT STEP</p>
   <h1 class="page-title">Downloads.</h1>
   <p class="lede">Choose the matching set for your carrier. Modular and standard FPC files describe different PCBs; do not mix their BOMs, placement files or Gerbers.</p>
-  <div class="actions"><a class="button" href="/files/shieldsigner-modular-order.zip" hx-boost="false">Modular 2.8-inch order kit ↓</a><a href="/guides/modular-assembly/">Modular assembly steps →</a></div>
-  <h2>Modular carrier & 3D assembly</h2>
+  <div class="actions"><a class="button" href="/files/shieldsigner-modular-order.zip" hx-boost="false">Eight-pin pill order kit ↓</a><a href="/guides/modular-assembly/">Header & module assembly →</a></div>
+  <h2>Eight-pin pill · 0.0.4-dev</h2>
+  <p>160 × 70 mm capsule, 35 SMT placements, single-row LCD. Matched prototype quote files, native KiCad, schematic PDF and 3D assemblies. Physical qualification remains open.</p>
   <div class="downloads">{% for file in modular_files %}<a href="/files/{{ file.name }}" hx-boost="false"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>
   <h2>Standard FPC carrier</h2>
   <div class="actions"><a href="/files/shieldsigner-jlcpcb-order.zip" hx-boost="false">Standard FPC order bundle ↓</a><a href="/build/pcb/">Standard ordering steps →</a></div>

@@ -1,33 +1,86 @@
 {
   "units": "mm",
   "display": {
-    "part": "Waveshare Pico-ResTouch-LCD-2.8",
-    "manufacturerStep": "kicad/3dmodels/vendor/Waveshare-Pico-ResTouch-LCD-2.8.step",
-    "outline": [70.2, 52.2004],
-    "moduleBackHeight": 12.0,
-    "moduleFrontHeight": 17.3,
-    "factoryBossHeight": 4.0,
-    "extensionStandoffHeight": 8.0,
+    "part": "HOTHMI HTM-TFT028A16-SPI, no touch",
+    "model": "kicad/3dmodels/vendor/HOTHMI-HTM-TFT028A16-SPI-envelope.step",
+    "modelType": "Drawing-based dimensional envelope, not manufacturer CAD",
+    "outline": [
+      88,
+      53.3
+    ],
+    "moduleBackHeight": 12,
+    "moduleFrontHeight": 17.7,
+    "rearConnectorDepth": 5.2,
+    "rearClearance": 6.8,
+    "standoffHeight": 12,
     "mountingHoleDiameter": 2.7,
-    "mountingCenters": [[114.71, 23.0], [176.91, 23.0], [114.71, 66.0004], [176.91, 66.0004]],
-    "nominalHeaderRowSpacing": 17.78,
-    "manufacturerCadHeaderRowSpacing": 17.8,
+    "moduleHoleDiameter": 3,
+    "mountingCenters": [
+      [
+        92.75,
+        65.679
+      ],
+      [
+        175.25,
+        65.679
+      ],
+      [
+        92.75,
+        113.479
+      ],
+      [
+        175.25,
+        113.479
+      ]
+    ],
     "headerPitch": 2.54,
-    "pin1To20Span": 48.26,
+    "pin1To8Span": 17.78,
     "maleInsulatorHeight": 2.54,
-    "malePostAboveInsulator": 6.0,
-    "femaleHousingHeight": 9.0,
-    "modeledPinInsertion": 5.54,
-    "modelOffset": [28.75, -50.63, 12.0],
-    "modelRotation": [0, 180, 0]
+    "malePostAboveInsulator": 6,
+    "femaleHousingHeight": 8.5,
+    "modeledPinInsertion": 5.04,
+    "modelOffset": [
+      -2.5,
+      35.54,
+      12
+    ],
+    "modelRotation": [
+      0,
+      0,
+      0
+    ],
+    "moduleBounds": [
+      90,
+      62.929,
+      178,
+      116.229
+    ],
+    "source": "reference/pdfs/HOTHMI-HTM-TFT028A16-SPI.pdf page 5",
+    "dimensionDiscrepancy": "Drawing includes 1.6 mm PCB, 4.1 mm front and 5.2 mm rear; model reserves 10.9 mm total; product prose also says 7.7 mm. Confirm physical revision."
   },
   "luckfox": {
     "socketHousingHeight": 8.5,
     "maleInsulatorHeight": 2.54,
     "modulePcbThickness": 1.0,
-    "moduleModelOffset": [-1.5, 1.5, 12.04],
+    "moduleModelOffset": [
+      -1.5,
+      1.5,
+      12.04
+    ],
     "maleHeaderPlane": 11.04,
     "customerSoldering": "Two 1x11 socket strips on the carrier and two male strips on an unpopulated module; use a module with headers already fitted when possible."
   },
-  "qualification": "CAD and datasheet review; physical module/header fit and production tolerances require first-article confirmation. Card socket and spacer models are explicitly dimensional envelopes."
+  "qualification": "Drawing and native CAD review; physical fit/stack/thermal/bring-up remain first-article checks. LCD, card socket and supports are explicit dimensional models.",
+  "board": {
+    "shape": "horizontal capsule",
+    "width": 160,
+    "height": 70,
+    "radius": 35,
+    "bounds": [
+      48,
+      54.579,
+      208,
+      124.579
+    ]
+  }
 }

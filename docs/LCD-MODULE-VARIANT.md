@@ -1,78 +1,84 @@
-# Modular ShieldSigner with a 2.8-inch display
+# ShieldSigner pill: 2.8-inch, eight-pin SPI LCD
 
-This variant keeps the Plus's **2.8-inch ST7789 display size**, smartcard reader and Luckfox processor, while using an assembled LCD board that plugs into ordinary headers. JLCPCB assembles the small components; customer soldering is limited to **2.54 mm through-hole headers**. It follows MOD-PROTO's module-based approach without using its smaller 1.3-inch display.
+This is the **0.0.4-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
 
-![Modular carrier front assembly](../variants/lcd-module-2.8/assembly-front.png)
+![Assembled pill carrier, front](../variants/lcd-module-2.8/assembly-front.png)
 
-## Get the design and order files
+JLCPCB assembles **35 SMT pieces across 17 catalog lines**. Customer soldering is ordinary **2.54 mm headers**: 30 joints on the carrier, plus up to 30 on unheadered LCD/Luckfox modules. There is no customer LCD ribbon connection, fine-pitch connector, QFN or smartcard-contact soldering. The camera retains its normal Luckfox ribbon connection.
 
-- [Open the native KiCad project](../variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pro), including local footprints and portable 3D models.
-- [Download the matched JLCPCB quote kit](https://www.shieldsigner.dev/files/shieldsigner-modular-order.zip): inner Gerber ZIP, BOM, CPL, population, customer parts and review notes.
-- [Assembly and first-power guide](MODULAR-ASSEMBLY.md), [32-part carrier BOM](../variants/lcd-module-2.8/manufacturing/bom-jlcpcb.csv), [placement file](../variants/lcd-module-2.8/manufacturing/cpl-jlcpcb.csv), [customer shopping list](../variants/lcd-module-2.8/assembly-extras.csv).
-- [Native check results](../variants/lcd-module-2.8/check-results.json), [mechanical checks](../variants/lcd-module-2.8/mechanical-check-results.json), [manufacturing readiness](../variants/lcd-module-2.8/manufacturing/readiness.json), [dated stock audit](../variants/lcd-module-2.8/manufacturing/stock-for-five.json).
-- [Front copper drawing](../variants/lcd-module-2.8/pcb-top.svg), [back copper drawing](../variants/lcd-module-2.8/pcb-bottom.svg), [complete STEP assembly](https://www.shieldsigner.dev/files/shieldsigner-modular-assembly.step), [GLB assembly](https://www.shieldsigner.dev/files/shieldsigner-modular-assembly.glb).
+## Get the matching files
 
-These are **prototype quotation files**, with clean native ERC/DRC, connectivity and parity checks. The two inherited courtyard exclusions cover unpopulated strap pairs; the checker requires all four straps to remain DNP. No physical board, display fit, powered bring-up or assembler placement preview has been tested. The standard FPC carrier remains separate; its BOM/CPL/Gerbers do not apply here.
+- [Complete JLCPCB prototype quote kit](https://www.shieldsigner.dev/files/shieldsigner-modular-order.zip): Gerber ZIP, BOM, CPL, population and customer-parts list.
+- [Full schematic PDF](https://www.shieldsigner.dev/files/shieldsigner-modular-schematic.pdf).
+- [Portable KiCad project and local libraries/models](https://www.shieldsigner.dev/files/shieldsigner-modular-kicad.zip).
+- [Customer assembly and first-power steps](MODULAR-ASSEMBLY.md), [readable SMT BOM](../variants/lcd-module-2.8/manufacturing/BOM.md), [manufacturing notes](../variants/lcd-module-2.8/manufacturing/README.md).
+- [Complete STEP assembly](https://www.shieldsigner.dev/files/shieldsigner-modular-assembly.step), [GLB assembly](https://www.shieldsigner.dev/files/shieldsigner-modular-assembly.glb), [front drawing](../variants/lcd-module-2.8/pcb-top.svg), [back drawing](../variants/lcd-module-2.8/pcb-bottom.svg).
+- [Native results](../variants/lcd-module-2.8/check-results.json), [footprint/model results](../variants/lcd-module-2.8/mechanical-check-results.json), [quote readiness](../variants/lcd-module-2.8/manufacturing/readiness.json).
 
-## Display choice and why it works
+These are matched **prototype quotation files**. Native ERC, DRC, connectivity and schematic parity pass with **zero exclusions**. Physical module fit, powered bring-up, assembler rotation/DFM approval and enclosure qualification remain first-article work. The previous 0.0.3-dev Pico-format bay and the separate standard FPC carrier use different manufacturing files; do not mix them with this kit.
 
-Buy **Waveshare Pico-ResTouch-LCD-2.8**, as an assembled display module **without a Raspberry Pi Pico CPU**. [Manufacturer product](https://www.waveshare.com/pico-restouch-lcd-2.8.htm), [pinout and examples](https://www.waveshare.com/wiki/Pico-ResTouch-LCD-2.8), [retained schematic](../reference/pdfs/Waveshare-Pico-ResTouch-LCD-2.8-Schematic.pdf).
+## The design reference
 
-It provides a 240×320 ST7789 display, its own 3.3 V regulator, LED resistors/backlight transistor and two Pico-format 20-position receptacle rows. The carrier supplies 5 V to VSYS and 3.3 V control signals. The factory handles the panel connection, so the customer does not install a display ribbon or fine-pitch FPC connector. The larger module has no navigation buttons: all eight carrier buttons remain fitted. Touch and the module's extra SD slot are unused.
+Your [existing Luckfox hardware](https://github.com/lightningspore/seedsigner-luckfox-pico/tree/d1a703c240a38b826052e9eb993669f774000dfe/hardware-kicad) establishes a single eight-pin ST7789 connection. The dev-v1 board has two ordinary 1×8 headers with identical wiring. The shipit board uses the custom [ST7789_LCD_MOD1 footprint](https://github.com/lightningspore/seedsigner-luckfox-pico/blob/d1a703c240a38b826052e9eb993669f774000dfe/hardware-kicad/libraries/seedsigner-luckfox.pretty/ST7789_LCD_MOD1.kicad_mod).
 
-This is not the Waveshare 2.8-inch DSI display, the 1.3-inch LCD HAT, or an ESP32/RP2350 display board. **The signer CPU remains the Luckfox Pico Mini.** The camera still uses its direct Luckfox ribbon connection.
+This revision keeps its **BL, RST, DC, CS, CLK, MOSI, GND, 3V3 carrier numbering**, header pitch, module-based construction and controls around the display. It retains the ShieldSigner smartcard circuitry and pill silhouette. The old reference's 58.25 × 35.3 mm module outline and mounting holes are not reused for a larger panel. Its C190820 BOM entry identifies an eight-position header, not a retail LCD.
 
-The manufacturer's STEP and dimension photograph agree on **70.2×52.2 mm**, despite the product table saying 50.2 mm. The board uses the STEP envelope and its four mounting centers. The Pico interface uses nominal **17.78 mm row spacing and 2.54 mm pitch**; the supplied STEP depicts 17.80 mm between header centers, a 0.02 mm discrepancy retained in the model rather than distorting it. Confirm the purchased module revision during the first fit test.
+## Which display to buy
 
-The carrier is approximately **137.86×108.58 mm**: it reserves a separate display bay above the inherited electronics, keeping header pins clear of the smartcard socket. It needs a new enclosure. This favors accessible, ordinary connectors and a mechanically supported module over minimizing board size.
+The selected module is **HOTHMI HTM-TFT028A16-SPI, no-touch version**: an assembled 2.8-inch, 240×320 ST7789V SPI board. Use [the manufacturer's product listing](https://www.hothmi.com/product/2-8-inch-display-high-brightness-st7789-spi/) and the [retained manufacturer specification](../reference/pdfs/HOTHMI-HTM-TFT028A16-SPI.pdf), especially pages 5–6. The UI uses the screen in landscape, 320×240; firmware initialization and rotation still need hardware verification.
 
-## Header wiring
+Use its **J1 eight-position 2.54 mm row**, with a downward-facing male header into the carrier's female socket. The module also has a separate **2 mm J2 connector**; that is not the carrier connection. Product photographs show J1 solder lands, so buy the correct preheadered option or fit eight ordinary pins yourself. Confirm the purchased revision matches the drawing before soldering. Do not substitute a Pico-format board, a bare panel, an arbitrary eight-pin module, or a touch variant with different dimensions.
 
-J701 uses the display's **Pico physical pin numbers**, not Luckfox pin numbers. Its carrier-top view mirrors the manufacturer's rear view. Pin 1 is the square pad; the marked USB end points toward the top of the display bay.
+The drawing specifies **88 × 53.3 mm**, mounting centers **82.5 × 47.8 mm**, and four 3 mm holes. It depicts the PCB/front/rear stack as 1.6/4.1/5.2 mm; the product prose also gives 7.7 mm total while the product summary gives 10.9 mm. Our envelope reserves the larger **10.9 mm** stack and 12 mm between carrier and module PCB back. Confirm actual connector/body heights on the first module.
 
-| J701 module pin | Function | Carrier connection | Purpose |
-|---|---|---|---|
-| 39 | VSYS | +5V | Supplies the module regulator and display |
-| 3, 8, 13, 18, 23, 28, 33, 38 | Grounds | GND | Power and signal return |
-| 11 / GP8 | LCD_DC | LCD_DC; Luckfox 10 | Commands versus pixel data |
-| 12 / GP9 | LCD_CS | RPI_SPI_CS; default jumper path to Luckfox 6 | SPI selection |
-| 14 / GP10 | LCD_CLK | LCD_SCLK; Luckfox 7 | SPI clock |
-| 15 / GP11 | MOSI | LCD_MOSI; Luckfox 8 | Commands and RGB565 pixels |
-| 20 / GP15 | LCD_RST | LCD_RST; Luckfox 9 | Hardware reset |
-| 17 / GP13 | LCD_BL | +3.3V | Enables onboard backlight transistor; always on |
-| 21 / GP16 | TP_CS | +3.3V | Deselects unused touch controller |
-| 29 / GP22 | SD_CS | +3.3V | Deselects unused module SD interface |
-| 36 / Pico3V3 | Optional Pico supply | No connection | Avoids joining the carrier and module regulator outputs |
-| All others | Unused GPIO, readback, touch, SD, VBUS, RUN | Explicit no-connect | No extra CPU or peripheral functionality wired |
+## Exact connector wiring
 
-The display's onboard regulator supplies its LCD load rather than drawing that load from the Luckfox 3.3 V output. The BL input drives an onboard 1 kΩ base resistor and transistor; four 10 Ω LED branches are already on the module. The manufacturer FAQ quotes **5 V/140 mA** maximum module power consumption. This is supplier information, not a measured whole-signer budget; verify rail droop with camera and smartcard operations.
+**Carrier pad numbers run opposite the manufacturer's J1 numbering.** Pad 1 is the carrier's square pad, marked BL. Match signals and the orientation drawing, not equal pin numbers.
 
-Keep **JP203 and JP205 closed, JP204 and JP206 open** for chip select. JP201/JP202 do not control this module's backlight. Do not select the old alternative PWM/permanently-selected configuration. J401, C401, Q401 and R401–R410 are DNP; their inherited lands receive no reflow paste. J302 also stays DNP. The retained old mode-strap footprints have no role in configuring the purchased module.
+| Carrier J701 | Signal | Module J1 | Carrier connection |
+|---:|---|---:|---|
+| 1 | BL | 8 / BL_E | RPI_BACKLIGHT; always on through JP201 by default |
+| 2 | RST | 7 / RES | LCD_RST; Luckfox pin 9 |
+| 3 | DC | 6 / D/C | LCD_DC; Luckfox pin 10 |
+| 4 | CS | 5 / CS | RPI_SPI_CS; default jumper path to Luckfox pin 6 |
+| 5 | CLK | 4 / SCL | LCD_SCLK; Luckfox pin 7 |
+| 6 | MOSI | 3 / SDA | LCD_MOSI; Luckfox pin 8 |
+| 7 | GND | 2 / GND | Common ground |
+| 8 | 3V3 | 1 / VCC | **LCD_3V3**, dedicated regulator output |
 
-## Assembly and manufacturing
+Here SDA/SCL mean **SPI data and clock**, not I²C. No MISO is required for the write-only display. Keep JP201/JP203/JP205 closed and JP202/JP204/JP206 open. The default gives chip-select control and an always-on backlight. The inherited alternative jumpers share a host function; independent dimming is not promised by this wiring/firmware.
 
-The matched kit has **32 SMT placements and 16 JLC catalog lines**, with eight top-side switches and the remaining circuitry on the bottom. All 16 part identities currently have SMT assembly catalog entries; the dated snapshot supports a five-board prototype quote. The limiting stock fields were 28 smartcard sockets and 55 SEC1210/PV-UR2 bridges. Stock is not reserved and final sourcing/placement is confirmed in JLCPCB's quote.
+## Why the added power components are here
 
-The customer buys the LCD, Luckfox and headers separately. J701 is **two 1×20 male strips**, with the rows 17.78 mm apart, not an ordinary tightly spaced 2×20 header. The Luckfox mount uses two 1×11 sockets and, unless already fitted, two male strips on the module. No QFN, USB-C signal pins or smartcard contacts need customer soldering.
+The LCD takes **3.3 V**, not the former Pico module's 5 V VSYS. **U701, AP2112K-3.3TRG1 (C51118)**, converts the board's regulated 5 V input to a separate LCD_3V3 rail. This avoids adding the display/backlight load to the Luckfox module's 3.3 V output. VIN and EN connect to +5V; GND connects to the plane; VOUT only supplies the LCD. The two regulator outputs are never joined.
 
-The selected Amphenol **7312P0225A13LF** is a full-size contact smartcard socket. Use an appropriate full-size adapter for a compatible SIM-size card; the footprint name inherited from upstream does not make this a second independently fitted SIM socket. Card firmware/application compatibility still follows the [smartcard guide](SMARTCARDS.md).
+**C701 and C702 are 10 µF, 25 V X5R, CL21A106KAYNNNE (C15850).** C701 decouples the LDO input; C702 stabilizes/decouples its output. The [Diodes datasheet](../reference/pdfs/Diodes-AP2112.pdf) calls for at least 1 µF; 10 µF nominal gives useful margin for capacitance loss under DC bias and load transients. Effective capacitance, startup and rail droop still need measurements. These reuse an existing carrier capacitor purchasing identity.
 
-## Footprints and 3D models
+The AP2112's 600 mA rating is not a promise of 600 mA usable at 5→3.3 V in this layout. Dissipation is approximately **1.7 × LCD current** watts. At a planning load of 150 mA, that is 0.255 W; the datasheet's SOT25 184 °C/W figure implies roughly 47 °C junction rise under its test conditions. The LCD drawing's 120 mA figure describes the backlight, not a guaranteed maximum whole-module load. Measure total module current, regulator temperature and supply margin before treating the prototype as qualified.
 
-The modular variant has dedicated reflow footprints for the selected XKB switch, SHOUHAN USB connector, Amphenol socket and Microchip SEC1210. Supplier drawings define their pad sizes/centers. Native checks independently assert these dimensions and the display/host header geometry. The SEC1210 uses 0.35 mm-wide, 0.65 mm-long lead lands, a 4.0 mm inner gap, and retains its 3.4 mm exposed-pad land and four reduced paste windows; its datasheet specifies a 3.3 mm nominal/3.4 mm maximum package exposed pad.
+The module handles its own panel connection and backlight switching. Carrier J401/C401/Q401/R401–R410 and the old bare-panel schematic sheet are removed. The alternative J302 connector is also absent. There are no DNP mode-strap courtyard exceptions on this PCB.
 
-Seventeen local STEP models have provenance and SHA-256 checks. There are no workstation-specific or missing active model paths. The display is the manufacturer's complete STEP; the host, selected switch and USB/bridge representations are retained supplier/upstream models. **The card socket is a simplified dimensional envelope and the spacer model omits threads**—neither is presented as detailed manufacturer CAD. DNP parts are omitted from the assembled views.
+## Smartcard and processor
 
-The modeled display PCB back is 12 mm above the carrier, using its 4 mm factory bosses plus specified 8 mm extensions. The male posts engage the modeled female headers by about 5.54 mm. The Luckfox stack accounts for both 8.5 mm socket housings and 2.54 mm male header insulators. See [assembly measurements and steps](MODULAR-ASSEMBLY.md) before selecting hardware; do not assume the included display spacers have the required length.
+The processor remains a **Luckfox Pico Mini**, socketed on two 1×11 strips. No Raspberry Pi Pico CPU or Pico-format LCD connector is used. The existing UART/SEC1210/PV-UR2 smartcard path, decoupling and eight physical buttons are retained.
 
-![Modular carrier back assembly](../variants/lcd-module-2.8/assembly-back.png)
+J601 is the **Amphenol 7312P0225A13LF full-size contact smartcard socket**. A compatible SIM-size card requires a full-size adapter; this is not a second independently fitted SIM socket. See [supported cards and application differences](SMARTCARDS.md). JLCPCB handles the socket, USB-C contacts and SEC1210 QFN.
 
-## Reproduce checks and outputs
+## Mechanical and 3D evidence
 
-Run from the repository root:
+Four M2.5 supports use manufacturer-drawn hole centers. **12 mm female-female spacers**, eight M2.5×4 screws and suitable washers support the display rather than relying on connector friction. Both PCB sides reserve 6 mm diameter hardware areas. The power-input parts move clear of the lower-left support. Ground stitching joins the display/regulator return copper to the back plane.
+
+The modeled 8.5 mm female socket, 2.54 mm male insulator and 6 mm posts give about **5.04 mm insertion** with the module back 12 mm above the carrier. The module's rear connector has 6.8 mm nominal clearance. The Luckfox retains its separate socket stack and outward-facing microSD. The screen sits higher than the 2.5 mm switch actuators, so an enclosure needs suitable button plungers and a new camera/card opening layout.
+
+There are **19 portable STEP models** with recorded sources and hashes. Supplier/upstream models represent the Luckfox, switches, USB, bridge and regulator. **The LCD, card socket and threadless supports are clearly identified dimensional envelopes**, not detailed manufacturer STEP files. The LCD envelope is regenerated from the saved drawing by `scripts/model-pill-display.py`. Native checks verify reviewed solder lands, the eight-pin interface, capsule edges, mounting centers and module/button separation. Physical tolerances and complete enclosure fit remain untested.
+
+![Assembled pill carrier, back](../variants/lcd-module-2.8/assembly-back.png)
+
+## Reproduce the design
 
 ```sh
 git lfs pull
+mise run variant:lcd:open
 mise run variant:lcd:check
 mise run variant:lcd:models
 mise run variant:lcd:fab
@@ -80,6 +86,4 @@ mise run variant:lcd:review
 mise run variant:lcd:package
 ```
 
-`check` runs ERC/DRC/parity and header/population assertions. `models` verifies local model hashes, mounting centers and reviewed solder lands. `fab` creates a matched prototype quote kit with its own native placement export and common Gerber/drill/CPL origin. `review` generates STEP/GLB and assembled renders. `package` bundles the portable project and pins release checksums after those outputs are generated. The experimental tscircuit view still describes the separate standard carrier.
-
-MOD-PROTO's local hardware guide and Python driver establish its assembled 1.3-inch ST7789 HAT approach. A search of the local monorepo's KiCad/Eagle files did not locate a separate MOD-PROTO PCB. No private MOD-PROTO configuration or source is published here.
+The native KiCad project is authoritative. The experimental tscircuit port and standard carrier remain separate. The modular kit has its own BOM, native placement export and shared Gerber/drill/CPL datum. See [how the site is generated and deployed](WEBSITE.md).

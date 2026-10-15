@@ -10,10 +10,12 @@ The site at [shieldsigner.dev](https://shieldsigner.dev/) is a Django documentat
 | PCB/parts/compile/flash/use/cards task pages | `docs/workflows.json` |
 | Whole-device shopping list | `docs/system-parts.json` |
 | Smartcard workflows | `docs/card-workflows.json` |
-| Standard carrier table and readable passive values | Native BOM, `docs/jlc-catalog.json`, `scripts/part-values.py` |
-| Module-variant drawings, native files and filtered carrier BOM | `variants/lcd-module-2.8/`; independent native files, model provenance, SMT population and quote kit |
+| Standard carrier table and readable passive values | Standard native BOM/catalog plus pill `manufacturing/bom-jlcpcb.csv` and `jlc-catalog.json`; `scripts/part-values.py` |
+| Pill drawings, native files and matched carrier BOM | `variants/lcd-module-2.8/`; independent native files, model provenance, SMT population and quote kit |
 | Supplier PDF references | `reference/pdfs/`, Git LFS, and `docs/pdf-references.json` |
 | Site version | `website/version.json`; build adds Git revision and dirty status |
+
+The PCB order and searchable shopping pages default to the eight-pin pill (35 pieces/17 lines). The shopping selector also exposes the separate standard FPC reference (43/21); it preserves the selected variant through searches and quantities. Pill system parts come from `variants/lcd-module-2.8/system-parts.json`.
 
 Edit the source files, then run content synchronization. Do not edit generated `website/content/` or `website/public/` copies. The packager uses allowlists rather than copying the entire repository. Private Telegram material, credentials, infrastructure state and OS caches must stay out of public content.
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-12",
+  "checkedAt": "2026-10-15",
   "tasks": [
     {
       "slug": "pcb",
@@ -8,59 +8,63 @@
       "title": "Make & order the PCB",
       "summary": "Get the three JLCPCB files, check assembly, and request a quote.",
       "needs": [
-        "Carrier without Luckfox selected",
-        "JLCPCB account for your quote"
+        "Eight-pin pill carrier selected",
+        "JLCPCB account for a prototype quote"
       ],
       "result": "Gerbers + matching BOM/CPL ready for a reviewed prototype quote.",
       "steps": [
         {
-          "title": "Choose bare PCB or assembled carrier",
+          "title": "Choose the assembled pill carrier",
           "items": [
-            "Bare PCB: upload Gerbers; you assemble the 43 fitted parts.",
-            "Assembled carrier: upload Gerbers + BOM + CPL. Default files omit the Luckfox, LCD, camera and case.",
-            "These order files describe the standard bare-LCD carrier. The separate 2.8-inch header-module variant is a development layout with its own population and no qualified order kit."
+            "The 160×70 mm pill uses a 2.8-inch eight-pin SPI module, socketed Luckfox and contact smartcard reader.",
+            "Recommended route: JLCPCB assembles 35 SMT pieces; you install ordinary headers, modules and screws.",
+            "These files supersede the Pico-format display bay. The standard FPC carrier remains a separate reference."
           ],
           "choices": [
             {
-              "title": "Bare PCB",
-              "text": "You solder the parts.",
-              "url": "/build/parts/?scope=carrier"
+              "title": "Pill carrier PCBA",
+              "text": "Small parts assembled; ordinary header soldering at home.",
+              "url": "/guides/modular-assembly/"
             },
             {
-              "title": "Carrier PCBA",
-              "text": "JLC assembles the carrier; module/display remain separate.",
-              "url": "/build/parts/?scope=system"
-            },
-            {
-              "title": "2.8-inch plug-in LCD variant",
-              "text": "Assembled display module and basic header assembly; review this separate layout before ordering.",
+              "title": "Pill design & pinout",
+              "text": "Display selection, eight-pin mapping, power and mechanical checks.",
               "url": "/guides/lcd-module/"
+            },
+            {
+              "title": "Standard FPC reference",
+              "text": "Separate earlier board; use its own files.",
+              "url": "/guides/kicad/"
             }
           ]
         },
         {
           "title": "Download the matching order files",
           "items": [
-            "Use this bundle as one set. Do not mix a BOM from the original upstream board with these Gerbers.",
-            "Unzip the order bundle once. Upload the inner shieldsigner-carrier-gerbers.zip to JLC; keep the two CSV files for its assembly step.",
-            "Keep R404, R408 and J302 unpopulated. U202 is excluded; solder-jumper copper is already on the PCB."
+            "Use the pill bundle as one set; its BOM/CPL and Gerbers share the same PCB hash and datum.",
+            "Unzip once. Upload the inner shieldsigner-modular-gerbers.zip for the PCB; upload bom-jlcpcb.csv and cpl-jlcpcb.csv for assembly.",
+            "LCD, Luckfox, customer headers/supports and six copper jumpers are outside the SMT BOM. Old FPC/backlight parts and J302 are absent."
           ],
           "downloads": [
             {
-              "label": "All three files + review notes",
-              "url": "/files/shieldsigner-jlcpcb-order.zip"
+              "label": "All files + prototype review notes",
+              "url": "/files/shieldsigner-modular-order.zip"
             },
             {
               "label": "Gerbers & drills",
-              "url": "/files/shieldsigner-carrier-gerbers.zip"
+              "url": "/files/shieldsigner-modular-gerbers.zip"
             },
             {
               "label": "Assembly BOM",
-              "url": "/files/manufacturing/jlcpcb/bom-carrier-jlcpcb.csv"
+              "url": "/files/variants/lcd-module-2.8/manufacturing/bom-jlcpcb.csv"
             },
             {
               "label": "Placement CPL",
-              "url": "/files/manufacturing/jlcpcb/cpl-carrier-jlcpcb.csv"
+              "url": "/files/variants/lcd-module-2.8/manufacturing/cpl-jlcpcb.csv"
+            },
+            {
+              "label": "Full schematic PDF",
+              "url": "/files/shieldsigner-modular-schematic.pdf"
             }
           ]
         },
@@ -68,7 +72,7 @@
           "title": "Upload Gerbers to JLCPCB",
           "items": [
             "Start a PCB quote and upload the Gerber ZIP, not the KiCad source ZIP.",
-            "Check the detected outline and two copper layers. The native stackup is 1.6 mm; confirm dimensions against the preview.",
+            "Confirm a 160×70 mm capsule, two copper layers and 1.6 mm thickness. Inspect the preview and separate plated/nonplated drills.",
             "Enable PCB assembly for PCBA. The carrier uses parts on both sides; confirm the quoted assembly service supports them."
           ],
           "links": [
@@ -85,14 +89,14 @@
         {
           "title": "Match parts and inspect placement",
           "items": [
-            "Upload BOM/CPL and process both. Expect 43 fitted references across 21 catalog parts.",
-            "Confirm C603/C604 are C28323 (1 \u00b5F), U601 is C633309 (UR2), and J401 is C2931360 (top-contact).",
-            "Inspect rotation, bottom-side placement, USB/FPC/card connector orientation and all eight switches in JLC\u2019s assembly viewer. No substitutions without reviewing footprint and electrical compatibility."
+            "Upload matching BOM/CPL. Expect 35 fitted SMT references across 17 catalog identities.",
+            "C603/C604 remain 1 µF C28323; C701/C702 are 10 µF C15850; U701 is the 3.3 V AP2112K C51118; U601 is the UR2 C633309.",
+            "Inspect both sides, card entrance, USB direction, SEC1210/regulator pin 1 and eight switches. No substitutions without checking electrical and footprint compatibility."
           ],
           "links": [
             {
               "label": "Interactive carrier parts",
-              "url": "/build/parts/?scope=carrier"
+              "url": "/build/parts/?variant=modular&scope=carrier"
             },
             {
               "label": "JLC matching rules",
@@ -103,18 +107,18 @@
         {
           "title": "Resolve the remaining quote/DFM items",
           "items": [
-            "Ask JLC to review extended switch lands/paste and 2.5 mm actuator height. Verify the enclosure accepts the selected switches.",
-            "Confirm the exact LCD/contact orientation and backlight ratings separately. The screen is outside the PCBA BOM.",
-            "Review stock, assembly preview, DFM and final quote before payment. These files are review-only; no manufactured board has passed bring-up here."
+            "Confirm assembly rotations, socket handling, double-sided process, stock/attrition and the final quote before payment.",
+            "Check the purchased LCD J1 row, mounting dimensions and 12 mm support stack. The retail module is outside PCBA.",
+            "These are prototype quotation files. Native ERC/DRC/connectivity/parity pass with zero exclusions; physical fit, display power/thermal behavior, firmware and enclosure testing remain open."
           ],
           "links": [
             {
-              "label": "Electrical review details",
-              "url": "/guides/electrical-review/"
+              "label": "Pill electrical/mechanical evidence",
+              "url": "/guides/lcd-module/"
             },
             {
-              "label": "Assembly limitations",
-              "url": "/guides/bom/"
+              "label": "Assembly and bring-up steps",
+              "url": "/guides/modular-assembly/"
             }
           ]
         },
@@ -127,13 +131,13 @@
           "commands": [
             {
               "label": "Regenerate checks and manufacturing files",
-              "text": "mise run kicad:check\nmise run bom:generate\nmise run kicad:fab\nmise run review:build"
+              "text": "mise run variant:lcd:check\nmise run variant:lcd:models\nmise run variant:lcd:fab\nmise run variant:lcd:review\nmise run variant:lcd:package"
             }
           ],
           "links": [
             {
               "label": "Open native design sources",
-              "url": "https://github.com/lightningspore/shieldsigner-dev/tree/main/kicad"
+              "url": "https://github.com/lightningspore/shieldsigner-dev/tree/main/variants/lcd-module-2.8/kicad"
             },
             {
               "label": "KiCad editing tools",
@@ -142,16 +146,16 @@
           ]
         }
       ],
-      "notice": "You can prepare a quote now. Assembly qualification, LCD fit and physical testing still need review.",
+      "notice": "Prototype quotation files; assembler DFM/rotation review and physical bring-up remain open.",
       "next": "parts",
       "references": [
         {
-          "label": "BOM and assembly evidence",
-          "url": "/guides/bom/"
+          "label": "Pill design and rationale",
+          "url": "/guides/lcd-module/"
         },
         {
-          "label": "Native KiCad checks",
-          "url": "/guides/kicad/"
+          "label": "BOM and dated stock",
+          "url": "/guides/modular-bom/"
         }
       ]
     },
@@ -169,29 +173,29 @@
         {
           "title": "Use the carrier table for PCB components",
           "items": [
-            "For PCBA, JLC sources the 43 fitted carrier pieces from the uploaded BOM. You do not need a second loose set.",
-            "For hand assembly, filter Carrier parts and buy the listed quantities. All C-codes link to their supplier listing."
+            "For pill PCBA, JLC sources 35 fitted SMT pieces from the matching BOM; do not buy a second loose set.",
+            "The table defaults to the eight-pin pill carrier. Select Standard FPC only when building that separate board. Values, ratings and quantities remain visible."
           ]
         },
         {
           "title": "Buy the separate system parts",
           "items": [
-            "Luckfox Pico Mini; verify SD boot compatibility. Pro/Max/Pi modules are different targets.",
-            "Exact 2.8-inch ST7789 bare 40-pin FPC panel; compatible SC3336 camera/ribbon; case; microSD; regulated 5 V USB power.",
-            "Add a contact SeedKeeper for storage or Satochip for on-card signing. Cards are optional for ordinary host signing."
+            "Luckfox Pico Mini with compatible microSD boot and matching SC3336 camera/ribbon.",
+            "HOTHMI HTM-TFT028A16-SPI, no-touch, using its J1 eight-pin 2.54 mm row; socket/header strips, 12 mm supports and short screws.",
+            "microSD, one regulated 5 V USB supply and a new pill enclosure. Add a compatible contact card only if using the smartcard features."
           ]
         },
         {
-          "title": "Confirm the unresolved substitutions before checkout",
+          "title": "Confirm the exact module and hardware",
           "items": [
-            "HS280S010B / C2939938 is not a drop-in LCD: it is a 14-pin module.",
-            "Do not use a bottom-contact LCD connector in place of J401\u2019s selected top-contact part.",
-            "A case or retail carrier may have a different revision/reader suffix from this variant. Confirm its bundle contents and firmware configuration."
+            "The LCD is a 3.3 V module. Match the saved drawing and J1 row; do not buy the former Pico-format display or a bare FPC panel for this PCB.",
+            "Carrier header numbering runs opposite module J1 numbering. Verify all signals and the specified connector heights before soldering.",
+            "The old enclosure does not fit. Confirm supports, screw engagement, camera cable path and button plungers."
           ],
           "links": [
             {
-              "label": "Exact LCD requirements",
-              "url": "/guides/bom/#lcd-candidate-qualification-11-october-2026"
+              "label": "Exact LCD, connector and power requirements",
+              "url": "/guides/lcd-module/"
             },
             {
               "label": "Compatible card families",
@@ -204,12 +208,12 @@
       "next": "compile",
       "references": [
         {
-          "label": "Per-component rationale",
-          "url": "/guides/components/"
+          "label": "Pill circuit choices and wiring",
+          "url": "/guides/lcd-module/"
         },
         {
-          "label": "Catalog snapshot",
-          "url": "/guides/bom-table/"
+          "label": "Pill catalog snapshot",
+          "url": "/guides/modular-bom/"
         }
       ]
     },
@@ -371,7 +375,7 @@
           ],
           "commands": [
             {
-              "label": "macOS \u2014 hash the selected file",
+              "label": "macOS — hash the selected file",
               "text": "cd ~/Downloads\nshasum -a 256 seedsigner-luckfox-pico-mini-sd-SeSi-0.8.7_ShSi-B13-osproduction-signed-devkey.img"
             }
           ],
@@ -462,7 +466,7 @@
         {
           "title": "Create and back up a test seed",
           "items": [
-            "On the device: Tools \u2192 New seed (camera entropy or dice entropy). Choose the length and complete the prompts.",
+            "On the device: Tools → New seed (camera entropy or dice entropy). Choose the length and complete the prompts.",
             "Record and verify the words offline. The ordinary SeedSigner flow holds the loaded seed in memory, so you need its backup again after power-off.",
             "Use a disposable seed and an unfunded wallet for your first run. The website never asks you to enter a seed or PIN."
           ],
@@ -476,8 +480,8 @@
         {
           "title": "Export public wallet information",
           "items": [
-            "Open the loaded seed\u2019s options and export an xpub for Single Sig and the script type you intend to use. Choose Sparrow as the QR format.",
-            "In Sparrow: create a new wallet, choose the air-gapped hardware wallet route, and scan the signer\u2019s public export.",
+            "Open the loaded seed’s options and export an xpub for Single Sig and the script type you intend to use. Choose Sparrow as the QR format.",
+            "In Sparrow: create a new wallet, choose the air-gapped hardware wallet route, and scan the signer’s public export.",
             "Keep network, derivation path and script type consistent. This is a watch-only wallet; never type the seed into Sparrow just to make scanning work."
           ],
           "links": [
@@ -498,7 +502,7 @@
         {
           "title": "Verify a receive address",
           "items": [
-            "Display a receive address in Sparrow and use the signer\u2019s address-verification/scan flow to confirm it belongs to your loaded seed and wallet settings.",
+            "Display a receive address in Sparrow and use the signer’s address-verification/scan flow to confirm it belongs to your loaded seed and wallet settings.",
             "Compare the complete address and network. For multisig, import the correct wallet descriptor; a single cosigner seed alone does not define the wallet.",
             "Do this before any real deposit. This prototype still needs its hardware validation."
           ]
@@ -508,7 +512,7 @@
           "items": [
             "Sparrow builds an unsigned transaction (PSBT) and displays it as an animated QR. Scan that QR with the signer.",
             "On the signer, review destination addresses, amounts, change and fee before approving.",
-            "Display the signed QR, scan it back into Sparrow, then review there. Sparrow\u2014not the offline signer\u2014broadcasts when you explicitly choose to do so."
+            "Display the signed QR, scan it back into Sparrow, then review there. Sparrow—not the offline signer—broadcasts when you explicitly choose to do so."
           ],
           "diagram": "signing",
           "links": [
@@ -561,7 +565,7 @@
         {
           "title": "Choose what the card should do",
           "items": [
-            "SeedKeeper stores secrets; loading one puts it in the Luckfox\u2019s memory for host signing.",
+            "SeedKeeper stores secrets; loading one puts it in the Luckfox’s memory for host signing.",
             "Satochip derives/signs on the card; the host still reviews the transaction and requests a signature.",
             "This PCB has a contact socket and no NFC reader. Buy a contact-capable retail card, or a supported blank JavaCard for deliberate DIY provisioning."
           ],
@@ -586,7 +590,7 @@
         {
           "title": "Verify the reader before changing the card",
           "items": [
-            "Insert a spare card and inspect Tools \u2192 Smartcard Tools. Card presence/ATR only prove transport, not the right applet.",
+            "Insert a spare card and inspect Tools → Smartcard Tools. Card presence/ATR only prove transport, not the right applet.",
             "J601 is the Amphenol 7312P0225A13LF contact socket. Only SEC1210 SC1 is wired; UR2 may enumerate another empty slot.",
             "If no card is detected, check seating and the UR2/UART configuration before installing applets or guessing PINs."
           ],
@@ -612,7 +616,7 @@
         {
           "title": "Check the result and keep a recovery copy",
           "items": [
-            "After loading a SeedKeeper secret, compare its fingerprint. For Satochip, compare the card\u2019s master fingerprint/public export with the intended seed.",
+            "After loading a SeedKeeper secret, compare its fingerprint. For Satochip, compare the card’s master fingerprint/public export with the intended seed.",
             "A wrong fingerprint is a reason to stop and check setup, not to overwrite the card.",
             "Keep PINs, management keys and wallet backups offline. Do not reset a card containing a seed as a transport diagnostic."
           ],

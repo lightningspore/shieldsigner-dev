@@ -2,15 +2,17 @@
 
 ![Modular ShieldSigner assembly](variants/lcd-module-2.8/assembly-front.png)
 
-Native KiCad is the preferred editing workflow. This repository publishes the reviewed ShieldSigner carrier variant, tools and knowledge site. This ports the upstream ShieldSigner Plus smartcard PCB into native tscircuit components, footprints, and net connections, while retaining its reference copper routing.
+Native KiCad is the preferred editing workflow. This repository publishes the reviewed ShieldSigner carrier variant, tools and knowledge site. A separate experimental tscircuit port preserves the standard carrier for comparison.
 
-## Modular 2.8-inch build
+## Eight-pin 2.8-inch pill build
 
-Start with the [modular carrier guide](docs/LCD-MODULE-VARIANT.md) and [customer assembly steps](docs/MODULAR-ASSEMBLY.md). It combines the smartcard circuitry with an assembled plug-in display: 32 SMT placements for JLCPCB, ordinary header soldering for the customer, and local 3D models. Open it with `mise run variant:lcd:open`; build its quote files with `mise run variant:lcd:fab`.
+Start with the [pill carrier guide](docs/LCD-MODULE-VARIANT.md) and [customer assembly steps](docs/MODULAR-ASSEMBLY.md). This **160×70 mm capsule** follows the eight-pin SPI module interface in the existing Luckfox design, with the larger 2.8-inch display between the controls. JLCPCB handles 35 SMT placements across 17 catalog lines. Customer soldering is ordinary headers: 30 carrier joints, plus up to 30 if both modules arrive bare.
 
-The sections below also retain the separate standard FPC carrier and its experimental tscircuit port. Do not mix their manufacturing files with the modular kit.
+The PCB uses a dedicated 3.3 V display regulator, supported display mounts and 19 local 3D models. Native ERC/DRC/connectivity/parity pass with zero exclusions. Open with `mise run variant:lcd:open`; build matched prototype quote files with `mise run variant:lcd:fab`. Physical fit, firmware/display behavior and powered bring-up remain unqualified.
 
-## Documentation
+The former 0.0.3-dev Pico-format display bay is superseded. Sections below also retain the separate standard FPC carrier and its experimental tscircuit port; do not mix their manufacturing files with the pill kit.
+
+## Standard FPC reference documentation
 
 Read these in order:
 
@@ -21,7 +23,7 @@ Read these in order:
 
 The [component guide](docs/COMPONENTS.md) covers all 53 PCB references and pad/net maps. [Hardware guide](docs/HARDWARE.md) explains the blocks; [port status](docs/PORT-STATUS.md) explains the experimental tscircuit limitations. Native KiCad is the preferred workflow.
 
-## Native KiCad workflow
+## Standard FPC native workflow
 
 See [KiCad setup, exports and remaining DRC work](KICAD.md). Use `mise run kicad:open` to open the complete native project, `mise run kicad:export` for review files and `mise run kicad:check` for ERC/DRC. The native schematic has zero ERC errors/warnings. The PCB has zero active DRC errors/warnings and zero unconnected/parity issues. Two documented courtyard exceptions apply only to mutually exclusive DNP mode straps; population checks enforce that assumption.
 
@@ -41,7 +43,7 @@ mise run dev
 
 Outputs in `dist/`: circuit JSON, top/bottom PCB SVGs, schematic SVG, and BOM JSON. The schematic is a generated connectivity view, not a reproduction of the original schematic sheet arrangement. Components use generic chip symbols with original values and pin aliases.
 
-## Hardware reference
+## Standard FPC hardware reference
 
 Pinned upstream commit: `efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f` in [3rdIteration/seedsigner](https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero). Original board, hierarchical schematics, README, license and provenance are in `reference/`.
 
@@ -64,12 +66,8 @@ Derived from 3rdIteration/SeedSigner at the pinned revision in [reference/proven
 
 ## Public repository
 
-Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. Downloadable design bundles are attached to the [0.0.2-dev workflow preview](https://github.com/lightningspore/shieldsigner-dev/releases/tag/workflow-preview-0.0.2-dev); these remain review artifacts, not assembly-qualified production files.
+Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. The [0.0.4-dev pill preview](https://github.com/lightningspore/shieldsigner-dev/releases/tag/pill-preview-0.0.4-dev) contains the current native project, schematic, matched quote kit and 3D exports. The older workflow preview remains a separate standard FPC reference. These are prototype review files, not physically qualified production hardware.
 
 ## Build and use workflows
 
-The public site now starts with six tasks: [PCB order](https://shieldsigner.dev/build/pcb/), [parts](https://shieldsigner.dev/build/parts/), [compile](https://shieldsigner.dev/build/compile/), [flash](https://shieldsigner.dev/build/flash/), [SeedSigner use](https://shieldsigner.dev/build/use/) and [smartcards](https://shieldsigner.dev/build/cards/). The site is **0.0.3-dev**, with its Git revision visible. Passives show explicit units and catalog ratings. `mise run bom:check` validates the 28 fitted passive values against catalog electrical attributes. C603/C604 purchase identities are now the 1 µF C28323 parts, superseding the initial preview’s incorrect 100 nF metadata.
-
-## Plug-in 2.8-inch LCD variant
-
-The [modular 2.8-inch carrier](docs/LCD-MODULE-VARIANT.md) uses an assembled Waveshare Pico-ResTouch-LCD-2.8, local 3D models and four mechanical supports. JLCPCB handles 32 SMT pieces; the customer solders ordinary 2.54 mm headers. Its [KiCad project](variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pro), [matched prototype quote files](variants/lcd-module-2.8/manufacturing/README.md), [16-line sourcing table](variants/lcd-module-2.8/manufacturing/BOM.md) and [assembly guide](docs/MODULAR-ASSEMBLY.md) are independent of the standard FPC carrier. Use `mise run variant:lcd:fab` and `mise run variant:lcd:review`. Native/footprint/model checks pass; assembler review and physical bring-up remain open. The public site is 0.0.3-dev.
+The public site now starts with six tasks: [PCB order](https://shieldsigner.dev/build/pcb/), [parts](https://shieldsigner.dev/build/parts/), [compile](https://shieldsigner.dev/build/compile/), [flash](https://shieldsigner.dev/build/flash/), [SeedSigner use](https://shieldsigner.dev/build/use/) and [smartcards](https://shieldsigner.dev/build/cards/). The site is **0.0.4-dev**, with its Git revision visible. Passives show explicit units and catalog ratings. For the standard FPC reference, `mise run bom:check` validates its 28 fitted passive values. The pill manufacturing gate validates its own fitted passives against its catalog. C603/C604 purchase identities are now the 1 µF C28323 parts, superseding the initial preview’s incorrect 100 nF metadata.

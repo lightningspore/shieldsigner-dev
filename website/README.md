@@ -122,3 +122,9 @@ CSS and task JavaScript URLs include the displayed revision to avoid stale asset
 ## 2.8-inch module variant — 0.0.3-dev
 
 `/guides/lcd-module/` documents the separate header-module carrier, and `/guides/website/` documents this site. The PCB task links to the variant before ordering. Its native files, drawings, population and check summary are packaged under `/files/variants/lcd-module-2.8/`; they do not replace or enter the standard carrier order bundle. A separate prototype quote kit provides matching modular Gerbers/BOM/CPL. `assets/modular-downloads.json` pins its release hashes and source PCB hash. The modular files remain subject to assembler DFM/placement and first-article testing. Run `mise run variant:lcd:check` at the repository root before packaging changed variant assets.
+
+## Eight-pin pill — 0.0.4-dev
+
+The homepage, PCB order workflow and default shopping table now describe the 160×70 mm eight-pin pill. Its 35 SMT placements/17 lines and separate customer headers/modules come from the variant's native manufacturing files/catalog and `system-parts.json`. A selector preserves access to the standard FPC table without mixing its files into the pill order flow. Display and assembly guides document the reference numbering, dedicated LCD supply, support stack and limits of the dimensional 3D models.
+
+`assets/modular-downloads.json` pins six pill prerelease assets: matched order/Gerber/native kits, schematic PDF and assembled STEP/GLB. Content synchronization verifies the PCB and asset hashes; a fresh checkout fetches pinned release files. Run response tests and desktop/mobile/no-JS checks, including variant switching, quantities, board images and actual order downloads, before deploying.

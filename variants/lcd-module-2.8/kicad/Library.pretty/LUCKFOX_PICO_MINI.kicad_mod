@@ -104,7 +104,7 @@
 	(fp_text user "CUT_OUT"
 		(at 4 11 0)
 		(unlocked yes)
-		(layer "F.SilkS")
+		(layer "F.Fab")
 		(uuid "9815ffd2-8cae-49b4-8057-ba417d4bdeaa")
 		(effects
 			(font
@@ -146,7 +146,7 @@
 	(fp_text user "CUT_OUT"
 		(at 14 8.5 0)
 		(unlocked yes)
-		(layer "B.SilkS")
+		(layer "B.Fab")
 		(uuid "55777f7e-a348-4b7c-a976-0c08c669b101")
 		(effects
 			(font

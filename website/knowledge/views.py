@@ -41,7 +41,7 @@ def workflow(request, slug):
     task = next((p for p in tasks if p['slug']==slug), None)
     if task is None: raise Http404
     context = {'task':task, 'tasks':tasks, 'title':task['title'], 'description':task['summary'], 'next_task':next((p for p in tasks if p['slug']==task.get('next')),None)}
-    if slug=='pcb': context['pcb_spec']=workflows.load('pcb-spec')
+    if slug=='pcb': context['pcb_spec']=workflows.load('modular-pcb-spec')
     if slug=='parts':
         context.update(workflows.shopping(request.GET))
         if request.headers.get('HX-Request')=='true' and request.headers.get('HX-Boosted')!='true':

@@ -1,13 +1,6 @@
 {
-  "checkedAt": "2026-10-14",
+  "checkedAt": "2026-10-15",
   "models": {
-    "kicad/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x20_P2.54mm_Vertical.step": {
-      "provider": "KiCad packages3D 10.0.7",
-      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
-      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
-      "sha256": "dd12a941403093b0e24053307e5622c51c95907f0bb60f9f5d1c9d25c5442e20",
-      "bytes": 723585
-    },
     "kicad/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x11_P2.54mm_Vertical.step": {
       "provider": "KiCad packages3D 10.0.7",
       "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
@@ -71,14 +64,6 @@
       "sha256": "0c0c2c406023d98c7be84b9de00dcb7abf1cb1c8e26e8776710b15b1c56651ca",
       "bytes": 296138
     },
-    "vendor/Waveshare-Pico-ResTouch-LCD-2.8.step": {
-      "provider": "Waveshare",
-      "source": "https://files.waveshare.com/upload/8/83/Pico-ResTouch-LCD-2_8.zip",
-      "type": "manufacturer STEP, unchanged",
-      "license": "Manufacturer reference model; retain embedded attribution",
-      "sha256": "3efec089a29bfbb3933e5d77b4f1605f026a77cdde94606fc35ed88e117248c9",
-      "bytes": 560591
-    },
     "vendor/Microchip-SEC1210-QFN24.step": {
       "provider": "LCSC/EasyEDA C633309",
       "source": "https://easyeda.com/api/products/C633309/components?version=6.4.19.5",
@@ -121,13 +106,43 @@
       "sha256": "3c7a97314c0071ff21ce729bd83a405d076cd5607afbde88425a77be5fe47dbf",
       "bytes": 15544
     },
-    "vendor/M2.5x8-standoff-envelope.step": {
+    "kicad/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x08_P2.54mm_Vertical.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "ea08834e672b1f96115f4d51e8db44b9d653dd2798afb956a0277425663d5832",
+      "bytes": 170058
+    },
+    "kicad/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x08_P2.54mm_Vertical.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "081e2b47a2d73a4502efc64d77b9002c9a28047b5776a46043c3d9ca37bac9e1",
+      "bytes": 286283
+    },
+    "vendor/Diodes-AP2112K-SOT25.step": {
+      "provider": "LCSC/EasyEDA C51118",
+      "source": "https://easyeda.com/api/products/C51118/components?version=6.4.19.5",
+      "type": "Supplier STEP for selected Diodes AP2112K",
+      "license": "Supplier reference model; retain embedded attribution",
+      "sha256": "b62c7f540156fc3f53a49e7d688515117affede125777c7d99f5a6a6ae61c7ca",
+      "bytes": 1417804
+    },
+    "vendor/HOTHMI-HTM-TFT028A16-SPI-envelope.step": {
       "provider": "ShieldSigner",
-      "source": "Specified 8 mm M2.5 extension hardware",
-      "type": "Simplified 5 mm diameter x 8 mm support envelope; threads omitted",
+      "source": "reference/pdfs/HOTHMI-HTM-TFT028A16-SPI.pdf page 5; scripts/model-pill-display.py",
+      "type": "Drawing-based dimensional envelope, not manufacturer STEP; simplified back connector keepout",
       "license": "MIT; generated for this project",
-      "sha256": "2462e93149c0edf1cba88baebc6066aac6d1eb9d66d030898e9679cbeafc2e27",
-      "bytes": 9319
+      "sha256": "8897c15231db03f5d4745bd1e7640e0dc91c9b00d69d0b7a52697fae143c29aa",
+      "bytes": 129466
+    },
+    "vendor/M2.5x12-standoff-envelope.step": {
+      "provider": "ShieldSigner",
+      "source": "Specified 12 mm M2.5 support hardware; scripts/model-pill-display.py",
+      "type": "5 mm diameter x 12 mm threadless dimensional envelope",
+      "license": "MIT; generated for this project",
+      "sha256": "e7d651a23d8d695a70062af986af5751176508d8f18e81082f84a0fdfdf246d8",
+      "bytes": 9584
     }
   }
 }

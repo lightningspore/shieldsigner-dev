@@ -1,5 +1,7 @@
 # Native KiCad board
 
+For the **current eight-pin pill**, start with [its project](variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pro) and `mise run variant:lcd:open`. Its complete workflow is at the end of this guide. The standard `kicad:*` tasks and reference discussion below target the separate original FPC carrier.
+
 Open [the complete KiCad project](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro). It includes the hierarchical schematic, routed PCB, project settings, and project-local symbol/footprint libraries. Native KiCad is now the preferred editor. The original tscircuit work remains for comparison.
 
 ## Use mise
@@ -69,8 +71,10 @@ After an accepted edit, run `mise run kicad:check`, `mise run bom:generate`, and
 
 Library paths use the exact tracked `Footprints/` capitalization. This prevents a case-insensitive Mac checkout from masking missing libraries in Linux checkouts.
 
-## Separate 2.8-inch assembled-module carrier
+## Eight-pin pill carrier
 
-The [header-module variant](docs/LCD-MODULE-VARIANT.md) has independent native files under `variants/lcd-module-2.8/kicad/`. Run `mise run variant:lcd:check`; standard `kicad:check` and fabrication tasks still target the original carrier. The experimental tscircuit port also continues to describe that original carrier, not this separate module layout.
+The [0.0.4-dev pill carrier](docs/LCD-MODULE-VARIANT.md) is an independent project under `variants/lcd-module-2.8/kicad/`. Use `mise run variant:lcd:open`. It follows the existing Luckfox eight-pin interface, keeps a 160×70 mm capsule and places a 2.8-inch module between the controls. A dedicated AP2112 supplies LCD_3V3. The obsolete bare-panel sheet/lands and Pico-format bay are removed.
 
-The modular project includes reviewed reflow footprints, 17 local STEP models and four display mounting holes. `mise run variant:lcd:models` checks land dimensions, mating geometry and model hashes. `mise run variant:lcd:fab` creates its own matched Gerbers/drills/BOM/CPL with a shared datum. `mise run variant:lcd:review` regenerates native 3D renders and STEP/GLB exports. The card socket and spacer are explicitly dimensional models, not detailed manufacturer CAD.
+`variant:lcd:check` runs native ERC/DRC/connectivity/parity with zero permitted exclusions. `variant:lcd:models` checks 19 model hashes, reviewed solder lands, exact connector mapping, capsule edges, supports and both-side hardware clearance. `variant:lcd:fab` builds 35-part/17-line matched Gerbers/drills/BOM/CPL. `variant:lcd:review` produces both assembled views, a complete schematic PDF and STEP/GLB exports. `variant:lcd:package` pins public release outputs. LCD/socket/support models are explicit dimensional envelopes.
+
+Standard `kicad:*` tasks and the experimental tscircuit port still target the separate standard FPC carrier. Its two DNP courtyard exclusions do not apply to the pill PCB. Keep the two manufacturing sets separate.

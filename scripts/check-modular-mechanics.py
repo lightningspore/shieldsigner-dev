@@ -49,20 +49,54 @@ near(one(pads('U601')['25'],'size')[1:3],[3.4,3.4])
 windows=[p for p in children(fps['U601'],'pad') if p[1]==''];assert len(windows)==4
 for p in windows:near(one(p,'size')[1:3],[1.37,1.37]);assert one(p,'layers')==['layers','B.Paste']
 assert one(pads('J301')['A12'],'zone_connect')[-1]=='2','Reviewed USB ground plane connection lost'
+assert len(pads('J701'))==8
 for n,p in pads('J701').items():
- n=int(n);near(one(p,'at')[1:3],[17.78 if n<=20 else 0,(n-1 if n<=20 else 40-n)*2.54]);near(one(p,'drill')[1:],[1])
+ n=int(n);near(one(p,'at')[1:3],[0,-(n-1)*2.54]);near(one(p,'drill')[1:],[1])
+for number,xy in {'1':[-.95,1.2],'2':[0,1.2],'3':[.95,1.2],'4':[.95,-1.2],'5':[-.95,-1.2]}.items():
+ land('U701',number,xy,[.55,.8])
+for ref in ['C701','C702']:
+ assert next(x[2] for x in children(fps[ref],'property') if x[1]=='Value')=='10uF'
+# Verify the requested capsule itself, not only the display connector.
+edges=[e for key in ['gr_line','gr_arc'] for e in children(tree,key) if one(e,'layer')[1:] == ['Edge.Cuts']]
+assert len(edges)==4 and sum(e[0]=='gr_arc' for e in edges)==2,'Pill must have two straight edges and two semicircles, without a display bay'
+points=[list(map(float,one(e,key)[1:3])) for e in edges for key in ['start','end']]
+assert min(x for x,y in points)==83 and max(x for x,y in points)==173
+for e in edges:
+ if e[0]=='gr_arc':
+  a=list(map(float,one(e,'start')[1:3]));z=list(map(float,one(e,'end')[1:3]));near([abs(z[1]-a[1])],[70])
+  assert list(map(float,one(e,'mid')[1:3])) in [[48,89.579],[208,89.579]]
+x0,y0,x1,y1=mechanical['display']['moduleBounds']
+for ref in [f'SW{i}' for i in range(501,509)]:
+ x,y=map(float,one(fps[ref],'at')[1:3]);assert x+3.5<x0 or x-3.5>x1,f'{ref} collides with display board'
 for ref,xy in zip(['H701','H702','H703','H704'],mechanical['display']['mountingCenters']):
  f=fps[ref];near(one(f,'at')[1:3],xy);assert 'board_only' in one(f,'attr');p=children(f,'pad')[0];near(one(p,'drill')[1:],[2.7])
+ # Reserve a 5 mm hardware body plus 0.25 mm clearance on both board sides.
+ for other_ref,other in fps.items():
+  if other_ref.startswith('H70'):continue
+  at=one(other,'at');fx,fy=map(float,at[1:3]);angle=math.radians(float(at[3]) if len(at)>3 else 0)
+  for pad in children(other,'pad'):
+   dx,dy=map(float,one(pad,'at')[1:3]);px=fx+math.cos(angle)*dx+math.sin(angle)*dy;py=fy-math.sin(angle)*dx+math.cos(angle)*dy
+   w,h=map(float,one(pad,'size')[1:3]);distance=math.hypot(px-xy[0],py-xy[1])-math.hypot(w,h)/2
+   assert distance>=2.75,f'{other_ref} pad {pad[1]} intrudes into {ref} hardware clearance'
+keepouts=[z for z in children(tree,'zone') if one(z,'keepout')]
+assert len(keepouts)==4,'Four both-side support keepouts are required'
+for zone in keepouts:
+ assert one(zone,'layers')[1:]==['F.Cu','B.Cu']
+ assert one(one(zone,'keepout'),'tracks')[1:] == ['not_allowed']
+ assert one(one(zone,'keepout'),'vias')[1:] == ['not_allowed']
 # PCB edits and reusable library footprints must agree, so updating from libraries
 # cannot silently restore the inherited hand-solder lands.
-for ref in [*[f'SW{i}' for i in range(501,509)],'J301','J601','U601']:
+for ref in [*[f'SW{i}' for i in range(501,509)],'J301','J601','U601','U701']:
  f=fps[ref];library=parse((K/'Footprints/ShieldSigner.pretty'/(f[1].split(':')[-1]+'.kicad_mod')).read_text());bottom=one(f,'layer')[1]=='B.Cu'
  for pad in children(f,'pad'):
   xy=list(map(float,one(pad,'at')[1:3]));target=[xy[0],-xy[1] if bottom else xy[1]]
   candidates=[p for p in children(library,'pad') if p[1]==pad[1] and all(abs(float(a)-b)<.00001 for a,b in zip(one(p,'at')[1:3],target))]
   assert len(candidates)==1,(ref,pad[1],target)
   near(one(candidates[0],'size')[1:3],list(map(float,one(pad,'size')[1:3])))
-module=next(m for m in children(fps['J701'],'model') if 'Waveshare' in m[1]);near(one(one(module,'offset'),'xyz')[1:],mechanical['display']['modelOffset']);near(one(one(module,'rotate'),'xyz')[1:],mechanical['display']['modelRotation'])
+module=next(m for m in children(fps['J701'],'model') if 'HOTHMI' in m[1]);near(one(one(module,'offset'),'xyz')[1:],mechanical['display']['modelOffset']);near(one(one(module,'rotate'),'xyz')[1:],mechanical['display']['modelRotation'])
+socket=next(m for m in children(fps['J701'],'model') if 'PinSocket_1x08' in m[1]);near(one(one(socket,'rotate'),'xyz')[1:],[0,0,180])
+male=next(m for m in children(fps['J701'],'model') if 'PinHeader_1x08' in m[1]);near(one(one(male,'offset'),'xyz')[1:],[0,0,12]);near(one(one(male,'rotate'),'xyz')[1:],[180,0,0])
+regulator=children(fps['U701'],'model')[0];near(one(one(regulator,'offset'),'xyz')[1:],[0,0,.15])
 host=next(m for m in children(fps['U202'],'model') if 'Luckfox-Pico-Mini' in m[1]);near(one(one(host,'offset'),'xyz')[1:],mechanical['luckfox']['moduleModelOffset'])
-report={'modelsVerified':len(provenance),'assembledReferencesWithModels':modeled,'copperOnlyJumpers':copper_jumpers,'landPatterns':'XKB, SHOUHAN, Amphenol and Microchip recommended land dimensions asserted','displayMounts':'Four M2.5 clearance holes match manufacturer STEP','modelLimitations':['Card socket is a dimensional envelope, not detailed manufacturer CAD','Standoff model omits threads','Physical first-article header fit remains to be confirmed']}
+report={'modelsVerified':len(provenance),'assembledReferencesWithModels':modeled,'copperOnlyJumpers':copper_jumpers,'landPatterns':'XKB, SHOUHAN, Amphenol, Microchip and Diodes recommended land dimensions asserted','boardShape':'160 x 70 mm capsule; no rectangular bay or module cutout','displayMounts':'Four M2.5 clearance holes match HOTHMI manufacturer drawing','modelLimitations':['LCD and card socket are dimensional envelopes, not detailed manufacturer CAD','Standoff model omits threads','Physical first-article header/module fit remains to be confirmed']}
 (V/'mechanical-check-results.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

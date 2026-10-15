@@ -1,5 +1,7 @@
 # How the ShieldSigner Luckfox carrier works
 
+> **Standard FPC reference:** The current eight-pin pill carrier has its own [design, component changes and power review](LCD-MODULE-VARIANT.md), [35-part BOM](../variants/lcd-module-2.8/manufacturing/BOM.md) and [assembly guide](MODULAR-ASSEMBLY.md). The detailed standard-carrier reference below remains separate.
+
 This is an explanation of the pinned upstream circuit, not a new electrical qualification. The initial tscircuit port lost assembly and drawing semantics, so its appearance was less complete than the native KiCad design. Native KiCad is now the preferred editing workflow in `../kicad/`. The complete [component guide](COMPONENTS.md) explains all 53 PCB references and gives actual pad-to-net mappings.
 
 ## Read this design in blocks

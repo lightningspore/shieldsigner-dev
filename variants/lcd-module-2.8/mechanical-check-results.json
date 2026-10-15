@@ -1,19 +1,22 @@
 {
-  "modelsVerified": 17,
+  "modelsVerified": 19,
   "assembledReferencesWithModels": [
+    "H701",
     "SW503",
     "SW504",
     "SW501",
-    "H701",
-    "J701",
     "H702",
+    "C701",
+    "H703",
     "SW505",
     "SW502",
     "SW508",
     "H704",
+    "C702",
     "SW507",
+    "U701",
     "SW506",
-    "H703",
+    "J701",
     "C606",
     "C201",
     "C601",
@@ -48,11 +51,12 @@
     "JP205",
     "JP206"
   ],
-  "landPatterns": "XKB, SHOUHAN, Amphenol and Microchip recommended land dimensions asserted",
-  "displayMounts": "Four M2.5 clearance holes match manufacturer STEP",
+  "landPatterns": "XKB, SHOUHAN, Amphenol, Microchip and Diodes recommended land dimensions asserted",
+  "boardShape": "160 x 70 mm capsule; no rectangular bay or module cutout",
+  "displayMounts": "Four M2.5 clearance holes match HOTHMI manufacturer drawing",
   "modelLimitations": [
-    "Card socket is a dimensional envelope, not detailed manufacturer CAD",
+    "LCD and card socket are dimensional envelopes, not detailed manufacturer CAD",
     "Standoff model omits threads",
-    "Physical first-article header fit remains to be confirmed"
+    "Physical first-article header/module fit remains to be confirmed"
   ]
 }

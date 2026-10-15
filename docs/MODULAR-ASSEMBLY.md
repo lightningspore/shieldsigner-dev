@@ -1,58 +1,62 @@
-# Build the modular carrier
+# Assemble the eight-pin pill carrier
 
-The intended work split is **JLCPCB solders the 32 small parts; you solder ordinary headers, plug modules together and install screws**. Use the [modular design guide](LCD-MODULE-VARIANT.md) and its matched files, rather than the standard FPC carrier instructions.
+**JLCPCB solders the 35 SMT parts. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.4-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
 
 ## Customer shopping list
 
-| Item | Qty | Required specification |
+| Item | Qty | Specification |
 |---|---:|---|
-| Waveshare Pico-ResTouch-LCD-2.8 | 1 | Assembled 2.8-inch ST7789 display with its two receptacle rows; no Pico CPU |
-| Luckfox Pico Mini | 1 | Compatible RV1103/microSD boot variant; SC3336 camera support |
-| Display male header strips | 2 | 1×20, 2.54 mm pitch, 0.64 mm square pins, nominal 2.54 mm insulator and 6 mm exposed posts |
-| Carrier Luckfox socket strips | 2 | 1×11, 2.54 mm pitch, nominal 8.5 mm housing height, mates with 0.64 mm square pins |
-| Luckfox male strips | 2 if needed | 1×11, 2.54 mm pitch; omit if the purchased module already has correctly oriented headers |
-| Display support extensions | 4 | M2.5 male-female, 8 mm body; short male stud suitable for the display's 4 mm bosses |
-| Carrier support screws | 4 | M2.5×4 mm, with suitable washers if needed; check engagement and case clearance |
-| Camera, microSD, regulated 5 V supply and enclosure | 1 set | Match the Luckfox and this larger PCB; the old enclosure does not fit |
+| HOTHMI HTM-TFT028A16-SPI | 1 | No-touch 2.8-inch ST7789V module; confirm J1 1×8, 2.54 mm row and 88×53.3 mm drawing |
+| Luckfox Pico Mini | 1 | Compatible RV1103/microSD boot variant and matching camera |
+| LCD carrier socket | 1 | 1×8 female, 2.54 mm pitch, 8.5 mm housing, accepts 0.64 mm square posts |
+| LCD male strip | 1 if needed | 1×8, 2.54 mm pitch, 0.64 mm square, 2.54 mm insulator, 6 mm exposed mating posts |
+| Luckfox carrier sockets | 2 | 1×11 female, 2.54 mm pitch, 8.5 mm housing |
+| Luckfox male strips | 2 if needed | 1×11; long posts face carrier sockets; omit if correctly preinstalled |
+| Display spacers | 4 | M2.5 female-female, 12 mm body, nominal 5 mm outside diameter |
+| Mounting screws | 8 | M2.5×4; check engagement through each PCB and any washers |
+| Washers | As needed | M2.5, no more than 5 mm outside diameter in the reserved hardware area |
+| Camera, microSD, 5 V supply, enclosure | 1 set | Match the selected Luckfox and 160×70 mm carrier; old enclosure does not fit |
 
-Buy headers to the specified heights, not only pitch. The module's packaged spacers are not specified as 8 mm; measure them before reusing them. Generic longer breakaway **male** strips can be trimmed to the exact pin counts. Precut sockets avoid cutting through a female contact. The [CSV](../variants/lcd-module-2.8/assembly-extras.csv) is a separate customer list, not a JLC SMT BOM.
+The LCD's separate 2 mm J2 connector is not used. Fit the 2.54 mm J1 row if the seller supplies it bare. Confirm connector type, pitch and pin orientation on the purchased module; the photograph/drawing is not a guarantee that a header is fitted. Buy headers by **height and post length**, not pitch alone. Precut female strips avoid damaging contacts when trimming.
 
-## 1. Request the PCBA quote
+[Customer-parts CSV](../variants/lcd-module-2.8/assembly-extras.csv) is separate from the JLC SMT BOM. A compatible full-size smartcard is also needed for reader tests; [choose a card/app](SMARTCARDS.md) for your workflow.
 
-Unzip the [modular order kit](https://www.shieldsigner.dev/files/shieldsigner-modular-order.zip). Upload its inner Gerber ZIP, then its matching BOM and CPL. Select two-sided SMT assembly, two copper layers and 1.6 mm thickness. The [kit instructions](../variants/lcd-module-2.8/manufacturing/README.md) explain the datum, population and quote checks.
+## 1. Get a matched PCBA quote
 
-Start with five assembled prototypes. Confirm the assembler's preview shows all eight switches on top and the card socket/USB/SEC1210 on the bottom. Confirm the socket entrance, USB port direction and SEC1210 pin 1 visually before approving assembly. No retail LCD, Luckfox, customer headers, supports or DNP parts should appear in the SMT BOM/CPL. Request review of the card socket's tray handling and double-sided process; its public SMT catalog listing is not a completed quote.
+Unzip the [pill order kit](https://www.shieldsigner.dev/files/shieldsigner-modular-order.zip). Upload the inner **shieldsigner-modular-gerbers.zip**, then **bom-jlcpcb.csv** and **cpl-jlcpcb.csv**. Request two copper layers, 1.6 mm thickness and two-sided SMT assembly. Expect **35 placements / 17 catalog lines**: eight switches plus U701/C701/C702 on top, and 24 parts underneath.
 
-Do not solder the small parts yourself if using the assembled-carrier route. The supplied files identify them by manufacturer part number and LCSC code. Any substitution needs an electrical/footprint review, especially the SEC1210 firmware suffix and card socket.
+Start with five prototypes. Check JLC's preview for SEC1210 pin 1, card-socket entrance, USB orientation and the eight switches. Ask about socket handling and its double-sided process. The LCD, Luckfox, customer headers, supports and copper jumpers do not belong in the SMT BOM/CPL. There are no obsolete FPC/backlight parts to populate and no DNP courtyard exceptions to approve.
 
-## 2. Inspect and install the headers
+Confirm stock, rotation, DFM, loading/attrition fees and final quote before payment. No paid order or physical qualification is implied by the software checks. Do not substitute the SEC1210 firmware suffix or an arbitrary eight-pin LCD.
 
-Keep all power disconnected. Inspect the PCBA for solder bridges, polarity and the stated DNP population. Fit the two 1×20 **male** strips on the carrier's display side at J701. Use the unpowered LCD as an alignment jig while lightly tacking one pin on each strip; verify both rows are straight before finishing the joints. Do not force the module or solder with power connected.
+## 2. Inspect the assembled carrier
 
-Fit the two 1×11 **female** socket strips on the carrier's Luckfox mounting side. Match the KiCad 3D assembly: the Luckfox microSD/components face outward and the USB end follows the board marking. If the module lacks headers, install two male strips so the long posts enter the carrier sockets. Tack a corner, check perpendicular alignment and then finish the remaining joints.
+Keep all power disconnected. Inspect the QFN, USB and card contacts for bridges, capacitor damage and correct orientation. Check that U701 is the selected 3.3 V regulator. Verify resistance between +5V/GND, LCD_3V3/GND and Luckfox +3.3V/GND; investigate an apparent short.
 
-The carrier has **62 customer header joints** (40 LCD + 22 Luckfox sockets). An unheadered Luckfox adds 22 joints, for **84 total**, all at 2.54 mm pitch. A module with suitable preinstalled headers saves those 22 joints. The customer does not solder the SEC1210 QFN, USB contacts, card socket or an LCD FPC connector.
+The dedicated LCD_3V3 output must not be shorted to the Luckfox 3.3 V output. The LCD header never receives 5 V. Confirm header pad 8 is LCD_3V3 and pad 7 is GND against the [signal table](LCD-MODULE-VARIANT.md#exact-connector-wiring).
 
-## 3. Support the display mechanically
+## 3. Solder the ordinary headers
 
-Use H701–H704's four 2.7 mm clearance holes. Their centers come from the manufacturer's STEP, not an estimated screenshot. The intended support is 8 mm extensions between the carrier and the module's 4 mm factory bosses, placing the LCD PCB back approximately 12 mm above the carrier. Verify thread engagement without bottoming out or pulling on the PCB.
+Install the **1×8 female socket on the carrier front at J701**. Install two **1×11 female sockets on the Luckfox mounting side**. Tack one end, check perpendicular alignment and finish the joints.
 
-At these nominal dimensions, the display receptacle openings sit about 3 mm above the carrier and the specified male posts enter them by about 5.54 mm. The male insulators are 2.54 mm tall, leaving a small gap rather than loading the connector housings. The supplied STEP depicts a 0.02 mm wider row spacing than the nominal Pico interface; confirm smooth mating on the purchased module before tightening supports.
+If the LCD lacks its J1 header, fit a 1×8 male strip with the long mating posts pointing down toward the carrier. The carrier numbers run opposite the module's: **carrier 1/BL → module 8/BL_E; carrier 8/3V3 → module 1/VCC**. Match every signal before using the unpowered module as an alignment jig. Never connect by equal pin numbers.
 
-Support the display with its screws, not only friction in the electrical headers. Keep metal housings and screw ends away from circuit pads. Check the camera cable path and access to both USB/microSD locations before designing an enclosure. The source card-socket model is an outer envelope, so use the real socket drawing/card for its insertion opening.
+If needed, fit the Luckfox's two male strips so the long posts enter its sockets. The microSD/components face outward and the module USB end follows the KiCad assembly. The carrier has **30 customer solder joints**: 8 LCD socket + 22 Luckfox sockets. Bare LCD/Luckfox modules add 8 + 22, for **60 maximum**, all at 2.54 mm pitch. No customer reflow or fine-pitch connector soldering is required.
 
-## 4. Check connections before power
+## 4. Mount and fit-check
 
-With the modules removed, check resistance between +5 V and ground and between +3.3 V and ground. Investigate an apparent short before attaching the LCD. Verify J701 pin 39 goes to +5 V and its ground pins go to ground. Verify its SPI/reset/DC pins against the design guide's table; the 40-pin numbering is Pico-style, not Luckfox numbering.
+Use four **12 mm M2.5 female-female spacers** at H701–H704. Fasten from below the carrier and above the display using eight short screws. Check engagement, washer diameter and screw clearance before tightening. Do not use the earlier Pico module's factory bosses or 8 mm extension instructions.
 
-Keep JP203/JP205 closed and JP204/JP206 open. The assembled display has its own backlight circuit; do not populate the old J401/C401/Q401/R401–R410 circuitry. Leave the module's SD slot empty—it is not the Luckfox boot slot.
+The CAD stack gives about 5.04 mm electrical pin insertion and 6.8 mm clearance beneath the LCD's rear connector. Confirm smooth mating with no forced bending. Support the display mechanically; do not use the header as the only support. Check Luckfox removal, camera cable routing, both microSD/USB access paths and smartcard insertion.
 
-## 5. Bring up in stages
+The LCD front is approximately 17.7 mm above the carrier. Switch actuators are much lower, so the case needs button plungers or suitable wells. Enclosure and physical stack tolerances are not qualified by the STEP envelopes.
 
-1. Insert only the Luckfox and boot media. Use one current-limited regulated 5 V source. Verify +5 V and Luckfox +3.3 V at J701; power down before adding the display.
-2. Connect and support the display. Measure whole-device current and both rails during boot. The manufacturer quotes 140 mA at 5 V for the display module; total signer consumption also includes the CPU, camera and smartcard.
-3. Begin display tests at a conservative SPI clock, such as 1 MHz. Test red/green/blue/white/black fills and labeled corners. Confirm inversion, RGB/BGR order, rotation, offsets and full Plus-sized UI before increasing clock speed. The existing ST7789 family driver is a starting point, not a tested module firmware image.
-4. Test all eight buttons and the SC3336 camera, including QR focus/rotation. The camera retains its own ribbon connection.
-5. Use the SEC1210/PV-UR2 reader configuration, test the presence switch, read a compatible card's ATR and exercise the intended SeedKeeper/Satochip workflow. Use test material until physical bring-up is complete. A small SIM-size smartcard needs an appropriate full-size adapter for this socket.
+## 5. Apply power in stages
 
-Record rail minima, current, actual header/spacer dimensions, firmware revision, display tests and card results in the [bring-up record](BRINGUP-RESULTS.md). Native design checks and a successful OS compilation do not replace these measurements.
+1. Leave both modules out. Use one current-limited regulated 5 V supply at the carrier's power input. Verify U701 VIN/EN and LCD_3V3 output. Increase the limit only after checking unexpected current or heating.
+2. Power down, fit the Luckfox and boot media, then power up. Verify the independent Luckfox 3.3 V rail. Avoid simultaneously powering carrier and module USB ports.
+3. Power down, connect and support the LCD, then measure supply rails and whole-device current during boot and solid-color fills. Record U701 temperature and rail minima. The module drawing's 120 mA backlight figure is not a whole-device power budget.
+4. Keep JP201/JP203/JP205 closed, JP202/JP204/JP206 open. The default backlight is always on. Test SPI at a conservative clock, such as 1 MHz, then increase only after stable operation. Check reset, inversion, RGB/BGR order, rotation, offsets and all four labeled corners at landscape 320×240. An ST7789 family driver is a starting point, not a tested module firmware image.
+5. Test all eight buttons and camera scanning. Then load the UR2 UART/PCSC reader configuration and exercise the [smartcard bring-up steps](BRINGUP.md). Start with disposable test data, not a real wallet seed.
+
+Record module revision, header/spacer measurements, firmware version, measured current/temperature, display tests and card transactions in the [bring-up record](BRINGUP-RESULTS.md). A clean PCB check and a successful OS build do not establish these physical results.

@@ -1,4 +1,6 @@
 # ShieldSigner Luckfox Pico Mini build overview
+
+> For the **current 0.0.4-dev eight-pin pill**, use the [pill design](LCD-MODULE-VARIANT.md) and [assembly guide](MODULAR-ASSEMBLY.md). The overview below describes the earlier standard FPC configuration; its dated store prices/bundles are an archived sourcing snapshot, not a quote for the pill build.
 Checked 11 October 2026
 
 Recommended configuration

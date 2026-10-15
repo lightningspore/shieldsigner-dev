@@ -1,5 +1,7 @@
 # Prototype bring-up guide
 
+> For the **eight-pin pill**, start with [modular assembly and first power](MODULAR-ASSEMBLY.md). The FPC connector, Q401 and R401–R410 below apply only to the standard FPC carrier and are absent from the pill. Shared Luckfox/SEC1210/card tests remain useful after completing the pill-specific rail and fit checks.
+
 For the native KiCad ShieldSigner Luckfox carrier. This is a **proposed test procedure**, not a record of hardware passing. Use the [electrical review](ELECTRICAL-REVIEW.md) and [component pad maps](COMPONENTS.md) alongside it. Clear the layout/assembly review items before ordering; passing a prototype does not excuse unresolved manufacturing DRC.
 
 Use a spare/test card and test data throughout. Production keys, PIN attempts, applet installation and card resets are not needed to prove the first electrical stages.

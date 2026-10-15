@@ -1,0 +1,18 @@
+{
+  "boardSha256": "8f8a78e32b262ffb9dc23dd57a8e45151b91f023589a8d4e8fd690ac3e6da382",
+  "qualification": "Development layout; not manufacturing or mechanical sign-off",
+  "checks": {
+    "erc": {
+      "active": {},
+      "excluded": 0,
+      "unconnected": 0,
+      "parity": 0
+    },
+    "drc": {
+      "active": {},
+      "excluded": 2,
+      "unconnected": 0,
+      "parity": 0
+    }
+  }
+}

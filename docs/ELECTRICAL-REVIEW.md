@@ -2,7 +2,7 @@
 
 Reviewed 2026-10-11 against the native KiCad working project, pinned upstream sources, supplier drawings and controller datasheets. This is a **desk review**: no physical board, load measurement, oscilloscope capture or card transaction has been tested in this session.
 
-The circuit is plausible, but it is not ready for manufacturing approval. The main unresolved questions concern the LCD connector/assembly, backlight load, supply protection and reader configuration. Native ERC currently has zero errors; PCB connectivity/parity checks also pass. The 13 remaining layout DRC errors are separately recorded in [KICAD.md](../KICAD.md).
+The circuit is plausible, but it is not ready for manufacturing approval. The main unresolved questions concern the LCD connector/assembly, backlight load, supply protection and reader configuration. Native ERC currently has zero errors; PCB connectivity/parity checks also pass. Current native layout checks have zero active DRC errors/warnings, with two documented DNP courtyard exclusions; see [KICAD.md](../KICAD.md). This does not close the electrical bench items below. The [separate modular variant](LCD-MODULE-VARIANT.md) has its own reviewed lands, display power path and checks.
 
 ## Decisions and findings
 

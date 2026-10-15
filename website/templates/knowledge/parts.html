@@ -1,5 +1,6 @@
 <section class="shopping" aria-labelledby="shopping-title">
   <h2 id="shopping-title">Your shopping list</h2>
+  <p class="parts-note"><strong>Building the modular 2.8-inch carrier?</strong> Use <a href="/guides/modular-bom/">its 16-line SMT BOM</a> and <a href="/guides/modular-assembly/">customer header/module list</a>. The searchable table below describes the standard FPC carrier.</p>
   <p class="parts-note">Ordering an assembled carrier? Buy the separate system parts below. Hand assembling? Switch to Carrier / PCBA to see all 21 component lines.</p>
   <form class="parts-form" method="get" action="/build/parts/" hx-get="/build/parts/" hx-sync="this:replace" hx-replace-url="true" hx-target="#parts-results" hx-select="#parts-fragment" hx-swap="innerHTML" hx-trigger="submit, input changed delay:250ms from:#part-query, change from:select, change from:#board-quantity">
     <div><label for="part-query">Find a part</label><input id="part-query" name="q" value="{{ query }}" placeholder="C603, reader, screen…"></div>

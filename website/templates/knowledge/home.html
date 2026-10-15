@@ -5,12 +5,12 @@
     <p class="eyebrow">LUCKFOX MINI / CONTACT SMARTCARDS</p>
     <h1>Build a ShieldSigner.</h1>
     <p class="lede">Choose a task. Get the files, parts and steps to finish it.</p>
-    <div class="actions"><a class="button" href="/build/pcb/">Start with the PCB →</a><a class="text-link" href="/build/flash/">Already have hardware? Flash it →</a></div>
+    <div class="actions"><a class="button" href="/guides/lcd-module/">Build the modular 2.8-inch carrier →</a><a class="text-link" href="/build/pcb/">Standard FPC carrier →</a><a class="text-link" href="/build/flash/">Already have hardware? Flash it →</a></div>
   </div>
-  <a class="board-frame compact-board" href="/build/pcb/" aria-label="Open PCB ordering workflow">
-    <div class="frame-top"><span>THE CARRIER</span><span>53 FOOTPRINTS</span></div>
-    <img src="/files/pcb-top.svg" alt="Native KiCad view of the Luckfox smartcard carrier" width="1000" height="600">
-    <div class="frame-bottom"><span>43 FITTED PARTS</span><span>LUCKFOX SOLD SEPARATELY ↗</span></div>
+  <a class="board-frame compact-board" href="/guides/lcd-module/" aria-label="Open the modular carrier guide">
+    <div class="frame-top"><span>MODULAR 2.8-INCH CARRIER</span><span>HEADER-MOUNTED DISPLAY</span></div>
+    <img src="/files/variants/lcd-module-2.8/assembly-front.png" alt="KiCad 3D assembly of the modular ShieldSigner with a plug-in 2.8-inch display" width="1000" height="600">
+    <div class="frame-bottom"><span>32 SMT PARTS</span><span>SIMPLE HEADER SOLDERING ↗</span></div>
   </a>
 </section>
 <section class="task-section" aria-labelledby="task-title">
@@ -26,7 +26,7 @@
   </div>
 </section>
 <section class="project-state">
-  <div><span class="dot"></span><strong>Prototype status</strong><p>Checks pass; 2 documented DNP exceptions. LCD/paste/enclosure and bench tests remain open.</p></div>
+  <div><span class="dot"></span><strong>Prototype status</strong><p>Native and footprint checks pass. Matching prototype quote files are available; assembler review and physical bring-up remain open.</p></div>
   <a href="/guides/bringup-results/">See what’s actually tested →</a>
 </section>
 {% endblock %}

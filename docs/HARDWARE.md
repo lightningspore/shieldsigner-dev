@@ -108,3 +108,7 @@ Module headers under the LCD can short the display housing to supply pins; the u
 ## Evidence and maintenance
 
 Electrical topology, values, DNP flags and actual land mappings are taken from commit `efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f`, preserved in `../reference/` and the native working copy. Author explanations are in `component-rationale.json`; run `mise run docs` after changing that file or regenerating the reference data. Exact passives' ratings, the generic MOSFET/LED purchase identities, LCD orientation and a validated bridge firmware suffix remain review items rather than invented certainty.
+
+## Assembled display module alternative
+
+The [separate 2.8-inch module variant](LCD-MODULE-VARIANT.md) replaces user-handled display FPC assembly with Pico-format header rows and an assembled ST7789 module. The standard carrier and its existing BOM above remain a separate design.

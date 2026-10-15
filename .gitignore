@@ -19,3 +19,7 @@ reference/research/*-flight.txt
 
 # Local KiCad cache may also be a symlink.
 .tools
+
+# Public catalog download caches and local CAD tool logs.
+.easyeda_cache/
+logs/

@@ -1,0 +1,133 @@
+{
+  "checkedAt": "2026-10-14",
+  "models": {
+    "kicad/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x20_P2.54mm_Vertical.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "dd12a941403093b0e24053307e5622c51c95907f0bb60f9f5d1c9d25c5442e20",
+      "bytes": 723585
+    },
+    "kicad/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x11_P2.54mm_Vertical.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "281ded4a3a08cf6fc47b647ae700b587c72829350bd305a2ce5368574072cabd",
+      "bytes": 230208
+    },
+    "kicad/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x11_P2.54mm_Vertical.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "46552ee8d4513b5712408224c755611c62d0b8e3ecac2be1aa730e4f4f4155bc",
+      "bytes": 391770
+    },
+    "kicad/Resistor_SMD.3dshapes/R_0805_2012Metric.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "ded342cdb394fb45395227beaaa75cc390613cf2581b29cd6d22c12abd6103b2",
+      "bytes": 40592
+    },
+    "kicad/Capacitor_SMD.3dshapes/C_0805_2012Metric.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "9a669c1a2f1ea25b88b401acef6efeaa80a067bd7da9db6993de719a7fbe155c",
+      "bytes": 43618
+    },
+    "kicad/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x02_P2.54mm_Vertical.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "2ba6aa82de97b2d4407494139b38eca040f254144e7fec2dd853e04cc27e9860",
+      "bytes": 49920
+    },
+    "kicad/LED_SMD.3dshapes/LED_0805_2012Metric.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "0aa8b791804f5d72a2fc7d1bf231dd9959207d83df8ad801176fbc459f575b98",
+      "bytes": 78220
+    },
+    "kicad/Package_TO_SOT_SMD.3dshapes/SOT-23.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "dd5d1711204e1d8d26cd11490923bd84340820baa69538c385a4300ec2539bc0",
+      "bytes": 60296
+    },
+    "kicad/Diode_SMD.3dshapes/D_SOD-123F.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "132323445e3d1f9231e81c083cd88a33cd204dd8b96063bb2ed1f3ab4470c7e7",
+      "bytes": 42604
+    },
+    "kicad/Button_Switch_SMD.3dshapes/SW_SPST_FSMSM.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "0c0c2c406023d98c7be84b9de00dcb7abf1cb1c8e26e8776710b15b1c56651ca",
+      "bytes": 296138
+    },
+    "vendor/Waveshare-Pico-ResTouch-LCD-2.8.step": {
+      "provider": "Waveshare",
+      "source": "https://files.waveshare.com/upload/8/83/Pico-ResTouch-LCD-2_8.zip",
+      "type": "manufacturer STEP, unchanged",
+      "license": "Manufacturer reference model; retain embedded attribution",
+      "sha256": "3efec089a29bfbb3933e5d77b4f1605f026a77cdde94606fc35ed88e117248c9",
+      "bytes": 560591
+    },
+    "vendor/Microchip-SEC1210-QFN24.step": {
+      "provider": "LCSC/EasyEDA C633309",
+      "source": "https://easyeda.com/api/products/C633309/components?version=6.4.19.5",
+      "type": "Catalog STEP for selected SEC1210/PV-UR2",
+      "license": "Supplier reference model; retain embedded attribution",
+      "sha256": "86b10a0bc57da7f2afd075a86e1ba84aa0f6c4d5b591f80590f774a730e2a579",
+      "bytes": 1774283,
+      "downloadSha256": "207e638e85b5dba576266c1c0f2df54f562883fbfe5c6fea7d68b6c4ecb70658",
+      "processing": "OCCT STEP serialization normalized for KiCad rendering; geometric dimensions unchanged"
+    },
+    "vendor/XKB-TS-1101-C-W.step": {
+      "provider": "LCSC/EasyEDA C318938",
+      "source": "https://easyeda.com/api/products/C318938/components?version=6.4.19.5",
+      "type": "Catalog STEP, placement Z corrected against 2.5 mm datasheet height",
+      "license": "Supplier reference model; retain embedded attribution",
+      "sha256": "bac6efca00e1032f67cdaa5dd2fad4b0c2695499cfd69c4755f0b809c0aeb085",
+      "bytes": 1217762
+    },
+    "vendor/SHOUHAN-TYPE-C-6P-073.step": {
+      "provider": "LCSC/EasyEDA C668623",
+      "source": "https://easyeda.com/api/products/C668623/components?version=6.4.19.5",
+      "type": "Catalog STEP, placement datum aligned to reviewed footprint",
+      "license": "Supplier reference model; retain embedded attribution",
+      "sha256": "6b09ce65b8c8a629d063991eed6b12c1f3e140ebd0bd245369d9a1e5c7af73e3",
+      "bytes": 3719689
+    },
+    "vendor/Luckfox-Pico-Mini.step": {
+      "provider": "Public Lightningspore Luckfox design source",
+      "source": "https://github.com/lightningspore/seedsigner-luckfox-pico/blob/d1a703c240a38b826052e9eb993669f774000dfe/hardware-kicad/3d_models/Luckfox%20Pico%20Mini.step",
+      "type": "Existing module STEP, unchanged; socket mounting height adjusted",
+      "license": "Upstream module reference model; retain embedded attribution",
+      "sha256": "eceef5e2aff6874896165cadfeb55c6c04a1f96484798dd0f1b4a5f516bff098",
+      "bytes": 17346479
+    },
+    "vendor/Amphenol-7312P0225A13LF-envelope.step": {
+      "provider": "ShieldSigner",
+      "source": "reference/pdfs/C5417011.pdf and retained catalog footprint envelope",
+      "type": "Simplified dimensional envelope; not detailed manufacturer CAD",
+      "license": "MIT; generated for this project",
+      "sha256": "3c7a97314c0071ff21ce729bd83a405d076cd5607afbde88425a77be5fe47dbf",
+      "bytes": 15544
+    },
+    "vendor/M2.5x8-standoff-envelope.step": {
+      "provider": "ShieldSigner",
+      "source": "Specified 8 mm M2.5 extension hardware",
+      "type": "Simplified 5 mm diameter x 8 mm support envelope; threads omitted",
+      "license": "MIT; generated for this project",
+      "sha256": "2462e93149c0edf1cba88baebc6066aac6d1eb9d66d030898e9679cbeafc2e27",
+      "bytes": 9319
+    }
+  }
+}

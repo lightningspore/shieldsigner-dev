@@ -1,0 +1,37 @@
+{
+  "variant": "modular-lcd-2.8",
+  "boardSha256": "8f8a78e32b262ffb9dc23dd57a8e45151b91f023589a8d4e8fd690ac3e6da382",
+  "fittedSmtPieces": 32,
+  "catalogLines": 16,
+  "bomCplRefsMatch": true,
+  "layers": 2,
+  "thicknessMm": 1.6,
+  "originMm": {
+    "x": 50,
+    "y": 130,
+    "cplY": "130 minus board y; bottom X is not mirrored"
+  },
+  "proposedPrototypeQuantity": 5,
+  "stockReserved": false,
+  "catalogStockSufficientForFive": true,
+  "placementRotationsQualifiedByAssembler": false,
+  "status": "prototype_quote_files",
+  "nativeErcErrors": 0,
+  "nativeActiveDrcErrors": 0,
+  "nativeUnconnected": 0,
+  "nativeParityIssues": 0,
+  "dnpCourtyardExclusions": 2,
+  "mechanicalModelsVerified": 17,
+  "limitations": [
+    "Assembler placement preview/DFM/quote not submitted",
+    "Physical header/module fit and powered bring-up not tested",
+    "Smartcard socket and spacer 3D models are dimensional envelopes",
+    "Stock snapshot is not a reservation"
+  ],
+  "files": {
+    "shieldsigner-modular-gerbers.zip": "ee063dac670c8b527709e468d01cb2ad5f583c62e7c8618c019632f9fe1dc499",
+    "bom-jlcpcb.csv": "169c31fd4abd4f79a3ff5144dfff9110498149bcdd21f71562ccaa2a6b19542b",
+    "cpl-jlcpcb.csv": "b2a44c9416017f339ed201c190ab2f5a94a942d7891e887463a725ab346d77b0",
+    "population.csv": "6f584df5890a12db08b6bc31edbfef7edaf6b6889a56a4e53a9c99d2e07bdae4"
+  }
+}

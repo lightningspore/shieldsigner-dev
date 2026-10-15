@@ -17,7 +17,8 @@
           "title": "Choose bare PCB or assembled carrier",
           "items": [
             "Bare PCB: upload Gerbers; you assemble the 43 fitted parts.",
-            "Assembled carrier: upload Gerbers + BOM + CPL. Default files omit the Luckfox, LCD, camera and case."
+            "Assembled carrier: upload Gerbers + BOM + CPL. Default files omit the Luckfox, LCD, camera and case.",
+            "These order files describe the standard bare-LCD carrier. The separate 2.8-inch header-module variant is a development layout with its own population and no qualified order kit."
           ],
           "choices": [
             {
@@ -29,6 +30,11 @@
               "title": "Carrier PCBA",
               "text": "JLC assembles the carrier; module/display remain separate.",
               "url": "/build/parts/?scope=system"
+            },
+            {
+              "title": "2.8-inch plug-in LCD variant",
+              "text": "Assembled display module and basic header assembly; review this separate layout before ordering.",
+              "url": "/guides/lcd-module/"
             }
           ]
         },

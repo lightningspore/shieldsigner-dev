@@ -57,6 +57,32 @@ for source in (ROOT / "kicad").rglob("*"):
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
         url_map[str(source.resolve())] = f"/files/{name}"
+# Explicit separate-variant allowlist; never mix its BOM/files into the standard order kit.
+variant = ROOT / "variants/lcd-module-2.8"
+for source in variant.rglob("*"):
+    if source.is_file() and (source.suffix in {".kicad_pcb", ".kicad_sch", ".kicad_pro", ".kicad_sym", ".kicad_mod", ".svg", ".json", ".csv", ".md", ".png", ".step"} or source.name in {"fp-lib-table", "sym-lib-table"}):
+        name = str(source.relative_to(ROOT))
+        target = public / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+        url_map[str(source.resolve())] = f"/files/{name}"
+# Release-pinned modular outputs remain reproducible in a fresh public checkout.
+modular_manifest = json.loads((ROOT / "assets/modular-downloads.json").read_text())
+board = ROOT / "variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb"
+if hashlib.sha256(board.read_bytes()).hexdigest() != modular_manifest["boardSha256"]:
+    raise RuntimeError("Modular hardware changed; rebuild and publish matching quote/review assets first")
+for artifact in modular_manifest["assets"]:
+    source = ROOT / "dist/lcd-module-2.8" / artifact["name"]
+    if not source.exists():
+        source = ROOT / ".tools/website-downloads" / artifact["sha256"] / artifact["name"]
+        if not source.exists():
+            source.parent.mkdir(parents=True, exist_ok=True)
+            request = urllib.request.Request(artifact["url"], headers={"User-Agent":"ShieldSigner-content-builder"})
+            with urllib.request.urlopen(request, timeout=60) as response: payload=response.read()
+            if hashlib.sha256(payload).hexdigest()!=artifact["sha256"]: raise ValueError("Modular asset checksum mismatch")
+            source.write_bytes(payload)
+    if hashlib.sha256(source.read_bytes()).hexdigest()!=artifact["sha256"]: raise ValueError("Modular asset changed: "+artifact["name"])
+    shutil.copyfile(source, public / artifact["name"])
 repo_url = "https://github.com/lightningspore/shieldsigner-dev/tree/main/"
 for slug, name, *_ in GUIDES:
     source = ROOT / name

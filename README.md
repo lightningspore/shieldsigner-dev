@@ -1,8 +1,14 @@
-# ShieldSigner Luckfox Plus — KiCad working design and tscircuit reference port
+# ShieldSigner — modular Luckfox smartcard carrier
 
-![Native KiCad carrier PCB](assets/pcb-top.svg)
+![Modular ShieldSigner assembly](variants/lcd-module-2.8/assembly-front.png)
 
 Native KiCad is the preferred editing workflow. This repository publishes the reviewed ShieldSigner carrier variant, tools and knowledge site. This ports the upstream ShieldSigner Plus smartcard PCB into native tscircuit components, footprints, and net connections, while retaining its reference copper routing.
+
+## Modular 2.8-inch build
+
+Start with the [modular carrier guide](docs/LCD-MODULE-VARIANT.md) and [customer assembly steps](docs/MODULAR-ASSEMBLY.md). It combines the smartcard circuitry with an assembled plug-in display: 32 SMT placements for JLCPCB, ordinary header soldering for the customer, and local 3D models. Open it with `mise run variant:lcd:open`; build its quote files with `mise run variant:lcd:fab`.
+
+The sections below also retain the separate standard FPC carrier and its experimental tscircuit port. Do not mix their manufacturing files with the modular kit.
 
 ## Documentation
 
@@ -62,4 +68,8 @@ Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightning
 
 ## Build and use workflows
 
-The public site now starts with six tasks: [PCB order](https://shieldsigner.dev/build/pcb/), [parts](https://shieldsigner.dev/build/parts/), [compile](https://shieldsigner.dev/build/compile/), [flash](https://shieldsigner.dev/build/flash/), [SeedSigner use](https://shieldsigner.dev/build/use/) and [smartcards](https://shieldsigner.dev/build/cards/). The site is **0.0.2-dev**, with its Git revision visible. Passives show explicit units and catalog ratings. `mise run bom:check` validates the 28 fitted passive values against catalog electrical attributes. C603/C604 purchase identities are now the 1 µF C28323 parts, superseding the initial preview’s incorrect 100 nF metadata.
+The public site now starts with six tasks: [PCB order](https://shieldsigner.dev/build/pcb/), [parts](https://shieldsigner.dev/build/parts/), [compile](https://shieldsigner.dev/build/compile/), [flash](https://shieldsigner.dev/build/flash/), [SeedSigner use](https://shieldsigner.dev/build/use/) and [smartcards](https://shieldsigner.dev/build/cards/). The site is **0.0.3-dev**, with its Git revision visible. Passives show explicit units and catalog ratings. `mise run bom:check` validates the 28 fitted passive values against catalog electrical attributes. C603/C604 purchase identities are now the 1 µF C28323 parts, superseding the initial preview’s incorrect 100 nF metadata.
+
+## Plug-in 2.8-inch LCD variant
+
+The [modular 2.8-inch carrier](docs/LCD-MODULE-VARIANT.md) uses an assembled Waveshare Pico-ResTouch-LCD-2.8, local 3D models and four mechanical supports. JLCPCB handles 32 SMT pieces; the customer solders ordinary 2.54 mm headers. Its [KiCad project](variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pro), [matched prototype quote files](variants/lcd-module-2.8/manufacturing/README.md), [16-line sourcing table](variants/lcd-module-2.8/manufacturing/BOM.md) and [assembly guide](docs/MODULAR-ASSEMBLY.md) are independent of the standard FPC carrier. Use `mise run variant:lcd:fab` and `mise run variant:lcd:review`. Native/footprint/model checks pass; assembler review and physical bring-up remain open. The public site is 0.0.3-dev.

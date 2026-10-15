@@ -1,0 +1,7 @@
+Reference,Quantity,Description,Manufacturer part,Source,Qualification
+J701,2,1x20 male header; 2.54 mm pitch; 0.64 mm square; 2.54 mm insulator; 6 mm exposed post,Commodity header matching dimensions,,Check purchased header dimensions and mating smoothness
+U202 carrier sockets,2,1x11 female socket; 2.54 mm pitch; 8.5 mm housing; accepts 0.64 mm square,Commodity socket matching dimensions,,Precut strips preferred
+U202 module headers,2,1x11 male header; 2.54 mm pitch; omit if correctly preinstalled,Commodity header matching dimensions,,Long posts face carrier sockets; microSD faces outward
+LCD module,1,Assembled 2.8-inch ST7789 display with receptacle headers,Waveshare Pico-ResTouch-LCD-2.8,https://www.waveshare.com/pico-restouch-lcd-2.8.htm,Verify module revision and native pin numbering
+H701-H704,4,M2.5 male-female support extension; 8 mm body; short stud for 4 mm module bosses,Commodity M2.5x8 spacer,,Measure supplied display spacers before reuse
+H701-H704 screws,4,M2.5x4 screw for carrier into support; verify engagement,Commodity M2.5x4 screw,,Check washer and enclosure clearances

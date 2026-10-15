@@ -61,13 +61,13 @@ def workflow(request, slug):
 def downloads(request):
     files = json.loads((settings.PUBLIC_DIR / "manifest.json").read_text())
     primary_names = {"shieldsigner-jlcpcb-order.zip", "shieldsigner-carrier-gerbers.zip", "shieldsigner-luckfox-kicad.zip", "schematic.pdf"}
-    return render(request, "knowledge/downloads.html", {"files": files, "primary_files":[p for p in files if p["name"] in primary_names], "pdfs":[p for p in files if p["name"].startswith("reference/pdfs/")], "title": "Board files & sources", "description": "Native KiCad files, manufacturing review outputs and saved datasheets."})
+    return render(request, "knowledge/downloads.html", {"files": files, "primary_files":[p for p in files if p["name"] in primary_names], "modular_files":[p for p in files if p["name"].startswith("shieldsigner-modular-")], "pdfs":[p for p in files if p["name"].startswith("reference/pdfs/")], "title": "Board files & sources", "description": "Native KiCad files, manufacturing review outputs and saved datasheets."})
 
 def file(request, name):
     root = settings.PUBLIC_DIR.resolve()
     candidate = (root / name).resolve()
     if not candidate.is_relative_to(root) or not candidate.is_file(): raise Http404
-    return FileResponse(candidate.open("rb"), as_attachment=candidate.suffix not in {".pdf", ".svg"}, filename=candidate.name)
+    return FileResponse(candidate.open("rb"), as_attachment=candidate.suffix not in {".pdf", ".svg", ".png"}, filename=candidate.name)
 
 def health(request):
     version=workflows.load('site-version')

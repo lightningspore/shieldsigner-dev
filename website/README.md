@@ -118,3 +118,7 @@ reference search and no-JavaScript fallbacks. Response tests cover every interna
 section anchor as well as sourcing/manifest invariants.
 
 CSS and task JavaScript URLs include the displayed revision to avoid stale assets across development deployments. The live origin health response reports version, revision and six task routes.
+
+## 2.8-inch module variant — 0.0.3-dev
+
+`/guides/lcd-module/` documents the separate header-module carrier, and `/guides/website/` documents this site. The PCB task links to the variant before ordering. Its native files, drawings, population and check summary are packaged under `/files/variants/lcd-module-2.8/`; they do not replace or enter the standard carrier order bundle. A separate prototype quote kit provides matching modular Gerbers/BOM/CPL. `assets/modular-downloads.json` pins its release hashes and source PCB hash. The modular files remain subject to assembler DFM/placement and first-article testing. Run `mise run variant:lcd:check` at the repository root before packaging changed variant assets.

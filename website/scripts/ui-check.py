@@ -20,7 +20,7 @@ with sync_playwright() as p:
         page.locator('.board-frame img').wait_for()
         assert page.locator('.board-frame img').evaluate('(img) => img.complete && img.naturalWidth > 0')
         assert page.locator('.task-card').count() == 6
-        assert '0.0.2-dev' in page.locator('footer').inner_text()
+        assert '0.0.3-dev' in page.locator('footer').inner_text()
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Homepage overflows'
         page.screenshot(path=str(artifacts/f'home-{width}.png'), full_page=True)
         page.locator('.task-card[href="/build/pcb/"]').click()
@@ -79,6 +79,20 @@ with sync_playwright() as p:
         page.locator('#results').get_by_role('link').filter(has_text='Cards & the Linux reader').click()
         page.wait_for_url('**/guides/smartcards/')
         assert page.locator('h1').inner_text().startswith('Smartcards')
+        page.goto(base+'/guides/lcd-module/')
+        assert '2.8-inch' in page.locator('h1').inner_text()
+        for image in page.locator('main img').all():
+            assert image.evaluate('(img) => img.complete && img.naturalWidth > 0')
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Module guide overflows'
+        page.screenshot(path=str(artifacts/f'modular-{width}.png'), full_page=True)
+        page.goto(base+'/downloads/')
+        with page.expect_download() as download:
+            page.get_by_role('link', name='Modular 2.8-inch order kit').click()
+        target = artifacts/f'modular-order-{width}.zip'
+        download.value.save_as(target)
+        with ZipFile(target) as archive:
+            bom = list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
+            assert len(bom)==16 and sum(len(row['Designator'].split(',')) for row in bom)==32
         assert not errors, errors
         context.close()
     context = browser.new_context(java_script_enabled=False,viewport={'width':390,'height':844})

@@ -88,5 +88,15 @@
     "bytes": 2108663,
     "retainedOn": "2026-10-11",
     "provenance": "Public supplier/manufacturer URL"
+  },
+  {
+    "file": "reference/pdfs/Waveshare-Pico-ResTouch-LCD-2.8-Schematic.pdf",
+    "title": "Waveshare Pico-ResTouch-LCD-2.8 schematic",
+    "source": "https://files.waveshare.com/upload/d/dc/Pico-ResTouch-LCD-2.8_Sch.pdf",
+    "catalog": "https://www.waveshare.com/pico-restouch-lcd-2.8.htm",
+    "sha256": "c4dd50fdb36ec299424a879c321e91a6f5ea74bf296ea9fffb3feccd0471c1e2",
+    "bytes": 1770440,
+    "retainedOn": "2026-10-14",
+    "provenance": "Manufacturer schematic for the separate header-LCD variant"
   }
 ]

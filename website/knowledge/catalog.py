@@ -1,5 +1,9 @@
 # Explicit public-content allowlist. Never crawl the repo or Telegram caches.
 GUIDES = [
+("modular-assembly", "docs/MODULAR-ASSEMBLY.md", "Build", "Assemble the modular carrier", "JLC quote, through-hole headers, mounting and staged bring-up."),
+("modular-bom", "variants/lcd-module-2.8/manufacturing/BOM.md", "Build", "Modular carrier BOM", "32 SMT pieces with values, ratings and dated JLC sourcing."),
+("lcd-module", "docs/LCD-MODULE-VARIANT.md", "Hardware", "2.8-inch plug-in LCD variant", "A larger assembled ST7789 module, header connections, population and bring-up."),
+("website", "docs/WEBSITE.md", "Software", "How this website works", "Content sources, local previews, versioning, checks and deployment."),
 ("build-overview", "docs/BUILD-OVERVIEW.md", "Build", "Whole-device build overview", "Module, camera, case and firmware choices beyond the carrier PCB."),
 ("overview", "README.md", "Start here", "Project overview", "The Luckfox carrier, current progress and project sources."),
 ("hardware", "docs/HARDWARE.md", "Hardware", "Hardware architecture", "Power, processor, screen, buttons and the card reader."),

@@ -1,6 +1,6 @@
 # Saved reference PDFs
 
-All nine downloaded supplier/manufacturer reference PDFs are retained in `reference/pdfs/`. They are tracked through Git LFS by the project `.gitattributes`. Generated KiCad schematic PDFs remain in `dist/kicad/` and can be regenerated. The private build SDK checkout is excluded from this reference archive.
+All ten downloaded supplier/manufacturer reference PDFs are retained in `reference/pdfs/`. They are tracked through Git LFS by the project `.gitattributes`. Generated KiCad schematic PDFs remain in `dist/kicad/` and can be regenerated. The private build SDK checkout is excluded from this reference archive.
 
 The JSON index records byte sizes and SHA-256 hashes. These identify the retained documents; they do not certify that a supplier specification is correct. Missing original download provenance is marked explicitly.
 
@@ -15,6 +15,8 @@ The JSON index records byte sizes and SHA-256 hashes. These identify the retaine
 | [TYPE-C 6P(073)](../reference/pdfs/C668623.pdf) | [Supplier PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2006181823_SHOU-HAN-TYPE-C-6P-073_C668623.pdf) | `98756b6026c3ad625679d384f382df5910246c3bf98a7d85897eb9f5d603b504` |
 | [Luckfox-Pico-Mini](../reference/pdfs/Luckfox-Pico-Mini.pdf) | Original URL not recorded | `67d8730d4d636df3dd4d8df2ac8d0c1615a35092b8cdcdd11e98d76b2934461d` |
 | [SEC1210-DS00001561D](../reference/pdfs/SEC1210-DS00001561D.pdf) | [Supplier PDF](https://www.microchip.com/content/dam/mchp/documents/UNG/ProductDocuments/DataSheets/00001561D.pdf) | `f3e8c11a747c3d15fe684662938342763b81943b84ff9c41fe3bf6255255515d` |
+
+| [Waveshare Pico-ResTouch-LCD-2.8 schematic](../reference/pdfs/Waveshare-Pico-ResTouch-LCD-2.8-Schematic.pdf) | [Manufacturer PDF](https://files.waveshare.com/upload/d/dc/Pico-ResTouch-LCD-2.8_Sch.pdf) | `c4dd50fdb36ec299424a879c321e91a6f5ea74bf296ea9fffb3feccd0471c1e2` |
 
 LCD qualification is recorded in [BOM.md](BOM.md). The downloaded HS280S010B is rejected as a drop-in; saving a datasheet does not select its part for assembly.
 

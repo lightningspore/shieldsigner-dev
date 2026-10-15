@@ -1,0 +1,40 @@
+{
+  "module": "Waveshare Pico-ResTouch-LCD-2.8",
+  "headerPinToNet": {
+    "3": "GND",
+    "8": "GND",
+    "11": "LCD_DC",
+    "12": "RPI_SPI_CS",
+    "13": "GND",
+    "14": "LCD_SCLK",
+    "15": "LCD_MOSI",
+    "17": "+3.3V",
+    "18": "GND",
+    "20": "LCD_RST",
+    "21": "+3.3V",
+    "23": "GND",
+    "28": "GND",
+    "29": "+3.3V",
+    "33": "GND",
+    "38": "GND",
+    "39": "+5V"
+  },
+  "dnp": [
+    "J401",
+    "C401",
+    "Q401",
+    "R401",
+    "R402",
+    "R403",
+    "R404",
+    "R405",
+    "R406",
+    "R407",
+    "R408",
+    "R409",
+    "R410"
+  ],
+  "sheetId": "4fead130-596d-4414-bb04-d5dfc4d319ed",
+  "symbolId": "b52675ac-5438-47bf-af9d-18e6f1b3588e",
+  "rootId": "8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f"
+}

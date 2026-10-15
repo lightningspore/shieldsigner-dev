@@ -1,0 +1,59 @@
+ref,value,footprint,side,role,lcsc,mpn
+C201,10u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB SMT assembly,C15850,CL21A106KAYNNNE
+C301,100n,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB SMT assembly,C49678,CC0805KRX7R9BB104
+C302,10u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB SMT assembly,C15850,CL21A106KAYNNNE
+C401,100n,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,DNP,C49678,CC0805KRX7R9BB104
+C601,100n,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB SMT assembly,C49678,CC0805KRX7R9BB104
+C602,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB SMT assembly,C28323,CL21B105KBFNNNE
+C603,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB SMT assembly,C28323,CL21B105KBFNNNE
+C604,1u,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB SMT assembly,C28323,CL21B105KBFNNNE
+C605,33p,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB SMT assembly,C107115,CC0805JRNPO9BN330
+C606,33p,Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder,B.Cu,JLCPCB SMT assembly,C107115,CC0805JRNPO9BN330
+D301,SMF5.0CA,Diode_SMD:D_SOD-123F,B.Cu,JLCPCB SMT assembly,C19077498,SMF5.0CA
+D302,KT-0805G,LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C2297,KT-0805G
+H701,MountingHole_2.7mm_M2.5,MountingHole_2.7mm_M2.5,F.Cu,customer M2.5 supports,,
+H702,MountingHole_2.7mm_M2.5,MountingHole_2.7mm_M2.5,F.Cu,customer M2.5 supports,,
+H703,MountingHole_2.7mm_M2.5,MountingHole_2.7mm_M2.5,F.Cu,customer M2.5 supports,,
+H704,MountingHole_2.7mm_M2.5,MountingHole_2.7mm_M2.5,F.Cu,customer M2.5 supports,,
+J301,TYPE-C 6P(073),ShieldSigner:SHOUHAN_TYPE_C_6P_073,B.Cu,JLCPCB SMT assembly,C668623,TYPE-C 6P(073)
+J302,Conn_01x02_Pin,Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Vertical,B.Cu,DNP,,
+J401,62684-402100ALF,Seedsigner-plus-library:AMPHENOL_62684-402100ALF,B.Cu,DNP,C2931360,62684-402100ALF
+J601,7312P0225A13LF,ShieldSigner:Amphenol_7312P0225A13LF_reflow,B.Cu,JLCPCB SMT assembly,C5417011,7312P0225A13LF
+J701,Pico-ResTouch-LCD-2.8,ShieldSigner:Waveshare_Pico_ResTouch_LCD_2.8_Header,F.Cu,customer display headers (two strips),,
+JP201,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
+JP202,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
+JP203,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
+JP204,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
+JP205,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
+JP206,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
+Q401,AO3400A,Package_TO_SOT_SMD:SOT-23,B.Cu,DNP,C20917,AO3400A
+R301,5K1,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C27834,0805W8F5101T5E
+R302,5K1,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C27834,0805W8F5101T5E
+R303,560R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C28636,0805W8F5600T5E
+R401,330R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17630,0805W8F3300T5E
+R402,33k,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17633,0805W8F3302T5E
+R403,0R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17477,0805W8F0000T5E
+R404,0R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17477,0805W8F0000T5E
+R405,47R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17714,0805W8F470JT5E
+R406,47R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17714,0805W8F470JT5E
+R407,47R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17714,0805W8F470JT5E
+R408,0R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17477,0805W8F0000T5E
+R409,0R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17477,0805W8F0000T5E
+R410,10K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,DNP,C17414,0805W8F1002T5E
+R601,100K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C149504,0805W8F1003T5E
+R602,100R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C17408,0805W8F1000T5E
+R603,100R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C17408,0805W8F1000T5E
+R604,47R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C17714,0805W8F470JT5E
+R605,10K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C17414,0805W8F1002T5E
+R606,100K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C149504,0805W8F1003T5E
+R607,10K,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C17414,0805W8F1002T5E
+SW501,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_reflow,F.Cu,JLCPCB SMT assembly,C318938,TS-1101-C-W
+SW502,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_reflow,F.Cu,JLCPCB SMT assembly,C318938,TS-1101-C-W
+SW503,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_reflow,F.Cu,JLCPCB SMT assembly,C318938,TS-1101-C-W
+SW504,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_reflow,F.Cu,JLCPCB SMT assembly,C318938,TS-1101-C-W
+SW505,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_reflow,F.Cu,JLCPCB SMT assembly,C318938,TS-1101-C-W
+SW506,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_reflow,F.Cu,JLCPCB SMT assembly,C318938,TS-1101-C-W
+SW507,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_reflow,F.Cu,JLCPCB SMT assembly,C318938,TS-1101-C-W
+SW508,TS-1101-C-W,ShieldSigner:XKB_TS1101_C_W_reflow,F.Cu,JLCPCB SMT assembly,C318938,TS-1101-C-W
+U202,LuckFox_Pico_MINI,Library:LUCKFOX_PICO_MINI_reversed,B.Cu,customer Luckfox module and headers,,
+U601,SEC1210/PV-UR2,ShieldSigner:Microchip_SEC1210_QFN24_reflow,B.Cu,JLCPCB SMT assembly,C633309,SEC1210/PV-UR2

@@ -1,0 +1,111 @@
+{
+  "repository": "https://github.com/3rdIteration/seedsigner",
+  "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+  "files": [
+    {
+      "path": "Footprints/FPC-Connector/62684-402100ALF.kicad_sym",
+      "upstreamGitBlob": "45db77942b48d4a0b2d89a3ffaee8000cd413f08",
+      "sha256": "8440c394f86f603f23ce53d3085c9b6394cf9032e2a040f59173ad47ea62a207"
+    },
+    {
+      "path": "Footprints/FPC-Connector/AMPHENOL_62684-402100ALF.kicad_mod",
+      "upstreamGitBlob": "a31feba7ef9ec17822c802dde9b69b5382cdc7ea",
+      "sha256": "ffaa511d4edb166167e29b9a8c1ef11c6ccf462862c1937d590cdf7b77afd814"
+    },
+    {
+      "path": "Footprints/FPC-Connector/License.txt",
+      "upstreamGitBlob": "d8b7d2962858d16364c1540ff45c623a41ba6993",
+      "sha256": "1bf55b45b7b7f65fb2a6702fcd696ea5b066d8e18dccc717f5b34aafcb334445"
+    },
+    {
+      "path": "Footprints/Seedsigner-plus-library.kicad_sym",
+      "upstreamGitBlob": "d9580209e956d81d9fd8ba14b40b2b46ab296a42",
+      "sha256": "807c8356427fd34bf821c3fbcd762787b41d2b92b8bccd3181e996c7d554837f"
+    },
+    {
+      "path": "Footprints/Seedsigner-plus-library.pretty/AMPHENOL_62684-402100ALF.kicad_mod",
+      "upstreamGitBlob": "728fd15e14b1a37b9d41b82d6a974807010eea1a",
+      "sha256": "3250dfdba00ecc3c70dd4490690dfb9bdf3f1e1ce61118406161e8009baabd19"
+    },
+    {
+      "path": "Library.pretty/AMPHENOL_7312P0225A13LF_smrt2_combo_handsolder.kicad_mod",
+      "upstreamGitBlob": "6f2136442bc17d0777c48aff684504c67c19a256",
+      "sha256": "bf25c5c284094331d4e2d8aba98362b2ec303cce0f973df5af6494cf4d26b386"
+    },
+    {
+      "path": "Library.pretty/LUCKFOX_PICO_MINI.kicad_mod",
+      "upstreamGitBlob": "10c202157ec98ba1b63c7aa7f7193e9cf6d5b44b",
+      "sha256": "547747ad0adbbfaf961b9780d0ed8763867ba36833e0b3dd223e107bace2cf97"
+    },
+    {
+      "path": "Library.pretty/LUCKFOX_PICO_MINI_reversed.kicad_mod",
+      "upstreamGitBlob": "a4c79f048956cc3b2572cf18cd917b49ae5b0aef",
+      "sha256": "6d7217ddb25f467ca2eec6c2e3944b11b27e8acb6180ed94cc6e5a0d1494b4d3"
+    },
+    {
+      "path": "Library.pretty/LUCKFOX_PICO_MINI_reversed_fullcutout.kicad_mod",
+      "upstreamGitBlob": "3ed18feeb035a6b8dba892e0664cb2b60b0af181",
+      "sha256": "3ad4aab935e8fed94c5cedb09cce0ecd783b407c4fb2411eb0d0f69f63d88d71"
+    },
+    {
+      "path": "Library.pretty/SW_SPST_FSMSM.kicad_mod",
+      "upstreamGitBlob": "f4e5201fa177ad7a4b3d38d1abae1c93ff5676dc",
+      "sha256": "9c64fd20b05783935ec9af940513e7fccda3a2786e9403cc38bf1fdbec5cf400"
+    },
+    {
+      "path": "Power.kicad_sch",
+      "upstreamGitBlob": "cce77c3a2d839f3f350e64e930d4a3c737d9729c",
+      "sha256": "661a450b9039a64737e98add977af8745df9bf5627d1f68515dab702fb401f52"
+    },
+    {
+      "path": "SeedSigner-Plus-smartcard-pico.kicad_pcb",
+      "upstreamGitBlob": "d0476c0640823b3d33995c5d15b3db5dc21070fa",
+      "sha256": "d28eb1fa9fb045632238519b34d635a8bb75a247a425261f2d658e5bd81c3687"
+    },
+    {
+      "path": "SeedSigner-Plus-smartcard-pico.kicad_pro",
+      "upstreamGitBlob": "e690f46a7c58bcaeb1a55c6de5a0efaa9c0cd006",
+      "sha256": "4f6613783280ac5d53b34a710b9a7cfb93171de296fcd9aa36c37af8a7a5e608"
+    },
+    {
+      "path": "SeedSigner-Plus-smartcard-pico.kicad_sch",
+      "upstreamGitBlob": "e9d767dd2b30c1fbb582862d6b3a047643860299",
+      "sha256": "d1b3204c9271fe84aa2a0861eeede1112947d4ac209f657f748509f351407a1f"
+    },
+    {
+      "path": "buttons.kicad_sch",
+      "upstreamGitBlob": "8373db5d410ae8b619233ef522dbc4220fe3ea6c",
+      "sha256": "7a368d1af42eac1c63aea8bc5ebc4aea9d7217ed6f74fed2f5f53eaf362a0aea"
+    },
+    {
+      "path": "fp-lib-table",
+      "upstreamGitBlob": "2eda97b823ffa4d52d6483d13373ad2c3b11e4f8",
+      "sha256": "b8e6ed3a7e32e49084a0cfe7e38de4a2f624451607b6f86656456f016bd37953"
+    },
+    {
+      "path": "readme.md",
+      "upstreamGitBlob": "ee021f5d445ca57b2eb0b67760eb84898eeebedf",
+      "sha256": "1d1f70fb7980af787ecfcc5c7596ef48b7c785af0bcfbb73817a4afc5e364e47"
+    },
+    {
+      "path": "rpi_interface.kicad_sch",
+      "upstreamGitBlob": "203944e998e7038926f41d451578b61f8d2c4773",
+      "sha256": "18c25a859c7716e0a43707cf7cdd53aa2c85a079d1e59f9caf5e2e33d5a3a7d0"
+    },
+    {
+      "path": "screen.kicad_sch",
+      "upstreamGitBlob": "ecc4eea65214af5bded7021db45afd7da5bcf83b",
+      "sha256": "643dd53db8e877d7203db0e65577ce5c4c6367a2831fe01c4f923f8b8713267d"
+    },
+    {
+      "path": "smartcard_reader.kicad_sch",
+      "upstreamGitBlob": "8b34916fdb6fbb5586aaedb3709664a619cfffdd",
+      "sha256": "83ddd0469c2cb10d30bb015b139d0655f7a47f5d7af08eb92609aa295a5d11af"
+    },
+    {
+      "path": "sym-lib-table",
+      "upstreamGitBlob": "277c1a19da6eb0ce720e4fc486f52dcab36e7dfb",
+      "sha256": "0cd5be183c13ab7134a42c20df252b2e6b386a3e4ad8f62fc0072dad5e998350"
+    }
+  ]
+}

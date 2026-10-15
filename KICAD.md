@@ -68,3 +68,9 @@ Use the committed `docs/pcb-*-edits.json` files as the record of changes already
 After an accepted edit, run `mise run kicad:check`, `mise run bom:generate`, and `mise run review:build`. The final parity check and manufacturing exports use the working project, not the candidate-only layout check.
 
 Library paths use the exact tracked `Footprints/` capitalization. This prevents a case-insensitive Mac checkout from masking missing libraries in Linux checkouts.
+
+## Separate 2.8-inch assembled-module carrier
+
+The [header-module variant](docs/LCD-MODULE-VARIANT.md) has independent native files under `variants/lcd-module-2.8/kicad/`. Run `mise run variant:lcd:check`; standard `kicad:check` and fabrication tasks still target the original carrier. The experimental tscircuit port also continues to describe that original carrier, not this separate module layout.
+
+The modular project includes reviewed reflow footprints, 17 local STEP models and four display mounting holes. `mise run variant:lcd:models` checks land dimensions, mating geometry and model hashes. `mise run variant:lcd:fab` creates its own matched Gerbers/drills/BOM/CPL with a shared datum. `mise run variant:lcd:review` regenerates native 3D renders and STEP/GLB exports. The card socket and spacer are explicitly dimensional models, not detailed manufacturer CAD.

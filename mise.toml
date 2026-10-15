@@ -92,3 +92,27 @@ run = "SHIELDSIGNER_PREPARE_ONLY=1 bash scripts/build-os.sh"
 [tasks."bom:check"]
 description = "Verify fitted passive nominal values agree with their selected catalog parts"
 run = "uv run scripts/check-bom-values.py"
+
+[tasks."variant:lcd:check"]
+description = "Check and export the separate 2.8-inch header-module carrier"
+run = "uv run python scripts/check-lcd-module-variant.py"
+
+[tasks."variant:lcd:models"]
+description = "Check manufacturer land patterns, mounting geometry and all portable 3D model hashes"
+run = "uv run python scripts/check-modular-mechanics.py"
+
+[tasks."variant:lcd:fab"]
+description = "Build matched modular Gerbers/drills/BOM/CPL and five-board sourcing audit"
+run = "uv run python scripts/manufacture-modular.py"
+
+[tasks."variant:lcd:review"]
+description = "Render the assembled modular carrier and export STEP/GLB models"
+run = "uv run python scripts/render-modular.py"
+
+[tasks."variant:lcd:open"]
+description = "Open the modular carrier in pinned KiCad 10"
+run = "uv run python scripts/open-modular.py"
+
+[tasks."variant:lcd:package"]
+description = "Package existing modular fabrication/review outputs and pin release checksums"
+run = "uv run python scripts/package-modular.py"

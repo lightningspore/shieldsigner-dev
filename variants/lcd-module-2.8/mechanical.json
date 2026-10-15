@@ -1,0 +1,33 @@
+{
+  "units": "mm",
+  "display": {
+    "part": "Waveshare Pico-ResTouch-LCD-2.8",
+    "manufacturerStep": "kicad/3dmodels/vendor/Waveshare-Pico-ResTouch-LCD-2.8.step",
+    "outline": [70.2, 52.2004],
+    "moduleBackHeight": 12.0,
+    "moduleFrontHeight": 17.3,
+    "factoryBossHeight": 4.0,
+    "extensionStandoffHeight": 8.0,
+    "mountingHoleDiameter": 2.7,
+    "mountingCenters": [[114.71, 23.0], [176.91, 23.0], [114.71, 66.0004], [176.91, 66.0004]],
+    "nominalHeaderRowSpacing": 17.78,
+    "manufacturerCadHeaderRowSpacing": 17.8,
+    "headerPitch": 2.54,
+    "pin1To20Span": 48.26,
+    "maleInsulatorHeight": 2.54,
+    "malePostAboveInsulator": 6.0,
+    "femaleHousingHeight": 9.0,
+    "modeledPinInsertion": 5.54,
+    "modelOffset": [28.75, -50.63, 12.0],
+    "modelRotation": [0, 180, 0]
+  },
+  "luckfox": {
+    "socketHousingHeight": 8.5,
+    "maleInsulatorHeight": 2.54,
+    "modulePcbThickness": 1.0,
+    "moduleModelOffset": [-1.5, 1.5, 12.04],
+    "maleHeaderPlane": 11.04,
+    "customerSoldering": "Two 1x11 socket strips on the carrier and two male strips on an unpopulated module; use a module with headers already fitted when possible."
+  },
+  "qualification": "CAD and datasheet review; physical module/header fit and production tolerances require first-article confirmation. Card socket and spacer models are explicitly dimensional envelopes."
+}

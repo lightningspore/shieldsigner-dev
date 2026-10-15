@@ -82,7 +82,7 @@ class KnowledgeTests(SimpleTestCase):
         self.assertContains(page, '125 mW · ±1%')
         self.assertContains(self.client.get('/guides/bom-table/'), '1 µF')
         self.assertContains(self.client.get('/build/parts/?scope=carrier&q=1uF'), 'C28323')
-        self.assertContains(self.client.get('/'), '0.0.2-dev')
+        self.assertContains(self.client.get('/'), '0.0.3-dev')
         self.assertContains(self.client.get('/'), 'revision')
         self.assertContains(self.client.get('/'), 'site.css?v=')
         self.assertContains(self.client.get('/'), 'site.js?v=')
@@ -122,6 +122,28 @@ class KnowledgeTests(SimpleTestCase):
             caps = next(part for part in bom if part['LCSC Part #']=='C28323')
             self.assertEqual(set(caps['Designator'].split(',')), {'C602','C603','C604'})
             self.assertTrue(caps['Comment'].startswith('1u;'))
+
+    def test_modular_bundle_matches_its_board_and_population(self):
+        with ZipFile(settings.PUBLIC_DIR / 'shieldsigner-modular-order.zip') as archive:
+            readiness = json.loads(archive.read('readiness.json'))
+            board = settings.PUBLIC_DIR / 'variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+            self.assertEqual(readiness['boardSha256'], hashlib.sha256(board.read_bytes()).hexdigest())
+            self.assertEqual(readiness['status'], 'prototype_quote_files')
+            for name, digest in readiness['files'].items():
+                self.assertEqual(hashlib.sha256(archive.read(name)).hexdigest(), digest)
+            bom = list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
+            refs = {ref for row in bom for ref in row['Designator'].split(',')}
+            cpl = list(csv.DictReader(io.StringIO(archive.read('cpl-jlcpcb.csv').decode())))
+            self.assertEqual((len(bom), len(refs)), (16, 32))
+            self.assertEqual(refs, {row['Designator'] for row in cpl})
+            self.assertFalse(refs & {'J701', 'U202', 'J401', 'J302', 'Q401', 'R403', 'R404', 'R408', 'R409'})
+            self.assertTrue(next(row for row in bom if row['LCSC Part #'] == 'C28323')['Comment'].startswith('1 µF;'))
+        for slug in ['lcd-module', 'modular-assembly', 'modular-bom']:
+            self.assertEqual(self.client.get(f'/guides/{slug}/').status_code, 200)
+        image = self.client.get('/files/variants/lcd-module-2.8/assembly-front.png')
+        self.assertEqual(image.status_code, 200)
+        self.assertTrue(image['Content-Disposition'].startswith('inline;'))
+        image.close()
 
     def test_workflow_internal_links_and_anchors(self):
         cache = {}

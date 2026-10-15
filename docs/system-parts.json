@@ -24,7 +24,7 @@
       "sourceLabel": "Upstream panel lead",
       "detail": "https://github.com/3rdIteration/seedsigner-hardware/blob/main/display_hats/plus_hat/README.md",
       "detailLabel": "Panel requirements",
-      "warning": "Not a confirmed buy-ready substitute. Reject HS280S010B/C2939938 14-pin board; request exact panel drawing before buying."
+      "warning": "Not a confirmed buy-ready substitute. HS280S010B/C2939938 is not a drop-in for the standard FPC carrier; request exact panel drawing before buying."
     },
     {
       "id": "camera",

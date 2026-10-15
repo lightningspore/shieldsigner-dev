@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parent.parent
 board=json.loads((ROOT/'src/generated/reference-board.json').read_text())
 ids={c['lcsc'] for c in board['components'] if c.get('lcsc')}
 ids.update(['C2931360','C7278475','C633310'])
-parser=argparse.ArgumentParser();parser.add_argument('--only',nargs='+');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--only',nargs='+');parser.add_argument('--output',type=Path,default=ROOT/'docs/jlc-catalog.json');args=parser.parse_args()
 if args.only:ids=set(args.only)
 CACHE=ROOT/'reference/research/catalog-cache';CACHE.mkdir(parents=True,exist_ok=True)
 
@@ -41,9 +41,10 @@ def snapshot(code):
   return result
  except Exception as error:return {'code':code,'url':url,'status':'unverified','error':str(error)}
 with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:results=list(pool.map(snapshot,sorted(ids)))
-if args.only and (ROOT/'docs/jlc-catalog.json').exists():
- old=json.loads((ROOT/'docs/jlc-catalog.json').read_text())['parts']
+if args.only and args.output.exists():
+ old=json.loads(args.output.read_text())['parts']
  results=sorted([r for r in old if r['code'] not in ids]+results,key=lambda r:r['code'])
-(ROOT/'docs/jlc-catalog.json').write_text(json.dumps({'note':'Public catalog snapshot, not a stock reservation or confirmed assembly quote. Raw stock field names retained deliberately.','parts':results},indent=2,ensure_ascii=False)+'\n')
+args.output.parent.mkdir(parents=True,exist_ok=True)
+args.output.write_text(json.dumps({'note':'Public catalog snapshot, not a stock reservation or confirmed assembly quote. Raw stock field names retained deliberately.','parts':results},indent=2,ensure_ascii=False)+'\n')
 for r in results:print(r['code'],r.get('componentModelEn',r.get('error')), 'assembly',r.get('canPresaleNumber'),'overseas',r.get('overseasStockCount'))
 assert all(r['status']=='public_catalog_snapshot' for r in results), 'Some catalog lookups failed; retain unverified status and retry.'

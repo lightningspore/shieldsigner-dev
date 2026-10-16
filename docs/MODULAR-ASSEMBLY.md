@@ -21,6 +21,8 @@ The LCD's separate 2 mm J2 connector is not used. Fit the 2.54 mm J1 row if the 
 
 [Customer-parts CSV](../variants/lcd-module-2.8/assembly-extras.csv) is separate from the JLC SMT BOM. A compatible full-size smartcard is also needed for reader tests; [choose a card/app](SMARTCARDS.md) for your workflow.
 
+For the [printed enclosure](ENCLOSURE.md), use its screw list in place of the eight short mounting screws above. It keeps all four LCD spacers, uses three case-to-spacer screws and leaves one base post absent for Luckfox connector access.
+
 ## 1. Get a matched PCBA quote
 
 Unzip the [pill order kit](https://www.shieldsigner.dev/files/shieldsigner-modular-order.zip). Upload the inner **shieldsigner-modular-gerbers.zip**, then **bom-jlcpcb.csv** and **cpl-jlcpcb.csv**. Request two copper layers, 1.6 mm thickness and two-sided SMT assembly. Expect **35 placements / 17 catalog lines**: eight switches plus U701/C701/C702 on top, and 24 parts underneath.

@@ -13,6 +13,8 @@ run = ["uv run python scripts/sync-content.py", "uv run python manage.py runserv
 run = ["uv run python manage.py check", "uv run python manage.py test knowledge"]
 [tasks."ui:test"]
 run = "uv run python scripts/ui-check.py"
+[tasks."ui:enclosure"]
+run = "uv run python scripts/enclosure-ui-check.py"
 [tasks.package]
 run = ["uv run python scripts/sync-content.py", "uv run python scripts/package-release.py"]
 [tasks.deploy]

@@ -34,7 +34,14 @@ def detail(request, slug):
     body = (settings.CONTENT_DIR / f"{slug}.md").read_text()
     # Only reviewed, explicitly allowlisted repository Markdown is trusted HTML.
     html = markdown(body, extensions=["extra", "sane_lists", "toc"])
-    return render(request, "knowledge/detail.html", {**item, "body": mark_safe(html), "guides": entries()})
+    context={**item, "body": mark_safe(html), "guides": entries()}
+    if slug=='enclosure':
+        lead,section=html.split('<h2',1)
+        assets=json.loads((settings.CONTENT_DIR/'enclosure-assets.json').read_text())
+        context.update(lead=mark_safe(lead),body=mark_safe('<h2'+section),
+            enclosure_files=[{**a,'href':f"/files/{a['name']}?v={a['sha256'][:12]}"} for a in assets['assets']])
+        context['enclosure_models']={a['name'].removeprefix('shieldsigner-enclosure-').removesuffix('.glb'):f"/files/{a['name']}?v={a['sha256'][:12]}" for a in assets['assets'] if a['name'].endswith('.glb')}
+    return render(request, "knowledge/detail.html", context)
 
 def workflow(request, slug):
     tasks = workflows.tasks()
@@ -61,7 +68,7 @@ def workflow(request, slug):
 def downloads(request):
     files = json.loads((settings.PUBLIC_DIR / "manifest.json").read_text())
     primary_names = {"shieldsigner-jlcpcb-order.zip", "shieldsigner-carrier-gerbers.zip", "shieldsigner-luckfox-kicad.zip", "schematic.pdf"}
-    return render(request, "knowledge/downloads.html", {"files": files, "primary_files":[p for p in files if p["name"] in primary_names], "modular_files":[p for p in files if p["name"].startswith("shieldsigner-modular-")], "pdfs":[p for p in files if p["name"].startswith("reference/pdfs/")], "title": "Board files & sources", "description": "Native KiCad files, manufacturing review outputs and saved datasheets."})
+    return render(request, "knowledge/downloads.html", {"files": files, "primary_files":[p for p in files if p["name"] in primary_names], "modular_files":[p for p in files if p["name"].startswith("shieldsigner-modular-")], "enclosure_files":[p for p in files if p["name"].startswith("shieldsigner-enclosure-")], "pdfs":[p for p in files if p["name"].startswith("reference/pdfs/")], "title": "Board files & sources", "description": "Native KiCad files, manufacturing review outputs and saved datasheets."})
 
 def file(request, name):
     root = settings.PUBLIC_DIR.resolve()

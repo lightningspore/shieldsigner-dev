@@ -45,3 +45,11 @@ The production route is Cloudflare HTTPS → dedicated outbound Tunnel → Caddy
 After checks, `SHIELDSIGNER_DEPLOY_HOST=<authorized-ssh-host> mise run deploy` packages an allowlisted content-addressed release, builds the pinned image and updates the web/Caddy services after the origin health check. The tunnel connector is managed separately. `/healthz` reports version, revision and packaged content counts. Check public guide links and downloads after deployment. Retained immutable releases support rollback without a database migration.
 
 For detailed local/operator procedures, see [website implementation notes](../website/README.md). This page describes the public architecture without providing account access.
+
+## Printed enclosure and 3D viewer
+
+The enclosure guide comes from `docs/ENCLOSURE.md`; printable geometry and checks live in `enclosure/`. Run `mise run enclosure:verify` to regenerate the portable print kit and its checks. Hardware mesh caches are generated from the native KiCad assembly with `enclosure/export_hardware.py` and `enclosure/color_hardware.py`; run them together with `mise run enclosure:hardware` after `mise run variant:lcd:review`. The native colored GLB is grouped into carrier, LCD, Luckfox, headers and supports for the exploded view.
+
+`assets/enclosure-downloads.json` pins four assets to the separate `enclosure-preview-0.0.1-dev` release. The content builder verifies their checksums and the target PCB/SCAD hashes, and can fetch the pinned files in a fresh checkout. Enclosure downloads do not replace the 0.0.4-dev PCB order kit. Publish the matching assets before relying on a fresh checkout to build the site.
+
+The viewer uses locally bundled Three.js 0.179.1 with its MIT license saved alongside the bundle. Edit `website/viewer/enclosure.js`, then run `mise run enclosure:viewer`. A small loader imports it only on the enclosure guide. The viewer releases its WebGL resources during HTMX navigation; the tests exercise leaving and returning to the guide. Saved previews provide a static/no-JavaScript fallback. The ordinary response tests validate asset hashes and kit contents; `mise -C website run ui:enclosure` exercises both models, controls, responsive layout, HTMX lifecycle and no-JavaScript downloads.

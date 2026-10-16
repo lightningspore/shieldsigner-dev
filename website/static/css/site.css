@@ -254,3 +254,16 @@ footer small { grid-column: 1/-1; color: var(--muted); font: 11px monospace; }
 .site-version { color: var(--lime); font: 11px monospace; white-space: nowrap; }
 .brand .site-version { border: 1px solid var(--line); padding: 4px 7px; border-radius: 4px; margin-left: 5px; letter-spacing: 0; }
 @media(max-width:760px) { .brand .site-version { display: none; } }
+
+.enclosure-preview { margin: 1.5rem 0 3rem; }
+.enclosure-preview canvas { display:none; width:100%; height:480px; border:1px solid var(--line,#d1d4ca); border-radius:8px; touch-action:none; }
+.enclosure-preview button { cursor:pointer; font:inherit; }
+.enclosure-preview [data-mode][aria-pressed="true"] { outline:2px solid currentColor; outline-offset:2px; }
+.enclosure-preview .downloads strong { overflow-wrap:anywhere; }
+@media(max-width:600px) { .enclosure-preview canvas { height:340px; } }
+.enclosure-preview img { max-width:100%; height:auto; }
+
+[data-enclosure-viewer][data-ready="true"] canvas { display:block; }
+[data-enclosure-viewer][data-ready="true"] .enclosure-fallback { display:none; }
+[data-enclosure-viewer][data-failed="true"] canvas { display:none; }
+[data-enclosure-viewer][data-failed="true"] .enclosure-fallback { display:block; }

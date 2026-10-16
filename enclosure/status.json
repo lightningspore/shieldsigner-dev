@@ -1,0 +1,28 @@
+{
+  "status": "Digitally reviewed prototype for first physical fit",
+  "pcb": "variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb",
+  "pcb_sha256": "71b4291c46760ec92d351e5b64ef52ab169e6b26d12df3a2706350f120d52b4a",
+  "frame": "X=PCB_X-128; Y=89.579-PCB_Y; Z=carrier front",
+  "verified": [
+    "Nine distinct STL files: watertight, connected, print Z=0, P1S bed bounds",
+    "All print meshes: zero downward-face area steeper than 45 degrees above first layer (0.2 degree numeric tolerance)",
+    "Fifteen printed assembly parts: zero resting intersections",
+    "Native hardware: 380 closed solids plus conservative bounds for all open surfaces; zero case intersections",
+    "Card, carrier USB, Luckfox USB and microSD insertion clearances: zero case intersections",
+    "Assumed camera and 12 mm ribbon routing corridor clear printed parts and fasteners",
+    "23 nominal screws: no intersections outside explicit thread engagement cylinders",
+    "Eight buttons: eight sampled positions across 0.35 mm stroke, only intended actuator contact exempted",
+    "Exploded model: separate LCD/Luckfox/header groups, screws and case parts; printed parts clear conservative native group bounds",
+    "Official profiles resolved: P1S 256x256, 0.4 nozzle, PLA, 0.20 layers, four walls, 20% gyroid",
+    "Bambu 2.8.2.60: one plate, 15 objects, no supports, no outside/skipped parts",
+    "Website: 12 response/content tests; desktop/mobile WebGL controls, HTMX lifecycle and no-JS downloads"
+  ],
+  "step_frame_note": "Native component top plane is Z=1.595 mm (e.g. SW503 bottom); full native assembly transformed by (-128,89.579,-1.595). Board dielectric is 0..1.51, while physical carrier is conservatively reserved to -1.6.",
+  "physicalChecksPending": [
+    "Purchased low-profile camera board size, thickness, lens position and clear edge margins",
+    "Button free motion, actuator tolerance, travel and screw engagement on printed parts",
+    "Actual camera ribbon type, bend radius, routing and retention",
+    "Thermal behavior, durability and complete powered bring-up"
+  ],
+  "delivery": "Portable STL, SCAD and standard 3MF. Bambu-native project is temporary slice validation output, not a distributed ready-to-print project."
+}

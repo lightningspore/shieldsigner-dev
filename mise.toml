@@ -120,3 +120,23 @@ run = "uv run python scripts/package-modular.py"
 [tasks."variant:lcd:display-model"]
 description = "Regenerate drawing-based LCD/support envelopes and hashes; follow with review/package"
 run = "uv run --python 3.11 --with cadquery==2.8.0 python scripts/model-pill-display.py"
+
+[tasks."enclosure:build"]
+description = "Render draft enclosure STL meshes and validate manifoldness, bed bounds and print Z"
+run = "uv run --python 3.11 --with trimesh --with networkx --with manifold3d python enclosure/build.py"
+
+[tasks."enclosure:fit"]
+description = "Check native hardware against printed parts and export assembled/exploded GLBs (requires hardware mesh cache)"
+run = ["uv run --python 3.11 --with trimesh --with networkx --with manifold3d python enclosure/check_hardware.py", "uv run --python 3.11 --with trimesh --with networkx --with manifold3d python enclosure/preview_assembly.py"]
+
+[tasks."enclosure:verify"]
+description = "Regenerate portable meshes, run fit/motion/fastener checks and slice the P1S plate"
+run = "uv run --python 3.11 --with trimesh --with networkx --with manifold3d python enclosure/verify.py"
+
+[tasks."enclosure:viewer"]
+description = "Bundle the locally hosted Three.js enclosure viewer"
+run = "bun build website/viewer/enclosure.js --outfile website/static/enclosure-viewer.js --minify"
+
+[tasks."enclosure:hardware"]
+description = "Generate checked hardware mesh caches from existing native STEP/GLB exports"
+run = ["uv run --python 3.11 --with cadquery==2.8.0 --with trimesh python enclosure/export_hardware.py", "uv run --python 3.11 --with trimesh python enclosure/color_hardware.py"]

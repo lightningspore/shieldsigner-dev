@@ -28,6 +28,20 @@ class Links(HTMLParser):
 
 
 class KnowledgeTests(SimpleTestCase):
+    def test_enclosure_models_and_print_kit(self):
+        response=self.client.get('/guides/enclosure/')
+        self.assertContains(response,'data-enclosure-viewer')
+        manifest=json.loads((settings.CONTENT_DIR/'enclosure-assets.json').read_text())
+        for asset in manifest['assets']:
+            self.assertContains(response,f"/files/{asset['name']}?v={asset['sha256'][:12]}")
+            path=settings.PUBLIC_DIR/asset['name']
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),asset['sha256'])
+        with ZipFile(settings.PUBLIC_DIR/'shieldsigner-enclosure-print.zip') as archive:
+            self.assertIn('print/button-fit-coupon.stl',archive.namelist())
+            self.assertEqual(len([n for n in archive.namelist() if n.endswith('.stl')]),9)
+            self.assertEqual(json.loads(archive.read('checks/hardware-fit.json'))['findings'],[])
+            self.assertEqual(json.loads(archive.read('checks/fastener-check.json'))['findings'],[])
+
     def test_all_guides_and_metadata(self):
         for slug, *_ in GUIDES:
             response = self.client.get(f'/guides/{slug}/')
@@ -82,7 +96,7 @@ class KnowledgeTests(SimpleTestCase):
         self.assertContains(page, '125 mW · ±1%')
         self.assertContains(self.client.get('/guides/bom-table/'), '1 µF')
         self.assertContains(self.client.get('/build/parts/?scope=carrier&q=1uF'), 'C28323')
-        self.assertContains(self.client.get('/'), '0.0.4-dev')
+        self.assertContains(self.client.get('/'), '0.0.5-dev')
         self.assertContains(self.client.get('/'), 'revision')
         self.assertContains(self.client.get('/'), 'site.css?v=')
         self.assertContains(self.client.get('/'), 'site.js?v=')

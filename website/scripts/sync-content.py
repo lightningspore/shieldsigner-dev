@@ -22,6 +22,7 @@ for directory in [content, public]:
 url_map = {str((ROOT / source).resolve()): f"/guides/{slug}/" for slug, source, *_ in GUIDES}
 files = [*(f"reference/pdfs/{p.name}" for p in sorted((ROOT / "reference/pdfs").glob("*.pdf"))),
 "docs/workflows.json", "docs/system-parts.json", "docs/card-workflows.json", "docs/os-build-benchmark.json", "docs/pdf-references.json", "docs/drc-assembly-exceptions.json",
+"enclosure/previews/assembled.png", "enclosure/previews/exploded.png",
 "manufacturing/jlcpcb/bom-carrier-jlcpcb.csv", "manufacturing/jlcpcb/cpl-carrier-jlcpcb.csv"]
 # Hardware-only review bundle produced by review:build; no firmware/private archives.
 for name in ["shieldsigner-luckfox-kicad.zip", "shieldsigner-carrier-gerbers.zip", "pcb-top.svg", "pcb-bottom.svg", "schematic.pdf"]:
@@ -83,6 +84,23 @@ for artifact in modular_manifest["assets"]:
             source.write_bytes(payload)
     if hashlib.sha256(source.read_bytes()).hexdigest()!=artifact["sha256"]: raise ValueError("Modular asset changed: "+artifact["name"])
     shutil.copyfile(source, public / artifact["name"])
+# Enclosure is versioned separately from the unchanged 0.0.4-dev PCB kit.
+enclosure_manifest=json.loads((ROOT/'assets/enclosure-downloads.json').read_text())
+assert hashlib.sha256(board.read_bytes()).hexdigest()==enclosure_manifest['boardSha256'],'Case targets another board'
+assert hashlib.sha256((ROOT/'enclosure/case.scad').read_bytes()).hexdigest()==enclosure_manifest['scadSha256'],'Rebuild case release after changing geometry'
+for artifact in enclosure_manifest['assets']:
+    source=ROOT/'dist/enclosure'/artifact['name']
+    if not source.exists():
+        source=ROOT/'.tools/website-downloads'/artifact['sha256']/artifact['name']
+        if not source.exists():
+            source.parent.mkdir(parents=True,exist_ok=True)
+            request=urllib.request.Request(artifact['url'],headers={'User-Agent':'ShieldSigner-content-builder'})
+            with urllib.request.urlopen(request,timeout=60) as response:payload=response.read()
+            if hashlib.sha256(payload).hexdigest()!=artifact['sha256']:raise ValueError('Enclosure download checksum mismatch')
+            source.write_bytes(payload)
+    assert hashlib.sha256(source.read_bytes()).hexdigest()==artifact['sha256'],'Enclosure asset changed: '+artifact['name']
+    shutil.copyfile(source,public/artifact['name'])
+shutil.copyfile(ROOT/'assets/enclosure-downloads.json',content/'enclosure-assets.json')
 repo_url = "https://github.com/lightningspore/shieldsigner-dev/tree/main/"
 for slug, name, *_ in GUIDES:
     source = ROOT / name

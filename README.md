@@ -12,6 +12,8 @@ The PCB uses a dedicated 3.3 V display regulator, supported display mounts and 1
 
 The former 0.0.3-dev Pico-format display bay is superseded. Sections below also retain the separate standard FPC carrier and its experimental tscircuit port; do not mix their manufacturing files with the pill kit.
 
+The [printed enclosure guide](docs/ENCLOSURE.md) includes the screw list, camera clamp, button mechanisms and first-fit checks. Inspect the [assembled and exploded models](https://www.shieldsigner.dev/guides/enclosure/) on the site. The [enclosure prototype release](https://github.com/lightningspore/shieldsigner-dev/releases/tag/enclosure-preview-0.0.1-dev) contains portable STL, SCAD and 3MF files for the unchanged 0.0.4-dev PCB. Run `mise run enclosure:verify` to regenerate and check the case.
+
 ## Standard FPC reference documentation
 
 Read these in order:

@@ -3,3 +3,5 @@
 # Portable mechanical models and review assemblies.
 *.step filter=lfs diff=lfs merge=lfs -text
 *.stp filter=lfs diff=lfs merge=lfs -text
+# Bundled upstream GLSL strings retain their intentional shader whitespace.
+website/static/enclosure-viewer.js -whitespace

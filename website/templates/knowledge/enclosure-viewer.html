@@ -1,0 +1,11 @@
+{% load static %}
+<section class="enclosure-preview" aria-label="Enclosure 3D assembly">
+  <div data-enclosure-viewer data-assembled="{{ enclosure_models.assembled }}" data-exploded="{{ enclosure_models.exploded }}" data-viewer-script="{% static 'enclosure-viewer.js' %}?v={{ site_revision }}">
+    <div class="actions"><button type="button" class="button" data-mode="assembled" aria-pressed="true">Assembled</button><button type="button" class="button" data-mode="exploded" aria-pressed="false">Exploded</button><button type="button" data-reset>Reset view</button></div>
+    <canvas aria-label="Interactive ShieldSigner enclosure model" tabindex="0"></canvas>
+    <p role="status" class="caption">Load the 3D model to inspect the case and PCB together.</p>
+    <div class="enclosure-fallback"><img src="/files/enclosure/previews/assembled.png?v={{ site_revision }}" alt="Assembled printed ShieldSigner case with LCD and eight buttons" width="850" height="480"><p>Download either GLB below to inspect it in a 3D viewer.</p></div>
+  </div>
+  <p class="caption">Camera and ribbon are adjustable envelopes. Screw threads are omitted. Digital clearances do not replace a first fit with the purchased parts. <a href="/files/enclosure/previews/exploded.png?v={{ site_revision }}" hx-boost="false">Static exploded view ↗</a></p>
+  <div class="downloads">{% for file in enclosure_files %}<a href="{{ file.href }}" hx-boost="false"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>
+</section>

@@ -8,6 +8,9 @@
   <h2>Eight-pin pill · 0.0.4-dev</h2>
   <p>160 × 70 mm capsule, 35 SMT placements, single-row LCD. Matched prototype quote files, native KiCad, schematic PDF and 3D assemblies. Physical qualification remains open.</p>
   <div class="downloads">{% for file in modular_files %}<a href="/files/{{ file.name }}?v={{ file.sha256|slice:":12" }}" hx-boost="false"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>
+  <h2>Printed enclosure · 0.0.1-dev</h2>
+  <p>Flat print orientations, a removable service cover and captured buttons. <a href="/guides/enclosure/">Inspect the assembled and exploded models and read the assembly guide →</a></p>
+  <div class="downloads">{% for file in enclosure_files %}<a href="/files/{{ file.name }}?v={{ file.sha256|slice:":12" }}" hx-boost="false"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>
   <h2>Standard FPC carrier</h2>
   <div class="actions"><a href="/files/shieldsigner-jlcpcb-order.zip" hx-boost="false">Standard FPC order bundle ↓</a><a href="/build/pcb/">Standard ordering steps →</a></div>
   <div class="downloads">{% for file in primary_files %}<a href="/files/{{ file.name }}?v={{ file.sha256|slice:":12" }}" hx-boost="false"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>

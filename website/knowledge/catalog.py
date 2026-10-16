@@ -1,5 +1,6 @@
 # Explicit public-content allowlist. Never crawl the repo or Telegram caches.
 GUIDES = [
+("enclosure", "docs/ENCLOSURE.md", "Build", "Print and assemble the enclosure", "Flat prints, camera fit, button mechanisms, fasteners and exploded 3D assembly."),
 ("modular-assembly", "docs/MODULAR-ASSEMBLY.md", "Build", "Assemble the modular carrier", "JLC quote, through-hole headers, mounting and staged bring-up."),
 ("modular-bom", "variants/lcd-module-2.8/manufacturing/BOM.md", "Build", "Modular carrier BOM", "35 SMT pieces with values, ratings and dated JLC sourcing."),
 ("lcd-module", "docs/LCD-MODULE-VARIANT.md", "Hardware", "Eight-pin 2.8-inch pill carrier", "Pill layout, reference eight-pin interface, dedicated LCD power and simple header assembly."),

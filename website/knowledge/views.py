@@ -17,8 +17,15 @@ def entries(query=""):
         result.append(dict(slug=slug, source=source, category=category, title=title, description=description))
     return result
 
+def enclosure_context():
+    assets=json.loads((settings.CONTENT_DIR/'enclosure-assets.json').read_text())
+    return {
+        'enclosure_files':[{**a,'href':f"/files/{a['name']}?v={a['sha256'][:12]}"} for a in assets['assets']],
+        'enclosure_models':{a['name'].removeprefix('shieldsigner-enclosure-').removesuffix('.glb'):f"/files/{a['name']}?v={a['sha256'][:12]}" for a in assets['assets'] if a['name'].endswith('.glb')}
+    }
+
 def home(request):
-    return render(request, "knowledge/home.html", {"tasks": workflows.tasks()})
+    return render(request, "knowledge/home.html", {"tasks": workflows.tasks(), **enclosure_context()})
 
 def guides(request):
     query = request.GET.get("q", "").strip()[:200]
@@ -37,10 +44,7 @@ def detail(request, slug):
     context={**item, "body": mark_safe(html), "guides": entries()}
     if slug=='enclosure':
         lead,section=html.split('<h2',1)
-        assets=json.loads((settings.CONTENT_DIR/'enclosure-assets.json').read_text())
-        context.update(lead=mark_safe(lead),body=mark_safe('<h2'+section),
-            enclosure_files=[{**a,'href':f"/files/{a['name']}?v={a['sha256'][:12]}"} for a in assets['assets']])
-        context['enclosure_models']={a['name'].removeprefix('shieldsigner-enclosure-').removesuffix('.glb'):f"/files/{a['name']}?v={a['sha256'][:12]}" for a in assets['assets'] if a['name'].endswith('.glb')}
+        context.update(lead=mark_safe(lead),body=mark_safe('<h2'+section),**enclosure_context())
     return render(request, "knowledge/detail.html", context)
 
 def workflow(request, slug):

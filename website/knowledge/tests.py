@@ -29,6 +29,9 @@ class Links(HTMLParser):
 
 class KnowledgeTests(SimpleTestCase):
     def test_enclosure_models_and_print_kit(self):
+        home=self.client.get('/')
+        self.assertContains(home,'data-enclosure-viewer')
+        self.assertContains(home,'href="#3d-model"')
         response=self.client.get('/guides/enclosure/')
         self.assertContains(response,'data-enclosure-viewer')
         manifest=json.loads((settings.CONTENT_DIR/'enclosure-assets.json').read_text())

@@ -13,6 +13,13 @@ with sync_playwright() as p:
         context=browser.new_context(viewport={'width':width,'height':height})
         page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
         page.goto(base)
+        page.get_by_role('link',name='View 3D model').click()
+        page.wait_for_function("document.querySelector('[data-enclosure-viewer]')?.dataset.loaded==='assembled'",timeout=60000)
+        home_viewer=page.locator('[data-enclosure-viewer]')
+        home_viewer.get_by_role('button',name='Exploded',exact=True).click()
+        page.wait_for_function("document.querySelector('[data-enclosure-viewer]').dataset.loaded==='exploded'",timeout=60000)
+        home_viewer.locator('canvas').screenshot(path=str(artifacts/f'home-3d-{width}.png'))
+        assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),'Homepage 3D model overflows'
         page.get_by_role('link',name='Print the case & inspect it in 3D').click()
         page.wait_for_url('**/guides/enclosure/')
         viewer=page.locator('[data-enclosure-viewer]')

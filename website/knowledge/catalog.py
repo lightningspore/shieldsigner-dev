@@ -1,5 +1,9 @@
 # Explicit public-content allowlist. Never crawl the repo or Telegram caches.
 GUIDES = [
+("start-here", "docs/START-HERE.md", "Start here", "Start here: projects, versions & build paths", "How SeedSigner, ShieldSigner, Luckfox firmware and this prototype fit together."),
+("software-features", "docs/SOFTWARE-FEATURES.md", "Use", "Software features & defaults", "Signing, smartcards, optional tools and what the pinned image actually enables."),
+("wallet-backups", "docs/WALLET-BACKUPS.md", "Use", "Wallets, secrets & backups", "SeedQR, passphrases, descriptors, card storage, BIP85 and SLIP39 explained."),
+("troubleshooting", "docs/TROUBLESHOOTING.md", "Support", "Troubleshooting", "Find the failing layer: boot, display, camera, reader, applet or wallet settings."),
 ("enclosure", "docs/ENCLOSURE.md", "Build", "Print and assemble the enclosure", "Flat prints, camera fit, button mechanisms, fasteners and exploded 3D assembly."),
 ("modular-assembly", "docs/MODULAR-ASSEMBLY.md", "Build", "Assemble the modular carrier", "JLC quote, through-hole headers, mounting and staged bring-up."),
 ("modular-bom", "variants/lcd-module-2.8/manufacturing/BOM.md", "Build", "Modular carrier BOM", "35 SMT pieces with values, ratings and dated JLC sourcing."),

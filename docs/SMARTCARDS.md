@@ -2,9 +2,16 @@
 
 ## Exact reader hardware on this PCB
 
-The card connector is **J601, Amphenol 7312P0225A13LF**, supplier **LCSC/JLCPCB C5417011**. It is a bottom-side, surface-mount **contact smartcard socket**, with eight card contacts and a normally-open insertion switch. It is not a microSD socket, USB reader, or NFC reader. The PCB uses the custom `Library:AMPHENOL_7312P0225A13LF_smrt2_combo_handsolder` footprint. The extended hand-solder lands are inherited; automated reflow qualification remains pending. The socket is fitted in the carrier BOM even when the Luckfox module is supplied separately.
+The card connector is **J601, Amphenol 7312P0225A13LF**, supplier **LCSC/JLCPCB C5417011**. It is a bottom-side SMT **contact smartcard socket**, with eight contacts and an insertion switch. It is not a microSD socket or NFC reader. The socket is included in the carrier BOM even when Luckfox is supplied separately.
 
-Use the saved [Amphenol mechanical drawing](../reference/pdfs/C5417011.pdf) for contact locations, retention and insertion direction, and the [J601 component map](COMPONENTS.md#j601) for this board's land assignments. The upstream describes a combined full-size/SIM arrangement. A full-size contact card is the initial test fixture; smaller card formats require verified retention/contact alignment or an appropriate adapter. “SIM compatible” does not establish application support for telecom SIMs. Card orientation must follow the drawing and socket contacts; “chip up” is ambiguous because J601 is on the board's bottom side.
+| Carrier | Socket footprint and scope |
+|---|---|
+| **Current eight-pin pill** | `ShieldSigner:Amphenol_7312P0225A13LF_reflow`; revised SMT lands, full-size contact-card target; physical reflow and card fit qualification pending |
+| Earlier standard FPC board | `Library:AMPHENOL_7312P0225A13LF_smrt2_combo_handsolder`; inherited extended hand-solder lands; not the pill's assembly footprint |
+
+Start the pill with [modular assembly](MODULAR-ASSEMBLY.md). The following reader/contact explanation applies to both designs. The [J601 component map](COMPONENTS.md#j601) describes the earlier standard board in more detail.
+
+Use the saved [Amphenol drawing](../reference/pdfs/C5417011.pdf) for insertion direction and contact geometry. Full-size contact cards are the initial test fixtures. Historical upstream full-size/SIM descriptions do not establish SIM retention or application compatibility on our pill. Do not infer “chip up” from a photograph: J601 is on the bottom of the board.
 
 | J601 contact | PCB connection | Purpose |
 |---|---|---|

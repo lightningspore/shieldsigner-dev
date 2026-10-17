@@ -143,6 +143,22 @@
       "license": "MIT; generated for this project",
       "sha256": "e7d651a23d8d695a70062af986af5751176508d8f18e81082f84a0fdfdf246d8",
       "bytes": 9584
+    },
+    "local/CK-PTS636-SK25-envelope.step": {
+      "provider": "ShieldSigner drawing-derived nominal envelope",
+      "source": "reference/pdfs/CK-PTS636.pdf, pages 3\u20134, 2.5 mm G leads",
+      "license": "Repository license; original drawing retained separately",
+      "sha256": "2594bc2acc58744e8c3cd48ebfe8a208d1373957fdf3258548af51039252b774",
+      "bytes": 64874,
+      "limitations": "Envelope only; no manufacturer CAD or physical fit qualification; no detailed contacts"
+    },
+    "local/GCT-USB4125-envelope.step": {
+      "provider": "ShieldSigner drawing-derived nominal envelope",
+      "source": "reference/pdfs/GCT-USB4125.pdf, rev A6, default 1.0 mm stakes",
+      "license": "Repository license; original drawing retained separately",
+      "sha256": "aff738d56ba226d3bbc37bb11ac8c4f68ae16caabf1e0f147c05e6522bce6685",
+      "bytes": 96317,
+      "limitations": "Envelope only; no manufacturer CAD or physical fit qualification; no detailed contacts"
     }
   }
 }

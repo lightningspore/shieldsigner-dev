@@ -497,6 +497,91 @@
       "status": "public_catalog_snapshot"
     },
     {
+      "componentModelEn": "PTS636SK25SMTRLFS",
+      "componentBrandEn": "C&K",
+      "componentSpecificationEn": "SMD,6x3.5mm",
+      "describe": "-40℃~+90℃ 12V 2.5N 3.7mm 50mA 6.1mm Gull Wing IP40 No Rectangular Button SPST-NO Surface Mount,Vertical SMD,6x3.5mm Tactile Switches ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 61,
+      "overseasStockCount": 2894,
+      "preMinPurchaseNum": 26,
+      "leastPatchNumber": 5,
+      "lossNumber": 1,
+      "initialPrice": 0.3546,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2110271930_C-K-PTS636SK25SMTRLFS_C2689642.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C2689642",
+          "attribute_value_name": "-40℃~+90℃"
+        },
+        {
+          "attribute_name_en": "Contact Current",
+          "component_code": "C2689642",
+          "attribute_value_name": "50mA"
+        },
+        {
+          "attribute_name_en": "Operating Force",
+          "component_code": "C2689642",
+          "attribute_value_name": "2.5N"
+        },
+        {
+          "attribute_name_en": "IP Rating",
+          "component_code": "C2689642",
+          "attribute_value_name": "IP40"
+        },
+        {
+          "attribute_name_en": "Length",
+          "component_code": "C2689642",
+          "attribute_value_name": "6.1mm"
+        },
+        {
+          "attribute_name_en": "Termination Style",
+          "component_code": "C2689642",
+          "attribute_value_name": "Gull Wing"
+        },
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C2689642",
+          "attribute_value_name": "12V"
+        },
+        {
+          "attribute_name_en": "Actuator Style",
+          "component_code": "C2689642",
+          "attribute_value_name": "Rectangular Button"
+        },
+        {
+          "attribute_name_en": "Circuit",
+          "component_code": "C2689642",
+          "attribute_value_name": "SPST-NO"
+        },
+        {
+          "attribute_name_en": "With Lamp",
+          "component_code": "C2689642",
+          "attribute_value_name": "No"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C2689642",
+          "attribute_value_name": "Surface Mount,Vertical"
+        },
+        {
+          "attribute_name_en": "Width",
+          "component_code": "C2689642",
+          "attribute_value_name": "3.7mm"
+        }
+      ],
+      "code": "C2689642",
+      "url": "https://jlcpcb.com/partdetail/C2689642",
+      "checkedAt": "2026-10-17T20:42:32.346088+00:00",
+      "htmlSha256": "1752686b8b04e6e18eb57e56340bed827c139e31ce572adedbe18ac2605b6c6c",
+      "status": "public_catalog_snapshot"
+    },
+    {
       "componentModelEn": "0805W8F5101T5E",
       "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
       "componentSpecificationEn": "0805",
@@ -659,6 +744,76 @@
       "url": "https://jlcpcb.com/partdetail/C28636",
       "checkedAt": "2026-10-15T15:18:17.104076+00:00",
       "htmlSha256": "79f4c90d7b30ae3f4d58548c385e75254e41a783839341069c09a22349d8de7d",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "USB4125-GF-A",
+      "componentBrandEn": "Global Connector Technology",
+      "componentSpecificationEn": "SMD",
+      "describe": "-30℃~+85℃ 1 3A 48V 6P Black Female Surface Mount, Right Angle Type-C SMD USB Connectors ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 762,
+      "overseasStockCount": 958,
+      "preMinPurchaseNum": 9,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 1.04,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_Global-Connector-Technology-USB4125-GF-A_C3151650.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C3151650",
+          "attribute_value_name": "-30℃~+85℃"
+        },
+        {
+          "attribute_name_en": "Current Rating-Power",
+          "component_code": "C3151650",
+          "attribute_value_name": "3A"
+        },
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C3151650",
+          "attribute_value_name": "48V"
+        },
+        {
+          "attribute_name_en": "Gender",
+          "component_code": "C3151650",
+          "attribute_value_name": "Female"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C3151650",
+          "attribute_value_name": "Surface Mount, Right Angle"
+        },
+        {
+          "attribute_name_en": "Detection color",
+          "component_code": "C3151650",
+          "attribute_value_name": "Black"
+        },
+        {
+          "attribute_name_en": "Number of Ports",
+          "component_code": "C3151650",
+          "attribute_value_name": "1"
+        },
+        {
+          "attribute_name_en": "Connector Type",
+          "component_code": "C3151650",
+          "attribute_value_name": "Type-C"
+        },
+        {
+          "attribute_name_en": "Number of Contacts",
+          "component_code": "C3151650",
+          "attribute_value_name": "6P"
+        }
+      ],
+      "code": "C3151650",
+      "url": "https://jlcpcb.com/partdetail/C3151650",
+      "checkedAt": "2026-10-17T20:42:32.293090+00:00",
+      "htmlSha256": "b01b920982dcd9d64aa70194753f35e03644d8a51e08db5430675cf66bc8fe43",
       "status": "public_catalog_snapshot"
     },
     {

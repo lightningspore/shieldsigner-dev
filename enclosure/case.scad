@@ -3,6 +3,13 @@
 // Prototype geometry: run the fit checker before treating exports as printable.
 render_part = "base"; // base | bezel | button | retainer-left | retainer-right | camera-tray | camera-clamp | assembly
 $fn = 96;
+// Measure soldered switch height per button; conservative maximum default.
+// Set with -D button_switch_height=... after measuring a first article.
+button_switch_height = 2.7;
+button_gap = 0.15;
+button_stroke = 0.40; // gap + nominal 0.25 mm switch travel
+button_tip_z = button_switch_height + button_gap;
+assert(button_switch_height >= 2.3 && button_switch_height <= 2.7);
 wall = 2.4;
 outer_size = [176,82];
 inner_size = [164,74];
@@ -104,12 +111,12 @@ module bezel_assembled() {
                 for(x=closure_x) bore(x,0,seam_z-2.01,2.12,6.8);
             }
             for(x=closure_x) bore(x,0,seam_z,front_inner_z-seam_z+0.01,6);
-            for(p=retainer_mounts) bore(p[0],p[1],16.85,front_inner_z-16.85+0.01,5);
+            for(p=retainer_mounts) bore(p[0],p[1],16.80,front_inner_z-16.80+0.01,5);
         }
         // Active area 57.6 x 43.2; 0.5 mm aperture allowance each edge.
         translate([6-58.6/2,-44.2/2,front_inner_z-0.01]) cube([58.6,44.2,wall+0.02]);
         for(p=button_xy) bore(p[0],p[1],front_inner_z-0.01,wall+0.02,7.4);
-        for(p=retainer_mounts) bore(p[0],p[1],16.79,3.5,1.6);
+        for(p=retainer_mounts) bore(p[0],p[1],16.74,3.5,1.6);
         for(x=closure_x) {
             bore(x,0,seam_z-0.01,front_z-seam_z+0.02,2.8);
             translate([x,0,front_z-1.2]) cylinder(h=1.21,d1=2.8,d2=5.2);
@@ -120,8 +127,8 @@ module bezel_assembled() {
     }
 }
 module button_assembled() {
-    // 0.1 mm nominal switch gap; retainer limits downward travel to 0.35 mm.
-    bore(0,0,2.6,1,2);
+    // Adjustable tip: measure each switch before selecting plunger length.
+    bore(0,0,button_tip_z,3.6-button_tip_z,2);
     translate([0,0,3.59]) cylinder(h=1.01,d1=2,d2=4);
     bore(0,0,4.59,12.62,4);
     translate([0,0,17.2]) cylinder(h=1.2,d1=9,d2=6.8);
@@ -132,11 +139,11 @@ module retainer_assembled(left=true) {
     mounts=left?[0,1,2]:[3,4];
     difference() {
         hull() {
-            for(i=indices) bore(button_xy[i][0],button_xy[i][1],15.2,1.65,11);
-            for(i=mounts) bore(retainer_mounts[i][0],retainer_mounts[i][1],15.2,1.65,5);
+            for(i=indices) bore(button_xy[i][0],button_xy[i][1],15.15,1.65,11);
+            for(i=mounts) bore(retainer_mounts[i][0],retainer_mounts[i][1],15.15,1.65,5);
         }
-        for(i=indices) bore(button_xy[i][0],button_xy[i][1],15.19,1.67,4.6);
-        for(i=mounts) bore(retainer_mounts[i][0],retainer_mounts[i][1],15.19,1.67,2.2);
+        for(i=indices) bore(button_xy[i][0],button_xy[i][1],15.14,1.67,4.6);
+        for(i=mounts) bore(retainer_mounts[i][0],retainer_mounts[i][1],15.14,1.67,2.2);
     }
 }
 module camera_ring(clamp=false) {
@@ -172,8 +179,8 @@ module service_cover_assembled() {
 if(render_part=="base") translate([0,0,-floor_z]) base_assembled();
 else if(render_part=="bezel") translate([0,0,front_z]) rotate([180,0,0]) bezel_assembled();
 else if(render_part=="button") translate([0,0,22]) rotate([180,0,0]) button_assembled();
-else if(render_part=="retainer-left") translate([59.53,0,-15.2]) retainer_assembled(true);
-else if(render_part=="retainer-right") translate([-62,0,-15.2]) retainer_assembled(false);
+else if(render_part=="retainer-left") translate([59.53,0,-15.15]) retainer_assembled(true);
+else if(render_part=="retainer-right") translate([-62,0,-15.15]) retainer_assembled(false);
 else if(render_part=="camera-tray") translate([0,0,-camera_front_z+1.2]) camera_ring(false);
 else if(render_part=="camera-clamp") translate([0,0,-camera_front_z-camera_pcb_thickness]) camera_ring(true);
 else if(render_part=="service-cover") translate([-service_xy[0],-service_xy[1],-floor_z+2]) service_cover_assembled();

@@ -96,6 +96,18 @@
     "reserved": false
   },
   {
+    "code": "C2689642",
+    "mpn": "PTS636SK25SMTRLFS",
+    "refs": "SW501,SW502,SW503,SW504,SW505,SW506,SW507,SW508",
+    "perBoard": 8,
+    "forFiveBoards": 40,
+    "assemblyStock": 61,
+    "minimumPurchase": 26,
+    "checkedAt": "2026-10-17T20:42:32.346088+00:00",
+    "library": "expand",
+    "reserved": false
+  },
+  {
     "code": "C27834",
     "mpn": "0805W8F5101T5E",
     "refs": "R301,R302",
@@ -132,14 +144,14 @@
     "reserved": false
   },
   {
-    "code": "C318938",
-    "mpn": "TS-1101-C-W",
-    "refs": "SW501,SW502,SW503,SW504,SW505,SW506,SW507,SW508",
-    "perBoard": 8,
-    "forFiveBoards": 40,
-    "assemblyStock": 300772,
-    "minimumPurchase": 255,
-    "checkedAt": "2026-10-15T15:18:15.467865+00:00",
+    "code": "C3151650",
+    "mpn": "USB4125-GF-A",
+    "refs": "J301",
+    "perBoard": 1,
+    "forFiveBoards": 5,
+    "assemblyStock": 762,
+    "minimumPurchase": 9,
+    "checkedAt": "2026-10-17T20:42:32.293090+00:00",
     "library": "expand",
     "reserved": false
   },
@@ -188,18 +200,6 @@
     "assemblyStock": 55,
     "minimumPurchase": 1,
     "checkedAt": "2026-10-15T15:18:16.319649+00:00",
-    "library": "expand",
-    "reserved": false
-  },
-  {
-    "code": "C668623",
-    "mpn": "TYPE-C 6P(073)",
-    "refs": "J301",
-    "perBoard": 1,
-    "forFiveBoards": 5,
-    "assemblyStock": 136793,
-    "minimumPurchase": 276,
-    "checkedAt": "2026-10-15T15:18:16.918759+00:00",
     "library": "expand",
     "reserved": false
   }

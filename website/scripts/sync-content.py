@@ -84,7 +84,7 @@ for artifact in modular_manifest["assets"]:
             source.write_bytes(payload)
     if hashlib.sha256(source.read_bytes()).hexdigest()!=artifact["sha256"]: raise ValueError("Modular asset changed: "+artifact["name"])
     shutil.copyfile(source, public / artifact["name"])
-# Enclosure is versioned separately from the unchanged 0.0.4-dev PCB kit.
+# Enclosure and carrier are versioned separately; their manifests must target the same PCB.
 enclosure_manifest=json.loads((ROOT/'assets/enclosure-downloads.json').read_text())
 assert hashlib.sha256(board.read_bytes()).hexdigest()==enclosure_manifest['boardSha256'],'Case targets another board'
 assert hashlib.sha256((ROOT/'enclosure/case.scad').read_bytes()).hexdigest()==enclosure_manifest['scadSha256'],'Rebuild case release after changing geometry'

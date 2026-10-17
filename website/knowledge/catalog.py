@@ -1,5 +1,6 @@
 # Explicit public-content allowlist. Never crawl the repo or Telegram caches.
 GUIDES = [
+("mechanical-substitutions", "docs/MECHANICAL-SUBSTITUTIONS.md", "Build", "Switch & USB-C revision", "Manufacturer drawings, shared-supplier parts, new lands and measured-height buttons."),
 ("start-here", "docs/START-HERE.md", "Start here", "Start here: projects, versions & build paths", "How SeedSigner, ShieldSigner, Luckfox firmware and this prototype fit together."),
 ("software-features", "docs/SOFTWARE-FEATURES.md", "Use", "Software features & defaults", "Signing, smartcards, optional tools and what the pinned image actually enables."),
 ("wallet-backups", "docs/WALLET-BACKUPS.md", "Use", "Wallets, secrets & backups", "SeedQR, passphrases, descriptors, card storage, BIP85 and SLIP39 explained."),
@@ -11,7 +12,7 @@ GUIDES = [
 ("modular-assembly", "docs/MODULAR-ASSEMBLY.md", "Build", "Assemble the modular carrier", "JLC quote, through-hole headers, mounting and staged bring-up."),
 ("modular-bom", "variants/lcd-module-2.8/manufacturing/BOM.md", "Build", "Modular carrier BOM", "35 SMT pieces with values, ratings and dated JLC sourcing."),
 ("self-assembly", "docs/SELF-ASSEMBLY.md", "Build", "Optional DigiKey self-assembly", "Separate commodity substitutions and purchase CSV; JLC remains the primary assembly path."),
-("digikey-bom", "variants/lcd-module-2.8/self-assembly/BOM-DIGIKEY.md", "Build", "DigiKey self-assembly BOM", "Exact order codes and quantities for 26 SMT pieces; switches and USB remain separately sourced."),
+("digikey-bom", "variants/lcd-module-2.8/self-assembly/BOM-DIGIKEY.md", "Build", "DigiKey self-assembly BOM", "Exact order codes for all 35 SMT pieces; shared JLC/DigiKey switches and USB-C."),
 ("lcd-module", "docs/LCD-MODULE-VARIANT.md", "Hardware", "Eight-pin 2.8-inch pill carrier", "Pill layout, reference eight-pin interface, dedicated LCD power and simple header assembly."),
 ("website", "docs/WEBSITE.md", "Software", "How this website works", "Content sources, local previews, versioning, checks and deployment."),
 ("build-overview", "docs/BUILD-OVERVIEW.md", "Build", "Standard FPC build overview", "Earlier standard FPC configuration; current pill has a separate assembly guide."),

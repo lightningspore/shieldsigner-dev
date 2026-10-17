@@ -28,16 +28,16 @@ def pads(ref):return {p[1]:p for p in children(fps[ref],'pad') if p[1]}
 def land(ref,number,xy,size):
  p=pads(ref)[number];bottom=one(fps[ref],'layer')[1]=='B.Cu';near(one(p,'at')[1:3],[xy[0],-xy[1] if bottom else xy[1]]);near(one(p,'size')[1:3],size)
 for ref in [f'SW{i}' for i in range(501,509)]:
- assert fps[ref][1]=='ShieldSigner:XKB_TS1101_C_W_reflow'
- land(ref,'1',[-3.7,0],[1.2,1]);land(ref,'2',[3.7,0],[1.2,1])
+ assert fps[ref][1]=='ShieldSigner:CK_PTS636_SK25_G'
+ land(ref,'1',[-3.875,0],[1.25,2.1]);land(ref,'2',[3.875,0],[1.25,2.1])
 for i,x in enumerate([-6.82,-4.28,-1.74,.8]):
  land('J601',f'C{i+1}',[x,-12.05],[1.2,1.9]);land('J601',f'C{i+5}',[x,12.05],[1.2,1.9])
 land('J601','COM',[8.42,-5.75],[1.4,1.9]);land('J601','NO',[5.88,-5.75],[1.4,1.9])
-for n,x,w in [('A5',-.5,.7),('B5',.5,.7),('A9',1.52,.8),('B9',-1.52,.8),('A12',2.75,.9),('B12',-2.75,.9)]:land('J301',n,[x,-3.18],[w,1.2])
+for n,x,w in [('A5',-.5,.7),('B5',.5,.7),('A9',1.52,.8),('B9',-1.52,.8),('A12',2.75,.76),('B12',-2.75,.76)]:land('J301',n,[x,-3.38],[w,1.2])
 for p in children(fps['J301'],'pad'):
  if p[1]=='S1':
   x,y=map(float,one(p,'at')[1:3]);assert abs(abs(x)-4.32)<.00001 and min(abs(y-2.7),abs(y+1.1))<.00001
-  near(one(p,'size')[1:3],[1,1.7]);near(one(p,'drill')[2:],[.5,1.2])
+  near(one(p,'size')[1:3],[1.1,1.7]);near(one(p,'drill')[2:],[.6,1.2])
 assert fps['U601'][1]=='ShieldSigner:Microchip_SEC1210_QFN24_reflow'
 for n in range(1,25):
  if n<=6:xy=[-2.325,-1.625+(n-1)*.65];size=[.65,.35]
@@ -98,5 +98,5 @@ socket=next(m for m in children(fps['J701'],'model') if 'PinSocket_1x08' in m[1]
 male=next(m for m in children(fps['J701'],'model') if 'PinHeader_1x08' in m[1]);near(one(one(male,'offset'),'xyz')[1:],[0,0,12]);near(one(one(male,'rotate'),'xyz')[1:],[180,0,0])
 regulator=children(fps['U701'],'model')[0];near(one(one(regulator,'offset'),'xyz')[1:],[0,0,.15])
 host=next(m for m in children(fps['U202'],'model') if 'Luckfox-Pico-Mini' in m[1]);near(one(one(host,'offset'),'xyz')[1:],mechanical['luckfox']['moduleModelOffset'])
-report={'modelsVerified':len(provenance),'assembledReferencesWithModels':modeled,'copperOnlyJumpers':copper_jumpers,'landPatterns':'XKB, SHOUHAN, Amphenol, Microchip and Diodes recommended land dimensions asserted','boardShape':'160 x 70 mm capsule; no rectangular bay or module cutout','displayMounts':'Four M2.5 clearance holes match HOTHMI manufacturer drawing','modelLimitations':['LCD and card socket are dimensional envelopes, not detailed manufacturer CAD','Standoff model omits threads','Physical first-article header/module fit remains to be confirmed']}
+report={'modelsVerified':len(provenance),'assembledReferencesWithModels':modeled,'copperOnlyJumpers':copper_jumpers,'landPatterns':'C&K, GCT, Amphenol, Microchip and Diodes recommended land dimensions asserted','boardShape':'160 x 70 mm capsule; no rectangular bay or module cutout','displayMounts':'Four M2.5 clearance holes match HOTHMI manufacturer drawing','modelLimitations':['LCD, card socket, switch and USB are dimensional envelopes, not detailed manufacturer CAD','Standoff model omits threads','Physical first-article header/module fit remains to be confirmed']}
 (V/'mechanical-check-results.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

@@ -26,7 +26,7 @@ A Raspberry Pi image is not a Luckfox image. Luckfox models and flash targets al
 
 ## Versions describe different things
 
-The website version is not the firmware version. The current modular PCB release is **0.0.4-dev** and enclosure preview is **0.0.1-dev**. Firmware identity comes from the exact OS and application commits, not those labels.
+The website version is not the firmware version. The current modular PCB release is **0.0.5-dev** and enclosure preview is **0.0.2-dev**. Firmware identity comes from the exact OS and application commits, not those labels.
 
 Our build wrapper pins OS `e7589465aff172f4f510ad46d18776ccc8d2c203` and application `efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f`. On a development device, `cat /etc/seedsigner-os-release` records the installed OS/application provenance. Compare it with the intended build before assuming a menu or feature is present.
 

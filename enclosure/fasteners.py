@@ -30,7 +30,7 @@ def assembly():
         else:parts.update([screw(f'Base M2.5x30 {i}',x,y,-23.4,30,2.5,1,True)])
     for x in [-84.5,84.5]:parts.update([screw(f'Closure M2.5x30 {x}',x,0,21,30,2.5,-1,True)])
     for i,(x,y) in enumerate([(-67.2,7.7),(-67.2,-7.7),(-51.8,7.7),(66.5,7),(66.5,-7)]):
-        parts.update([screw(f'Retainer M2x5 {i+1}',x,y,15.2,5,2,1)])
+        parts.update([screw(f'Retainer M2x5 {i+1}',x,y,15.15,5,2,1)])
     for x in [-14.5,14.5]:
         for y in [-14.5,14.5]:parts.update([screw(f'Camera M2x10 {x},{y}',7+x,17+y,-9.8,10,2,-1)])
     for x in [-14,14]:
@@ -38,6 +38,6 @@ def assembly():
     # 12 mm spacers: lower/upper screw engagement leaves 3 mm between tips.
     assert abs((12-(6.6+2.4))-3)<1e-6
     assert 21-30>-11.6 # Closure tip remains inside pilot depth.
-    assert 15.2+5<21 # Retainer screws do not puncture front face.
+    assert 15.15+5<21 # Retainer screws do not puncture front face.
     assert -9.8-10>-21 # Camera screws do not puncture rear floor.
     return parts

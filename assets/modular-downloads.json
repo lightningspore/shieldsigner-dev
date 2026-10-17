@@ -1,36 +1,36 @@
 {
-  "release": "pill-preview-0.0.4-dev",
-  "boardSha256": "71b4291c46760ec92d351e5b64ef52ab169e6b26d12df3a2706350f120d52b4a",
+  "release": "pill-preview-0.0.5-dev",
+  "boardSha256": "d9ff1151deb55c36f355f1967cd5b3d3d09a6c394cdcebefc71823b60bdf0cdf",
   "assets": [
     {
       "name": "shieldsigner-modular-order.zip",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.4-dev/shieldsigner-modular-order.zip",
-      "sha256": "b900e3cd06df65bb3098426af1a8be94c6c445f37a8aa646aaad9eedb3032069"
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.5-dev/shieldsigner-modular-order.zip",
+      "sha256": "4e0e035aed9f41cfb3e72cd1c636438ee055927777c4001586904b595e780cd1"
     },
     {
       "name": "shieldsigner-modular-gerbers.zip",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.4-dev/shieldsigner-modular-gerbers.zip",
-      "sha256": "1d63f70d0e51e27586fef01854ffb559173e3deda3c88dc1aca7ad838a1a3e64"
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.5-dev/shieldsigner-modular-gerbers.zip",
+      "sha256": "d32254effceff38d18ce1cbd7c10c791a849018f8e91a7b3e70eae4c065c8a2d"
     },
     {
       "name": "shieldsigner-modular-kicad.zip",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.4-dev/shieldsigner-modular-kicad.zip",
-      "sha256": "a800b20e9d8597c14fdcc774a4f2230f92fd5da3a726be00ce579bf6a473d572"
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.5-dev/shieldsigner-modular-kicad.zip",
+      "sha256": "548479787135dfea8dd7dfaaaac8d2c7d2fd2ca12e6400cbdb21f1f05c4b1703"
     },
     {
       "name": "shieldsigner-modular-assembly.step",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.4-dev/shieldsigner-modular-assembly.step",
-      "sha256": "6f2aaab573f324aa41ca6fec9aac6222b5bfd7a5258d3204de64f1071d43ed7d"
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.5-dev/shieldsigner-modular-assembly.step",
+      "sha256": "8841dd886b6247feb796e1725167e6d15630a2c03acf3fdf0d3e289846bcd1a7"
     },
     {
       "name": "shieldsigner-modular-assembly.glb",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.4-dev/shieldsigner-modular-assembly.glb",
-      "sha256": "545d3be97320a2bcc2a2c22498e08804460a50ae46809be7a40a7814ec8c01e5"
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.5-dev/shieldsigner-modular-assembly.glb",
+      "sha256": "d9e52a3655eab7e8290b8e729f2d383399ea99a431c3cdd0e5a527515b9c39a9"
     },
     {
       "name": "shieldsigner-modular-schematic.pdf",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.4-dev/shieldsigner-modular-schematic.pdf",
-      "sha256": "b10dba93eef793d64ae8a94ade64c67eeff3ba4ddf945235c3a73eb09cbb5029"
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.5-dev/shieldsigner-modular-schematic.pdf",
+      "sha256": "b695a6565d9b531d236f0342e5cd60fb375dd1fa17f92f341fcee7dc14261c66"
     }
   ]
 }

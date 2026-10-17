@@ -1,6 +1,6 @@
 # ShieldSigner pill: 2.8-inch, eight-pin SPI LCD
 
-This is the **0.0.4-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
+This is the **0.0.5-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
 
 ![Assembled pill carrier, front](../variants/lcd-module-2.8/assembly-front.png)
 
@@ -87,3 +87,5 @@ mise run variant:lcd:package
 ```
 
 The native KiCad project is authoritative. The experimental tscircuit port and standard carrier remain separate. The modular kit has its own BOM, native placement export and shared Gerber/drill/CPL datum. See [how the site is generated and deployed](WEBSITE.md).
+
+Revision **0.0.5-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A with revised native lands. Use matched revision files and the measured-height button setup in [self-assembly](SELF-ASSEMBLY.md). Physical first-article fit and powered bring-up remain pending.

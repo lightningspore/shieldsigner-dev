@@ -22,3 +22,9 @@ The current pill LCD and added regulator use **HOTHMI-HTM-TFT028A16-SPI.pdf** an
 The [pill guide](LCD-MODULE-VARIANT.md) states the selected module, electrical limits and drawing discrepancies. The [standard FPC BOM](BOM.md) records its separate panel qualification. Update the JSON index when retaining/replacing documents.
 
 Self-assembly indicator reference: [Kingbright APT2012LZGCK](../reference/pdfs/Kingbright-APT2012LZGCK.pdf), [manufacturer source](https://www.kingbrightusa.com/images/catalog/SPEC/APT2012LZGCK.pdf), SHA-256 `e0ef6d7073f40ce3a3db6a61ccb87fafd056bf00026942ada2fbe177b1fc49a8`.
+
+Mechanical substitution reference: [C&K PTS636 tactile switches](../reference/pdfs/CK-PTS636.pdf), [Manufacturer datasheet, archived 7 October 2020 edition, retained from LCSC](https://datasheet.lcsc.com/datasheet/pdf/229e2204c94be8eac226511395a363de.pdf?productCode=C2689642), SHA-256 `2015aeeef741ee7eff1ec5bdb3c2229233d4b0605be9a8cfe73bff851ef5dceb`.
+
+Mechanical substitution reference: [GCT USB4125 mechanical drawing](../reference/pdfs/GCT-USB4125.pdf), [Manufacturer drawing rev A6, 20 November 2025](https://www.gct.co/files/drawings/usb4125.pdf), SHA-256 `ea33e0b40545e545bf698cbac3bb1c0f5a3fc7ca6b5b7fda83a63134d4affaa7`.
+
+Mechanical substitution reference: [GCT USB4135 mechanical drawing](../reference/pdfs/GCT-USB4135.pdf), [Manufacturer drawing rev A2, 13 September 2024](https://www.gct.co/files/drawings/usb4135.pdf), SHA-256 `96941ffad52b3ee61a6388db4229b02cba07e2a47bb2bf9f94a3d751dfc20ac4`.

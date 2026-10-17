@@ -1,6 +1,6 @@
 # Eight-pin pill carrier: prototype quote kit
 
-Unzip the outer order ZIP once. Upload **shieldsigner-modular-gerbers.zip**, then its matching **bom-jlcpcb.csv** and **cpl-jlcpcb.csv**. These are one set for the **0.0.4-dev, 160×70 mm pill carrier**. Do not mix the standard FPC or former Pico-bay files into this order.
+Unzip the outer order ZIP once. Upload **shieldsigner-modular-gerbers.zip**, then its matching **bom-jlcpcb.csv** and **cpl-jlcpcb.csv**. These are one set for the **0.0.5-dev, 160×70 mm pill carrier**. Do not mix the standard FPC or former Pico-bay files into this order.
 
 Request **two copper layers, 1.6 mm thickness and two-sided SMT assembly**. There are **35 placements / 17 catalog lines**: eight switches and U701/C701/C702 on top; 24 parts underneath. Gerbers/drills/CPL share the auxiliary origin (50,130) mm. CPL coordinates use millimeters, Y = 130 minus PCB Y; bottom X is not mirrored. Inspect socket entrance, USB orientation, SEC1210 pin 1, regulator pin 1, sides and rotations in the assembler's preview.
 
@@ -11,3 +11,5 @@ J701, U202, H701–H704 and six copper jumpers are outside SMT BOM/CPL. `populat
 Use five boards for the first quote. `stock-for-five.json` contains dated public assembly-stock fields and required quantities, not a reservation. Final stock, minimum-purchase/attrition fees, card-socket handling, loading and the actual quote need JLCPCB confirmation. Do not substitute the SEC1210 firmware suffix or an arbitrary display.
 
 The matching kit passes native ERC/DRC, connectivity, schematic parity and the documented model/land-pattern/geometry assertions. It is prepared for **prototype quotation and assembler DFM**, not physical qualification. Header fit, LCD rail/thermal behavior, display initialization, reader/card transactions and enclosure fit remain first-article work. The LCD, socket and supports use explicitly simplified dimensional models. No paid order has been placed.
+
+USB4125-GF-A uses its default 1.00 mm shell stakes on the 1.60 mm PCB. Stakes do not protrude through the opposite face. Have JLC review insertion/solder fill and all rotations in the assembly preview; do not substitute -0190 without a deliberate BOM review. Switches are C&K PTS636SK25SMTRLFS, C2689642.

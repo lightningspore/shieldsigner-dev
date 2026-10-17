@@ -12,12 +12,12 @@
 | R604 | 47 Ω | 125 mW · ±1% | 1 | 0805W8F470JT5E | [C17714](https://jlcpcb.com/partdetail/C17714) | 458061 | 2026-10-15T15:18:13 |
 | D301 | SMF5.0CA | — | 1 | SMF5.0CA | [C19077498](https://jlcpcb.com/partdetail/C19077498) | 1412906 | 2026-10-15T15:18:14 |
 | D302 | KT-0805G | — | 1 | KT-0805G | [C2297](https://jlcpcb.com/partdetail/C2297) | 2474039 | 2026-10-15T15:18:14 |
+| SW503, SW504, SW501, SW505, SW502, SW508, SW507, SW506 | PTS636SK25SMTRLFS | — | 8 | PTS636SK25SMTRLFS | [C2689642](https://jlcpcb.com/partdetail/C2689642) | 61 | 2026-10-17T20:42:32 |
 | R302, R301 | 5.1 kΩ | 125 mW · ±1% | 2 | 0805W8F5101T5E | [C27834](https://jlcpcb.com/partdetail/C27834) | 2470638 | 2026-10-15T15:18:14 |
 | C602, C604, C603 | 1 µF | 50 V · ±10% · X7R | 3 | CL21B105KBFNNNE | [C28323](https://jlcpcb.com/partdetail/C28323) | 1667923 | 2026-10-15T15:18:14 |
 | R303 | 560 Ω | 125 mW · ±1% | 1 | 0805W8F5600T5E | [C28636](https://jlcpcb.com/partdetail/C28636) | 269545 | 2026-10-15T15:18:17 |
-| SW503, SW504, SW501, SW505, SW502, SW508, SW507, SW506 | TS-1101-C-W | — | 8 | TS-1101-C-W | [C318938](https://jlcpcb.com/partdetail/C318938) | 300772 | 2026-10-15T15:18:15 |
+| J301 | USB4125-GF-A | — | 1 | USB4125-GF-A | [C3151650](https://jlcpcb.com/partdetail/C3151650) | 762 | 2026-10-17T20:42:32 |
 | C601, C301 | 100 nF | 50 V · ±10% · X7R | 2 | CC0805KRX7R9BB104 | [C49678](https://jlcpcb.com/partdetail/C49678) | 18304571 | 2026-10-15T15:18:15 |
 | U701 | AP2112K-3.3TRG1 | — | 1 | AP2112K-3.3TRG1 | [C51118](https://jlcpcb.com/partdetail/C51118) | 9153 | 2026-10-15T15:18:15 |
 | J601 | 7312P0225A13LF | — | 1 | 7312P0225A13LF | [C5417011](https://jlcpcb.com/partdetail/C5417011) | 28 | 2026-10-15T15:18:15 |
 | U601 | SEC1210/PV-UR2 | — | 1 | SEC1210/PV-UR2 | [C633309](https://jlcpcb.com/partdetail/C633309) | 55 | 2026-10-15T15:18:16 |
-| J301 | TYPE-C 6P(073) | — | 1 | TYPE-C 6P(073) | [C668623](https://jlcpcb.com/partdetail/C668623) | 136793 | 2026-10-15T15:18:16 |

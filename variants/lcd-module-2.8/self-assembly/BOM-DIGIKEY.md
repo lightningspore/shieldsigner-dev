@@ -1,8 +1,8 @@
 # DigiKey self-assembly BOM
 
-Optional sourcing for the unchanged **0.0.4-dev eight-pin pill carrier**. JLCPCB remains the primary assembled-board ordering path. This overlay never replaces the JLC BOM/CPL or native part fields.
+Optional sourcing for the revised **0.0.5-dev eight-pin pill carrier**. JLCPCB remains the primary assembled-board ordering path. This overlay never replaces the JLC BOM/CPL or native part fields.
 
-**26 SMT pieces / 15 DigiKey lines are selected, including every capacitor, resistor, LED and TVS (23 pieces / 12 lines).** The other nine pieces (eight switches and one USB connector) require the original parts from another source. This is not a complete DigiKey-only order. LCD, camera and Luckfox are excluded; customer headers and mechanical hardware remain separate.
+**35 SMT pieces / 17 DigiKey lines are selected, including every capacitor, resistor, LED and TVS (23 pieces / 12 lines).** The revised switches and USB-C use exact shared JLCPCB/DigiKey manufacturer parts. LCD, camera and Luckfox are excluded; customer headers and mechanical hardware remain separate.
 
 [Download DigiKey CSV](bom-digikey.csv) · [Remaining original-parts CSV](remaining-parts.csv)
 
@@ -25,11 +25,11 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 | U701 | 3.3 V LDO; SOT-25; 600 mA | 1 / 5 | AP2112K-3.3TRG1 | [AP2112K-3.3TRG1DICT-ND](https://www.digikey.com/en/products/detail/diodes-incorporated/AP2112K-3-3TRG1/4470746) | not recorded |
 | J601 | Contact smartcard socket; Original full-size contact socket | 1 / 5 | 7312P0225A13LF | [609-4481-ND](https://www.digikey.com/en/products/detail/amphenol-cs-fci/7312P0225A13LF/1527047) | 3141 |
 | U601 | UART smartcard bridge; 24-QFN 5×5 mm; UR2 firmware | 1 / 5 | SEC1210/PV-UR2 | [SEC1210/PV-UR2-ND](https://www.digikey.com/en/products/detail/microchip-technology/SEC1210-PV-UR2/6192958) | 56 |
+| SW501, SW502, SW503, SW504, SW505, SW506, SW507, SW508 | Momentary switch; G leads; 2.5 mm nominal height; 250 gf; SPST-NO | 8 / 40 | PTS636SK25SMTRLFS | [CKN12322-1-ND](https://www.digikey.com/en/products/detail/c-k/PTS636SK25SMTR-LFS/10071735) | 20644 |
+| J301 | USB-C power input; 6 contacts; default 1.00 mm shell stakes; 3 A connector rating | 1 / 5 | USB4125-GF-A | [2073-USB4125-GF-ACT-ND](https://www.digikey.com/en/products/detail/gct/USB4125-GF-A/13547388) | 13606 |
 
-## Original parts still needed
+## Unresolved fitted parts (none in this revision)
 
-- **SW501, SW502, SW503, SW504, SW505, SW506, SW507, SW508 / TS-1101-C-W**: Buy original XKB part for this board; C&K PTS636SK25SMTR LFS remains an unapproved mechanical alternative.
-- **J301 / TYPE-C 6P(073)**: Buy original SHOUHAN connector for this board; GCT USB4135-GF-A remains an unapproved footprint/case alternative.
 
 ## Assembly notes
 
@@ -37,7 +37,7 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 - The green LED uses the existing 560 Ω resistor. Its typical 2.65 V forward voltage gives an illustrative `(5 − 2.65) / 560 ≈ 4.2 mA`; actual current and brightness vary. Follow native K/cathode polarity.
 - The TVS remains bidirectional 5 V stand-off / 200 W pulse class. A 9.2 V clamp rating is not an overvoltage shutdown or a guarantee that every downstream supply pin stays within its absolute maximum.
 - Self-assembly of the entire board still includes the exposed-pad QFN smartcard bridge. Use a controlled paste/reflow process and inspection; the large passive lands do not make the QFN an ordinary header-soldering task.
-- Match the original switch actuator geometry and USB connector unless a separate native/mechanical revision is qualified.
+- Use the revision-specific C&K switch and GCT USB4125 lands. Old-board footprints and enclosure plungers are not interchangeable by assumption.
 - Physical bring-up and supply/camera/display qualification remain pending; use the staged assembly guide.
 
 ## Selection notes
@@ -57,6 +57,8 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 - **U701**: Exact original regulator.
 - **J601**: Exact original socket; orientation follows native drawing.
 - **U601**: Exact original firmware suffix; do not use URT or another SEC1210 variant.
+- **SW501, SW502, SW503, SW504, SW505, SW506, SW507, SW508**: Exact shared JLC/DigiKey MPN; revised native footprint. Requires physical first-article qualification.
+- **J301**: Exact shared JLC/DigiKey MPN; revised native footprint. Requires physical first-article qualification.
 
 ## Retained reference
 
@@ -64,5 +66,5 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 
 ## Board identity
 
-Board SHA-256: `71b4291c46760ec92d351e5b64ef52ab169e6b26d12df3a2706350f120d52b4a`.
+Board SHA-256: `d9ff1151deb55c36f355f1967cd5b3d3d09a6c394cdcebefc71823b60bdf0cdf`.
 Supplier pages checked 2026-10-17. Rebuild using `mise run bom:self-assembly`; verify generated data with `mise run bom:self-assembly -- --check`.

@@ -576,7 +576,7 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
+		(property "Value" "PTS636SK25SMTRLFS"
 			(at 120.65 113.03 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -586,7 +586,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_reflow"
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
 			(at 120.65 113.03 0)
 			(hide yes)
 			(show_name no)
@@ -597,7 +597,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
 			(at 120.65 113.03 0)
 			(hide yes)
 			(show_name no)
@@ -619,7 +619,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
+		(property "LCSC" "C2689642"
 			(at 120.65 110.49 0)
 			(hide yes)
 			(show_name no)
@@ -645,7 +645,7 @@
 			)
 		)
 	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
 (property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
@@ -671,7 +671,7 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
+		(property "Value" "PTS636SK25SMTRLFS"
 			(at 120.65 69.85 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -681,7 +681,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_reflow"
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
 			(at 120.65 69.85 0)
 			(hide yes)
 			(show_name no)
@@ -692,7 +692,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
 			(at 120.65 69.85 0)
 			(hide yes)
 			(show_name no)
@@ -714,7 +714,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
+		(property "LCSC" "C2689642"
 			(at 120.65 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -740,7 +740,7 @@
 			)
 		)
 	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
 (property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
@@ -922,7 +922,7 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
+		(property "Value" "PTS636SK25SMTRLFS"
 			(at 88.9 91.44 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -932,7 +932,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_reflow"
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
 			(at 88.9 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -943,7 +943,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
 			(at 88.9 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -965,7 +965,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
+		(property "LCSC" "C2689642"
 			(at 88.9 88.9 0)
 			(hide yes)
 			(show_name no)
@@ -991,7 +991,7 @@
 			)
 		)
 	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
 (property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
@@ -1095,7 +1095,7 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
+		(property "Value" "PTS636SK25SMTRLFS"
 			(at 203.2 92.71 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1105,7 +1105,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_reflow"
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
 			(at 203.2 92.71 0)
 			(hide yes)
 			(show_name no)
@@ -1116,7 +1116,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
 			(at 203.2 92.71 0)
 			(hide yes)
 			(show_name no)
@@ -1138,7 +1138,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
+		(property "LCSC" "C2689642"
 			(at 203.2 90.17 0)
 			(hide yes)
 			(show_name no)
@@ -1164,7 +1164,7 @@
 			)
 		)
 	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
 (property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
@@ -1190,7 +1190,7 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
+		(property "Value" "PTS636SK25SMTRLFS"
 			(at 120.65 91.44 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1200,7 +1200,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_reflow"
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
 			(at 120.65 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -1211,7 +1211,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
 			(at 120.65 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -1233,7 +1233,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
+		(property "LCSC" "C2689642"
 			(at 120.65 88.9 0)
 			(hide yes)
 			(show_name no)
@@ -1259,7 +1259,7 @@
 			)
 		)
 	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
 (property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
@@ -1363,7 +1363,7 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
+		(property "Value" "PTS636SK25SMTRLFS"
 			(at 203.2 81.28 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1373,7 +1373,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_reflow"
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
 			(at 203.2 81.28 0)
 			(hide yes)
 			(show_name no)
@@ -1384,7 +1384,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
 			(at 203.2 81.28 0)
 			(hide yes)
 			(show_name no)
@@ -1406,7 +1406,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
+		(property "LCSC" "C2689642"
 			(at 203.2 78.74 0)
 			(hide yes)
 			(show_name no)
@@ -1432,7 +1432,7 @@
 			)
 		)
 	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
 (property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
@@ -1536,7 +1536,7 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
+		(property "Value" "PTS636SK25SMTRLFS"
 			(at 152.4 91.44 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1546,7 +1546,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_reflow"
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
 			(at 152.4 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -1557,7 +1557,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
 			(at 152.4 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -1579,7 +1579,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
+		(property "LCSC" "C2689642"
 			(at 152.4 88.9 0)
 			(hide yes)
 			(show_name no)
@@ -1605,7 +1605,7 @@
 			)
 		)
 	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
 (property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
@@ -1709,7 +1709,7 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
+		(property "Value" "PTS636SK25SMTRLFS"
 			(at 203.2 104.14 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1719,7 +1719,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_reflow"
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
 			(at 203.2 104.14 0)
 			(hide yes)
 			(show_name no)
@@ -1730,7 +1730,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
 			(at 203.2 104.14 0)
 			(hide yes)
 			(show_name no)
@@ -1752,7 +1752,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
+		(property "LCSC" "C2689642"
 			(at 203.2 101.6 0)
 			(hide yes)
 			(show_name no)
@@ -1778,7 +1778,7 @@
 			)
 		)
 	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
 (property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )

@@ -1,6 +1,6 @@
 # Assemble the eight-pin pill carrier
 
-**JLCPCB solders the 35 SMT parts. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.4-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
+**JLCPCB solders the 35 SMT parts. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.5-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
 
 For an optional DIY build, use the separate [self-assembly guide](SELF-ASSEMBLY.md) and DigiKey purchase CSV. The original JLC kit below remains the assembled-board ordering path.
 
@@ -64,3 +64,5 @@ The LCD front is approximately 17.7 mm above the carrier. Switch actuators are m
 5. Test all eight buttons and camera scanning. Then load the UR2 UART/PCSC reader configuration and exercise the [smartcard bring-up steps](BRINGUP.md). Start with disposable test data, not a real wallet seed.
 
 Record module revision, header/spacer measurements, firmware version, measured current/temperature, display tests and card transactions in the [bring-up record](BRINGUP-RESULTS.md). A clean PCB check and a successful OS build do not establish these physical results.
+
+Revision **0.0.5-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A with revised native lands. Use matched revision files and the measured-height button setup in [self-assembly](SELF-ASSEMBLY.md). Physical first-article fit and powered bring-up remain pending.

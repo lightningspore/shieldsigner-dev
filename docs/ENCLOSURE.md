@@ -60,7 +60,7 @@ Route the matching Luckfox ribbon with power off, away from screw tips and the c
 6. Lower the bezel onto the base without trapping the ribbon. Check every button before installing the two M2.5 × 30 closure screws. Fit the rear service cover with four M2 × 6 countersunk screws.
 7. Confirm card insertion, USB connections, microSD service and a clear camera image. Run the [modular bring-up procedure](MODULAR-ASSEMBLY.md) with disposable test data.
 
-The [switch drawing](../reference/pdfs/C318938.pdf) specifies 2.5 ± 0.1 mm actuator height and 0.25 mm travel. The nominal button tip has a 0.1 mm rest gap and a 0.35 mm retainer stop, providing 0.25 mm nominal switch movement. Printed tolerances and actual actuator height can change this. Before tightening the shell, verify release and full actuation of all eight switches; adjust plunger length or retainer shims if necessary. Never use a closure screw to force a preloaded button into place.
+Revision 0.0.5-dev uses the [C&K switch drawing](../reference/pdfs/CK-PTS636.pdf): 2.5 ±0.2 mm height and nominal 0.25 mm travel. The SCAD measured-height parameter sets a 0.15 mm rest gap, with a 0.40 mm stop. Its conservative 2.7 mm default avoids preload but shorter switches may not actuate: measure each soldered switch, generate the matching plunger with `-D button_switch_height=...`, and test the coupon. Actual print, solder and travel tolerances still require adjustment. The published 0.0.1-dev enclosure belongs to the older PCB; do not mix release files.
 
 ## Rebuild and review
 

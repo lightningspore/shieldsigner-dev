@@ -1,6 +1,6 @@
 {
   "variant": "modular-lcd-2.8",
-  "boardSha256": "71b4291c46760ec92d351e5b64ef52ab169e6b26d12df3a2706350f120d52b4a",
+  "boardSha256": "d9ff1151deb55c36f355f1967cd5b3d3d09a6c394cdcebefc71823b60bdf0cdf",
   "fittedSmtPieces": 35,
   "catalogLines": 17,
   "bomCplRefsMatch": true,
@@ -21,17 +21,17 @@
   "nativeUnconnected": 0,
   "nativeParityIssues": 0,
   "dnpCourtyardExclusions": 0,
-  "mechanicalModelsVerified": 19,
+  "mechanicalModelsVerified": 21,
   "limitations": [
     "Assembler placement preview/DFM/quote not submitted",
     "Physical header/module fit and powered bring-up not tested",
-    "LCD, smartcard socket and spacer 3D models are dimensional envelopes",
+    "LCD, smartcard socket, switch, USB and spacer models are drawing-derived envelopes",
     "Stock snapshot is not a reservation"
   ],
   "files": {
-    "shieldsigner-modular-gerbers.zip": "1d63f70d0e51e27586fef01854ffb559173e3deda3c88dc1aca7ad838a1a3e64",
-    "bom-jlcpcb.csv": "cdf93d9f147d3853b2c81588218467d3d818277582850b105f2d9c57a6efa33c",
+    "shieldsigner-modular-gerbers.zip": "d32254effceff38d18ce1cbd7c10c791a849018f8e91a7b3e70eae4c065c8a2d",
+    "bom-jlcpcb.csv": "65dfc981a7250d65e73d2cf284c801ef6a8dd738fd921fd61c73cd349ed87d93",
     "cpl-jlcpcb.csv": "8c7e4faea7291cdc1ed8209cd9b29e779a411cc480602e211338cd4302d0731d",
-    "population.csv": "bfdc23b74ab281fcd40d78fdab7b16961f4eae0c68736d1dbb496fde6c596026"
+    "population.csv": "590ac5f3de31a501478ae4fc202ea74d7f76a007e9fd4b87e4de4ccb33781b01"
   }
 }

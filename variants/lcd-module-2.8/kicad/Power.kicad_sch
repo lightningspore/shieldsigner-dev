@@ -2290,7 +2290,7 @@
 				)
 			)
 		)
-		(property "Value" "TYPE-C 6P(073)"
+		(property "Value" "USB4125-GF-A"
 			(at 139.7 69.85 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2300,7 +2300,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ShieldSigner:SHOUHAN_TYPE_C_6P_073"
+		(property "Footprint" "ShieldSigner:GCT_USB4125_GF_A"
 			(at 143.51 82.55 0)
 			(hide yes)
 			(show_name no)
@@ -2311,7 +2311,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2006181823_SHOU-HAN-TYPE-C-6P-073_C668623.pdf"
+		(property "Datasheet" "https://www.gct.co/files/drawings/usb4125.pdf"
 			(at 139.7 85.09 0)
 			(hide yes)
 			(show_name no)
@@ -2333,7 +2333,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C668623"
+		(property "LCSC" "C3151650"
 			(at 139.7 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -2374,7 +2374,7 @@
 			)
 		)
 	
-(property "MPN" "TYPE-C 6P(073)" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "USB4125-GF-A" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
 (property "Manufacturer" "SHOU HAN" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )

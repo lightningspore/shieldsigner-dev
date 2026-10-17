@@ -20,8 +20,8 @@ def add(name, filename, offset, flip=False):
 
 add("base", "base", [0,0,-23.4])
 add("bezel", "bezel", [0,0,21], True)
-add("left retainer", "retainer-left", [-59.53,0,15.2])
-add("right retainer", "retainer-right", [62,0,15.2])
+add("left retainer", "retainer-left", [-59.53,0,15.15])
+add("right retainer", "retainer-right", [62,0,15.15])
 add("service cover", "service-cover", [-34,22,-25.4])
 add("camera tray", "camera-tray", [7,17,-13.8])
 add("camera clamp", "camera-clamp", [7,17,-11.4])

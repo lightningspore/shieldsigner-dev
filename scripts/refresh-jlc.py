@@ -26,18 +26,20 @@ def snapshot(code):
   for m in re.finditer(r'self\.__next_f\.push\((\[.*?\])\)</script>',text,re.S):
    try:chunks.extend(x for x in json.loads(m[1]) if isinstance(x,str))
    except json.JSONDecodeError:continue
-  flight=''.join(chunks);decoder=json.JSONDecoder();records=[]
+  flight=''.join(chunks);decoder=json.JSONDecoder();records=[];price_tiers=[]
   # React server data can contain length-prefixed strings between records.
   # Decode object starts, not assumed record IDs or a hypothetical public API.
   for m in re.finditer(r'\{',flight):
    try:obj,n=decoder.raw_decode(flight[m.start():])
    except json.JSONDecodeError:continue
-   if isinstance(obj,dict) and obj.get('componentCode')==code and obj.get('componentModelEn'):records.append(obj)
+   if isinstance(obj,dict) and obj.get('componentCode')==code:
+    if obj.get('componentModelEn'):records.append(obj)
+    if isinstance(obj.get('productPrice'),(int,float)) and obj.get('startNumber') is not None:price_tiers.append({k:obj[k] for k in ['startNumber','endNumber','productPrice']})
   if not records:raise RuntimeError('Catalog identity not present in server-rendered page')
   merged={}
   for obj in sorted(records,key=len):merged.update({k:v for k,v in obj.items() if not isinstance(v,str) or not v.startswith('$')})
   fields=['componentModelEn','componentBrandEn','componentSpecificationEn','describe','componentLibraryType','assemblyMode','canPresaleNumber','overseasStockCount','preMinPurchaseNum','leastPatchNumber','lossNumber','initialPrice','needAuditFlag','dataManualUrl','noBuyReason','isBuyComponent','attributes']
-  result={k:merged[k] for k in fields if k in merged};result.update(code=code,url=url,checkedAt=datetime.datetime.now(datetime.timezone.utc).isoformat(),htmlSha256=hashlib.sha256(text.encode()).hexdigest(),status='public_catalog_snapshot')
+  result={k:merged[k] for k in fields if k in merged};result['priceTiers']=sorted({p['startNumber']:p for p in price_tiers}.values(),key=lambda p:p['startNumber']);result.update(code=code,url=url,checkedAt=datetime.datetime.now(datetime.timezone.utc).isoformat(),htmlSha256=hashlib.sha256(text.encode()).hexdigest(),status='public_catalog_snapshot')
   return result
  except Exception as error:return {'code':code,'url':url,'status':'unverified','error':str(error)}
 with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:results=list(pool.map(snapshot,sorted(ids)))

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "variant": "lcd-module-2.8",
-  "boardRevision": "0.0.4-dev",
+  "boardRevision": "0.0.5-dev",
   "checkedAt": "2026-10-17",
   "parts": [
     {
@@ -239,9 +239,7 @@
       "checkedAt": "2026-10-17",
       "selection": "exact",
       "rationale": "Exact original firmware suffix; do not use URT or another SEC1210 variant."
-    }
-  ],
-  "unresolved": [
+    },
     {
       "refs": [
         "SW501",
@@ -253,17 +251,34 @@
         "SW507",
         "SW508"
       ],
-      "mpn": "TS-1101-C-W",
-      "reason": "Buy original XKB part for this board; C&K PTS636SK25SMTR LFS remains an unapproved mechanical alternative."
+      "manufacturer": "C&K",
+      "mpn": "PTS636SK25SMTRLFS",
+      "digikey": "CKN12322-1-ND",
+      "url": "https://www.digikey.com/en/products/detail/c-k/PTS636SK25SMTR-LFS/10071735",
+      "value": "Momentary switch",
+      "spec": "G leads; 2.5 mm nominal height; 250 gf; SPST-NO",
+      "stockSnapshot": 20644,
+      "checkedAt": "2026-10-17",
+      "selection": "exact",
+      "rationale": "Exact shared JLC/DigiKey MPN; revised native footprint. Requires physical first-article qualification."
     },
     {
       "refs": [
         "J301"
       ],
-      "mpn": "TYPE-C 6P(073)",
-      "reason": "Buy original SHOUHAN connector for this board; GCT USB4135-GF-A remains an unapproved footprint/case alternative."
+      "manufacturer": "GCT",
+      "mpn": "USB4125-GF-A",
+      "digikey": "2073-USB4125-GF-ACT-ND",
+      "url": "https://www.digikey.com/en/products/detail/gct/USB4125-GF-A/13547388",
+      "value": "USB-C power input",
+      "spec": "6 contacts; default 1.00 mm shell stakes; 3 A connector rating",
+      "stockSnapshot": 13606,
+      "checkedAt": "2026-10-17",
+      "selection": "exact",
+      "rationale": "Exact shared JLC/DigiKey MPN; revised native footprint. Requires physical first-article qualification."
     }
   ],
+  "unresolved": [],
   "referenceDocuments": [
     {
       "file": "reference/pdfs/Kingbright-APT2012LZGCK.pdf",

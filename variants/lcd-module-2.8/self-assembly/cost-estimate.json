@@ -1,0 +1,123 @@
+{
+  "checkedAt": "2026-10-17",
+  "currency": "USD",
+  "basis": "Exact installed quantities for one 0.0.5-dev carrier, cut tape/tray; not a checkout quote.",
+  "excluded": [
+    "PCB",
+    "LCD",
+    "camera",
+    "Luckfox",
+    "headers",
+    "mechanical hardware",
+    "smartcard",
+    "shipping",
+    "tax",
+    "tariffs",
+    "spares"
+  ],
+  "parts": [
+    {
+      "mpn": "CC0805JRNPO9BN330",
+      "qty": 2,
+      "unitUSD": ".17",
+      "url": "https://www.digikey.com/en/products/detail/yageo/CC0805JRNPO9BN330/302839"
+    },
+    {
+      "mpn": "CC0805KRX7R9BB104",
+      "qty": 2,
+      "unitUSD": ".18",
+      "url": "https://www.digikey.com/en/products/detail/yageo/CC0805KRX7R9BB104/303050"
+    },
+    {
+      "mpn": "CL21A106KACLRNC",
+      "qty": 4,
+      "unitUSD": ".73",
+      "url": "https://www.digikey.com/en/products/detail/samsung-electro-mechanics/CL21A106KACLRNC/3888055"
+    },
+    {
+      "mpn": "C0805C105K5RACTU",
+      "qty": 3,
+      "unitUSD": "1.38",
+      "url": "https://www.digikey.com/en/products/detail/kemet/C0805C105K5RACTU/3317615"
+    },
+    {
+      "mpn": "RC0805FR-07100KL",
+      "qty": 2,
+      "unitUSD": ".11",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100KL/727544"
+    },
+    {
+      "mpn": "RC0805FR-07100RL",
+      "qty": 2,
+      "unitUSD": ".10",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100RL/727543"
+    },
+    {
+      "mpn": "RC0805FR-0710KL",
+      "qty": 2,
+      "unitUSD": ".10",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0710KL/727535"
+    },
+    {
+      "mpn": "RC0805FR-0747RL",
+      "qty": 1,
+      "unitUSD": ".10",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0747RL/730919"
+    },
+    {
+      "mpn": "CR0805-FX-5101ELF",
+      "qty": 2,
+      "unitUSD": ".10",
+      "url": "https://www.digikey.com/en/products/detail/bourns-inc/CR0805-FX-5101ELF/3784995"
+    },
+    {
+      "mpn": "RC0805FR-07560RL",
+      "qty": 1,
+      "unitUSD": ".10",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07560RL/728036"
+    },
+    {
+      "mpn": "APT2012LZGCK",
+      "qty": 1,
+      "unitUSD": ".59",
+      "url": "https://www.digikey.com/en/products/detail/kingbright/APT2012LZGCK/5177440"
+    },
+    {
+      "mpn": "SMF5.0CA",
+      "qty": 1,
+      "unitUSD": ".64",
+      "url": "https://www.digikey.com/en/products/detail/littelfuse-inc/SMF5-0CA/11206223"
+    },
+    {
+      "mpn": "AP2112K-3.3TRG1",
+      "qty": 1,
+      "unitUSD": ".28",
+      "url": "https://www.digikey.com/en/products/detail/diodes-incorporated/AP2112K-3-3TRG1/4470746"
+    },
+    {
+      "mpn": "7312P0225A13LF",
+      "qty": 1,
+      "unitUSD": "2.94",
+      "url": "https://www.digikey.com/en/products/detail/amphenol-cs-fci/7312P0225A13LF/1527047"
+    },
+    {
+      "mpn": "SEC1210/PV-UR2",
+      "qty": 1,
+      "unitUSD": "3.32",
+      "url": "https://www.digikey.com/en/products/detail/microchip-technology/SEC1210-PV-UR2/6192958"
+    },
+    {
+      "mpn": "PTS636SK25SMTR LFS",
+      "qty": 8,
+      "unitUSD": ".25",
+      "url": "https://www.digikey.com/en/products/detail/c-k/PTS636SK25SMTR-LFS/10071735"
+    },
+    {
+      "mpn": "USB4125-GF-A",
+      "qty": 1,
+      "unitUSD": ".61",
+      "url": "https://www.digikey.com/en/products/detail/gct/USB4125-GF-A/13547388"
+    }
+  ],
+  "total": "19.16"
+}

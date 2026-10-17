@@ -14,7 +14,7 @@ findings=[];engagements=[]
 for name,screw in screws.items():
     x,y=screw.bounds.mean(axis=0)[:2]
     if name.startswith('Closure'):z0,z1,d=-9,.4,2.5
-    elif name.startswith('Retainer'):z0,z1,d=16.85,20.2,2
+    elif name.startswith('Retainer'):z0,z1,d=16.80,20.15,2
     elif name.startswith('Camera'):z0,z1,d=-19.8,-13.8,2
     elif name.startswith('Service'):z0,z1,d=-23.4,-19.4,2
     elif name.startswith('LCD top'):z0,z1,d=9.6,12,2.5

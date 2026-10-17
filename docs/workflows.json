@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-15",
+  "checkedAt": "2026-10-17",
   "tasks": [
     {
       "slug": "pcb",
@@ -156,6 +156,10 @@
         {
           "label": "BOM and dated stock",
           "url": "/guides/modular-bom/"
+        },
+        {
+          "title": "Practical build checks",
+          "url": "/guides/build-tips/"
         }
       ]
     },
@@ -547,6 +551,10 @@
         {
           "label": "Fork quick starts",
           "url": "https://3rditeration.github.io/seedsigner/quickstarts/"
+        },
+        {
+          "title": "Practice multisig recovery",
+          "url": "/guides/multisig-practice/"
         }
       ]
     },
@@ -637,6 +645,10 @@
         {
           "label": "Satochip instructions",
           "url": "https://3rditeration.github.io/seedsigner/satochip.html"
+        },
+        {
+          "title": "Reader diagnostic checkpoints",
+          "url": "/guides/build-tips/"
         }
       ]
     }

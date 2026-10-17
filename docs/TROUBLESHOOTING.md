@@ -35,3 +35,7 @@ Do not reset a populated card to diagnose transport. Capture the error, card/app
 ## Display settings belong to the actual module
 
 The fork documents **Settings → Hardware → Display type**. Our eight-pin 2.8-inch module uses ST7789 at landscape 320×240; ordinary SeedSigner Pi display instructions commonly describe 240×240 hardware. Selecting a profile cannot repair swapped power pins or an incompatible module. Source: [platform support](https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/docs/hardware_platform_support.md).
+
+## Repeatable checks
+
+The [practical build tips](BUILD-TIPS.md) separate missing camera frames from optical focus and QR decoding, explain opposite LCD header numbering, and break card bring-up into reader, insertion, ATR and applet checkpoints. Keep a configuration/change log so each result is reproducible.

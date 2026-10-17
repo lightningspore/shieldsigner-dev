@@ -99,7 +99,7 @@ class KnowledgeTests(SimpleTestCase):
         self.assertContains(page, '125 mW · ±1%')
         self.assertContains(self.client.get('/guides/bom-table/'), '1 µF')
         self.assertContains(self.client.get('/build/parts/?scope=carrier&q=1uF'), 'C28323')
-        self.assertContains(self.client.get('/'), '0.0.5-dev')
+        self.assertContains(self.client.get('/'), '0.0.6-dev')
         self.assertContains(self.client.get('/'), 'revision')
         self.assertContains(self.client.get('/'), 'site.css?v=')
         self.assertContains(self.client.get('/'), 'site.js?v=')
@@ -115,7 +115,7 @@ class KnowledgeTests(SimpleTestCase):
         response = self.client.get('/files/reference/pdfs/C5417011.pdf')
         self.assertEqual(response.status_code, 200)
         response.close()
-        for path in ['../manage.py','.env','tools/telegram/shieldsigner.txt','tools/telegram/account.session']:
+        for path in ['../manage.py','.env','tools/telegram/shieldsigner.txt','tools/telegram/account.session', 'tools/telegram/private/config.json', 'tools/telegram/private/knowledge.sqlite3', 'tools/telegram/private/sources.html', 'tools/telegram/private/REVIEW.md']:
             self.assertEqual(self.client.get('/files/'+path).status_code, 404)
         for path in settings.PUBLIC_DIR.rglob('*'):
             self.assertNotIn(path.suffix, {'.session','.sqlite3','.env'})

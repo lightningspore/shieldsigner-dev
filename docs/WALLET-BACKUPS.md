@@ -42,3 +42,7 @@ SeedKeeper v0.2 stores a multisig descriptor as one entry; older v0.1 handling s
 **SLIP39** uses threshold shares and is disabled by default in this fork. Record the scheme and threshold/group arrangement and test the intended recovery workflow. Do not treat shares as ordinary BIP39 phrases or assume converting representations preserves an existing wallet. Source: [SLIP39 workflow](https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/docs/slip39.md).
 
 Use the [first signing exercise](/build/use/) for a practical test, then consult [card workflows](/build/cards/) if persistent card storage is part of your plan.
+
+## Practice before choosing a multisig arrangement
+
+Follow the [multisig laboratory plan](MULTISIG-PRACTICE.md) to exercise all three 2-of-3 signing pairs and recovery with one key unavailable. It includes a result table with tests explicitly marked not run.

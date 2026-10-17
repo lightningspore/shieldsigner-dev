@@ -33,3 +33,5 @@ Our build wrapper pins OS `e7589465aff172f4f510ad46d18776ccc8d2c203` and applica
 ## Sources and scope
 
 Reviewed 2026-10-16: [official SeedSigner README](https://github.com/SeedSigner/seedsigner/blob/b2199c68b475eab0035b863b156f149757a1b4a6/README.md), [ShieldSigner fork README](https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/README.md), [fork repository map](https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/docs/repositories.md), and [platform support](https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/docs/hardware_platform_support.md). Links pin the reviewed revisions. The fork revision matches our application build pin; upstream documentation describes software support, not successful tests on our carrier. Our local build pins and hardware test record take precedence for this build.
+
+For practical next steps, read [build tips](BUILD-TIPS.md), [multisig practice](MULTISIG-PRACTICE.md), and the [reviewed source list](USEFUL-SOURCES.md).

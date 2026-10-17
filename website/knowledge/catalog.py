@@ -10,6 +10,8 @@ GUIDES = [
 ("enclosure", "docs/ENCLOSURE.md", "Build", "Print and assemble the enclosure", "Flat prints, camera fit, button mechanisms, fasteners and exploded 3D assembly."),
 ("modular-assembly", "docs/MODULAR-ASSEMBLY.md", "Build", "Assemble the modular carrier", "JLC quote, through-hole headers, mounting and staged bring-up."),
 ("modular-bom", "variants/lcd-module-2.8/manufacturing/BOM.md", "Build", "Modular carrier BOM", "35 SMT pieces with values, ratings and dated JLC sourcing."),
+("self-assembly", "docs/SELF-ASSEMBLY.md", "Build", "Optional DigiKey self-assembly", "Separate commodity substitutions and purchase CSV; JLC remains the primary assembly path."),
+("digikey-bom", "variants/lcd-module-2.8/self-assembly/BOM-DIGIKEY.md", "Build", "DigiKey self-assembly BOM", "Exact order codes and quantities for 26 SMT pieces; switches and USB remain separately sourced."),
 ("lcd-module", "docs/LCD-MODULE-VARIANT.md", "Hardware", "Eight-pin 2.8-inch pill carrier", "Pill layout, reference eight-pin interface, dedicated LCD power and simple header assembly."),
 ("website", "docs/WEBSITE.md", "Software", "How this website works", "Content sources, local previews, versioning, checks and deployment."),
 ("build-overview", "docs/BUILD-OVERVIEW.md", "Build", "Standard FPC build overview", "Earlier standard FPC configuration; current pill has a separate assembly guide."),

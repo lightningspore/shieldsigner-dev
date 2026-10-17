@@ -20,7 +20,7 @@ with sync_playwright() as p:
         page.locator('.board-frame img').wait_for()
         assert page.locator('.board-frame img').evaluate('(img) => img.complete && img.naturalWidth > 0')
         assert page.locator('.task-card').count() == 6
-        assert '0.0.6-dev' in page.locator('footer').inner_text()
+        assert '0.0.7-dev' in page.locator('footer').inner_text()
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Homepage overflows'
         page.screenshot(path=str(artifacts/f'home-{width}.png'), full_page=True)
         page.locator('.task-card[href="/build/pcb/"]').click()

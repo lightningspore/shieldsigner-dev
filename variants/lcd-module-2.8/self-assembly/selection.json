@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "variant": "lcd-module-2.8",
+  "boardRevision": "0.0.4-dev",
+  "checkedAt": "2026-10-17",
+  "parts": [
+    {
+      "refs": [
+        "C605",
+        "C606"
+      ],
+      "manufacturer": "YAGEO",
+      "mpn": "CC0805JRNPO9BN330",
+      "digikey": "311-1105-1-ND",
+      "url": "https://www.digikey.com/en/products/detail/yageo/CC0805JRNPO9BN330/302839",
+      "value": "33 pF",
+      "spec": "0805; 50 V; ±5%; C0G/NP0",
+      "stockSnapshot": 61962,
+      "checkedAt": "2026-10-17",
+      "selection": "exact",
+      "rationale": "Same MPN as JLC."
+    },
+    {
+      "refs": [
+        "C301",
+        "C601"
+      ],
+      "manufacturer": "YAGEO",
+      "mpn": "CC0805KRX7R9BB104",
+      "digikey": "311-1140-1-ND",
+      "url": "https://www.digikey.com/en/products/detail/yageo/CC0805KRX7R9BB104/303050",
+      "value": "100 nF",
+      "spec": "0805; 50 V; ±10%; X7R",
+      "stockSnapshot": 880728,
+      "checkedAt": "2026-10-17",
+      "selection": "exact",
+      "rationale": "Same MPN as JLC."
+    },
+    {
+      "refs": [
+        "C201",
+        "C302",
+        "C701",
+        "C702"
+      ],
+      "manufacturer": "Samsung",
+      "mpn": "CL21A106KACLRNC",
+      "digikey": "1276-2397-1-ND",
+      "url": "https://www.digikey.com/en/products/detail/samsung-electro-mechanics/CL21A106KACLRNC/3888055",
+      "value": "10 µF",
+      "spec": "0805; 25 V; ±10%; X5R; 0.95 mm max height",
+      "stockSnapshot": 2546,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Replaces CL21A106KAYNNNE with the same nominal capacitance, voltage, tolerance and dielectric; lower body height."
+    },
+    {
+      "refs": [
+        "C602",
+        "C603",
+        "C604"
+      ],
+      "manufacturer": "KEMET",
+      "mpn": "C0805C105K5RACTU",
+      "digikey": "399-C0805C105K5RACTUCT-ND",
+      "url": "https://www.digikey.com/en/products/detail/kemet/C0805C105K5RACTU/3317615",
+      "value": "1 µF",
+      "spec": "0805; 50 V; ±10%; X7R",
+      "stockSnapshot": 125411,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Replaces CL21B105KBFNNNE at matching capacitance, voltage, tolerance and dielectric."
+    },
+    {
+      "refs": [
+        "R601",
+        "R606"
+      ],
+      "manufacturer": "YAGEO",
+      "mpn": "RC0805FR-07100KL",
+      "digikey": "311-100KCRCT-ND",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100KL/727544",
+      "value": "100 kΩ",
+      "spec": "0805; ±1%; 125 mW",
+      "stockSnapshot": 526449,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Same resistance, tolerance and nominal power rating."
+    },
+    {
+      "refs": [
+        "R602",
+        "R603"
+      ],
+      "manufacturer": "YAGEO",
+      "mpn": "RC0805FR-07100RL",
+      "digikey": "311-100CRCT-ND",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100RL/727543",
+      "value": "100 Ω",
+      "spec": "0805; ±1%; 125 mW",
+      "stockSnapshot": 1083343,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Same resistance, tolerance and nominal power rating."
+    },
+    {
+      "refs": [
+        "R605",
+        "R607"
+      ],
+      "manufacturer": "YAGEO",
+      "mpn": "RC0805FR-0710KL",
+      "digikey": "311-10.0KCRCT-ND",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0710KL/727535",
+      "value": "10 kΩ",
+      "spec": "0805; ±1%; 125 mW",
+      "stockSnapshot": 1580141,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Same resistance, tolerance and nominal power rating."
+    },
+    {
+      "refs": [
+        "R604"
+      ],
+      "manufacturer": "YAGEO",
+      "mpn": "RC0805FR-0747RL",
+      "digikey": "311-47.0CRCT-ND",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0747RL/730919",
+      "value": "47 Ω",
+      "spec": "0805; ±1%; 125 mW",
+      "stockSnapshot": 94241,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Same resistance, tolerance and nominal power rating."
+    },
+    {
+      "refs": [
+        "R301",
+        "R302"
+      ],
+      "manufacturer": "Bourns",
+      "mpn": "CR0805-FX-5101ELF",
+      "digikey": "CR0805-FX-5101ELFCT-ND",
+      "url": "https://www.digikey.com/en/products/detail/bourns-inc/CR0805-FX-5101ELF/3784995",
+      "value": "5.1 kΩ",
+      "spec": "0805; ±1%; 125 mW",
+      "stockSnapshot": 28897,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Same USB-C Rd resistance/tolerance/power. Selected over out-of-stock Yageo RC0805FR-075K1L."
+    },
+    {
+      "refs": [
+        "R303"
+      ],
+      "manufacturer": "YAGEO",
+      "mpn": "RC0805FR-07560RL",
+      "digikey": "311-560CRCT-ND",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07560RL/728036",
+      "value": "560 Ω",
+      "spec": "0805; ±1%; 125 mW",
+      "stockSnapshot": 45507,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Same LED series resistance, tolerance and power rating."
+    },
+    {
+      "refs": [
+        "D302"
+      ],
+      "manufacturer": "Kingbright",
+      "mpn": "APT2012LZGCK",
+      "digikey": "754-1939-1-ND",
+      "url": "https://www.digikey.com/en/products/detail/kingbright/APT2012LZGCK/5177440",
+      "value": "Green LED",
+      "spec": "0805; 2.00×1.25 mm; 0.75 mm max height; Vf typ 2.65 V at 2 mA",
+      "stockSnapshot": 75055,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Green indicator on the existing LED lands; retain R303 560 Ω. Match cathode to native pad 1/K; brightness can differ."
+    },
+    {
+      "refs": [
+        "D301"
+      ],
+      "manufacturer": "Littelfuse",
+      "mpn": "SMF5.0CA",
+      "digikey": "18-SMF5.0CACT-ND",
+      "url": "https://www.digikey.com/en/products/detail/littelfuse-inc/SMF5-0CA/11206223",
+      "value": "5 V bidirectional TVS",
+      "spec": "SOD-123F; VRWM 5 V; VBR 6.4–7.0 V; VC max 9.2 V at 21.7 A; 200 W (10/1000 µs)",
+      "stockSnapshot": 11192,
+      "checkedAt": "2026-10-17",
+      "selection": "alternative",
+      "rationale": "Same TVS function and nominal pulse/clamp class in the existing SOD-123F footprint. Bidirectional CA required; does not add overvoltage disconnect."
+    },
+    {
+      "refs": [
+        "U701"
+      ],
+      "manufacturer": "Diodes Incorporated",
+      "mpn": "AP2112K-3.3TRG1",
+      "digikey": "AP2112K-3.3TRG1DICT-ND",
+      "url": "https://www.digikey.com/en/products/detail/diodes-incorporated/AP2112K-3-3TRG1/4470746",
+      "value": "3.3 V LDO",
+      "spec": "SOT-25; 600 mA",
+      "stockSnapshot": null,
+      "checkedAt": "2026-10-17",
+      "selection": "exact",
+      "rationale": "Exact original regulator."
+    },
+    {
+      "refs": [
+        "J601"
+      ],
+      "manufacturer": "Amphenol",
+      "mpn": "7312P0225A13LF",
+      "digikey": "609-4481-ND",
+      "url": "https://www.digikey.com/en/products/detail/amphenol-cs-fci/7312P0225A13LF/1527047",
+      "value": "Contact smartcard socket",
+      "spec": "Original full-size contact socket",
+      "stockSnapshot": 3141,
+      "checkedAt": "2026-10-17",
+      "selection": "exact",
+      "rationale": "Exact original socket; orientation follows native drawing."
+    },
+    {
+      "refs": [
+        "U601"
+      ],
+      "manufacturer": "Microchip",
+      "mpn": "SEC1210/PV-UR2",
+      "digikey": "SEC1210/PV-UR2-ND",
+      "url": "https://www.digikey.com/en/products/detail/microchip-technology/SEC1210-PV-UR2/6192958",
+      "value": "UART smartcard bridge",
+      "spec": "24-QFN 5×5 mm; UR2 firmware",
+      "stockSnapshot": 56,
+      "checkedAt": "2026-10-17",
+      "selection": "exact",
+      "rationale": "Exact original firmware suffix; do not use URT or another SEC1210 variant."
+    }
+  ],
+  "unresolved": [
+    {
+      "refs": [
+        "SW501",
+        "SW502",
+        "SW503",
+        "SW504",
+        "SW505",
+        "SW506",
+        "SW507",
+        "SW508"
+      ],
+      "mpn": "TS-1101-C-W",
+      "reason": "Buy original XKB part for this board; C&K PTS636SK25SMTR LFS remains an unapproved mechanical alternative."
+    },
+    {
+      "refs": [
+        "J301"
+      ],
+      "mpn": "TYPE-C 6P(073)",
+      "reason": "Buy original SHOUHAN connector for this board; GCT USB4135-GF-A remains an unapproved footprint/case alternative."
+    }
+  ],
+  "referenceDocuments": [
+    {
+      "file": "reference/pdfs/Kingbright-APT2012LZGCK.pdf",
+      "source": "https://www.kingbrightusa.com/images/catalog/SPEC/APT2012LZGCK.pdf"
+    },
+    {
+      "source": "https://www.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smf_datasheet.pdf.pdf",
+      "note": "Manufacturer PDF inspected online; direct archival download returned HTTP 403. Original JLC TVS drawing remains saved separately."
+    }
+  ]
+}

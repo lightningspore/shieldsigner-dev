@@ -1,0 +1,3 @@
+References,Quantity per board,Original MPN,Original LCSC,Status
+"SW501,SW502,SW503,SW504,SW505,SW506,SW507,SW508",8,TS-1101-C-W,C318938,Buy original XKB part for this board; C&K PTS636SK25SMTR LFS remains an unapproved mechanical alternative.
+J301,1,TYPE-C 6P(073),C668623,Buy original SHOUHAN connector for this board; GCT USB4135-GF-A remains an unapproved footprint/case alternative.

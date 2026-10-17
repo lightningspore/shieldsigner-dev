@@ -99,7 +99,7 @@ class KnowledgeTests(SimpleTestCase):
         self.assertContains(page, '125 mW · ±1%')
         self.assertContains(self.client.get('/guides/bom-table/'), '1 µF')
         self.assertContains(self.client.get('/build/parts/?scope=carrier&q=1uF'), 'C28323')
-        self.assertContains(self.client.get('/'), '0.0.6-dev')
+        self.assertContains(self.client.get('/'), '0.0.7-dev')
         self.assertContains(self.client.get('/'), 'revision')
         self.assertContains(self.client.get('/'), 'site.css?v=')
         self.assertContains(self.client.get('/'), 'site.js?v=')

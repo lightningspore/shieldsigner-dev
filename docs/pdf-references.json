@@ -118,5 +118,15 @@
     "bytes": 755270,
     "retainedOn": "2026-10-15",
     "provenance": "Public manufacturer specification"
+  },
+  {
+    "file": "reference/pdfs/Kingbright-APT2012LZGCK.pdf",
+    "title": "Kingbright APT2012LZGCK self-assembly LED",
+    "source": "https://www.kingbrightusa.com/images/catalog/SPEC/APT2012LZGCK.pdf",
+    "catalog": "https://www.digikey.com/en/products/detail/kingbright/APT2012LZGCK/5177440",
+    "sha256": "e0ef6d7073f40ce3a3db6a61ccb87fafd056bf00026942ada2fbe177b1fc49a8",
+    "bytes": 647632,
+    "retainedOn": "2026-10-17",
+    "provenance": "Public manufacturer URL"
   }
 ]

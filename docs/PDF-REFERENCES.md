@@ -1,6 +1,6 @@
 # Saved reference PDFs
 
-All twelve retained supplier/manufacturer PDFs are in `reference/pdfs/`, tracked by Git LFS. Generated native schematic PDFs are release artifacts. The index records original sources, byte sizes and SHA-256; retained references are not automatic part selections.
+All retained supplier/manufacturer PDFs are in `reference/pdfs/`, tracked by Git LFS. Generated native schematic PDFs are release artifacts. The index records original sources, byte sizes and SHA-256; retained references are not automatic part selections.
 
 The current pill LCD and added regulator use **HOTHMI-HTM-TFT028A16-SPI.pdf** and **Diodes-AP2112.pdf**. The former Pico display schematic and standard bare-panel PDFs remain archived for their separate revisions.
 
@@ -20,3 +20,5 @@ The current pill LCD and added regulator use **HOTHMI-HTM-TFT028A16-SPI.pdf** an
 | [Diodes AP2112 regulator](../reference/pdfs/Diodes-AP2112.pdf) | [Manufacturer/supplier PDF](https://www.diodes.com/datasheet/download/AP2112.pdf) | `ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f` |
 
 The [pill guide](LCD-MODULE-VARIANT.md) states the selected module, electrical limits and drawing discrepancies. The [standard FPC BOM](BOM.md) records its separate panel qualification. Update the JSON index when retaining/replacing documents.
+
+Self-assembly indicator reference: [Kingbright APT2012LZGCK](../reference/pdfs/Kingbright-APT2012LZGCK.pdf), [manufacturer source](https://www.kingbrightusa.com/images/catalog/SPEC/APT2012LZGCK.pdf), SHA-256 `e0ef6d7073f40ce3a3db6a61ccb87fafd056bf00026942ada2fbe177b1fc49a8`.

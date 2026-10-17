@@ -2,6 +2,7 @@
   <h2 id="shopping-title">Your shopping list</h2>
   <p class="parts-note">The <strong>eight-pin pill</strong> is the current build: <a href="/guides/lcd-module/">design & display pinout</a> · <a href="/guides/modular-assembly/">header and support assembly</a>. Select the standard FPC reference only when building that separate board.</p>
   <p class="parts-note">For PCBA, JLC buys the SMT components. Buy the separate system parts yourself; switch to Carrier / PCBA to inspect the exact values, ratings and quantities.</p>
+  <p class="parts-note">Building the pill by hand? <a href="/guides/self-assembly/">Optional DigiKey self-assembly BOM & CSV →</a></p>
   <form class="parts-form" method="get" action="/build/parts/" hx-get="/build/parts/" hx-sync="this:replace" hx-replace-url="true" hx-target="#parts-results" hx-select="#parts-fragment" hx-swap="innerHTML" hx-trigger="submit, input changed delay:250ms from:#part-query, change from:select, change from:#board-quantity">
     <div><label for="part-query">Find a part</label><input id="part-query" name="q" value="{{ query }}" placeholder="C603, reader, screen…"></div>
     <div><label for="board-variant">Carrier</label><select id="board-variant" name="variant"><option value="modular" {% if variant == 'modular' %}selected{% endif %}>Eight-pin pill</option><option value="standard" {% if variant == 'standard' %}selected{% endif %}>Standard FPC reference</option></select></div>

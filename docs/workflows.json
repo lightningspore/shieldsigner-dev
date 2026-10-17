@@ -158,8 +158,12 @@
           "url": "/guides/modular-bom/"
         },
         {
-          "title": "Practical build checks",
-          "url": "/guides/build-tips/"
+          "url": "/guides/build-tips/",
+          "label": "Practical build checks"
+        },
+        {
+          "label": "Optional DigiKey self-assembly",
+          "url": "/guides/self-assembly/"
         }
       ]
     },
@@ -218,6 +222,10 @@
         {
           "label": "Pill catalog snapshot",
           "url": "/guides/modular-bom/"
+        },
+        {
+          "label": "Optional DigiKey self-assembly",
+          "url": "/guides/self-assembly/"
         }
       ]
     },
@@ -553,8 +561,8 @@
           "url": "https://3rditeration.github.io/seedsigner/quickstarts/"
         },
         {
-          "title": "Practice multisig recovery",
-          "url": "/guides/multisig-practice/"
+          "url": "/guides/multisig-practice/",
+          "label": "Practice multisig recovery"
         }
       ]
     },
@@ -647,8 +655,8 @@
           "url": "https://3rditeration.github.io/seedsigner/satochip.html"
         },
         {
-          "title": "Reader diagnostic checkpoints",
-          "url": "/guides/build-tips/"
+          "url": "/guides/build-tips/",
+          "label": "Reader diagnostic checkpoints"
         }
       ]
     }

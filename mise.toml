@@ -160,3 +160,7 @@ run = "uv run python tools/telegram/knowledge.py search"
 [tasks."telegram:update"]
 description = "Sequentially sync Telegram groups and rebuild the private knowledge index"
 run = ["uv run tools/telegram/ingest.py", "uv run python tools/telegram/knowledge.py build"]
+
+[tasks."bom:self-assembly"]
+description = "Generate/check the separate DigiKey self-assembly sourcing overlay"
+run = "uv run python scripts/generate-self-assembly.py"

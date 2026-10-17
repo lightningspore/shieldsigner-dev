@@ -148,3 +148,15 @@ run = "uv run tools/telegram/ingest.py"
 [tasks."telegram:status"]
 description = "Show private local Telegram message counts and last completed syncs"
 run = "uv run python tools/telegram/status.py"
+
+[tasks."telegram:index"]
+description = "Build private full-text, topic and deduplicated source-link indexes"
+run = "uv run python tools/telegram/knowledge.py build"
+
+[tasks."telegram:search"]
+description = "Search private Telegram knowledge with source references"
+run = "uv run python tools/telegram/knowledge.py search"
+
+[tasks."telegram:update"]
+description = "Sequentially sync Telegram groups and rebuild the private knowledge index"
+run = ["uv run tools/telegram/ingest.py", "uv run python tools/telegram/knowledge.py build"]

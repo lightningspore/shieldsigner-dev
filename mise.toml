@@ -140,3 +140,11 @@ run = "bun build website/viewer/enclosure.js --outfile website/static/enclosure-
 [tasks."enclosure:hardware"]
 description = "Generate checked hardware mesh caches from existing native STEP/GLB exports"
 run = ["uv run --python 3.11 --with cadquery==2.8.0 --with trimesh python enclosure/export_hardware.py", "uv run --python 3.11 --with trimesh python enclosure/color_hardware.py"]
+
+[tasks."telegram:sync"]
+description = "Sync three configured Telegram groups into ignored private local storage"
+run = "uv run tools/telegram/ingest.py"
+
+[tasks."telegram:status"]
+description = "Show private local Telegram message counts and last completed syncs"
+run = "uv run python tools/telegram/status.py"

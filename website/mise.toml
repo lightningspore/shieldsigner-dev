@@ -18,6 +18,9 @@ run = "uv run python scripts/enclosure-ui-check.py"
 [tasks.package]
 run = ["uv run python scripts/sync-content.py", "uv run python scripts/package-release.py"]
 [tasks.deploy]
-description = "Package and deploy to the existing website VM; public routing is in shared DNS Terraform"
+description = "Build an immutable image and deploy to the shared k3s website platform"
+run = "uv run python ../../lightningspore-monorepo/code/homelab/kubernetes/websites/deploy-shieldsigner.py --build"
+[tasks."deploy:vm"]
+description = "Legacy VM rollback deployment; requires explicit SHIELDSIGNER_DEPLOY_HOST"
 depends = ["package"]
 run = "uv run python scripts/deploy.py"

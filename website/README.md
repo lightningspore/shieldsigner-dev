@@ -128,3 +128,17 @@ CSS and task JavaScript URLs include the displayed revision to avoid stale asset
 The homepage, PCB order workflow and default shopping table now describe the 160×70 mm eight-pin pill. Its 35 SMT placements/17 lines and separate customer headers/modules come from the variant's native manufacturing files/catalog and `system-parts.json`. A selector preserves access to the standard FPC table without mixing its files into the pill order flow. Display and assembly guides document the reference numbering, dedicated LCD supply, support stack and limits of the dimensional 3D models.
 
 `assets/modular-downloads.json` pins six pill prerelease assets: matched order/Gerber/native kits, schematic PDF and assembled STEP/GLB. Content synchronization verifies the PCB and asset hashes; a fresh checkout fetches pinned release files. Run response tests and desktop/mobile/no-JS checks, including variant switching, quantities, board images and actual order downloads, before deploying.
+
+## k3s deployment transition
+
+The infrastructure migration is managed in the neighboring
+`lightningspore-monorepo` repository. `mise run deploy` packages this current
+source and delegates immutable-image publication and Helm deployment to its
+`code/homelab/kubernetes/websites/deploy-shieldsigner.py` helper. The monorepo's
+older website-source copy must not be used to replace this release.
+
+The original VM deployment is retained as `mise run deploy:vm`, with an explicit
+`SHIELDSIGNER_DEPLOY_HOST`, for rollback. Public routing now uses the shared k3s tunnel and Traefik. Both public hostnames
+passed the complete browser suite after cutover. The original VM origin and
+tunnel remain running for rollback.
+No application data or database migration is needed for this read-only site.

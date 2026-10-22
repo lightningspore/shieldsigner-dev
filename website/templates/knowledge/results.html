@@ -1,4 +1,5 @@
 <div id="guide-fragment">
-<p class="caption">{{ guides|length }} guide{{ guides|length|pluralize }}{% if query %} matching “{{ query }}”{% endif %}</p><div class="cards">{% for guide in guides %}<a class="card" href="/guides/{{ guide.slug }}/"><span class="eyebrow">{{ guide.category }}</span><h2>{{ guide.title }}</h2><p>{{ guide.description }}</p><span class="card-arrow">↗</span></a>{% empty %}<p>No matching guides. Try a component number or another term.</p>{% endfor %}</div>
+<noscript><p>Search needs JavaScript. All guides are listed below.</p></noscript>
+<p class="caption" data-search-summary>{{ guides|length }} guides</p><div class="cards">{% for guide in guides %}<a class="card" data-guide="{{ guide.slug }}" href="/guides/{{ guide.slug }}/"><span class="eyebrow">{{ guide.category }}</span><h2>{{ guide.title }}</h2><p>{{ guide.description }}</p><span class="card-arrow">↗</span></a>{% else %}<p>No matching guides. Try a component number or another term.</p>{% endfor %}</div><p data-search-empty hidden>No matching guides. Try a component number or another term.</p>
 
 </div>

@@ -1,4 +1,4 @@
-"""Exercise the actual WebGL viewer, HTMX entry and portable downloads."""
+"""Exercise the static site's WebGL viewer and portable downloads."""
 import os
 from pathlib import Path
 from zipfile import ZipFile
@@ -41,7 +41,7 @@ with sync_playwright() as p:
         with ZipFile(io.BytesIO(response.body())) as archive:
             assert 'print/button-fit-coupon.stl' in archive.namelist()
             assert len([n for n in archive.namelist() if n.endswith('.stl')])==9
-        # Navigate away and back with HTMX to verify viewer lifecycle/reinitialization.
+        # Navigate away and back through ordinary static pages.
         page.locator('.article-meta a').click();page.wait_for_url('**/guides/')
         page.get_by_role('link',name='Print and assemble the enclosure').click()
         page.wait_for_function("document.querySelector('[data-enclosure-viewer]')?.dataset.loaded==='assembled'",timeout=60000)
@@ -54,4 +54,4 @@ with sync_playwright() as p:
     assert page.locator('.enclosure-fallback img').evaluate('(img)=>img.complete && img.naturalWidth>0')
     assert not page.locator('[data-enclosure-viewer] canvas').is_visible()
     context.close();browser.close()
-print('Enclosure viewer passed: desktop/mobile, both models, controls, HTMX return, print ZIP and no-JS downloads')
+print('Static enclosure viewer passed: desktop/mobile, both models, controls, page return, print ZIP and no-JS downloads')

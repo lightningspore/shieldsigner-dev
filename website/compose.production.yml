@@ -5,16 +5,15 @@ services:
     build: .
     restart: unless-stopped
     read_only: true
-    tmpfs: [/tmp]
-    mem_limit: 192m
+    tmpfs: [/tmp, /data, /config]
+    user: "1000:1000"
+    mem_limit: 64m
     cpus: 0.5
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
-    environment:
-      DEBUG: "0"
     networks: [edge]
     healthcheck:
-      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
+      test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:8080/healthz"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -24,7 +23,7 @@ services:
     mem_limit: 64m
     cpus: 0.25
     ports: ["127.0.0.1:8082:80"]
-    volumes: ["./Caddyfile:/etc/caddy/Caddyfile:ro", "caddy_data:/data", "caddy_config:/config"]
+    volumes: ["./Caddyfile.vm:/etc/caddy/Caddyfile:ro", "caddy_data:/data", "caddy_config:/config"]
     networks: [edge]
   cloudflared:
     image: cloudflare/cloudflared:2026.8.3

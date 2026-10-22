@@ -1,11 +1,13 @@
 """Task content and sourcing data packaged from the reviewed project docs."""
 import json
 import re
-from django.conf import settings
+from pathlib import Path
+
+CONTENT_DIR = Path(__file__).resolve().parents[1] / 'content'
 
 
 def load(name):
-    return json.loads((settings.CONTENT_DIR / f"{name}.json").read_text())
+    return json.loads((CONTENT_DIR / f"{name}.json").read_text())
 
 
 def tasks():

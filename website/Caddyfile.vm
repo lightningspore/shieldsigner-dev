@@ -1,0 +1,4 @@
+# Optional VM origin; retained old VM release files are unchanged.
+:80 {
+    reverse_proxy web:8080
+}

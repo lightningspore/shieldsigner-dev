@@ -8,15 +8,20 @@ run = "uv sync --locked"
 [tasks.content]
 run = "uv run python scripts/sync-content.py"
 [tasks.dev]
-run = ["uv run python scripts/sync-content.py", "uv run python manage.py runserver 127.0.0.1:${SHIELDSIGNER_PORT:-8030}"]
+depends = ["build"]
+run = "uv run python scripts/serve-static.py"
+[tasks.build]
+run = ["uv run python scripts/sync-content.py", "uv run python scripts/build-static.py"]
 [tasks.check]
-run = ["uv run python manage.py check", "uv run python manage.py test knowledge"]
+depends = ["build"]
+run = "uv run python -m unittest knowledge.tests"
 [tasks."ui:test"]
 run = "uv run python scripts/ui-check.py"
 [tasks."ui:enclosure"]
 run = "uv run python scripts/enclosure-ui-check.py"
 [tasks.package]
-run = ["uv run python scripts/sync-content.py", "uv run python scripts/package-release.py"]
+depends = ["check"]
+run = "uv run python scripts/package-release.py"
 [tasks.deploy]
 description = "Build an immutable image and deploy to the shared k3s website platform"
 run = "uv run python ../../lightningspore-monorepo/code/homelab/kubernetes/websites/deploy-shieldsigner.py --build"

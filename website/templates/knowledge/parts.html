@@ -3,7 +3,7 @@
   <p class="parts-note">The <strong>eight-pin pill</strong> is the current build: <a href="/guides/lcd-module/">design & display pinout</a> · <a href="/guides/modular-assembly/">header and support assembly</a>. Select the standard FPC reference only when building that separate board.</p>
   <p class="parts-note">For PCBA, JLC buys the SMT components. Buy the separate system parts yourself; switch to Carrier / PCBA to inspect the exact values, ratings and quantities.</p>
   <p class="parts-note">Building the pill by hand? <a href="/guides/self-assembly/">Optional DigiKey self-assembly BOM & CSV →</a></p>
-  <form class="parts-form" method="get" action="/build/parts/" hx-get="/build/parts/" hx-sync="this:replace" hx-replace-url="true" hx-target="#parts-results" hx-select="#parts-fragment" hx-swap="innerHTML" hx-trigger="submit, input changed delay:250ms from:#part-query, change from:select, change from:#board-quantity">
+  <form class="parts-form" method="get" action="/build/parts/">
     <div><label for="part-query">Find a part</label><input id="part-query" name="q" value="{{ query }}" placeholder="C603, reader, screen…"></div>
     <div><label for="board-variant">Carrier</label><select id="board-variant" name="variant"><option value="modular" {% if variant == 'modular' %}selected{% endif %}>Eight-pin pill</option><option value="standard" {% if variant == 'standard' %}selected{% endif %}>Standard FPC reference</option></select></div>
     <div><label for="part-scope">Show</label><select id="part-scope" name="scope"><option value="all" {% if scope == 'all' %}selected{% endif %}>All parts</option><option value="system" {% if scope == 'system' %}selected{% endif %}>Separate system parts</option><option value="carrier" {% if scope == 'carrier' %}selected{% endif %}>Carrier / PCBA</option></select></div>
@@ -11,4 +11,6 @@
     <button class="button" type="submit">Update</button>
   </form>
   <div id="parts-results" aria-live="polite">{% include 'knowledge/parts-results.html' %}</div>
+  {% for name, html in part_variants.items() %}<template data-parts-variant="{{ name }}">{{ html }}</template>{% endfor %}
+  <noscript><p>Filtering and quantity calculations need JavaScript. The complete eight-pin pill list above shows quantities for one board. <a href="/files/variants/lcd-module-2.8/self-assembly/bom-digikey.csv">Download the DigiKey list</a> or <a href="/files/manufacturing/jlcpcb/bom-carrier-jlcpcb.csv">download the separate standard FPC BOM</a>.</p></noscript>
 </section>

@@ -1,24 +1,25 @@
 <div id="parts-fragment">
 {% if quantity_error %}<p class="task-notice" role="alert">{{ quantity_error }}</p>{% endif %}
-<div class="parts-result-summary"><span>{% if variant == 'modular' %}Eight-pin pill{% else %}Standard FPC{% endif %} · <strong>{{ quantity }} board{{ quantity|pluralize }}</strong>{% if query %} · “{{ query }}”{% endif %}</span><a href="{{ bom_url }}" hx-boost="false">Matching BOM CSV ↓</a></div>
-{% if system %}
-<h3>Buy separately · {{ system|length }} item{{ system|length|pluralize }}</h3>
+<div class="parts-result-summary"><span>{% if variant == 'modular' %}Eight-pin pill{% else %}Standard FPC{% endif %} · <strong>{{ quantity }} board{{ quantity|pluralize }}</strong>{% if query %} · “{{ query }}”{% endif %}</span><a href="{{ bom_url }}">Matching BOM CSV ↓</a></div>
+{% if system %}<section data-part-group="system">
+<h3>Buy separately · <span data-group-count>{{ system|length }}</span> items</h3>
 <p class="parts-note">These are outside the {{ piece_count }}-piece PCBA BOM. Card choices are alternatives; buy the one that fits your workflow.</p>
 <div class="system-parts">
-{% for part in system %}<article class="system-part {% if part.warning %}needs-review{% endif %}">
-  <div class="part-top"><span class="part-status">{{ part.status }}</span><span>{{ part.total }} {% if part.required %}required{% else %}optional{% endif %}</span></div>
+{% for part in system %}<article data-part data-qty="{{ part.qty }}" data-search="{{ part|tojson|forceescape }}" class="system-part {% if part.warning %}needs-review{% endif %}">
+  <div class="part-top"><span class="part-status">{{ part.status }}</span><span><span data-total>{{ part.total }}</span> {% if part.required %}required{% else %}optional{% endif %}</span></div>
   <h4>{{ part.name }}</h4><p>{{ part.spec }}</p>{% if part.warning %}<p class="part-warning">{{ part.warning }}</p>{% endif %}
   <div class="part-links"><a href="{{ part.source }}">{{ part.sourceLabel }} ↗</a>{% if part.detail %}<a href="{{ part.detail }}">{{ part.detailLabel }} ↗</a>{% endif %}</div>
 </article>{% endfor %}
-</div>
+</div></section>
 {% endif %}
-{% if carrier %}
-<h3>Carrier / PCBA · {{ carrier|length }} catalog line{{ carrier|length|pluralize }}</h3>
+{% if carrier %}<section data-part-group="carrier">
+<h3>Carrier / PCBA · <span data-group-count>{{ carrier|length }}</span> catalog lines</h3>
 <p class="parts-note">{{ piece_count }} fitted pieces / {{ line_count }} catalog lines per carrier. Values and ratings are explicit. Catalog snapshots from {{ checked_at }}; stock is not reserved. Open each listing for current availability.</p>
 <div class="parts-table-wrap"><table class="parts-table"><thead><tr><th scope="col">Value / ratings</th><th scope="col">Part / references</th><th scope="col">Qty / PCB</th><th scope="col">Your qty</th><th scope="col">Package</th><th scope="col">Source</th></tr></thead><tbody>
-{% for part in carrier %}<tr><td class="passive-value"><strong>{{ part.value }}</strong><small>{{ part.ratings|default:"—" }}</small></td><td><strong>{{ part.mpn }}</strong><span>{{ part.refs }}</span><small>{{ part.manufacturer }}</small></td><td>{{ part.qty }}</td><td><strong>{{ part.total }}</strong></td><td>{{ part.package }}</td><td><a href="{{ part.source }}">{{ part.code }} ↗</a><small>{{ part.library }}</small></td></tr>{% endfor %}
+{% for part in carrier %}<tr data-part data-qty="{{ part.qty }}" data-search="{{ part|tojson|forceescape }}"><td class="passive-value"><strong>{{ part.value }}</strong><small>{{ part.ratings|default('—', true) }}</small></td><td><strong>{{ part.mpn }}</strong><span>{{ part.refs }}</span><small>{{ part.manufacturer }}</small></td><td>{{ part.qty }}</td><td><strong data-total>{{ part.total }}</strong></td><td>{{ part.package }}</td><td><a href="{{ part.source }}">{{ part.code }} ↗</a><small>{{ part.library }}</small></td></tr>{% endfor %}
 </tbody></table></div>
 <p class="parts-note">{% if variant == 'modular' %}LCD, Luckfox, headers and supports are separate. Obsolete FPC/backlight lands and J302 are removed.{% else %}R404, R408 and J302 remain DNP. U202 is separate.{% endif %} PCB solder jumpers are copper, not purchased parts.</p>
+</section>
 {% endif %}
 {% if not carrier and not system %}<p class="empty-state">No matching parts in this category.</p>
 {% if scope == 'system' and carrier_count %}<a href="/build/parts/?variant={{ variant }}&scope=carrier&q={{ query|urlencode }}&quantity={{ quantity }}">Show {{ carrier_count }} matching carrier result{{ carrier_count|pluralize }} →</a>

@@ -4,5 +4,6 @@ public/
 content/
 staticfiles/
 artifacts/
+dist/
 .secrets/
 .env

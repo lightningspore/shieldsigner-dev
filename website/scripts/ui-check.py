@@ -1,4 +1,4 @@
-"""Six real task journeys, responsive layouts, HTMX updates and no-JS fallbacks."""
+"""Six static-site journeys, client-side filters, and no-JS content access."""
 import csv
 import io
 import os
@@ -20,7 +20,7 @@ with sync_playwright() as p:
         page.locator('.board-frame img').wait_for()
         assert page.locator('.board-frame img').evaluate('(img) => img.complete && img.naturalWidth > 0')
         assert page.locator('.task-card').count() == 6
-        assert '0.0.8-dev' in page.locator('footer').inner_text()
+        assert '0.0.9-dev' in page.locator('footer').inner_text()
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Homepage overflows'
         page.screenshot(path=str(artifacts/f'home-{width}.png'), full_page=True)
         page.locator('.task-card[href="/build/pcb/"]').click()
@@ -69,10 +69,10 @@ with sync_playwright() as p:
         assert 'mise run os:prepare' in page.evaluate('navigator.clipboard.readText()')
         page.goto(base+'/build/cards/')
         page.locator('.card-tabs').get_by_role('link',name='Satochip',exact=True).click()
-        page.wait_for_url('**/build/cards/?card=satochip#card-workflow')
+        page.wait_for_url('**/build/cards/satochip/#card-workflow')
         assert 'initialize and export' in page.locator('#card-workflow h3').inner_text()
         page.locator('.card-tabs').get_by_role('link',name='DIY JavaCard',exact=True).click()
-        page.wait_for_url('**/build/cards/?card=diy#card-workflow')
+        page.wait_for_url('**/build/cards/diy/#card-workflow')
         assert 'install an applet' in page.locator('#card-workflow h3').inner_text()
         if width==390:
             page.get_by_role('button',name='Toggle navigation').click()
@@ -107,15 +107,13 @@ with sync_playwright() as p:
     for slug in slugs:
         assert page.locator(f'.task-card[href="/build/{slug}/"]').count()==1
     page.locator('.task-card[href="/build/parts/"]').click()
-    page.locator('#part-scope').select_option('carrier')
-    page.locator('#part-query').fill('C603')
-    page.locator('#board-quantity').fill('5')
-    page.get_by_role('button',name='Update',exact=True).click()
+    assert page.locator('#parts-results tbody tr').count()==17
+    assert page.locator('#parts-results .system-part').count()==16
     assert 'C28323' in page.locator('#parts-results').inner_text()
-    assert '15' in page.locator('#parts-results').inner_text()
-    page.goto(base+'/build/cards/?card=diy')
+    assert 'Filtering and quantity calculations need JavaScript' in page.locator('noscript').inner_text()
+    page.goto(base+'/build/cards/diy/')
     assert 'install an applet' in page.locator('#card-workflow h3').inner_text()
     assert not page.locator('.copy-command').is_visible() if page.locator('.copy-command').count() else True
     context.close()
     browser.close()
-print('Passed six task journeys, order download, parts quantities/filters, command copy, checklist persistence, card selection, mobile navigation, reference search and no-JS fallback.')
+print('Passed six static task journeys, downloads, browser-local BOM quantities/search, copy, checklist persistence, static card routes, mobile navigation, guide search and no-JS content.')

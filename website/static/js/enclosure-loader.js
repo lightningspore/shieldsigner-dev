@@ -7,6 +7,5 @@
       loading=null
     })
   }
-  document.addEventListener('htmx:load',load)
   load()
 })()

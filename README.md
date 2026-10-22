@@ -62,7 +62,7 @@ The build writes `dist/validation-report.json` with preserved renderer warnings 
 
 ## Public documentation website
 
-[shieldsigner.dev](https://shieldsigner.dev/) presents the hardware, smartcards, firmware and build guides. The [website implementation and deployment guide](website/README.md) follows the Lightningspore Django/HTMX patterns. Public content is generated from these docs; private ingestion data is excluded.
+[shieldsigner.dev](https://shieldsigner.dev/) presents the hardware, smartcards, firmware and build guides. The [static website implementation and deployment guide](website/README.md) follows the SeedPills Caddy pattern. Public HTML and assets are generated from these docs; private ingestion data is excluded.
 
 ## License and provenance
 

@@ -1,17 +1,23 @@
-:80 {
+:{$PORT:8080} {
     encode zstd gzip
     header {
         X-Content-Type-Options nosniff
         Referrer-Policy strict-origin-when-cross-origin
         X-Frame-Options DENY
     }
-    reverse_proxy web:8000 {
-        header_up X-Forwarded-Proto https
-        health_uri /healthz
-        health_interval 5s
-        health_timeout 3s
-        health_headers {
-            Host shieldsigner.dev
-        }
+    root * /srv
+    @health path /healthz
+    header @health Content-Type application/json
+    @files path /files/*
+    header @files Cache-Control no-cache
+    @download {
+        path /files/*
+        not path *.pdf *.svg *.png
+    }
+    header @download Content-Disposition attachment
+    file_server
+    handle_errors {
+        rewrite * /404.html
+        file_server
     }
 }

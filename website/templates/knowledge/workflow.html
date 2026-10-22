@@ -20,15 +20,15 @@
     <div class="task-facts"><div><span>You need</span><ul>{% for need in task.needs %}<li>{{ need }}</li>{% endfor %}</ul></div><div><span>You’ll have</span><p>{{ task.result }}</p></div></div>
     {% if task.notice %}<div class="task-notice">{{ task.notice }}</div>{% endif %}
     {% if task.slug == 'parts' %}{% include 'knowledge/parts.html' %}{% endif %}
-    {% if task.slug == 'pcb' %}<div class="order-launch"><a class="button" href="/files/shieldsigner-modular-order.zip" hx-boost="false">Download JLC order files ↓</a><a href="https://jlcpcb.com/" target="_blank" rel="noopener">Open JLCPCB quote ↗</a><span>Pill Gerbers + BOM + CPL · {{ pcb_spec.layers }} layers · {{ pcb_spec.thickness }} mm · {{ pcb_spec.width }} × {{ pcb_spec.height }} mm</span></div>{% endif %}
-    <nav class="step-jump" aria-label="Steps on this page">{% for step in task.steps %}<a href="#step-{{ forloop.counter }}">{{ forloop.counter }}. {{ step.title }}</a>{% endfor %}</nav>
+    {% if task.slug == 'pcb' %}<div class="order-launch"><a class="button" href="/files/shieldsigner-modular-order.zip">Download JLC order files ↓</a><a href="https://jlcpcb.com/" target="_blank" rel="noopener">Open JLCPCB quote ↗</a><span>Pill Gerbers + BOM + CPL · {{ pcb_spec.layers }} layers · {{ pcb_spec.thickness }} mm · {{ pcb_spec.width }} × {{ pcb_spec.height }} mm</span></div>{% endif %}
+    <nav class="step-jump" aria-label="Steps on this page">{% for step in task.steps %}<a href="#step-{{ loop.index }}">{{ loop.index }}. {{ step.title }}</a>{% endfor %}</nav>
     <div class="steps">
       {% for step in task.steps %}
-      <section class="build-step" id="step-{{ forloop.counter }}">
-        <div class="step-header"><label class="step-check"><input type="checkbox" :checked="done.includes({{ forloop.counter0 }})" @change="toggle({{ forloop.counter0 }})" aria-label="Mark step {{ forloop.counter }} complete"><span>{{ forloop.counter }}</span></label><h2>{{ step.title }}</h2></div>
-        <ul class="step-items">{% for item in step.items %}<li>{{ item }}</li>{% endfor %}</ul>
+      <section class="build-step" id="step-{{ loop.index }}">
+        <div class="step-header"><label class="step-check"><input type="checkbox" :checked="done.includes({{ loop.index0 }})" @change="toggle({{ loop.index0 }})" aria-label="Mark step {{ loop.index }} complete"><span>{{ loop.index }}</span></label><h2>{{ step.title }}</h2></div>
+        <ul class="step-items">{% for item in step['items'] %}<li>{{ item }}</li>{% endfor %}</ul>
         {% if step.choices %}<div class="choice-grid">{% for choice in step.choices %}<a href="{{ choice.url }}" class="choice"><strong>{{ choice.title }} →</strong><span>{{ choice.text }}</span></a>{% endfor %}</div>{% endif %}
-        {% if step.downloads %}<div class="step-downloads">{% for download in step.downloads %}<a href="{{ download.url }}" hx-boost="false">{{ download.label }} <span>↓</span></a>{% endfor %}</div>{% endif %}
+        {% if step.downloads %}<div class="step-downloads">{% for download in step.downloads %}<a href="{{ download.url }}">{{ download.label }} <span>↓</span></a>{% endfor %}</div>{% endif %}
         {% for command in step.commands %}<div class="command-block"><div><span>{{ command.label }}</span><button class="copy-command" type="button" aria-label="Copy {{ command.label }}" hidden>Copy</button></div><pre><code>{{ command.text }}</code></pre><span class="copy-feedback" role="status"></span></div>{% endfor %}
         {% if step.diagram == 'signing' %}<div class="flow-diagram" aria-label="QR signing workflow"><div><strong>Sparrow</strong><span>Build unsigned PSBT</span></div><span aria-hidden="true">QR →</span><div><strong>ShieldSigner</strong><span>Review & sign offline</span></div><span aria-hidden="true">QR →</span><div><strong>Sparrow</strong><span>Review & broadcast</span></div></div>{% endif %}
         {% if step.diagram == 'reader' %}<div class="flow-diagram" aria-label="Reader connection"><div><strong>Python / PCSC</strong><span>Applet commands</span></div><span aria-hidden="true">UART →</span><div><strong>SEC1210 UR2</strong><span>Card electrical interface</span></div><span aria-hidden="true">SC1 →</span><div><strong>J601 + card</strong><span>Contact socket</span></div></div>{% endif %}
@@ -38,7 +38,7 @@
       {% endfor %}
     </div>
     {% if task.next %}<a class="next-task" href="/build/{{ task.next }}/"><span>Continue the build</span><strong>{{ next_task.title }} →</strong></a>{% endif %}
-    <details class="reference-details"><summary>Sources & deeper reference</summary><p>Checked {{ checked_at|default:'12 October 2026' }}. Menu names can vary with firmware.</p>{% for ref in task.references %}<a href="{{ ref.url }}">{{ ref.label }} ↗</a>{% endfor %}<a href="https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/workflows.json">Edit this workflow on GitHub ↗</a></details>
+    <details class="reference-details"><summary>Sources & deeper reference</summary><p>Checked {{ checked_at|default('12 October 2026', true) }}. Menu names can vary with firmware.</p>{% for ref in task.references %}<a href="{{ ref.url }}">{{ ref.label }} ↗</a>{% endfor %}<a href="https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/workflows.json">Edit this workflow on GitHub ↗</a></details>
   </div>
 </div>
 {% endblock %}

@@ -75,8 +75,5 @@ function mount(root) {
   }
 }
 function init() { document.querySelectorAll('[data-enclosure-viewer]').forEach(mount) }
-init(); document.addEventListener('htmx:load', init)
-document.addEventListener('htmx:beforeCleanupElement', event => {
-  const element=event.detail.elt
-  if (element.matches?.('[data-enclosure-viewer]')) element.cleanup?.()
-})
+// Ordinary document navigation owns the WebGL lifecycle.
+init()

@@ -1,20 +1,20 @@
-{% load static %}
+
 <!doctype html>
 <html lang="en" x-data="{ menuOpen: false }">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{{ title|default:'ShieldSigner — Build & use it' }}{% if title %} · ShieldSigner{% endif %}</title>
-  <meta name="description" content="{{ description|default:'Order the carrier, source the parts, build and flash firmware, then use SeedSigner and contact smartcards.' }}">
-  <link rel="canonical" href="https://shieldsigner.dev{{ request.path }}">
+  <title>{{ title|default('ShieldSigner — Build & use it', true) }}{% if title %} · ShieldSigner{% endif %}</title>
+  <meta name="description" content="{{ description|default('Order the carrier, source the parts, build and flash firmware, then use SeedSigner and contact smartcards.', true) }}">
+  <link rel="canonical" href="https://shieldsigner.dev{{ page_path }}">
   <meta name="theme-color" content="#10140f">
-  <meta property="og:title" content="{{ title|default:'ShieldSigner — Build & use it' }}">
+  <meta property="og:title" content="{{ title|default('ShieldSigner — Build & use it', true) }}">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://shieldsigner.dev{{ request.path }}">
-  <link rel="stylesheet" href="{% static 'css/site.css' %}?v={{ site_revision }}">
-  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+  <meta property="og:url" content="https://shieldsigner.dev{{ page_path }}">
+  <link rel="stylesheet" href="/static/css/site.css?v={{ site_revision }}">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 </head>
-<body hx-boost="true" hx-select="#main" hx-target="#main" hx-swap="outerHTML">
+<body>
   <a class="skip" href="#main">Skip to content</a>
   <header>
     <a class="brand" href="/"><span class="mark">S</span> ShieldSigner<span class="brand-note"> / build & use</span><span class="site-version">{{ site_version }}</span></a>
@@ -47,9 +47,8 @@
     </div>
     <small><span class="site-version">{{ site_version }}</span> · revision <a href="{{ site_revision_url }}">{{ site_revision }}</a>{% if site_dirty %} · local changes{% endif %} · Native design checks pass; physical bring-up remains unverified.</small>
   </footer>
-  <script src="{% static 'js/htmx.min.js' %}" defer></script>
-  <script src="{% static 'js/site.js' %}?v={{ site_revision }}" defer></script>
-  <script src="{% static 'js/alpine.min.js' %}" defer></script>
-  <script src="{% static 'js/enclosure-loader.js' %}?v={{ site_revision }}" defer></script>
+  <script src="/static/js/site.js?v={{ site_revision }}" defer></script>
+  <script src="/static/js/alpine.min.js" defer></script>
+  <script src="/static/js/enclosure-loader.js?v={{ site_revision }}" defer></script>
 </body>
 </html>

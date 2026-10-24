@@ -14,8 +14,10 @@ assert readiness['boardSha256'] == board_sha, 'Run variant:lcd:fab first'
 # Refresh the order bundle from the same checked BOM/CPL/Gerbers plus current notes.
 with ZipFile(OUT / 'shieldsigner-modular-order.zip', 'w', ZIP_DEFLATED) as archive:
     archive.write(OUT/'shieldsigner-modular-gerbers.zip','shieldsigner-modular-gerbers.zip')
-    for source in sorted((VARIANT/'manufacturing').iterdir()):
-        if source.is_file():archive.write(source,source.name)
+    for source in sorted((VARIANT/'manufacturing').rglob('*')):
+        if source.is_file():archive.write(source,source.relative_to(VARIANT/'manufacturing'))
+    guide = (VARIANT/'manufacturing/placement-review/README.md').read_text()
+    archive.writestr('READ-FIRST-PLACEMENT.md', guide.replace('(smartcard-contact-audit.json)', '(placement-review/smartcard-contact-audit.json)'))
     archive.write(VARIANT/'assembly-extras.csv','customer-parts.csv')
     archive.write(OUT/'drill-report.txt','drill-report.txt')
 allowed = {'.kicad_pcb', '.kicad_sch', '.kicad_pro', '.kicad_mod', '.kicad_sym', '.step', '.svg', '.png', '.json', '.csv', '.md', '.txt'}
@@ -26,7 +28,7 @@ with ZipFile(OUT / 'shieldsigner-modular-kicad.zip', 'w', ZIP_DEFLATED) as archi
             archive.write(source, source.relative_to(ROOT))
     for source in [ROOT / 'LICENSE', ROOT / 'docs/LCD-MODULE-VARIANT.md', ROOT / 'docs/MODULAR-ASSEMBLY.md', *sorted((ROOT / 'reference/pdfs').glob('*.pdf'))]:
         archive.write(source, source.relative_to(ROOT))
-tag = 'pill-preview-0.0.6-dev'
+tag = 'pill-assembly-0.0.6-r2'
 names = ['shieldsigner-modular-order.zip', 'shieldsigner-modular-gerbers.zip', 'shieldsigner-modular-kicad.zip', 'shieldsigner-modular-assembly.step', 'shieldsigner-modular-assembly.glb', 'shieldsigner-modular-schematic.pdf']
 manifest = {'release': tag, 'boardSha256': board_sha, 'assets': []}
 for name in names:

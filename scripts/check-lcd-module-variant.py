@@ -22,6 +22,12 @@ for ref,nets in {'U701':{'1':'+5V','2':'GND','3':'+5V','5':'LCD_3V3'},'C701':{'1
  for pad in sx['children'](fps[ref],'pad'):
   if pad[1] in nets:assert sx['one'](pad,'net')[-1]==nets[pad[1]],(ref,pad[1])
 
+# Independent power-entry assertions: a customer header must not become a factory SMT placement.
+assert fps['J302'][1]=='ShieldSigner:PowerHeader_1x02_P2.54mm'
+assert 'exclude_from_bom' in sx['one'](fps['J302'],'attr') and 'dnp' not in sx['one'](fps['J302'],'attr')
+for pad in sx['children'](fps['J302'],'pad'):
+ assert sx['one'](pad,'net')[-1]=={'1':'+5V','2':'GND'}[pad[1]]
+assert next(p[2] for p in sx['children'](fps['J301'],'property') if p[1]=='MPN')=='USB4125-GF-A-0190'
 drc=json.loads((out/'drc.json').read_text())
 assert not any(issue.get('excluded') for issue in drc['violations']),'Pill carrier has no permitted DRC exclusions'
 
@@ -32,5 +38,7 @@ for kind in ['erc','drc']:
 (folder/'check-results.json').write_text(json.dumps(summary,indent=2)+'\n')
 for side,layers in [('top','F.Cu,F.SilkS,Edge.Cuts,Dwgs.User'),('bottom','B.Cu,B.SilkS,Edge.Cuts')]:
  subprocess.run([str(cli),'pcb','export','svg','--layers',layers,'--mode-single','--fit-page-to-board','--exclude-drawing-sheet','--output',str(folder/f'pcb-{side}.svg'),str(board)],check=True)
+for side in ['top','bottom']:
+ path=folder/f'pcb-{side}.svg';path.write_text('\n'.join(line.rstrip() for line in path.read_text().splitlines())+'\n')
 print(json.dumps(summary,indent=2))
 if any(v['active'].get('error',0) or v['active'].get('warning',0) or v['unconnected'] or v['parity'] for v in summary['checks'].values()):sys.exit(1)

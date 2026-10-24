@@ -1,6 +1,6 @@
 # DigiKey self-assembly BOM
 
-Optional sourcing for the revised **0.0.5-dev eight-pin pill carrier**. JLCPCB remains the primary assembled-board ordering path. This overlay never replaces the JLC BOM/CPL or native part fields.
+Optional sourcing for the revised **0.0.6-dev eight-pin pill carrier**. JLCPCB remains the primary assembled-board ordering path. This overlay never replaces the JLC BOM/CPL or native part fields.
 
 **35 SMT pieces / 17 DigiKey lines are selected, including every capacitor, resistor, LED and TVS (23 pieces / 12 lines).** The revised switches and USB-C use exact shared JLCPCB/DigiKey manufacturer parts. LCD, camera and Luckfox are excluded; customer headers and mechanical hardware remain separate.
 
@@ -12,7 +12,7 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 |---|---|---:|---|---|---:|
 | C605, C606 | 33 pF; 0805; 50 V; ±5%; C0G/NP0 | 2 / 10 | CC0805JRNPO9BN330 | [311-1105-1-ND](https://www.digikey.com/en/products/detail/yageo/CC0805JRNPO9BN330/302839) | 61962 |
 | C301, C601 | 100 nF; 0805; 50 V; ±10%; X7R | 2 / 10 | CC0805KRX7R9BB104 | [311-1140-1-ND](https://www.digikey.com/en/products/detail/yageo/CC0805KRX7R9BB104/303050) | 880728 |
-| C201, C302, C701, C702 | 10 µF; 0805; 25 V; ±10%; X5R; 0.95 mm max height | 4 / 20 | CL21A106KACLRNC | [1276-2397-1-ND](https://www.digikey.com/en/products/detail/samsung-electro-mechanics/CL21A106KACLRNC/3888055) | 2546 |
+| C201, C302, C701, C702 | 10 µF; 0805; 25 V; ±10%; X5R; 1.45 mm max height | 4 / 20 | C2012X5R1E106K125AB | [445-5984-1-ND](https://www.digikey.com/en/products/detail/tdk/C2012X5R1E106K125AB/2443462) | 1000 |
 | C602, C603, C604 | 1 µF; 0805; 50 V; ±10%; X7R | 3 / 15 | C0805C105K5RACTU | [399-C0805C105K5RACTUCT-ND](https://www.digikey.com/en/products/detail/kemet/C0805C105K5RACTU/3317615) | 125411 |
 | R601, R606 | 100 kΩ; 0805; ±1%; 125 mW | 2 / 10 | RC0805FR-07100KL | [311-100KCRCT-ND](https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100KL/727544) | 526449 |
 | R602, R603 | 100 Ω; 0805; ±1%; 125 mW | 2 / 10 | RC0805FR-07100RL | [311-100CRCT-ND](https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100RL/727543) | 1083343 |
@@ -26,7 +26,7 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 | J601 | Contact smartcard socket; Original full-size contact socket | 1 / 5 | 7312P0225A13LF | [609-4481-ND](https://www.digikey.com/en/products/detail/amphenol-cs-fci/7312P0225A13LF/1527047) | 3141 |
 | U601 | UART smartcard bridge; 24-QFN 5×5 mm; UR2 firmware | 1 / 5 | SEC1210/PV-UR2 | [SEC1210/PV-UR2-ND](https://www.digikey.com/en/products/detail/microchip-technology/SEC1210-PV-UR2/6192958) | 56 |
 | SW501, SW502, SW503, SW504, SW505, SW506, SW507, SW508 | Momentary switch; G leads; 2.5 mm nominal height; 250 gf; SPST-NO | 8 / 40 | PTS636SK25SMTRLFS | [CKN12322-1-ND](https://www.digikey.com/en/products/detail/c-k/PTS636SK25SMTR-LFS/10071735) | 20644 |
-| J301 | USB-C power input; 6 contacts; default 1.00 mm shell stakes; 3 A connector rating | 1 / 5 | USB4125-GF-A | [2073-USB4125-GF-ACT-ND](https://www.digikey.com/en/products/detail/gct/USB4125-GF-A/13547388) | 13606 |
+| J301 | USB-C power input; 6 contacts; 1.90 mm shell stakes; 3 A connector rating | 1 / 5 | USB4125-GF-A-0190 | [2073-USB4125-GF-A-0190CT-ND](https://www.digikey.com/en/products/detail/gct/USB4125-GF-A-0190/14559038) | 27021 |
 
 ## Unresolved fitted parts (none in this revision)
 
@@ -44,7 +44,7 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 
 - **C605, C606**: Same MPN as JLC.
 - **C301, C601**: Same MPN as JLC.
-- **C201, C302, C701, C702**: Replaces CL21A106KAYNNNE with the same nominal capacitance, voltage, tolerance and dielectric; lower body height.
+- **C201, C302, C701, C702**: Same capacitance, voltage, tolerance and dielectric as original Samsung; standard 0805 lands and 1.45 mm maximum height match the original envelope. Selected for power bypass/bulk decoupling, not precision timing. Verify supply startup/transients in normal first-article bring-up.
 - **C602, C603, C604**: Replaces CL21B105KBFNNNE at matching capacitance, voltage, tolerance and dielectric.
 - **R601, R606**: Same resistance, tolerance and nominal power rating.
 - **R602, R603**: Same resistance, tolerance and nominal power rating.
@@ -58,7 +58,7 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 - **J601**: Exact original socket; orientation follows native drawing.
 - **U601**: Exact original firmware suffix; do not use URT or another SEC1210 variant.
 - **SW501, SW502, SW503, SW504, SW505, SW506, SW507, SW508**: Exact shared JLC/DigiKey MPN; revised native footprint. Requires physical first-article qualification.
-- **J301**: Exact shared JLC/DigiKey MPN; revised native footprint. Requires physical first-article qualification.
+- **J301**: Exact JLC/DigiKey -0190 variant; same GCT recommended lands, longer shell stakes for the 1.6 mm board. Requires normal first-article fit/wetting checks.
 
 ## Retained reference
 
@@ -66,5 +66,5 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 
 ## Board identity
 
-Board SHA-256: `d9ff1151deb55c36f355f1967cd5b3d3d09a6c394cdcebefc71823b60bdf0cdf`.
+Board SHA-256: `1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110`.
 Supplier pages checked 2026-10-17. Rebuild using `mise run bom:self-assembly`; verify generated data with `mise run bom:self-assembly -- --check`.

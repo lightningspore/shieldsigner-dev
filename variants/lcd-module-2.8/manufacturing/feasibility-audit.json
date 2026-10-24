@@ -1,0 +1,1059 @@
+{
+  "checkedAt": "2026-10-22T02:21:17.576199+00:00",
+  "boardSha256": "d9ff1151deb55c36f355f1967cd5b3d3d09a6c394cdcebefc71823b60bdf0cdf",
+  "scope": "0.0.5-dev eight-pin pill carrier: one first article, optional expansion to three; DigiKey self-assembly acceptable; JLC PCBA remains an alternative",
+  "decision": "Qualify one physical first article before populating remaining boards; no 20-unit batch planned.",
+  "nativeChecks": {
+    "command": "mise run variant:lcd:fab",
+    "ercViolations": 0,
+    "drcViolations": 0,
+    "unconnected": 0,
+    "parityIssues": 0,
+    "exclusions": 0,
+    "note": "Software checks do not establish assembly yield or powered functionality."
+  },
+  "stockReserved": false,
+  "stockAssessment": "JLC switches currently have zero standard assembly stock at any build quantity. Socket stock covers one or three before attrition. These constraints apply to JLC PCBA, not to DigiKey self-assembly; DigiKey stock/prices require revalidation.",
+  "parts": [
+    {
+      "code": "C107115",
+      "mpn": "CC0805JRNPO9BN330",
+      "perBoard": 2,
+      "assemblyStock": 1042099,
+      "otherWarehouseStock": 1095430,
+      "checkedAt": "2026-10-22T02:20:43.575487+00:00",
+      "url": "https://jlcpcb.com/partdetail/C107115",
+      "quantities": {
+        "5": {
+          "installedRequired": 10,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 40,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 2,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 6,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 999,
+          "productPrice": 0.007
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": 3999,
+          "productPrice": 0.0056
+        },
+        {
+          "startNumber": 4000,
+          "endNumber": 7999,
+          "productPrice": 0.0048
+        },
+        {
+          "startNumber": 8000,
+          "endNumber": 47999,
+          "productPrice": 0.0043
+        },
+        {
+          "startNumber": 48000,
+          "endNumber": 99999,
+          "productPrice": 0.0038
+        },
+        {
+          "startNumber": 100000,
+          "endNumber": -1,
+          "productPrice": 0.0036
+        }
+      ]
+    },
+    {
+      "code": "C149504",
+      "mpn": "0805W8F1003T5E",
+      "perBoard": 2,
+      "assemblyStock": 3015443,
+      "otherWarehouseStock": 3477609,
+      "checkedAt": "2026-10-22T02:20:43.632986+00:00",
+      "url": "https://jlcpcb.com/partdetail/C149504",
+      "quantities": {
+        "5": {
+          "installedRequired": 10,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 40,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 2,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 6,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 999,
+          "productPrice": 0.0059
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": 4999,
+          "productPrice": 0.0047
+        },
+        {
+          "startNumber": 5000,
+          "endNumber": 9999,
+          "productPrice": 0.0041
+        },
+        {
+          "startNumber": 10000,
+          "endNumber": 49999,
+          "productPrice": 0.0037
+        },
+        {
+          "startNumber": 50000,
+          "endNumber": 99999,
+          "productPrice": 0.0035
+        },
+        {
+          "startNumber": 100000,
+          "endNumber": -1,
+          "productPrice": 0.0034
+        }
+      ]
+    },
+    {
+      "code": "C15850",
+      "mpn": "CL21A106KAYNNNE",
+      "perBoard": 4,
+      "assemblyStock": 7760553,
+      "otherWarehouseStock": 9514886,
+      "checkedAt": "2026-10-22T02:20:43.607622+00:00",
+      "url": "https://jlcpcb.com/partdetail/C15850",
+      "quantities": {
+        "5": {
+          "installedRequired": 20,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 80,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 4,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 12,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 199,
+          "productPrice": 0.0426
+        },
+        {
+          "startNumber": 200,
+          "endNumber": 599,
+          "productPrice": 0.0342
+        },
+        {
+          "startNumber": 600,
+          "endNumber": 1999,
+          "productPrice": 0.0301
+        },
+        {
+          "startNumber": 2000,
+          "endNumber": 9999,
+          "productPrice": 0.0267
+        },
+        {
+          "startNumber": 10000,
+          "endNumber": 19999,
+          "productPrice": 0.0254
+        },
+        {
+          "startNumber": 20000,
+          "endNumber": -1,
+          "productPrice": 0.0246
+        }
+      ]
+    },
+    {
+      "code": "C17408",
+      "mpn": "0805W8F1000T5E",
+      "perBoard": 2,
+      "assemblyStock": 7827119,
+      "otherWarehouseStock": 8437550,
+      "checkedAt": "2026-10-22T02:20:43.710582+00:00",
+      "url": "https://jlcpcb.com/partdetail/C17408",
+      "quantities": {
+        "5": {
+          "installedRequired": 10,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 40,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 2,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 6,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 999,
+          "productPrice": 0.0042
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": 4999,
+          "productPrice": 0.0033
+        },
+        {
+          "startNumber": 5000,
+          "endNumber": 9999,
+          "productPrice": 0.0028
+        },
+        {
+          "startNumber": 10000,
+          "endNumber": 49999,
+          "productPrice": 0.0025
+        },
+        {
+          "startNumber": 50000,
+          "endNumber": 50199,
+          "productPrice": 0.0023
+        },
+        {
+          "startNumber": 50200,
+          "endNumber": -1,
+          "productPrice": 0.0023
+        }
+      ]
+    },
+    {
+      "code": "C17414",
+      "mpn": "0805W8F1002T5E",
+      "perBoard": 2,
+      "assemblyStock": 52053628,
+      "otherWarehouseStock": 55017641,
+      "checkedAt": "2026-10-22T02:20:46.114091+00:00",
+      "url": "https://jlcpcb.com/partdetail/C17414",
+      "quantities": {
+        "5": {
+          "installedRequired": 10,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 40,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 2,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 6,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 999,
+          "productPrice": 0.0034
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": 4999,
+          "productPrice": 0.0026
+        },
+        {
+          "startNumber": 5000,
+          "endNumber": 9999,
+          "productPrice": 0.0018
+        },
+        {
+          "startNumber": 10000,
+          "endNumber": 49999,
+          "productPrice": 0.0016
+        },
+        {
+          "startNumber": 50000,
+          "endNumber": 50199,
+          "productPrice": 0.0014
+        },
+        {
+          "startNumber": 50200,
+          "endNumber": -1,
+          "productPrice": 0.0014
+        }
+      ]
+    },
+    {
+      "code": "C17714",
+      "mpn": "0805W8F470JT5E",
+      "perBoard": 1,
+      "assemblyStock": 742845,
+      "otherWarehouseStock": 837358,
+      "checkedAt": "2026-10-22T02:20:43.628597+00:00",
+      "url": "https://jlcpcb.com/partdetail/C17714",
+      "quantities": {
+        "5": {
+          "installedRequired": 5,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 20,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 1,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 3,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 999,
+          "productPrice": 0.0029
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": 4999,
+          "productPrice": 0.0022
+        },
+        {
+          "startNumber": 5000,
+          "endNumber": 9999,
+          "productPrice": 0.0018
+        },
+        {
+          "startNumber": 10000,
+          "endNumber": 49999,
+          "productPrice": 0.0016
+        },
+        {
+          "startNumber": 50000,
+          "endNumber": 50199,
+          "productPrice": 0.0014
+        },
+        {
+          "startNumber": 50200,
+          "endNumber": -1,
+          "productPrice": 0.0014
+        }
+      ]
+    },
+    {
+      "code": "C19077498",
+      "mpn": "SMF5.0CA",
+      "perBoard": 1,
+      "assemblyStock": 1525775,
+      "otherWarehouseStock": 1626307,
+      "checkedAt": "2026-10-22T02:20:44.645240+00:00",
+      "url": "https://jlcpcb.com/partdetail/C19077498",
+      "quantities": {
+        "5": {
+          "installedRequired": 5,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 20,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 1,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 3,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 199,
+          "productPrice": 0.03
+        },
+        {
+          "startNumber": 200,
+          "endNumber": 599,
+          "productPrice": 0.0239
+        },
+        {
+          "startNumber": 600,
+          "endNumber": 2999,
+          "productPrice": 0.0211
+        },
+        {
+          "startNumber": 3000,
+          "endNumber": 8999,
+          "productPrice": 0.0171
+        },
+        {
+          "startNumber": 9000,
+          "endNumber": 20999,
+          "productPrice": 0.0162
+        },
+        {
+          "startNumber": 21000,
+          "endNumber": -1,
+          "productPrice": 0.0157
+        }
+      ]
+    },
+    {
+      "code": "C2297",
+      "mpn": "KT-0805G",
+      "perBoard": 1,
+      "assemblyStock": 2271136,
+      "otherWarehouseStock": 2518711,
+      "checkedAt": "2026-10-22T02:20:44.523268+00:00",
+      "url": "https://jlcpcb.com/partdetail/C2297",
+      "quantities": {
+        "5": {
+          "installedRequired": 5,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 20,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 1,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 3,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 499,
+          "productPrice": 0.0164
+        },
+        {
+          "startNumber": 500,
+          "endNumber": 2999,
+          "productPrice": 0.0128
+        },
+        {
+          "startNumber": 3000,
+          "endNumber": 5999,
+          "productPrice": 0.0101
+        },
+        {
+          "startNumber": 6000,
+          "endNumber": 23999,
+          "productPrice": 0.0089
+        },
+        {
+          "startNumber": 24000,
+          "endNumber": 50999,
+          "productPrice": 0.0084
+        },
+        {
+          "startNumber": 51000,
+          "endNumber": -1,
+          "productPrice": 0.0081
+        }
+      ]
+    },
+    {
+      "code": "C2689642",
+      "mpn": "PTS636SK25SMTRLFS",
+      "perBoard": 8,
+      "assemblyStock": 0,
+      "otherWarehouseStock": 2804,
+      "checkedAt": "2026-10-22T02:20:44.633649+00:00",
+      "url": "https://jlcpcb.com/partdetail/C2689642",
+      "quantities": {
+        "5": {
+          "installedRequired": 40,
+          "shortfallBeforeAttrition": 40
+        },
+        "20": {
+          "installedRequired": 160,
+          "shortfallBeforeAttrition": 160
+        },
+        "1": {
+          "installedRequired": 8,
+          "shortfallBeforeAttrition": 8
+        },
+        "3": {
+          "installedRequired": 24,
+          "shortfallBeforeAttrition": 24
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 49,
+          "productPrice": 0.2604
+        },
+        {
+          "startNumber": 50,
+          "endNumber": 149,
+          "productPrice": 0.2316
+        },
+        {
+          "startNumber": 150,
+          "endNumber": 499,
+          "productPrice": 0.2192
+        },
+        {
+          "startNumber": 500,
+          "endNumber": 2999,
+          "productPrice": 0.2036
+        },
+        {
+          "startNumber": 3000,
+          "endNumber": 5999,
+          "productPrice": 0.1802
+        },
+        {
+          "startNumber": 6000,
+          "endNumber": -1,
+          "productPrice": 0.1761
+        }
+      ]
+    },
+    {
+      "code": "C27834",
+      "mpn": "0805W8F5101T5E",
+      "perBoard": 2,
+      "assemblyStock": 2131769,
+      "otherWarehouseStock": 2530242,
+      "checkedAt": "2026-10-22T02:20:47.091031+00:00",
+      "url": "https://jlcpcb.com/partdetail/C27834",
+      "quantities": {
+        "5": {
+          "installedRequired": 10,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 40,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 2,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 6,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 999,
+          "productPrice": 0.0055
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": 4999,
+          "productPrice": 0.0042
+        },
+        {
+          "startNumber": 5000,
+          "endNumber": 9999,
+          "productPrice": 0.0035
+        },
+        {
+          "startNumber": 10000,
+          "endNumber": 49999,
+          "productPrice": 0.003
+        },
+        {
+          "startNumber": 50000,
+          "endNumber": 99999,
+          "productPrice": 0.0028
+        },
+        {
+          "startNumber": 100000,
+          "endNumber": -1,
+          "productPrice": 0.0027
+        }
+      ]
+    },
+    {
+      "code": "C28323",
+      "mpn": "CL21B105KBFNNNE",
+      "perBoard": 3,
+      "assemblyStock": 1679324,
+      "otherWarehouseStock": 2135608,
+      "checkedAt": "2026-10-22T02:20:44.655770+00:00",
+      "url": "https://jlcpcb.com/partdetail/C28323",
+      "quantities": {
+        "5": {
+          "installedRequired": 15,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 60,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 3,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 9,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 99,
+          "productPrice": 0.0342
+        },
+        {
+          "startNumber": 100,
+          "endNumber": 299,
+          "productPrice": 0.0262
+        },
+        {
+          "startNumber": 300,
+          "endNumber": 1999,
+          "productPrice": 0.0226
+        },
+        {
+          "startNumber": 2000,
+          "endNumber": 3999,
+          "productPrice": 0.0198
+        },
+        {
+          "startNumber": 4000,
+          "endNumber": 9999,
+          "productPrice": 0.0189
+        },
+        {
+          "startNumber": 10000,
+          "endNumber": -1,
+          "productPrice": 0.018
+        }
+      ]
+    },
+    {
+      "code": "C28636",
+      "mpn": "0805W8F5600T5E",
+      "perBoard": 1,
+      "assemblyStock": 502180,
+      "otherWarehouseStock": 556604,
+      "checkedAt": "2026-10-22T02:20:45.755481+00:00",
+      "url": "https://jlcpcb.com/partdetail/C28636",
+      "quantities": {
+        "5": {
+          "installedRequired": 5,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 20,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 1,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 3,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 999,
+          "productPrice": 0.0027
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": 4999,
+          "productPrice": 0.0021
+        },
+        {
+          "startNumber": 5000,
+          "endNumber": 9999,
+          "productPrice": 0.0017
+        },
+        {
+          "startNumber": 10000,
+          "endNumber": 49999,
+          "productPrice": 0.0016
+        },
+        {
+          "startNumber": 50000,
+          "endNumber": 50199,
+          "productPrice": 0.0014
+        },
+        {
+          "startNumber": 50200,
+          "endNumber": -1,
+          "productPrice": 0.0014
+        }
+      ]
+    },
+    {
+      "code": "C3151650",
+      "mpn": "USB4125-GF-A",
+      "perBoard": 1,
+      "assemblyStock": 729,
+      "otherWarehouseStock": 907,
+      "checkedAt": "2026-10-22T02:20:45.703671+00:00",
+      "url": "https://jlcpcb.com/partdetail/C3151650",
+      "quantities": {
+        "5": {
+          "installedRequired": 5,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 20,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 1,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 3,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 1.0416
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 29,
+          "productPrice": 0.8438
+        },
+        {
+          "startNumber": 30,
+          "endNumber": 99,
+          "productPrice": 0.744
+        },
+        {
+          "startNumber": 100,
+          "endNumber": 499,
+          "productPrice": 0.6459
+        },
+        {
+          "startNumber": 500,
+          "endNumber": 999,
+          "productPrice": 0.587
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": -1,
+          "productPrice": 0.556
+        }
+      ]
+    },
+    {
+      "code": "C49678",
+      "mpn": "CC0805KRX7R9BB104",
+      "perBoard": 2,
+      "assemblyStock": 18457232,
+      "otherWarehouseStock": 21709889,
+      "checkedAt": "2026-10-22T02:20:45.592832+00:00",
+      "url": "https://jlcpcb.com/partdetail/C49678",
+      "quantities": {
+        "5": {
+          "installedRequired": 10,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 40,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 2,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 6,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 199,
+          "productPrice": 0.0205
+        },
+        {
+          "startNumber": 200,
+          "endNumber": 599,
+          "productPrice": 0.0155
+        },
+        {
+          "startNumber": 600,
+          "endNumber": 3999,
+          "productPrice": 0.0127
+        },
+        {
+          "startNumber": 4000,
+          "endNumber": 7999,
+          "productPrice": 0.0107
+        },
+        {
+          "startNumber": 8000,
+          "endNumber": 19999,
+          "productPrice": 0.0093
+        },
+        {
+          "startNumber": 20000,
+          "endNumber": -1,
+          "productPrice": 0.0085
+        }
+      ]
+    },
+    {
+      "code": "C51118",
+      "mpn": "AP2112K-3.3TRG1",
+      "perBoard": 1,
+      "assemblyStock": 14046,
+      "otherWarehouseStock": 16769,
+      "checkedAt": "2026-10-22T02:20:45.732961+00:00",
+      "url": "https://jlcpcb.com/partdetail/C51118",
+      "quantities": {
+        "5": {
+          "installedRequired": 5,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 20,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 1,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 3,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 49,
+          "productPrice": 0.1773
+        },
+        {
+          "startNumber": 50,
+          "endNumber": 149,
+          "productPrice": 0.1405
+        },
+        {
+          "startNumber": 150,
+          "endNumber": 499,
+          "productPrice": 0.1227
+        },
+        {
+          "startNumber": 500,
+          "endNumber": 2999,
+          "productPrice": 0.1067
+        },
+        {
+          "startNumber": 3000,
+          "endNumber": 5999,
+          "productPrice": 0.0975
+        },
+        {
+          "startNumber": 6000,
+          "endNumber": -1,
+          "productPrice": 0.0949
+        }
+      ]
+    },
+    {
+      "code": "C5417011",
+      "mpn": "7312P0225A13LF",
+      "perBoard": 1,
+      "assemblyStock": 13,
+      "otherWarehouseStock": 19,
+      "checkedAt": "2026-10-22T02:20:46.512331+00:00",
+      "url": "https://jlcpcb.com/partdetail/C5417011",
+      "quantities": {
+        "5": {
+          "installedRequired": 5,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 20,
+          "shortfallBeforeAttrition": 7
+        },
+        "1": {
+          "installedRequired": 1,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 3,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 3.4272
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 29,
+          "productPrice": 3.3602
+        },
+        {
+          "startNumber": 30,
+          "endNumber": 99,
+          "productPrice": 3.3144
+        },
+        {
+          "startNumber": 100,
+          "endNumber": 101,
+          "productPrice": 3.2686
+        },
+        {
+          "startNumber": 102,
+          "endNumber": 103,
+          "productPrice": 3.2686
+        },
+        {
+          "startNumber": 104,
+          "endNumber": -1,
+          "productPrice": 3.2686
+        }
+      ]
+    },
+    {
+      "code": "C633309",
+      "mpn": "SEC1210/PV-UR2",
+      "perBoard": 1,
+      "assemblyStock": 57,
+      "otherWarehouseStock": 75,
+      "checkedAt": "2026-10-22T02:20:46.595773+00:00",
+      "url": "https://jlcpcb.com/partdetail/C633309",
+      "quantities": {
+        "5": {
+          "installedRequired": 5,
+          "shortfallBeforeAttrition": 0
+        },
+        "20": {
+          "installedRequired": 20,
+          "shortfallBeforeAttrition": 0
+        },
+        "1": {
+          "installedRequired": 1,
+          "shortfallBeforeAttrition": 0
+        },
+        "3": {
+          "installedRequired": 3,
+          "shortfallBeforeAttrition": 0
+        }
+      },
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 9.8466
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 29,
+          "productPrice": 8.5205
+        },
+        {
+          "startNumber": 30,
+          "endNumber": 99,
+          "productPrice": 7.7111
+        },
+        {
+          "startNumber": 100,
+          "endNumber": 101,
+          "productPrice": 7.0326
+        },
+        {
+          "startNumber": 102,
+          "endNumber": 103,
+          "productPrice": 7.0326
+        },
+        {
+          "startNumber": 104,
+          "endNumber": -1,
+          "productPrice": 7.0326
+        }
+      ]
+    }
+  ],
+  "financialEvidence": {
+    "currentSource": "../self-assembly/first-article-budget.json",
+    "componentBasketOneUSD": "17.62",
+    "componentBasketOneWithIllustrativeSparesUSD": "33.55",
+    "identifiedItemsWithLcdBareMiniACameraUSD": "56.09",
+    "identifiedItemsWithComponentSparesAndModulesUSD": "72.02",
+    "landedCostUSD": null,
+    "completeBasketAvailable": true,
+    "note": "Dated DigiKey stock observations cover all selected lines using TDK C2012X5R1E106K125AB. Landed cost and physical qualification remain pending.",
+    "bareBoardDimensionalCalculatorSource": "jlc-calculator-estimate.json"
+  },
+  "remainingGates": [
+    "Choose assembly route and equipment plan. Confirm checkout availability and costs; validate actual first-article parts.",
+    "Resolve central QFN via solder-wicking/inspection, USB blind shell-stake solder fill and socket heat limits. Evaluate one bottom reflow plus top-side local hand soldering for one article; supplier PCBA remains optional.",
+    "Qualify exact LCD and headers mechanically; manufacturer height descriptions disagree.",
+    "Measure 5V supply margin, LCD 3.3V LDO temperature/transients, reset/power cycles and UART/card voltage behavior.",
+    "Run firmware display, buttons, camera and selected smartcard transactions on first article.",
+    "Obtain itemized landed costs for complete usable units and compare JLC assembly with self-assembly including labor/yield.",
+    "Obtain supplier-approved rails/fiducials/tooling/depaneling for the capsule and include preparation costs; review U202/R606 silk legibility."
+  ],
+  "buildPlan": {
+    "firstArticlePopulated": 1,
+    "possibleTotalWorkingUnits": 3,
+    "repeatBuildRelease": "First-article measurements and functional tests pass with no unresolved failures.",
+    "bareBoardMinimum": "Supplier minimum may exceed populated quantity; leave extras bare.",
+    "assemblyRoute": "DigiKey/self-assembly or quoted small-run assembly; exposed-pad QFN/two-sided process must be established."
+  },
+  "firstArticleProcessReport": "first-article-process.json",
+  "lcdPowerBudget": "lcd-power-budget.json",
+  "bottomOnlyAssemblyOption": "bottom-only-option.json",
+  "fabricationCapabilityAudit": "fabrication-capability-audit.json",
+  "supersededBy": {
+    "release": "pill-preview-0.0.6-dev",
+    "boardSha256": "1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110",
+    "source": "readiness.json",
+    "reason": "J301 changed to -0190; customer power header J302 added. This audit retains its historical measurements and snapshots."
+  }
+}

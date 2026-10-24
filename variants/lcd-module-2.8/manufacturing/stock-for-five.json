@@ -144,18 +144,6 @@
     "reserved": false
   },
   {
-    "code": "C3151650",
-    "mpn": "USB4125-GF-A",
-    "refs": "J301",
-    "perBoard": 1,
-    "forFiveBoards": 5,
-    "assemblyStock": 762,
-    "minimumPurchase": 9,
-    "checkedAt": "2026-10-17T20:42:32.293090+00:00",
-    "library": "expand",
-    "reserved": false
-  },
-  {
     "code": "C49678",
     "mpn": "CC0805KRX7R9BB104",
     "refs": "C301,C601",
@@ -176,6 +164,18 @@
     "assemblyStock": 9153,
     "minimumPurchase": 67,
     "checkedAt": "2026-10-15T15:18:15.768938+00:00",
+    "library": "expand",
+    "reserved": false
+  },
+  {
+    "code": "C5246813",
+    "mpn": "USB4125-GF-A-0190",
+    "refs": "J301",
+    "perBoard": 1,
+    "forFiveBoards": 5,
+    "assemblyStock": 2592,
+    "minimumPurchase": 13,
+    "checkedAt": "2026-10-24T16:48:27.170963+00:00",
     "library": "expand",
     "reserved": false
   },

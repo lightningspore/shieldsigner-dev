@@ -24,7 +24,6 @@
   "dnp": [],
   "removedFromPcb": [
     "C401",
-    "J302",
     "J401",
     "Q401",
     "R401",
@@ -51,5 +50,15 @@
       "JP206"
     ]
   },
-  "backlight": "Always on by default; host CS/default firmware does not promise independent PWM"
+  "backlight": "Always on by default; host CS/default firmware does not promise independent PWM",
+  "powerHeader": {
+    "reference": "J302",
+    "pitchMm": 2.54,
+    "pins": {
+      "1": "+5V",
+      "2": "GND"
+    },
+    "assembly": "customer through-hole; optional population",
+    "sourceRule": "Use one regulated 5V input at a time; no source isolation or reverse-polarity protection."
+  }
 }

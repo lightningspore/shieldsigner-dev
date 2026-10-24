@@ -1,3 +1,11 @@
+# 0.0.6-dev — power entry
+
+- Select GCT USB4125-GF-A-0190 / C5246813, shared with DigiKey; same lands and 1.9 mm shell stakes.
+- Add J302, optional customer-fitted 1×2 2.54 mm power header at (105,120) mm, pin 1 +5V / pin 2 GND; 0.5 mm front track and one 0.6/0.3 mm via connect to the existing input rail.
+- Label 5V and GND on top silk. Use one regulated 5V input at a time; sources are directly connected with no isolation/reverse-polarity circuit.
+- Keep HOTHMI LCD geometry, card circuit and button positions. Factory population remains 35 SMT pieces / 17 lines. J302 adds two optional customer joints.
+- Supersedes 0.0.5-dev Gerbers/BOM/CPL for ordering; old USB-omitting JLC quote must not be ordered as the new revision.
+
 # Native KiCad variant changes
 
 The baseline is upstream commit `efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f`; file hashes are recorded in provenance.json. The unchanged source PCB and schematics remain in ../reference/.

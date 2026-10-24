@@ -1,5 +1,5 @@
 {
-  "modelsVerified": 21,
+  "modelsVerified": 22,
   "assembledReferencesWithModels": [
     "H701",
     "SW503",
@@ -12,6 +12,7 @@
     "SW502",
     "SW508",
     "H704",
+    "J302",
     "C702",
     "SW507",
     "U701",

@@ -60,7 +60,7 @@ Route the matching Luckfox ribbon with power off, away from screw tips and the c
 6. Lower the bezel onto the base without trapping the ribbon. Check every button before installing the two M2.5 × 30 closure screws. Fit the rear service cover with four M2 × 6 countersunk screws.
 7. Confirm card insertion, USB connections, microSD service and a clear camera image. Run the [modular bring-up procedure](MODULAR-ASSEMBLY.md) with disposable test data.
 
-Revision 0.0.5-dev uses the [C&K switch drawing](../reference/pdfs/CK-PTS636.pdf): 2.5 ±0.2 mm height and nominal 0.25 mm travel. The SCAD measured-height parameter sets a 0.15 mm rest gap, with a 0.40 mm stop. Its conservative 2.7 mm default avoids preload but shorter switches may not actuate: measure each soldered switch, generate the matching plunger with `-D button_switch_height=...`, and test the coupon. Actual print, solder and travel tolerances still require adjustment. The published 0.0.1-dev enclosure belongs to the older PCB; do not mix release files.
+Revision 0.0.6-dev uses the [C&K switch drawing](../reference/pdfs/CK-PTS636.pdf): 2.5 ±0.2 mm height and nominal 0.25 mm travel. The SCAD measured-height parameter sets a 0.15 mm rest gap, with a 0.40 mm stop. Its conservative 2.7 mm default avoids preload but shorter switches may not actuate: measure each soldered switch, generate the matching plunger with `-D button_switch_height=...`, and test the coupon. Actual print, solder and travel tolerances still require adjustment. The published 0.0.1-dev enclosure belongs to the older PCB; do not mix release files.
 
 ## Rebuild and review
 
@@ -71,3 +71,5 @@ For a fresh design checkout, run `mise run kicad:setup`, `mise run variant:lcd:r
 `enclosure/print_plate.py` builds the portable 3MF. `enclosure/slice.py` resolves the full official Bambu profile inheritance, slices it and rejects a fallback bed size, missing objects or enabled supports. Generated files live in ignored `dist/enclosure/`; portable source remains in `enclosure/`.
 
 The hardware collision check retains closed native solids and reserves conservative bounds for open supplier-model surfaces. It does not prove physical print tolerances, thermal behavior, cable durability or switch feel. Confirm those on the first assembly before treating the case as qualified hardware.
+
+The 0.0.6-dev PCB adds an optional internal J302 power header. The existing case has no dedicated wire exit for it; use USB-C for the enclosed build unless you provide a suitable wire opening and strain relief. Use one regulated 5V input at a time.

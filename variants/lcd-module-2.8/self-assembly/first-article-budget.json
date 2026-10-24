@@ -1,0 +1,595 @@
+{
+  "currency": "USD",
+  "pricingSource": "pricing-current.json",
+  "decision": "First article only before repeat builds; complete landed cost remains unquoted.",
+  "scenarios": [
+    {
+      "populatedBoards": 1,
+      "sparesIncluded": false,
+      "partsSubtotalUSD": "17.58",
+      "allPartsAvailable": true,
+      "lines": [
+        {
+          "mpn": "CC0805JRNPO9BN330",
+          "installed": 2,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.17",
+          "extensionUSD": "0.34",
+          "publicStock": 61947,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/CC0805JRNPO9BN330/302839"
+        },
+        {
+          "mpn": "CC0805KRX7R9BB104",
+          "installed": 2,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.18",
+          "extensionUSD": "0.36",
+          "publicStock": 3205926,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/CC0805KRX7R9BB104/303050"
+        },
+        {
+          "mpn": "C2012X5R1E106K125AB",
+          "installed": 4,
+          "purchaseQuantity": 4,
+          "unitUSD": "0.34",
+          "extensionUSD": "1.36",
+          "publicStock": 1000,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/tdk/C2012X5R1E106K125AB/2443462"
+        },
+        {
+          "mpn": "C0805C105K5RACTU",
+          "installed": 3,
+          "purchaseQuantity": 3,
+          "unitUSD": "1.38",
+          "extensionUSD": "4.14",
+          "publicStock": 123442,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/kemet/C0805C105K5RACTU/3317615"
+        },
+        {
+          "mpn": "RC0805FR-07100KL",
+          "installed": 2,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.10",
+          "extensionUSD": "0.20",
+          "publicStock": 511749,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100KL/727544"
+        },
+        {
+          "mpn": "RC0805FR-07100RL",
+          "installed": 2,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.10",
+          "extensionUSD": "0.20",
+          "publicStock": 1043678,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100RL/727543"
+        },
+        {
+          "mpn": "RC0805FR-0710KL",
+          "installed": 2,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.10",
+          "extensionUSD": "0.20",
+          "publicStock": 1305909,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0710KL/727535"
+        },
+        {
+          "mpn": "RC0805FR-0747RL",
+          "installed": 1,
+          "purchaseQuantity": 1,
+          "unitUSD": "0.10",
+          "extensionUSD": "0.10",
+          "publicStock": 62545,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0747RL/730919"
+        },
+        {
+          "mpn": "CR0805-FX-5101ELF",
+          "installed": 2,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.10",
+          "extensionUSD": "0.20",
+          "publicStock": 23866,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/bourns-inc/CR0805-FX-5101ELF/3784995"
+        },
+        {
+          "mpn": "RC0805FR-07560RL",
+          "installed": 1,
+          "purchaseQuantity": 1,
+          "unitUSD": "0.10",
+          "extensionUSD": "0.10",
+          "publicStock": 34258,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07560RL/728036"
+        },
+        {
+          "mpn": "APT2012LZGCK",
+          "installed": 1,
+          "purchaseQuantity": 1,
+          "unitUSD": "0.59",
+          "extensionUSD": "0.59",
+          "publicStock": 74325,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/kingbright/APT2012LZGCK/5177440"
+        },
+        {
+          "mpn": "SMF5.0CA",
+          "installed": 1,
+          "purchaseQuantity": 1,
+          "unitUSD": "0.64",
+          "extensionUSD": "0.64",
+          "publicStock": 11152,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/littelfuse-inc/SMF5-0CA/11206223"
+        },
+        {
+          "mpn": "AP2112K-3.3TRG1",
+          "installed": 1,
+          "purchaseQuantity": 1,
+          "unitUSD": "0.28",
+          "extensionUSD": "0.28",
+          "publicStock": 423796,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/diodes-incorporated/AP2112K-3-3TRG1/4470746"
+        },
+        {
+          "mpn": "7312P0225A13LF",
+          "installed": 1,
+          "purchaseQuantity": 1,
+          "unitUSD": "2.94",
+          "extensionUSD": "2.94",
+          "publicStock": 3129,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/amphenol-cs-fci/7312P0225A13LF/1527047"
+        },
+        {
+          "mpn": "SEC1210/PV-UR2",
+          "installed": 1,
+          "purchaseQuantity": 1,
+          "unitUSD": "3.32",
+          "extensionUSD": "3.32",
+          "publicStock": 546,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/microchip-technology/SEC1210-PV-UR2/6192958"
+        },
+        {
+          "mpn": "PTS636SK25SMTR LFS",
+          "installed": 8,
+          "purchaseQuantity": 8,
+          "unitUSD": "0.25",
+          "extensionUSD": "2.00",
+          "publicStock": 20459,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/c-k/PTS636SK25SMTR-LFS/10071735"
+        },
+        {
+          "mpn": "USB4125-GF-A-0190",
+          "installed": 1,
+          "purchaseQuantity": 1,
+          "unitUSD": "0.61",
+          "extensionUSD": "0.61",
+          "publicStock": 27021,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/gct/USB4125-GF-A-0190/14559038"
+        }
+      ]
+    },
+    {
+      "populatedBoards": 1,
+      "sparesIncluded": true,
+      "partsSubtotalUSD": "33.47",
+      "allPartsAvailable": true,
+      "lines": [
+        {
+          "mpn": "CC0805JRNPO9BN330",
+          "installed": 2,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.093",
+          "extensionUSD": "0.93",
+          "publicStock": 61947,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/CC0805JRNPO9BN330/302839"
+        },
+        {
+          "mpn": "CC0805KRX7R9BB104",
+          "installed": 2,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.098",
+          "extensionUSD": "0.98",
+          "publicStock": 3205926,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/CC0805KRX7R9BB104/303050"
+        },
+        {
+          "mpn": "C2012X5R1E106K125AB",
+          "installed": 4,
+          "purchaseQuantity": 5,
+          "unitUSD": "0.34",
+          "extensionUSD": "1.70",
+          "publicStock": 1000,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/tdk/C2012X5R1E106K125AB/2443462"
+        },
+        {
+          "mpn": "C0805C105K5RACTU",
+          "installed": 3,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.883",
+          "extensionUSD": "8.83",
+          "publicStock": 123442,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/kemet/C0805C105K5RACTU/3317615"
+        },
+        {
+          "mpn": "RC0805FR-07100KL",
+          "installed": 2,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.034",
+          "extensionUSD": "0.34",
+          "publicStock": 511749,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100KL/727544"
+        },
+        {
+          "mpn": "RC0805FR-07100RL",
+          "installed": 2,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.034",
+          "extensionUSD": "0.34",
+          "publicStock": 1043678,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100RL/727543"
+        },
+        {
+          "mpn": "RC0805FR-0710KL",
+          "installed": 2,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.034",
+          "extensionUSD": "0.34",
+          "publicStock": 1305909,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0710KL/727535"
+        },
+        {
+          "mpn": "RC0805FR-0747RL",
+          "installed": 1,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.034",
+          "extensionUSD": "0.34",
+          "publicStock": 62545,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0747RL/730919"
+        },
+        {
+          "mpn": "CR0805-FX-5101ELF",
+          "installed": 2,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.037",
+          "extensionUSD": "0.37",
+          "publicStock": 23866,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/bourns-inc/CR0805-FX-5101ELF/3784995"
+        },
+        {
+          "mpn": "RC0805FR-07560RL",
+          "installed": 1,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.034",
+          "extensionUSD": "0.34",
+          "publicStock": 34258,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07560RL/728036"
+        },
+        {
+          "mpn": "APT2012LZGCK",
+          "installed": 1,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.59",
+          "extensionUSD": "1.18",
+          "publicStock": 74325,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/kingbright/APT2012LZGCK/5177440"
+        },
+        {
+          "mpn": "SMF5.0CA",
+          "installed": 1,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.64",
+          "extensionUSD": "1.28",
+          "publicStock": 11152,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/littelfuse-inc/SMF5-0CA/11206223"
+        },
+        {
+          "mpn": "AP2112K-3.3TRG1",
+          "installed": 1,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.28",
+          "extensionUSD": "0.56",
+          "publicStock": 423796,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/diodes-incorporated/AP2112K-3-3TRG1/4470746"
+        },
+        {
+          "mpn": "7312P0225A13LF",
+          "installed": 1,
+          "purchaseQuantity": 2,
+          "unitUSD": "2.94",
+          "extensionUSD": "5.88",
+          "publicStock": 3129,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/amphenol-cs-fci/7312P0225A13LF/1527047"
+        },
+        {
+          "mpn": "SEC1210/PV-UR2",
+          "installed": 1,
+          "purchaseQuantity": 2,
+          "unitUSD": "3.32",
+          "extensionUSD": "6.64",
+          "publicStock": 546,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/microchip-technology/SEC1210-PV-UR2/6192958"
+        },
+        {
+          "mpn": "PTS636SK25SMTR LFS",
+          "installed": 8,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.22",
+          "extensionUSD": "2.20",
+          "publicStock": 20459,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/c-k/PTS636SK25SMTR-LFS/10071735"
+        },
+        {
+          "mpn": "USB4125-GF-A-0190",
+          "installed": 1,
+          "purchaseQuantity": 2,
+          "unitUSD": "0.61",
+          "extensionUSD": "1.22",
+          "publicStock": 27021,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/gct/USB4125-GF-A-0190/14559038"
+        }
+      ]
+    },
+    {
+      "populatedBoards": 3,
+      "sparesIncluded": false,
+      "partsSubtotalUSD": "45.43",
+      "allPartsAvailable": true,
+      "lines": [
+        {
+          "mpn": "CC0805JRNPO9BN330",
+          "installed": 6,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.093",
+          "extensionUSD": "0.93",
+          "publicStock": 61947,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/CC0805JRNPO9BN330/302839"
+        },
+        {
+          "mpn": "CC0805KRX7R9BB104",
+          "installed": 6,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.098",
+          "extensionUSD": "0.98",
+          "publicStock": 3205926,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/CC0805KRX7R9BB104/303050"
+        },
+        {
+          "mpn": "C2012X5R1E106K125AB",
+          "installed": 12,
+          "purchaseQuantity": 12,
+          "unitUSD": "0.202",
+          "extensionUSD": "2.42",
+          "publicStock": 1000,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/tdk/C2012X5R1E106K125AB/2443462"
+        },
+        {
+          "mpn": "C0805C105K5RACTU",
+          "installed": 9,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.883",
+          "extensionUSD": "8.83",
+          "publicStock": 123442,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/kemet/C0805C105K5RACTU/3317615"
+        },
+        {
+          "mpn": "RC0805FR-07100KL",
+          "installed": 6,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.034",
+          "extensionUSD": "0.34",
+          "publicStock": 511749,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100KL/727544"
+        },
+        {
+          "mpn": "RC0805FR-07100RL",
+          "installed": 6,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.034",
+          "extensionUSD": "0.34",
+          "publicStock": 1043678,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100RL/727543"
+        },
+        {
+          "mpn": "RC0805FR-0710KL",
+          "installed": 6,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.034",
+          "extensionUSD": "0.34",
+          "publicStock": 1305909,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0710KL/727535"
+        },
+        {
+          "mpn": "RC0805FR-0747RL",
+          "installed": 3,
+          "purchaseQuantity": 3,
+          "unitUSD": "0.10",
+          "extensionUSD": "0.30",
+          "publicStock": 62545,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0747RL/730919"
+        },
+        {
+          "mpn": "CR0805-FX-5101ELF",
+          "installed": 6,
+          "purchaseQuantity": 10,
+          "unitUSD": "0.037",
+          "extensionUSD": "0.37",
+          "publicStock": 23866,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/bourns-inc/CR0805-FX-5101ELF/3784995"
+        },
+        {
+          "mpn": "RC0805FR-07560RL",
+          "installed": 3,
+          "purchaseQuantity": 3,
+          "unitUSD": "0.10",
+          "extensionUSD": "0.30",
+          "publicStock": 34258,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07560RL/728036"
+        },
+        {
+          "mpn": "APT2012LZGCK",
+          "installed": 3,
+          "purchaseQuantity": 3,
+          "unitUSD": "0.59",
+          "extensionUSD": "1.77",
+          "publicStock": 74325,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/kingbright/APT2012LZGCK/5177440"
+        },
+        {
+          "mpn": "SMF5.0CA",
+          "installed": 3,
+          "purchaseQuantity": 3,
+          "unitUSD": "0.64",
+          "extensionUSD": "1.92",
+          "publicStock": 11152,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/littelfuse-inc/SMF5-0CA/11206223"
+        },
+        {
+          "mpn": "AP2112K-3.3TRG1",
+          "installed": 3,
+          "purchaseQuantity": 3,
+          "unitUSD": "0.28",
+          "extensionUSD": "0.84",
+          "publicStock": 423796,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/diodes-incorporated/AP2112K-3-3TRG1/4470746"
+        },
+        {
+          "mpn": "7312P0225A13LF",
+          "installed": 3,
+          "purchaseQuantity": 3,
+          "unitUSD": "2.94",
+          "extensionUSD": "8.82",
+          "publicStock": 3129,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/amphenol-cs-fci/7312P0225A13LF/1527047"
+        },
+        {
+          "mpn": "SEC1210/PV-UR2",
+          "installed": 3,
+          "purchaseQuantity": 3,
+          "unitUSD": "3.32",
+          "extensionUSD": "9.96",
+          "publicStock": 546,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/microchip-technology/SEC1210-PV-UR2/6192958"
+        },
+        {
+          "mpn": "PTS636SK25SMTR LFS",
+          "installed": 24,
+          "purchaseQuantity": 25,
+          "unitUSD": "0.20560",
+          "extensionUSD": "5.14",
+          "publicStock": 20459,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/c-k/PTS636SK25SMTR-LFS/10071735"
+        },
+        {
+          "mpn": "USB4125-GF-A-0190",
+          "installed": 3,
+          "purchaseQuantity": 3,
+          "unitUSD": "0.61",
+          "extensionUSD": "1.83",
+          "publicStock": 27021,
+          "stockSufficient": true,
+          "url": "https://www.digikey.com/en/products/detail/gct/USB4125-GF-A-0190/14559038"
+        }
+      ]
+    }
+  ],
+  "sparesPolicy": "Illustrative only: at least 10 and two extras per passive line; two extra switches; one extra per other fitted line. Price-break quantity increases are shown. Not a purchase instruction.",
+  "unquotedCostsUSD": {
+    "barePcbMinimumOrder": null,
+    "stencil": null,
+    "pasteFluxAndConsumables": null,
+    "headersAndMechanicalHardware": null,
+    "microSd": null,
+    "enclosure": null,
+    "testCard": null,
+    "shipping": null,
+    "taxAndTariffs": null,
+    "missingAssemblyAndTestEquipment": null,
+    "outsourcedAssemblyIfChosen": null,
+    "laborAndRework": null
+  },
+  "totalLandedCostUSD": null,
+  "notes": [
+    "All selected lines have dated public stock observations; confirm inventory and checkout charges before ordering.",
+    "A three-board parts basket does not authorize populating repeats before first-article acceptance.",
+    "No yield assumption, equipment ownership, free labor or shipping subsidy is assumed.",
+    "Buying a PCB minimum does not require populating all delivered boards.",
+    "Compare full self-assembly against a bottom-only assembly quote and full PCBA including setup, minimums and freight.",
+    "Identified-items subtotals include selected LCD, bare Mini A and low-profile camera, but omit remaining unquoted costs."
+  ],
+  "systemPricingSource": "system-pricing-current.json",
+  "identifiedModuleSubtotalUSD": "38.47",
+  "oneArticleIdentifiedItemsUSD": "56.05",
+  "oneArticleWithSparesIdentifiedItemsUSD": "71.94",
+  "carrierComponentsPlusLcdUSD": "33.05",
+  "comparison": {
+    "existingHatWithLcdBaseUSD": "36.00",
+    "existingHatWithLcdSocketOptionUSD": "38.00",
+    "note": "Different hardware/enclosure from this pill variant. Listing title says Luckfox but copied description says Raspberry Pi; confirm exact compatibility and what the connection options include before purchasing. Not a qualified drop-in replacement for this project.",
+    "decision": "Custom one-off production has no demonstrated cost saving over buying an existing hat. Justification is the desired pill/module construction and custom design, subject to an acceptable quoted first-article spend."
+  },
+  "dimensionalBarePcbEstimateSource": "../manufacturing/jlc-calculator-estimate.json",
+  "partialCashOutlayExamples": [
+    {
+      "finish": "LeadFree HASL",
+      "bareBoardsPurchased": 5,
+      "populatedBoardsPlanned": 1,
+      "bareBoardBatchAndEstimatedJlcFreightUSD": "20.57",
+      "identifiedComponentsModulesAndEstimatedBareBoardShipmentUSD": "76.62",
+      "note": "Partial cash outlay for one article, not divided by five. No Gerber validation; excludes assembly/stencil, other suppliers shipping/taxes, headers/hardware, SD/card/case, tools/labor. Slower shipping eligibility must be rechecked."
+    },
+    {
+      "finish": "ENIG (calculator default gold option)",
+      "bareBoardsPurchased": 5,
+      "populatedBoardsPlanned": 1,
+      "bareBoardBatchAndEstimatedJlcFreightUSD": "37.07",
+      "identifiedComponentsModulesAndEstimatedBareBoardShipmentUSD": "93.12",
+      "note": "Partial cash outlay for one article, not divided by five. No Gerber validation; excludes assembly/stencil, other suppliers shipping/taxes, headers/hardware, SD/card/case, tools/labor. Slower shipping eligibility must be rechecked."
+    }
+  ]
+}

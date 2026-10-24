@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="section cost-page">
+  <p class="eyebrow">EIGHT-PIN PILL · 0.0.6-dev · USD</p>
+  <h1 class="page-title">What does it cost?</h1>
+  <p class="lede">Start with one working prototype. The priced items add up to <strong>${{ '%.2f'|format(cost_total) }}</strong>. Assembly and several finishing costs are still unquoted.</p>
+  <p class="caption">Pricing observations: October 22, 2026. Public stock and prices can change. No order has been placed.</p>
+  <div class="cost-breakdown">
+    <figure class="cost-figure">
+      <svg class="cost-pie" viewBox="0 0 240 240" role="img" aria-labelledby="cost-chart-title cost-chart-desc">
+        <title id="cost-chart-title">Priced prototype items: ${{ '%.2f'|format(cost_total) }}</title>
+        <desc id="cost-chart-desc">{% for row in cost_rows %}{{ row.label }}: ${{ '%.2f'|format(row.amount) }}. {% endfor %}Unquoted costs are excluded. Values are also in the adjacent table.</desc>
+        {% for row in cost_rows %}<circle cx="120" cy="120" r="85" fill="none" stroke="{{ row.color }}" stroke-width="65" pathLength="100" stroke-dasharray="{{ row.percent }} {{ 100-row.percent }}" stroke-dashoffset="{{ -row.offset }}" transform="rotate(-90 120 120)"><title>{{ row.label }}: ${{ '%.2f'|format(row.amount) }} ({{ '%.1f'|format(row.percent) }}%)</title></circle>{% endfor %}
+        <text x="120" y="118" text-anchor="middle" class="cost-total">${{ '%.2f'|format(cost_total) }}</text>
+        <text x="120" y="139" text-anchor="middle" class="cost-total-note">PRICED ITEMS</text>
+      </svg>
+      <figcaption class="caption">Pie shows priced items only.<br>Unknown costs have no slice; they are not zero.</figcaption>
+    </figure>
+    <div class="cost-table-wrap"><table class="cost-table"><caption>One prototype · no spare components</caption><thead><tr><th scope="col">Item</th><th scope="col">USD</th></tr></thead><tbody>
+      {% for row in cost_rows %}<tr><th scope="row"><span class="cost-swatch" style="background:{{ row.color }}"></span>{{ row.label }}</th><td>${{ '%.2f'|format(row.amount) }}</td></tr>{% endfor %}
+      <tr class="cost-sum"><th scope="row">Priced subtotal</th><td>${{ '%.2f'|format(cost_total) }}</td></tr>
+    </tbody></table><p class="caption">Includes the whole five-board bare-PCB minimum, with only one board populated. LCD, camera and Luckfox are separate modules. This is a DIY parts basket, not a factory assembly quote.</p></div>
+  </div>
+  <div class="cost-open"><h2>What still needs a price?</h2><p>SMT assembly or DIY soldering supplies and equipment; headers and mounting hardware; microSD; smartcard; enclosure; other suppliers’ shipping; taxes and tariffs; labor and rework.</p><p><strong>The all-in total is not established yet.</strong> ENIG instead of lead-free HASL adds $16.50 to this bare-board batch estimate. PCB dimensions were entered in JLC’s calculator; Gerbers have not yet received supplier review.</p></div>
+  <h2>Factory assembly: five boards</h2>
+  <p>The October 24 JLC quote for revision 0.0.6-dev is <strong>$195.54 for five boards ($39.11 each)</strong>, before shipping and tax. It includes the bare PCBs and all 35 SMT placements per board, including USB-C, plus setup, stencil and loading fees. LCD, Luckfox, camera, customer-soldered headers and other finishing parts are separate. The pie above describes the DIY prototype basket, a different purchasing route.</p>
+  <h2>One first article, then a small batch</h2>
+  <div class="cost-table-wrap"><table class="cost-table"><thead><tr><th scope="col">PCB electronic parts only</th><th scope="col">Purchase subtotal</th></tr></thead><tbody>{% for scenario in budget.scenarios %}<tr><th scope="row">{{ scenario.populatedBoards }} board{% if scenario.populatedBoards != 1 %}s{% endif %}{% if scenario.sparesIncluded %} + illustrative spares{% endif %}</th><td>${{ scenario.partsSubtotalUSD }}</td></tr>{% endfor %}</tbody></table></div>
+  <p>These figures exclude modules and every other build cost. Quantity breaks can mean buying a few extras. Prove the first article before populating the remaining boards.</p>
+  <h2>What changes at 100 units?</h2>
+  <p>PCB and assembly setup fees spread across the batch, components receive quantity discounts, and freight is shared. Bulk quotes for the LCD, Luckfox and camera could also reduce the largest portion of the parts budget. We do not yet have a reviewed 100-unit production quote.</p>
+  <p>For example, four 10 µF capacitors cost $1.36 at single-piece pricing. Buying 500 of the selected TDK part costs $51.01: enough for 100 boards and 100 spares, or about $0.51 per board in capacitor purchases. That is a DigiKey sourcing example; JLC assembly uses its separate BOM and catalog pricing.</p>
+  <div class="actions"><a class="button" href="/guides/digikey-bom/">DigiKey BOM →</a><a href="/guides/self-assembly/">Assembly & detailed assumptions</a><a href="/files/variants/lcd-module-2.8/self-assembly/first-article-budget.json">Download cost data</a></div>
+</section>
+{% endblock %}

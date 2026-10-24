@@ -1,0 +1,55 @@
+{
+  "boardSha256": "1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110",
+  "qualification": "Geometry/process review only; no physical assembly or yield evidence.",
+  "smtPiecesBySide": {
+    "B.Cu": 24,
+    "F.Cu": 11
+  },
+  "qfn": {
+    "reference": "U601",
+    "pitchMm": 0.65,
+    "exposedCopperAreaMm2": 11.559999999999999,
+    "pasteWindowCount": 4,
+    "pasteAreaMm2": 7.292997579680057,
+    "pasteCoveragePercent": 63.088214357093925,
+    "minimumPerimeterApertureAreaToWallAreaByStencilThicknessMm": {
+      "0.1": 1.1943472861742257,
+      "0.127": 0.9404309339954534,
+      "0.15": 0.7962315241161506
+    },
+    "centralVias": [
+      {
+        "atMm": [
+          135.0,
+          86.3
+        ],
+        "diameterMm": 0.6,
+        "drillMm": 0.3,
+        "note": "Native through-via; no filled/capped process established."
+      }
+    ],
+    "openQuestions": [
+      "Choose stencil thickness and paste using measured print/reflow results.",
+      "Review solder wicking/voiding at the central through-via; mask tenting is not filling/capping.",
+      "Do not simply delete the via: via-removal-experiment.json records a native connectivity regression.",
+      "Establish hidden-pad inspection and rework capability; a working UART alone does not inspect the pad."
+    ]
+  },
+  "firstArticleProcessCandidate": {
+    "bottom": "Reflow the 24 bottom-side parts once with the component side up, subject to every part/paste thermal limits.",
+    "top": "Then hand-solder the eight accessible switches, SOT-25 LDO and two capacitors with local heat; verify access on a dry fit.",
+    "benefit": "Avoids requiring a second full-board reflow and inverted heavy socket retention for a one-off build.",
+    "notYetProven": "Operator/equipment, socket heat limits, USB shell solder fill and actual print/reflow profile."
+  },
+  "sources": [
+    {
+      "path": "reference/pdfs/Microchip-AN2089-QFN-assembly.pdf",
+      "url": "https://ww1.microchip.com/downloads/en/Appnotes/00002089A.pdf",
+      "scope": "Generic package mounting/profile/moisture handling, not SEC1210-specific process approval."
+    },
+    {
+      "path": "reference/pdfs/GCT-USB4125.pdf",
+      "scope": "Drawing page 1: default shell stake 1.00 mm, alternative 1.90 mm; current PCB 1.60 mm."
+    }
+  ]
+}

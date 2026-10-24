@@ -1,0 +1,23 @@
+DRAFT QUOTE REQUEST - NOT AN ORDER OR PRODUCTION RELEASE
+ShieldSigner 0.0.6-dev, five assembled boards
+PCB SHA-256: 1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110
+
+160 x 70 mm capsule; two-layer FR4, 1.6 mm, 1 oz copper.
+35 SMT placements / 17 catalog lines, both sides.
+Use only the matching Gerbers, bom-jlcpcb.csv and cpl-jlcpcb.csv.
+J301 is GCT USB4125-GF-A-0190 / C5246813 with 1.90 mm shell stakes.
+J302 is CUSTOMER-FITTED: do not factory assemble this 1x2 2.54 mm header.
+LCD, Luckfox, camera, customer headers and mounting hardware are excluded.
+SEC1210/PV-UR2 firmware suffix must not be substituted.
+
+Please review rails/fiducials/tooling and depaneling for the capsule; proposed
+rails must not obstruct USB/card access or alter the finished board outline.
+Review the QFN exposed-pad paste and central via; do not simply remove the via.
+Confirm USB shell-slot soldering, socket reflow constraints, pin 1 and polarity
+of all parts. Preserve the CPL datum and do not mirror bottom X coordinates.
+Return itemized PCB/parts/setup/loading/stencil/assembly/freight/tax charges.
+
+The 0.0.5-dev quote omitted an unavailable USB connector and is superseded.
+Native checks do not establish physical fit, powered operation or factory DFM.
+Validate the first complete device before completing or using the remaining units.
+No purchase, inventory reservation or production authorization is given by this draft.

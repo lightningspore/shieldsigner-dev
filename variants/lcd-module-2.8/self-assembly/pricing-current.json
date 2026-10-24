@@ -1,0 +1,376 @@
+{
+  "currency": "USD",
+  "method": "Public DigiKey US product pages; observations can be stale and require cart verification. Prices are cut-tape/tray, no Digi-Reel fees.",
+  "boardRevision": "0.0.6-dev",
+  "parts": [
+    {
+      "mpn": "CC0805JRNPO9BN330",
+      "url": "https://www.digikey.com/en/products/detail/yageo/CC0805JRNPO9BN330/302839",
+      "perBoard": 2,
+      "publicStock": 61947,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".17"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".093"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819780+00:00"
+    },
+    {
+      "mpn": "CC0805KRX7R9BB104",
+      "url": "https://www.digikey.com/en/products/detail/yageo/CC0805KRX7R9BB104/303050",
+      "perBoard": 2,
+      "publicStock": 3205926,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".18"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".098"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819914+00:00"
+    },
+    {
+      "mpn": "C2012X5R1E106K125AB",
+      "url": "https://www.digikey.com/en/products/detail/tdk/C2012X5R1E106K125AB/2443462",
+      "perBoard": 4,
+      "publicStock": 1000,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".34"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".202"
+        },
+        {
+          "quantity": 50,
+          "unitUSD": ".14740"
+        },
+        {
+          "quantity": 100,
+          "unitUSD": ".13050"
+        },
+        {
+          "quantity": 500,
+          "unitUSD": ".10202"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22"
+    },
+    {
+      "mpn": "C0805C105K5RACTU",
+      "url": "https://www.digikey.com/en/products/detail/kemet/C0805C105K5RACTU/3317615",
+      "perBoard": 3,
+      "publicStock": 123442,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": "1.38"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".883"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819920+00:00"
+    },
+    {
+      "mpn": "RC0805FR-07100KL",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100KL/727544",
+      "perBoard": 2,
+      "publicStock": 511749,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".10"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".034"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819922+00:00"
+    },
+    {
+      "mpn": "RC0805FR-07100RL",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07100RL/727543",
+      "perBoard": 2,
+      "publicStock": 1043678,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".10"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".034"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819923+00:00"
+    },
+    {
+      "mpn": "RC0805FR-0710KL",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0710KL/727535",
+      "perBoard": 2,
+      "publicStock": 1305909,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".10"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".034"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819925+00:00"
+    },
+    {
+      "mpn": "RC0805FR-0747RL",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-0747RL/730919",
+      "perBoard": 1,
+      "publicStock": 62545,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".10"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".034"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819926+00:00"
+    },
+    {
+      "mpn": "CR0805-FX-5101ELF",
+      "url": "https://www.digikey.com/en/products/detail/bourns-inc/CR0805-FX-5101ELF/3784995",
+      "perBoard": 2,
+      "publicStock": 23866,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".10"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".037"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819928+00:00"
+    },
+    {
+      "mpn": "RC0805FR-07560RL",
+      "url": "https://www.digikey.com/en/products/detail/yageo/RC0805FR-07560RL/728036",
+      "perBoard": 1,
+      "publicStock": 34258,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".10"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".034"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819929+00:00"
+    },
+    {
+      "mpn": "APT2012LZGCK",
+      "url": "https://www.digikey.com/en/products/detail/kingbright/APT2012LZGCK/5177440",
+      "perBoard": 1,
+      "publicStock": 74325,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".59"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".407"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819931+00:00"
+    },
+    {
+      "mpn": "SMF5.0CA",
+      "url": "https://www.digikey.com/en/products/detail/littelfuse-inc/SMF5-0CA/11206223",
+      "perBoard": 1,
+      "publicStock": 11152,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".64"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".395"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819932+00:00"
+    },
+    {
+      "mpn": "AP2112K-3.3TRG1",
+      "url": "https://www.digikey.com/en/products/detail/diodes-incorporated/AP2112K-3-3TRG1/4470746",
+      "perBoard": 1,
+      "publicStock": 423796,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".28"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".191"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819934+00:00"
+    },
+    {
+      "mpn": "7312P0225A13LF",
+      "url": "https://www.digikey.com/en/products/detail/amphenol-cs-fci/7312P0225A13LF/1527047",
+      "perBoard": 1,
+      "publicStock": 3129,
+      "packaging": "Tray",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": "2.94"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": "2.497"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819938+00:00"
+    },
+    {
+      "mpn": "SEC1210/PV-UR2",
+      "url": "https://www.digikey.com/en/products/detail/microchip-technology/SEC1210-PV-UR2/6192958",
+      "perBoard": 1,
+      "publicStock": 546,
+      "packaging": "Tray",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": "3.32"
+        },
+        {
+          "quantity": 25,
+          "unitUSD": "2.77"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819941+00:00"
+    },
+    {
+      "mpn": "PTS636SK25SMTR LFS",
+      "url": "https://www.digikey.com/en/products/detail/c-k/PTS636SK25SMTR-LFS/10071735",
+      "perBoard": 8,
+      "publicStock": 20459,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".25"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".22"
+        },
+        {
+          "quantity": 25,
+          "unitUSD": ".20560"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-22T02:27:51.819943+00:00"
+    },
+    {
+      "mpn": "USB4125-GF-A-0190",
+      "url": "https://www.digikey.com/en/products/detail/gct/USB4125-GF-A-0190/14559038",
+      "perBoard": 1,
+      "publicStock": 27021,
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": "0.61"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": "0.518"
+        },
+        {
+          "quantity": 25,
+          "unitUSD": "0.4852"
+        },
+        {
+          "quantity": 50,
+          "unitUSD": "0.4618"
+        },
+        {
+          "quantity": 100,
+          "unitUSD": "0.4398"
+        }
+      ],
+      "availability": "public_stock_observed_not_reserved",
+      "observedAt": "2026-10-24"
+    }
+  ],
+  "excluded": [
+    "PCB",
+    "LCD",
+    "camera",
+    "Luckfox",
+    "headers",
+    "mechanical hardware",
+    "smartcard",
+    "shipping",
+    "tax",
+    "tariffs",
+    "spares",
+    "stencil",
+    "paste/flux",
+    "assembly/rework/inspection equipment",
+    "labor"
+  ],
+  "purchasableCompleteBom": true
+}

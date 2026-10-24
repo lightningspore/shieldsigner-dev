@@ -1,32 +1,32 @@
 {
-  "version": "0.0.2-dev",
+  "version": "0.0.3-dev",
   "status": "Digital prototype; physical first fit pending",
-  "boardSha256": "d9ff1151deb55c36f355f1967cd5b3d3d09a6c394cdcebefc71823b60bdf0cdf",
+  "boardSha256": "1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110",
   "scadSha256": "cee8d4db187d5d045a72791ef1a13cca657f7d937ecb13df1cda83031f2760af",
   "assets": [
     {
       "name": "shieldsigner-enclosure-print.zip",
-      "size": 1097844,
-      "sha256": "988d79f79b0772a22048652ac4b5ddb9c75a9a01fb7fa5cf491cd604ec59022f",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.2-dev/shieldsigner-enclosure-print.zip"
+      "size": 1097964,
+      "sha256": "8a230f41578e9693e1f0e310043b626f51ad0f43d269d4fceacba7ba80375633",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.3-dev/shieldsigner-enclosure-print.zip"
     },
     {
       "name": "shieldsigner-enclosure-assembled.glb",
-      "size": 5629644,
-      "sha256": "3ce96a87a24565949b1361f9be945064c602c33a46c4b37676e1f52e15282f2c",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.2-dev/shieldsigner-enclosure-assembled.glb"
+      "size": 5642248,
+      "sha256": "d26433514d15ba31843fa92a26162a56387bd23b11be186e48b3ea097cd91439",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.3-dev/shieldsigner-enclosure-assembled.glb"
     },
     {
       "name": "shieldsigner-enclosure-exploded.glb",
-      "size": 5629632,
-      "sha256": "9d6f5a41a36bae12f6c73df643006e2a467e250caabc40aa4c2439def59d2344",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.2-dev/shieldsigner-enclosure-exploded.glb"
+      "size": 5642236,
+      "sha256": "5c5b3103bbc2294be17f233326179800ee2d7ab1c8dde1f857391310983ccb8e",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.3-dev/shieldsigner-enclosure-exploded.glb"
     },
     {
       "name": "shieldsigner-enclosure-plate.3mf",
       "size": 439476,
       "sha256": "da7c835be2c496af1d359aa233ce5a7417f44ca54bf94baa750f96e8af02f4de",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.2-dev/shieldsigner-enclosure-plate.3mf"
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.3-dev/shieldsigner-enclosure-plate.3mf"
     }
   ]
 }

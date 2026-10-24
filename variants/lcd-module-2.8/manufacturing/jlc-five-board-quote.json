@@ -1,0 +1,40 @@
+{
+  "observedDate": "2026-10-24",
+  "boardRevision": "0.0.6-dev",
+  "currency": "USD",
+  "pcbQuantity": 5,
+  "assembledQuantity": 5,
+  "sides": "Both",
+  "fittedSmtPerBoard": 35,
+  "catalogLines": 17,
+  "usbConnectorIncluded": true,
+  "usbMpn": "USB4125-GF-A-0190",
+  "usbFivePiecePurchaseUSD": "4.5825",
+  "pcbUSD": "11.60",
+  "assemblyIncludingComponentsUSD": "183.94",
+  "subtotalBeforeShippingTaxUSD": "195.54",
+  "perBoardBeforeShippingTaxUSD": "39.108",
+  "assemblyBreakdownUSD": {
+    "setup": "51.50",
+    "stencil": "16.54",
+    "components": "86.97",
+    "feeders": "26.35",
+    "smtLabor": "1.46",
+    "placementConfirmation": ".45",
+    "packaging": ".52",
+    "specialComponents": ".15"
+  },
+  "excluded": [
+    "shipping",
+    "tax",
+    "LCD",
+    "Luckfox",
+    "camera",
+    "customer headers including J302",
+    "mechanical hardware",
+    "microSD",
+    "smartcard",
+    "enclosure"
+  ],
+  "status": "Unpaid calculated quote; not final factory DFM or physical qualification; previous USB-omitting quote superseded."
+}

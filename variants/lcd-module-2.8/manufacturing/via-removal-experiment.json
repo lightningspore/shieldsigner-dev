@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-22T02:34:23.910507+00:00",
+  "referenceBoardSha256": "d9ff1151deb55c36f355f1967cd5b3d3d09a6c394cdcebefc71823b60bdf0cdf",
+  "candidateBoardSha256": "278c213810aef407ed7b691be2f5ac118874e4c889267b1b8a66316d96d4db5c",
+  "nativeKiCadVersion": "10.0.7",
+  "experiment": "Remove only the GND through-via at (135,86.3) mm, UUID b564140b-90ff-4142-825a-d8341d7d43f5, from an isolated copy; refill zones and run severity-all DRC.",
+  "reference": {
+    "violations": 0,
+    "unconnectedItems": 0,
+    "exclusions": 0
+  },
+  "candidate": {
+    "violations": 0,
+    "unconnectedItems": 1,
+    "findings": [
+      {
+        "description": "Missing connection between items",
+        "items": [
+          {
+            "description": "Zone [GND] on B.Cu, priority 1",
+            "pos": {
+              "x": 48.0,
+              "y": 54.579
+            },
+            "uuid": "0e5ae786-a742-4508-bbc4-c8f544cb631d"
+          },
+          {
+            "description": "Zone [GND] on B.Cu, priority 1",
+            "pos": {
+              "x": 48.0,
+              "y": 54.579
+            },
+            "uuid": "0e5ae786-a742-4508-bbc4-c8f544cb631d"
+          }
+        ],
+        "severity": "error",
+        "type": "unconnected_items"
+      }
+    ]
+  },
+  "decision": "Reject simple via deletion: connectivity regresses. Keep production source unchanged.",
+  "remainingOptions": [
+    "Qualify existing via-in-pad assembly using appropriate stencil/paste, inspection and rework; no guaranteed yield inferred.",
+    "Get explicit filled/capped via capability and cost if that process is selected; opposite-side tenting is not equivalent.",
+    "Design and independently check a new exposed-pad ground escape rather than deleting the only connection."
+  ],
+  "limitations": "This experiment proves a native connectivity regression, not a solder-wicking measurement or an assembly failure."
+}

@@ -1,6 +1,6 @@
 # ShieldSigner pill: 2.8-inch, eight-pin SPI LCD
 
-This is the **0.0.5-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
+This is the **0.0.6-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
 
 ![Assembled pill carrier, front](../variants/lcd-module-2.8/assembly-front.png)
 
@@ -56,6 +56,10 @@ The LCD takes **3.3 V**, not the former Pico module's 5 V VSYS. **U701, AP2112K-
 
 The AP2112's 600 mA rating is not a promise of 600 mA usable at 5→3.3 V in this layout. Dissipation is approximately **1.7 × LCD current** watts. At a planning load of 150 mA, that is 0.255 W; the datasheet's SOT25 184 °C/W figure implies roughly 47 °C junction rise under its test conditions. The LCD drawing's 120 mA figure describes the backlight, not a guaranteed maximum whole-module load. Measure total module current, regulator temperature and supply margin before treating the prototype as qualified.
 
+The [power sensitivity calculation](../variants/lcd-module-2.8/manufacturing/lcd-power-budget.json), regenerated with `mise run variant:lcd:power-budget`, uses explicitly selected 5.25 V input, 3.1 V output and 40 °C local ambient to test margin. At 150 mA the regulator dissipates about 0.323 W; at 300 mA it dissipates about 0.645 W. Applying the datasheet's 184 °C/W value gives illustrative junction temperatures of roughly 99 °C and 159 °C respectively. These are **not predictions or measured bounds for this PCB**, and the latter case is already beyond the 150 °C absolute maximum in that simplified calculation. The 600 mA headline rating cannot establish safe 5-to-3.3 V operation here.
+
+For the first article, capture the LCD supply minimum/maximum at startup and under display/camera/card activity against the module's **3.1–3.6 V operating range**. Measure whole-module current and U701 case temperature at recorded local ambient, both open and in the intended enclosure, until temperature stabilizes. Case temperature is not junction temperature; establish the thermal margin for the intended ambient before approving repeats. The LCD specification leaves total operating current unspecified, so its 120 mA typical backlight current cannot close this budget.
+
 The module handles its own panel connection and backlight switching. Carrier J401/C401/Q401/R401–R410 and the old bare-panel schematic sheet are removed. The alternative J302 connector is also absent. There are no DNP mode-strap courtyard exceptions on this PCB.
 
 ## Smartcard and processor
@@ -88,4 +92,8 @@ mise run variant:lcd:package
 
 The native KiCad project is authoritative. The experimental tscircuit port and standard carrier remain separate. The modular kit has its own BOM, native placement export and shared Gerber/drill/CPL datum. See [how the site is generated and deployed](WEBSITE.md).
 
-Revision **0.0.5-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A with revised native lands. Use matched revision files and the measured-height button setup in [self-assembly](SELF-ASSEMBLY.md). Physical first-article fit and powered bring-up remain pending.
+Revision **0.0.6-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A with revised native lands. Use matched revision files and the measured-height button setup in [self-assembly](SELF-ASSEMBLY.md). Physical first-article fit and powered bring-up remain pending.
+
+## Power-entry revision 0.0.6-dev
+
+USB-C remains a power-only input with separate 5.1 kΩ CC pull-downs. J301 is now GCT **USB4125-GF-A-0190 / C5246813**, retaining the reviewed land pattern with 1.9 mm shell stakes. Optional **J302** adds a standard 1×2, 2.54 mm header: square pad 1 = +5 V, pad 2 = GND. Both inputs share the same rail; use only one regulated 5 V source at a time. See the [assembly guide](MODULAR-ASSEMBLY.md#alternative-5-v-power-header-006-dev). The HOTHMI interface, display mounts and button positions are unchanged.

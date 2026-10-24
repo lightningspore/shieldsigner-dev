@@ -747,76 +747,6 @@
       "status": "public_catalog_snapshot"
     },
     {
-      "componentModelEn": "USB4125-GF-A",
-      "componentBrandEn": "Global Connector Technology",
-      "componentSpecificationEn": "SMD",
-      "describe": "-30℃~+85℃ 1 3A 48V 6P Black Female Surface Mount, Right Angle Type-C SMD USB Connectors ROHS",
-      "componentLibraryType": "expand",
-      "assemblyMode": "smtWeld",
-      "canPresaleNumber": 762,
-      "overseasStockCount": 958,
-      "preMinPurchaseNum": 9,
-      "leastPatchNumber": 0,
-      "lossNumber": 0,
-      "initialPrice": 1.04,
-      "needAuditFlag": false,
-      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_Global-Connector-Technology-USB4125-GF-A_C3151650.pdf",
-      "noBuyReason": null,
-      "isBuyComponent": "1",
-      "attributes": [
-        {
-          "attribute_name_en": "Operating Temperature",
-          "component_code": "C3151650",
-          "attribute_value_name": "-30℃~+85℃"
-        },
-        {
-          "attribute_name_en": "Current Rating-Power",
-          "component_code": "C3151650",
-          "attribute_value_name": "3A"
-        },
-        {
-          "attribute_name_en": "Voltage Rating",
-          "component_code": "C3151650",
-          "attribute_value_name": "48V"
-        },
-        {
-          "attribute_name_en": "Gender",
-          "component_code": "C3151650",
-          "attribute_value_name": "Female"
-        },
-        {
-          "attribute_name_en": "Mounting Type",
-          "component_code": "C3151650",
-          "attribute_value_name": "Surface Mount, Right Angle"
-        },
-        {
-          "attribute_name_en": "Detection color",
-          "component_code": "C3151650",
-          "attribute_value_name": "Black"
-        },
-        {
-          "attribute_name_en": "Number of Ports",
-          "component_code": "C3151650",
-          "attribute_value_name": "1"
-        },
-        {
-          "attribute_name_en": "Connector Type",
-          "component_code": "C3151650",
-          "attribute_value_name": "Type-C"
-        },
-        {
-          "attribute_name_en": "Number of Contacts",
-          "component_code": "C3151650",
-          "attribute_value_name": "6P"
-        }
-      ],
-      "code": "C3151650",
-      "url": "https://jlcpcb.com/partdetail/C3151650",
-      "checkedAt": "2026-10-17T20:42:32.293090+00:00",
-      "htmlSha256": "b01b920982dcd9d64aa70194753f35e03644d8a51e08db5430675cf66bc8fe43",
-      "status": "public_catalog_snapshot"
-    },
-    {
       "componentModelEn": "TS-1101-C-W",
       "componentBrandEn": "XKB Connection",
       "componentSpecificationEn": "SMD,6x3.6mm",
@@ -1199,6 +1129,215 @@
       "url": "https://jlcpcb.com/partdetail/C668623",
       "checkedAt": "2026-10-15T15:18:16.918759+00:00",
       "htmlSha256": "675bdd09c8dd5670bedf7490f509bc64b78641e2d43a53b20dd31aca652a9660",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "USB4125-GF-A",
+      "componentBrandEn": "Global Connector Technology",
+      "componentSpecificationEn": "SMD",
+      "describe": "-30℃~+85℃ 1 3A 48V 6P Black Female Surface Mount, Right Angle Type-C SMD USB Connectors ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 667,
+      "overseasStockCount": 851,
+      "preMinPurchaseNum": 9,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 1.0425,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_Global-Connector-Technology-USB4125-GF-A_C3151650.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C3151650",
+          "attribute_value_name": "-30℃~+85℃"
+        },
+        {
+          "attribute_name_en": "Current Rating-Power",
+          "component_code": "C3151650",
+          "attribute_value_name": "3A"
+        },
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C3151650",
+          "attribute_value_name": "48V"
+        },
+        {
+          "attribute_name_en": "Gender",
+          "component_code": "C3151650",
+          "attribute_value_name": "Female"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C3151650",
+          "attribute_value_name": "Surface Mount, Right Angle"
+        },
+        {
+          "attribute_name_en": "Detection color",
+          "component_code": "C3151650",
+          "attribute_value_name": "Black"
+        },
+        {
+          "attribute_name_en": "Number of Ports",
+          "component_code": "C3151650",
+          "attribute_value_name": "1"
+        },
+        {
+          "attribute_name_en": "Connector Type",
+          "component_code": "C3151650",
+          "attribute_value_name": "Type-C"
+        },
+        {
+          "attribute_name_en": "Number of Contacts",
+          "component_code": "C3151650",
+          "attribute_value_name": "6P"
+        }
+      ],
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 1.0425
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 29,
+          "productPrice": 0.8445
+        },
+        {
+          "startNumber": 30,
+          "endNumber": 99,
+          "productPrice": 0.7447
+        },
+        {
+          "startNumber": 100,
+          "endNumber": 499,
+          "productPrice": 0.6465
+        },
+        {
+          "startNumber": 500,
+          "endNumber": 999,
+          "productPrice": 0.5875
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": -1,
+          "productPrice": 0.5565
+        }
+      ],
+      "code": "C3151650",
+      "url": "https://jlcpcb.com/partdetail/C3151650",
+      "checkedAt": "2026-10-24T16:48:27.234202+00:00",
+      "htmlSha256": "22452954360620d5ca6d3c7b137470ebeae2f8c1cf8757006f0e94cc62d443bc",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "USB4125-GF-A-0190",
+      "componentBrandEn": "Global Connector Technology",
+      "componentSpecificationEn": "SMD",
+      "describe": "-30℃~+85℃ 1 20 thousand cycles 3A 48V 6P Black Female Surface Mount, Right Angle Type-C SMD USB Connectors ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 2592,
+      "overseasStockCount": 2803,
+      "preMinPurchaseNum": 13,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 0.9165,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2401301201_Global-Connector-Technology-USB4125-GF-A-0190_C5246813.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C5246813",
+          "attribute_value_name": "-30℃~+85℃"
+        },
+        {
+          "attribute_name_en": "Current Rating-Power",
+          "component_code": "C5246813",
+          "attribute_value_name": "3A"
+        },
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C5246813",
+          "attribute_value_name": "48V"
+        },
+        {
+          "attribute_name_en": "Gender",
+          "component_code": "C5246813",
+          "attribute_value_name": "Female"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C5246813",
+          "attribute_value_name": "Surface Mount, Right Angle"
+        },
+        {
+          "attribute_name_en": "Detection color",
+          "component_code": "C5246813",
+          "attribute_value_name": "Black"
+        },
+        {
+          "attribute_name_en": "Number of Ports",
+          "component_code": "C5246813",
+          "attribute_value_name": "1"
+        },
+        {
+          "attribute_name_en": "Connector Type",
+          "component_code": "C5246813",
+          "attribute_value_name": "Type-C"
+        },
+        {
+          "attribute_name_en": "Number of Contacts",
+          "component_code": "C5246813",
+          "attribute_value_name": "6P"
+        },
+        {
+          "attribute_name_en": "Connect-Disconnect Life",
+          "component_code": "C5246813",
+          "attribute_value_name": "20,000 cycles"
+        }
+      ],
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 0.9165
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 29,
+          "productPrice": 0.7479
+        },
+        {
+          "startNumber": 30,
+          "endNumber": 99,
+          "productPrice": 0.6628
+        },
+        {
+          "startNumber": 100,
+          "endNumber": 499,
+          "productPrice": 0.5794
+        },
+        {
+          "startNumber": 500,
+          "endNumber": 999,
+          "productPrice": 0.5286
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": -1,
+          "productPrice": 0.5025
+        }
+      ],
+      "code": "C5246813",
+      "url": "https://jlcpcb.com/partdetail/C5246813",
+      "checkedAt": "2026-10-24T16:48:27.170963+00:00",
+      "htmlSha256": "6723f1371f4cb9ea0d685252b11a86bac2da047d7c832004058dbe99aaf07c18",
       "status": "public_catalog_snapshot"
     }
   ]

@@ -16,7 +16,8 @@ H701,MountingHole_2.7mm_M2.5,MountingHole:MountingHole_2.7mm_M2.5,F.Cu,customer 
 H702,MountingHole_2.7mm_M2.5,MountingHole:MountingHole_2.7mm_M2.5,F.Cu,customer M2.5 supports,,
 H703,MountingHole_2.7mm_M2.5,MountingHole:MountingHole_2.7mm_M2.5,F.Cu,customer M2.5 supports,,
 H704,MountingHole_2.7mm_M2.5,MountingHole:MountingHole_2.7mm_M2.5,F.Cu,customer M2.5 supports,,
-J301,USB4125-GF-A,ShieldSigner:GCT_USB4125_GF_A,B.Cu,JLCPCB SMT assembly,C3151650,USB4125-GF-A
+J301,USB4125-GF-A-0190,ShieldSigner:GCT_USB4125_GF_A,B.Cu,JLCPCB SMT assembly,C5246813,USB4125-GF-A-0190
+J302,5V_IN,ShieldSigner:PowerHeader_1x02_P2.54mm,F.Cu,customer optional 2.54mm power header,,
 J601,7312P0225A13LF,ShieldSigner:Amphenol_7312P0225A13LF_reflow,B.Cu,JLCPCB SMT assembly,C5417011,7312P0225A13LF
 J701,LCD SPI 8-pin,ShieldSigner:LCD_SPI_8_Pill,F.Cu,customer 1x8 display socket/header,,
 JP201,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,

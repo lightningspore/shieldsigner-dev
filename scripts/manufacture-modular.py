@@ -11,7 +11,7 @@ selection=json.loads((ROOT/'docs/bom-selection.json').read_text());selection.upd
 parts=[];groups=collections.defaultdict(list);expected=set()
 for f in children(tree,'footprint'):
  props={p[1]:p[2] for p in children(f,'property')};ref=props['Reference'];dnp='dnp' in one(f,'attr')
- role='DNP' if dnp else 'PCB copper jumper' if ref.startswith('JP') else 'customer 1x8 display socket/header' if ref=='J701' else 'customer Luckfox module and headers' if ref=='U202' else 'customer M2.5 supports' if ref.startswith('H70') else 'JLCPCB SMT assembly'
+ role='DNP' if dnp else 'PCB copper jumper' if ref.startswith('JP') else 'customer 1x8 display socket/header' if ref=='J701' else 'customer optional 2.54mm power header' if ref=='J302' else 'customer Luckfox module and headers' if ref=='U202' else 'customer M2.5 supports' if ref.startswith('H70') else 'JLCPCB SMT assembly'
  row={'ref':ref,'value':props['Value'],'footprint':f[1],'side':one(f,'layer')[1],'role':role,'lcsc':props.get('LCSC',''),'mpn':props.get('MPN','')};parts.append(row)
  if role=='JLCPCB SMT assembly':
   chosen=selection[ref];assert row['lcsc']==chosen['lcsc'] and row['mpn']==chosen['mpn'],f'{ref} purchase identity drift'
@@ -23,7 +23,7 @@ for f in children(tree,'footprint'):
    assert normalize(values['nominal'](row['value'],[ref]))==normalize(attributes[key]),f'{ref} value/catalog mismatch'
   groups[row['lcsc']].append(row);expected.add(ref)
 assert len(expected)==35 and len(groups)==17,(len(expected),len(groups))
-assert len(parts)==47,len(parts)
+assert len(parts)==48,len(parts)
 M.mkdir(exist_ok=True,parents=True);OUT.mkdir(exist_ok=True,parents=True);FAB.mkdir(exist_ok=True,parents=True)
 with (M/'bom-jlcpcb.csv').open('w',newline='') as file:
  writer=csv.writer(file,lineterminator='\n');writer.writerow(['Comment','Designator','Footprint','LCSC Part #'])

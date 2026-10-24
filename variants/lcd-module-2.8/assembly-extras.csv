@@ -6,3 +6,4 @@ U202 module,2,1x11 male strip; long posts toward carrier sockets,Commodity heade
 LCD module,1,2.8-inch ST7789V; no touch; J1 2.54 mm row; 88x53.3 mm,HOTHMI HTM-TFT028A16-SPI,https://www.hothmi.com/product/2-8-inch-display-high-brightness-st7789-spi/,Check physical revision and reverse carrier/vendor numbering
 H701-H704,4,M2.5 female-female spacer; 12 mm body; 5 mm outside diameter,Commodity M2.5x12 spacer,,No factory bosses assumed
 Mounting screws,8,M2.5x4 screw; washers as needed; hardware OD no more than 5 mm,Commodity M2.5x4 screw,,Check thread engagement and enclosure clearances
+J302,1,Optional 1x2 male power header; 2.54 mm pitch; pin 1 5V and pin 2 GND,Commodity standard 2.54 mm breakaway header,,Customer soldered; use regulated 5V and only one power source at a time

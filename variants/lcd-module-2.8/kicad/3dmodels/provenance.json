@@ -154,11 +154,18 @@
     },
     "local/GCT-USB4125-envelope.step": {
       "provider": "ShieldSigner drawing-derived nominal envelope",
-      "source": "reference/pdfs/GCT-USB4125.pdf, rev A6, default 1.0 mm stakes",
+      "source": "reference/pdfs/GCT-USB4125.pdf, rev A6, -0190 1.9 mm stakes",
       "license": "Repository license; original drawing retained separately",
-      "sha256": "aff738d56ba226d3bbc37bb11ac8c4f68ae16caabf1e0f147c05e6522bce6685",
-      "bytes": 96317,
+      "sha256": "6a819d8313ae53db0ad0c1339ee09930eebbef98053548f72c13b0f92c76fe7d",
+      "bytes": 96401,
       "limitations": "Envelope only; no manufacturer CAD or physical fit qualification; no detailed contacts"
+    },
+    "kicad/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "ea4d0799007ebdd3945072bf255d673d2fe87eb05fda85fd8d7993ad9397da41",
+      "bytes": 75616
     }
   }
 }

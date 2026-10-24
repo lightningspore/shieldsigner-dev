@@ -39,6 +39,7 @@ archive of the static document root and Caddy/container deployment files.
   Query-string bookmarks remain supported with JavaScript.
 - `/build/cards/seedkeeper/`, `/build/cards/satochip/` and `/build/cards/diy/` are actual
   static HTML pages. Old `?card=...` bookmarks redirect in the browser.
+- `/costs/` shows a static pie chart of priced first-article items, explicit unquoted costs and quantity examples. It reads the reviewed BOM budget at build time; unknown costs have no chart slice.
 - `/downloads/` and `/files/` provide reviewed, checksum-verified hardware sources,
   PDFs, matching fabrication kits and enclosure models.
 - `/healthz` is a generated JSON file with hosting mode, version and source revision.

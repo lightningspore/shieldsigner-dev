@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-10-22",
+  "references": [
+    "C201",
+    "C302",
+    "C701",
+    "C702"
+  ],
+  "selectedMpn": "C2012X5R1E106K125AB",
+  "disposition": "Selected DigiKey self-assembly substitute; native/JLC original unchanged. No separate supplier needed.",
+  "keepNativeJlcSelection": true,
+  "requirements": {
+    "nominalCapacitanceUf": 10,
+    "package": "0805 (2012 metric)",
+    "voltageRatingV": 25,
+    "tolerancePercent": 10,
+    "dielectric": "X5R or X7R subject to exact-part effective-capacitance review",
+    "note": "0.95 mm is the selected DigiKey part height, not an established board-wide height limit. Taller candidates require comparison with native component/enclosure envelopes; do not reject them solely because they exceed 0.95 mm.",
+    "selectedPartMaximumHeightMm": 1.45
+  },
+  "regulatorCapacitanceGate": {
+    "source": "reference/pdfs/Diodes-AP2112.pdf, pages 1-2, stable with 1uF ceramic; X5R/X7R recommended",
+    "inputOperatingBiasV": 5,
+    "outputOperatingBiasV": 3.3,
+    "minimumEffectiveCapacitanceUf": 1,
+    "calculation": "Ceff = Cnom * tolerance retention * temperature retention * DC-bias retention * aging retention; use exact-part curves/data, not nominal capacitance alone.",
+    "illustrationOnly": {
+      "CnomUf": 10,
+      "toleranceRetention": 0.9,
+      "temperatureRetention": 0.85,
+      "minimumCombinedDcBiasAndAgingRetentionFor1Uf": 0.13071895424836602
+    },
+    "limitations": "Illustration is a margin calculation, not vendor-guaranteed capacitance. Startup and transient measurements still required."
+  },
+  "candidatesReviewed": [
+    {
+      "mpn": "KGM21AR51E106KU",
+      "url": "https://www.digikey.com/en/products/detail/kyocera-avx/KGM21AR51E106KU/3660337",
+      "disposition": "Current page shows zero stock; height 1.45 mm needs comparison with native assembly envelope. Not selected; inventory is insufficient."
+    },
+    {
+      "mpn": "C2012X5R1E106K085AC",
+      "url": "https://www.digikey.com/en/products/detail/tdk/C2012X5R1E106K085AC/3956053",
+      "disposition": "Current page shows zero stock; not recommended for new design and 1.00 mm maximum listed height. Not selected; inventory is insufficient."
+    }
+  ],
+  "nextAction": "Use selected DigiKey cut-tape part; normal first-article power checks remain.",
+  "originalPartSourcingFallback": {
+    "mpn": "CL21A106KAYNNNE",
+    "lcsc": "C15850",
+    "url": "https://www.lcsc.com/product-detail/C15850.html",
+    "observedAt": "2026-10-22T02:46:37.302844+00:00",
+    "publicStock": 2768320,
+    "minimumPurchase": 20,
+    "purchaseMultiple": 20,
+    "unitUSD": "0.0429",
+    "twentyPieceExtensionUSD": "0.86",
+    "note": "Historical investigation only; superseded by available DigiKey TDK selection. No separate LCSC order needed."
+  },
+  "selectedReplacement": {
+    "mpn": "C2012X5R1E106K125AB",
+    "digikey": "445-5984-1-ND",
+    "url": "https://www.digikey.com/en/products/detail/tdk/C2012X5R1E106K125AB/2443462",
+    "manufacturerSource": "https://product.tdk.com/en/search/capacitor/ceramic/mlcc/info?part_no=C2012X5R1E106K125AB",
+    "publicStock": 1000,
+    "unitUSD": ".34",
+    "quantityPerBoard": 4,
+    "mechanicalReview": "2.00 x 1.25 mm nominal; 1.45 mm maximum height, same original envelope; existing 0805 footprint.",
+    "electricalReview": "10 uF, 25 V, \u00b110%, X5R matches original ratings for 5 V/3.3 V bypass and bulk decoupling. Nominal capacitance is ten times the AP2112 1 uF ceramic recommendation; exact biased capacitance is not claimed measured or guaranteed by that ratio. Normal first-article rail/transient tests remain."
+  }
+}

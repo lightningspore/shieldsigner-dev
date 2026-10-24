@@ -1,0 +1,106 @@
+{
+  "boardSha256": "1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110",
+  "capabilityProfileCheckedDate": "2026-10-22",
+  "status": "Selected nominal fabrication features screen within published limits; factory DFM and assembly preparation remain open.",
+  "profile": {
+    "material": "FR4",
+    "copperLayers": 2,
+    "copperThicknessMm": 0.035,
+    "boardThicknessMm": 1.6,
+    "outline": "160x70mm capsule, as checked by mechanical gate"
+  },
+  "measurements": {
+    "minimumRoutedTrackWidthMm": 0.2,
+    "configuredMinimumClearanceMm": 0.15,
+    "configuredCopperToEdgeClearanceMm": 0.2,
+    "viaCount": 221,
+    "minimumViaDrillMm": 0.3,
+    "minimumActualViaAnnularRingMm": 0.15,
+    "platedSlots": [
+      {
+        "reference": "J301",
+        "pad": "S1",
+        "type": "thru_hole",
+        "widthMm": 0.6,
+        "lengthMm": 1.2,
+        "aspectRatio": 2.0
+      },
+      {
+        "reference": "J301",
+        "pad": "S1",
+        "type": "thru_hole",
+        "widthMm": 0.6,
+        "lengthMm": 1.2,
+        "aspectRatio": 2.0
+      },
+      {
+        "reference": "J301",
+        "pad": "S1",
+        "type": "thru_hole",
+        "widthMm": 0.6,
+        "lengthMm": 1.2,
+        "aspectRatio": 2.0
+      },
+      {
+        "reference": "J301",
+        "pad": "S1",
+        "type": "thru_hole",
+        "widthMm": 0.6,
+        "lengthMm": 1.2,
+        "aspectRatio": 2.0
+      }
+    ]
+  },
+  "scopeLimits": [
+    "Trace width and via/slot dimensions are extracted directly. Copper spacing and edge clearance rely on the recorded native DRC and project rules, not an independent Gerber geometry engine.",
+    "No actual PCB, stencil or factory tooling has been inspected.",
+    "Only named features are screened; this is not a comprehensive factory DFM approval.",
+    "The PCB project allows a 0.05mm minimum via annulus, but actual vias are 0.15mm; this screen checks actual geometry rather than accepting that permissive setting."
+  ],
+  "assemblyPreparation": {
+    "railFiducialToolingPlanApproved": false,
+    "nativeFiducialFootprints": [],
+    "action": "Have assembler propose/approve rails, optical fiducials, tooling and depanelization for this capsule. Keep attachments away from USB/card access and display supports; do not assume a bare-board Gerber is an assembly panel."
+  },
+  "silkLegibilityReview": {
+    "advisoryThresholds": {
+      "textHeightMm": 0.8,
+      "strokeMm": 0.15
+    },
+    "smallerVisibleFootprintText": [
+      {
+        "reference": "U202",
+        "text": "U202",
+        "sizeMm": [
+          1.0,
+          1.0
+        ],
+        "strokeMm": 0.1
+      },
+      {
+        "reference": "R606",
+        "text": "R606",
+        "sizeMm": [
+          0.7,
+          0.7
+        ],
+        "strokeMm": 0.15
+      }
+    ],
+    "action": "Review these reference markings in the fabrication preview; these are legibility advisories, not established electrical faults. Board-level artwork/graphics are outside this text scan."
+  },
+  "sources": [
+    {
+      "url": "https://jlcpcb.com/capabilities/pcb-capabilities/",
+      "limitsUsed": "2-layer 1oz track/space 0.10/0.10mm; routed edge copper 0.2mm; plated slot width 0.5mm, length at least twice width. Profile includes conservative 0.13mm annular-ring screen."
+    },
+    {
+      "url": "https://jlcpcb.com/help/article/how-to-add-edge-rails-fiducials-for-pcb-assembly-order",
+      "scope": "Standard assembly requires rail/fiducial preparation; supplier must approve the actual implementation."
+    },
+    {
+      "url": "https://jlcpcb.com/help/article/pcb-dimensions",
+      "scope": "An irregular outline requires manual manufacturability review."
+    }
+  ]
+}

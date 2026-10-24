@@ -1,0 +1,105 @@
+{
+  "observedAt": "2026-10-22T03:01:16.832992+00:00",
+  "source": "https://cart.jlcpcb.com/quote/",
+  "method": "Read-only live calculator via native Chrome UI; no Gerber/BOM/CPL uploaded, account sign-in, cart save or payment.",
+  "currency": "USD",
+  "scope": "Dimensional bare-PCB estimates, not Gerber-validated DFM, assembly or final landed quotations.",
+  "inputs": {
+    "dimensionsMm": [
+      160,
+      70
+    ],
+    "quantity": 5,
+    "material": "FR4 TG135",
+    "layers": 2,
+    "thicknessMm": 1.6,
+    "copperOz": 1,
+    "color": "green",
+    "silk": "white",
+    "format": "single PCB",
+    "viaDrillClassMm": 0.3,
+    "outlineToleranceMm": 0.2,
+    "electricalTest": "Flying probe",
+    "assemblyIncluded": false,
+    "stencilIncluded": false,
+    "railsIncluded": false,
+    "productionFileConfirmation": "No on the calculator; actual order should request reviewed production files."
+  },
+  "cases": [
+    {
+      "surfaceFinish": "LeadFree HASL",
+      "viaCovering": "Tented",
+      "viaPlating": "Not Specified",
+      "pcbSubtotalUSD": "10.80",
+      "breakdownUSD": {
+        "engineering": "4.00",
+        "boards": "5.40",
+        "finish": "1.40",
+        "viaCovering": "0.00"
+      },
+      "displayedBuildTime": "2 days"
+    },
+    {
+      "surfaceFinish": "ENIG (calculator default gold option)",
+      "viaCovering": "Tented",
+      "viaPlating": "Not Specified",
+      "pcbSubtotalUSD": "27.30",
+      "breakdownUSD": {
+        "engineering": "4.00",
+        "boards": "5.40",
+        "finish": "17.90",
+        "viaCovering": "0.00"
+      },
+      "displayedBuildTime": "3 days"
+    },
+    {
+      "surfaceFinish": "ENIG",
+      "viaCovering": "Epoxy Filled & Capped",
+      "viaPlating": "Horizontal Electroless Copper Plating (required by calculator)",
+      "pcbSubtotalUSD": "83.15",
+      "incrementOverStandardEnigUSD": "55.85",
+      "breakdownUSD": {
+        "engineering": "4.00",
+        "boards": "5.40",
+        "finish": "17.90",
+        "viaCovering": "52.40",
+        "viaPlating": "3.45"
+      },
+      "warning": "Optional process only, not selected or proven necessary. Calculator notes via diameter at most 0.5mm; supplier must confirm drilled-hole versus pad-diameter meaning and this board/process eligibility."
+    }
+  ],
+  "shippingEstimates": {
+    "destinationCountry": "United States Of America (calculator default; no address entered)",
+    "packageWeightKg": 0.32,
+    "options": [
+      {
+        "method": "Global Standard Direct Line",
+        "USD": "9.77",
+        "time": "8-13 business days",
+        "restrictions": "Package <=1.5kg, goods value <=$59, dimensions <=55x40cm; do not assume it remains available for assembled/filled-via orders."
+      },
+      {
+        "method": "UPS Express Saver (DDP)",
+        "USD": "26.64",
+        "time": "2-4 business days"
+      },
+      {
+        "method": "DHL Express (DDP)",
+        "USD": "31.59",
+        "time": "2-4 business days"
+      },
+      {
+        "method": "FedEx Express (DDP)",
+        "USD": "31.70",
+        "time": "2-5 business days"
+      }
+    ]
+  },
+  "limits": [
+    "Actual capsule, slots, panel/tooling, via-in-pad process and component placements have not been reviewed by this calculator.",
+    "Prices may change after file upload, engineering review, packing, taxes or delivery details.",
+    "Full assembly pricing explicitly requires Gerber upload; upload confirmation requested and pending.",
+    "No stock reservation, vendor message, purchase or production approval."
+  ],
+  "decision": "Obtain Gerber-validated assembly/DFM quote before accepting this as manufacturing cost. Standard bare-board ordering appears inexpensive relative to tooling/labor; optional via filling materially changes cost."
+}

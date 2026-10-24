@@ -1,6 +1,6 @@
 {
   "variant": "modular-lcd-2.8",
-  "boardSha256": "d9ff1151deb55c36f355f1967cd5b3d3d09a6c394cdcebefc71823b60bdf0cdf",
+  "boardSha256": "1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110",
   "fittedSmtPieces": 35,
   "catalogLines": 17,
   "bomCplRefsMatch": true,
@@ -21,7 +21,7 @@
   "nativeUnconnected": 0,
   "nativeParityIssues": 0,
   "dnpCourtyardExclusions": 0,
-  "mechanicalModelsVerified": 21,
+  "mechanicalModelsVerified": 22,
   "limitations": [
     "Assembler placement preview/DFM/quote not submitted",
     "Physical header/module fit and powered bring-up not tested",
@@ -29,9 +29,9 @@
     "Stock snapshot is not a reservation"
   ],
   "files": {
-    "shieldsigner-modular-gerbers.zip": "d32254effceff38d18ce1cbd7c10c791a849018f8e91a7b3e70eae4c065c8a2d",
-    "bom-jlcpcb.csv": "65dfc981a7250d65e73d2cf284c801ef6a8dd738fd921fd61c73cd349ed87d93",
+    "shieldsigner-modular-gerbers.zip": "cc3f6fa0c3e8212a6769d83fe0a12ceefcbdea96901ee4c463d633625b7cfcbd",
+    "bom-jlcpcb.csv": "94e9e76f2058dbd5fdea56c022649cb37a1d2b820ff943a17bc2b5b29174e4ab",
     "cpl-jlcpcb.csv": "8c7e4faea7291cdc1ed8209cd9b29e779a411cc480602e211338cd4302d0731d",
-    "population.csv": "590ac5f3de31a501478ae4fc202ea74d7f76a007e9fd4b87e4de4ccb33781b01"
+    "population.csv": "72ab4834fafe64904d3902914df2ad2bf21ecb6c9bb0f6775e26c62981d8a909"
   }
 }

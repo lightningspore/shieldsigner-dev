@@ -2290,7 +2290,7 @@
 				)
 			)
 		)
-		(property "Value" "USB4125-GF-A"
+		(property "Value" "USB4125-GF-A-0190"
 			(at 139.7 69.85 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2333,7 +2333,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C3151650"
+		(property "LCSC" "C5246813"
 			(at 139.7 67.31 0)
 			(hide yes)
 			(show_name no)
@@ -2374,9 +2374,9 @@
 			)
 		)
 	
-(property "MPN" "USB4125-GF-A" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "USB4125-GF-A-0190" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "SHOU HAN" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "Manufacturer" "GCT" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_name "GND_3")
@@ -2971,9 +2971,9 @@
 		(body_style 1)
 		(exclude_from_sim no)
 		(in_bom no)
-		(on_board no)
-		(in_pos_files yes)
-		(dnp yes)
+		(on_board yes)
+		(in_pos_files no)
+		(dnp no)
 		(uuid "c0dfbddc-3ac8-4da0-a902-44d1c77ba4bb")
 		(property "Reference" "J302"
 			(at 192.786 80.772 0)
@@ -2985,7 +2985,7 @@
 				)
 			)
 		)
-		(property "Value" "Conn_01x02_Pin"
+		(property "Value" "5V_IN"
 			(at 189.738 83.058 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2995,7 +2995,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Vertical"
+		(property "Footprint" "ShieldSigner:PowerHeader_1x02_P2.54mm"
 			(at 187.96 86.36 0)
 			(hide yes)
 			(show_name no)

@@ -43,6 +43,20 @@ for slug, source, category, title, description in GUIDES:
     guides.append(dict(slug=slug,source=source,category=category,title=title,description=description))
     search[slug]=(title+' '+description+' '+body).casefold()
 render('/', 'knowledge/home.html', tasks=workflows.tasks(), **enclosure)
+# Costs are rendered directly from the reviewed pricing snapshots.
+budget=json.loads((SITE.parent/'variants/lcd-module-2.8/self-assembly/first-article-budget.json').read_text())
+modules=json.loads((SITE.parent/'variants/lcd-module-2.8/self-assembly/system-pricing-current.json').read_text())
+colors=['#c5ed78','#8ac8e8','#d7a5e5','#edba78','#91a28a','#e78e92']
+rows=[dict(label='PCB electronic parts', amount=float(budget['scenarios'][0]['partsSubtotalUSD']))]
+for item in modules['items']:
+    rows.append(dict(label={'lcd':'LCD module','luckfox':'Luckfox Mini A','camera':'Camera'}[item['id']],amount=float(item['unitUSD'])))
+rows += [dict(label='Five bare PCBs · lead-free HASL',amount=10.80),dict(label='Estimated PCB shipping',amount=9.77)]
+total=round(sum(row['amount'] for row in rows),2)
+offset=0
+for row,color in zip(rows,colors):
+    row.update(color=color,percent=row['amount']/total*100,offset=offset)
+    offset += row['percent']
+render('/costs/','knowledge/costs.html',title='Build costs',description='Prototype costs, a price breakdown and what remains unquoted for ShieldSigner.',cost_rows=rows,cost_total=total,budget=budget)
 render('/guides/', 'knowledge/guides.html', guides=guides, query='', title='Build knowledge', description='Search hardware, smartcards, firmware and assembly guides.')
 for guide in guides:
     html=markdown((SITE/'content'/f"{guide['slug']}.md").read_text(), extensions=['extra','sane_lists','toc'])

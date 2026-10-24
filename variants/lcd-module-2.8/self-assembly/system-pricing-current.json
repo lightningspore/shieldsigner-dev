@@ -1,0 +1,83 @@
+{
+  "observedAt": "2026-10-22T02:43:19.354783+00:00",
+  "currency": "USD",
+  "method": "Read-only seller product pages and embedded WooCommerce variation data; no cart mutations, quote request or purchase. Stock is not reserved.",
+  "items": [
+    {
+      "id": "lcd",
+      "mpn": "HTM-TFT028A16-SPI",
+      "option": "None / no touch",
+      "unitUSD": "15.47",
+      "publicInStock": true,
+      "variationId": 16978,
+      "url": "https://www.hothmi.com/product/2-8-inch-display-high-brightness-st7789-spi/",
+      "qualification": "Drawing-selected module; physical revision, header fit and firmware behavior untested."
+    },
+    {
+      "id": "luckfox",
+      "mpn": "Luckfox Pico Mini A",
+      "option": "MicroSD Only; No Pins",
+      "unitUSD": "10.00",
+      "publicInStock": true,
+      "variationId": 2261,
+      "url": "https://cryptoguide.tips/product/luckfox-pico-mini/",
+      "qualification": "Matches microSD-target plan; add module headers separately and verify actual board pinout/orientation."
+    },
+    {
+      "id": "camera",
+      "mpn": "pico-sc3336-3mp-10mm",
+      "option": "Low-profile SC3336, 10mm high, 75 degree FOV",
+      "unitUSD": "13.00",
+      "publicStock": 12,
+      "url": "https://cryptoguide.tips/product/luckfox-pico-camera-module-3pm-sc3336/",
+      "qualification": "Existing sourcing lead; actual camera/ribbon/clamp fit and QR behavior still require qualification."
+    }
+  ],
+  "luckfoxOptions": [
+    {
+      "option": "Mini A no pins",
+      "unitUSD": "10.00"
+    },
+    {
+      "option": "Mini A unsoldered headers",
+      "unitUSD": "11.00"
+    },
+    {
+      "option": "Mini A soldered headers",
+      "unitUSD": "12.00"
+    },
+    {
+      "option": "Mini B no pins",
+      "unitUSD": "20.00"
+    },
+    {
+      "option": "Mini B soldered headers",
+      "unitUSD": "22.00"
+    }
+  ],
+  "rejectedPriceAnchor": {
+    "unitUSD": "5.00",
+    "reason": "Seller explicitly labels this option faulty microSD slot / NAND-only. Not suitable as the price basis for the planned microSD build."
+  },
+  "comparisonOnly": {
+    "name": "Existing ShieldSigner+ display/reader/power hat including LCD",
+    "url": "https://cryptoguide.tips/product/seedsigner-plus-display-hat-usb-c-power-smartcard-luckfox-pico-mini/",
+    "baseUSD": "36.00",
+    "socketOptionUSD": "38.00",
+    "qualification": "Different hardware/enclosure from this pill variant. Listing title says Luckfox but copied description says Raspberry Pi; confirm exact compatibility and what the connection options include before purchasing. Not a qualified drop-in replacement for this project."
+  },
+  "excluded": [
+    "PCB",
+    "headers",
+    "mechanical hardware",
+    "microSD",
+    "case",
+    "smartcard",
+    "shipping",
+    "tax/tariffs",
+    "tools",
+    "labor",
+    "rework"
+  ],
+  "decision": "Custom one-off production has no demonstrated cost saving over buying an existing hat. Justification is the desired pill/module construction and custom design, subject to an acceptable quoted first-article spend."
+}

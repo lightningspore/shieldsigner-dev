@@ -25,8 +25,9 @@ Copy per physical board. A blank field is not a pass. Keep secrets/PINs/private 
 | LCD interface orientation / SPI / pixel test (320×240 corners) | | Pending |
 | Standard FPC only: R405, R406, R407 currents (N/A for pill) | | Pending |
 | Pill only: J1/carrier numbering and 3.3 V continuity | | Pending |
-| Pill only: LCD_3V3 voltage/minimum at startup and fills | | Pending |
-| Pill only: LCD current, U701 case temperature, ambient and run duration | | Pending |
+| Pill only: actual C701/C702 MPN, capacitance-at-bias evidence, paste/stencil/process | | Pending |
+| Pill only: LCD_3V3 startup/load min AND max versus LCD 3.1–3.6 V operating range | | Pending |
+| Pill only: whole-module LCD current, U701 case temperature, local ambient, enclosure state and time to thermal stability | | Pending |
 | Pill only: header heights/insertion, 12 mm supports, screws and clearance | | Pending |
 | All eight key states / debounce / case fit | | Pending |
 | Camera + harmless QR | | Pending |

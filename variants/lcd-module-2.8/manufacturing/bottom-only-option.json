@@ -1,0 +1,202 @@
+{
+  "status": "Historical 0.0.5-dev option; superseded by 0.0.6-dev full-assembly quote kit. Do not order this option with current files.",
+  "release": "pill-preview-0.0.5-dev",
+  "boardSha256": "d9ff1151deb55c36f355f1967cd5b3d3d09a6c394cdcebefc71823b60bdf0cdf",
+  "firstArticlePopulatedQuantityRequested": 1,
+  "supplierMinimumAssembledQuantity": null,
+  "assemblySide": "Bottom",
+  "smtPlacements": 24,
+  "catalogLines": 15,
+  "customerTopPlacements": 11,
+  "stockReserved": false,
+  "scope": "Same PCB and complete Gerber set; only assembly BOM/CPL population is reduced.",
+  "stockSnapshot": [
+    {
+      "code": "C107115",
+      "mpn": "CC0805JRNPO9BN330",
+      "perBoard": 2,
+      "assemblyStock": 1042099,
+      "checkedAt": "2026-10-22T02:20:43.575487+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 1612,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 12
+    },
+    {
+      "code": "C149504",
+      "mpn": "0805W8F1003T5E",
+      "perBoard": 2,
+      "assemblyStock": 3015443,
+      "checkedAt": "2026-10-22T02:20:43.632986+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 1920,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C15850",
+      "mpn": "CL21A106KAYNNNE",
+      "perBoard": 2,
+      "assemblyStock": 7760553,
+      "checkedAt": "2026-10-22T02:20:43.607622+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 264,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C17408",
+      "mpn": "0805W8F1000T5E",
+      "perBoard": 2,
+      "assemblyStock": 7827119,
+      "checkedAt": "2026-10-22T02:20:43.710582+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 2735,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C17414",
+      "mpn": "0805W8F1002T5E",
+      "perBoard": 2,
+      "assemblyStock": 52053628,
+      "checkedAt": "2026-10-22T02:20:46.114091+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 3471,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C17714",
+      "mpn": "0805W8F470JT5E",
+      "perBoard": 1,
+      "assemblyStock": 742845,
+      "checkedAt": "2026-10-22T02:20:43.628597+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 4102,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C19077498",
+      "mpn": "SMF5.0CA",
+      "perBoard": 1,
+      "assemblyStock": 1525775,
+      "checkedAt": "2026-10-22T02:20:44.645240+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 378,
+      "leastPatchNumberRaw": 15,
+      "lossNumberRaw": 4
+    },
+    {
+      "code": "C2297",
+      "mpn": "KT-0805G",
+      "perBoard": 1,
+      "assemblyStock": 2271136,
+      "checkedAt": "2026-10-22T02:20:44.523268+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 705,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C27834",
+      "mpn": "0805W8F5101T5E",
+      "perBoard": 2,
+      "assemblyStock": 2131769,
+      "checkedAt": "2026-10-22T02:20:47.091031+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 2149,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C28323",
+      "mpn": "CL21B105KBFNNNE",
+      "perBoard": 3,
+      "assemblyStock": 1679324,
+      "checkedAt": "2026-10-22T02:20:44.655770+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 400,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C28636",
+      "mpn": "0805W8F5600T5E",
+      "perBoard": 1,
+      "assemblyStock": 502180,
+      "checkedAt": "2026-10-22T02:20:45.755481+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 4297,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C3151650",
+      "mpn": "USB4125-GF-A",
+      "perBoard": 1,
+      "assemblyStock": 729,
+      "checkedAt": "2026-10-22T02:20:45.703671+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 9,
+      "leastPatchNumberRaw": 0,
+      "lossNumberRaw": 0
+    },
+    {
+      "code": "C49678",
+      "mpn": "CC0805KRX7R9BB104",
+      "perBoard": 2,
+      "assemblyStock": 18457232,
+      "checkedAt": "2026-10-22T02:20:45.592832+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 583,
+      "leastPatchNumberRaw": 20,
+      "lossNumberRaw": 10
+    },
+    {
+      "code": "C5417011",
+      "mpn": "7312P0225A13LF",
+      "perBoard": 1,
+      "assemblyStock": 13,
+      "checkedAt": "2026-10-22T02:20:46.512331+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 3,
+      "leastPatchNumberRaw": 0,
+      "lossNumberRaw": 0
+    },
+    {
+      "code": "C633309",
+      "mpn": "SEC1210/PV-UR2",
+      "perBoard": 1,
+      "assemblyStock": 57,
+      "checkedAt": "2026-10-22T02:20:46.595773+00:00",
+      "stockCoversOneBeforeAttrition": true,
+      "minimumPurchaseRaw": 1,
+      "leastPatchNumberRaw": 0,
+      "lossNumberRaw": 0
+    }
+  ],
+  "supplierQuestions": [
+    "Quote ONE populated first article; separately state bare-PCB minimum and minimum assembled quantity. Do not assume all fabricated boards should be populated.",
+    "Confirm QFN center through-via process, stencil thickness/apertures, solder wicking/void inspection and rework. No filled/capped via process is specified by these files.",
+    "Confirm USB4125-GF-A 1mm shell-stake solder fill on 1.6mm board and socket handling/heat limits.",
+    "Review bottom rotations, SEC1210 pin 1 and socket entrance; customer parts on top must remain absent.",
+    "Itemize board, setup, parts including minimums/attrition/loading, stencil, inspection, freight and taxes. Raw catalog minimum fields are not interpreted as final charges.",
+    "Specify any panel rails/fiducials/tooling added and any proposed fabrication change before acceptance."
+  ],
+  "remainingCustomerWork": [
+    "Solder 8 switches, U701 and C701/C702 on top; source the exact parts or reviewed substitutes. Top 10uF DigiKey selection is currently out of stock; exact original CL21A106KAYNNNE is separately listed at LCSC C15850 (shipping/minimums apply).",
+    "Install 30 carrier header joints; modules may require additional header soldering.",
+    "Perform staged first-article acceptance before populating repeat boards."
+  ],
+  "files": {
+    "bom-bottom-only.csv": "cd78e32f312edfbdf20c838aa2fd1ebb88ead2183f53b41bd976153362a000c8",
+    "cpl-bottom-only.csv": "d7ddd088087c178e19681b5dd5494a22ed00d6fc7ab016cdd5d266be0a53168b",
+    "customer-top-population.csv": "5ad1afbcfbb2f1b641fb8c7439f1a791f47c71643d38ce80ac538df3a4a1bed8",
+    "fabrication-capability-audit.json": "1f106bc4b4930a4b7f00b1bf16b1f5f375d7ce605bf3a9b7a7abff943383b7ce",
+    "first-article-process.json": "e417c69143b0ca45cde0c77670cdea68c47d5521f9fa61502727cb2de8a98d07",
+    "via-removal-experiment.json": "76bd0e3e7024546738495ab465614b7fc01f3b683d7777077ca0b0e8062246aa"
+  },
+  "gerberSha256": "d32254effceff38d18ce1cbd7c10c791a849018f8e91a7b3e70eae4c065c8a2d"
+}

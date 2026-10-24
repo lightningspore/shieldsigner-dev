@@ -16,8 +16,8 @@
 | R302, R301 | 5.1 kΩ | 125 mW · ±1% | 2 | 0805W8F5101T5E | [C27834](https://jlcpcb.com/partdetail/C27834) | 2470638 | 2026-10-15T15:18:14 |
 | C602, C604, C603 | 1 µF | 50 V · ±10% · X7R | 3 | CL21B105KBFNNNE | [C28323](https://jlcpcb.com/partdetail/C28323) | 1667923 | 2026-10-15T15:18:14 |
 | R303 | 560 Ω | 125 mW · ±1% | 1 | 0805W8F5600T5E | [C28636](https://jlcpcb.com/partdetail/C28636) | 269545 | 2026-10-15T15:18:17 |
-| J301 | USB4125-GF-A | — | 1 | USB4125-GF-A | [C3151650](https://jlcpcb.com/partdetail/C3151650) | 762 | 2026-10-17T20:42:32 |
 | C601, C301 | 100 nF | 50 V · ±10% · X7R | 2 | CC0805KRX7R9BB104 | [C49678](https://jlcpcb.com/partdetail/C49678) | 18304571 | 2026-10-15T15:18:15 |
 | U701 | AP2112K-3.3TRG1 | — | 1 | AP2112K-3.3TRG1 | [C51118](https://jlcpcb.com/partdetail/C51118) | 9153 | 2026-10-15T15:18:15 |
+| J301 | USB4125-GF-A-0190 | — | 1 | USB4125-GF-A-0190 | [C5246813](https://jlcpcb.com/partdetail/C5246813) | 2592 | 2026-10-24T16:48:27 |
 | J601 | 7312P0225A13LF | — | 1 | 7312P0225A13LF | [C5417011](https://jlcpcb.com/partdetail/C5417011) | 28 | 2026-10-15T15:18:15 |
 | U601 | SEC1210/PV-UR2 | — | 1 | SEC1210/PV-UR2 | [C633309](https://jlcpcb.com/partdetail/C633309) | 55 | 2026-10-15T15:18:16 |

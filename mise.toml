@@ -164,3 +164,23 @@ run = ["uv run tools/telegram/ingest.py", "uv run python tools/telegram/knowledg
 [tasks."bom:self-assembly"]
 description = "Generate/check the separate DigiKey self-assembly sourcing overlay"
 run = "uv run python scripts/generate-self-assembly.py"
+
+[tasks."variant:lcd:first-article"]
+description = "Measure native QFN stencil/via geometry and report first-article assembly process questions"
+run = "uv run python scripts/audit-first-article.py"
+
+[tasks."bom:first-article-budget"]
+description = "Calculate one-article/spares/three-board parts baskets; keep missing landed costs unknown"
+run = "uv run python scripts/budget-first-article.py"
+
+[tasks."variant:lcd:bottom-quote"]
+description = "Package an unsubmitted bottom-only first-article assembly option from pinned Gerbers and matched BOM/CPL"
+run = "uv run python scripts/package-bottom-assembly.py"
+
+[tasks."variant:lcd:power-budget"]
+description = "Calculate LCD LDO heat sensitivity and retain first-article measurement gates"
+run = "uv run python scripts/lcd-power-budget.py"
+
+[tasks."variant:lcd:fab-audit"]
+description = "Screen actual native geometry against dated JLC fabrication limits and flag assembly tooling gaps"
+run = "uv run python scripts/audit-fabrication.py"

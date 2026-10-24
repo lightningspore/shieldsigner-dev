@@ -1,0 +1,93 @@
+{
+  "observedAt": "2026-10-22T02:25:59.144310+00:00",
+  "method": "DigiKey public product pages; no cart/order submitted; inventory not reserved.",
+  "scope": "Critical IC, switches and connectors only; remaining 13 BOM lines still require refresh.",
+  "currency": "USD",
+  "parts": [
+    {
+      "mpn": "SEC1210/PV-UR2",
+      "perBoard": 1,
+      "publicStock": 546,
+      "url": "https://www.digikey.com/en/products/detail/microchip-technology/SEC1210-PV-UR2/6192958",
+      "packaging": "Tray",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": "3.32"
+        },
+        {
+          "quantity": 25,
+          "unitUSD": "2.77"
+        }
+      ]
+    },
+    {
+      "mpn": "PTS636SK25SMTR LFS",
+      "perBoard": 8,
+      "publicStock": 20459,
+      "url": "https://www.digikey.com/en/products/detail/c-k/PTS636SK25SMTR-LFS/10071735",
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".25"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".22"
+        },
+        {
+          "quantity": 25,
+          "unitUSD": ".20560"
+        }
+      ]
+    },
+    {
+      "mpn": "USB4125-GF-A",
+      "perBoard": 1,
+      "publicStock": 13495,
+      "url": "https://www.digikey.com/en/products/detail/gct/USB4125-GF-A/13547388",
+      "packaging": "Cut Tape",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": ".65"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": ".549"
+        }
+      ]
+    },
+    {
+      "mpn": "7312P0225A13LF",
+      "perBoard": 1,
+      "publicStock": 3129,
+      "url": "https://www.digikey.com/en/products/detail/amphenol-cs-fci/7312P0225A13LF/1527047",
+      "packaging": "Tray",
+      "priceTiers": [
+        {
+          "quantity": 1,
+          "unitUSD": "2.94"
+        },
+        {
+          "quantity": 10,
+          "unitUSD": "2.497"
+        }
+      ]
+    }
+  ],
+  "finding": "All four critical exact MPNs show sufficient public stock for one first article plus ordinary spares; JLC switch assembly-stock shortage is not a DigiKey blocker.",
+  "priceCorrection": "USB4125 cut tape is $0.65 at one, versus $0.61 Digi-Reel with an additional $7 reeling fee. Prefer cut tape for small quantities.",
+  "excluded": [
+    "shipping",
+    "tax",
+    "tariffs",
+    "PCB",
+    "stencil",
+    "tools",
+    "modules",
+    "hardware",
+    "labor"
+  ]
+}

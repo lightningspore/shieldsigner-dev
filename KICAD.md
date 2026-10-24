@@ -73,8 +73,8 @@ Library paths use the exact tracked `Footprints/` capitalization. This prevents 
 
 ## Eight-pin pill carrier
 
-The [0.0.4-dev pill carrier](docs/LCD-MODULE-VARIANT.md) is an independent project under `variants/lcd-module-2.8/kicad/`. Use `mise run variant:lcd:open`. It follows the existing Luckfox eight-pin interface, keeps a 160×70 mm capsule and places a 2.8-inch module between the controls. A dedicated AP2112 supplies LCD_3V3. The obsolete bare-panel sheet/lands and Pico-format bay are removed.
+The [0.0.6-dev pill carrier](docs/LCD-MODULE-VARIANT.md) is an independent project under `variants/lcd-module-2.8/kicad/`. Use `mise run variant:lcd:open`. It follows the existing Luckfox eight-pin interface, keeps a 160×70 mm capsule and places a 2.8-inch module between the controls. A dedicated AP2112 supplies LCD_3V3. The obsolete bare-panel sheet/lands and Pico-format bay are removed.
 
-`variant:lcd:check` runs native ERC/DRC/connectivity/parity with zero permitted exclusions. `variant:lcd:models` checks 19 model hashes, reviewed solder lands, exact connector mapping, capsule edges, supports and both-side hardware clearance. `variant:lcd:fab` builds 35-part/17-line matched Gerbers/drills/BOM/CPL. `variant:lcd:review` produces both assembled views, a complete schematic PDF and STEP/GLB exports. `variant:lcd:package` pins public release outputs. LCD/socket/support models are explicit dimensional envelopes.
+`variant:lcd:check` runs native ERC/DRC/connectivity/parity with zero permitted exclusions. `variant:lcd:models` checks 22 model hashes, reviewed solder lands, exact connector mapping, capsule edges, supports and both-side hardware clearance. `variant:lcd:fab` builds 35-part/17-line matched Gerbers/drills/BOM/CPL. `variant:lcd:review` produces both assembled views, a complete schematic PDF and STEP/GLB exports. `variant:lcd:package` pins public release outputs. LCD/socket/support models are explicit dimensional envelopes.
 
 Standard `kicad:*` tasks and the experimental tscircuit port still target the separate standard FPC carrier. Its two DNP courtyard exclusions do not apply to the pill PCB. Keep the two manufacturing sets separate.

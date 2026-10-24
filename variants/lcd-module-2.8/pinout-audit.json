@@ -1,0 +1,34 @@
+{
+  "boardSha256": "1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110",
+  "scope": "Manufacturer pin mapping and default electrical topology; not physical qualification",
+  "hostPinsChecked": 22,
+  "lcdPinsChecked": 8,
+  "result": "PCB mapping passes; upstream firmware SPI speed requires correction",
+  "checks": [
+    "All U202 pad nets",
+    "All J701 pad nets",
+    "Closed/open CS and BL jumper defaults",
+    "Separate LCD and host 3.3V outputs",
+    "LDO supply/enable/decoupling",
+    "Unused host I2C and 1.8V output",
+    "1.8V button inputs have no external pull-up",
+    "UART crossed through series resistors",
+    "Pinned FOX_22 display and button settings",
+    "10MHz patch changes only FOX_22 SPI speed and is idempotent"
+  ],
+  "firmware": {
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "sourceSha256": "6444ae780d74e346c5a52b239fb3871c95a05f5f4fd609a9bb11bdb00f6f472a",
+    "upstreamDefaultHz": 40000000,
+    "hothmiMinimumWriteCycleNs": 66,
+    "requiredHz": 10000000,
+    "patchTested": true,
+    "installedOrBuiltImageVerified": false
+  },
+  "remaining": [
+    "LCD total current and LDO thermal qualification",
+    "Supply startup/shutdown and logic timing measurements",
+    "Actual module/header revision and orientation continuity check",
+    "Apply 10MHz patch to image; verify live SPI clock and display operation"
+  ]
+}

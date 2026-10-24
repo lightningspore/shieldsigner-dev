@@ -97,6 +97,10 @@ run = "uv run scripts/check-bom-values.py"
 description = "Check and export the separate 2.8-inch header-module carrier"
 run = "uv run python scripts/check-lcd-module-variant.py"
 
+[tasks."variant:lcd:pinouts"]
+description = "Audit all Luckfox/LCD pad nets, rail separation and pinned firmware assignments"
+run = "uv run python scripts/audit-module-pinouts.py"
+
 [tasks."variant:lcd:models"]
 description = "Check manufacturer land patterns, mounting geometry and all portable 3D model hashes"
 run = "uv run python scripts/check-modular-mechanics.py"

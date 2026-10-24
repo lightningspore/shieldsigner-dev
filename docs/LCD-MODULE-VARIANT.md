@@ -60,7 +60,9 @@ The [power sensitivity calculation](../variants/lcd-module-2.8/manufacturing/lcd
 
 For the first article, capture the LCD supply minimum/maximum at startup and under display/camera/card activity against the module's **3.1–3.6 V operating range**. Measure whole-module current and U701 case temperature at recorded local ambient, both open and in the intended enclosure, until temperature stabilizes. Case temperature is not junction temperature; establish the thermal margin for the intended ambient before approving repeats. The LCD specification leaves total operating current unspecified, so its 120 mA typical backlight current cannot close this budget.
 
-The module handles its own panel connection and backlight switching. Carrier J401/C401/Q401/R401–R410 and the old bare-panel schematic sheet are removed. The alternative J302 connector is also absent. There are no DNP mode-strap courtyard exceptions on this PCB.
+The module handles its own panel connection and backlight switching. Carrier J401/C401/Q401/R401–R410 and the old bare-panel schematic sheet are removed. J302 is the optional two-pin 5 V power input in 0.0.6-dev. There are no DNP mode-strap courtyard exceptions on this PCB.
+
+**Pinout audit (2026-10-24):** all 22 Luckfox pad assignments, eight LCD signals, default jumpers and separated power rails pass an independent native-board check. The pinned application's **40 MHz SPI default exceeds this HOTHMI module's 66 ns minimum write cycle**. Apply the reviewed **10 MHz** configuration before using this display; an existing image has not been verified to contain it. See [the complete pinout audit and firmware correction](MODULE-PINOUT-AUDIT.md).
 
 ## Smartcard and processor
 

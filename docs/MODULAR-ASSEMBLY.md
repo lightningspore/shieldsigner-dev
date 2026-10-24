@@ -46,6 +46,8 @@ For the current first-article plan, populate and qualify **one board first**; le
 
 Confirm stock, rotation, DFM, loading/attrition fees and final quote before payment. No paid order or physical qualification is implied by the software checks. Do not substitute the SEC1210 firmware suffix or an arbitrary eight-pin LCD.
 
+**JLC placement check:** the initial catalog preview needed J301 rotated 180° and moved inward, plus a sideways offset for J601. These adjustments are saved in the current cart. Fresh CPL uploads require the same pad/locating-hole alignment review; the generic CPL retains KiCad's origins. See the [saved corrected preview and repeat-upload instructions](../variants/lcd-module-2.8/manufacturing/placement-review/README.md). Keep **Confirm Parts Placement: Yes** for assembler review.
+
 ## 2. Inspect the assembled carrier
 
 Keep all power disconnected. Inspect the QFN, USB and card contacts for bridges, capacitor damage and correct orientation. Check that U701 is the selected 3.3 V regulator. Verify resistance between +5V/GND, LCD_3V3/GND and Luckfox +3.3V/GND; investigate an apparent short.

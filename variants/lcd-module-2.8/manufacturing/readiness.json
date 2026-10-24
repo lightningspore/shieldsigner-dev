@@ -23,15 +23,25 @@
   "dnpCourtyardExclusions": 0,
   "mechanicalModelsVerified": 22,
   "limitations": [
-    "Assembler placement preview/DFM/quote not submitted",
     "Physical header/module fit and powered bring-up not tested",
     "LCD, smartcard socket, switch, USB and spacer models are drawing-derived envelopes",
-    "Stock snapshot is not a reservation"
+    "Stock snapshot is not a reservation",
+    "Compensated CPL preview and quote checked; final assembler DFM and placement confirmation still pending"
   ],
   "files": {
-    "shieldsigner-modular-gerbers.zip": "cc3f6fa0c3e8212a6769d83fe0a12ceefcbdea96901ee4c463d633625b7cfcbd",
+    "shieldsigner-modular-gerbers.zip": "ca39af5369a4fe81e8c75b6d9b1a3f33e8c5365f67a26198987c14e97c27306e",
     "bom-jlcpcb.csv": "94e9e76f2058dbd5fdea56c022649cb37a1d2b820ff943a17bc2b5b29174e4ab",
-    "cpl-jlcpcb.csv": "8c7e4faea7291cdc1ed8209cd9b29e779a411cc480602e211338cd4302d0731d",
+    "cpl-jlcpcb.csv": "70b63147919d01e8d9fc8f6ea46f7a4b7f524b83b4da76d15032964d96148d7e",
     "population.csv": "72ab4834fafe64904d3902914df2ad2bf21ecb6c9bb0f6775e26c62981d8a909"
+  },
+  "supplierPlacementCompensation": {
+    "file": "placement-review/cpl-corrections.json",
+    "references": [
+      "J301",
+      "J601",
+      "U601"
+    ],
+    "uploadedCsvPreviewChecked": true,
+    "assemblerQualified": false
   }
 }

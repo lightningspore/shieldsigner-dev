@@ -39,6 +39,11 @@ for row in csv.DictReader((OUT/'positions.csv').open()):
  assert abs(x-(source[0]-50))<.00001 and abs(y-(130-source[1]))<.00001,'Native placement export has different coordinate datum'
  rows.append({'Designator':row['Ref'],'Mid X':f'{x:.6f}','Mid Y':f'{y:.6f}','Layer':'Top' if row['Side']=='top' else 'Bottom','Rotation':f'{float(row["Rot"])%360:.6f}'})
 assert {row['Designator'] for row in rows}==expected and len(rows)==35
+native_rows=rows
+rows=runpy.run_path(str(ROOT/'scripts/jlc-placement.py'))['correct'](native_rows,fps)
+native_file=M/'placement-review/cpl-native-reference.csv';native_file.parent.mkdir(parents=True,exist_ok=True)
+with native_file.open('w',newline='') as file:
+ writer=csv.DictWriter(file,fieldnames=list(native_rows[0]),lineterminator='\n');writer.writeheader();writer.writerows(native_rows)
 with (M/'cpl-jlcpcb.csv').open('w',newline='') as file:
  writer=csv.DictWriter(file,fieldnames=list(rows[0]),lineterminator='\n');writer.writeheader();writer.writerows(rows)
 # Clear only this generator's dedicated fabrication directory, preventing stale layer files.
@@ -59,10 +64,12 @@ manifest={'variant':'modular-lcd-2.8','boardSha256':hashlib.sha256(PCB.read_byte
 with ZipFile(OUT/'shieldsigner-modular-gerbers.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(FAB.iterdir()):z.write(p,p.name)
 for p in [OUT/'shieldsigner-modular-gerbers.zip',M/'bom-jlcpcb.csv',M/'cpl-jlcpcb.csv',M/'population.csv']:manifest['files'][p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
+manifest['supplierPlacementCompensation']={'file':'placement-review/cpl-corrections.json','references':['J301','J601','U601'],'uploadedCsvPreviewChecked':True,'assemblerQualified':False}
+manifest['limitations']=[v for v in manifest['limitations'] if v!='Assembler placement preview/DFM/quote not submitted']+['Compensated CPL preview and quote checked; final assembler DFM and placement confirmation still pending']
 (M/'readiness.json').write_text(json.dumps(manifest,indent=2)+'\n')
 with ZipFile(OUT/'shieldsigner-modular-order.zip','w',ZIP_DEFLATED) as z:
  z.write(OUT/'shieldsigner-modular-gerbers.zip','shieldsigner-modular-gerbers.zip')
- for p in sorted(M.iterdir()):
-  if p.is_file():z.write(p,p.name)
+ for p in sorted(M.rglob('*')):
+  if p.is_file():z.write(p,p.relative_to(M))
  z.write(V/'assembly-extras.csv','customer-parts.csv');z.write(OUT/'drill-report.txt','drill-report.txt')
 print('Matched modular kit: 35 SMT placements, 17 current catalog lines; five-board stock check passed.')

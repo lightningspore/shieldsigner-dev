@@ -16,6 +16,7 @@ with ZipFile(OUT / 'shieldsigner-modular-order.zip', 'w', ZIP_DEFLATED) as archi
     archive.write(OUT/'shieldsigner-modular-gerbers.zip','shieldsigner-modular-gerbers.zip')
     for source in sorted((VARIANT/'manufacturing').rglob('*')):
         if source.is_file():archive.write(source,source.relative_to(VARIANT/'manufacturing'))
+    archive.write(VARIANT/'jlc-placement-corrections.json', 'placement-review/cpl-corrections.json')
     guide = (VARIANT/'manufacturing/placement-review/README.md').read_text()
     archive.writestr('READ-FIRST-PLACEMENT.md', guide.replace('(smartcard-contact-audit.json)', '(placement-review/smartcard-contact-audit.json)'))
     archive.write(VARIANT/'assembly-extras.csv','customer-parts.csv')
@@ -28,7 +29,7 @@ with ZipFile(OUT / 'shieldsigner-modular-kicad.zip', 'w', ZIP_DEFLATED) as archi
             archive.write(source, source.relative_to(ROOT))
     for source in [ROOT / 'LICENSE', ROOT / 'docs/LCD-MODULE-VARIANT.md', ROOT / 'docs/MODULAR-ASSEMBLY.md', *sorted((ROOT / 'reference/pdfs').glob('*.pdf'))]:
         archive.write(source, source.relative_to(ROOT))
-tag = 'pill-assembly-0.0.6-r2'
+tag = 'pill-assembly-0.0.6-r3'
 names = ['shieldsigner-modular-order.zip', 'shieldsigner-modular-gerbers.zip', 'shieldsigner-modular-kicad.zip', 'shieldsigner-modular-assembly.step', 'shieldsigner-modular-assembly.glb', 'shieldsigner-modular-schematic.pdf']
 manifest = {'release': tag, 'boardSha256': board_sha, 'assets': []}
 for name in names:

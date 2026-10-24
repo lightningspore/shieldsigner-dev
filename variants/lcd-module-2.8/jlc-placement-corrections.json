@@ -1,0 +1,33 @@
+{
+  "boardSha256": "1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110",
+  "reviewed": "2026-10-24",
+  "qualification": "Corrected CSV re-uploaded and inspected in JLC preview without manual component moves; final assembler DFM remains required",
+  "corrections": {
+    "J301": {
+      "lcsc": "C5246813",
+      "native": [46.51, 8.99, 180],
+      "delta": [0, 0.84, 180],
+      "expected": [46.51, 9.83, 0],
+      "basis": "GCT manufacturer stake pattern and JLC catalog a636b18807724d12b57aad37ab127677 shell-slot centers; preview confirms outward cable mouth, four stakes and solder-tail overlap. Use mechanical stakes as datum, not catalog copper-pad centroids."
+    },
+    "J601": {
+      "lcsc": "C5417011",
+      "native": [89.42, 20.05, 180],
+      "delta": [-0.8, 0, 180],
+      "expected": [88.62, 20.05, 0],
+      "basis": "All ten numbered catalog pads and both locating holes match native component-local coordinates after +0.8mm X translation. Bottom-view X reflection makes the CPL origin correction -0.8mm. Catalog fac09934403f4310b3853998f3c08281."
+    },
+    "U601": {
+      "lcsc": "C633309",
+      "native": [85, 43.7, 180],
+      "delta": [0, 0, 180],
+      "expected": [85, 43.7, 0],
+      "basis": "Catalog f2fbfd87e0e64900805e04b89a8ad51e pin 1 is upper left in component-side view. Corrected preview pin-1 dot agrees with native triangle; previous raw export placed it lower right."
+    }
+  },
+  "unchangedPolarizedChecks": {
+    "D302": "C2297 catalog pad 1 is on the right at zero rotation, unlike the native local pad-1 baseline; existing exported 0deg gives the correct bottom-view cathode orientation. No blanket bottom-side rotation rule applied.",
+    "U701": "Top-side regulator orientation unchanged; pin 1 lower left agrees with its native footprint.",
+    "D301": "Bidirectional TVS; no polarity-dependent 180deg change required."
+  }
+}

@@ -10,7 +10,7 @@ For self-assembly of the revised 0.0.6-dev board, use the separate [DigiKey sour
 |---|---|
 | 11 capacitors, 10 resistors, indicator LED and TVS | All 23 pieces / 12 lines have selected DigiKey parts using the existing footprints |
 | SEC1210/PV-UR2, Amphenol card socket and AP2112K regulator | Exact original MPNs listed at DigiKey; three more pieces / three lines |
-| Eight C&K PTS636 switches and GCT USB4125-GF-A connector | Exact MPNs shared by JLCPCB and DigiKey; revised native lands |
+| Eight C&K PTS636 switches and GCT USB4125-GF-A-0190 connector | Exact MPNs shared by JLCPCB and DigiKey; revised native lands |
 | LCD, camera and Luckfox | Outside this supplier list |
 | Customer headers, fasteners, card, microSD and supply | Follow the existing shopping/assembly and enclosure specifications |
 
@@ -29,7 +29,7 @@ Each selected part links to its DigiKey page in the sourcing table. Stock was ch
 
 Self-assembly of the whole carrier includes a **24-pin exposed-pad QFN**, SMT card socket and two-sided population. A controlled paste/reflow process and inspection are appropriate; this requires more equipment and technique than the header soldering needed after JLC assembly. Use native paste, silk and placement information with the original reference designators. Replacements keep their existing footprints and net assignments; confirm LED polarity and IC pin 1 before heating.
 
-After assembly, follow the [staged rail and module checks](MODULAR-ASSEMBLY.md), then [reader bring-up](BRINGUP.md). Use C&K PTS636SK25SMTR LFS and GCT USB4125-GF-A on revision 0.0.6-dev. USB4135 is not selected.
+After assembly, follow the [staged rail and module checks](MODULAR-ASSEMBLY.md), then [reader bring-up](BRINGUP.md). Use C&K PTS636SK25SMTR LFS and GCT USB4125-GF-A-0190 on revision 0.0.6-dev. USB4135 is not selected.
 
 Use the [enclosure hardware list](ENCLOSURE.md) when printing the case. M2.5 thread and spacer length alone do not establish clearance: a 5 mm-across-flats hex spacer has approximately 5.77 mm across corners and does not fit a 5 mm circular envelope.
 

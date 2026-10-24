@@ -15,7 +15,7 @@
     {
       "name": "shieldsigner-modular-kicad.zip",
       "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-preview-0.0.6-dev/shieldsigner-modular-kicad.zip",
-      "sha256": "c5bf1b4761d9dda196d0b6e7eafcf286d4a8c2e3ecbfecb0fa6e14061f3d714c"
+      "sha256": "081c4b71b1ac943e60ca1498e9567c1e347a25c097d1a48ca00da0c5ed01aba8"
     },
     {
       "name": "shieldsigner-modular-assembly.step",

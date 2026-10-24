@@ -92,7 +92,7 @@ mise run variant:lcd:package
 
 The native KiCad project is authoritative. The experimental tscircuit port and standard carrier remain separate. The modular kit has its own BOM, native placement export and shared Gerber/drill/CPL datum. See [how the site is generated and deployed](WEBSITE.md).
 
-Revision **0.0.6-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A with revised native lands. Use matched revision files and the measured-height button setup in [self-assembly](SELF-ASSEMBLY.md). Physical first-article fit and powered bring-up remain pending.
+Revision **0.0.6-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A-0190 with revised native lands. Use matched revision files and the measured-height button setup in [self-assembly](SELF-ASSEMBLY.md). Physical first-article fit and powered bring-up remain pending.
 
 ## Power-entry revision 0.0.6-dev
 

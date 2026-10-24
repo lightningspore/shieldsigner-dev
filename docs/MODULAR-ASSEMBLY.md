@@ -78,7 +78,7 @@ The LCD front is approximately 17.7 mm above the carrier. Switch actuators are m
 
 Record module revision, header/spacer measurements, firmware version, measured current/temperature, display tests and card transactions in the [bring-up record](BRINGUP-RESULTS.md). A clean PCB check and a successful OS build do not establish these physical results.
 
-Revision **0.0.6-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A with revised native lands. Use matched revision files and the measured-height button setup in [self-assembly](SELF-ASSEMBLY.md). Physical first-article fit and powered bring-up remain pending.
+Revision **0.0.6-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A-0190 with revised native lands. Use matched revision files and the measured-height button setup in [self-assembly](SELF-ASSEMBLY.md). Physical first-article fit and powered bring-up remain pending.
 
 ## Alternative 5 V power header (0.0.6-dev)
 

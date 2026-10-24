@@ -46,7 +46,7 @@ For the current first-article plan, populate and qualify **one board first**; le
 
 Confirm stock, rotation, DFM, loading/attrition fees and final quote before payment. No paid order or physical qualification is implied by the software checks. Do not substitute the SEC1210 firmware suffix or an arbitrary eight-pin LCD.
 
-**JLC placement check:** the initial catalog preview needed J301 rotated 180° and moved inward. The initial J601 offset-only assessment was withdrawn after the user rotated the socket to better match its tapered body/notch and silkscreen. Confirm its C1–C8/COM/NO contacts and locating holes against the manufacturer drawing before approval; preview markers alone are insufficient. Fresh CPL uploads require placement review because the generic CPL retains KiCad's origins. See the [placement review history and repeat-upload instructions](../variants/lcd-module-2.8/manufacturing/placement-review/README.md). Keep **Confirm Parts Placement: Yes** for assembler review.
+**JLC placement check:** the initial catalog preview needed J301 rotated 180° and moved inward. The user's revised J601 rotation has now been checked against the numbered catalog contact pattern and exposed PCB copper: C1–C4 upper row, C5–C8 lower row, NO then COM to the right, in the bottom/component-side view. The ten pad centers/sizes and both locating holes agree with the catalog after its 0.8 mm local-origin translation. Fresh CPL uploads still require placement review because the generic CPL retains KiCad's origins. See the [numbered-contact audit, review history and repeat-upload instructions](../variants/lcd-module-2.8/manufacturing/placement-review/README.md). Keep **Confirm Parts Placement: Yes** for final assembler review.
 
 ## 2. Inspect the assembled carrier
 

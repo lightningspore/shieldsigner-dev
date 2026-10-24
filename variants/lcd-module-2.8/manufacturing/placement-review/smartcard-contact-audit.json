@@ -1,0 +1,167 @@
+{
+  "reviewed": "2026-10-24",
+  "boardSha256": "1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110",
+  "source": "JLCEDA/EasyEDA official library (\u5609\u7acb\u521bEDA/EasyEDA\u5b98\u65b9\u5e93), C5417011",
+  "catalogSymbolUrl": "https://easyeda.com/api/products/C5417011/components?version=6.4.19.5",
+  "catalogFootprintUrl": "https://easyeda.com/api/components/fac09934403f4310b3853998f3c08281",
+  "catalogUpdatedAt": "2025-08-20 07:00:17",
+  "catalogResponseSha256": "21afd1d6d059600af318b4885e91d8b97bf667e72097d10269c65ee411c2a10a",
+  "manufacturerDrawing": "reference/pdfs/C5417011.pdf, page 2 recommended PCB layout",
+  "coordinateConvention": "Component-side view of carrier bottom; +x right and +y down. Native B.Cu Y reflection removed; 180 degree footprint rotation plus bottom-view X reflection cancels in this view.",
+  "catalogToNativeLocalMm": {
+    "x": 0.8,
+    "y": 0,
+    "rotationDeg": 0
+  },
+  "padComparisonToleranceMm": 0.001,
+  "pads": [
+    {
+      "pin": "C1",
+      "nativeComponentSideMm": [
+        -6.82,
+        -12.05
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        -6.82,
+        -12.050014
+      ],
+      "maxCoordinateDifferenceMm": 1.4e-05,
+      "net": "/Smartcard Interface/SEC1210_SC_VCC"
+    },
+    {
+      "pin": "C2",
+      "nativeComponentSideMm": [
+        -4.28,
+        -12.05
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        -4.28,
+        -12.050014
+      ],
+      "maxCoordinateDifferenceMm": 1.4e-05,
+      "net": "/Smartcard Interface/SEC1210_SC_RST"
+    },
+    {
+      "pin": "C3",
+      "nativeComponentSideMm": [
+        -1.74,
+        -12.05
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        -1.74,
+        -12.050014
+      ],
+      "maxCoordinateDifferenceMm": 1.4e-05,
+      "net": "/Smartcard Interface/SEC1210_SC_CLK_PostR"
+    },
+    {
+      "pin": "C4",
+      "nativeComponentSideMm": [
+        0.8,
+        -12.05
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        0.8,
+        -12.050014
+      ],
+      "maxCoordinateDifferenceMm": 1.4e-05,
+      "net": "unconnected-(J601-RFU-PadC4)"
+    },
+    {
+      "pin": "C5",
+      "nativeComponentSideMm": [
+        -6.82,
+        12.05
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        -6.82,
+        12.050014
+      ],
+      "maxCoordinateDifferenceMm": 1.4e-05,
+      "net": "GND"
+    },
+    {
+      "pin": "C6",
+      "nativeComponentSideMm": [
+        -4.28,
+        12.05
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        -4.28,
+        12.050014
+      ],
+      "maxCoordinateDifferenceMm": 1.4e-05,
+      "net": "/Smartcard Interface/SEC1210_SC_VCC"
+    },
+    {
+      "pin": "C7",
+      "nativeComponentSideMm": [
+        -1.74,
+        12.05
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        -1.74,
+        12.050014
+      ],
+      "maxCoordinateDifferenceMm": 1.4e-05,
+      "net": "/Smartcard Interface/SEC1210_SC_IO"
+    },
+    {
+      "pin": "C8",
+      "nativeComponentSideMm": [
+        0.8,
+        12.05
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        0.8,
+        12.050014
+      ],
+      "maxCoordinateDifferenceMm": 1.4e-05,
+      "net": "unconnected-(J601-RFU__1-PadC8)"
+    },
+    {
+      "pin": "COM",
+      "nativeComponentSideMm": [
+        8.42,
+        -5.75
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        8.42,
+        -5.750052
+      ],
+      "maxCoordinateDifferenceMm": 5.2e-05,
+      "net": "GND"
+    },
+    {
+      "pin": "NO",
+      "nativeComponentSideMm": [
+        5.88,
+        -5.75
+      ],
+      "catalogAfterOriginCorrectionMm": [
+        5.88,
+        -5.750052
+      ],
+      "maxCoordinateDifferenceMm": 5.2e-05,
+      "net": "/Smartcard Interface/SEC1210_SC_PRSNT"
+    }
+  ],
+  "locatingHoleCentersMm": [
+    [
+      -20.79,
+      10.16
+    ],
+    [
+      23.659746,
+      -10.16
+    ]
+  ],
+  "currentPreviewCheck": {
+    "orientation": "User 180 degree correction retained; tapered side up, bottom notch down",
+    "method": "Registered catalog shape using locating holes, calculated numbered pad positions, temporarily exposed actual PCB copper, compared all 10 solder pads and restored placement with Undo",
+    "screenReference": "25.1 pixels/mm approximately; upper-right peg (1987,1024); C1 predicted (1222,977), observed native pad about (1221,978); C4 observed (1413,978); NO/COM observed (1539,1137)/(1603,1137); lower contact row about y1582",
+    "result": "Current user placement passes visual numbered-contact registration; not assembler DFM approval",
+    "supplierNumericPlacementExported": false
+  },
+  "limitation": "No soldered article tested. Final assembler placement approval remains separate."
+}

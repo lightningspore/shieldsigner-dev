@@ -291,3 +291,6 @@ footer small { grid-column: 1/-1; color: var(--muted); font: 11px monospace; }
 .cost-open { border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 24px; margin: 36px 0; }
 .cost-open h2 { margin-top: 0; }
 @media (max-width: 700px) { .cost-breakdown { grid-template-columns: 1fr; gap: 20px; } .cost-pie { max-width: 260px; } }
+
+/* One-colour shield/bolt emblem, shared with the PCB artwork. */
+.brand-mark { width: 30px; height: 32px; flex: 0 0 30px; color: var(--accent); }

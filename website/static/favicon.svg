@@ -1,1 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#10140f"/><path d="M18 12h28v10H28v5h18v25H18V42h18v-5H18Z" fill="#c5ed78"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 68" role="img" aria-label="ShieldSigner">
+  <path fill="#a3e635" d="M31 4Q32 3.5 33 4L42 9 16 30 35 37 19 56C10 47 7 36 7 18Q7 16 9 15ZM46 11 55 15Q57 16 57 18C57 40 49 54 33 63Q32 64 31 63L22 58 50 32 32 25Z"/>
+</svg>

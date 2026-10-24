@@ -11,6 +11,8 @@ for relative,record in provenance.items():
  path=K/'3dmodels'/relative
  assert path.is_file(),f'Missing {path}; run git lfs pull'
  assert hashlib.sha256(path.read_bytes()).hexdigest()==record['sha256'],f'Model changed or LFS pointer not hydrated: {path}'
+testpoints={t['ref']:t for t in json.loads((V/'testpoints.json').read_text())}
+assert set(testpoints)=={f'TP{i}' for i in range(801,813)}
 modeled=[];copper_jumpers=[]
 for ref,f in fps.items():
  dnp='dnp' in one(f,'attr');models=children(f,'model')
@@ -18,6 +20,16 @@ for ref,f in fps.items():
  if dnp or ref=='U202':
   for pad in children(f,'pad'):assert not {'F.Paste','B.Paste'} & set(one(pad,'layers')[1:]),f'Customer/DNP part {ref} must not receive reflow paste'
  if ref.startswith('JP'):copper_jumpers.append(ref);continue
+ if ref.startswith('TP8'):
+  assert {'board_only','exclude_from_bom','exclude_from_pos_files'} <= set(one(f,'attr')[1:])
+  assert len(children(f,'pad'))==1
+  entry=testpoints[ref];pad=children(f,'pad')[0]
+  assert one(pad,'net')[-1]==entry['net']
+  assert list(map(float,one(f,'at')[1:3]))==entry['xy']
+  assert one(f,'layer')[1]==('F.Cu' if entry['layer']==0 else 'B.Cu')
+  assert list(map(float,one(pad,'size')[1:3]))==[1.2,1.2]
+  assert set(one(children(f,'pad')[0],'layers')[1:]) in [{'F.Cu','F.Mask'},{'B.Cu','B.Mask'}]
+  continue
  if not dnp:assert models,f'Missing assembled 3D representation: {ref}'
  for model in models:
   assert model[1].startswith('${KIPRJMOD}/3dmodels/'),f'Nonportable model: {model[1]}'

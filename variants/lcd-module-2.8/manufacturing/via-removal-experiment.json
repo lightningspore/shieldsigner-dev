@@ -44,5 +44,6 @@
     "Get explicit filled/capped via capability and cost if that process is selected; opposite-side tenting is not equivalent.",
     "Design and independently check a new exposed-pad ground escape rather than deleting the only connection."
   ],
-  "limitations": "This experiment proves a native connectivity regression, not a solder-wicking measurement or an assembly failure."
+  "limitations": "This experiment proves a native connectivity regression, not a solder-wicking measurement or an assembly failure.",
+  "revisionNote": "Historical analysis of pre-0.0.7 layout; not the current Gerber/CPL or a current supplier quote."
 }

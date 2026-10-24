@@ -44,6 +44,18 @@ SW505,PTS636SK25SMTRLFS,ShieldSigner:CK_PTS636_SK25_G,F.Cu,JLCPCB SMT assembly,C
 SW506,PTS636SK25SMTRLFS,ShieldSigner:CK_PTS636_SK25_G,F.Cu,JLCPCB SMT assembly,C2689642,PTS636SK25SMTRLFS
 SW507,PTS636SK25SMTRLFS,ShieldSigner:CK_PTS636_SK25_G,F.Cu,JLCPCB SMT assembly,C2689642,PTS636SK25SMTRLFS
 SW508,PTS636SK25SMTRLFS,ShieldSigner:CK_PTS636_SK25_G,F.Cu,JLCPCB SMT assembly,C2689642,PTS636SK25SMTRLFS
+TP801,5V,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP802,3V3,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP803,LCD3V3,ShieldSigner:TestPoint_D1.2mm,F.Cu,copper test point,,
+TP804,GND,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP805,SC VCC,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP806,UART RX,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP807,UART TX,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP808,SC CLK,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP809,SC IO,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP810,CARD DET,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP811,SC RST,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
+TP812,GND,ShieldSigner:TestPoint_D1.2mm,B.Cu,copper test point,,
 U202,LuckFox_Pico_MINI,Library:LUCKFOX_PICO_MINI_reversed,B.Cu,customer Luckfox module and headers,,
 U601,SEC1210/PV-UR2,ShieldSigner:Microchip_SEC1210_QFN24_reflow,B.Cu,JLCPCB SMT assembly,C633309,SEC1210/PV-UR2
 U701,AP2112K-3.3TRG1,ShieldSigner:AP2112K_SOT25_reflow,F.Cu,JLCPCB SMT assembly,C51118,AP2112K-3.3TRG1

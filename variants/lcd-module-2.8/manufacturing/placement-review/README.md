@@ -1,6 +1,6 @@
-# JLCPCB assembly placement guide — PCB 0.0.6-dev
+# JLCPCB assembly placement guide — PCB 0.0.7-dev
 
-Assembly package **r3**, 2026-10-24. The upload CPL now includes the supplier rotation/origin corrections. It was re-uploaded into JLCPCB and visually checked **without manual component moves**. Copper, drills and the BOM design are unchanged.
+Assembly package **0.0.7 r1**, 2026-10-24. This revision moves the controller cluster 17 mm toward the top edge, adds 12 copper-only test pads, and adds branding. It requires a new Gerber/CPL upload and supplier preview. The component-specific catalog corrections are retained from the verified 0.0.6 r3 import; U601 uses its new coordinate. Do not reuse the old cart as confirmation of this new board.
 
 ## Upload and confirm
 
@@ -14,9 +14,9 @@ Assembly package **r3**, 2026-10-24. The upload CPL now includes the supplier ro
 |---|---:|---:|---:|---|
 | J301 | 46.510000 | 9.830000 | 0° | +0.84 mm Y; +180° |
 | J601 | 88.620000 | 20.050000 | 0° | -0.8 mm X; +180° |
-| U601 | 85.000000 | 43.700000 | 0° | +180° |
+| U601 | 85.000000 | 60.700000 | 0° | +180° |
 
-All other 32 placement rows are unchanged. Corrections are pinned to the PCB SHA and catalog identities in `jlc-placement-corrections.json` in the native source package. The exporter rejects a changed board, changed identity/side/datum, or attempts to apply compensation twice. Each new catalog model or PCB revision still needs preview review.
+Supplier compensation leaves the other 32 native placement rows unchanged. The relocation itself moves 13 fitted parts. Corrections are pinned to the PCB SHA and catalog identities in `jlc-placement-corrections.json` in the native source package. The exporter rejects a changed board, changed identity/side/datum, or attempts to apply compensation twice. Each new catalog model or PCB revision still needs preview review.
 
 J301's translation uses the four physical shell-stake centers as the mechanical datum; the supplier's copper-pad centers are not a substitute for the manufacturer lead geometry. Its imported preview shows the six solder-tail ends overlapping their lands and the stakes aligned with the slots. U601's corrected pin-1 dot agrees with the native triangle. D302 LED's library has a different pad-1 baseline and needs **no** additional rotation: a blanket rotation change for all bottom-side parts would be incorrect. U701 remains unchanged on top.
 

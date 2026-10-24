@@ -142,3 +142,26 @@ A prototype passes this proposed bring-up only after expected functions and meas
 | Reader exists, card absent | Connected slot, COM/NO detect switch, insertion and contact alignment |
 | Card detected, no ATR | Card voltage/class, clock/reset/I/O, contact condition, known-good card comparison |
 | ATR exists, applet unavailable | Card/application identity, support settings and firmware version; separate from PCB transport |
+
+## PCB 0.0.7 test points
+
+The 1.2 mm circular pads are bare copper with solder-mask openings, not components. They have no solder paste, BOM quantity or CPL placement. Eleven are on the socket/controller side; LCD3V3 is on the display side and requires removing the LCD for access. Labels name the signal directly. Use a nearby GND pad for the meter or probe ground; never inject power into a signal or switched card rail.
+
+| Pad | Silkscreen | What to check |
+|---|---|---|
+| TP801 | 5V | Carrier input after the USB power connection; nominal 5 V. |
+| TP802 | 3V3 | Luckfox/host 3.3 V rail. |
+| TP803 | LCD3V3 | Dedicated display-regulator output; nominal 3.3 V. Display side. |
+| TP804 | GND | Scope/meter return near the card signal area. |
+| TP805 | SC VCC | Switched card power; may be off until card activation. Its operating voltage depends on reader/card negotiation. |
+| TP806 | UART RX | UART_RX_PostR, controller side of R603. Host naming retained. |
+| TP807 | UART TX | UART_TX_PostR, controller side of R602. Host naming retained. |
+| TP808 | SC CLK | Card clock after R604; check only while the reader activates a card. |
+| TP809 | SC IO | Bidirectional smartcard data. Use a high-impedance probe. |
+| TP810 | CARD DET | Socket NO contact / SEC1210 presence input; check insertion/removal. |
+| TP811 | SC RST | Reset delivered to the card. |
+| TP812 | GND | Meter return beside USB power entry. |
+
+Coordinates and exact net names are recorded in [testpoints.json](../variants/lcd-module-2.8/testpoints.json). Pads lie directly on existing tracks/vias, rather than on added signal stubs. The native checks validate copper clearance and connectivity; actual rail levels, clock edges and card operation still require first-article measurements.
+
+The SEC1210 support cluster moves 17 mm toward the top edge, retaining its relative part positions and local decoupling/damping. C604 remains at the socket-side power route. Longer interconnects are rerouted with ground pours refilled; no pin mapping, module position, mounting hole, socket, USB connector, or purchased component changes. A longer clock path makes edge quality an explicit bring-up check.

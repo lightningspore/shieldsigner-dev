@@ -1575,5 +1575,6 @@
       "htmlSha256": "27e11eb72eab6a51bc10a8f5eb721fa353cc222c30d9bc2ee6b2ee9d6ba55165",
       "status": "public_catalog_snapshot"
     }
-  ]
+  ],
+  "revisionNote": "Historical analysis of pre-0.0.7 layout; not the current Gerber/CPL or a current supplier quote."
 }

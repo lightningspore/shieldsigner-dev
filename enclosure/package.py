@@ -29,12 +29,12 @@ for name,source in [('shieldsigner-enclosure-assembled.glb','assembled.glb'),
                     ('shieldsigner-enclosure-plate.3mf','print-plate.3mf')]:shutil.copyfile(out/source,out/name)
 names=['shieldsigner-enclosure-print.zip','shieldsigner-enclosure-assembled.glb',
        'shieldsigner-enclosure-exploded.glb','shieldsigner-enclosure-plate.3mf']
-manifest={'version':'0.0.3-dev','status':'Digital prototype; physical first fit pending',
+manifest={'version':'0.0.4-dev','status':'Digital prototype; physical first fit pending',
           'boardSha256':sha(root/'variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'),
           'scadSha256':sha(root/'enclosure/case.scad'),'assets':[]}
 for name in names:
     path=out/name
     manifest['assets'].append({'name':name,'size':path.stat().st_size,'sha256':sha(path),
-        'url':f'https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.3-dev/{name}'})
+        'url':f'https://github.com/lightningspore/shieldsigner-dev/releases/download/enclosure-preview-0.0.4-dev/{name}'})
 (root/'assets/enclosure-downloads.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print('Packaged portable enclosure kit and pinned four download checksums')

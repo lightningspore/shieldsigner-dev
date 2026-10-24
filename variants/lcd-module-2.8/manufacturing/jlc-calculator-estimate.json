@@ -101,5 +101,6 @@
     "Full assembly pricing explicitly requires Gerber upload; upload confirmation requested and pending.",
     "No stock reservation, vendor message, purchase or production approval."
   ],
-  "decision": "Obtain Gerber-validated assembly/DFM quote before accepting this as manufacturing cost. Standard bare-board ordering appears inexpensive relative to tooling/labor; optional via filling materially changes cost."
+  "decision": "Obtain Gerber-validated assembly/DFM quote before accepting this as manufacturing cost. Standard bare-board ordering appears inexpensive relative to tooling/labor; optional via filling materially changes cost.",
+  "revisionNote": "Historical analysis of pre-0.0.7 layout; not the current Gerber/CPL or a current supplier quote."
 }

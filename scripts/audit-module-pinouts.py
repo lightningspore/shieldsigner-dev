@@ -58,8 +58,8 @@ assert connected(pins['U202']['6'], pins['J701']['4'])
 assert connected('+3.3V', pins['J701']['1'])
 assert not connected('+3.3V', 'LCD_3V3')
 assert not connected('RPI_SPI_CS', 'GND')
-assert nets['LCD_3V3'] == {'J701.8', 'U701.5', 'C702.1'}
-assert nets['+3.3V'] == {'U202.3', 'JP201.1'}
+assert nets['LCD_3V3'] == {'J701.8', 'U701.5', 'C702.1', 'TP803.1'}
+assert nets['+3.3V'] == {'U202.3', 'JP201.1', 'TP802.1'}
 for p, n in {'1': '+5V', '2': 'GND', '3': '+5V', '5': 'LCD_3V3'}.items():
     assert pins['U701'][p] == n
 for ref, rail in [('C701', '+5V'), ('C702', 'LCD_3V3')]:

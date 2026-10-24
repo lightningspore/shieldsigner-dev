@@ -11,7 +11,7 @@ selection=json.loads((ROOT/'docs/bom-selection.json').read_text());selection.upd
 parts=[];groups=collections.defaultdict(list);expected=set()
 for f in children(tree,'footprint'):
  props={p[1]:p[2] for p in children(f,'property')};ref=props['Reference'];dnp='dnp' in one(f,'attr')
- role='DNP' if dnp else 'PCB copper jumper' if ref.startswith('JP') else 'customer 1x8 display socket/header' if ref=='J701' else 'customer optional 2.54mm power header' if ref=='J302' else 'customer Luckfox module and headers' if ref=='U202' else 'customer M2.5 supports' if ref.startswith('H70') else 'JLCPCB SMT assembly'
+ role='copper test point' if ref.startswith('TP8') else 'DNP' if dnp else 'PCB copper jumper' if ref.startswith('JP') else 'customer 1x8 display socket/header' if ref=='J701' else 'customer optional 2.54mm power header' if ref=='J302' else 'customer Luckfox module and headers' if ref=='U202' else 'customer M2.5 supports' if ref.startswith('H70') else 'JLCPCB SMT assembly'
  row={'ref':ref,'value':props['Value'],'footprint':f[1],'side':one(f,'layer')[1],'role':role,'lcsc':props.get('LCSC',''),'mpn':props.get('MPN','')};parts.append(row)
  if role=='JLCPCB SMT assembly':
   chosen=selection[ref];assert row['lcsc']==chosen['lcsc'] and row['mpn']==chosen['mpn'],f'{ref} purchase identity drift'
@@ -23,7 +23,7 @@ for f in children(tree,'footprint'):
    assert normalize(values['nominal'](row['value'],[ref]))==normalize(attributes[key]),f'{ref} value/catalog mismatch'
   groups[row['lcsc']].append(row);expected.add(ref)
 assert len(expected)==35 and len(groups)==17,(len(expected),len(groups))
-assert len(parts)==48,len(parts)
+assert len(parts)==60,len(parts)
 M.mkdir(exist_ok=True,parents=True);OUT.mkdir(exist_ok=True,parents=True);FAB.mkdir(exist_ok=True,parents=True)
 with (M/'bom-jlcpcb.csv').open('w',newline='') as file:
  writer=csv.writer(file,lineterminator='\n');writer.writerow(['Comment','Designator','Footprint','LCSC Part #'])
@@ -64,8 +64,9 @@ manifest={'variant':'modular-lcd-2.8','boardSha256':hashlib.sha256(PCB.read_byte
 with ZipFile(OUT/'shieldsigner-modular-gerbers.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(FAB.iterdir()):z.write(p,p.name)
 for p in [OUT/'shieldsigner-modular-gerbers.zip',M/'bom-jlcpcb.csv',M/'cpl-jlcpcb.csv',M/'population.csv']:manifest['files'][p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
-manifest['supplierPlacementCompensation']={'file':'placement-review/cpl-corrections.json','references':['J301','J601','U601'],'uploadedCsvPreviewChecked':True,'assemblerQualified':False}
-manifest['limitations']=[v for v in manifest['limitations'] if v!='Assembler placement preview/DFM/quote not submitted']+['Compensated CPL preview and quote checked; final assembler DFM and placement confirmation still pending']
+manifest['testPoints']={'copperOnly':12,'pasteApertures':0,'assemblyPlacements':0,'map':'testpoints.json'}
+manifest['supplierPlacementCompensation']={'file':'placement-review/cpl-corrections.json','references':['J301','J601','U601'],'uploadedCsvPreviewChecked':json.loads((V/'jlc-placement-corrections.json').read_text()).get('uploadedCsvPreviewChecked',False),'assemblerQualified':False}
+manifest['limitations']=[v for v in manifest['limitations'] if v!='Assembler placement preview/DFM/quote not submitted']+['0.0.7 requires fresh Gerber/CPL supplier preview and quote; final assembler DFM and placement confirmation pending']
 (M/'readiness.json').write_text(json.dumps(manifest,indent=2)+'\n')
 with ZipFile(OUT/'shieldsigner-modular-order.zip','w',ZIP_DEFLATED) as z:
  z.write(OUT/'shieldsigner-modular-gerbers.zip','shieldsigner-modular-gerbers.zip')

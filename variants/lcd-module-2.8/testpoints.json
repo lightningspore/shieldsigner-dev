@@ -1,0 +1,122 @@
+[
+  {
+    "ref": "TP801",
+    "label": "5V",
+    "net": "+5V",
+    "xy": [
+      99.517091,
+      111.364909
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP802",
+    "label": "3V3",
+    "net": "+3.3V",
+    "xy": [
+      133.359632,
+      75.093
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP803",
+    "label": "LCD3V3",
+    "net": "LCD_3V3",
+    "xy": [
+      99.804333,
+      75.39
+    ],
+    "layer": 0
+  },
+  {
+    "ref": "TP804",
+    "label": "GND",
+    "net": "GND",
+    "xy": [
+      113.6,
+      88.4
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP805",
+    "label": "SC VCC",
+    "net": "/Smartcard Interface/SEC1210_SC_VCC",
+    "xy": [
+      151.437674,
+      71.120741
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP806",
+    "label": "UART RX",
+    "net": "/Smartcard Interface/UART_RX_PostR",
+    "xy": [
+      124.2525,
+      69.3525
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP807",
+    "label": "UART TX",
+    "net": "/Smartcard Interface/UART_TX_PostR",
+    "xy": [
+      125.375,
+      72.475
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP808",
+    "label": "SC CLK",
+    "net": "/Smartcard Interface/SEC1210_SC_CLK_PostR",
+    "xy": [
+      145.76,
+      74.08
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP809",
+    "label": "SC IO",
+    "net": "/Smartcard Interface/SEC1210_SC_IO",
+    "xy": [
+      137.866667,
+      73.677778
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP810",
+    "label": "CARD DET",
+    "net": "/Smartcard Interface/SEC1210_SC_PRSNT",
+    "xy": [
+      161.64375,
+      88.925
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP811",
+    "label": "SC RST",
+    "net": "/Smartcard Interface/SEC1210_SC_RST",
+    "xy": [
+      147.482705,
+      85.085395
+    ],
+    "layer": 31
+  },
+  {
+    "ref": "TP812",
+    "label": "GND",
+    "net": "GND",
+    "xy": [
+      103.556,
+      113.386
+    ],
+    "layer": 31
+  }
+]

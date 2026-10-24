@@ -46,7 +46,7 @@ For the current first-article plan, populate and qualify **one board first**; le
 
 Confirm stock, rotation, DFM, loading/attrition fees and final quote before payment. No paid order or physical qualification is implied by the software checks. Do not substitute the SEC1210 firmware suffix or an arbitrary eight-pin LCD.
 
-**JLC placement check:** assembly package **r3** includes a compensated `cpl-jlcpcb.csv` for J301 USB-C, J601 smartcard and U601 controller. It was re-uploaded and checked in JLC's preview without manual moves. **Do not repeat the earlier manual rotations/offsets.** Select the USB-C BOM checkbox if JLC leaves it unchecked. See the [numeric corrections and numbered-contact audit](../variants/lcd-module-2.8/manufacturing/placement-review/README.md). Keep **Confirm Parts Placement: Yes** for final assembler review.
+**JLC placement check:** PCB **0.0.7-dev** adds the relocated controller cluster, 12 copper-only test pads and brand silkscreen. Use its matching Gerbers and compensated CPL together; the older 0.0.6 r3 cart is not this layout. Supplier origin/rotation corrections for J301, J601 and U601 are retained, with U601's new position. New-board supplier preview is required. Keep **Confirm Parts Placement: Yes** for final assembler review. See the [placement guide](../variants/lcd-module-2.8/manufacturing/placement-review/README.md) and [test-point table](BRINGUP.md).
 
 ## 2. Inspect the assembled carrier
 

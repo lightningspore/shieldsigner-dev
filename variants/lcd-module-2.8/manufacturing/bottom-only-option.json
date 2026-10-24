@@ -198,5 +198,6 @@
     "first-article-process.json": "e417c69143b0ca45cde0c77670cdea68c47d5521f9fa61502727cb2de8a98d07",
     "via-removal-experiment.json": "76bd0e3e7024546738495ab465614b7fc01f3b683d7777077ca0b0e8062246aa"
   },
-  "gerberSha256": "d32254effceff38d18ce1cbd7c10c791a849018f8e91a7b3e70eae4c065c8a2d"
+  "gerberSha256": "d32254effceff38d18ce1cbd7c10c791a849018f8e91a7b3e70eae4c065c8a2d",
+  "revisionNote": "Historical analysis of pre-0.0.7 layout; not the current Gerber/CPL or a current supplier quote."
 }

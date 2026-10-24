@@ -1,6 +1,6 @@
 # ShieldSigner pill: 2.8-inch, eight-pin SPI LCD
 
-This is the **0.0.6-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
+This is the **0.0.7-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
 
 ![Assembled pill carrier, front](../variants/lcd-module-2.8/assembly-front.png)
 
@@ -99,3 +99,7 @@ Revision **0.0.6-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A-01
 ## Power-entry revision 0.0.6-dev
 
 USB-C remains a power-only input with separate 5.1 kΩ CC pull-downs. J301 is now GCT **USB4125-GF-A-0190 / C5246813**, retaining the reviewed land pattern with 1.9 mm shell stakes. Optional **J302** adds a standard 1×2, 2.54 mm header: square pad 1 = +5 V, pad 2 = GND. Both inputs share the same rail; use only one regulated 5 V source at a time. See the [assembly guide](MODULAR-ASSEMBLY.md#alternative-5-v-power-header-006-dev). The HOTHMI interface, display mounts and button positions are unchanged.
+
+## Layout and probe revision 0.0.7-dev
+
+The reader controller/support cluster moves 17 mm toward the top edge. The socket, module headers, mounting holes, USB-C and board outline stay fixed. Twelve labelled copper test pads add access to power rails, UART and card signals without adding purchased parts. ShieldSigner and LightningSpore marks use single-colour silkscreen. See the [test-point table](BRINGUP.md#pcb-007-test-points). Use the matching 0.0.7 Gerbers and CPL, with a fresh supplier preview.

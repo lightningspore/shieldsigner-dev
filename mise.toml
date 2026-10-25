@@ -200,3 +200,7 @@ run = "uv run --python 3.11 --with trimesh --with numpy python scripts/audit-ass
 [tasks."variant:lcd:fit-model"]
 description = "Export full case-aligned PCB STEP, standard-unit GLBs and assembled case STL fit kit"
 run = "uv run --python 3.11 --with cadquery==2.8.0 --with trimesh --with manifold3d python scripts/build-fit-model.py"
+
+[tasks."variant:lcd:printable-fit"]
+description = "Create one watertight millimetre STL fit mockup and a bare carrier STL"
+run = "uv run --python 3.11 --with trimesh --with manifold3d --with networkx python scripts/build-printable-fit.py"

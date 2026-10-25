@@ -39,6 +39,12 @@ function mount(root) {
     camera.near = size/1000; camera.far = size*15
     camera.updateProjectionMatrix(); controls.update()
   }
+  function layers() {
+    root.querySelectorAll('[data-layer]').forEach(input => {
+      model?.traverse(o => { if (o.name === input.dataset.layer || (input.dataset.layer === 'case_' && o.name.startsWith('case_'))) o.visible = input.checked })
+    })
+  }
+  root.querySelectorAll('[data-layer]').forEach(input => input.addEventListener('change', layers))
   async function load(mode) {
     const request = ++sequence
     status.textContent = 'Loading 3D assembly…'
@@ -49,8 +55,19 @@ function mount(root) {
         scene.remove(model)
         model.traverse(o => { o.geometry?.dispose(); if (o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose()) })
       }
-      model = gltf.scene; scene.add(model); reset()
-      status.textContent = mode === 'exploded' ? 'Exploded assembly loaded. Drag to rotate; scroll to zoom.' : 'Assembled case loaded. Drag to rotate; scroll to zoom.'
+      model = gltf.scene
+      const fitMode = mode === 'pcb' || mode === 'fit'
+      if (fitMode) model.scale.setScalar(1000)
+      if (mode === 'fit') model.traverse(o => {
+        if (o.isMesh && o.name.startsWith('case_')) {
+          o.material = o.material.clone(); o.material.transparent = true
+          o.material.opacity = 0.16; o.material.depthWrite = false
+        }
+      })
+      root.querySelector('[data-fit-controls]').hidden = !fitMode
+      scene.add(model); reset()
+      if (fitMode) layers()
+      status.textContent = mode === 'pcb' ? 'Full PCB assembly loaded: display, Luckfox, mating headers and spacers. Drag to rotate.' : mode === 'fit' ? 'Case fit loaded. Transparent shell; hide display or Luckfox bodies to inspect the headers.' : mode === 'exploded' ? 'Exploded assembly loaded. Drag to rotate; scroll to zoom.' : 'Assembled case loaded. Drag to rotate; scroll to zoom.'
       root.dataset.loaded = mode
       root.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)))
     } catch { root.dataset.failed='true'; status.textContent = 'Could not load the 3D preview. Download the GLB model below.' }

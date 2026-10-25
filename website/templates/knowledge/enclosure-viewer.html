@@ -1,12 +1,15 @@
 
 <section class="enclosure-preview" id="3d-model" aria-label="Enclosure 3D assembly">
   <h2>Interactive 3D model</h2>
-  <div data-enclosure-viewer data-assembled="{{ enclosure_models.assembled }}" data-exploded="{{ enclosure_models.exploded }}" data-viewer-script="/static/enclosure-viewer.js?v={{ site_revision }}">
-    <div class="actions"><button type="button" class="button" data-mode="assembled" aria-pressed="true">Assembled</button><button type="button" class="button" data-mode="exploded" aria-pressed="false">Exploded</button><button type="button" data-reset>Reset view</button></div>
+  <div data-enclosure-viewer data-pcb="{{ fit_models['shieldsigner-pcb-fit.glb'] }}" data-fit="{{ fit_models['shieldsigner-case-fit.glb'] }}" data-assembled="{{ enclosure_models.assembled }}" data-exploded="{{ enclosure_models.exploded }}" data-viewer-script="/static/enclosure-viewer.js?v={{ site_revision }}">
+    <div class="actions"><button type="button" class="button" data-mode="assembled" aria-pressed="true">Assembled</button><button type="button" class="button" data-mode="exploded" aria-pressed="false">Exploded</button><button type="button" class="button" data-mode="pcb" aria-pressed="false">PCB assembly</button><button type="button" class="button" data-mode="fit" aria-pressed="false">Case fit</button><button type="button" data-reset>Reset view</button></div>
+    <p data-fit-controls hidden><label><input type="checkbox" data-layer="display_module" checked> Display body</label> · <label><input type="checkbox" data-layer="luckfox_module" checked> Luckfox body</label> · <label><input type="checkbox" data-layer="case_" checked> Case shell</label><br><span class="caption">Hide module bodies to inspect their mating headers. Drag to rotate; scroll or pinch to zoom.</span></p>
     <canvas aria-label="Interactive ShieldSigner enclosure model" tabindex="0"></canvas>
     <p role="status" class="caption">Load the 3D model to inspect the case and PCB together.</p>
     <div class="enclosure-fallback"><img src="/files/enclosure/previews/assembled.png?v={{ site_revision }}" alt="Assembled printed ShieldSigner case with LCD and eight buttons" width="850" height="480"><p>Download either GLB below to inspect it in a 3D viewer.</p></div>
   </div>
   <p class="caption">Camera and ribbon are adjustable envelopes. Screw threads are omitted. Digital clearances do not replace a first fit with the purchased parts. <a href="/files/enclosure/previews/exploded.png?v={{ site_revision }}">Static exploded view ↗</a></p>
+  <p><strong>PCB fit stack:</strong> 35.52 mm overall height · 12 mm display spacers · 8.5 mm female sockets · 2.54 mm header pitch. Headers are nominal models; purchased part dimensions and contact depth still need checking. <a href="/files/variants/lcd-module-2.8/FIT-MODEL.md">Dimensions &amp; CAD import instructions ↗</a></p>
+  <div class="downloads">{% for file in fit_files %}<a href="{{ file.href }}"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>
   {% if not hide_downloads %}<div class="downloads">{% for file in enclosure_files %}<a href="{{ file.href }}"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>{% endif %}
 </section>

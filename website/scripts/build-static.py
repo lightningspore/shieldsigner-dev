@@ -36,6 +36,9 @@ def render(url, template, **context):
 assets=workflows.load('enclosure-assets')
 enclosure = dict(enclosure_files=[{**a,'href':f"/files/{a['name']}?v={a['sha256'][:12]}"} for a in assets['assets']],
                 enclosure_models={a['name'].removeprefix('shieldsigner-enclosure-').removesuffix('.glb'):f"/files/{a['name']}?v={a['sha256'][:12]}" for a in assets['assets'] if a['name'].endswith('.glb')})
+fit=workflows.load('fit-assets')
+enclosure['fit_files']=[{**a,'href':f"/files/{a['name']}?v={a['sha256'][:12]}"} for a in fit['assets']]
+enclosure['fit_models']={a['name']:f"/files/{a['name']}?v={a['sha256'][:12]}" for a in fit['assets']}
 guides = []
 search = {}
 for slug, source, category, title, description in GUIDES:
@@ -90,7 +93,7 @@ files=json.loads((SITE/'public/manifest.json').read_text())
 primary={'shieldsigner-jlcpcb-order.zip','shieldsigner-carrier-gerbers.zip','shieldsigner-luckfox-kicad.zip','schematic.pdf'}
 render('/downloads/','knowledge/downloads.html', files=files, primary_files=[p for p in files if p['name'] in primary],
        modular_version=json.loads((SITE.parent/'assets/modular-downloads.json').read_text())['release'].removeprefix('pill-preview-'),
-       enclosure_version=assets['version'],
+       enclosure_version=assets['version'], fit_files=enclosure['fit_files'],
        modular_files=[p for p in files if p['name'].startswith('shieldsigner-modular-')],
        enclosure_files=[p for p in files if p['name'].startswith('shieldsigner-enclosure-')],
        pdfs=[p for p in files if p['name'].startswith('reference/pdfs/')],

@@ -192,3 +192,11 @@ run = "uv run python scripts/audit-fabrication.py"
 [tasks."variant:lcd:faces"]
 description = "Render unobstructed high-resolution top and bottom PCB views"
 run = "uv run python scripts/render-board-faces.py"
+
+[tasks."variant:lcd:stack"]
+description = "Measure exported header mating alignment, insertion and module stack geometry"
+run = "uv run --python 3.11 --with trimesh --with numpy python scripts/audit-assembly-stack.py"
+
+[tasks."variant:lcd:fit-model"]
+description = "Export full case-aligned PCB STEP, standard-unit GLBs and assembled case STL fit kit"
+run = "uv run --python 3.11 --with cadquery==2.8.0 --with trimesh --with manifold3d python scripts/build-fit-model.py"

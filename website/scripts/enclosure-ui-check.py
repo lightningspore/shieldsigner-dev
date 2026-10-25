@@ -41,6 +41,23 @@ with sync_playwright() as p:
         with ZipFile(io.BytesIO(response.body())) as archive:
             assert 'print/button-fit-coupon.stl' in archive.namelist()
             assert len([n for n in archive.namelist() if n.endswith('.stl')])==9
+        for mode,label in [('pcb','PCB assembly'),('fit','Case fit')]:
+            viewer.get_by_role('button',name=label,exact=True).click()
+            page.wait_for_function("mode => document.querySelector('[data-enclosure-viewer]').dataset.loaded===mode",arg=mode,timeout=60000)
+            page.wait_for_timeout(500)
+            canvas.screenshot(path=str(artifacts/f'enclosure-{mode}-{width}.png'))
+            assert viewer.get_by_role('checkbox',name='Display body').is_visible()
+            viewer.get_by_role('checkbox',name='Display body').uncheck()
+            viewer.get_by_role('checkbox',name='Luckfox body').uncheck()
+            canvas.screenshot(path=str(artifacts/f'enclosure-{mode}-headers-{width}.png'))
+            viewer.get_by_role('checkbox',name='Display body').check()
+            viewer.get_by_role('checkbox',name='Luckfox body').check()
+        response=page.request.get(base+'/files/shieldsigner-fit-kit.zip')
+        assert response.ok
+        with ZipFile(io.BytesIO(response.body())) as archive:
+            assert 'shieldsigner-pcb-fit.step' in archive.namelist()
+            assert 'case/case_base.stl' in archive.namelist()
+            assert 'assembly-fit-check.json' in archive.namelist()
         # Navigate away and back through ordinary static pages.
         page.locator('.article-meta a').click();page.wait_for_url('**/guides/')
         page.get_by_role('link',name='Print and assemble the enclosure').click()

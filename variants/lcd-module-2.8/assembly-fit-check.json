@@ -1,0 +1,161 @@
+{
+  "boardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
+  "sourceGlbSha256": "c40eb99880dbd5d1fa6d00a419a80a75ef7c9e6d0412a779046e000b003d867c",
+  "coordinateFrame": {
+    "units": "mm",
+    "origin": "Carrier XY centre; carrier front component mounting plane Z=0",
+    "nativeStepTranslationMm": [
+      -128,
+      89.579,
+      -1.595
+    ],
+    "front": "+Z",
+    "rear": "-Z"
+  },
+  "interfaces": [
+    {
+      "name": "LCD",
+      "pins": 8,
+      "pitchMm": 2.54,
+      "pinSpanMm": 17.78,
+      "maxModelToPadXYErrorMm": 6e-07,
+      "femaleHousingHeightMm": 8.5,
+      "maleInsulatorHeightMm": 2.54,
+      "housingGapMm": 0.96,
+      "nominalInsertionMm": 5.04,
+      "femaleHousingZMm": [
+        0.0,
+        8.5
+      ],
+      "maleHousingZMm": [
+        9.46,
+        12.0
+      ],
+      "maleMetalZMm": [
+        3.46,
+        15.0
+      ]
+    },
+    {
+      "name": "Luckfox row A",
+      "pins": 11,
+      "pitchMm": 2.54,
+      "pinSpanMm": 25.4,
+      "maxModelToPadXYErrorMm": 6e-07,
+      "femaleHousingHeightMm": 8.5,
+      "maleInsulatorHeightMm": 2.54,
+      "housingGapMm": -0.0,
+      "nominalInsertionMm": 6.0,
+      "femaleHousingZMm": [
+        -10.18,
+        -1.68
+      ],
+      "maleHousingZMm": [
+        -12.72,
+        -10.18
+      ],
+      "maleMetalZMm": [
+        -15.72,
+        -4.18
+      ]
+    },
+    {
+      "name": "Luckfox row B",
+      "pins": 11,
+      "pitchMm": 2.54,
+      "pinSpanMm": 25.4,
+      "maxModelToPadXYErrorMm": 6e-07,
+      "femaleHousingHeightMm": 8.5,
+      "maleInsulatorHeightMm": 2.54,
+      "housingGapMm": -0.0,
+      "nominalInsertionMm": 6.0,
+      "femaleHousingZMm": [
+        -10.18,
+        -1.68
+      ],
+      "maleHousingZMm": [
+        -12.72,
+        -10.18
+      ],
+      "maleMetalZMm": [
+        -15.72,
+        -4.18
+      ]
+    }
+  ],
+  "mounts": [
+    {
+      "reference": "H701",
+      "centerMm": [
+        -35.25,
+        23.9
+      ],
+      "supportHeightMm": 12,
+      "carrierHoleMm": 2.7,
+      "displayHoleMm": 3.0
+    },
+    {
+      "reference": "H702",
+      "centerMm": [
+        47.25,
+        23.9
+      ],
+      "supportHeightMm": 12,
+      "carrierHoleMm": 2.7,
+      "displayHoleMm": 3.0
+    },
+    {
+      "reference": "H703",
+      "centerMm": [
+        -35.25,
+        -23.9
+      ],
+      "supportHeightMm": 12,
+      "carrierHoleMm": 2.7,
+      "displayHoleMm": 3.0
+    },
+    {
+      "reference": "H704",
+      "centerMm": [
+        47.25,
+        -23.9
+      ],
+      "supportHeightMm": 12,
+      "carrierHoleMm": 2.7,
+      "displayHoleMm": 3.0
+    }
+  ],
+  "nominalPcbMm": [
+    160,
+    70,
+    1.6
+  ],
+  "assemblyBoundsMm": [
+    [
+      -79.9309,
+      -35.131,
+      -17.82
+    ],
+    [
+      79.9309,
+      35.0,
+      17.7
+    ]
+  ],
+  "overallHeightMm": 35.52,
+  "lcdFrontZMm": 17.7,
+  "lcdPcbRearZMm": 12,
+  "lcdRearConnectorBottomZMm": 6.8,
+  "luckfoxRearZMm": -17.82,
+  "baseInnerFloorZMm": -21,
+  "luckfoxToFlatBaseFloorMm": 3.18,
+  "displayToFlatFrontInnerPlaneMm": 0.9,
+  "findings": [],
+  "qualification": "Nominal CAD alignment only. Generic header models have no selected purchase MPN or verified contact-depth tolerance. LCD is a drawing-derived envelope; camera/cable dimensions remain assumptions. First physical fit required.",
+  "remaining": [
+    "Choose exact female/male header MPNs and verify insertion depth, post lengths and tolerances against manufacturer drawings.",
+    "Measure the purchased display: retained drawing total stack is 10.9 mm while product prose has also stated 7.7 mm.",
+    "Dry-fit 12 mm spacers, 8.5 mm sockets and both module headers before tightening the case.",
+    "Check solder fillets, cable bends, plug access, print shrinkage and real module revision."
+  ]
+}

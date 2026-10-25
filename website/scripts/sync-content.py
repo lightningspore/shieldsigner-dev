@@ -101,6 +101,24 @@ for artifact in enclosure_manifest['assets']:
     assert hashlib.sha256(source.read_bytes()).hexdigest()==artifact['sha256'],'Enclosure asset changed: '+artifact['name']
     shutil.copyfile(source,public/artifact['name'])
 shutil.copyfile(ROOT/'assets/enclosure-downloads.json',content/'enclosure-assets.json')
+# Case-aligned PCB fit assets have independent release provenance.
+fit_manifest=json.loads((ROOT/'assets/fit-downloads.json').read_text())
+assert fit_manifest['boardSha256']==modular_manifest['boardSha256']
+assert fit_manifest['scadSha256']==enclosure_manifest['scadSha256']
+assert fit_manifest['sourceStepSha256']==next(a['sha256'] for a in modular_manifest['assets'] if a['name'].endswith('assembly.step'))
+for artifact in fit_manifest['assets']:
+    source=ROOT/'dist/fit'/artifact['name']
+    if not source.exists():
+        source=ROOT/'.tools/website-downloads'/artifact['sha256']/artifact['name']
+        if not source.exists():
+            source.parent.mkdir(parents=True,exist_ok=True)
+            request=urllib.request.Request(artifact['url'],headers={'User-Agent':'ShieldSigner-content-builder'})
+            with urllib.request.urlopen(request,timeout=60) as response:payload=response.read()
+            assert hashlib.sha256(payload).hexdigest()==artifact['sha256']
+            source.write_bytes(payload)
+    assert hashlib.sha256(source.read_bytes()).hexdigest()==artifact['sha256']
+    shutil.copyfile(source,public/artifact['name'])
+shutil.copyfile(ROOT/'assets/fit-downloads.json',content/'fit-assets.json')
 repo_url = "https://github.com/lightningspore/shieldsigner-dev/tree/main/"
 for slug, name, *_ in GUIDES:
     source = ROOT / name

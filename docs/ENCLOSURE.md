@@ -2,6 +2,12 @@
 
 This prototype case fits the 160 × 70 mm pill carrier with the eight-pin HOTHMI display and socket-mounted Luckfox Mini. The outside is 176 × 82 mm, with a removable rear service cover. Digital fit and slicing checks cover the current CAD assembly; verify the purchased camera and a first print before assembling the full device.
 
+## PCB assembly fit model
+
+The [full PCB fit kit](../variants/lcd-module-2.8/FIT-MODEL.md) includes a case-aligned STEP assembly, standard-unit GLBs, and case STL parts already positioned for assembly. The website's **PCB assembly** view removes the shell; **Case fit** makes it transparent. Hide the display or Luckfox body to inspect mating headers.
+
+Nominal exported stack: **35.52 mm** high, **12 mm** display spacers, **8.5 mm** female socket bodies, **2.54 mm** pitch. The LCD header inserts 5.04 mm with a 0.96 mm housing gap; Luckfox headers insert 6 mm with housings touching. Exact purchased header contact depth and tolerances remain unverified. Read the fit-kit guide before selecting sockets or moving the assembly into another case.
+
 ## Parts and printing
 
 The design follows SeedPills' approach of independent parts with broad, flat print faces and explicit fit clearances. Two shells close with screws. Separate button plungers, retaining plates and camera clamps avoid trapped supports and delicate snap clips.

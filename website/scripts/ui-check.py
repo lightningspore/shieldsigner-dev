@@ -1,4 +1,5 @@
 """Six static-site journeys, client-side filters, and no-JS content access."""
+import json
 import csv
 import io
 import os
@@ -20,7 +21,7 @@ with sync_playwright() as p:
         page.locator('.board-frame img').wait_for()
         assert page.locator('.board-frame img').evaluate('(img) => img.complete && img.naturalWidth > 0')
         assert page.locator('.task-card').count() == 6
-        assert '0.0.11-dev' in page.locator('footer').inner_text()
+        assert json.loads((Path(__file__).resolve().parents[1]/'version.json').read_text())['version'] in page.locator('footer').inner_text()
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Homepage overflows'
         page.screenshot(path=str(artifacts/f'home-{width}.png'), full_page=True)
         gallery = page.locator('#pcb-views')

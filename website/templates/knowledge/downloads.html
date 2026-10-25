@@ -11,6 +11,9 @@
   <h2>Printed enclosure · {{ enclosure_version }}</h2>
   <p>Flat print orientations, a removable service cover and captured buttons. <a href="/guides/enclosure/">Inspect the assembled and exploded models and read the assembly guide →</a></p>
   <div class="downloads">{% for file in enclosure_files %}<a href="/files/{{ file.name }}?v={{ file.sha256[:12] }}"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>
+  <h2>PCB assembly &amp; case fit · 0.0.1-dev</h2>
+  <p>Full carrier, display, Luckfox, mating headers and spacers. STEP and assembled case STL parts share a millimetre coordinate frame; GLBs use metres. <a href="/files/variants/lcd-module-2.8/FIT-MODEL.md">Import instructions &amp; measured dimensions →</a></p>
+  <div class="downloads">{% for file in fit_files %}<a href="{{ file.href }}"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>
   <h2>Standard FPC carrier</h2>
   <div class="actions"><a href="/files/shieldsigner-jlcpcb-order.zip">Standard FPC order bundle ↓</a><a href="/build/pcb/">Standard ordering steps →</a></div>
   <div class="downloads">{% for file in primary_files %}<a href="/files/{{ file.name }}?v={{ file.sha256[:12] }}"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>

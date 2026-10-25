@@ -24,4 +24,4 @@ Visible footprint reference labels U202 (0.10 mm stroke) and R606 (0.70 mm heigh
 
 ## 0.0.7 supplier status
 
-The retained JLC quote and old placement screenshot refer to **0.0.6**, not this new layout. Re-upload both the 0.0.7 Gerbers and its CPL and review placement before ordering. The 12 new test pads have no paste or purchased parts. Their signal/probe table is in `BRINGUP.md` inside the order ZIP.
+The **0.0.7 Gerbers and CPL** were uploaded together and checked in a fresh supplier preview without manual part moves. The saved five-board quote is $195.54 before shipping/tax. The previous 0.0.6 cart was replaced; the old placement screenshot remains historical. Final assembler DFM/placement confirmation is still required. The 12 new test pads have no paste or purchased parts. Their signal/probe table is in `BRINGUP.md` inside the order ZIP.

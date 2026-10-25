@@ -1,0 +1,11 @@
+<section class="pcb-faces section" id="pcb-views" aria-labelledby="pcb-views-title">
+  <div class="pcb-faces-heading"><div><p class="eyebrow">CARRIER PCB · 0.0.7-dev</p><h2 id="pcb-views-title">Inspect both sides.</h2></div><a href="/guides/bringup/">Test points & bring-up →</a></div>
+  <p>Large, straight-on views of the board with component bodies hidden so you can read the silkscreen and see every pad. Open either image at full size to zoom in.</p>
+  {% for side, title, caption in [('top', 'Top · display & buttons', 'Eight button positions, the display header and its dedicated 3.3 V regulator.'), ('bottom', 'Bottom · reader & power', 'Luckfox connections, the relocated smartcard circuit, USB-C power and labelled test pads.')] %}
+  <figure class="pcb-face">
+    <figcaption><div><h3>{{ title }}</h3><p>{{ caption }}</p></div><a href="/files/variants/lcd-module-2.8/board-{{ side }}.png?v={{ site_revision }}" target="_blank" rel="noopener">Open full-size ↗</a></figcaption>
+    <a class="pcb-face-image" href="/files/variants/lcd-module-2.8/board-{{ side }}.png?v={{ site_revision }}" target="_blank" rel="noopener" aria-label="Open full-size {{ side }} PCB view"><img src="/files/variants/lcd-module-2.8/board-{{ side }}.png?v={{ site_revision }}" alt="Straight-on {{ side }} view of ShieldSigner PCB 0.0.7, showing pads, routing and silkscreen without components obscuring them" width="2800" height="1400" loading="lazy"></a>
+    <div class="pcb-face-links"><span>PCB only · component bodies hidden</span><a href="/files/variants/lcd-module-2.8/pcb-{{ side }}.svg?v={{ site_revision }}" target="_blank" rel="noopener">Copper & silkscreen drawing (SVG) ↗</a></div>
+  </figure>
+  {% endfor %}
+</section>

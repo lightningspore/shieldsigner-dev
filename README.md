@@ -6,7 +6,7 @@ Native KiCad is the preferred editing workflow. This repository publishes the re
 
 ## Eight-pin 2.8-inch pill build
 
-PCB **0.0.7-dev** relocates the smartcard controller cluster, adds 12 labelled copper test pads and ShieldSigner/LightningSpore silkscreen. The [bring-up guide](docs/BRINGUP.md) explains the probes. Use the matching new Gerbers/CPL; the older 0.0.6 cart requires replacement before ordering.
+PCB **0.0.7-dev** relocates the smartcard controller cluster, adds 12 labelled copper test pads and ShieldSigner/LightningSpore silkscreen. The [bring-up guide](docs/BRINGUP.md) explains the probes. Use the matching new Gerbers/CPL; the revised 0.0.7 cart has been previewed and saved; final assembler review remains required.
 
 Start with the [pill carrier guide](docs/LCD-MODULE-VARIANT.md) and [customer assembly steps](docs/MODULAR-ASSEMBLY.md). This **160×70 mm capsule** follows the eight-pin SPI module interface in the existing Luckfox design, with the larger 2.8-inch display between the controls. JLCPCB handles 35 SMT placements across 17 catalog lines. Customer soldering is ordinary headers: 30 carrier joints, plus up to 30 if both modules arrive bare.
 
@@ -72,7 +72,7 @@ Derived from 3rdIteration/SeedSigner at the pinned revision in [reference/proven
 
 ## Public repository
 
-Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. The [0.0.7-dev pill package](https://github.com/lightningspore/shieldsigner-dev/releases/tag/pill-assembly-0.0.7-r1) contains the current native project, schematic, matched quote kit and 3D exports. The older workflow preview remains a separate standard FPC reference. These are prototype review files, not physically qualified production hardware.
+Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. The [0.0.7-dev pill package](https://github.com/lightningspore/shieldsigner-dev/releases/tag/pill-assembly-0.0.7-r2) contains the current native project, schematic, matched quote kit and 3D exports. The older workflow preview remains a separate standard FPC reference. These are prototype review files, not physically qualified production hardware.
 
 ## Build and use workflows
 

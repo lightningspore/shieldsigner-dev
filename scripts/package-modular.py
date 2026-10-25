@@ -31,7 +31,7 @@ with ZipFile(OUT / 'shieldsigner-modular-kicad.zip', 'w', ZIP_DEFLATED) as archi
             archive.write(source, source.relative_to(ROOT))
     for source in [ROOT / 'LICENSE', ROOT / 'docs/LCD-MODULE-VARIANT.md', ROOT / 'docs/MODULAR-ASSEMBLY.md', ROOT / 'docs/BRINGUP.md', *sorted((ROOT / 'reference/pdfs').glob('*.pdf'))]:
         archive.write(source, source.relative_to(ROOT))
-tag = 'pill-assembly-0.0.7-r1'
+tag = 'pill-assembly-0.0.7-r2'
 names = ['shieldsigner-modular-order.zip', 'shieldsigner-modular-gerbers.zip', 'shieldsigner-modular-kicad.zip', 'shieldsigner-modular-assembly.step', 'shieldsigner-modular-assembly.glb', 'shieldsigner-modular-schematic.pdf']
 manifest = {'release': tag, 'boardSha256': board_sha, 'assets': []}
 for name in names:

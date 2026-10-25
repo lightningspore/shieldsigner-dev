@@ -98,3 +98,5 @@ enclosure suite loads both actual GLBs and exercises controls and static fallbac
 
 Website checks do not qualify the physical hardware; the existing first-article limitations
 remain part of the documentation.
+
+The homepage and PCB ordering task share `knowledge/pcb-faces.html`: large, stacked top/bottom PCB views with full-size PNG and native SVG links. Regenerate the unobstructed 2800 px images with `mise run variant:lcd:faces` from the repository root after a PCB change. This uses a temporary model-free rendering copy and asserts that the native board bytes are unchanged. `mise run ui:test` checks both images and the full-size link on desktop/mobile.

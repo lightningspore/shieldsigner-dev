@@ -1,7 +1,7 @@
 {
   "boardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
   "reviewed": "2026-10-24",
-  "qualification": "Supplier model datums retained from 0.0.6 r3; U601 translated 17mm toward top edge. New 0.0.7 Gerbers/CPL require fresh supplier preview; final assembler DFM remains required",
+  "qualification": "PCB 0.0.7 Gerbers and compensated CPL re-uploaded and inspected without manual component moves; USB tail/stake alignment, smartcard orientation and relocated SEC1210 pin 1 checked. Saved five-board cart quote; final assembler DFM remains required.",
   "corrections": {
     "J301": {
       "lcsc": "C5246813",
@@ -66,5 +66,5 @@
     "U701": "Top-side regulator orientation unchanged; pin 1 lower left agrees with its native footprint.",
     "D301": "Bidirectional TVS; no polarity-dependent 180deg change required."
   },
-  "uploadedCsvPreviewChecked": false
+  "uploadedCsvPreviewChecked": true
 }

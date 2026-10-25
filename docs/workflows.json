@@ -43,7 +43,7 @@
           "items": [
             "Use the pill bundle as one set; its BOM/CPL and Gerbers share the same PCB hash and datum.",
             "Unzip once. Upload the inner shieldsigner-modular-gerbers.zip for the PCB; upload bom-jlcpcb.csv and cpl-jlcpcb.csv for assembly.",
-            "LCD, Luckfox, customer headers/supports and six copper jumpers are outside the SMT BOM. Old FPC/backlight parts and J302 are absent."
+            "LCD, Luckfox, customer headers/supports, six copper jumpers and twelve copper test pads are outside the SMT BOM. J302 is the optional 5 V/GND power header; old FPC/backlight parts are absent."
           ],
           "downloads": [
             {

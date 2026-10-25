@@ -23,6 +23,19 @@ with sync_playwright() as p:
         assert '0.0.11-dev' in page.locator('footer').inner_text()
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Homepage overflows'
         page.screenshot(path=str(artifacts/f'home-{width}.png'), full_page=True)
+        gallery = page.locator('#pcb-views')
+        assert gallery.locator('.pcb-face').count() == 2
+        for photo in gallery.locator('img').all():
+            photo.scroll_into_view_if_needed()
+            photo.evaluate('(img) => img.decode()')
+            assert photo.evaluate('(img) => img.naturalWidth === 2800')
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'PCB views overflow'
+        gallery.screenshot(path=str(artifacts/f'pcb-views-{width}.png'))
+        with page.expect_popup() as image_window:
+            gallery.get_by_role('link', name='Open full-size ↗', exact=True).first.click()
+        image_window.value.wait_for_load_state()
+        assert '/board-top.png' in image_window.value.url
+        image_window.value.close()
         page.locator('.task-card[href="/build/pcb/"]').click()
         page.wait_for_url('**/build/pcb/')
         page.locator('.step-check input').first.check()

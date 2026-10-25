@@ -66,7 +66,7 @@ with ZipFile(OUT/'shieldsigner-modular-gerbers.zip','w',ZIP_DEFLATED) as z:
 for p in [OUT/'shieldsigner-modular-gerbers.zip',M/'bom-jlcpcb.csv',M/'cpl-jlcpcb.csv',M/'population.csv']:manifest['files'][p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
 manifest['testPoints']={'copperOnly':12,'pasteApertures':0,'assemblyPlacements':0,'map':'testpoints.json'}
 manifest['supplierPlacementCompensation']={'file':'placement-review/cpl-corrections.json','references':['J301','J601','U601'],'uploadedCsvPreviewChecked':json.loads((V/'jlc-placement-corrections.json').read_text()).get('uploadedCsvPreviewChecked',False),'assemblerQualified':False}
-manifest['limitations']=[v for v in manifest['limitations'] if v!='Assembler placement preview/DFM/quote not submitted']+['0.0.7 requires fresh Gerber/CPL supplier preview and quote; final assembler DFM and placement confirmation pending']
+manifest['limitations']=[v for v in manifest['limitations'] if v!='Assembler placement preview/DFM/quote not submitted']+['Supplier preview/quote status recorded in supplierPlacementCompensation; final assembler DFM and placement confirmation pending']
 (M/'readiness.json').write_text(json.dumps(manifest,indent=2)+'\n')
 with ZipFile(OUT/'shieldsigner-modular-order.zip','w',ZIP_DEFLATED) as z:
  z.write(OUT/'shieldsigner-modular-gerbers.zip','shieldsigner-modular-gerbers.zip')

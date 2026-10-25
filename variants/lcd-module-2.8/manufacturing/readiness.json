@@ -26,7 +26,7 @@
     "Physical header/module fit and powered bring-up not tested",
     "LCD, smartcard socket, switch, USB and spacer models are drawing-derived envelopes",
     "Stock snapshot is not a reservation",
-    "0.0.7 requires fresh Gerber/CPL supplier preview and quote; final assembler DFM and placement confirmation pending"
+    "Supplier preview and quote checked for 0.0.7; final assembler DFM and placement confirmation pending"
   ],
   "files": {
     "shieldsigner-modular-gerbers.zip": "b7d595e79a5d67e8e61b7b46ca359f1e709bbcda206a12ab7a9fc37517eac570",
@@ -41,7 +41,7 @@
       "J601",
       "U601"
     ],
-    "uploadedCsvPreviewChecked": false,
+    "uploadedCsvPreviewChecked": true,
     "assemblerQualified": false
   },
   "testPoints": {

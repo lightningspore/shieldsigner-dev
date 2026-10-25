@@ -1,6 +1,6 @@
 # Assemble the eight-pin pill carrier
 
-**JLCPCB solders the 35 SMT parts. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.6-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
+**JLCPCB solders the 35 SMT parts. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.7-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
 
 For an optional DIY build, use the separate [self-assembly guide](SELF-ASSEMBLY.md) and DigiKey purchase CSV. The original JLC kit below remains the assembled-board ordering path.
 
@@ -46,7 +46,7 @@ For the current first-article plan, populate and qualify **one board first**; le
 
 Confirm stock, rotation, DFM, loading/attrition fees and final quote before payment. No paid order or physical qualification is implied by the software checks. Do not substitute the SEC1210 firmware suffix or an arbitrary eight-pin LCD.
 
-**JLC placement check:** PCB **0.0.7-dev** adds the relocated controller cluster, 12 copper-only test pads and brand silkscreen. Use its matching Gerbers and compensated CPL together; the older 0.0.6 r3 cart is not this layout. Supplier origin/rotation corrections for J301, J601 and U601 are retained, with U601's new position. New-board supplier preview is required. Keep **Confirm Parts Placement: Yes** for final assembler review. See the [placement guide](../variants/lcd-module-2.8/manufacturing/placement-review/README.md) and [test-point table](BRINGUP.md).
+**JLC placement check:** PCB **0.0.7-dev** adds the relocated controller cluster, 12 copper-only test pads and brand silkscreen. Use its matching Gerbers and compensated CPL together; the older 0.0.6 r3 cart is not this layout. Supplier origin/rotation corrections for J301, J601 and U601 are retained, with U601's new position. The new Gerbers/CPL were uploaded and previewed without manual part moves; the saved five-board cart is $195.54 before shipping/tax. Keep **Confirm Parts Placement: Yes** for final assembler review. See the [placement guide](../variants/lcd-module-2.8/manufacturing/placement-review/README.md) and [test-point table](BRINGUP.md).
 
 ## 2. Inspect the assembled carrier
 

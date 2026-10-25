@@ -1,6 +1,6 @@
 {
   "observedDate": "2026-10-24",
-  "boardRevision": "0.0.6-dev",
+  "boardRevision": "0.0.7-dev",
   "currency": "USD",
   "pcbQuantity": 5,
   "assembledQuantity": 5,
@@ -36,5 +36,6 @@
     "smartcard",
     "enclosure"
   ],
-  "status": "Unpaid calculated quote; not final factory DFM or physical qualification; previous USB-omitting quote superseded."
+  "status": "Saved unpaid five-board quote for PCB 0.0.7; both-side standard assembly, USB included; corrected CSV preview checked without manual part moves. Final assembler DFM and first article remain pending.",
+  "boardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7"
 }

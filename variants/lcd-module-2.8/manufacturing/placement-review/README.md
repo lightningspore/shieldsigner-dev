@@ -1,6 +1,6 @@
 # JLCPCB assembly placement guide — PCB 0.0.7-dev
 
-Assembly package **0.0.7 r1**, 2026-10-24. This revision moves the controller cluster 17 mm toward the top edge, adds 12 copper-only test pads, and adds branding. It requires a new Gerber/CPL upload and supplier preview. The component-specific catalog corrections are retained from the verified 0.0.6 r3 import; U601 uses its new coordinate. Do not reuse the old cart as confirmation of this new board.
+Assembly package **0.0.7 r2**, 2026-10-24. This revision moves the controller cluster 17 mm toward the top edge, adds 12 copper-only test pads, and adds branding. Its Gerbers, BOM and compensated CPL were uploaded together and checked without manual part moves. The saved five-board cart quote is $195.54 before shipping/tax. USB solder-tail/stake alignment, the socket entrance/orientation and relocated U601 pin 1 were checked. The old 0.0.6 cart was replaced. Final assembler DFM/placement approval and physical first-article qualification remain pending.
 
 ## Upload and confirm
 

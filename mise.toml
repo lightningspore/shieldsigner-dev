@@ -188,3 +188,7 @@ run = "uv run python scripts/lcd-power-budget.py"
 [tasks."variant:lcd:fab-audit"]
 description = "Screen actual native geometry against dated JLC fabrication limits and flag assembly tooling gaps"
 run = "uv run python scripts/audit-fabrication.py"
+
+[tasks."variant:lcd:faces"]
+description = "Render unobstructed high-resolution top and bottom PCB views"
+run = "uv run python scripts/render-board-faces.py"

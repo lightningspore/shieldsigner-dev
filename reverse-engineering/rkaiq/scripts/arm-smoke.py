@@ -64,6 +64,10 @@ ae_damping=ROOT/'dist/reverse-engineering/ae-damping-fixtures'
 with (ae_damping/'inputs.txt').open('rb') as source:
  damping=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert damping.stdout==(ae_damping/'expected.txt').read_bytes(),'ARM dynamic damping differs from original instructions'
+isp_pipeline=ROOT/'dist/reverse-engineering/isp-pipeline-fixtures'
+with (isp_pipeline/'inputs.txt').open('rb') as source:
+ pipeline=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert pipeline.stdout==(isp_pipeline/'expected.txt').read_bytes(),'ARM ISP pad orchestration differs from original instructions'
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -84,6 +88,7 @@ for values,message in [(['1600','2147483648','0','100'],'nonnegative signed 32-b
  rejected=subprocess.run(command('camera-probe','apply-linear','/dev/null',*values),text=True,capture_output=True)
  assert rejected.returncode==1 and message in rejected.stderr and not rejected.stdout,rejected
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'ispPipelineReferenceCases':len(pipeline.stdout.splitlines()),'ispPipelineMatch':True,
  'aeDampingReferenceCases':len(damping.stdout.splitlines()),'aeDampingMatch':True,
  'aeDecisionReferenceCases':len(decision.stdout.splitlines()),'aeDecisionMatch':True,
  'sensorWriteInvalidEndpointRejected':True,'sensorWriteArgumentGuardsPassed':True,

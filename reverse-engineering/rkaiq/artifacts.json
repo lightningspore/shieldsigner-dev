@@ -138,6 +138,16 @@
       "name": "sc3336.c",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/i2c/sc3336.c",
       "sha256": "1b70ba3939caee66563950fc4456056ab28e4bddf4d1739461fc7b619325b98c"
+    },
+    {
+      "name": "isp_params.c",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/isp_params.c",
+      "sha256": "e890a82053fef08ee336c09e6d85addb2225deef2edd39e7f3a8b71af5822018"
+    },
+    {
+      "name": "isp_params_v32.c",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/isp_params_v32.c",
+      "sha256": "bd22b031cb402e758be25626869587290ef45af700e85de4dc6e0181a68f50ed"
     }
   ],
   "uclibcRuntime": {

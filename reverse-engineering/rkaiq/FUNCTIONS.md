@@ -54,3 +54,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## Dynamic exposure damping
 
 `ae_damping::calculate` reconstructs `AecDynamicDamp`, ELF `0xa4024`, and its active core at `0xa3ab8`. The wrapper returns the supplied coefficient unchanged when disabled; a native null context returns 8.0, which is outside this checked value API. [Behavior and reference evidence](AE.md#history-based-exposure-damping).
+
+## ISP pipeline pad setup
+
+`isp_pipeline::setup` reconstructs `CamHwIsp20::setupPipelineFmtIsp`, ELF `0x2319c`. It preserves the native sequence and full UAPI records through an explicit backend. Device/raw-stream/scaler implementations remain outside this verified function. [Contract, driver evidence and missing startup work](ISP.md).

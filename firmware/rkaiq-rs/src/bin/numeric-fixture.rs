@@ -191,6 +191,114 @@ fn main() {
                         .join(",")
                 );
             }
+            "isp-pipeline" => {
+                use shieldsigner_rkaiq::isp_pipeline::*;
+                fn hex(v: &[u8]) -> String {
+                    v.iter().map(|b| format!("{b:02x}")).collect()
+                }
+                struct Trace {
+                    calls: Vec<String>,
+                    operations: i32,
+                    fail: i32,
+                    error: i32,
+                    formats: [Format; 2],
+                    bits: i8,
+                    adjust: bool,
+                }
+                impl Trace {
+                    fn status(&mut self) -> i32 {
+                        self.operations += 1;
+                        if self.operations == self.fail {
+                            self.error
+                        } else {
+                            0
+                        }
+                    }
+                }
+                impl Backend for Trace {
+                    fn set_tx_format(&mut self, f: &Format, p: u32) {
+                        self.calls.push(format!("tx:{p}:{}", hex(f)));
+                    }
+                    fn set_rx_format(&mut self, f: &Format, p: u32) {
+                        self.calls.push(format!("rx:{p}:{}", hex(f)));
+                    }
+                    fn bits_per_pixel(&mut self, p: u32) -> i8 {
+                        self.calls.push(format!("bpp:{p}"));
+                        self.bits
+                    }
+                    fn set_scaler_format(&mut self, s: &Selection, p: u32, b: i8) {
+                        self.calls.push(format!("scaler:{p}:{b}:{}", hex(s)));
+                    }
+                    fn get_format(&mut self, w: u32, p: u32, out: &mut Format) -> i32 {
+                        self.calls.push(format!("get:{w}:{p}"));
+                        let status = self.status();
+                        if status == 0 {
+                            *out = self.formats[(p == 2) as usize];
+                        }
+                        status
+                    }
+                    fn set_format(&mut self, f: &mut Format) -> i32 {
+                        self.calls.push(format!("format:{}", hex(f)));
+                        self.status()
+                    }
+                    fn set_selection(&mut self, s: &mut Selection) -> i32 {
+                        self.calls.push(format!("selection:{}", hex(s)));
+                        let status = self.status();
+                        if status == 0 && self.adjust {
+                            for (offset, mask) in [(8, 0x1234u32), (12, 0x8000)] {
+                                let n =
+                                    u32::from_le_bytes(s[offset..offset + 4].try_into().unwrap())
+                                        ^ mask;
+                                s[offset..offset + 4].copy_from_slice(&n.to_le_bytes());
+                            }
+                            for (offset, delta) in [(16, 1i32), (20, 2), (24, -2), (28, -4)] {
+                                let n =
+                                    u32::from_le_bytes(s[offset..offset + 4].try_into().unwrap())
+                                        .wrapping_add(delta as u32);
+                                s[offset..offset + 4].copy_from_slice(&n.to_le_bytes());
+                            }
+                            for b in &mut s[32..] {
+                                *b ^= 0x5a;
+                            }
+                        }
+                        status
+                    }
+                }
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let decode = |k: &str| {
+                    let s = v[k].as_str().unwrap();
+                    (0..s.len())
+                        .step_by(2)
+                        .map(|i| u8::from_str_radix(&s[i..i + 2], 16).unwrap())
+                        .collect::<Vec<_>>()
+                };
+                let mut trace = Trace {
+                    calls: vec![],
+                    operations: 0,
+                    fail: v["fail"].as_i64().unwrap() as i32,
+                    error: v["error"].as_i64().unwrap() as i32,
+                    bits: v["bits"].as_i64().unwrap() as i8,
+                    adjust: v["adjust"].as_bool().unwrap(),
+                    formats: [
+                        decode("sink").try_into().unwrap(),
+                        decode("source").try_into().unwrap(),
+                    ],
+                };
+                let config = Configuration {
+                    shared_cif: v["shared"].as_bool().unwrap(),
+                    shared_capture_first: v["first"].as_bool().unwrap(),
+                    scaler: v["scaler"].as_bool().unwrap(),
+                    pixel_format: v["pixel"].as_u64().unwrap() as u32,
+                };
+                let result = setup(
+                    &mut trace,
+                    config,
+                    &decode("sensor").try_into().unwrap(),
+                    &decode("crop").try_into().unwrap(),
+                );
+                trace.calls.push(format!("return:{result}"));
+                println!("{}", trace.calls.join(";"));
+            }
             "ae-damping" => {
                 use shieldsigner_rkaiq::ae_damping::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

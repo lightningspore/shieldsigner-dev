@@ -38,6 +38,8 @@ The histogram-driven `ClmExecute` exposure solver is now reconstructed, includin
 
 History-based `AecDynamicDamp` now matches **1,000 original-ARM cases**, including the 9×9 rule surface, custom mode, ring wrap, linear/HDR diagnostic writes and disabled behavior. This returns a damping coefficient; it does not complete the outer controller or independent ISP startup. See [AE.md](AE.md).
 
+The ISP pad-format/crop setup sequence now matches **1,000 original-ARM traces**, including shared-CIF behavior, optional scaler calls, complete record preservation, adjusted crop responses and first-error returns. Its device methods are recorded boundaries, not a live startup backend. The first-parameter-buffer startup dependency is confirmed in the pinned kernel source. See [ISP.md](ISP.md).
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -101,6 +103,7 @@ mise run camera:rust:iq-calibration
 mise run camera:rust:ae-histogram
 mise run camera:rust:ae-decision
 mise run camera:rust:ae-damping
+mise run camera:rust:isp-pipeline
 mise run camera:rust:arm
 mise run camera:rust:smoke
 mise run camera:rust:package

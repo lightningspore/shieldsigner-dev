@@ -14,6 +14,7 @@ pub mod engine;
 pub mod exposure;
 pub mod gain;
 pub mod isp32;
+pub mod isp_pipeline;
 pub mod media;
 pub mod sensor;
 pub mod sensor_descriptor;

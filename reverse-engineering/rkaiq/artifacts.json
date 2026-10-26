@@ -49,6 +49,33 @@
       "name": "gain_uapi_head_v2.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/gain_uapi_head_v2.h",
       "sha256": "ea40f8a258fed45ced8591720fb5c775e024d2af5a0328d20743dbbe14e40918"
+    },
+    {
+      "name": "rk_aiq_types_awb_algo.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/awb/rk_aiq_types_awb_algo.h",
+      "sha256": "e25f4a3f73f7093b90a94823f61d478bfed2d244594013bf329e3f0c1f23d25d"
+    }
+  ],
+  "kernelHeaders": [
+    {
+      "name": "rk-isp2-config.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/rk-isp2-config.h",
+      "sha256": "4222985137397f36ad8ed067d6b094d7e87dc07f621269ede9ff1eada8ff28c7"
+    },
+    {
+      "name": "rk-isp21-config.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/rk-isp21-config.h",
+      "sha256": "ed7486c90504906825729d4f60d13a89d93c06bc9ea77c6af705d5d8edf8f1ca"
+    },
+    {
+      "name": "rk-isp3-config.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/rk-isp3-config.h",
+      "sha256": "441a9722939ddcbeff8e73e2284db106d1356fc35c2e66be6c80394515f0055b"
+    },
+    {
+      "name": "rk-isp32-config.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/rk-isp32-config.h",
+      "sha256": "dbf3e0fc8bccc4f2f7211d0c43e39f793f61ff867de8ca21a4226c6933d0353a"
     }
   ]
 }

@@ -152,3 +152,121 @@ mod tests {
         );
     }
 }
+
+/// Thirteen-entry ISO calibration table used by the pinned gain selector.
+#[derive(Clone, Copy, Debug)]
+pub struct GainTable {
+    pub enabled: bool,
+    pub iso: [i32; 13],
+    pub short: [f32; 13],
+    pub middle: [f32; 13],
+}
+#[derive(Clone, Copy, Debug)]
+pub struct SelectedGain {
+    pub scales: GainScales,
+    pub low: usize,
+    pub high: usize,
+}
+/// Recovered gain_select_params_by_ISO_V2 (ELF 0xe784c).
+/// ISO is first integer-divided by 50. Exact interior knots choose the interval
+/// beginning at that knot, and samples outside the table extrapolate.
+pub fn select_gain_scales(
+    table: &GainTable,
+    exposure: &ExposureSet,
+) -> Result<SelectedGain, InvalidInput> {
+    let sample = exposure.iso[exposure.mode.last()];
+    if sample < 0 {
+        return Err(InvalidInput::Exposure);
+    }
+    let gain = (sample / 50).max(1);
+    let mut knots = [0i32; 13];
+    for i in 0..13 {
+        if table.iso[i] < 50 {
+            return Err(InvalidInput::Exposure);
+        }
+        knots[i] = table.iso[i] / 50;
+        if !table.short[i].is_finite() || !table.middle[i].is_finite() {
+            return Err(InvalidInput::NonFinite);
+        }
+    }
+    if knots.windows(2).any(|p| p[0] >= p[1]) {
+        return Err(InvalidInput::NonIncreasing);
+    }
+    let (mut low, mut high) = (0, 1);
+    for i in 0..12 {
+        if knots[i] <= gain && gain <= knots[i + 1] {
+            low = i;
+            high = i + 1;
+        }
+    }
+    if gain > knots[12] {
+        low = 11;
+        high = 12;
+    }
+    if gain < knots[1] {
+        low = 0;
+        high = 1;
+    }
+    let ratio = ((gain - knots[low]) as f32) / ((knots[high] - knots[low]) as f32);
+    let short = libm::fmaf(
+        table.short[high] - table.short[low],
+        ratio,
+        table.short[low],
+    );
+    let middle = libm::fmaf(
+        table.middle[high] - table.middle[low],
+        ratio,
+        table.middle[low],
+    );
+    Ok(SelectedGain {
+        scales: GainScales {
+            enabled: table.enabled,
+            short,
+            middle,
+        },
+        low,
+        high,
+    })
+}
+
+#[cfg(test)]
+mod selection_tests {
+    use super::*;
+    fn fixture() -> (GainTable, ExposureSet) {
+        (
+            GainTable {
+                enabled: true,
+                iso: core::array::from_fn(|i| (i as i32 + 1) * 50),
+                short: core::array::from_fn(|i| i as f32),
+                middle: [1.; 13],
+            },
+            ExposureSet {
+                mode: HdrMode::Linear,
+                time: [1.; 3],
+                analog_gain: [1.; 3],
+                digital_gain: [1.; 3],
+                iso: [150; 3],
+            },
+        )
+    }
+    #[test]
+    fn exact_knot_uses_next_interval_and_above_table_extrapolates() {
+        let (table, mut exposure) = fixture();
+        let selected = select_gain_scales(&table, &exposure).unwrap();
+        assert_eq!((selected.low, selected.high), (2, 3));
+        assert_eq!(selected.scales.short, 2.);
+        exposure.iso[0] = 750;
+        let selected = select_gain_scales(&table, &exposure).unwrap();
+        assert_eq!((selected.low, selected.high), (11, 12));
+        assert_eq!(selected.scales.short, 14.);
+    }
+    #[test]
+    fn distinct_iso_knots_with_equal_integer_gain_are_rejected() {
+        let (mut table, exposure) = fixture();
+        table.iso[1] = 99;
+        assert!(matches!(
+            select_gain_scales(&table, &exposure),
+            Err(InvalidInput::NonIncreasing)
+        ));
+    }
+}

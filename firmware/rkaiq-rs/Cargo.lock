@@ -88,7 +88,7 @@ dependencies = [
 
 [[package]]
 name = "shieldsigner-rkaiq"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "libc",
  "libm",

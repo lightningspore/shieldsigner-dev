@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Assemble a checksummed hardware-test kit, excluding vendor binaries/pseudocode."""
 from pathlib import Path
-import hashlib,json,platform,shutil,subprocess,zipfile
+import hashlib,json,platform,shutil,subprocess,zipfile,tomllib
 from elftools.elf.elffile import ELFFile
 ROOT=Path(__file__).resolve().parents[3]
-base=ROOT/'dist/reverse-engineering';kit=base/'rkaiq-camera-test-0.0.1';kit.mkdir(parents=True,exist_ok=True)
+version=tomllib.loads((ROOT/'firmware/rkaiq-rs/Cargo.toml').read_text())['package']['version']
+base=ROOT/'dist/reverse-engineering';kit=base/('rkaiq-camera-test-'+version);kit.mkdir(parents=True,exist_ok=True)
 arm=ROOT/'firmware/rkaiq-rs/target/armv7-unknown-linux-musleabihf/release'
 smoke=json.loads((ROOT/'reverse-engineering/rkaiq/arm-smoke.json').read_text())
 proof=json.loads((ROOT/'reverse-engineering/rkaiq/numeric-equivalence.json').read_text());assert proof['mismatchCount']==0
@@ -45,7 +46,7 @@ manifest.json records SHA-256 for each kit file. Source and dependency license
 texts are included. Full investigation and reproducible mise tasks:
 https://github.com/lightningspore/shieldsigner-dev/tree/main/reverse-engineering/rkaiq
 '''
-(kit/'README.txt').write_text(readme);items.append('README.txt')
+(kit/'README.txt').write_text(readme.replace('0.0.1',version));items.append('README.txt')
 script='''#!/bin/sh
 set -eu
 kit_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
@@ -82,12 +83,16 @@ zigroot=Path(subprocess.check_output(['mise','where','zig@0.15.2'],cwd=ROOT,text
 for path in [zigroot/'lib/libc/musl/COPYRIGHT',zigroot/'lib/libc/musl/COPYRIGHT.txt']:
  if path.exists():copy(path,'licenses/musl/'+path.name)
 (kit/'licenses/dependencies.json').write_text(json.dumps(licenses,indent=2)+'\n');items.append('licenses/dependencies.json')
-manifest={'version':'0.0.1','target':'armv7-unknown-linux-musleabihf','status':'Partial reconstruction; hardware camera validation pending',
+manifest={'version':version,'target':'armv7-unknown-linux-musleabihf','status':'Partial reconstruction; hardware camera validation pending',
  'numericCases':proof['totalCases'],'fullIspReplacement':False,'linksVendorRkaiq':False,'files':[]}
 for name in sorted(items):
  path=kit/name;manifest['files'].append({'name':name,'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
 (kit/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 archive=base/(kit.name+'.zip')
+if archive.exists():
+ with zipfile.ZipFile(archive) as old:previous=json.loads(old.read(kit.name+'/manifest.json'))
+ if previous!=manifest:raise SystemExit('Refusing to replace an existing kit version; bump Cargo package version first')
+ print('Identical version already packaged:',archive);raise SystemExit(0)
 with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as out:
  for name in [*sorted(items),'manifest.json']:out.write(kit/name,kit.name+'/'+name)
 print(archive,archive.stat().st_size,'bytes; sha256',hashlib.sha256(archive.read_bytes()).hexdigest())

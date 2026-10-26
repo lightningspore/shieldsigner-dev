@@ -12,6 +12,9 @@ All addresses below are **ELF virtual addresses with the Thumb bit cleared**, be
 | `gain_float_lim2_int(float, int, int)` | `0xe79d8` | `quantize_gain` | 1,000; multiplicative branch, 0–30 fractional bits |
 | `gain_fix_transfer_v2` | `0xe7a68` | `gain::pack_gain_registers` | 1,000 full records; linear, two-frame HDR, three-frame HDR |
 
+| `gain_select_params_by_ISO_V2` | `0xe784c` | `gain::select_gain_scales` | 1,000 calibration selections |
+| `RkCam::Isp32Params::convertAiqAwbGainToIsp32Params` | `0x2b590` | `isp32::apply_awb_gain` | 1,000 complete parameter-buffer updates |
+
 ## Gain-record layout and behavior
 
 The SDK's public `RK_GAIN_Fix_V2_s` header defines 13 one-byte controls followed by three u32 gains aligned at byte 16. The Rust serializer explicitly zeroes the three padding bytes; the original routine leaves them untouched, so reference outputs begin in zeroed storage. The compared record is 28 bytes.
@@ -26,6 +29,16 @@ The Rust implementation rejects nonpositive active exposure/time/gain/ISO and no
 
 ## Corpus coverage
 
-The fixed seed is in `numeric-equivalence.json`. It covers endpoint clamping, tight interpolation intervals around the 0.001 threshold, matrix extrapolation, calibration integer ranges, signed gain quantization including saturation, and LUT alpha endpoints/fractional coefficients. Calibration profiles use normal finite values. Seven function reconstructions and a finite corpus are not an exhaustive correctness or complete ISP claim.
+The fixed seed is in `numeric-equivalence.json`. It covers endpoint clamping, tight interpolation intervals around the 0.001 threshold, matrix extrapolation, calibration integer ranges, signed gain quantization including saturation, and LUT alpha endpoints/fractional coefficients. Calibration profiles use normal finite values. Nine function reconstructions and a finite corpus are not an exhaustive correctness or complete ISP claim.
 
 The harness loads original ARM instructions, applies ELF relocations, enables VFP and runs each selected function to a bounded return sentinel. Standard memory copies/sets have explicit emulator implementations; all other unexpected imported calls fail the test. Gain register conversion executes its actual internal helper and reaches no imported dependency for the valid cases tested.
+
+## ISO calibration selection
+
+The selector integer-divides ISO and table knots by 50, with sample gain at least 1. Exact interior knots select the interval beginning there; out-of-range samples extrapolate. The checked API requires strictly increasing normalized knots. Interpolation uses fused multiply-add. The table enable flag is copied; row flags are unused. Returned indices replace the original context mutation.
+
+## ISP32 white-balance parameter serialization
+
+The SDK header defines the fifth input field as an application-position enum (gain bank 0 or 1), despite Ghidra inferring a float. Each color gain is multiplied by 256 in f32, then rounded using f64 +0.5, narrowed and limited to 2047. The checked API accepts finite gains from 0 through 255. Four groups of GB/GR/B/R words occupy 32 bytes: gain bank 1 first, then the three gain-bank-0 groups. The unused bank receives unity (256).
+
+The exact pinned ARM kernel UAPI defines a packed 11,145-byte ISP32 parameter buffer, AWB gain record offset 4,645 (0x1225), and AWB module mask 1<<5. `camera:rust:layout` independently cross-compiles assertions against those headers. Updating sets that bit in all three masks and preserves unrelated bytes. `update=false` is a complete no-op. The Rust API exposes the original C++ cached record as a separate buffer. No parameter buffer is submitted to a live ISP yet.

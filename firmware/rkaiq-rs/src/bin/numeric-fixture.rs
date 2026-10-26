@@ -55,6 +55,67 @@ fn main() {
                     .unwrap()
                 );
             }
+            "iso" => {
+                use shieldsigner_rkaiq::gain::*;
+                let knots: Vec<i32> = a[3].split(',').map(|v| v.parse().unwrap()).collect();
+                let table = GainTable {
+                    enabled: a[2] == "1",
+                    iso: knots.try_into().unwrap(),
+                    short: floats(a[4]).try_into().unwrap(),
+                    middle: floats(a[5]).try_into().unwrap(),
+                };
+                let mut e = ExposureSet {
+                    mode: HdrMode::Linear,
+                    time: [1.; 3],
+                    analog_gain: [1.; 3],
+                    digital_gain: [1.; 3],
+                    iso: [0; 3],
+                };
+                e.iso[0] = a[1].parse().unwrap();
+                let out = select_gain_scales(&table, &e).unwrap();
+                println!(
+                    "{} {} {} {:08x} {:08x}",
+                    out.low,
+                    out.high,
+                    out.scales.enabled as u8,
+                    out.scales.short.to_bits(),
+                    out.scales.middle.to_bits()
+                );
+            }
+            "awb" => {
+                use shieldsigner_rkaiq::isp32::*;
+                let mut state: u32 = a[1].parse().unwrap();
+                let mut params = [0u8; PARAMETER_BYTES];
+                for value in &mut params {
+                    state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                    *value = (state >> 24) as u8;
+                }
+                let mut cache = [0u8; 32];
+                let values = floats(a[4]);
+                let gain = WhiteBalanceGain {
+                    red: values[0],
+                    green_red: values[1],
+                    green_blue: values[2],
+                    blue: values[3],
+                    position: if a[3] == "0" {
+                        ApplyPosition::Gain0
+                    } else {
+                        ApplyPosition::Gain1
+                    },
+                };
+                apply_awb_gain(&mut params, &mut cache, gain, a[2] == "1").unwrap();
+                let hex = |data: &[u8]| {
+                    data.iter()
+                        .map(|v| format!("{:02x}", v))
+                        .collect::<String>()
+                };
+                println!(
+                    "{}:{}:{}",
+                    hex(&params[..24]),
+                    hex(&params[AWB_GAIN_OFFSET..AWB_GAIN_OFFSET + 32]),
+                    hex(&cache)
+                );
+            }
             "gain" => {
                 use shieldsigner_rkaiq::gain::*;
                 let mode = match a[1] {

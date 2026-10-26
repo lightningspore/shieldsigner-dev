@@ -8,9 +8,11 @@
     "defect": 1000,
     "quant": 1000,
     "gain": 1000,
+    "iso": 1000,
+    "awb": 1000,
     "lut": 50
   },
-  "totalCases": 6050,
+  "totalCases": 8050,
   "comparison": "Exact IEEE754 f32 output bits or complete integer output; original ARM instructions vs compiled Rust",
   "originalDependencyCalls": [
     "memcpy"
@@ -19,7 +21,7 @@
   "mismatchCount": 0,
   "limitations": [
     "Finite, valid-domain calibration inputs only; invalid-pointer ABI behavior is not reproduced.",
-    "This verifies seven recovered numerical routines, not the complete RKAIQ library or camera startup.",
+    "This verifies nine recovered numerical/parameter routines, not the complete RKAIQ library or camera startup.",
     "Unicorn is an instruction-level reference; real camera/ARM hardware validation remains pending."
   ]
 }

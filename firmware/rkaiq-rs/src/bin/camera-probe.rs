@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str="camera-probe 0.0.1 — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe self-test\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffer request, 1–4 (default 1)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n";
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe self-test\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffer request, 1–4 (default 1)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -26,7 +26,8 @@ fn main() {
         }
         Some("--version") => {
             println!(
-                "camera-probe 0.0.1 (partial RKAIQ reconstruction; standalone V4L2 diagnostic)"
+                "camera-probe {} (partial RKAIQ reconstruction; standalone V4L2 diagnostic)",
+                env!("CARGO_PKG_VERSION")
             );
             Ok(())
         }
@@ -350,7 +351,7 @@ mod linux {
         println!(
             "{}",
             serde_json::to_string_pretty(
-                &json!({"tool":"camera-probe 0.0.1","linksRkaiq":false,"vendorProcesses":vendor_processes(),"devices":devices,"mediaGraph":media_graph(),"limitations":["This is a Linux node/format inventory, not proof of camera capture or absence of vendor initialization at boot."]})
+                &json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"linksRkaiq":false,"vendorProcesses":vendor_processes(),"devices":devices,"mediaGraph":media_graph(),"limitations":["This is a Linux node/format inventory, not proof of camera capture or absence of vendor initialization at boot."]})
             )?
         );
         Ok(())
@@ -634,7 +635,7 @@ mod linux {
             .create_new(true)
             .open(output)?;
         out.write_all(&bytes)?;
-        let report = json!({"tool":"camera-probe 0.0.1","device":device,"linksRkaiq":false,"vendorProcessesBeforeCapture":active,"requireNoRkaiq":require_no_vendor,"format":format_json(&fmt),"bytes":bytes.len(),"planes":planes,"sequence":sequence,"timestamp":{"seconds":seconds,"microseconds":microseconds},"limitations":["Captures from the existing kernel media graph; does not yet recreate ISP calibration, auto-exposure, white balance or graph initialization.","Absent vendor processes do not prove the graph was never initialized by vendor software during boot."]});
+        let report = json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"device":device,"linksRkaiq":false,"vendorProcessesBeforeCapture":active,"requireNoRkaiq":require_no_vendor,"format":format_json(&fmt),"bytes":bytes.len(),"planes":planes,"sequence":sequence,"timestamp":{"seconds":seconds,"microseconds":microseconds},"limitations":["Captures from the existing kernel media graph; does not yet recreate ISP calibration, auto-exposure, white balance or graph initialization.","Absent vendor processes do not prove the graph was never initialized by vendor software during boot."]});
         let meta = format!("{output}.json");
         let mut file = OpenOptions::new()
             .write(true)

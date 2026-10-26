@@ -4,6 +4,7 @@
 //! Function behavior is checked against original ARM machine code under Unicorn.
 #![no_std]
 pub mod gain;
+pub mod isp32;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum InvalidInput {
@@ -14,6 +15,7 @@ pub enum InvalidInput {
     AlphaRange,
     FractionalBits,
     Exposure,
+    GainRange,
 }
 
 /// Piecewise linear interpolation with the binary's endpoint clamping and

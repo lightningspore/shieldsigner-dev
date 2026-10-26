@@ -1,18 +1,37 @@
 [package]
 name = "shieldsigner-rkaiq"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 publish = false
 
 [lib]
 name = "shieldsigner_rkaiq"
 
+[features]
+default = ["diagnostics"]
+diagnostics = ["dep:serde_json", "dep:libc"]
+
+[[bin]]
+name = "camera-probe"
+path = "src/bin/camera-probe.rs"
+required-features = ["diagnostics"]
+
+[[bin]]
+name = "numeric-fixture"
+path = "src/bin/numeric-fixture.rs"
+required-features = ["diagnostics"]
+
+[[bin]]
+name = "frame-preview"
+path = "src/bin/frame-preview.rs"
+required-features = ["diagnostics"]
+
 [dependencies]
 libm = "=0.2.16"
-serde_json = "1"
+serde_json = { version = "1", optional = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-libc = "0.2"
+libc = { version = "0.2", optional = true }
 
 [profile.release]
 opt-level = 2

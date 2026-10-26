@@ -222,7 +222,7 @@ description = "Analyze pinned ARM binaries with Ghidra and export selected numer
 run = "uv run python reverse-engineering/rkaiq/scripts/analyze.py"
 
 [tasks."camera:rust:test"]
-description = "Test Rust reconstruction and compare original ARM instructions with 6,050 Rust outputs"
+description = "Test Rust reconstruction and compare original ARM instructions with 8,050 Rust outputs"
 run = ["mise exec rust@1.93.1 -- cargo test --locked --manifest-path firmware/rkaiq-rs/Cargo.toml", "mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/differential.py --cases 1000 --emit-dir dist/reverse-engineering/fixtures"]
 
 [tasks."camera:rust:arm"]
@@ -236,3 +236,7 @@ run = "uv run python reverse-engineering/rkaiq/scripts/arm-smoke.py"
 [tasks."camera:rust:package"]
 description = "Package verified ARM camera-test tools, original-reference fixtures, source and test guide"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin frame-preview", "uv run --python 3.13 --with pyelftools==0.32 python reverse-engineering/rkaiq/scripts/package.py"]
+
+[tasks."camera:rust:layout"]
+description = "Cross-check ISP32 Rust layout against pinned ARM kernel UAPI"
+run = "uv run --python 3.13 --with pyelftools==0.32 python reverse-engineering/rkaiq/scripts/check-layout.py"

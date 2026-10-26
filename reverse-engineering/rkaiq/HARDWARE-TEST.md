@@ -1,13 +1,13 @@
 # First camera session
 
-This kit is an **experimental partial reconstruction**. It supplies seven recovered Rust numerical routines and a camera diagnostic. It does not replace `librkaiq.so` or the existing image's startup/service scripts. No firmware flash is needed for these tests.
+This kit is an **experimental partial reconstruction**. It supplies nine recovered Rust numerical routines and a camera diagnostic. It does not replace `librkaiq.so` or the existing image's startup/service scripts. No firmware flash is needed for these tests.
 
 ## Kit contents
 
 - `bin/camera-probe`: standalone static ARMv7 Linux executable, no RKAIQ dependency.
 - `bin/numeric-fixture`: the numerical reconstruction with a line-based test runner.
 - `bin/frame-preview`: grayscale PGM conversion for supported capture formats.
-- `fixtures/inputs.txt` and `fixtures/expected.txt`: 6,050 cases with reference results captured from the original ARM machine code under Unicorn.
+- `fixtures/inputs.txt` and `fixtures/expected.txt`: 8,050 cases with reference results captured from the original ARM machine code under Unicorn.
 - `run-numeric-test.sh`: run and compare the numerical corpus on the device.
 - `manifest.json`: artifact sizes/hashes, target and source-file hashes.
 
@@ -23,7 +23,7 @@ chmod +x bin/* run-numeric-test.sh
 ./run-numeric-test.sh /tmp/shieldsigner-rust-results
 ```
 
-**Numerical pass:** `self-test` succeeds and all 6,050 output lines exactly match the reference file. A numerical pass does not mean the camera or complete ISP port works.
+**Numerical pass:** `self-test` succeeds and all 8,050 output lines exactly match the reference file. A numerical pass does not mean the camera or complete ISP port works.
 
 ## 2. Inventory the actual camera
 

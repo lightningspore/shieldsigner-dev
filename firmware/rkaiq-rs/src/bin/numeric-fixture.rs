@@ -191,6 +191,70 @@ fn main() {
                         .join(",")
                 );
             }
+            "sensor-linear" => {
+                use shieldsigner_rkaiq::sensor::*;
+                struct Trace {
+                    descriptor: Descriptor,
+                    trace: Vec<String>,
+                    fail: usize,
+                    calls: usize,
+                }
+                impl Trace {
+                    fn operation(&mut self, text: String) -> Result<(), ()> {
+                        self.trace.push(text);
+                        self.calls += 1;
+                        if self.fail == self.calls {
+                            Err(())
+                        } else {
+                            Ok(())
+                        }
+                    }
+                }
+                impl Backend for Trace {
+                    type Error = ();
+                    fn descriptor(&mut self) -> Result<Descriptor, ()> {
+                        self.trace.push("descriptor".into());
+                        Ok(self.descriptor)
+                    }
+                    fn control(&mut self, id: u32, value: i32) -> Result<(), ()> {
+                        self.operation(format!("control:{id:08x}:{value}"))
+                    }
+                    fn conversion_gain(&mut self, value: u32) -> Result<(), ()> {
+                        self.operation(format!("dcg:{value}"))
+                    }
+                }
+                let mut backend = Trace {
+                    descriptor: Descriptor {
+                        line_periods_per_field: a[1].parse().unwrap(),
+                        output_height: a[2].parse().unwrap(),
+                    },
+                    trace: Vec::new(),
+                    fail: a[10].parse().unwrap(),
+                    calls: 0,
+                };
+                let exposure = LinearExposure {
+                    frame_length_lines: a[3].parse().unwrap(),
+                    dcg_mode: a[4].parse().unwrap(),
+                    analogue_gain_code: a[5].parse().unwrap(),
+                    digital_gain_code: a[6].parse().unwrap(),
+                    coarse_integration_time: a[7].parse().unwrap(),
+                };
+                let mut mirror = if a[8] == "1" {
+                    Some(a[9].parse().unwrap())
+                } else {
+                    None
+                };
+                let status = if program_linear(&mut backend, exposure, &mut mirror).is_ok() {
+                    0
+                } else {
+                    -9
+                };
+                println!(
+                    "{}|{status}|{}",
+                    backend.trace.join(";"),
+                    mirror.map(|v| v.to_string()).unwrap_or_else(|| "-".into())
+                );
+            }
             "aebig" => {
                 use shieldsigner_rkaiq::ae::*;
                 let mut state: u32 = a[1].parse().unwrap();

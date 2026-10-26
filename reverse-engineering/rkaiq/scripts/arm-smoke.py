@@ -34,6 +34,10 @@ ae_big_grid=ROOT/'dist/reverse-engineering/ae-big-grid-fixtures'
 with (ae_big_grid/'inputs.txt').open('rb') as source:
  big_grid=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert big_grid.stdout==(ae_big_grid/'expected.txt').read_bytes(),'ARM big-AE correction differs from original helper'
+sensor_linear=ROOT/'dist/reverse-engineering/sensor-linear-fixtures'
+with (sensor_linear/'inputs.txt').open('rb') as source:
+ controls=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert controls.stdout==(sensor_linear/'expected.txt').read_bytes(),'ARM sensor-write sequence differs from original method'
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -48,6 +52,7 @@ for options,expected in [(['--buffers','1'],'at least two buffers'),(['--width',
 occupied=subprocess.run(command('camera-probe','capture-statistics','/dev/null','/work/camera-probe'),text=True,capture_output=True)
 assert occupied.returncode==1 and 'already exists' in occupied.stderr,occupied
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'sensorLinearReferenceCases':len(controls.stdout.splitlines()),'sensorLinearMatch':True,
  'aeBigGridReferenceCases':len(big_grid.stdout.splitlines()),'aeBigGridMatch':True,
  'aeHistogramReferenceCases':len(histogram.stdout.splitlines()),'aeHistogramMatch':True,
  'aeGridReferenceCases':len(corrected.stdout.splitlines()),'aeGridMatch':True,

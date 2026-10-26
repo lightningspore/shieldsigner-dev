@@ -1,0 +1,26 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "seed": "0x53454e53",
+  "cases": 1000,
+  "branchCoverage": {
+    "0:0": 84,
+    "1:0": 84,
+    "0:1": 84,
+    "1:1": 84,
+    "0:2": 83,
+    "1:2": 83,
+    "0:3": 83,
+    "1:3": 83,
+    "0:4": 83,
+    "1:4": 83,
+    "0:5": 83,
+    "1:5": 83
+  },
+  "mismatchCount": 0,
+  "scope": "Linear sensor write order, optional DCG/digital/shutter writes, first-error exit and frame-length mirror updates",
+  "limitations": [
+    "Descriptor retrieval and device ioctl calls are controlled callbacks, not real hardware.",
+    "Successful descriptor retrieval is assumed for binary comparison; Rust propagates descriptor failures explicitly.",
+    "No real-gain/register conversion, frame-delay scheduling, HDR programming or live ioctl adapter is implemented by this function."
+  ]
+}

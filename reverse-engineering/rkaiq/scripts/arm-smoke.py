@@ -80,6 +80,25 @@ demosaic_selection=ROOT/'dist/reverse-engineering/demosaic-selection-fixtures'
 with (demosaic_selection/'inputs.txt').open('rb') as source:
  demosaic_selected=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert demosaic_selected.stdout==(demosaic_selection/'expected.txt').read_bytes(),'ARM demosaic tuning/quantization differs from original instructions'
+parameter_queue=ROOT/'dist/reverse-engineering/parameter-queue-fixtures'
+with (parameter_queue/'inputs.txt').open('rb') as source:
+ parameter_queued=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert parameter_queued.stdout==(parameter_queue/'expected.txt').read_bytes(),'ARM parameter queue state differs from original instructions'
+# Synthetic data below is only for rejection checks against /dev/null/nonexistent
+# devices. It is not a usable initial IQ record and is not included in the kit.
+parameter_guards=ROOT/'dist/reverse-engineering/parameter-command-guards';parameter_guards.mkdir(parents=True,exist_ok=True)
+(parameter_guards/'short.bin').write_bytes(b'0');(parameter_guards/'empty.bin').write_bytes(bytes(11145));(parameter_guards/'oversize.bin').write_bytes(bytes(11146))
+synthetic=bytearray(11145);synthetic[0]=2;(parameter_guards/'synthetic-guard-only.bin').write_bytes(synthetic)
+def parameter_command(*args):
+ c=command('camera-probe','submit-parameters',*args);c[c.index(image):c.index(image)]=['--mount',f'type=bind,src={parameter_guards},dst=/params,readonly'];return c
+parameter_invalid=subprocess.run(parameter_command('/dev/null','/params/synthetic-guard-only.bin'),text=True,capture_output=True)
+assert parameter_invalid.returncode==1 and 'os error 25' in parameter_invalid.stderr.lower() and not parameter_invalid.stdout,parameter_invalid
+for file,message in [('short.bin','exactly 11145'),('empty.bin','no module updates'),('oversize.bin','exactly 11145')]:
+ rejected=subprocess.run(parameter_command('/dev/does-not-exist','/params/'+file),text=True,capture_output=True)
+ assert rejected.returncode==1 and message in rejected.stderr and not rejected.stdout,rejected
+for option,value in [('--hold-ms','300001'),('--timeout-ms','0'),('--buffers','3')]:
+ rejected=subprocess.run(parameter_command('/dev/does-not-exist','/params/synthetic-guard-only.bin',option,value),text=True,capture_output=True)
+ assert rejected.returncode==1 and 'Unsupported parameter option/range' in rejected.stderr and not rejected.stdout,rejected
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -100,6 +119,8 @@ for values,message in [(['1600','2147483648','0','100'],'nonnegative signed 32-b
  rejected=subprocess.run(command('camera-probe','apply-linear','/dev/null',*values),text=True,capture_output=True)
  assert rejected.returncode==1 and message in rejected.stderr and not rejected.stdout,rejected
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'parameterQueueReferenceCases':len(parameter_queued.stdout.splitlines()),'parameterQueueMatch':True,
+ 'parameterSubmitInvalidEndpointRejected':True,'parameterSubmitInputGuardsPassed':True,
  'demosaicSelectionReferenceCases':len(demosaic_selected.stdout.splitlines()),'demosaicSelectionMatch':True,
  'ispDemosaicReferenceCases':len(demosaic.stdout.splitlines()),'ispDemosaicMatch':True,
  'ispBlackLevelReferenceCases':len(black_level.stdout.splitlines()),'ispBlackLevelMatch':True,

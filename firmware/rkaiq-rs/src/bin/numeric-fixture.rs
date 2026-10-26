@@ -191,6 +191,143 @@ fn main() {
                         .join(",")
                 );
             }
+            "parameter-queue" => {
+                use shieldsigner_rkaiq::parameter_queue::*;
+                fn hex(b: &[u8]) -> String {
+                    b.iter().map(|v| format!("{v:02x}")).collect()
+                }
+                fn decode(v: &serde_json::Value) -> BufferRecord {
+                    let s = v.as_str().unwrap();
+                    (0..s.len())
+                        .step_by(2)
+                        .map(|i| u8::from_str_radix(&s[i..i + 2], 16).unwrap())
+                        .collect::<Vec<_>>()
+                        .try_into()
+                        .unwrap()
+                }
+                struct Mock {
+                    v: serde_json::Value,
+                    trace: Vec<String>,
+                    requested: u32,
+                }
+                impl Mock {
+                    fn n(&self, key: &str) -> i32 {
+                        self.v[key].as_i64().unwrap() as i32
+                    }
+                }
+                impl Backend for Mock {
+                    fn request_buffers(&mut self) -> i32 {
+                        let mut request = [0u8; 20];
+                        put(&mut request, 0, self.requested);
+                        put(&mut request, 4, META_OUTPUT);
+                        put(&mut request, 8, self.n("memory") as u32);
+                        self.trace.push(format!("req:{}", hex(&request)));
+                        if self.n("request_result") < 0 {
+                            -9
+                        } else {
+                            self.requested = self.n("returned_count") as u32;
+                            0
+                        }
+                    }
+                    fn initialize_pool(&mut self) -> i32 {
+                        self.trace.push("init".into());
+                        self.n("init_result")
+                    }
+                    fn stream_on(&mut self) -> i32 {
+                        self.trace.push("on:14".into());
+                        self.n("stream_result")
+                    }
+                    fn stream_off(&mut self) -> i32 {
+                        self.trace.push("off:14".into());
+                        self.n("stream_result")
+                    }
+                    fn close(&mut self) {
+                        self.trace.push("close".into());
+                    }
+                    fn finalize_pool(&mut self) {
+                        self.trace.push("finalize".into());
+                    }
+                    fn lock(&mut self) {
+                        self.trace.push("lock".into());
+                    }
+                    fn unlock(&mut self) {
+                        self.trace.push("unlock".into());
+                    }
+                    fn queue(&mut self, r: &mut BufferRecord) -> i32 {
+                        self.trace.push(format!("qbuf:{}", hex(r)));
+                        let result = self.n("io_result");
+                        if result >= 0 {
+                            *r = decode(&self.v["mutation"]);
+                        }
+                        result
+                    }
+                    fn dequeue(&mut self, r: &mut BufferRecord) -> i32 {
+                        self.trace.push(format!("dqbuf:{}", hex(r)));
+                        let result = self.n("io_result");
+                        if result >= 0 {
+                            *r = decode(&self.v["response"]);
+                        }
+                        result
+                    }
+                }
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut buffers = v["records"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|r| {
+                        let mut b = BufferState::from_record(decode(r)).unwrap();
+                        b.queued = v["buffer_queued"].as_bool().unwrap();
+                        b.returned_length = v["initial_length"].as_u64().unwrap() as u32;
+                        b
+                    })
+                    .collect::<Vec<_>>();
+                let mut q = Queue {
+                    queued_count: v["queued"].as_u64().unwrap() as u32,
+                    active: v["active"].as_bool().unwrap(),
+                };
+                let mut backend = Mock {
+                    requested: v["count"].as_u64().unwrap() as u32,
+                    v: v.clone(),
+                    trace: vec![],
+                };
+                let mut index = None;
+                let status = match v["op"].as_str().unwrap() {
+                    "prepare" => q.prepare(&mut backend),
+                    "start" => q.start(&mut backend, v["prepared"].as_bool().unwrap()),
+                    "queue" => q.queue(
+                        &mut backend,
+                        &mut buffers[0],
+                        v["locked"].as_bool().unwrap(),
+                        v["cache_sync"].as_bool().unwrap(),
+                    ),
+                    "dequeue" => match q.dequeue(
+                        &mut backend,
+                        &mut buffers,
+                        v["memory"].as_u64().unwrap() as u32,
+                        v["cache_sync"].as_bool().unwrap(),
+                    ) {
+                        Ok(i) => {
+                            index = Some(i);
+                            0
+                        }
+                        Err(e) => e,
+                    },
+                    "return" => {
+                        q.return_to_pool(&mut backend, &mut buffers[0]);
+                        0
+                    }
+                    "stop" => {
+                        q.stop(&mut backend, v["has_pool"].as_bool().unwrap());
+                        0
+                    }
+                    _ => panic!("unsupported queue fixture"),
+                };
+                println!(
+                    "{}",
+                    serde_json::json!({"status":status,"index":index,"queued":q.queued_count,"active":q.active,"requested":backend.requested,"trace":backend.trace,"buffers":buffers.iter().map(|b|serde_json::json!({"record":hex(&b.record),"queued":b.queued,"length":b.returned_length})).collect::<Vec<_>>()})
+                );
+            }
             "demosaic-select" => {
                 use shieldsigner_rkaiq::{
                     demosaic_selection::Calibration, isp32::PARAMETER_BYTES, isp_demosaic::*,

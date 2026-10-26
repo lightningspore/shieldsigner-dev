@@ -84,3 +84,7 @@ The oracle independently packs the public SDK calibration record from the suppli
 The kit contains the functional SC3336 demosaic subset with the source URL/hash and explicit scene pointer. This is SDK reference data, not physical camera/lens qualification. Unit checks cover the nonstandard fractional-knot weighting and rejection of missing, truncated, fractional-integer, overflowing and integer-collapsed tables. The numerical selector still builds without JSON/std.
 
 This completes the recovered automatic tuning-to-register path for this demosaic module’s checked inputs. It does **not** complete the outer frame/update-state controller, manual-mode lifecycle, initial configuration for the remaining ISP modules, queue submission or independent camera startup. Selection does not set the hardware update flag; the recovered outer processing state must decide when to publish changed results.
+
+## Parameter queue connection
+
+The recovered metadata queue core and bounded Linux submission diagnostic are now documented in [PARAMETERS.md](PARAMETERS.md). They accept a fully assembled kernel parameter record; they do not supply the remaining initial module configuration or persistent camera-service backend. Driver dequeue can acknowledge a saved first configuration before frame application. Successful hardware transport and independent startup are still unverified.

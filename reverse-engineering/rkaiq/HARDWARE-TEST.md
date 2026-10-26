@@ -25,6 +25,7 @@ This kit is an **experimental partial reconstruction**. It supplies recovered Ru
 - `isp-black-level-fixtures/`: 1,000 native-reference ISP32 BLS parameter blocks, masks and cache results; replay does not submit parameters to hardware.
 - `isp-demosaic-fixtures/`: 1,000 selected-value-to-hardware cases plus 1,000 direct hardware-to-kernel packing cases. Replay does not select tuning from IQ or configure devices.
 - `demosaic-selection-fixtures/`: 1,000 explicit-scene JSON/ISO-to-hardware/kernel cases, including 100 SDK SC3336 profile cases. `reference/sc3336-demosaic-subset.json` records its source scene and hash; this is a component reference, not complete startup IQ.
+- `parameter-queue-fixtures/`: 1,000 metadata-output lifecycle/state traces. Replay uses recorded device/pool boundaries and performs no queue writes.
 - `manifest.json`: artifact sizes/hashes, target and source-file hashes.
 
 Use a development microSD/image and a connected compatible camera. Keep the existing working camera setup available for baseline comparison. The kit makes no persistent boot changes. Commands below use `/tmp` for test output; check available space first because full-resolution Bayer frames can be several MB.
@@ -187,3 +188,16 @@ Replace all placeholders with the actual node and numeric codes. For the pinned 
 The driver accepts gain codes from 128 to 99,614, while the SDK profile can produce 99,615 at its upper end; do not assume that every conversion result passes driver validation. Frame length must also support the requested integration time, and the command does not add an AE policy to choose those values. It reads current descriptor minima, sets VBLANK first, then the optional DCG operation, analogue gain, optional digital gain and optional exposure, stopping on the first failure.
 
 Preserve stdout JSON and stderr on failure. The JSON lists attempted writes, accepted frame length, partial effects and control readback/ranges. It returns a nonzero exit code when programming stops, with no rollback of earlier accepted controls. Driver readback may reflect cached state while the sensor is powered down; capture a subsequent image to verify actual behavior. Record whether a normal camera restart restores the baseline and keep the development image available for restoring normal startup. This command does not perform an AE loop, frame-delay scheduling or ISP/media initialization, and its real device path has not yet been validated.
+
+## Parameter submission transport (requires a complete record)
+
+This is a separate experimental step. **The kit does not yet generate or ship a complete initial ISP configuration.** Do not use per-module fixtures, the functional demosaic JSON subset or an arbitrary zeroed buffer as the input record. The baseline capture/descriptor tests above remain the useful first hardware session.
+
+Once a complete, reviewed `isp32_isp_params_cfg` record is available, use `camera-probe list` to identify the RK1P metadata-output node and run, for example:
+
+```sh
+./bin/camera-probe submit-parameters /dev/videoN complete-initial-isp32.bin \
+  --timeout-ms 3000 --hold-ms 60000
+```
+
+It requires known vendor processes to be stopped and makes no persistent boot changes. The first JSON event indicates dequeue, not verified image-frame application. While the parameter stream is held open, a separate terminal can attempt image/statistics capture on the appropriate other nodes. Normal parameter stream-off disables/clears configuration, so finishing this command can affect capture still in progress. Preserve its final JSON report and actual frames/errors. [Exact behavior, ABI, first-buffer semantics and remaining limits](PARAMETERS.md).

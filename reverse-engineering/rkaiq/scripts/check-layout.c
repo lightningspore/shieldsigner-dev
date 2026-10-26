@@ -11,12 +11,15 @@ _Static_assert(ISP32_MODULE_AWB_GAIN==(1ULL<<5),"AWB enable mask");
 const unsigned int recovered_layout[]={sizeof(struct isp32_isp_params_cfg),offsetof(struct isp32_isp_params_cfg,others.awb_gain_cfg),sizeof(struct isp32_awb_gain_cfg)};
 
 /* Explicit old-time ARM32 userspace ABI used by the pinned daemon. musl's
- * current native struct timespec is time64 and must not determine this ioctl. */
+ * current native timeval/timespec are time64 and must not determine ioctls. */
 #include <sys/time.h>
 struct recovered_timespec32 { int32_t tv_sec; int32_t tv_nsec; };
+struct recovered_timeval32 { int32_t tv_sec; int32_t tv_usec; };
 #define timespec recovered_timespec32
+#define timeval recovered_timeval32
 #include <linux/videodev2.h>
 #undef timespec
+#undef timeval
 _Static_assert(sizeof(struct v4l2_event)==128,"ARM32 old-time event size");
 _Static_assert(offsetof(struct v4l2_event,sequence)==76,"event sequence offset");
 _Static_assert(sizeof(struct v4l2_event_subscription)==32,"subscription size");
@@ -106,3 +109,18 @@ _Static_assert(offsetof(struct isp32_debayer_cfg,bf_sgm)==31,"demosaic sigma");
 _Static_assert(offsetof(struct isp32_debayer_cfg,hf_offset)==33,"demosaic offset");
 _Static_assert(offsetof(struct isp32_debayer_cfg,edge_scale)==49,"demosaic edge scale");
 _Static_assert(offsetof(struct isp32_debayer_cfg,alpha_scale)==53,"demosaic alpha scale");
+_Static_assert(V4L2_BUF_TYPE_META_OUTPUT==14,"metadata output type");
+_Static_assert(V4L2_CAP_META_OUTPUT==0x08000000,"metadata output capability");
+_Static_assert(V4L2_META_FMT_RK_ISP1_PARAMS==0x50314b52,"RK1P parameter FourCC");
+_Static_assert(offsetof(struct v4l2_buffer,bytesused)==8,"buffer payload size");
+_Static_assert(offsetof(struct v4l2_buffer,flags)==12,"buffer flags");
+_Static_assert(offsetof(struct v4l2_buffer,timestamp)==20,"legacy ARM timestamp");
+_Static_assert(offsetof(struct v4l2_buffer,timecode)==28,"legacy ARM timecode");
+_Static_assert(offsetof(struct v4l2_buffer,sequence)==44,"legacy ARM sequence");
+_Static_assert(offsetof(struct v4l2_buffer,memory)==48,"legacy ARM memory");
+_Static_assert(offsetof(struct v4l2_buffer,length)==56,"legacy ARM length");
+_Static_assert(VIDIOC_REQBUFS==0xc0145608,"request buffer ioctl");
+_Static_assert(VIDIOC_QBUF==0xc044560f,"queue buffer ioctl");
+_Static_assert(VIDIOC_DQBUF==0xc0445611,"dequeue buffer ioctl");
+_Static_assert(VIDIOC_STREAMON==0x40045612,"stream on ioctl");
+_Static_assert(VIDIOC_STREAMOFF==0x40045613,"stream off ioctl");

@@ -70,3 +70,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## Automatic demosaic tuning
 
 `demosaic_selection::Calibration::select` reconstructs the automatic branch of `AdebayerProcess` (ELF `0x1157a0`) and its full `AdebayerSelectParam` call (`0x115028`). `Calibration::from_value` loads an explicit `debayer_v2.param` JSON object through the optional diagnostic feature. [Contracts, SDK profile comparisons and limits](ISP.md#automatic-demosaic-tuning).
+
+## Metadata parameter queue
+
+`parameter_queue::Queue` reconstructs metadata-output branches of native `V4l2Device` prepare/start/queue/dequeue/return/stop and uses the recovered buffer reset/request logic. The Linux diagnostic supplies a real MMAP/ioctl adapter; its positive hardware path is untested. [Entries, contracts, controlled boundaries and validation](PARAMETERS.md).

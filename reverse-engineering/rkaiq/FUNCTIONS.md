@@ -62,3 +62,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## ISP black-level conversion
 
 `isp_black_level::apply` reconstructs `Isp32Params::convertAiqBlcToIsp32Params`, ELF `0x2d58c`, including its complete 44-byte kernel block and cache. [Contract and evidence](ISP.md#black-level-parameter-block).
+
+## ISP demosaic conversion
+
+`isp_demosaic::quantize` reconstructs `AdebayerGetProcResult`, ELF `0x115880`, with explicit selected values/cached hardware storage. `isp_demosaic::apply` reconstructs `Isp32Params::convertAiqAdebayerToIsp32Params`, ELF `0x2ca90`, including all masks and the complete 57-byte kernel block. [Contracts, native runtime evidence and limits](ISP.md#demosaic-hardware-controls).

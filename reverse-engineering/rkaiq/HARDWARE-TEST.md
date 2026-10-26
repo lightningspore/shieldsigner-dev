@@ -23,6 +23,7 @@ This kit is an **experimental partial reconstruction**. It supplies recovered Ru
 - `ae-damping-fixtures/`: 1,000 history-based damping coefficients and diagnostic writes compared with original ARM code. Replay does not configure the ISP or run automatic exposure.
 - `isp-pipeline-fixtures/`: 1,000 native-reference ISP pad setup traces, including adjusted crop responses and failure ordering. Replay uses a recorded backend and does not configure devices.
 - `isp-black-level-fixtures/`: 1,000 native-reference ISP32 BLS parameter blocks, masks and cache results; replay does not submit parameters to hardware.
+- `isp-demosaic-fixtures/`: 1,000 selected-value-to-hardware cases plus 1,000 direct hardware-to-kernel packing cases. Replay does not select tuning from IQ or configure devices.
 - `manifest.json`: artifact sizes/hashes, target and source-file hashes.
 
 Use a development microSD/image and a connected compatible camera. Keep the existing working camera setup available for baseline comparison. The kit makes no persistent boot changes. Commands below use `/tmp` for test output; check available space first because full-resolution Bayer frames can be several MB.

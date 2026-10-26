@@ -76,3 +76,23 @@ _Static_assert(offsetof(AblcProc_V32_t,isp_ob_max)==28,"optical-black maximum");
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'blc-sdk-layout.o')],check=True)
 print('PASS: pinned SDK black-level input=32 bytes; full kernel BLS block=44 bytes at 0x7ae')
+
+# Both SDK demosaic declarations are compiled verbatim, independently of the
+# Rust value struct and its explicit byte decoding/serialization.
+def sdk_record(name,pattern):
+    item=next(x for x in manifest['headers'] if x['name']==name)
+    path=ROOT/'.tools/reverse-engineering/headers'/item['name']
+    assert hashlib.sha256(path.read_bytes()).hexdigest()==item['sha256']
+    match=re.search(pattern,path.read_text(),re.S);assert match
+    return match.group(0)
+selected=sdk_record('rk_aiq_types_adebayer_algo_int.h',r'typedef struct AdebayerSeletedParamV2_s \{.*?\} AdebayerSeletedParamV2_t;')
+hardware=sdk_record('rk_aiq_types_adebayer_hw.h',r'typedef struct AdebayerHwConfigV2_s \{.*?\} AdebayerHwConfigV2_t;')
+source=cache/'demosaic-sdk-layout.c'
+assertions=['_Static_assert(sizeof(AdebayerSeletedParamV2_t)==132,"selected size");','_Static_assert(sizeof(AdebayerHwConfigV2_t)==112,"hardware size");']
+for field,offset in [('debayer_en',0),('lowfreq_filter1',4),('highfreq_filter2',20),('c_alpha_gaus_coe',36),('c_guid_gaus_coe',48),('c_ce_gaus_coe',60),('debayer_clip_en',72),('debayer_gain_offset',74),('debayer_max_ratio',76),('debayer_hf_offset',78),('debayer_thed0',80),('debayer_thed1',81),('debayer_dist_scale',82),('debayer_select_thed',83),('debayer_gfilter_en',84),('debayer_gfilter_offset',86),('debayer_cfilter_en',88),('debayer_loggd_offset',90),('debayer_cfilter_str',92),('debayer_wet_clip',96),('debayer_wet_ghost',100),('debayer_wgtslope',104),('debayer_bf_sgm',108),('debayer_bf_clip',112),('debayer_bf_curwgt',113),('debayer_loghf_offset',114),('debayer_alpha_offset',116),('debayer_alpha_scale',120),('debayer_edge_offset',124),('debayer_edge_scale',128)]:
+    assertions.append(f'_Static_assert(offsetof(AdebayerSeletedParamV2_t,{field})=={offset},"{field}");')
+for field,offset in [('updatecfg',0),('enable',1),('filter_g_en',2),('filter_c_en',3),('clip_en',4),('dist_scale',5),('thed0',6),('thed1',7),('select_thed',8),('max_ratio',9),('filter1_coe',12),('filter2_coe',28),('guid_gaus_coe',44),('ce_gaus_coe',56),('alpha_gaus_coe',68),('ce_sgm',80),('exp_shift',81),('wet_clip',82),('wet_ghost',83),('bf_clip',84),('bf_curwgt',85),('bf_sgm',86),('hf_offset',88),('gain_offset',90),('offset',92),('loghf_offset',94),('loggd_offset',96),('wgtslope',98),('alpha_offset',100),('edge_offset',102),('edge_scale',104),('alpha_scale',108)]:
+    assertions.append(f'_Static_assert(offsetof(AdebayerHwConfigV2_t,{field})=={offset},"{field}");')
+source.write_text('#include <stdbool.h>\n#include <stddef.h>\n'+selected+'\n'+hardware+'\n'+'\n'.join(assertions)+'\n')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'demosaic-sdk-layout.o')],check=True)
+print('PASS: SDK demosaic selected=132/hardware=112 bytes; full kernel block=57 bytes at 0x1282')

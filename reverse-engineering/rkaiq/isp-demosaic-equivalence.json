@@ -1,0 +1,30 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "runtimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "seed": "0x444d5343",
+  "cases": 2000,
+  "casesPerStage": 1000,
+  "mismatchCount": 0,
+  "coverage": {
+    "quantize:0:0": 250,
+    "quantize:1:0": 250,
+    "quantize:0:1": 250,
+    "quantize:1:1": 250,
+    "pack:0:0": 250,
+    "pack:1:0": 250,
+    "pack:0:1": 250,
+    "pack:1:1": 250
+  },
+  "nativeRuntimeFunctions": [
+    "log"
+  ],
+  "nativeRuntimeImportedCalls": [],
+  "scope": "Demosaic selected-value quantization: all 112 hardware/cache bytes; ISP32 conversion: three masks and full 57-byte block, with unrelated context/parameter preservation",
+  "limitations": [
+    "Selected calibration values are supplied; automatic ISO selection/loading and frame-state integration remain unfinished.",
+    "Positive finite inverse-filter inputs and positive wrapped normalization product; checked Rust rejects invalid domains before mutation.",
+    "Standard memcpy is explicit in the harness; logarithm executes pinned uClibc ARM instructions.",
+    "Resulting integer-register equivalence does not prove logarithm f64 equivalence at every possible input.",
+    "No live parameter submission or independent ISP startup is supplied by these functions."
+  ]
+}

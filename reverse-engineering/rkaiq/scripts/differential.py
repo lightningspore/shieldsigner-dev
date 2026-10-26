@@ -73,11 +73,13 @@ class OriginalArm:
   elif name=='memset':uc.mem_write(a,bytes([b&255])*c)
   else:raise RuntimeError(f'Unexpected dependency: {name}')
   uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR))
- def invoke(self,name,args=(),floats=(),stack=b'',instructions=100_000):
+ def invoke(self,name,args=(),floats=(),stack=b'',instructions=100_000,doubles=()):
   self.uc.mem_write(STACK+0xff000,stack or bytes(256))
   for i in range(16):self.uc.reg_write(getattr(regs,f'UC_ARM_REG_S{i}'),0)
   for i in range(4):self.uc.reg_write(getattr(regs,f'UC_ARM_REG_R{i}'),args[i]&0xffffffff if i<len(args) else 0)
   for i,x in enumerate(floats):self.uc.reg_write(getattr(regs,f'UC_ARM_REG_S{i}'),u32(struct.pack('<f',x)))
+  assert not (floats and doubles),'Mixed VFP argument layouts require explicit ABI support'
+  for i,x in enumerate(doubles):self.uc.reg_write(getattr(regs,f'UC_ARM_REG_D{i}'),struct.unpack('<Q',struct.pack('<d',x))[0])
   self.uc.reg_write(regs.UC_ARM_REG_FPSCR,0)
   self.uc.reg_write(regs.UC_ARM_REG_SP,STACK+0xff000)
   self.uc.reg_write(regs.UC_ARM_REG_LR,RETURN|1)

@@ -79,6 +79,26 @@
       "name": "rk_aiq_types_ablc_hw_v32.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/ablcV32/rk_aiq_types_ablc_hw_v32.h",
       "sha256": "9552aafb63d3482c9e7a42fd8817112f8def3e27dba1e4919e838eac5f01ce55"
+    },
+    {
+      "name": "rk_aiq_types_adebayer_algo.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/adebayer/rk_aiq_types_adebayer_algo.h",
+      "sha256": "f6fcd81ab2a55fe2ab40238d345a50dfdeec145282120f79ea6b7e9b63ff70bf"
+    },
+    {
+      "name": "rk_aiq_types_adebayer_algo_int.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/adebayer/rk_aiq_types_adebayer_algo_int.h",
+      "sha256": "daf679910c43188bc23673d93820a0cc2fca1239241aff1d33a771acd331c2a2"
+    },
+    {
+      "name": "rk_aiq_types_adebayer_ext.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/adebayer/rk_aiq_types_adebayer_ext.h",
+      "sha256": "1393a87cd281ea5d6a0ea0bdb3d65d28513b070bb6f1b114a77c870b57d4f0fb"
+    },
+    {
+      "name": "rk_aiq_types_adebayer_hw.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/adebayer/rk_aiq_types_adebayer_hw.h",
+      "sha256": "2ab47865525db38e95f49f4789df3dfeebf51736271bfdc02b53f881b40696ba"
     }
   ],
   "kernelHeaders": [

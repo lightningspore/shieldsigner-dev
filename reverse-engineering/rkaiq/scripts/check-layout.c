@@ -97,3 +97,12 @@ _Static_assert(offsetof(struct isp32_bls_cfg,bls1_val)==28,"black-level stage1 o
 _Static_assert(offsetof(struct isp32_bls_cfg,isp_ob_offset)==36,"optical-black offset");
 _Static_assert(offsetof(struct isp32_bls_cfg,isp_ob_predgain)==38,"optical-black gain");
 _Static_assert(offsetof(struct isp32_bls_cfg,isp_ob_max)==40,"optical-black maximum");
+_Static_assert(ISP32_MODULE_DEBAYER==(1ULL<<35),"demosaic module mask");
+_Static_assert(offsetof(struct isp32_isp_params_cfg,others.debayer_cfg)==0x1282,"demosaic block offset");
+_Static_assert(sizeof(struct isp32_debayer_cfg)==57,"demosaic block size");
+_Static_assert(offsetof(struct isp32_debayer_cfg,filter1_coe1)==8,"demosaic coefficients");
+_Static_assert(offsetof(struct isp32_debayer_cfg,ce_sgm)==25,"demosaic normalization");
+_Static_assert(offsetof(struct isp32_debayer_cfg,bf_sgm)==31,"demosaic sigma");
+_Static_assert(offsetof(struct isp32_debayer_cfg,hf_offset)==33,"demosaic offset");
+_Static_assert(offsetof(struct isp32_debayer_cfg,edge_scale)==49,"demosaic edge scale");
+_Static_assert(offsetof(struct isp32_debayer_cfg,alpha_scale)==53,"demosaic alpha scale");

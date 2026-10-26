@@ -42,6 +42,8 @@ The ISP pad-format/crop setup sequence now matches **1,000 original-ARM traces**
 
 The ISP32 black-level converter now matches **1,000 original-ARM cases** for the complete BLS parameter block, masks and cache. Calibration selection and live parameter submission remain separate work. See [ISP.md](ISP.md#black-level-parameter-block).
 
+Demosaic hardware quantization and kernel parameter packing now match **2,000 original-ARM cases**, including original uClibc logarithm execution, complete output/cache records and enable/update behavior. The hardware ISP performs pixel demosaicing; these Rust functions prepare its controls. Automatic ISO/calibration selection and live submission remain unfinished. See [ISP.md](ISP.md#demosaic-hardware-controls).
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -107,6 +109,7 @@ mise run camera:rust:ae-decision
 mise run camera:rust:ae-damping
 mise run camera:rust:isp-pipeline
 mise run camera:rust:isp-black-level
+mise run camera:rust:isp-demosaic
 mise run camera:rust:arm
 mise run camera:rust:smoke
 mise run camera:rust:package

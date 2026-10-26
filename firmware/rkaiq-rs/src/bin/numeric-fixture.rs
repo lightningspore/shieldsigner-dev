@@ -191,6 +191,44 @@ fn main() {
                         .join(",")
                 );
             }
+            "isp-demosaic" => {
+                use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_demosaic::*};
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let decode = |key: &str| {
+                    let s = v[key].as_str().unwrap();
+                    (0..s.len())
+                        .step_by(2)
+                        .map(|i| u8::from_str_radix(&s[i..i + 2], 16).unwrap())
+                        .collect::<Vec<_>>()
+                };
+                let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
+                let mut cached: HardwareRecord = decode("hardware").try_into().unwrap();
+                let hardware = if v["kind"].as_str().unwrap() == "quantize" {
+                    let selected =
+                        SelectedParameters::from_record(&decode("selected").try_into().unwrap())
+                            .unwrap();
+                    quantize(&mut cached, selected).unwrap()
+                } else {
+                    cached
+                };
+                let mut state = v["seed"].as_u64().unwrap() as u32;
+                let mut params = [0u8; PARAMETER_BYTES];
+                for b in &mut params {
+                    state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                    *b = (state >> 24) as u8;
+                }
+                let before = params;
+                apply(&mut params, &hardware);
+                assert_eq!(&params[24..OFFSET], &before[24..OFFSET]);
+                assert_eq!(&params[OFFSET + BYTES..], &before[OFFSET + BYTES..]);
+                println!(
+                    "{}:{}:{}:{}",
+                    hex(&params[..24]),
+                    hex(&params[OFFSET..OFFSET + BYTES]),
+                    hex(&hardware),
+                    hex(&cached)
+                );
+            }
             "isp-black-level" => {
                 use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_black_level::*};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

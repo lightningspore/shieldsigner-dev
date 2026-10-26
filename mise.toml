@@ -296,3 +296,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:isp-black-level"]
 description = "Compare ISP32 black-level parameter serialization/cache against original ARM instructions"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-black-level.py --cases 1000 --emit-dir dist/reverse-engineering/isp-black-level-fixtures"]
+
+[tasks."camera:rust:isp-demosaic"]
+description = "Compare demosaic hardware quantization and full ISP32 serialization against native ARM"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-demosaic.py --cases 1000 --emit-dir dist/reverse-engineering/isp-demosaic-fixtures"]

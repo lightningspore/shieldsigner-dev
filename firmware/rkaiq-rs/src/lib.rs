@@ -15,6 +15,7 @@ pub mod exposure;
 pub mod gain;
 pub mod isp32;
 pub mod isp_black_level;
+pub mod isp_demosaic;
 pub mod isp_pipeline;
 pub mod media;
 pub mod sensor;
@@ -24,6 +25,7 @@ pub mod statistics;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum InvalidInput {
     Length,
+    BooleanValue,
     NonFinite,
     NonIncreasing,
     DegenerateRange,

@@ -147,6 +147,50 @@ fn main() {
                     hex(&params[AWB_GAIN_OFFSET..AWB_GAIN_OFFSET + 32])
                 );
             }
+            "aehist" => {
+                use shieldsigner_rkaiq::{ae::Bls, ae_histogram::*};
+                let mut state: u32 = a[1].parse().unwrap();
+                let count: usize = a[2].parse().unwrap();
+                let input: Vec<u32> = (0..count)
+                    .map(|_| {
+                        state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                        state
+                    })
+                    .collect();
+                let read = |s: &str| {
+                    let v: Vec<i16> = s.split(',').map(|v| v.parse().unwrap()).collect();
+                    Bls {
+                        red: v[0],
+                        green_red: v[1],
+                        green_blue: v[2],
+                        blue: v[3],
+                    }
+                };
+                let mode = match a[3] {
+                    "2" => Mode::Red,
+                    "3" => Mode::Green,
+                    "4" => Mode::Blue,
+                    _ => Mode::Luma,
+                };
+                let config = Config {
+                    mode,
+                    optical_black_rb: a[4].parse().unwrap(),
+                    optical_black_green: a[5].parse().unwrap(),
+                    black: read(a[6]),
+                    gain: read(a[7]),
+                    bypass: a[8] == "1",
+                };
+                let mut output = vec![0xa5a5a5a5; count];
+                correct(&input, &mut output, config).unwrap();
+                println!(
+                    "{}",
+                    output
+                        .iter()
+                        .map(|v| format!("{v:08x}"))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                );
+            }
             "aegrid" => {
                 use shieldsigner_rkaiq::ae::*;
                 let mut state: u32 = a[1].parse().unwrap();

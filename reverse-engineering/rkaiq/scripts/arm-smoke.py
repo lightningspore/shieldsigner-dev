@@ -26,6 +26,10 @@ ae_grid=ROOT/'dist/reverse-engineering/ae-grid-fixtures'
 with (ae_grid/'inputs.txt').open('rb') as source:
  corrected=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert corrected.stdout==(ae_grid/'expected.txt').read_bytes(),'ARM AE0 correction differs from original helper'
+ae_histogram=ROOT/'dist/reverse-engineering/ae-histogram-fixtures'
+with (ae_histogram/'inputs.txt').open('rb') as source:
+ histogram=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert histogram.stdout==(ae_histogram/'expected.txt').read_bytes(),'ARM histogram correction differs from original helper'
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -40,6 +44,7 @@ for options,expected in [(['--buffers','1'],'at least two buffers'),(['--width',
 occupied=subprocess.run(command('camera-probe','capture-statistics','/dev/null','/work/camera-probe'),text=True,capture_output=True)
 assert occupied.returncode==1 and 'already exists' in occupied.stderr,occupied
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'aeHistogramReferenceCases':len(histogram.stdout.splitlines()),'aeHistogramMatch':True,
  'aeGridReferenceCases':len(corrected.stdout.splitlines()),'aeGridMatch':True,
  'statisticsCaptureGuardsPassed':True,'statisticsInvalidEndpointRejected':True,
  'statisticsReferenceCases':len(decoded.stdout.splitlines()),'statisticsMatch':True,

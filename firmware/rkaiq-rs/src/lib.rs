@@ -4,6 +4,7 @@
 //! Function behavior is checked against original ARM machine code under Unicorn.
 #![no_std]
 pub mod ae;
+pub mod ae_histogram;
 pub mod discovery;
 pub mod engine;
 pub mod gain;

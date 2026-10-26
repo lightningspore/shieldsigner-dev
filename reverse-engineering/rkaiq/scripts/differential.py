@@ -58,7 +58,8 @@ class OriginalArm:
   elif name=='memset':uc.mem_write(a,bytes([b&255])*c)
   else:raise RuntimeError(f'Unexpected dependency: {name}')
   uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR))
- def invoke(self,name,args=(),floats=()):
+ def invoke(self,name,args=(),floats=(),stack=b''):
+  self.uc.mem_write(STACK+0xff000,stack or bytes(256))
   for i in range(16):self.uc.reg_write(getattr(regs,f'UC_ARM_REG_S{i}'),0)
   for i in range(4):self.uc.reg_write(getattr(regs,f'UC_ARM_REG_R{i}'),args[i]&0xffffffff if i<len(args) else 0)
   for i,x in enumerate(floats):self.uc.reg_write(getattr(regs,f'UC_ARM_REG_S{i}'),u32(struct.pack('<f',x)))
@@ -141,6 +142,24 @@ def main():
   assert out[24:0x1225]==original[24:0x1225] and out[0x1245:]==original[0x1245:],'Original routine altered an unexpected parameter field'
   want=out[:24].hex()+':'+out[0x1225:0x1245].hex()+':'+cache.hex()
   add('awb',f'awb {seed} {update} {position} '+','.join(map(fhex,gains)),want)
+ for i in range(args.cases):
+  seed=rng.randrange(0xffffffff);state=seed;data=bytearray()
+  for _ in range(11145):state=(state*1664525+1013904223)&0xffffffff;data.append(state>>24)
+  original=bytes(data);mode=i%3
+  gains=[f32(rng.choice([0.,.5,1.,1.0000001192092896,2.,256.,rng.uniform(0,256)])) for _ in range(3)]
+  cached=[rng.randrange(65536) for _ in range(16)]
+  context=HEAP+0x10000;params=HEAP+0x20000;vtable=HEAP+0x50000+12
+  arm.uc.mem_write(context,bytes(0x2000));arm.uc.mem_write(vtable-12,struct.pack('<i',0));arm.uc.mem_write(context,struct.pack('<I',vtable))
+  arm.uc.mem_write(context+0x20,struct.pack('<i',mode));arm.uc.mem_write(context+0x827,struct.pack('<16H',*cached));arm.uc.mem_write(params,original)
+  # By-value ARM AAPCS aggregate begins in r2/r3, then continues on stack.
+  exposure=bytearray(512)
+  for offset,value in zip([12,60,108,156],[gains[0],*gains]):struct.pack_into('<f',exposure,offset,value)
+  arm.invoke('_ZN5RkCam11Isp32Params34convertAiqExpIspDgainToIsp32ParamsER20isp32_isp_params_cfg17RKAiqAecExpInfo_s',[context,params,0,0],stack=bytes(exposure[8:]))
+  out=bytes(arm.uc.mem_read(params,11145))
+  assert out[:16]==original[:16] and out[24:0x122d]==original[24:0x122d] and out[0x1245:]==original[0x1245:]
+  assert arm.uc.mem_read(context+0x827,32)==struct.pack('<16H',*cached),'Unexpected cache mutation'
+  want=out[:24].hex()+':'+out[0x1225:0x1245].hex()
+  add('dgain',f'dgain {seed} {mode} '+','.join(map(fhex,gains))+' '+','.join(map(str,cached)),want)
  for i in range(max(12,args.cases//20)):
   alpha=f32(([0.,1.,.5,1/128,.999,.0001]+[rng.random()])[i%7]);seed=rng.randrange(0xffffffff);state=seed;arrays=[]
   for n in range(2):
@@ -159,7 +178,7 @@ def main():
  results=proc.stdout.splitlines();assert len(results)==len(expected)
  mismatches=[{'case':i,'input':fixtures[i],'expected':a,'actual':b} for i,(a,b) in enumerate(zip(expected,results)) if a!=b]
  report={'binarySha256':hashlib.sha256(BINARY.read_bytes()).hexdigest(),'fixtureSeed':'0x524b4149','comparisons':counts,'totalCases':len(expected),'comparison':'Exact IEEE754 f32 output bits or complete integer output; original ARM instructions vs compiled Rust',
-  'originalDependencyCalls':sorted(set(arm.calls)),'mismatches':mismatches[:10],'mismatchCount':len(mismatches),'limitations':['Finite, valid-domain calibration inputs only; invalid-pointer ABI behavior is not reproduced.','This verifies nine recovered numerical/parameter routines, not the complete RKAIQ library or camera startup.','Unicorn is an instruction-level reference; real camera/ARM hardware validation remains pending.']}
+  'originalDependencyCalls':sorted(set(arm.calls)),'mismatches':mismatches[:10],'mismatchCount':len(mismatches),'limitations':['Finite, valid-domain calibration inputs only; invalid-pointer ABI behavior is not reproduced.','This verifies ten recovered numerical/parameter routines, not the complete RKAIQ library or camera startup.','Unicorn is an instruction-level reference; real camera/ARM hardware validation remains pending.']}
  out=ROOT/'reverse-engineering/rkaiq/numeric-equivalence.json';out.write_text(json.dumps(report,indent=2)+'\n')
  print(json.dumps({k:v for k,v in report.items() if k!='mismatches'},indent=2))
  if mismatches:

@@ -121,3 +121,105 @@ mod tests {
         assert_eq!(cache, [0x5a; 32]);
     }
 }
+
+/// Exposure digital gains: the binary uses three slots for any HDR mode.
+#[derive(Clone, Copy, Debug)]
+pub enum ExposureDigitalGain {
+    Linear(f32),
+    Hdr([f32; 3]),
+}
+/// Reconstruct convertAiqExpIspDgainToIsp32Params (ELF 0x2d860).
+/// Scale the cached AWB-bank-0 gains, leaving bank 1 and the cache unchanged.
+/// Only the AWB configuration-update mask is set, not either enable mask.
+pub fn apply_exposure_digital_gain(
+    params: &mut [u8; PARAMETER_BYTES],
+    cached: &[u8; AWB_GAIN_BYTES],
+    gain: ExposureDigitalGain,
+) -> Result<(), InvalidInput> {
+    let gains = match gain {
+        ExposureDigitalGain::Linear(value) => {
+            if !value.is_finite() || value < 0.0 {
+                return Err(InvalidInput::GainRange);
+            }
+            if value <= 1.0 {
+                return Ok(());
+            }
+            [value; 3]
+        }
+        ExposureDigitalGain::Hdr(values) => {
+            if values.iter().any(|v| !v.is_finite() || *v < 0.0) {
+                return Err(InvalidInput::GainRange);
+            }
+            let values = values.map(|v| v.max(1.0));
+            if values.iter().all(|v| *v == 1.0) {
+                return Ok(());
+            }
+            values
+        }
+    };
+    for (group, gain) in gains.iter().enumerate() {
+        for channel in 0..4 {
+            let offset = 8 + group * 8 + channel * 2;
+            let base = u16::from_le_bytes(cached[offset..offset + 2].try_into().unwrap());
+            let rounded = ((base as f32 * gain) as f64) + 0.5;
+            let value = rounded.min(65535.0) as u16;
+            params[AWB_GAIN_OFFSET + offset..AWB_GAIN_OFFSET + offset + 2]
+                .copy_from_slice(&value.to_le_bytes());
+        }
+    }
+    let value = u64::from_le_bytes(params[16..24].try_into().unwrap()) | AWB_GAIN_MODULE_MASK;
+    params[16..24].copy_from_slice(&value.to_le_bytes());
+    Ok(())
+}
+
+#[cfg(test)]
+mod exposure_tests {
+    use super::*;
+    #[test]
+    fn hdr_scales_from_cache_without_accumulating_and_preserves_enable_masks() {
+        let mut params = [0xa5; PARAMETER_BYTES];
+        let mut cache = [0; 32];
+        for pair in cache.chunks_exact_mut(2) {
+            pair.copy_from_slice(&1000u16.to_le_bytes());
+        }
+        let original = params;
+        let gain = ExposureDigitalGain::Hdr([0.5, 2., 100.]);
+        apply_exposure_digital_gain(&mut params, &cache, gain).unwrap();
+        for (group, expected) in [1000u16, 2000, 65535].iter().enumerate() {
+            for channel in 0..4 {
+                let offset = AWB_GAIN_OFFSET + 8 + group * 8 + channel * 2;
+                assert_eq!(
+                    u16::from_le_bytes(params[offset..offset + 2].try_into().unwrap()),
+                    *expected
+                );
+            }
+        }
+        assert_eq!(&params[..16], &original[..16]);
+        assert_eq!(
+            &params[24..AWB_GAIN_OFFSET + 8],
+            &original[24..AWB_GAIN_OFFSET + 8]
+        );
+        assert_eq!(
+            &params[AWB_GAIN_OFFSET + 32..],
+            &original[AWB_GAIN_OFFSET + 32..]
+        );
+        let once = params;
+        apply_exposure_digital_gain(&mut params, &cache, gain).unwrap();
+        assert_eq!(params, once);
+    }
+    #[test]
+    fn unity_is_noop_and_invalid_gain_is_atomic() {
+        let mut params = [0xa5; PARAMETER_BYTES];
+        let original = params;
+        let cache = [0; 32];
+        apply_exposure_digital_gain(&mut params, &cache, ExposureDigitalGain::Linear(1.)).unwrap();
+        assert_eq!(params, original);
+        assert!(apply_exposure_digital_gain(
+            &mut params,
+            &cache,
+            ExposureDigitalGain::Hdr([2., f32::NAN, 1.])
+        )
+        .is_err());
+        assert_eq!(params, original);
+    }
+}

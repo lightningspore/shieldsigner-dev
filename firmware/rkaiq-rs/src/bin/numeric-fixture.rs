@@ -116,6 +116,37 @@ fn main() {
                     hex(&cache)
                 );
             }
+            "dgain" => {
+                use shieldsigner_rkaiq::isp32::*;
+                let mut state: u32 = a[1].parse().unwrap();
+                let mut params = [0u8; PARAMETER_BYTES];
+                for value in &mut params {
+                    state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                    *value = (state >> 24) as u8;
+                }
+                let mut cache = [0u8; AWB_GAIN_BYTES];
+                for (i, value) in a[4].split(',').enumerate() {
+                    cache[i * 2..i * 2 + 2]
+                        .copy_from_slice(&value.parse::<u16>().unwrap().to_le_bytes());
+                }
+                let values = floats(a[3]);
+                let gain = if a[2] == "0" {
+                    ExposureDigitalGain::Linear(values[0])
+                } else {
+                    ExposureDigitalGain::Hdr(values.try_into().unwrap())
+                };
+                apply_exposure_digital_gain(&mut params, &cache, gain).unwrap();
+                let hex = |data: &[u8]| {
+                    data.iter()
+                        .map(|v| format!("{:02x}", v))
+                        .collect::<String>()
+                };
+                println!(
+                    "{}:{}",
+                    hex(&params[..24]),
+                    hex(&params[AWB_GAIN_OFFSET..AWB_GAIN_OFFSET + 32])
+                );
+            }
             "gain" => {
                 use shieldsigner_rkaiq::gain::*;
                 let mode = match a[1] {

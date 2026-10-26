@@ -68,6 +68,10 @@ isp_pipeline=ROOT/'dist/reverse-engineering/isp-pipeline-fixtures'
 with (isp_pipeline/'inputs.txt').open('rb') as source:
  pipeline=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert pipeline.stdout==(isp_pipeline/'expected.txt').read_bytes(),'ARM ISP pad orchestration differs from original instructions'
+isp_black_level=ROOT/'dist/reverse-engineering/isp-black-level-fixtures'
+with (isp_black_level/'inputs.txt').open('rb') as source:
+ black_level=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert black_level.stdout==(isp_black_level/'expected.txt').read_bytes(),'ARM ISP black-level conversion differs from original instructions'
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -88,6 +92,7 @@ for values,message in [(['1600','2147483648','0','100'],'nonnegative signed 32-b
  rejected=subprocess.run(command('camera-probe','apply-linear','/dev/null',*values),text=True,capture_output=True)
  assert rejected.returncode==1 and message in rejected.stderr and not rejected.stdout,rejected
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'ispBlackLevelReferenceCases':len(black_level.stdout.splitlines()),'ispBlackLevelMatch':True,
  'ispPipelineReferenceCases':len(pipeline.stdout.splitlines()),'ispPipelineMatch':True,
  'aeDampingReferenceCases':len(damping.stdout.splitlines()),'aeDampingMatch':True,
  'aeDecisionReferenceCases':len(decision.stdout.splitlines()),'aeDecisionMatch':True,

@@ -19,7 +19,7 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
-for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','ISP.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
+for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','ISP.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','isp-black-level-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
@@ -43,6 +43,8 @@ for name in ['inputs.txt','expected.txt']:copy(base/'ae-damping-fixtures'/name,'
 assert smoke['aeDampingReferenceCases']==1000 and smoke['aeDampingMatch']
 for name in ['inputs.txt','expected.txt']:copy(base/'isp-pipeline-fixtures'/name,'isp-pipeline-fixtures/'+name)
 assert smoke['ispPipelineReferenceCases']==1000 and smoke['ispPipelineMatch']
+for name in ['inputs.txt','expected.txt']:copy(base/'isp-black-level-fixtures'/name,'isp-black-level-fixtures/'+name)
+assert smoke['ispBlackLevelReferenceCases']==1000 and smoke['ispBlackLevelMatch']
 assert smoke['aeBigGridReferenceCases']==1000 and smoke['aeBigGridMatch']
 assert smoke['aeHistogramReferenceCases']==1000 and smoke['aeHistogramMatch']
 assert smoke['aeGridReferenceCases']==1000 and smoke['aeGridMatch']
@@ -178,6 +180,13 @@ if cmp -s "$kit_dir/isp-pipeline-fixtures/expected.txt" "$result_dir/isp-pipelin
     echo "PASS: ISP pad setup matches the original call/record reference; no device configured."
 else
     echo "FAIL: ISP pad setup differs; preserve $result_dir/isp-pipeline-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/isp-black-level-fixtures/inputs.txt" > "$result_dir/isp-black-level-actual.txt"
+if cmp -s "$kit_dir/isp-black-level-fixtures/expected.txt" "$result_dir/isp-black-level-actual.txt"; then
+    echo "PASS: ISP black-level parameters/cache match the original reference."
+else
+    echo "FAIL: ISP black-level conversion differs; preserve $result_dir/isp-black-level-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

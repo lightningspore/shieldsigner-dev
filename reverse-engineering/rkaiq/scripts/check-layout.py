@@ -55,3 +55,24 @@ _Static_assert(offsetof(rawaebig_stat_t,wndx_sumb)==1896,"blue sums offset");
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'ae-sdk-layout.o')],check=True)
 print('PASS: pinned SDK big AE record=1928 bytes; preserved channels and RGB sum offsets verified')
+
+# Extract the exact SDK input declaration, without importing unrelated algorithm
+# headers or substituting a hand-written equivalent struct.
+item=next(x for x in manifest['headers'] if x['name']=='rk_aiq_types_ablc_algo_int_v32.h')
+header=ROOT/'.tools/reverse-engineering/headers'/item['name']
+assert hashlib.sha256(header.read_bytes()).hexdigest()==item['sha256']
+match=re.search(r'typedef struct AblcProc_V32_s \{.*?\} AblcProc_V32_t;',header.read_text(),re.S);assert match
+source=cache/'blc-sdk-layout.c'
+source.write_text('#include <stdbool.h>\n#include <stddef.h>\n'+match.group(0)+'''
+_Static_assert(sizeof(AblcProc_V32_t)==32,"black-level SDK input size");
+_Static_assert(offsetof(AblcProc_V32_t,enable)==0,"main enable");
+_Static_assert(offsetof(AblcProc_V32_t,blc_r)==2,"fixed channels");
+_Static_assert(offsetof(AblcProc_V32_t,blc1_enable)==10,"stage1 enable");
+_Static_assert(offsetof(AblcProc_V32_t,blc1_r)==12,"stage1 channels");
+_Static_assert(offsetof(AblcProc_V32_t,blc_ob_enable)==20,"optical-black enable");
+_Static_assert(offsetof(AblcProc_V32_t,isp_ob_offset)==22,"optical-black offset");
+_Static_assert(offsetof(AblcProc_V32_t,isp_ob_predgain)==24,"optical-black predgain");
+_Static_assert(offsetof(AblcProc_V32_t,isp_ob_max)==28,"optical-black maximum");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'blc-sdk-layout.o')],check=True)
+print('PASS: pinned SDK black-level input=32 bytes; full kernel BLS block=44 bytes at 0x7ae')

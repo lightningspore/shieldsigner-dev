@@ -58,3 +58,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## ISP pipeline pad setup
 
 `isp_pipeline::setup` reconstructs `CamHwIsp20::setupPipelineFmtIsp`, ELF `0x2319c`. It preserves the native sequence and full UAPI records through an explicit backend. Device/raw-stream/scaler implementations remain outside this verified function. [Contract, driver evidence and missing startup work](ISP.md).
+
+## ISP black-level conversion
+
+`isp_black_level::apply` reconstructs `Isp32Params::convertAiqBlcToIsp32Params`, ELF `0x2d58c`, including its complete 44-byte kernel block and cache. [Contract and evidence](ISP.md#black-level-parameter-block).

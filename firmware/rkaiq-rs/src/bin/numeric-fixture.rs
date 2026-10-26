@@ -191,6 +191,47 @@ fn main() {
                         .join(",")
                 );
             }
+            "isp-black-level" => {
+                use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_black_level::*};
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut state = v["seed"].as_u64().unwrap() as u32;
+                let mut params = [0u8; PARAMETER_BYTES];
+                for b in &mut params {
+                    state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                    *b = (state >> 24) as u8;
+                }
+                let before = params;
+                let mut cache = [0x77; BYTES];
+                let channels = |k: &str| -> [i16; 4] {
+                    v[k].as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|x| x.as_i64().unwrap() as i16)
+                        .collect::<Vec<_>>()
+                        .try_into()
+                        .unwrap()
+                };
+                let config = Configuration {
+                    enabled: v["enabled"].as_bool().unwrap(),
+                    fixed: channels("fixed"),
+                    stage1_enabled: v["stage1_enabled"].as_bool().unwrap(),
+                    stage1: channels("stage1"),
+                    optical_black_enabled: v["ob_enabled"].as_bool().unwrap(),
+                    optical_black_offset: v["offset"].as_i64().unwrap() as i16,
+                    optical_black_predgain: v["gain"].as_f64().unwrap() as f32,
+                    optical_black_maximum: v["maximum"].as_i64().unwrap() as i32,
+                };
+                apply(&mut params, &mut cache, config).unwrap();
+                assert_eq!(&params[24..OFFSET], &before[24..OFFSET]);
+                assert_eq!(&params[OFFSET + BYTES..], &before[OFFSET + BYTES..]);
+                let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
+                println!(
+                    "{}:{}:{}",
+                    hex(&params[..24]),
+                    hex(&params[OFFSET..OFFSET + BYTES]),
+                    hex(&cache)
+                );
+            }
             "isp-pipeline" => {
                 use shieldsigner_rkaiq::isp_pipeline::*;
                 fn hex(v: &[u8]) -> String {

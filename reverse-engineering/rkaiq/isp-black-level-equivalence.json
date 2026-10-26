@@ -1,0 +1,31 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "seed": "0x424c5332",
+  "cases": 1000,
+  "mismatchCount": 0,
+  "coverage": {
+    "0:0:0:positive": 81,
+    "1:0:0:zero": 42,
+    "0:1:0:positive": 124,
+    "1:1:0:positive": 83,
+    "0:0:1:positive": 123,
+    "1:0:1:positive": 124,
+    "0:1:1:positive": 124,
+    "1:1:1:negative": 42,
+    "1:0:0:positive": 83,
+    "1:1:0:negative": 42,
+    "1:1:1:positive": 83,
+    "0:0:0:zero": 42,
+    "1:0:1:negative": 1,
+    "0:0:1:negative": 2,
+    "0:1:1:negative": 1,
+    "0:1:0:negative": 1,
+    "0:0:0:negative": 2
+  },
+  "scope": "ISP32 black-level converter: all three u64 masks, entire 44-byte BLS block/cache, unrelated parameter/context/input preservation",
+  "limitations": [
+    "Finite predgain inputs; checked Rust rejects NaN/infinity before mutation.",
+    "Calibration interpolation/selection and parameter queue submission are separate unfinished stages.",
+    "Native optical-black enable input is unused; disabled main input preserves an existing module enable bit."
+  ]
+}

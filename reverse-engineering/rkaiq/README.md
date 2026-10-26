@@ -28,6 +28,8 @@ The linear sensor-write sequencer matches **1,000 original-ARM traces**, includi
 
 `exposure::convert` now reconstructs gain and shutter register conversion, with **1,000 resulting-code comparisons** against original RKAIQ plus the pinned SDK uClibc math instructions. It covers linear/HDR timing, DCG ratios, gain-band/fallback and logarithmic models. Calibration must still be supplied; no live sensor programming is exposed.
 
+Sensor descriptor construction now matches **1,000 original-ARM cases**, including timing minima, pixel-clock fallback, format mapping and optional-query failures. `camera-probe sensor-info` adds a read-only driver adapter for hardware validation.
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -85,6 +87,7 @@ mise run camera:rust:statistics
 mise run camera:rust:ae-grid
 mise run camera:rust:ae-big-grid
 mise run camera:rust:sensor-linear
+mise run camera:rust:sensor-descriptor
 mise run camera:rust:exposure
 mise run camera:rust:ae-histogram
 mise run camera:rust:arm

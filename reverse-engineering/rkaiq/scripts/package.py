@@ -19,7 +19,7 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
-for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','SENSOR.md','exposure-equivalence.json','sensor-linear-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
+for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','SENSOR.md','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
@@ -29,6 +29,8 @@ for name in ['inputs.txt','expected.txt']:copy(base/'ae-histogram-fixtures'/name
 for name in ['inputs.txt','expected.txt']:copy(base/'ae-big-grid-fixtures'/name,'ae-big-grid-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'sensor-linear-fixtures'/name,'sensor-linear-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'exposure-fixtures'/name,'exposure-fixtures/'+name)
+for name in ['inputs.txt','expected.txt']:copy(base/'sensor-descriptor-fixtures'/name,'sensor-descriptor-fixtures/'+name)
+assert smoke['sensorDescriptorReferenceCases']==1000 and smoke['sensorDescriptorMatch']
 assert smoke['exposureReferenceCases']==1000 and smoke['exposureMatch']
 assert smoke['sensorLinearReferenceCases']==1000 and smoke['sensorLinearMatch']
 assert smoke['aeBigGridReferenceCases']==1000 and smoke['aeBigGridMatch']
@@ -130,6 +132,13 @@ if cmp -s "$kit_dir/exposure-fixtures/expected.txt" "$result_dir/exposure-actual
     echo "PASS: gain/time codes match the original RKAIQ plus uClibc reference."
 else
     echo "FAIL: exposure conversion differs; preserve $result_dir/exposure-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/sensor-descriptor-fixtures/inputs.txt" > "$result_dir/sensor-descriptor-actual.txt"
+if cmp -s "$kit_dir/sensor-descriptor-fixtures/expected.txt" "$result_dir/sensor-descriptor-actual.txt"; then
+    echo "PASS: sensor descriptors match the original method reference."
+else
+    echo "FAIL: sensor descriptor differs; preserve $result_dir/sensor-descriptor-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

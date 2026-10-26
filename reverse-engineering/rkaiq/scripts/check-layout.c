@@ -48,3 +48,22 @@ _Static_assert(offsetof(struct v4l2_meta_format,dataformat)==0,"metadata FourCC 
 _Static_assert(offsetof(struct v4l2_meta_format,buffersize)==4,"metadata size offset");
 _Static_assert(sizeof(struct isp2x_bls_fixed_val)==8,"signed BLS/gain record size");
 _Static_assert(offsetof(struct isp2x_bls_fixed_val,b)==6,"BLS blue offset");
+#include <linux/v4l2-subdev.h>
+#include <linux/rk-camera-module.h>
+_Static_assert(sizeof(struct v4l2_subdev_format)==88,"subdevice format size");
+_Static_assert(offsetof(struct v4l2_subdev_format,format.width)==8,"subdevice width offset");
+_Static_assert(offsetof(struct v4l2_subdev_format,format.height)==12,"subdevice height offset");
+_Static_assert(offsetof(struct v4l2_subdev_format,format.code)==16,"subdevice bus code offset");
+_Static_assert(VIDIOC_SUBDEV_G_FMT==0xc0585604,"subdevice format request");
+_Static_assert(sizeof(struct v4l2_subdev_frame_interval)==48,"subdevice interval size");
+_Static_assert(offsetof(struct v4l2_subdev_frame_interval,interval)==4,"interval fraction offset");
+_Static_assert(VIDIOC_SUBDEV_G_FRAME_INTERVAL==0xc0305615,"interval request");
+_Static_assert(sizeof(struct v4l2_queryctrl)==68,"control query size");
+_Static_assert(offsetof(struct v4l2_queryctrl,minimum)==40,"minimum control offset");
+_Static_assert(sizeof(struct v4l2_ext_control)==20,"extended control size");
+_Static_assert(offsetof(struct v4l2_ext_control,value64)==12,"pixel-rate value offset");
+_Static_assert(sizeof(struct v4l2_ext_controls)==24,"ARM extended controls size");
+_Static_assert(offsetof(struct v4l2_ext_controls,controls)==20,"ARM control pointer offset");
+_Static_assert(VIDIOC_G_EXT_CTRLS==0xc0185647,"extended controls request");
+_Static_assert(RKMODULE_GET_NR_SWITCH_THRESHOLD==0x801056c9,"noise-switch query");
+_Static_assert(RKMODULE_GET_DCG_RATIO==0x800c56d2,"DCG ratio query");

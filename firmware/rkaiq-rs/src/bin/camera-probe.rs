@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe self-test\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe self-test\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -871,6 +871,91 @@ mod linux {
         Ok(())
     }
     // Raw ARM32 kernel event storage: do not use musl's time64 timespec.
+    struct SensorReader {
+        file: File,
+        queries: Vec<Value>,
+        bus: Option<u32>,
+    }
+    impl SensorReader {
+        fn query<T>(&mut self, label: &str, request: u32, value: &mut T) -> io::Result<()> {
+            let result = ioctl(self.file.as_raw_fd(), request, value);
+            self.queries.push(json!({"query":label,"request":format!("0x{request:08x}"),"error":result.as_ref().err().map(|e|e.to_string())}));
+            result
+        }
+    }
+    impl shieldsigner_rkaiq::sensor_descriptor::Backend for SensorReader {
+        type Error = io::Error;
+        fn format(&mut self) -> io::Result<shieldsigner_rkaiq::sensor_descriptor::Format> {
+            let mut value = [0u8; 88];
+            put32(&mut value, 0, 1);
+            self.query("active-pad-0-format", 0xc0585604, &mut value)?;
+            self.bus = Some(get32(&value, 16));
+            Ok(shieldsigner_rkaiq::sensor_descriptor::Format {
+                width: get32(&value, 8),
+                height: get32(&value, 12),
+                media_bus_code: get32(&value, 16),
+            })
+        }
+        fn minimum(&mut self, id: u32) -> io::Result<i32> {
+            let mut value = [0u8; 68];
+            put32(&mut value, 0, id);
+            self.query(
+                &format!("control-minimum-0x{id:08x}"),
+                0xc0445624,
+                &mut value,
+            )?;
+            Ok(get32(&value, 40) as i32)
+        }
+        fn frame_interval(&mut self) -> io::Result<(u32, u32)> {
+            let mut value = [0u8; 48];
+            self.query("pad-0-frame-interval", 0xc0305615, &mut value)?;
+            Ok((get32(&value, 4), get32(&value, 8)))
+        }
+        fn pixel_rate(&mut self) -> io::Result<i64> {
+            let mut control = [0u8; 20];
+            put32(&mut control, 0, 0x009f0902);
+            let mut controls = [0u8; 24];
+            put32(&mut controls, 0, 0x009f0000);
+            put32(&mut controls, 4, 1);
+            put32(&mut controls, 20, control.as_mut_ptr() as usize as u32);
+            self.query("pixel-rate-fallback", 0xc0185647, &mut controls)?;
+            Ok(i64::from_ne_bytes(control[12..20].try_into().unwrap()))
+        }
+        fn nr_switch(&mut self) -> io::Result<[u32; 4]> {
+            let mut value = [0u8; 16];
+            self.query("optional-noise-switch", 0x801056c9, &mut value)?;
+            Ok(core::array::from_fn(|i| get32(&value, i * 4)))
+        }
+        fn dcg_ratio(&mut self) -> io::Result<[u32; 3]> {
+            let mut value = [0u8; 12];
+            self.query("optional-conversion-gain-ratio", 0x800c56d2, &mut value)?;
+            Ok(core::array::from_fn(|i| get32(&value, i * 4)))
+        }
+    }
+    fn sensor_info(args: &[String]) -> io::Result<()> {
+        if args.len() != 1 {
+            return Err(error(
+                "sensor-info requires exactly one sensor subdevice path",
+            ));
+        }
+        if std::mem::size_of::<usize>() != 4 {
+            return Err(error("Sensor query ABI currently targets ARM32 Linux only"));
+        }
+        let mut reader = SensorReader {
+            file: open(&args[0], false)?,
+            queries: Vec::new(),
+            bus: None,
+        };
+        let descriptor = shieldsigner_rkaiq::sensor_descriptor::read(&mut reader).map_err(|e| {
+            error(format!(
+                "Sensor descriptor failed: {e}; query trace: {}",
+                json!(reader.queries)
+            ))
+        })?;
+        let report = json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"device":args[0],"linksRkaiq":false,"changesSensorSettings":false,"vendorProcesses":vendor_processes(),"width":descriptor.width(),"height":descriptor.height(),"mediaBusCode":reader.bus,"pixelFormat":fourcc(descriptor.pixel_format()),"pixelFormatValue":descriptor.pixel_format(),"pixelPeriodsPerLine":descriptor.pixel_periods_per_line(),"linePeriodsPerField":descriptor.line_periods_per_field(),"pixelClockMHz":descriptor.pixel_clock_mhz(),"pixelClockBits":format!("{:08x}",descriptor.pixel_clock_mhz().to_bits()),"coarseIntegrationMinimum":descriptor.minimum_integration(),"coarseIntegrationMargin":descriptor.integration_margin(),"noiseSwitch":descriptor.noise_switch(),"conversionGainRatio":descriptor.conversion_gain_ratio(),"queries":reader.queries,"nativeDescriptorHex":descriptor.bytes().iter().map(|b|format!("{b:02x}")).collect::<String>(),"limitations":["Descriptor line/frame periods use minimum blanking, not necessarily the current frame timing.","Recovered arithmetic includes native 16-bit narrowing and pixel-rate fallback; calibration and physical validity still require checking.","Queries do not configure the sensor, media graph, ISP or an exposure loop."]});
+        println!("{}", serde_json::to_string_pretty(&report)?);
+        Ok(())
+    }
     fn events(args: &[String]) -> io::Result<()> {
         use shieldsigner_rkaiq::engine::{STREAM_START, STREAM_STOP};
         if std::mem::size_of::<usize>() != 4 {
@@ -978,6 +1063,7 @@ mod linux {
             Some("capture") => capture(&args[1..], false),
             Some("capture-statistics") => capture(&args[1..], true),
             Some("events") => events(&args[1..]),
+            Some("sensor-info") => sensor_info(&args[1..]),
             _ => Err(error("Unknown command; see --help")),
         }
     }

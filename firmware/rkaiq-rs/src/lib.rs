@@ -12,6 +12,7 @@ pub mod gain;
 pub mod isp32;
 pub mod media;
 pub mod sensor;
+pub mod sensor_descriptor;
 pub mod statistics;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

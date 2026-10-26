@@ -1,6 +1,6 @@
 # Sensor exposure programming
 
-`sensor::program_linear` reconstructs `SensorHw::setLinearSensorExposure(RKAiqAecExpInfo_s*)`, ELF `0x3ac10` (Ghidra `0x4ac10`), in the pinned library. It operates on already converted sensor register/control codes. **The live ioctl backend and descriptor reader are not supplied by this function. Exposure-code conversion is a separate recovered API described below.** The kit's fixture tests do not program a real device.
+`sensor::program_linear` reconstructs `SensorHw::setLinearSensorExposure(RKAiqAecExpInfo_s*)`, ELF `0x3ac10` (Ghidra `0x4ac10`), in the pinned library. It operates on already converted sensor register/control codes. **The live write backend is not supplied by this function. Descriptor reading and exposure-code conversion are separate recovered APIs described below.** The kit's fixture tests do not program a real device.
 
 The recovered sequence is:
 
@@ -31,7 +31,7 @@ The native input fields are `LinearExp.exp_real_params.dcg_mode`, coarse integra
 
 Descriptor output is supplied at the offsets used by the original virtual call; this is not a verified native descriptor implementation. The Rust backend interface deliberately avoids copying C++ object/vtable layouts. ARM emulation repeats every fixture using the compiled Rust implementation. A host test verifies descriptor errors prevent all writes and preserve the mirror.
 
-Remaining work includes loading the real-exposure-to-register calibration, implementing/validating the live descriptor/ioctl adapter, sensor-specific control support, frame-start scheduling/delays, HDR programming and integration with the actual AE loop. No sensor-programming command has been added to `camera-probe` yet.
+Remaining work includes loading the real-exposure-to-register calibration, validating the read-only descriptor adapter and implementing the live write adapter, sensor-specific control support, frame-start scheduling/delays, HDR programming and integration with the actual AE loop. No sensor-programming command has been added to `camera-probe` yet.
 
 ## Real exposure to register codes
 
@@ -50,3 +50,15 @@ The checked API rejects nonfinite/invalid active timing inputs and malformed gai
 `camera:rust:exposure` executes the original RKAIQ function and bridges its `powf`/`log10f` calls into **actual ARM instructions** from `libuClibc-1.0.31.so` in the pinned SDK's runtime archive. The archive and member hashes/URLs are recorded in `artifacts.json`; setup downloads them to ignored cache. The isolated runtime uses ARM variant-I TLS relocations/thread-pointer storage. No imported runtime function calls were needed by the tested math cases; this is not an emulation of a full Linux process or dynamic loader. Logging is discarded explicitly.
 
 Rust uses pure-Rust `libm` math. The 1,000-case comparison checks final integer gain/time codes, not a claim that every transcendental float result is bit-identical for all inputs. Cases cover both gain models, all three timing modes, four DCG modes, first-inclusive interval selection, zero-scale fallback and negative pre-clamp gain codes. [Report](exposure-equivalence.json). The reference runtime is pinned SDK evidence, not a measured hash of libc on the eventual hardware image. Compiled ARM Rust fixtures repeat the entire comparison corpus without shipping or linking the vendor runtime. Its binary/archive are excluded from the kit.
+
+## Descriptor construction and read-only adapter
+
+`sensor_descriptor::read` reconstructs `SensorHw::get_sensor_descriptor`, ELF `0x3b0c4` (Ghidra `0x4b0c4`), and its format/blanking/pixel-rate/exposure helpers. It clears a 172-byte descriptor, reads active pad-0 width/height/media-bus format, then queries **minimum** HBLANK and VBLANK. Width plus minimum HBLANK and height plus minimum VBLANK narrow to u16 line/frame periods. These are descriptor minima, not necessarily the current timing.
+
+The native frame-interval query computes FPS as denominator/numerator in f32. Pixel clock is `line_period × frame_period × FPS / 1,000,000`, preserving its operation order. If frame-interval querying fails, a pixel-rate extended-control query is required. The pinned native fallback converts the signed low 32 bits of that 64-bit value to f32 MHz; the Rust reconstruction preserves this behavior rather than silently widening it. It also narrows the minimum exposure to u16 and fixes the coarse-integration margin to 10.
+
+Required query failures stop descriptor construction. Optional noise-switch and DCG-ratio failures only clear validity; both may be unsupported. Noise-switch payload words are `direct`, `up_thres`, `down_thres`, `div_coeff`; DCG words are `integer`, `decimal`, `div_coeff`. The raw payloads are retained without inventing physical interpretation or replacing missing calibration. Fifteen native media-bus-to-pixel-format mappings are preserved; unknown codes yield `0xffffffff`.
+
+`camera:rust:sensor-descriptor` compares original ARM query order, status and the complete successful 172-byte record across 1,000 cases. Native descriptor helpers and format mapping execute directly; only ioctl responses/errno are simulated. Required failures compare status/trace and discard partial native output, matching the Rust API's absence of a returned descriptor. [Report](sensor-descriptor-equivalence.json). Both individually and jointly unsupported optional queries are covered. `camera:rust:layout` checks the read ioctl numbers, struct sizes, field offsets and pointer layout against pinned kernel headers.
+
+`camera-probe sensor-info NODE` implements the read-only ARM32 Linux adapter, outputs parsed fields plus original descriptor bytes/query trace, and is included in the hardware guide. Device requests remain unvalidated until the real camera test. No write ioctl adapter or automatic loop has been added by this command.

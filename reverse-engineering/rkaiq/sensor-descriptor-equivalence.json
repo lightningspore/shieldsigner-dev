@@ -1,0 +1,32 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "seed": "0x44455343",
+  "cases": 1000,
+  "branchCoverage": {
+    "False:": 56,
+    "True:": 56,
+    "False:format": 56,
+    "True:format": 56,
+    "False:hblank": 56,
+    "True:hblank": 56,
+    "False:vblank": 56,
+    "True:vblank": 56,
+    "False:pixel_rate": 56,
+    "True:pixel_rate": 56,
+    "False:exposure": 55,
+    "True:exposure": 55,
+    "False:nr": 55,
+    "True:nr": 55,
+    "False:dcg": 55,
+    "True:dcg": 55,
+    "False:nr+dcg": 55,
+    "True:nr+dcg": 55
+  },
+  "mismatchCount": 0,
+  "scope": "Full 172-byte descriptor on success, query order/status, timing and pixel-clock fallback, format mapping, optional NR/DCG behavior",
+  "limitations": [
+    "Only device ioctl responses and errno are simulated; native descriptor helpers execute original ARM instructions.",
+    "Required failures compare status/query trace, not the original partial error output; Rust returns no descriptor on error.",
+    "Real driver queries, internal routing and live sensor operation require hardware validation."
+  ]
+}

@@ -191,6 +191,91 @@ fn main() {
                         .join(",")
                 );
             }
+            "sensor-descriptor" => {
+                use shieldsigner_rkaiq::sensor_descriptor::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                struct Trace {
+                    v: serde_json::Value,
+                    trace: Vec<String>,
+                }
+                impl Trace {
+                    fn operation(&mut self, name: &str) -> Result<(), ()> {
+                        self.trace.push(name.into());
+                        if self.v["fail"]
+                            .as_str()
+                            .unwrap()
+                            .split('+')
+                            .any(|v| v == name)
+                        {
+                            Err(())
+                        } else {
+                            Ok(())
+                        }
+                    }
+                    fn n(&self, key: &str) -> u32 {
+                        self.v[key].as_u64().unwrap() as u32
+                    }
+                }
+                impl Backend for Trace {
+                    type Error = ();
+                    fn format(&mut self) -> Result<Format, ()> {
+                        self.operation("format")?;
+                        Ok(Format {
+                            width: self.n("width"),
+                            height: self.n("height"),
+                            media_bus_code: self.n("bus"),
+                        })
+                    }
+                    fn minimum(&mut self, id: u32) -> Result<i32, ()> {
+                        let name = match id {
+                            HBLANK => "hblank",
+                            VBLANK => "vblank",
+                            _ => "exposure",
+                        };
+                        self.operation(name)?;
+                        Ok(self.v[name].as_i64().unwrap() as i32)
+                    }
+                    fn frame_interval(&mut self) -> Result<(u32, u32), ()> {
+                        self.operation("interval")?;
+                        if self.v["fps_fail"] == true {
+                            return Err(());
+                        }
+                        Ok((self.n("numerator"), self.n("denominator")))
+                    }
+                    fn pixel_rate(&mut self) -> Result<i64, ()> {
+                        self.operation("pixel_rate")?;
+                        Ok(self.v["pixel_rate"].as_i64().unwrap())
+                    }
+                    fn nr_switch(&mut self) -> Result<[u32; 4], ()> {
+                        self.operation("nr")?;
+                        Ok(core::array::from_fn(|i| {
+                            self.v["nr"][i].as_u64().unwrap() as u32
+                        }))
+                    }
+                    fn dcg_ratio(&mut self) -> Result<[u32; 3], ()> {
+                        self.operation("dcg")?;
+                        Ok(core::array::from_fn(|i| {
+                            self.v["dcg"][i].as_u64().unwrap() as u32
+                        }))
+                    }
+                }
+                let mut backend = Trace {
+                    v,
+                    trace: Vec::new(),
+                };
+                let result = read(&mut backend);
+                let (status, data) = match result {
+                    Ok(d) => (
+                        0,
+                        d.bytes()
+                            .iter()
+                            .map(|v| format!("{v:02x}"))
+                            .collect::<String>(),
+                    ),
+                    Err(_) => (-9, "-".into()),
+                };
+                println!("{}|{status}|{data}", backend.trace.join(";"));
+            }
             "exposure" => {
                 use shieldsigner_rkaiq::exposure::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

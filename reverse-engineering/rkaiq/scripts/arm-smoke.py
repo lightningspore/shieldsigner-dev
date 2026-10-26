@@ -42,6 +42,12 @@ exposure=ROOT/'dist/reverse-engineering/exposure-fixtures'
 with (exposure/'inputs.txt').open('rb') as source:
  converted=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert converted.stdout==(exposure/'expected.txt').read_bytes(),'ARM exposure conversion differs from original RKAIQ/uClibc'
+sensor_descriptor=ROOT/'dist/reverse-engineering/sensor-descriptor-fixtures'
+with (sensor_descriptor/'inputs.txt').open('rb') as source:
+ described=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert described.stdout==(sensor_descriptor/'expected.txt').read_bytes(),'ARM descriptor differs from original methods'
+invalid_sensor=subprocess.run(command('camera-probe','sensor-info','/dev/null'),text=True,capture_output=True)
+assert invalid_sensor.returncode==1 and 'os error 25' in invalid_sensor.stderr.lower(),invalid_sensor
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -56,6 +62,7 @@ for options,expected in [(['--buffers','1'],'at least two buffers'),(['--width',
 occupied=subprocess.run(command('camera-probe','capture-statistics','/dev/null','/work/camera-probe'),text=True,capture_output=True)
 assert occupied.returncode==1 and 'already exists' in occupied.stderr,occupied
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'sensorDescriptorReferenceCases':len(described.stdout.splitlines()),'sensorDescriptorMatch':True,'invalidSensorEndpointRejected':True,
  'exposureReferenceCases':len(converted.stdout.splitlines()),'exposureMatch':True,
  'sensorLinearReferenceCases':len(controls.stdout.splitlines()),'sensorLinearMatch':True,
  'aeBigGridReferenceCases':len(big_grid.stdout.splitlines()),'aeBigGridMatch':True,

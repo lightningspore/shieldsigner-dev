@@ -46,3 +46,5 @@ _Static_assert(V4L2_CAP_META_CAPTURE==0x00800000,"metadata capture capability");
 _Static_assert(V4L2_META_FMT_RK_ISP1_STAT_3A==0x53314b52,"RK1S statistics FourCC");
 _Static_assert(offsetof(struct v4l2_meta_format,dataformat)==0,"metadata FourCC offset");
 _Static_assert(offsetof(struct v4l2_meta_format,buffersize)==4,"metadata size offset");
+_Static_assert(sizeof(struct isp2x_bls_fixed_val)==8,"signed BLS/gain record size");
+_Static_assert(offsetof(struct isp2x_bls_fixed_val,b)==6,"BLS blue offset");

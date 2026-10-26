@@ -3,6 +3,7 @@
 //! These are recovered numerical components, not a complete ISP library.
 //! Function behavior is checked against original ARM machine code under Unicorn.
 #![no_std]
+pub mod ae;
 pub mod discovery;
 pub mod engine;
 pub mod gain;

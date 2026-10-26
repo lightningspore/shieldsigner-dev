@@ -19,11 +19,13 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
-for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
+for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'statistics-fixtures'/name,'statistics-fixtures/'+name)
+for name in ['inputs.txt','expected.txt']:copy(base/'ae-grid-fixtures'/name,'ae-grid-fixtures/'+name)
+assert smoke['aeGridReferenceCases']==1000 and smoke['aeGridMatch']
 assert smoke['statisticsReferenceCases']==100 and smoke['statisticsMatch']
 assert smoke['bindingReferenceCases']==1000 and smoke['bindingMatch']
 assert smoke['lifecycleReferenceTraces']==100 and smoke['lifecycleMatch']
@@ -85,6 +87,13 @@ if cmp -s "$kit_dir/statistics-fixtures/expected.txt" "$result_dir/statistics-ac
     echo "PASS: AWB measurements match the original translator reference."
 else
     echo "FAIL: statistics decoding differs; preserve $result_dir/statistics-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/ae-grid-fixtures/inputs.txt" > "$result_dir/ae-grid-actual.txt"
+if cmp -s "$kit_dir/ae-grid-fixtures/expected.txt" "$result_dir/ae-grid-actual.txt"; then
+    echo "PASS: corrected AE0 grids/means match the original helper reference."
+else
+    echo "FAIL: AE0 correction differs; preserve $result_dir/ae-grid-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

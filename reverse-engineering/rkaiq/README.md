@@ -18,6 +18,8 @@ The sensor binding selector also matches **1,000 controlled inventories** agains
 
 A borrowed full-ISP32 statistics decoder now exposes AE grids/histograms and AWB blocks/light sums/luma histogram. **100 AWB buffer comparisons** match the original translator; AE raw field layout is checked against kernel headers. `capture-statistics` reads the existing metadata queue with bounded MMAP capture and strict format checks. Real queue operation still needs hardware validation; this does not implement the exposure or white-balance algorithms. See [STATISTICS.md](STATISTICS.md).
 
+The AE0 5×5 correction helper now matches **1,000 original-ARM cases** across all six selection branches and both luma ranges, including signed correction, clipping and weighted means. This helper consumes calibration/gain/weight inputs; the automatic exposure decision is still missing. See [AE.md](AE.md).
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -72,6 +74,7 @@ mise run camera:rust:test
 mise run camera:rust:lifecycle
 mise run camera:rust:binding
 mise run camera:rust:statistics
+mise run camera:rust:ae-grid
 mise run camera:rust:arm
 mise run camera:rust:smoke
 mise run camera:rust:package

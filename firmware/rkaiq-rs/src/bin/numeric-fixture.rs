@@ -147,6 +147,61 @@ fn main() {
                     hex(&params[AWB_GAIN_OFFSET..AWB_GAIN_OFFSET + 32])
                 );
             }
+            "aegrid" => {
+                use shieldsigner_rkaiq::ae::*;
+                let mut state: u32 = a[1].parse().unwrap();
+                fn next(s: &mut u32) -> u32 {
+                    *s = s.wrapping_mul(1664525).wrapping_add(1013904223);
+                    *s
+                }
+                let input = core::array::from_fn(|_| next(&mut state));
+                let mut output =
+                    Grid::from_words(core::array::from_fn(|_| (next(&mut state) >> 16) as u16));
+                let weights = core::array::from_fn(|_| (next(&mut state) >> 24) as u8);
+                let read_bls = |s: &str| {
+                    let v: Vec<i16> = s.split(',').map(|v| v.parse().unwrap()).collect();
+                    Bls {
+                        red: v[0],
+                        green_red: v[1],
+                        green_blue: v[2],
+                        blue: v[3],
+                    }
+                };
+                let mut mean = a[6].parse().unwrap();
+                let selection = match a[2] {
+                    "1" => Selection::Luma,
+                    "2" => Selection::Red,
+                    "4" => Selection::Green,
+                    "8" => Selection::Blue,
+                    "14" => Selection::Rgb,
+                    _ => Selection::RgbAndLuma,
+                };
+                let range = if a[3] == "0" {
+                    LumaRange::Full
+                } else {
+                    LumaRange::Limited
+                };
+                correct_lite_grid(
+                    &input,
+                    &mut output,
+                    &mut mean,
+                    &weights,
+                    selection,
+                    range,
+                    read_bls(a[4]),
+                    read_bls(a[5]),
+                )
+                .unwrap();
+                println!(
+                    "{}:{mean}",
+                    output
+                        .words()
+                        .iter()
+                        .map(|v| v.to_string())
+                        .collect::<Vec<_>>()
+                        .join(",")
+                );
+            }
             "statistics" => {
                 use shieldsigner_rkaiq::statistics::*;
                 let mut state: u32 = a[1].parse().unwrap();

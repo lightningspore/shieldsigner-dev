@@ -8,6 +8,7 @@ pub mod engine;
 pub mod gain;
 pub mod isp32;
 pub mod media;
+pub mod statistics;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum InvalidInput {

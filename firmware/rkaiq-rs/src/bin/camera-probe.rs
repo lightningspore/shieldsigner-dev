@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe self-test\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffer request, 1–4 (default 1)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe self-test\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffer request, 1–4 (default 1)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -42,6 +42,30 @@ fn self_test() -> Result<(), String> {
     println!("PASS: reconstructed interpolation, complete 2187-value LUT and media topology traversal. Full ARM-original differential test is separate.");
     Ok(())
 }
+fn decode_statistics(args: &[String]) -> Result<(), String> {
+    use serde_json::json;
+    use shieldsigner_rkaiq::statistics::*;
+    if args.len() != 2 {
+        return Err("stats requires exactly one saved full-ISP32 statistics buffer".into());
+    }
+    let bytes = std::fs::read(&args[1]).map_err(|e| e.to_string())?;
+    let stats = Statistics::parse(&bytes).map_err(|_| {
+        "Unsupported statistics size; expected one 13036/13040-byte full-ISP32 buffer".to_string()
+    })?;
+    let channels=[Channel::Ae0,Channel::Ae1,Channel::Ae2,Channel::Ae3].map(|c|json!({
+        "grid":stats.ae(c).map(|grid|grid.map(|v|json!({"r":v.red,"g":v.green,"b":v.blue})).collect::<Vec<_>>()),
+        "histogram":stats.histogram(c).map(|hist|hist.collect::<Vec<_>>())}));
+    let report = json!({"layout":"full-ISP32","bytes":bytes.len(),"measurements":stats.measurements(),"frameId":stats.frame_id(),"parametersId":stats.parameters_id(),"ae":channels,
+        "awb":stats.awb().map(|grid|grid.map(|v|json!({"r":v.red,"g":v.green,"b":v.blue,"whitePoints":v.white_points})).collect::<Vec<_>>()),
+        "awbSums":stats.awb_sums().map(|sums|sums.map(|v|json!({"redNormal":v.red_normal,"blueNormal":v.blue_normal,"pointsNormal":v.points_normal,"pointsSecond":v.points_second,"redBig":v.red_big,"blueBig":v.blue_big,"pointsBig":v.points_big})).collect::<Vec<_>>()),
+        "awbLumaHistogram":stats.awb_luma_histogram().map(|hist|hist.collect::<Vec<_>>()),
+        "limitations":["Raw measurement decoding only; no IQ calibration, BLS correction, exposure selection or AWB gains are computed.","The supplied bytes must come from the pinned full-ISP32 statistics endpoint; size alone cannot identify hardware/layout."]});
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
 fn main() {
     let args: Vec<String> = env::args().skip(1).collect();
     let result = match args.first().map(String::as_str) {
@@ -57,6 +81,7 @@ fn main() {
             Ok(())
         }
         Some("self-test") => self_test(),
+        Some("stats") => decode_statistics(&args),
         _ => platform(&args),
     };
     if let Err(error) = result {

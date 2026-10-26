@@ -1,0 +1,13 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "seed": "0x53544154",
+  "cases": 100,
+  "awbBlocksPerCase": 225,
+  "mismatchCount": 0,
+  "scope": "Single-ISP valid AWB raw grid, four light sums, eight expanded luma histogram bins and frame ID from original translateAwbStats",
+  "limitations": [
+    "Not a port of translator calibration/configuration copies or the complete AE/AWB algorithms.",
+    "Buffer-access helpers and multi-ISP predicates are controlled stubs; no live statistics queue is tested.",
+    "AE raw grids and AE histograms are checked against kernel layouts, not by this AWB reference comparison."
+  ]
+}

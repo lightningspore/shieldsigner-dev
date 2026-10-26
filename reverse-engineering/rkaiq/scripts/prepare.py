@@ -19,6 +19,7 @@ parser=argparse.ArgumentParser();parser.add_argument('--ghidra',action='store_tr
 for item in manifest['binaries']:fetch(item['url'],cache/'rkaiq-original'/item['name'],item['sha256'])
 for item in manifest.get('headers',[]):fetch(item['url'],cache/'headers'/item['name'],item['sha256'])
 for item in manifest.get('kernelHeaders',[]):fetch(item['url'],cache/'kernel-uapi/linux'/item['name'],item['sha256'])
+for item in manifest.get('kernelSources',[]):fetch(item['url'],cache/'kernel-source'/item['name'],item['sha256'])
 if args.ghidra:
  info=manifest['ghidra'];archive=cache/'ghidra_12.2.zip';fetch(info['url'],archive,info['sha256']);install=cache/info['directory']
  if not install.exists():

@@ -16,6 +16,8 @@ A recovered Rust service controller also matches **100 original-daemon event tra
 
 The sensor binding selector also matches **1,000 controlled inventories** against the original instructions. It preserves ISP/CIF path precedence, name exceptions and media-probe outcomes. The live media inventory now reads pads/links and reports enabled entity-level sensor paths within each media device; full cross-media inventory construction is not implemented by this selector. See [DISCOVERY.md](DISCOVERY.md).
 
+A borrowed full-ISP32 statistics decoder now exposes AE grids/histograms and AWB blocks/light sums/luma histogram. **100 AWB buffer comparisons** match the original translator; AE raw field layout is checked against kernel headers. This does not implement the exposure or white-balance algorithms. See [STATISTICS.md](STATISTICS.md).
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -69,6 +71,7 @@ mise run camera:rust:layout
 mise run camera:rust:test
 mise run camera:rust:lifecycle
 mise run camera:rust:binding
+mise run camera:rust:statistics
 mise run camera:rust:arm
 mise run camera:rust:smoke
 mise run camera:rust:package
@@ -83,7 +86,7 @@ The probe explicitly uses the kernel's ARM32, long-sized V4L2 timestamp layout, 
 ## Remaining implementation
 
 1. Recover the exact single-camera initialization and stream-event lifecycle; reproduce sensor/media graph setup without temporary vendor `rkipc`.
-2. Implement the ISP32-lite parameter/statistics queue ABI and IQ-file subset needed by the selected sensor.
+2. Implement the full ISP32 parameter/statistics queue ABI and IQ-file subset needed by the selected sensor.
 3. Reconstruct the required exposure/gain loop and sensor-control behavior, then the minimal image-processing configuration needed for reliable QR capture.
 4. Integrate the recovered processing blocks, with tests for each behavior against the pinned binary. Add register/parameter packing and state-machine coverage.
 5. Provide the required RKAIQ API surface or replace its callers, then verify startup, frame delivery, exposure transitions, shutdown and restart on real hardware.

@@ -147,6 +147,48 @@ fn main() {
                     hex(&params[AWB_GAIN_OFFSET..AWB_GAIN_OFFSET + 32])
                 );
             }
+            "statistics" => {
+                use shieldsigner_rkaiq::statistics::*;
+                let mut state: u32 = a[1].parse().unwrap();
+                let mut bytes = [0u8; BUFFER_BYTES];
+                for b in &mut bytes {
+                    state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                    *b = (state >> 24) as u8;
+                }
+                bytes[MEASUREMENT_OFFSET..MEASUREMENT_OFFSET + 4]
+                    .copy_from_slice(&0x20u32.to_le_bytes());
+                let stats = Statistics::parse(&bytes).unwrap();
+                let grid = stats
+                    .awb()
+                    .unwrap()
+                    .map(|v| format!("{},{},{},{}", v.red, v.green, v.blue, v.white_points))
+                    .collect::<Vec<_>>()
+                    .join(",");
+                let sums = stats
+                    .awb_sums()
+                    .unwrap()
+                    .map(|v| {
+                        format!(
+                            "{},{},{},{},{},{},{}",
+                            v.red_normal,
+                            v.blue_normal,
+                            v.points_normal,
+                            v.points_second,
+                            v.red_big,
+                            v.blue_big,
+                            v.points_big
+                        )
+                    })
+                    .collect::<Vec<_>>()
+                    .join(",");
+                let hist = stats
+                    .awb_luma_histogram()
+                    .unwrap()
+                    .map(|v| v.to_string())
+                    .collect::<Vec<_>>()
+                    .join(",");
+                println!("{}:{grid}:{sums}:{hist}", stats.frame_id());
+            }
             "binding" => {
                 use shieldsigner_rkaiq::discovery::*;
                 let input: serde_json::Value = serde_json::from_str(a[1]).unwrap();

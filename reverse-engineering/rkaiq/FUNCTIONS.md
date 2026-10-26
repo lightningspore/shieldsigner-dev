@@ -27,7 +27,7 @@ Control-byte order is:
 
 The pinned function assigns `[0,0,1,1,1,1,0,0,1,0,0,1,1]`. It repeats the last active exposure for unused slots, calculates ISO×time exposure ratios and analog×digital gain ratios, quantizes to Q6, applies optional short/middle HDR scales, and limits the short channel to 262143 and the other two channels to 16383. Linear mode yields unity Q6 gains of 64. The fourth scalar argument and the input `isp_dgain[]` array are unused in this exact binary.
 
-The Rust implementation rejects nonpositive active exposure/time/gain/ISO and nonfinite inputs instead of reproducing invalid/undefined calculations. Pointer checks, vendor logging and arbitrary invalid binary-call ABI behavior are outside the safe API. This record still needs to be mapped into the kernel ISP32-lite parameter ABI before it can program the hardware.
+The Rust implementation rejects nonpositive active exposure/time/gain/ISO and nonfinite inputs instead of reproducing invalid/undefined calculations. Pointer checks, vendor logging and arbitrary invalid binary-call ABI behavior are outside the safe API. This record still needs to be mapped into the kernel full ISP32 parameter ABI before it can program the hardware.
 
 ## Corpus coverage
 

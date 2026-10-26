@@ -11,6 +11,7 @@ This kit is an **experimental partial reconstruction**. It supplies ten recovere
 - `run-numeric-test.sh`: run and compare the numerical corpus on the device.
 - `lifecycle-fixtures/`: 100 call traces from the original daemon, replayed through the Rust orchestration core. This does not execute a complete Rust ISP backend.
 - `binding-fixtures/`: 1,000 controlled sensor-selection cases. This checks the selector, not live inventory discovery.
+- `statistics-fixtures/`: 100 full-ISP32 AWB buffer comparisons against original translator instructions.
 - `manifest.json`: artifact sizes/hashes, target and source-file hashes.
 
 Use a development microSD/image and a connected compatible camera. Keep the existing working camera setup available for baseline comparison. The kit makes no persistent boot changes. Commands below use `/tmp` for test output; check available space first because full-resolution Bayer frames can be several MB.
@@ -97,3 +98,9 @@ Start and stop a camera session using the existing application in another termin
 - **Unexpected ioctl failure:** preserve architecture, kernel version and exact error. ARM32 timestamp/structure ABI is explicitly modeled, but real driver compatibility is still being tested.
 
 Provide the numerical results, node inventory, raw frame + JSON + PGM (if available), sensor model, image/kernel versions, which services were running before/after, and relevant camera/CMA kernel logs. Restart the normal camera service/application or reboot the unchanged development image to restore its normal startup sequence.
+
+## Saved ISP statistics
+
+`camera-probe stats SAVED_STATISTICS.raw` decodes a single saved buffer from the pinned **full ISP32 statistics endpoint**, printing JSON with frame/parameter IDs, valid AE grids/histograms and AWB blocks/sums/histogram. It accepts 13,036 payload bytes or the driver's 13,040-byte aligned allocation. Measurement-validity bits gate each output; invalid measurements appear as null.
+
+This is an offline decoder, not a new statistics-queue capture command. Do not give it an image frame or a buffer from a different ISP. Length alone does not establish provenance. A live reader for the statistics queue and processing synchronization remain unfinished. See `research/STATISTICS.md` in the kit for supported fields and validation limits.

@@ -27,3 +27,10 @@ with obj.open('rb') as source:
     layout=struct.unpack('<3I',section.data()[offset:offset+12])
 assert layout==(11145,4645,32),layout
 print('PASS: ARM kernel parameter bytes=%d, AWB offset=%d, AWB bytes=%d'%layout)
+
+with obj.open('rb') as source:
+    elf=ELFFile(source);symbol=elf.get_section_by_name('.symtab').get_symbol_by_name('statistics_layout')[0]
+    section=elf.get_section(symbol['st_shndx']);offset=symbol['st_value']-section['sh_addr']
+    statistics=struct.unpack('<14I',section.data()[offset:offset+56])
+assert statistics==(13036,13024,13028,13032,2736,4096,11008,12816,12944,12960,225,4,8,4),statistics
+print('PASS: full ISP32 statistics payload=13036, measurements=0x32e0; AE/AWB offsets and counts verified')

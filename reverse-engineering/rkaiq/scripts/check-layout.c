@@ -30,3 +30,13 @@ _Static_assert(offsetof(struct media_entity_desc,pads)==52,"media entity pad cou
 _Static_assert(offsetof(struct media_entity_desc,links)==54,"media entity link count");
 _Static_assert(MEDIA_IOC_ENUM_LINKS==0xc01c7c02,"ARM media links ioctl");
 _Static_assert(MEDIA_ENT_F_CAM_SENSOR==0x20001,"sensor entity type");
+const unsigned int statistics_layout[]={
+ sizeof(struct rkisp32_isp_stat_buffer),
+ offsetof(struct rkisp32_isp_stat_buffer,meas_type),
+ offsetof(struct rkisp32_isp_stat_buffer,frame_id),
+ offsetof(struct rkisp32_isp_stat_buffer,params_id),
+ offsetof(struct isp32_stat,rawae0),offsetof(struct isp32_stat,rawhist0),
+ offsetof(struct isp32_stat,rawawb),offsetof(struct isp32_stat,rawawb.sum),
+ offsetof(struct isp32_stat,rawawb.yhist_bin),offsetof(struct isp32_stat,rawawb.sum_exc),
+ ISP32_RAWAWB_RAMDATA_NUM,ISP32_RAWAWB_SUM_NUM,ISP32_RAWAWB_HSTBIN_NUM,ISP32_RAWAWB_EXCL_STAT_NUM
+};

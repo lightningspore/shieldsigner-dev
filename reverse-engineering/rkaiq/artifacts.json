@@ -102,5 +102,17 @@
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/media.h",
       "sha256": "003e1ea9efcee90d8e1f7add9783b7a8b2c0a9cbc0290769d12a2a1cd23bb8dd"
     }
+  ],
+  "kernelSources": [
+    {
+      "name": "hw.c",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/hw.c",
+      "sha256": "056061ac8e5ae6b020494cc77abc1ad22fd8c268d6cdd7a580d59f539fbfe958"
+    },
+    {
+      "name": "isp_stats_v32.c",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/isp_stats_v32.c",
+      "sha256": "19d1aef84d28611547dec241dd9b4dfff5490a78434d795ea41648fd10d42a2d"
+    }
   ]
 }

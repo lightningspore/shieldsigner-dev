@@ -30,6 +30,8 @@ The linear sensor-write sequencer matches **1,000 original-ARM traces**, includi
 
 Sensor descriptor construction now matches **1,000 original-ARM cases**, including timing minima, pixel-clock fallback, format mapping and optional-query failures. `camera-probe sensor-info` adds a read-only driver adapter for hardware validation.
 
+The IQ JSON exposure subset is now loaded into the recovered converter. **100 SDK-profile integration cases** match native RKAIQ/uClibc results, and the offline planner passes ten input/error checks. `camera-probe exposure-plan` combines an IQ profile and saved sensor descriptor without opening a camera device. See [CALIBRATION.md](CALIBRATION.md).
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -89,6 +91,7 @@ mise run camera:rust:ae-big-grid
 mise run camera:rust:sensor-linear
 mise run camera:rust:sensor-descriptor
 mise run camera:rust:exposure
+mise run camera:rust:iq-calibration
 mise run camera:rust:ae-histogram
 mise run camera:rust:arm
 mise run camera:rust:smoke
@@ -104,7 +107,7 @@ The probe explicitly uses the kernel's ARM32, long-sized V4L2 timestamp layout, 
 ## Remaining implementation
 
 1. Recover the exact single-camera initialization and stream-event lifecycle; reproduce sensor/media graph setup without temporary vendor `rkipc`.
-2. Implement the full ISP32 parameter/statistics queue ABI and IQ-file subset needed by the selected sensor.
+2. Finish the full ISP32 parameter/statistics queue integration and remaining ISP/3A IQ-file sections needed by the selected sensor.
 3. Reconstruct the required exposure/gain loop and sensor-control behavior, then the minimal image-processing configuration needed for reliable QR capture.
 4. Integrate the recovered processing blocks, with tests for each behavior against the pinned binary. Add register/parameter packing and state-machine coverage.
 5. Provide the required RKAIQ API surface or replace its callers, then verify startup, frame delivery, exposure transitions, shutdown and restart on real hardware.

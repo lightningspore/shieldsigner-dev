@@ -1,0 +1,18 @@
+{
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "binarySha256": "da5094f289850da1e739b9a6696467f94e45c6df683ff199675fd597e3bdb15d",
+  "checks": [
+    "SDK profile plus synthetic descriptor",
+    "Explicit longer frame",
+    "Reject frame below descriptor minimum",
+    "Reject resolution mismatch",
+    "Reject truncated gain row",
+    "Reject f32 overflow",
+    "Reject zero linear timing step",
+    "Reject missing sensor clock",
+    "Reject nonfinite requested time",
+    "Reject zero requested gain"
+  ],
+  "passed": true,
+  "descriptorSource": "Explicit synthetic fixture; not a real hardware observation"
+}

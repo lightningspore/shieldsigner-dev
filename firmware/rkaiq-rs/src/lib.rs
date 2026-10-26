@@ -5,6 +5,8 @@
 #![no_std]
 pub mod ae;
 pub mod ae_histogram;
+#[cfg(feature = "diagnostics")]
+pub mod calibration;
 pub mod discovery;
 pub mod engine;
 pub mod exposure;

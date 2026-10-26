@@ -19,7 +19,7 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
-for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','SENSOR.md','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
+for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
@@ -30,6 +30,10 @@ for name in ['inputs.txt','expected.txt']:copy(base/'ae-big-grid-fixtures'/name,
 for name in ['inputs.txt','expected.txt']:copy(base/'sensor-linear-fixtures'/name,'sensor-linear-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'exposure-fixtures'/name,'exposure-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'sensor-descriptor-fixtures'/name,'sensor-descriptor-fixtures/'+name)
+for name in ['inputs.txt','expected.txt']:copy(base/'iq-calibration-fixtures'/name,'iq-calibration-fixtures/'+name)
+copy(base/'iq-calibration-fixtures/sc3336-exposure-subset.json','reference/sc3336-exposure-subset.json')
+copy(base/'iq-calibration-fixtures/synthetic-sensor-info.json','examples/synthetic-sensor-info.json')
+assert smoke['iqCalibrationReferenceCases']==100 and smoke['iqCalibrationMatch'] and smoke['armOfflinePlanPassed']
 assert smoke['sensorDescriptorReferenceCases']==1000 and smoke['sensorDescriptorMatch']
 assert smoke['exposureReferenceCases']==1000 and smoke['exposureMatch']
 assert smoke['sensorLinearReferenceCases']==1000 and smoke['sensorLinearMatch']
@@ -44,8 +48,9 @@ source=ROOT/'firmware/rkaiq-rs'
 for path in sorted(source.rglob('*')):
  if path.is_file() and 'target' not in path.relative_to(source).parts and path.name!='.gitignore':copy(path,'source/rkaiq-rs/'+str(path.relative_to(source)))
 if platform.system()=='Darwin' and platform.machine()=='arm64':
- host=source/'target/release/frame-preview'
- if host.exists():copy(host,'host/frame-preview-macos-arm64').chmod(0o755)
+ for name in ['frame-preview','camera-probe']:
+  host=source/'target/release'/name
+  if host.exists():copy(host,'host/'+name+'-macos-arm64').chmod(0o755)
 readme='''Experimental RKAIQ Rust camera test kit 0.0.1
 
 START WITH HARDWARE-TEST.md.
@@ -139,6 +144,13 @@ if cmp -s "$kit_dir/sensor-descriptor-fixtures/expected.txt" "$result_dir/sensor
     echo "PASS: sensor descriptors match the original method reference."
 else
     echo "FAIL: sensor descriptor differs; preserve $result_dir/sensor-descriptor-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/iq-calibration-fixtures/inputs.txt" > "$result_dir/iq-calibration-actual.txt"
+if cmp -s "$kit_dir/iq-calibration-fixtures/expected.txt" "$result_dir/iq-calibration-actual.txt"; then
+    echo "PASS: IQ loading and conversion match the SDK-calibrated native reference."
+else
+    echo "FAIL: IQ calibration conversion differs; preserve $result_dir/iq-calibration-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

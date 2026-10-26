@@ -1,0 +1,12 @@
+{
+  "iqFile": "sc3336_CMK-OT2119-PC1_30IRC-F16.json",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "cases": 100,
+  "mismatchCount": 0,
+  "scope": "Actual SDK SC3336 sensor_calib JSON parsed by Rust, followed by gain/time conversion vs original RKAIQ and original uClibc math",
+  "limitations": [
+    "Exposure subset only; ISP scene tuning, automatic controls and native binary IQ loading are not implemented.",
+    "The profile is a pinned SDK reference, not a claim of camera-module/lens qualification.",
+    "No live driver writes or frame scheduling are performed."
+  ]
+}

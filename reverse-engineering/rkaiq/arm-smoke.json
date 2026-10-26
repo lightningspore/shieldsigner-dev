@@ -2,6 +2,9 @@
   "image": "alpine@sha256:ee16d92f96db08d9d2d07da48555a27f3a69d8f0759021dbc601195ed0d2b5bd",
   "platform": "linux/arm/v7",
   "execution": "Docker Desktop ARM emulation; no camera device attached",
+  "iqCalibrationReferenceCases": 100,
+  "iqCalibrationMatch": true,
+  "armOfflinePlanPassed": true,
   "sensorDescriptorReferenceCases": 1000,
   "sensorDescriptorMatch": true,
   "invalidSensorEndpointRejected": true,
@@ -30,9 +33,9 @@
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "1cc89995a2f7baaff28b4123283cef7d190abcc4fcaa3417845e235d4b41b25e",
-    "numeric-fixture": "dc552ca160e3aab287b9abcc7f108ea385dea426446c00ff67d3848d7f900c05",
-    "frame-preview": "86c0c4bfc705cf94d28bb524252223f7947341134fdf672663e8eb533c878b3c"
+    "camera-probe": "12e42f25112d626c3b67fb1017ce627ac63d2a0f8b79b58fbb56788a8f38c7b6",
+    "numeric-fixture": "8a220eac9b323d729ba246ac7ae1bbb2043a878f65f02bc35eb458855985126b",
+    "frame-preview": "d9c729fe073a1fb71a680c501961c78f24e9f0c5187a0421dd2672e0b62a5d2d"
   },
   "limitations": [
     "ARM/Linux userspace execution is verified; real camera capture and end-to-end ISP behavior are not tested."

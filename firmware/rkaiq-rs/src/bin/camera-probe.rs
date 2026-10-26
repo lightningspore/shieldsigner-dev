@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe self-test\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -66,6 +66,60 @@ fn decode_statistics(args: &[String]) -> Result<(), String> {
     );
     Ok(())
 }
+fn exposure_plan(args: &[String]) -> Result<(), String> {
+    use serde_json::json;
+    use shieldsigner_rkaiq::calibration::*;
+    if !matches!(args.len(), 5 | 6) {
+        return Err("exposure-plan requires IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]".into());
+    }
+    let text = std::fs::read_to_string(&args[1]).map_err(|e| e.to_string())?;
+    let profile = SensorCalibration::from_json(&text)?;
+    let sensor: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&args[2]).map_err(|e| e.to_string())?)
+            .map_err(|e| e.to_string())?;
+    let unsigned = |key: &str| -> Result<u32, String> {
+        sensor[key]
+            .as_u64()
+            .filter(|v| *v <= u32::MAX as u64)
+            .map(|v| v as u32)
+            .ok_or_else(|| format!("Missing/invalid sensor snapshot field {key}"))
+    };
+    if unsigned("width")? != profile.width || unsigned("height")? != profile.height {
+        return Err("IQ sensor resolution does not match the active sensor descriptor".into());
+    }
+    let minimum_frame = unsigned("linePeriodsPerField")?;
+    let frame = if let Some(text) = args.get(5) {
+        text.parse::<u32>().map_err(|_| "Invalid frame length")?
+    } else {
+        minimum_frame
+    };
+    if frame < minimum_frame {
+        return Err("Frame length is below the sensor descriptor minimum".into());
+    }
+    let clock = sensor["pixelClockMHz"]
+        .as_f64()
+        .ok_or("Missing/invalid sensor pixelClockMHz")? as f32;
+    let timing = RuntimeTiming {
+        frame_length: frame,
+        pixel_clock_mhz: clock,
+        line_length_pixels: unsigned("pixelPeriodsPerLine")?,
+    };
+    let seconds = args[3]
+        .parse::<f32>()
+        .map_err(|_| "Invalid exposure seconds")?;
+    let gain = args[4].parse::<f32>().map_err(|_| "Invalid real gain")?;
+    let codes = profile.linear_codes(seconds, gain, timing)?;
+    let band = profile
+        .bands
+        .iter()
+        .find(|b| b.lower <= gain && gain <= b.upper);
+    let report = json!({"kind":"offline-linear-exposure-plan","writesSensor":false,"automaticExposure":false,"iqSource":args[1],"sensorSnapshot":args[2],"seconds":seconds,"realGain":gain,"dcgMode":0,"resolution":{"width":profile.width,"height":profile.height},"frameLengthLines":frame,"frameLengthSource":if args.len()==6 {"explicit"}else{"descriptor-minimum"},"lineLengthPixels":timing.line_length_pixels,"pixelClockMHz":clock,"integrationTimeCode":codes.integration_time,"gainCode":codes.gain,"gainModel":if profile.logarithmic_gain{"logarithmic"}else{"bands"},"usedGainFallback":!profile.logarithmic_gain && band.is_none_or(|b|b.scale==0.),"linearMaximumTimeFactors":profile.linear_max_factors,"analogueGainRange":profile.analogue_range,"digitalGainRange":profile.digital_range,"ispGainRange":profile.isp_gain_range,"linearUpdateDelays":{"time":profile.linear_update_delays[0],"gain":profile.linear_update_delays[1],"dcg":profile.linear_update_delays[2]},"limitations":["Converts explicit inputs only; no AE decision, frame scheduling, ISP setup or sensor writes.","Frame length defaults to descriptor minima and is not a measurement of current timing.","Returned codes still need sensor-specific limit/support checks before live programming; this tool does not apply the higher-level maximum-time rules."]});
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?
+    );
+    Ok(())
+}
 fn main() {
     let args: Vec<String> = env::args().skip(1).collect();
     let result = match args.first().map(String::as_str) {
@@ -82,6 +136,7 @@ fn main() {
         }
         Some("self-test") => self_test(),
         Some("stats") => decode_statistics(&args),
+        Some("exposure-plan") => exposure_plan(&args),
         _ => platform(&args),
     };
     if let Err(error) = result {

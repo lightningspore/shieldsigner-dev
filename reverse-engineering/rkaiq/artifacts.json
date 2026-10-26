@@ -59,6 +59,11 @@
       "name": "rk_aiq_types_ae_hw.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/ae/rk_aiq_types_ae_hw.h",
       "sha256": "6397dc883cb37b25ab14c9794046b28d589a4bfe4b87933c3b9665addae69325"
+    },
+    {
+      "name": "sensorinfo_head.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/sensorinfo_head.h",
+      "sha256": "aa04e304e4cf410a960b7b04dca3b268066bd4fc024cd57508e85a50de0ed0db"
     }
   ],
   "kernelHeaders": [
@@ -136,5 +141,12 @@
     "member": "lib/libuClibc-1.0.31.so",
     "memberSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
     "referenceOnly": true
-  }
+  },
+  "iqFiles": [
+    {
+      "name": "sc3336_CMK-OT2119-PC1_30IRC-F16.json",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/isp_iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json",
+      "sha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a"
+    }
+  ]
 }

@@ -235,7 +235,7 @@ run = "uv run python reverse-engineering/rkaiq/scripts/arm-smoke.py"
 
 [tasks."camera:rust:package"]
 description = "Package verified ARM camera-test tools, original-reference fixtures, source and test guide"
-run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin frame-preview", "uv run --python 3.13 --with pyelftools==0.32 python reverse-engineering/rkaiq/scripts/package.py"]
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin frame-preview --bin camera-probe", "uv run --python 3.13 --with pyelftools==0.32 python reverse-engineering/rkaiq/scripts/package.py"]
 
 [tasks."camera:rust:layout"]
 description = "Cross-check ISP32 Rust layout against pinned ARM kernel UAPI"
@@ -276,3 +276,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:sensor-descriptor"]
 description = "Compare sensor descriptor construction and query fallbacks with original ARM methods"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/sensor-descriptor.py --cases 1000 --emit-dir dist/reverse-engineering/sensor-descriptor-fixtures"]
+
+[tasks."camera:rust:iq-calibration"]
+description = "Validate SDK IQ exposure loading, native conversion and offline planner input checks"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture --bin camera-probe", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/iq-calibration.py --cases 100 --emit-dir dist/reverse-engineering/iq-calibration-fixtures", "uv run --python 3.13 python reverse-engineering/rkaiq/scripts/iq-plan-check.py"]

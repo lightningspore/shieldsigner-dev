@@ -29,6 +29,7 @@ if 'uclibcRuntime' in manifest:
    entry=tar.getmember(info['member']);assert entry.isfile()
    member.write_bytes(tar.extractfile(entry).read())
  assert hashlib.sha256(member.read_bytes()).hexdigest()==info['memberSha256'],'Runtime member hash mismatch'
+for item in manifest.get('iqFiles',[]):fetch(item['url'],cache/'iqfiles'/item['name'],item['sha256'])
 if args.ghidra:
  info=manifest['ghidra'];archive=cache/'ghidra_12.2.zip';fetch(info['url'],archive,info['sha256']);install=cache/info['directory']
  if not install.exists():

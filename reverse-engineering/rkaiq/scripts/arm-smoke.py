@@ -48,6 +48,14 @@ with (sensor_descriptor/'inputs.txt').open('rb') as source:
 assert described.stdout==(sensor_descriptor/'expected.txt').read_bytes(),'ARM descriptor differs from original methods'
 invalid_sensor=subprocess.run(command('camera-probe','sensor-info','/dev/null'),text=True,capture_output=True)
 assert invalid_sensor.returncode==1 and 'os error 25' in invalid_sensor.stderr.lower(),invalid_sensor
+iq_calibration=ROOT/'dist/reverse-engineering/iq-calibration-fixtures'
+with (iq_calibration/'inputs.txt').open('rb') as source:
+ calibrated=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert calibrated.stdout==(iq_calibration/'expected.txt').read_bytes(),'ARM IQ loading/conversion differs from native reference'
+plan_command=command('camera-probe','exposure-plan','/iq/sc3336-exposure-subset.json','/iq/synthetic-sensor-info.json','0.01','2')
+plan_command[plan_command.index(image):plan_command.index(image)]=['--mount',f'type=bind,src={iq_calibration},dst=/iq,readonly']
+plan=json.loads(subprocess.run(plan_command,capture_output=True,check=True).stdout)
+assert not plan['writesSensor'] and (plan['integrationTimeCode'],plan['gainCode'])==(288,256)
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -62,6 +70,7 @@ for options,expected in [(['--buffers','1'],'at least two buffers'),(['--width',
 occupied=subprocess.run(command('camera-probe','capture-statistics','/dev/null','/work/camera-probe'),text=True,capture_output=True)
 assert occupied.returncode==1 and 'already exists' in occupied.stderr,occupied
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'iqCalibrationReferenceCases':len(calibrated.stdout.splitlines()),'iqCalibrationMatch':True,'armOfflinePlanPassed':True,
  'sensorDescriptorReferenceCases':len(described.stdout.splitlines()),'sensorDescriptorMatch':True,'invalidSensorEndpointRejected':True,
  'exposureReferenceCases':len(converted.stdout.splitlines()),'exposureMatch':True,
  'sensorLinearReferenceCases':len(controls.stdout.splitlines()),'sensorLinearMatch':True,

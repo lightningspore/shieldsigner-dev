@@ -191,6 +191,24 @@ fn main() {
                         .join(",")
                 );
             }
+            "iq-exposure" => {
+                use shieldsigner_rkaiq::calibration::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let profile = SensorCalibration::from_value(&v["profile"]).unwrap();
+                let timing = RuntimeTiming {
+                    frame_length: v["frame"].as_u64().unwrap() as u32,
+                    pixel_clock_mhz: v["clock"].as_f64().unwrap() as f32,
+                    line_length_pixels: v["line"].as_u64().unwrap() as u32,
+                };
+                let codes = profile
+                    .linear_codes(
+                        v["time"].as_f64().unwrap() as f32,
+                        v["gain"].as_f64().unwrap() as f32,
+                        timing,
+                    )
+                    .unwrap();
+                println!("{}:{}", codes.integration_time, codes.gain);
+            }
             "sensor-descriptor" => {
                 use shieldsigner_rkaiq::sensor_descriptor::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

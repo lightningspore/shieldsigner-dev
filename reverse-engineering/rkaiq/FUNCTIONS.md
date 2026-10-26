@@ -1,0 +1,31 @@
+# Reconstructed function contracts
+
+All addresses below are **ELF virtual addresses with the Thumb bit cleared**, before Ghidra's 0x10000 image-base relocation. The exact library SHA is recorded in the numerical report. The current Rust routines are checked value APIs, not binary-ABI-compatible exports of the C++ names.
+
+| Original function | ELF entry | Rust API | Checked cases |
+| --- | --- | --- | --- |
+| `interpolation(float const*, float const*, int, float, float*)` | `0x20630` | `interpolate` | 1,000 |
+| `SatInterpolateMatrices` | `0xfd2e6` | `saturation_matrix` | 1,000 |
+| `SatInterpolateOffset` | `0xfd32e` | `saturation_offsets` | 1,000 |
+| `InterpLutbyAlp` | `0xfc8bc` | `blend_lut` | 50 complete LUTs × 2,187 values |
+| `AdpccInterpolation(int, int*, int*)` | `0x11a984` | `defect_pixel_interpolate` | 1,000 |
+| `gain_float_lim2_int(float, int, int)` | `0xe79d8` | `quantize_gain` | 1,000; multiplicative branch, 0–30 fractional bits |
+| `gain_fix_transfer_v2` | `0xe7a68` | `gain::pack_gain_registers` | 1,000 full records; linear, two-frame HDR, three-frame HDR |
+
+## Gain-record layout and behavior
+
+The SDK's public `RK_GAIN_Fix_V2_s` header defines 13 one-byte controls followed by three u32 gains aligned at byte 16. The Rust serializer explicitly zeroes the three padding bytes; the original routine leaves them untouched, so reference outputs begin in zeroed storage. The compared record is 28 bytes.
+
+Control-byte order is:
+
+`sw_gain2ddr_mode`, `sw_gain2ddr_wr_en`, `sw_3dlut_gain_en`, `sw_dhaz_gain_en`, `sw_adrc_gain_en`, `sw_lsc_gain_en`, `sw_gain_module_free_mode`, `sw_gain_dmard_mode_en`, `sw_bayer3dnr_gain_en`, `sw_gain_mp_pipe_dis`, `sw_gain_gate_always_on`, `sw_mge_gain_en`, `sw_gain_en`.
+
+The pinned function assigns `[0,0,1,1,1,1,0,0,1,0,0,1,1]`. It repeats the last active exposure for unused slots, calculates ISO×time exposure ratios and analog×digital gain ratios, quantizes to Q6, applies optional short/middle HDR scales, and limits the short channel to 262143 and the other two channels to 16383. Linear mode yields unity Q6 gains of 64. The fourth scalar argument and the input `isp_dgain[]` array are unused in this exact binary.
+
+The Rust implementation rejects nonpositive active exposure/time/gain/ISO and nonfinite inputs instead of reproducing invalid/undefined calculations. Pointer checks, vendor logging and arbitrary invalid binary-call ABI behavior are outside the safe API. This record still needs to be mapped into the kernel ISP32-lite parameter ABI before it can program the hardware.
+
+## Corpus coverage
+
+The fixed seed is in `numeric-equivalence.json`. It covers endpoint clamping, tight interpolation intervals around the 0.001 threshold, matrix extrapolation, calibration integer ranges, signed gain quantization including saturation, and LUT alpha endpoints/fractional coefficients. Calibration profiles use normal finite values. Seven function reconstructions and a finite corpus are not an exhaustive correctness or complete ISP claim.
+
+The harness loads original ARM instructions, applies ELF relocations, enables VFP and runs each selected function to a bounded return sentinel. Standard memory copies/sets have explicit emulator implementations; all other unexpected imported calls fail the test. Gain register conversion executes its actual internal helper and reaches no imported dependency for the valid cases tested.

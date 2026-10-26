@@ -1,0 +1,83 @@
+# RKAIQ → Rust reconstruction
+
+**Status: partial numerical reconstruction and camera-test tools. This is not a replacement `librkaiq.so`, and the existing image is unchanged.** The active objective is a Rust implementation of the camera-processing path used by ShieldSigner. Real camera tests are deferred to the next hardware session.
+
+## What is implemented
+
+- Seven recovered numerical routines in [`firmware/rkaiq-rs`](../../firmware/rkaiq-rs): scalar interpolation, saturation color-matrix interpolation, saturation-offset interpolation, 9×9×9 RGB LUT blending, defect-pixel calibration interpolation, the multiplicative gain-quantization branch, and the full linear/two-frame/three-frame gain-register conversion.
+- **6,050 deterministic comparisons, zero mismatches** between compiled Rust and actual instructions from the pinned ARM library under Unicorn. Float results are compared as exact IEEE-754 output bits; LUT outputs compare all 2,187 u16 entries. [Report](numeric-equivalence.json).
+- A **standalone, statically linked ARMv7 Linux `camera-probe`**. It inventories video nodes, supported formats and media entities, reports active vendor camera processes, and supports bounded single-/multi-plane MMAP frame capture.
+- A Rust **`frame-preview`** converter for uncalibrated grayscale inspection of supported YUV/luma/Bayer captures. Bayer preview uses simple 2×2 binning, not the vendor ISP algorithm.
+- A static ARM `numeric-fixture` executable and reference corpus for checking the recovered routines on the actual processor.
+
+The probe uses Linux's existing V4L2/media interfaces. It does not call or link RKAIQ. It also **does not yet rebuild the media graph, initialize ISP parameters, load IQ calibration, run auto-exposure/white-balance, or replace the camera service**. Capturing from a graph previously initialized by the vendor is a useful diagnostic, not proof of an independent cold-start implementation.
+
+## Exact originals
+
+The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
+
+The daemon links `librkaiq.so` and imports these seven RKAIQ entry points:
+
+- `rk_aiq_uapi2_sysctl_getBindedSnsEntNmByVd`
+- `rk_aiq_uapi2_sysctl_init`
+- `rk_aiq_uapi2_sysctl_prepare`
+- `rk_aiq_uapi2_sysctl_start`
+- `rk_aiq_uapi2_sysctl_stop`
+- `rk_aiq_uapi2_sysctl_setListenStrmStatus`
+- `rk_aiq_uapi2_sysctl_setMulCamConc`
+
+Those initialization/stream-management obligations remain open. Additional calls from the application's temporary `rkipc` bootstrap also need to be removed or independently implemented before claiming a fully independent camera stack.
+
+## Ghidra workflow
+
+Ghidra **12.2**, its publisher's archive checksum, and Java **25** are pinned. The official archive has no Mac ARM decompiler executable, so setup builds its included native C++ decompiler with the pinned archive's own source. Ghidra projects live under `dist/reverse-engineering/ghidra-projects/`: Ghidra rejects project paths containing a dot-prefixed directory, so `.tools/` cannot hold the projects themselves.
+
+`ExportRkaiq.java` exports the analyzed function inventory and selected pseudocode to ignored cache. The library has 6,854 defined ELF function symbols (including aliases and C++ support functions); Ghidra's function manager reports 6,584 analyzed functions. These are different counts, not a percentage-complete metric. The daemon's 46 implementation functions have been decompiled. No debug-type information is present; inferred types are checked against instructions and the SDK's public headers where needed.
+
+REA **6.8.0** was checked from the official `morluto/rea` project. Its Ghidra provider accepts 12.1.x and rejects 12.2. This investigation therefore uses Ghidra directly rather than claiming REA analysis that did not run. No agent-wide REA configuration was changed.
+
+## What the first comparisons caught
+
+Ghidra's C output renders fused `VFMA.f32` instructions as ordinary multiply/add expressions. A direct Rust translation produced 149 mismatches in the first 412-case trial. Instruction inspection established the required fused rounding; the reconstruction uses pure-Rust `libm::fmaf` and now matches the corpus exactly.
+
+Other verified details:
+
+- Scalar interpolation compares the f32 interval against an exact **f64 0.001** threshold.
+- Matrix and offset interpolation allow extrapolation and preserve the original multiply/FMA operation order.
+- LUT blending truncates alpha to Q7, computes integer weighted sums, and shifts by 7 without rounding-to-nearest.
+- Defect-pixel interpolation promotes the interpolated f32 to f64 **before** adding 0.5 and converting to integer.
+- Gain quantization scales in f32, then adds ±0.5 in f64. The checked API covers nonnegative fractional-bit counts 0–30; the binary's alternate negative-shift mode is not reconstructed.
+
+The safe Rust APIs reject some invalid inputs instead of reproducing invalid pointers, unsorted tables, or undefined caller behavior. The test corpus is finite and seeded; it is not an exhaustive proof over every floating-point value. Unicorn executes the original numeric instructions with FPSCR=0 and stubs only the standard memory-copy/set operations; it is not an emulator for the entire camera subsystem.
+
+The gain-register conversion also matches all 13 control bytes and three u32 gains across 1,000 linear/HDR cases. The original binary ignores its fourth float argument; the harness checks this with two different values for each case. See [FUNCTIONS.md](FUNCTIONS.md) for addresses and individual contracts.
+
+## Reproduce
+
+Use mise from the repository root. Setup dependencies if absent:
+
+```sh
+mise install java@temurin-25.0.5+8.0.LTS rust@1.93.1 zig@0.15.2
+mise exec rust@1.93.1 -- rustup target add --toolchain 1.93.1 armv7-unknown-linux-musleabihf
+mise run camera:re:prepare
+mise run camera:re:analyze
+mise run camera:rust:test
+mise run camera:rust:arm
+mise run camera:rust:package
+```
+
+The library's core numerical code uses `no_std` plus pure-Rust `libm`. Diagnostics use standard Rust, open-source libc bindings and JSON, statically linked with musl so they can run on the uClibc-based Luckfox image without loading a second dynamic C runtime or the vendor ISP library. This diagnostic binary is not a uClibc ABI-compatible shared-library replacement.
+
+The probe explicitly uses the kernel's ARM32, long-sized V4L2 timestamp layout, rather than musl's 64-bit userspace `time_t`. Compile-time assertions check ARM32 buffer/format/plane sizes (68/204/60 bytes) and the ioctl request numbers against the pinned Linux 5.10 ABI. Actual ioctl behavior remains a real-camera test.
+
+[HARDWARE-TEST.md](HARDWARE-TEST.md) explains the next session and how to report results. Numerical emulation, ARM-container execution and mesh-/board checks do not establish live camera operation.
+
+## Remaining implementation
+
+1. Recover the exact single-camera initialization and stream-event lifecycle; reproduce sensor/media graph setup without temporary vendor `rkipc`.
+2. Implement the ISP32-lite parameter/statistics queue ABI and IQ-file subset needed by the selected sensor.
+3. Reconstruct the required exposure/gain loop and sensor-control behavior, then the minimal image-processing configuration needed for reliable QR capture.
+4. Integrate the recovered processing blocks, with tests for each behavior against the pinned binary. Add register/parameter packing and state-machine coverage.
+5. Provide the required RKAIQ API surface or replace its callers, then verify startup, frame delivery, exposure transitions, shutdown and restart on real hardware.
+
+The completed numeric routines and diagnostic tools are an initial milestone toward this objective. They do not close the remaining implementation above.

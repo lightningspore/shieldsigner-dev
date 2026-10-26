@@ -1,0 +1,18 @@
+{
+  "image": "alpine@sha256:ee16d92f96db08d9d2d07da48555a27f3a69d8f0759021dbc601195ed0d2b5bd",
+  "platform": "linux/arm/v7",
+  "execution": "Docker Desktop ARM emulation; no camera device attached",
+  "numericalReferenceLines": 6050,
+  "numericalMatch": true,
+  "cameraSelfTest": "PASS: reconstructed interpolation and complete 2187-value LUT. Full ARM-original differential test is separate.",
+  "nodeInventoryWithoutDevicePassed": true,
+  "invalidVideoEndpointRejected": true,
+  "binaries": {
+    "camera-probe": "224995fad94d1e7ae9a18fba99c714f8290ed0a5e900671cbbd3126ca91e9de6",
+    "numeric-fixture": "f04738f354ad11e192e5f8faa02db345f659b2557f9d66df5af6bde217a7471f",
+    "frame-preview": "3e3dc62f951325b1dc7ecf8a46eab10c70dcb1a4ad68a58a4179b0242f5a8c54"
+  },
+  "limitations": [
+    "ARM/Linux userspace execution is verified; real camera capture and end-to-end ISP behavior are not tested."
+  ]
+}

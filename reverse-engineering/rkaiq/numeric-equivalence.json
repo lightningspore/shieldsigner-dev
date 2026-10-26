@@ -1,0 +1,25 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "fixtureSeed": "0x524b4149",
+  "comparisons": {
+    "interpolate": 1000,
+    "matrix": 1000,
+    "offset": 1000,
+    "defect": 1000,
+    "quant": 1000,
+    "gain": 1000,
+    "lut": 50
+  },
+  "totalCases": 6050,
+  "comparison": "Exact IEEE754 f32 output bits or complete integer output; original ARM instructions vs compiled Rust",
+  "originalDependencyCalls": [
+    "memcpy"
+  ],
+  "mismatches": [],
+  "mismatchCount": 0,
+  "limitations": [
+    "Finite, valid-domain calibration inputs only; invalid-pointer ABI behavior is not reproduced.",
+    "This verifies seven recovered numerical routines, not the complete RKAIQ library or camera startup.",
+    "Unicorn is an instruction-level reference; real camera/ARM hardware validation remains pending."
+  ]
+}

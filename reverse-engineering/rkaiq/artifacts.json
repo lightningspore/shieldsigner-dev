@@ -1,0 +1,54 @@
+{
+  "sdkCommit": "0b5c1f30ca6333b7ec5af70d26511da9ef8d39af",
+  "osCommit": "e7589465aff172f4f510ad46d18776ccc8d2c203",
+  "binaries": [
+    {
+      "name": "librkaiq.so",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/lib/librkaiq.so",
+      "bytes": 2682768,
+      "sha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9"
+    },
+    {
+      "name": "rkaiq_3A_server",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/bin/rkaiq_3A_server",
+      "bytes": 24344,
+      "sha256": "9025cf4b823e0f6b8dbbe8280267c3db1f200ef9b36d8a29ad0a5900b9ca16ae"
+    }
+  ],
+  "ghidra": {
+    "version": "12.2",
+    "url": "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.2_build/ghidra_12.2_PUBLIC_20261016.zip",
+    "sha256": "2c2cd776db3c1f6a097ba418922378ac3649cadd5e844a6f5f088ae628a7be67",
+    "directory": "ghidra_12.2_PUBLIC"
+  },
+  "tools": {
+    "java": "temurin-25.0.5+8.0.LTS",
+    "rust": "1.93.1",
+    "zig": "0.15.2",
+    "cargoZigbuild": "0.23.0",
+    "python": "3.13",
+    "pyelftools": "0.32",
+    "unicorn": "2.1.4"
+  },
+  "rea": {
+    "version": "6.8.0",
+    "result": "Compatibility checked. This release accepts Ghidra 12.1.x, not 12.2. Analysis uses Ghidra directly."
+  },
+  "headers": [
+    {
+      "name": "rk_aiq_types_again_algo_int_v2.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/again2/rk_aiq_types_again_algo_int_v2.h",
+      "sha256": "3091133b2074ae90724ddbee37f5d946a60922572493059191ef4d65452de025"
+    },
+    {
+      "name": "rk_aiq_types_again_hw_v2.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/again2/rk_aiq_types_again_hw_v2.h",
+      "sha256": "f4cb55c7e02fb80b41f849a01e81427cb809add73690a856d04c31e0c2bfe2b2"
+    },
+    {
+      "name": "gain_uapi_head_v2.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/gain_uapi_head_v2.h",
+      "sha256": "ea40f8a258fed45ced8591720fb5c775e024d2af5a0328d20743dbbe14e40918"
+    }
+  ]
+}

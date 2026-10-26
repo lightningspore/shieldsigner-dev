@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe apply-linear /dev/v4l-subdevN FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -113,7 +113,7 @@ fn exposure_plan(args: &[String]) -> Result<(), String> {
         .bands
         .iter()
         .find(|b| b.lower <= gain && gain <= b.upper);
-    let report = json!({"kind":"offline-linear-exposure-plan","writesSensor":false,"automaticExposure":false,"iqSource":args[1],"sensorSnapshot":args[2],"seconds":seconds,"realGain":gain,"dcgMode":0,"resolution":{"width":profile.width,"height":profile.height},"frameLengthLines":frame,"frameLengthSource":if args.len()==6 {"explicit"}else{"descriptor-minimum"},"lineLengthPixels":timing.line_length_pixels,"pixelClockMHz":clock,"integrationTimeCode":codes.integration_time,"gainCode":codes.gain,"gainModel":if profile.logarithmic_gain{"logarithmic"}else{"bands"},"usedGainFallback":!profile.logarithmic_gain && band.is_none_or(|b|b.scale==0.),"linearMaximumTimeFactors":profile.linear_max_factors,"analogueGainRange":profile.analogue_range,"digitalGainRange":profile.digital_range,"ispGainRange":profile.isp_gain_range,"linearUpdateDelays":{"time":profile.linear_update_delays[0],"gain":profile.linear_update_delays[1],"dcg":profile.linear_update_delays[2]},"limitations":["Converts explicit inputs only; no AE decision, frame scheduling, ISP setup or sensor writes.","Frame length defaults to descriptor minima and is not a measurement of current timing.","Returned codes still need sensor-specific limit/support checks before live programming; this tool does not apply the higher-level maximum-time rules."]});
+    let report = json!({"kind":"offline-linear-exposure-plan","writesSensor":false,"automaticExposure":false,"iqSource":args[1],"sensorSnapshot":args[2],"seconds":seconds,"realGain":gain,"dcgMode":if profile.linear_dcg_supported {0}else{-1},"resolution":{"width":profile.width,"height":profile.height},"frameLengthLines":frame,"frameLengthSource":if args.len()==6 {"explicit"}else{"descriptor-minimum"},"lineLengthPixels":timing.line_length_pixels,"pixelClockMHz":clock,"integrationTimeCode":codes.integration_time,"gainCode":codes.gain,"gainModel":if profile.logarithmic_gain{"logarithmic"}else{"bands"},"usedGainFallback":!profile.logarithmic_gain && band.is_none_or(|b|b.scale==0.),"linearMaximumTimeFactors":profile.linear_max_factors,"analogueGainRange":profile.analogue_range,"digitalGainRange":profile.digital_range,"ispGainRange":profile.isp_gain_range,"linearUpdateDelays":{"time":profile.linear_update_delays[0],"gain":profile.linear_update_delays[1],"dcg":profile.linear_update_delays[2]},"limitations":["Converts explicit inputs only; no AE decision, frame scheduling, ISP setup or sensor writes.","Frame length defaults to descriptor minima and is not a measurement of current timing.","Returned codes still need sensor-specific limit/support checks before live programming; this tool does not apply the higher-level maximum-time rules."]});
     println!(
         "{}",
         serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?
@@ -926,19 +926,20 @@ mod linux {
         Ok(())
     }
     // Raw ARM32 kernel event storage: do not use musl's time64 timespec.
-    struct SensorReader {
+    struct SensorDevice {
         file: File,
         queries: Vec<Value>,
         bus: Option<u32>,
+        writes: Vec<Value>,
     }
-    impl SensorReader {
+    impl SensorDevice {
         fn query<T>(&mut self, label: &str, request: u32, value: &mut T) -> io::Result<()> {
             let result = ioctl(self.file.as_raw_fd(), request, value);
             self.queries.push(json!({"query":label,"request":format!("0x{request:08x}"),"error":result.as_ref().err().map(|e|e.to_string())}));
             result
         }
     }
-    impl shieldsigner_rkaiq::sensor_descriptor::Backend for SensorReader {
+    impl shieldsigner_rkaiq::sensor_descriptor::Backend for SensorDevice {
         type Error = io::Error;
         fn format(&mut self) -> io::Result<shieldsigner_rkaiq::sensor_descriptor::Format> {
             let mut value = [0u8; 88];
@@ -987,6 +988,106 @@ mod linux {
             Ok(core::array::from_fn(|i| get32(&value, i * 4)))
         }
     }
+    impl shieldsigner_rkaiq::sensor::Backend for SensorDevice {
+        type Error = io::Error;
+        fn descriptor(&mut self) -> io::Result<shieldsigner_rkaiq::sensor::Descriptor> {
+            let descriptor = shieldsigner_rkaiq::sensor_descriptor::read(self)?;
+            Ok(shieldsigner_rkaiq::sensor::Descriptor {
+                line_periods_per_field: descriptor.line_periods_per_field(),
+                output_height: descriptor.height(),
+            })
+        }
+        fn control(&mut self, id: u32, value: i32) -> io::Result<()> {
+            let mut control = shieldsigner_rkaiq::sensor::Control { id, value };
+            let result = ioctl(self.file.as_raw_fd(), 0xc008561c, &mut control);
+            self.writes.push(json!({"operation":"set-control","id":id,"value":value,"request":"0xc008561c","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string())}));
+            result
+        }
+        fn conversion_gain(&mut self, value: u32) -> io::Result<()> {
+            let mut code = value;
+            let result = ioctl(self.file.as_raw_fd(), 0x400456c6, &mut code);
+            self.writes.push(json!({"operation":"conversion-gain","value":value,"request":"0x400456c6","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string())}));
+            result
+        }
+    }
+    fn apply_linear(args: &[String]) -> io::Result<()> {
+        use shieldsigner_rkaiq::sensor;
+        if !matches!(args.len(), 5 | 6) {
+            return Err(error("apply-linear requires DEVICE FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]"));
+        }
+        let mut values = [0u32; 4];
+        for (i, value) in values.iter_mut().enumerate() {
+            *value = args[i + 1]
+                .parse()
+                .map_err(|_| error("Invalid unsigned control code"))?;
+            if *value > i32::MAX as u32 {
+                return Err(error(
+                    "Control codes/frame length must fit a nonnegative signed 32-bit value",
+                ));
+            }
+        }
+        let dcg = if let Some(value) = args.get(5) {
+            value
+                .parse::<i32>()
+                .map_err(|_| error("Invalid DCG mode"))?
+        } else {
+            -1
+        };
+        if !matches!(dcg, -1 | 0 | 1) {
+            return Err(error("DCG mode must be -1 (skip), 0 or 1"));
+        }
+        if std::mem::size_of::<usize>() != 4 {
+            return Err(error("Sensor write ABI currently targets ARM32 Linux only"));
+        }
+        let active = vendor_processes();
+        if !active.is_empty() {
+            return Err(error(format!(
+                "Vendor camera processes still running: {active:?}"
+            )));
+        }
+        let mut device = SensorDevice {
+            file: open(&args[0], true)?,
+            queries: Vec::new(),
+            bus: None,
+            writes: Vec::new(),
+        };
+        let exposure = sensor::LinearExposure {
+            frame_length_lines: values[0],
+            analogue_gain_code: values[1],
+            digital_gain_code: values[2],
+            coarse_integration_time: values[3],
+            dcg_mode: dcg,
+        };
+        let mut frame_mirror = Some(0);
+        let result = sensor::program_linear(&mut device, exposure, &mut frame_mirror);
+        let wrote_frame = device
+            .writes
+            .first()
+            .is_some_and(|v| v["success"] == true && v["id"] == sensor::VBLANK);
+        let mut readback = Vec::new();
+        if !device.writes.is_empty() {
+            for id in [
+                sensor::VBLANK,
+                sensor::ANALOGUE_GAIN,
+                sensor::DIGITAL_GAIN,
+                sensor::EXPOSURE,
+            ] {
+                let mut control = sensor::Control { id, value: 0 };
+                let observed = ioctl(device.file.as_raw_fd(), 0xc008561b, &mut control);
+                let mut range = [0u8; 68];
+                put32(&mut range, 0, id);
+                let queried = ioctl(device.file.as_raw_fd(), 0xc0445624, &mut range);
+                readback.push(json!({"id":id,"value":if observed.is_ok(){Some(control.value)}else{None},"error":observed.err().map(|e|e.to_string()),"range":if queried.is_ok(){Some(json!({"minimum":get32(&range,40) as i32,"maximum":get32(&range,44) as i32,"step":get32(&range,48) as i32,"default":get32(&range,52) as i32,"flags":get32(&range,56)}))}else{None},"rangeError":queried.err().map(|e|e.to_string())}));
+            }
+        }
+        let report = json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"kind":"manual-linear-sensor-programming","device":args[0],"writesSensor":true,"automaticExposure":false,"success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string()),"requested":{"frameLengthLines":values[0],"analogueGainCode":values[1],"digitalGainCode":values[2],"coarseIntegrationTime":values[3],"dcgMode":dcg},"frameLengthWritten":if wrote_frame {frame_mirror}else{None},"writes":device.writes,"descriptorQueries":device.queries,"controlReadback":readback,"vendorProcessesBefore":active,"vendorProcessesAfter":vendor_processes(),"limitations":["Explicit register/control codes only; no gain splitting, AE decision, delay scheduling, HDR or ISP initialization.","Driver success/readback is control state, not proof of sensor-register timing or image quality.","Earlier successful writes remain applied when a later operation fails."]});
+        println!("{}", serde_json::to_string_pretty(&report)?);
+        result.map_err(|e| {
+            error(format!(
+                "Sensor programming stopped: {e}; see JSON report for partial writes"
+            ))
+        })
+    }
     fn sensor_info(args: &[String]) -> io::Result<()> {
         if args.len() != 1 {
             return Err(error(
@@ -996,10 +1097,11 @@ mod linux {
         if std::mem::size_of::<usize>() != 4 {
             return Err(error("Sensor query ABI currently targets ARM32 Linux only"));
         }
-        let mut reader = SensorReader {
+        let mut reader = SensorDevice {
             file: open(&args[0], false)?,
             queries: Vec::new(),
             bus: None,
+            writes: Vec::new(),
         };
         let descriptor = shieldsigner_rkaiq::sensor_descriptor::read(&mut reader).map_err(|e| {
             error(format!(
@@ -1119,6 +1221,7 @@ mod linux {
             Some("capture-statistics") => capture(&args[1..], true),
             Some("events") => events(&args[1..]),
             Some("sensor-info") => sensor_info(&args[1..]),
+            Some("apply-linear") => apply_linear(&args[1..]),
             _ => Err(error("Unknown command; see --help")),
         }
     }

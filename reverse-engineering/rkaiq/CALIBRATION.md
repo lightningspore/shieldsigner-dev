@@ -17,9 +17,9 @@ For this reference, resolution is 2304×1296, gain scaling is 128 with exponent 
 
 ## Offline planner
 
-`camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]` loads this subset and a saved `sensor-info` report, checks resolution agreement, and calculates **linear, DCG-mode-0** register codes. Frame length defaults to the descriptor minimum and an explicit override cannot go below it. Runtime line length and clock come from the saved sensor information.
+`camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]` loads this subset and a saved `sensor-info` report, checks resolution agreement, and calculates **linear, DCG-normalization-disabled** register codes. Frame length defaults to the descriptor minimum and an explicit override cannot go below it. Runtime line length and clock come from the saved sensor information.
 
-The JSON report marks `writesSensor=false` and `automaticExposure=false`, exposes timing provenance, register codes, whether gain fallback was used, raw maximum-time factors, gain ranges and update delays. It does not silently turn a descriptor minimum into a claimed current-frame observation. It also does not apply the higher-level maximum-time policy, driver control limits, gain splitting, frame synchronization or automatic exposure decisions. The full ISP scene calibration and initialization remain unfinished.
+The report sets DCG mode to -1 (skip) when the profile disables DCG, otherwise 0. Neither applies a DCG ratio during conversion. The JSON report marks `writesSensor=false` and `automaticExposure=false`, exposes timing provenance, register codes, whether gain fallback was used, raw maximum-time factors, gain ranges and update delays. It does not silently turn a descriptor minimum into a claimed current-frame observation. It also does not apply the higher-level maximum-time policy, driver control limits, gain splitting, frame synchronization or automatic exposure decisions. The full ISP scene calibration and initialization remain unfinished.
 
 Both ARM and native Mac executables support this offline command. The kit's `examples/synthetic-sensor-info.json` exists only for a demonstration and frontend validation. Use actual `sensor-info` output for hardware investigation; the planner does not open a device in either case.
 

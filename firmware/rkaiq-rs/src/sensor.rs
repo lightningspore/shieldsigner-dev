@@ -5,6 +5,13 @@ pub const VBLANK: u32 = 0x009e0901;
 pub const ANALOGUE_GAIN: u32 = 0x009e0903;
 pub const DIGITAL_GAIN: u32 = 0x00980913;
 pub const EXPOSURE: u32 = 0x00980911;
+#[repr(C)]
+#[derive(Clone, Copy, Debug)]
+pub struct Control {
+    pub id: u32,
+    pub value: i32,
+}
+const _: () = assert!(core::mem::size_of::<Control>() == 8);
 #[derive(Clone, Copy, Debug)]
 pub struct Descriptor {
     pub line_periods_per_field: u16,

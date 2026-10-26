@@ -209,7 +209,7 @@ impl SensorCalibration {
             seconds,
             gain,
             exposure::Mode::Linear,
-            0,
+            if self.linear_dcg_supported { 0 } else { -1 },
             self.conversion(timing),
         )
         .map_err(|e| format!("Exposure conversion: {e:?}"))

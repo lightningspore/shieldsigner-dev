@@ -69,7 +69,14 @@ for options,expected in [(['--buffers','1'],'at least two buffers'),(['--width',
  assert result.returncode==1 and expected in result.stderr,result
 occupied=subprocess.run(command('camera-probe','capture-statistics','/dev/null','/work/camera-probe'),text=True,capture_output=True)
 assert occupied.returncode==1 and 'already exists' in occupied.stderr,occupied
+write_negative=subprocess.run(command('camera-probe','apply-linear','/dev/null','1600','256','0','100'),text=True,capture_output=True)
+assert write_negative.returncode==1 and 'os error 25' in write_negative.stderr.lower(),write_negative
+write_report=json.loads(write_negative.stdout);assert not write_report['success'] and write_report['writes']==[]
+for values,message in [(['1600','2147483648','0','100'],'nonnegative signed 32-bit'),(['1600','256','0','100','2'],'DCG mode must be')]:
+ rejected=subprocess.run(command('camera-probe','apply-linear','/dev/null',*values),text=True,capture_output=True)
+ assert rejected.returncode==1 and message in rejected.stderr and not rejected.stdout,rejected
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'sensorWriteInvalidEndpointRejected':True,'sensorWriteArgumentGuardsPassed':True,
  'iqCalibrationReferenceCases':len(calibrated.stdout.splitlines()),'iqCalibrationMatch':True,'armOfflinePlanPassed':True,
  'sensorDescriptorReferenceCases':len(described.stdout.splitlines()),'sensorDescriptorMatch':True,'invalidSensorEndpointRejected':True,
  'exposureReferenceCases':len(converted.stdout.splitlines()),'exposureMatch':True,

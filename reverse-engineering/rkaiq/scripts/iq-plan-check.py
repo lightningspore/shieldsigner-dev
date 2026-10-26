@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory(prefix='shieldsigner-iq-plan-') as temp:
   result=subprocess.run([str(binary),'exposure-plan',str(iq),str(snapshot),*options],text=True,capture_output=True)
   if error is None:
    assert result.returncode==0,result.stderr
-   v=json.loads(result.stdout);assert not v['writesSensor'] and not v['automaticExposure'];assert (v['integrationTimeCode'],v['gainCode'])==(288,256);assert v['linearUpdateDelays']==dict(time=2,gain=2,dcg=0)
+   v=json.loads(result.stdout);assert not v['writesSensor'] and not v['automaticExposure'] and v['dcgMode']==-1;assert (v['integrationTimeCode'],v['gainCode'])==(288,256);assert v['linearUpdateDelays']==dict(time=2,gain=2,dcg=0)
   else:assert result.returncode==1 and error in result.stderr and 'panicked' not in result.stderr,result
   checks.append(name)
  run('SDK profile plus synthetic descriptor',profile,sensor)

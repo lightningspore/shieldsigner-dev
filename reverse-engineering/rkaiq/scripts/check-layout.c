@@ -67,3 +67,12 @@ _Static_assert(offsetof(struct v4l2_ext_controls,controls)==20,"ARM control poin
 _Static_assert(VIDIOC_G_EXT_CTRLS==0xc0185647,"extended controls request");
 _Static_assert(RKMODULE_GET_NR_SWITCH_THRESHOLD==0x801056c9,"noise-switch query");
 _Static_assert(RKMODULE_GET_DCG_RATIO==0x800c56d2,"DCG ratio query");
+_Static_assert(sizeof(struct v4l2_control)==8,"control write/read payload");
+_Static_assert(offsetof(struct v4l2_control,value)==4,"control value offset");
+_Static_assert(VIDIOC_G_CTRL==0xc008561b,"control read request");
+_Static_assert(VIDIOC_S_CTRL==0xc008561c,"control write request");
+_Static_assert(RKMODULE_SET_CONVERSION_GAIN==0x400456c6,"conversion gain write request");
+_Static_assert(V4L2_CID_VBLANK==0x009e0901,"VBLANK ID");
+_Static_assert(V4L2_CID_ANALOGUE_GAIN==0x009e0903,"analogue gain ID");
+_Static_assert(V4L2_CID_GAIN==0x00980913,"native digital gain control ID");
+_Static_assert(V4L2_CID_EXPOSURE==0x00980911,"exposure control ID");

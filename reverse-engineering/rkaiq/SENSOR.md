@@ -1,6 +1,6 @@
 # Sensor exposure programming
 
-`sensor::program_linear` reconstructs `SensorHw::setLinearSensorExposure(RKAiqAecExpInfo_s*)`, ELF `0x3ac10` (Ghidra `0x4ac10`), in the pinned library. It operates on already converted sensor register/control codes. **The live write backend is not supplied by this function. Descriptor reading and exposure-code conversion are separate recovered APIs described below.** The kit's fixture tests do not program a real device.
+`sensor::program_linear` reconstructs `SensorHw::setLinearSensorExposure(RKAiqAecExpInfo_s*)`, ELF `0x3ac10` (Ghidra `0x4ac10`), in the pinned library. It operates on already converted sensor register/control codes. **The Linux backend is supplied by the diagnostic command described below. Descriptor reading and exposure-code conversion are separate recovered APIs described below.** The kit's fixture tests do not program a real device; the explicit `apply-linear` command does.
 
 The recovered sequence is:
 
@@ -31,7 +31,7 @@ The native input fields are `LinearExp.exp_real_params.dcg_mode`, coarse integra
 
 Descriptor output is supplied at the offsets used by the original virtual call; this is not a verified native descriptor implementation. The Rust backend interface deliberately avoids copying C++ object/vtable layouts. ARM emulation repeats every fixture using the compiled Rust implementation. A host test verifies descriptor errors prevent all writes and preserve the mirror.
 
-Remaining work includes loading the real-exposure-to-register calibration, validating the read-only descriptor adapter and implementing the live write adapter, sensor-specific control support, frame-start scheduling/delays, HDR programming and integration with the actual AE loop. No sensor-programming command has been added to `camera-probe` yet.
+Remaining work includes loading the real-exposure-to-register calibration, validating the descriptor and write adapters on hardware, sensor-specific control support, frame-start scheduling/delays, HDR programming and integration with the actual AE loop. The manual `apply-linear` command is available for adapter validation, without an automatic-control loop.
 
 ## Real exposure to register codes
 
@@ -62,3 +62,13 @@ Required query failures stop descriptor construction. Optional noise-switch and 
 `camera:rust:sensor-descriptor` compares original ARM query order, status and the complete successful 172-byte record across 1,000 cases. Native descriptor helpers and format mapping execute directly; only ioctl responses/errno are simulated. Required failures compare status/trace and discard partial native output, matching the Rust API's absence of a returned descriptor. [Report](sensor-descriptor-equivalence.json). Both individually and jointly unsupported optional queries are covered. `camera:rust:layout` checks the read ioctl numbers, struct sizes, field offsets and pointer layout against pinned kernel headers.
 
 `camera-probe sensor-info NODE` implements the read-only ARM32 Linux adapter, outputs parsed fields plus original descriptor bytes/query trace, and is included in the hardware guide. Device requests remain unvalidated until the real camera test. No write ioctl adapter or automatic loop has been added by this command.
+
+## Linux write adapter and manual test command
+
+`camera-probe apply-linear DEVICE FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]` opens the sensor subdevice for read/write and feeds those explicit codes to the recovered sequencer. It reads a fresh descriptor first, refuses detected `rkaiq_3A_server`/`rkipc` processes, and rejects values that cannot be represented as nonnegative signed V4L2 control values. The default DCG mode is **-1 (skip)**. Only an explicit 0 or 1 requests the conversion-gain ioctl. The offline planner now reports -1 when the IQ profile says DCG is unsupported; both -1 and 0 disable DCG ratio normalization during arithmetic conversion.
+
+The command does not start a sensor/image stream or initialize the ISP. It prints requested values, descriptor queries, each attempted write, failure details, accepted frame length and subsequent `VIDIOC_G_CTRL` readback plus control ranges. It exits nonzero on a write failure while preserving the JSON partial-write report. Later failed calls do not roll back earlier ones. Readback is kernel control state, not proof of I2C register contents or timing; a driver may cache controls while the device is powered down. Applications using the sensor must be stopped or coordinated separately; absence of the two known vendor process names is not exclusive-ownership proof.
+
+The pinned SC3336 driver (`sc3336.c`, URL/hash in `artifacts.json`) registers `V4L2_CID_ANALOGUE_GAIN` from 128 to **99,614** and handles combined sensor gain through that control. It does not register a separate digital-gain control. The native sequencer's digital slot uses generic `V4L2_CID_GAIN`; leaving the explicit digital code at zero skips that operation, as required for this driver. The profile's maximum register value is 99,615, one count above the driver limit. The planner preserves native conversion and does not hide that mismatch; the driver can reject an out-of-range code. Conversion-gain writes are skipped by default because this reference profile disables DCG support.
+
+The adapter uses a repr(C), eight-byte `v4l2_control` equivalent; read/write request numbers, control IDs and conversion-gain ioctl are cross-checked against pinned kernel headers. Existing 1,000-case native sensor sequencing tests continue to run. ARM smoke tests reject a nonsensor endpoint before any writes and reject invalid scalar/DCG arguments. No successful real sensor write is claimed by those tests. Sensor-specific limits, active streaming behavior, gain interpretation and before/after frames still need the hardware session.

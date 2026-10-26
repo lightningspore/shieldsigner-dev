@@ -208,3 +208,7 @@ run = "uv run --python 3.11 --with trimesh --with manifold3d --with networkx pyt
 [tasks."variant:lcd:pwm"]
 description = "Build the dedicated-backlight PWM revision candidate and run native checks"
 run = "uv run python scripts/build-backlight-pwm.py"
+
+[tasks."variant:lcd:pinout-diagram"]
+description = "Check public Mini pin diagram against both native revisions, pinned SDK muxes and app"
+run = "uv run python scripts/audit-pinout-diagram.py"

@@ -29,3 +29,6 @@ run = "uv run python ../../lightningspore-monorepo/code/homelab/kubernetes/websi
 description = "Legacy VM rollback deployment; requires explicit SHIELDSIGNER_DEPLOY_HOST"
 depends = ["package"]
 run = "uv run python scripts/deploy.py"
+
+[tasks."ui:pinout"]
+run = "uv run python scripts/pinout-ui-check.py"

@@ -20,7 +20,7 @@ if OUT.exists():
 OUT.mkdir()
 shutil.copytree(SITE/'public', OUT/'files')
 shutil.copytree(SITE/'static', OUT/'static')
-env = Environment(loader=FileSystemLoader(SITE/'templates'), autoescape=select_autoescape(['html']))
+env = Environment(loader=FileSystemLoader(SITE/'templates'), autoescape=select_autoescape(['html','svg']))
 env.filters['pluralize'] = lambda count: '' if count == 1 else 's'
 version = workflows.load('site-version')
 common = dict(site_version=version['version'], site_revision=version['revision'][:7],
@@ -39,6 +39,10 @@ enclosure = dict(enclosure_files=[{**a,'href':f"/files/{a['name']}?v={a['sha256'
 fit=workflows.load('fit-assets')
 enclosure['fit_files']=[{**a,'href':f"/files/{a['name']}?v={a['sha256'][:12]}"} for a in fit['assets']]
 enclosure['fit_models']={a['name']:f"/files/{a['name']}?v={a['sha256'][:12]}" for a in fit['assets']}
+pinout=json.loads((SITE/'public/docs/luckfox-mini-pinout.json').read_text())
+(OUT/'static/pinouts').mkdir(exist_ok=True)
+for revision in ['released','candidate']:
+    (OUT/f'static/pinouts/luckfox-mini-{revision}.svg').write_text(env.get_template('knowledge/luckfox-pinout.svg').render(pinout=pinout,revision=revision))
 guides = []
 search = {}
 for slug, source, category, title, description in GUIDES:
@@ -64,6 +68,9 @@ render('/guides/', 'knowledge/guides.html', guides=guides, query='', title='Buil
 for guide in guides:
     html=markdown((SITE/'content'/f"{guide['slug']}.md").read_text(), extensions=['extra','sane_lists','toc'])
     context={**guide,'body':Markup(html),'guides':guides}
+    if guide['slug']=='luckfox-pinout':
+        lead, section=html.split('<h2',1)
+        context.update(lead=Markup(lead),body=Markup('<h2'+section),pinout=pinout)
     if guide['slug']=='enclosure':
         lead, section=html.split('<h2',1)
         context.update(lead=Markup(lead), body=Markup('<h2'+section), **enclosure)

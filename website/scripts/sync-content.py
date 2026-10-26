@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SITE = ROOT / "website"
 sys.path.insert(0, str(SITE))
 from knowledge.catalog import GUIDES
+subprocess.run([sys.executable,str(ROOT/'scripts/audit-pinout-diagram.py')],check=True,stdout=subprocess.DEVNULL)
 content = SITE / "content"
 public = SITE / "public"
 for directory in [content, public]:
@@ -21,7 +22,7 @@ for directory in [content, public]:
     directory.mkdir()
 url_map = {str((ROOT / source).resolve()): f"/guides/{slug}/" for slug, source, *_ in GUIDES}
 files = [*(f"reference/pdfs/{p.name}" for p in sorted((ROOT / "reference/pdfs").glob("*.pdf"))),
-"docs/workflows.json", "docs/system-parts.json", "docs/card-workflows.json", "docs/os-build-benchmark.json", "docs/pdf-references.json", "docs/drc-assembly-exceptions.json",
+"docs/luckfox-mini-pinout.json", "docs/luckfox-pinout-check.json", "docs/workflows.json", "docs/system-parts.json", "docs/card-workflows.json", "docs/os-build-benchmark.json", "docs/pdf-references.json", "docs/drc-assembly-exceptions.json",
 "enclosure/previews/assembled.png", "enclosure/previews/exploded.png",
 "manufacturing/jlcpcb/bom-carrier-jlcpcb.csv", "manufacturing/jlcpcb/cpl-carrier-jlcpcb.csv"]
 # Hardware-only review bundle produced by review:build; no firmware/private archives.

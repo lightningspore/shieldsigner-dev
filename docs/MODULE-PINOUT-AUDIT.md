@@ -1,6 +1,6 @@
 # Luckfox Mini and HOTHMI pinout audit
 
-Reviewed 2026-10-24, pill PCB **0.0.6-dev**, SHA-256 `1b1c12a3a1a1300026a2a120e2115c351f9ba0c868ea393dbc02c223cc29a110`.
+Reviewed again 2026-10-25 against released pill PCB **0.0.7-dev**, SHA-256 `b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7`. The [interactive pinout and revision comparison](LUCKFOX-PINOUT.md) also covers the separate 0.0.8 PWM candidate.
 
 **PCB signal assignments and supply topology pass. One firmware correction is required: use 10 MHz SPI for the selected HOTHMI display.** No PCB change is indicated by this audit. This is a drawing/netlist review, not a powered hardware test. The checkout files remain the same revision.
 
@@ -44,6 +44,8 @@ These are **physical module pins**, viewed using the manufacturer's component-si
 
 The LCD signals are all on the Mini's 3.3 V GPIO bank. Pins 19/20 have no external pull-up or supply connection: their only carrier load is a normally-open switch to ground. The app requests pull-ups and the OS Mini setup configures the corresponding GPIO4 inputs. Do not add 3.3 V pull-ups, or use these as 3.3 V outputs. Other buttons likewise depend on firmware pull-ups. I2C3 is not used for this SPI display.
 
+The manufacturer image’s SPI0 CS1 label disagrees with its schematic and pinned SDK: CS1 belongs to pin 14 / GPIO1_D2, not pin 15. Our LCD uses CS0 on pin 6, so this discrepancy does not affect its wiring. See the [source comparison and full pin diagram](LUCKFOX-PINOUT.md).
+
 ## LCD connection and orientation
 
 Use **HOTHMI HTM-TFT028A16-SPI, no touch, J1 2.54 mm row**. Its separate 2 mm connector is not used. Module numbering is intentionally opposite the carrier's J701 numbering. Front/back views must not be confused; verify every signal label rather than matching equal numbers.
@@ -65,7 +67,7 @@ SDA/SCL here mean **SPI**, not I2C. The display is write-only; there is no missi
 
 - USB-C VBUS and J302 pin 1 feed **the same regulated +5V rail**, supplying Mini pin 1, SEC1210 and U701. J302 pin 2 is ground. Use one input source at a time, including the Mini's own USB connector; there is no source isolation or reverse-polarity protection.
 - U701 AP2112K pin 1 VIN and pin 3 EN are +5V; pin 2 is GND; pin 4 NC; pin 5 supplies **LCD_3V3**. Input/output capacitors C701/C702 are 10 µF nominal, each to ground. This is the correct regulator pinout.
-- LCD_3V3 has exactly three component endpoints: U701 output, C702 and J701 VCC. It is **not joined to Mini pin 3**. Neither 5 V nor 1.8 V is connected to the LCD supply or its data pins.
+- LCD_3V3 has exactly four component endpoints: U701 output, C702, J701 VCC and TP803. It is **not joined to Mini pin 3**. Neither 5 V nor 1.8 V is connected to the LCD supply or its data pins.
 - The LCD requires 3.1–3.6 V, nominal 3.3 V. HOTHMI specifies signal inputs no higher than IOVCC + 0.3 V and no higher than 3.6 V. Both host GPIO and LCD use nominal 3.3 V; measure startup/shutdown as well as steady-state levels because the supplies come from different regulators.
 - AP2112's 600 mA headline rating is not a thermal guarantee here. At 150 mA, 5→3.3 V dissipates about 0.255 W. HOTHMI's 120 mA typical figure is the backlight, not guaranteed maximum total module current. Current, rail droop, regulator temperature and enclosure ambient remain first-article acceptance measurements.
 

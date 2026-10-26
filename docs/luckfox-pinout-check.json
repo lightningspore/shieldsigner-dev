@@ -1,0 +1,34 @@
+{
+  "reviewed": "2026-10-25",
+  "boards": {
+    "released": {
+      "sha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
+      "physicalPins": 22,
+      "padInstancesChecked": 44
+    },
+    "candidate": {
+      "sha256": "c5644d7a6eb18ef013d008f880bb0813b05b33892b87eaa982da4638e973521a",
+      "physicalPins": 22,
+      "padInstancesChecked": 44
+    }
+  },
+  "sdkMuxAlternativesChecked": 35,
+  "gpioNumberingChecked": 17,
+  "appButtonMappingsChecked": 8,
+  "appDisplayGpioMappingsChecked": 2,
+  "upstream1v8ButtonTopologyMatches": true,
+  "findings": [
+    {
+      "kind": "manufacturer_diagram_discrepancy",
+      "detail": "Official Mini GPIO image places SPI0_CS1_M0 on pin 15 / GPIO1_D3. Retained schematic and pinned SDK spi0m0_cs1 assign GPIO1_D2 / physical pin 14. Diagram uses the corroborated pin 14 assignment; neither ShieldSigner revision uses a second SPI CS."
+    },
+    {
+      "kind": "documentation_correction",
+      "detail": "LCD_3V3 has four component endpoints including TP803, not three."
+    }
+  ],
+  "remaining": [
+    "Confirm live GPIO chip identities, device-tree muxes and SPI timing on the final image.",
+    "Physical voltage/continuity, module revision and optional BL_E PWM response remain bench checks."
+  ]
+}

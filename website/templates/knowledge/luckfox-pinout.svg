@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 890" role="img" aria-labelledby="mini-title mini-desc" class="mini-pinout">
+<title id="mini-title">Luckfox Mini A/B pinout · ShieldSigner {{ '0.0.7 released' if revision == 'released' else '0.0.8 PWM candidate' }}</title>
+<desc id="mini-desc">Component-side orientation, USB at the top. Pins 1 to 11 down the left; 22 to 12 down the right. Labels show electrical functions and ShieldSigner use. Pins 19 and 20 have 1.8 volt GPIO. Pin 22 is a 1.8 volt power output.</desc>
+<style>
+.mini-pinout{font-family:Arial,sans-serif;background:#fafaf5}.mini-pinout text{fill:#202c23}.mini-pinout .muted{fill:#58665b}.mini-pinout .use{font-size:15px}.mini-pinout .wire{stroke:#a6b0a7;stroke-width:1.5}.mini-pinout .row:focus .outline,.mini-pinout .row:hover .outline,.mini-pinout .row.selected .outline{stroke:#345e34;stroke-width:2;fill:#eef4dd}.mini-pinout .outline{fill:transparent;stroke:transparent}.mini-pinout .dimmed{opacity:.23}.mini-pinout .POWER{fill:#f7d0c6}.mini-pinout .GPIO{fill:#d4e6bc}.mini-pinout .SPI{fill:#edc6de}.mini-pinout .I2C{fill:#c8e3fa}.mini-pinout .PWM{fill:#f9d6b5}.mini-pinout .UART{fill:#ddd1f4}.mini-pinout .ADC{fill:#c8dfd1}.mini-pinout a{cursor:pointer;text-decoration:none}
+</style>
+<rect width="1600" height="890" rx="16" fill="#fafaf5"/>
+<text x="30" y="38" font-size="25" font-weight="700">Luckfox Pico Mini A/B</text>
+<text x="30" y="65" font-size="16" class="muted">Component-side view · USB at top · header numbers inside gold pads · illustration not to scale</text>
+<text x="1570" y="38" text-anchor="end" font-size="18" font-weight="700" data-diagram-revision="">{{ 'ShieldSigner 0.0.7 · released' if revision == 'released' else 'ShieldSigner 0.0.8 · PWM candidate' }}</text>
+<text x="1570" y="65" text-anchor="end" font-size="16" class="muted">Capabilities are multiplexed alternatives; firmware selects one at a time.</text>
+<rect x="710" y="125" width="180" height="635" rx="13" fill="#234b3d" stroke="#152e25" stroke-width="3"/>
+<rect x="758" y="105" width="84" height="57" rx="7" fill="#c4c9c5" stroke="#66746c" stroke-width="2"/>
+<rect x="770" y="110" width="60" height="11" rx="5" fill="#53635b"/>
+<text x="800" y="150" text-anchor="middle" font-size="15">USB</text>
+<rect x="742" y="315" width="116" height="116" rx="3" fill="#202827" stroke="#8b9690"/>
+<text x="800" y="368" text-anchor="middle" font-size="19" style="fill:#e2e7de">RV1103</text>
+<text x="800" y="392" text-anchor="middle" font-size="12" style="fill:#c9d1ca">17 GPIO · 22 pins</text>
+<rect x="742" y="664" width="116" height="40" fill="#1a2220" stroke="#a7b2a9"/>
+<text x="800" y="689" text-anchor="middle" font-size="13" style="fill:#d7ddd5">CAMERA FPC</text>
+{% for y in [200,260,470,530,590] %}<rect x="752" y="{{ y }}" width="18" height="10" fill="#b4b8aa"/><rect x="830" y="{{ y+12 }}" width="13" height="19" fill="#9ea78d"/>{% endfor %}
+{% for pin in pinout.pins %}
+{% set left = pin.pin <= 11 %}{% set row = pin.pin-1 if left else 22-pin.pin %}{% set y = 178+row*55 %}{% set x = 30 if left else 950 %}{% set badge = 240 if left else 1160 %}{% set pad = 710 if left else 890 %}
+<a href="#pin-{{ pin.pin }}" class="row" data-pin="{{ pin.pin }}" data-functions="{{ pin.functions|join(' ') }}" aria-label="Pin {{ pin.pin }}: {{ pin.name }}; {{ pin.volts }} V; {{ pin.use[revision] }}">
+<rect class="outline" x="{{ 19 if left else 936 }}" y="{{ y-28 }}" width="{{ 661 if left else 644 }}" height="51" rx="7"/>
+<path class="wire" d="M {{ 680 if left else 920 }} {{ y }} H {{ pad }}"/>
+<circle cx="{{ pad }}" cy="{{ y }}" r="14" fill="{{ '#f5b4a8' if pin.volts == 1.8 else '#d9c890' }}" stroke="#fbf8e7" stroke-width="2"/>
+<text x="{{ pad }}" y="{{ y+5 }}" text-anchor="middle" font-size="15" font-weight="700">{{ pin.pin }}</text>
+<text x="{{ x }}" y="{{ y-9 }}" font-size="19" font-weight="700">{{ pin.name }}</text>
+<text x="{{ x }}" y="{{ y+13 }}" font-size="15" class="muted">{{ 'Ground' if pin.volts == 0 else pin.volts|string+' V' }}{% if pin.legacyGpio is not none %} · GPIO #{{ pin.legacyGpio }}{% endif %}</text>
+{% for alt in pin.alternatives %}<rect class="{{ alt.kind }}" x="{{ badge+loop.index0*103 }}" y="{{ y-26 }}" width="99" height="22" rx="5"/><text x="{{ badge+loop.index0*103+49.5 }}" y="{{ y-11 }}" text-anchor="middle" font-size="11.8">{{ alt.label }}</text>{% endfor %}
+<text x="{{ badge }}" y="{{ y+16 }}" class="use" data-pin-use="{{ pin.pin }}">{{ pin.use[revision] }}</text>
+</a>
+{% endfor %}
+<text x="800" y="789" text-anchor="middle" font-size="16" font-weight="700">Always-on backlight remains the default on both revisions.</text>
+<text x="800" y="815" text-anchor="middle" font-size="15" class="muted">0.0.8 candidate: optional PWM on pin 14 · pins 19/20: 1.8 V GPIO · 22: 1.8 V output, not GPIO</text>
+<text x="800" y="841" text-anchor="middle" font-size="14" class="muted">SPI0 CS1 shown on pin 14 per manufacturer schematic + SDK; see the source discrepancy note.</text>
+<text x="800" y="867" text-anchor="middle" font-size="13" class="muted">ShieldSigner · shieldsigner.dev/guides/luckfox-pinout/ · reviewed {{ pinout.reviewed }}</text>
+</svg>

@@ -1,0 +1,824 @@
+{
+  "reviewed": "2026-10-25",
+  "model": "Luckfox Pico Mini A/B",
+  "orientation": "Component-side view; USB at top; left 1\u201311 top to bottom, right 22\u201312 top to bottom",
+  "sources": [
+    {
+      "name": "Luckfox Mini A/B official GPIO image",
+      "url": "https://wiki.luckfox.com/assets/images/LUCKFOX-PICO-MINI-GPIO-dd48b2490c683f3a1bafc86f54bf1e6e.webp",
+      "path": "reference/pinouts/luckfox-mini-official.webp",
+      "sha256": "c1243447442b519d08fc15674c634975feaa9b6e5e3b538a12275cbd3d79bf6d"
+    },
+    {
+      "name": "Luckfox SDK pinctrl snapshot",
+      "url": "https://github.com/LuckfoxTECH/luckfox-pico/blob/824b817f889c2cbff1d48fcdb18ab494a68f69d1/sysdrv/source/kernel/arch/arm/boot/dts/rv1106-pinctrl.dtsi",
+      "path": "reference/pinouts/rv1106-pinctrl-824b817.dtsi",
+      "sha256": "9d9c57be3ea67ee41575e7f9170afec214d0485643a6874ab807b559209f2c67"
+    },
+    {
+      "name": "Retained Luckfox Mini schematic",
+      "url": "https://files.luckfox.com/wiki/Luckfox-Pico/PDF/Luckfox-Pico-SCH/Luckfox%20Pico%20Mini.pdf",
+      "path": "reference/pdfs/Luckfox-Pico-Mini.pdf",
+      "sha256": "67d8730d4d636df3dd4d8df2ac8d0c1615a35092b8cdcdd11e98d76b2934461d"
+    }
+  ],
+  "pins": [
+    {
+      "pin": 1,
+      "name": "VBUS",
+      "volts": 5,
+      "bank": null,
+      "offset": null,
+      "legacyGpio": null,
+      "functions": [
+        "POWER"
+      ],
+      "alternatives": [],
+      "net": {
+        "released": "+5V",
+        "candidate": "+5V"
+      },
+      "use": {
+        "released": "5 V power input",
+        "candidate": "5 V power input"
+      },
+      "note": {
+        "released": "USB-C / J302 \u2192 module VBUS",
+        "candidate": "USB-C / J302 \u2192 module VBUS"
+      },
+      "active": "power"
+    },
+    {
+      "pin": 2,
+      "name": "GND",
+      "volts": 0,
+      "bank": null,
+      "offset": null,
+      "legacyGpio": null,
+      "functions": [
+        "POWER"
+      ],
+      "alternatives": [],
+      "net": {
+        "released": "GND",
+        "candidate": "GND"
+      },
+      "use": {
+        "released": "Common ground",
+        "candidate": "Common ground"
+      },
+      "note": {
+        "released": "Common signal and power return",
+        "candidate": "Common signal and power return"
+      },
+      "active": "power"
+    },
+    {
+      "pin": 3,
+      "name": "3V3 OUT",
+      "volts": 3.3,
+      "bank": null,
+      "offset": null,
+      "legacyGpio": null,
+      "functions": [
+        "POWER"
+      ],
+      "alternatives": [],
+      "net": {
+        "released": "+3.3V",
+        "candidate": "+3.3V"
+      },
+      "use": {
+        "released": "3.3 V output",
+        "candidate": "3.3 V output"
+      },
+      "note": {
+        "released": "Always-on backlight enable + TP802; not LCD power",
+        "candidate": "Always-on backlight enable + TP802; not LCD power"
+      },
+      "active": "power"
+    },
+    {
+      "pin": 4,
+      "name": "GPIO1_B2",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 10,
+      "legacyGpio": 42,
+      "functions": [
+        "GPIO",
+        "UART"
+      ],
+      "alternatives": [
+        {
+          "label": "UART2_TX_M1",
+          "kind": "UART",
+          "sourceToken": "uart2_tx_m1"
+        }
+      ],
+      "net": {
+        "released": "UART_TX",
+        "candidate": "UART_TX"
+      },
+      "use": {
+        "released": "Smartcard UART TX",
+        "candidate": "Smartcard UART TX"
+      },
+      "note": {
+        "released": "TX \u2192 R602 \u2192 SEC1210 RX, pin 11",
+        "candidate": "TX \u2192 R602 \u2192 SEC1210 RX, pin 11"
+      },
+      "active": "uart"
+    },
+    {
+      "pin": 5,
+      "name": "GPIO1_B3",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 11,
+      "legacyGpio": 43,
+      "functions": [
+        "GPIO",
+        "UART"
+      ],
+      "alternatives": [
+        {
+          "label": "UART2_RX_M1",
+          "kind": "UART",
+          "sourceToken": "uart2_rx_m1"
+        }
+      ],
+      "net": {
+        "released": "UART_RX",
+        "candidate": "UART_RX"
+      },
+      "use": {
+        "released": "Smartcard UART RX",
+        "candidate": "Smartcard UART RX"
+      },
+      "note": {
+        "released": "RX \u2190 R603 \u2190 SEC1210 TX, pin 14",
+        "candidate": "RX \u2190 R603 \u2190 SEC1210 TX, pin 14"
+      },
+      "active": "uart"
+    },
+    {
+      "pin": 6,
+      "name": "GPIO1_C0",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 16,
+      "legacyGpio": 48,
+      "functions": [
+        "GPIO",
+        "SPI",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "SPI0_CS0_M0",
+          "kind": "SPI",
+          "sourceToken": "spi0_cs0n_m0"
+        },
+        {
+          "label": "PWM2_M2",
+          "kind": "PWM",
+          "sourceToken": "pwm2_m2"
+        }
+      ],
+      "net": {
+        "released": "Net-(JP203-B)",
+        "candidate": "Net-(JP203-B)"
+      },
+      "use": {
+        "released": "LCD chip select",
+        "candidate": "LCD chip select"
+      },
+      "note": {
+        "released": "JP203 + JP205 \u2192 J701 pin 4; keep SPI CS active",
+        "candidate": "JP203 + JP205 \u2192 J701 pin 4; keep SPI CS active"
+      },
+      "active": "spi"
+    },
+    {
+      "pin": 7,
+      "name": "GPIO1_C1",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 17,
+      "legacyGpio": 49,
+      "functions": [
+        "GPIO",
+        "SPI",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "SPI0_CLK_M0",
+          "kind": "SPI",
+          "sourceToken": "spi0_clk_m0"
+        },
+        {
+          "label": "PWM4_M2",
+          "kind": "PWM",
+          "sourceToken": "pwm4_m2"
+        }
+      ],
+      "net": {
+        "released": "LCD_SCLK",
+        "candidate": "LCD_SCLK"
+      },
+      "use": {
+        "released": "LCD SPI clock",
+        "candidate": "LCD SPI clock"
+      },
+      "note": {
+        "released": "J701 pin 5; 10 MHz target for HOTHMI",
+        "candidate": "J701 pin 5; 10 MHz target for HOTHMI"
+      },
+      "active": "spi"
+    },
+    {
+      "pin": 8,
+      "name": "GPIO1_C2",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 18,
+      "legacyGpio": 50,
+      "functions": [
+        "GPIO",
+        "SPI",
+        "PWM",
+        "I2C"
+      ],
+      "alternatives": [
+        {
+          "label": "SPI0_MOSI_M0",
+          "kind": "SPI",
+          "sourceToken": "spi0_mosi_m0"
+        },
+        {
+          "label": "PWM5_M2",
+          "kind": "PWM",
+          "sourceToken": "pwm5_m2"
+        },
+        {
+          "label": "I2C4_SCL_M1",
+          "kind": "I2C",
+          "sourceToken": "i2c4_scl_m1"
+        }
+      ],
+      "net": {
+        "released": "LCD_MOSI",
+        "candidate": "LCD_MOSI"
+      },
+      "use": {
+        "released": "LCD SPI data",
+        "candidate": "LCD SPI data"
+      },
+      "note": {
+        "released": "J701 pin 6; write-only display",
+        "candidate": "J701 pin 6; write-only display"
+      },
+      "active": "spi"
+    },
+    {
+      "pin": 9,
+      "name": "GPIO1_C3",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 19,
+      "legacyGpio": 51,
+      "functions": [
+        "GPIO",
+        "SPI",
+        "PWM",
+        "I2C"
+      ],
+      "alternatives": [
+        {
+          "label": "SPI0_MISO_M0",
+          "kind": "SPI",
+          "sourceToken": "spi0_miso_m0"
+        },
+        {
+          "label": "PWM6_M2",
+          "kind": "PWM",
+          "sourceToken": "pwm6_m2"
+        },
+        {
+          "label": "I2C4_SDA_M1",
+          "kind": "I2C",
+          "sourceToken": "i2c4_sda_m1"
+        }
+      ],
+      "net": {
+        "released": "LCD_RST",
+        "candidate": "LCD_RST"
+      },
+      "use": {
+        "released": "LCD reset GPIO",
+        "candidate": "LCD reset GPIO"
+      },
+      "note": {
+        "released": "J701 pin 2; omit SPI MISO pinmux",
+        "candidate": "J701 pin 2; omit SPI MISO pinmux"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 10,
+      "name": "GPIO1_C4",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 20,
+      "legacyGpio": 52,
+      "functions": [
+        "GPIO",
+        "UART",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "UART4_RX_M1",
+          "kind": "UART",
+          "sourceToken": "uart4_rx_m1"
+        },
+        {
+          "label": "PWM8_M1",
+          "kind": "PWM",
+          "sourceToken": "pwm8_m1"
+        }
+      ],
+      "net": {
+        "released": "LCD_DC",
+        "candidate": "LCD_DC"
+      },
+      "use": {
+        "released": "LCD data / command",
+        "candidate": "LCD data / command"
+      },
+      "note": {
+        "released": "J701 pin 3; configure as GPIO output",
+        "candidate": "J701 pin 3; configure as GPIO output"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 11,
+      "name": "GPIO1_C5",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 21,
+      "legacyGpio": 53,
+      "functions": [
+        "GPIO",
+        "UART",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "UART4_TX_M1",
+          "kind": "UART",
+          "sourceToken": "uart4_tx_m1"
+        },
+        {
+          "label": "PWM9_M1",
+          "kind": "PWM",
+          "sourceToken": "pwm9_m1"
+        }
+      ],
+      "net": {
+        "released": "Key3",
+        "candidate": "Key3"
+      },
+      "use": {
+        "released": "Button 3",
+        "candidate": "Button 3"
+      },
+      "note": {
+        "released": "SW508 \u2192 ground; GPIO input with pull-up",
+        "candidate": "SW508 \u2192 ground; GPIO input with pull-up"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 12,
+      "name": "GPIO1_D0",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 24,
+      "legacyGpio": 56,
+      "functions": [
+        "GPIO",
+        "UART",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "UART3_TX_M1",
+          "kind": "UART",
+          "sourceToken": "uart3_tx_m1"
+        },
+        {
+          "label": "PWM3_IR_M2",
+          "kind": "PWM",
+          "sourceToken": "pwm3_ir_m2"
+        }
+      ],
+      "net": {
+        "released": "JoystickLeft",
+        "candidate": "JoystickLeft"
+      },
+      "use": {
+        "released": "Joystick left",
+        "candidate": "Joystick left"
+      },
+      "note": {
+        "released": "SW501 \u2192 ground; GPIO input with pull-up",
+        "candidate": "SW501 \u2192 ground; GPIO input with pull-up"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 13,
+      "name": "GPIO1_D1",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 25,
+      "legacyGpio": 57,
+      "functions": [
+        "GPIO",
+        "UART",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "UART3_RX_M1",
+          "kind": "UART",
+          "sourceToken": "uart3_rx_m1"
+        },
+        {
+          "label": "PWM10_M2",
+          "kind": "PWM",
+          "sourceToken": "pwm10_m2"
+        }
+      ],
+      "net": {
+        "released": "JoystickUp",
+        "candidate": "JoystickUp"
+      },
+      "use": {
+        "released": "Joystick up",
+        "candidate": "Joystick up"
+      },
+      "note": {
+        "released": "SW502 \u2192 ground; GPIO input with pull-up",
+        "candidate": "SW502 \u2192 ground; GPIO input with pull-up"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 14,
+      "name": "GPIO1_D2",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 26,
+      "legacyGpio": 58,
+      "functions": [
+        "GPIO",
+        "I2C",
+        "PWM",
+        "SPI",
+        "UART"
+      ],
+      "alternatives": [
+        {
+          "label": "I2C3_SDA_M1",
+          "kind": "I2C",
+          "sourceToken": "i2c3_sda_m1"
+        },
+        {
+          "label": "PWM0_M1",
+          "kind": "PWM",
+          "sourceToken": "pwm0_m1"
+        },
+        {
+          "label": "SPI0_CS1_M0",
+          "kind": "SPI",
+          "sourceToken": "spi0_cs1n_m0"
+        },
+        {
+          "label": "UART5_RX_M1",
+          "kind": "UART",
+          "sourceToken": "uart5_rx_m1"
+        }
+      ],
+      "net": {
+        "released": "I2C-SDA",
+        "candidate": "LCD_PWM"
+      },
+      "use": {
+        "released": "Unused on 0.0.7",
+        "candidate": "Optional LCD backlight PWM"
+      },
+      "note": {
+        "released": "No external endpoint on the released carrier",
+        "candidate": "R703 pull-down + JP202 \u2192 J701 pin 1; always-on remains default"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 15,
+      "name": "GPIO1_D3",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 27,
+      "legacyGpio": 59,
+      "functions": [
+        "GPIO",
+        "I2C",
+        "PWM",
+        "UART"
+      ],
+      "alternatives": [
+        {
+          "label": "I2C3_SCL_M1",
+          "kind": "I2C",
+          "sourceToken": "i2c3_scl_m1"
+        },
+        {
+          "label": "PWM11_M2",
+          "kind": "PWM",
+          "sourceToken": "pwm11_ir_m2"
+        },
+        {
+          "label": "UART5_TX_M1",
+          "kind": "UART",
+          "sourceToken": "uart5_tx_m1"
+        }
+      ],
+      "net": {
+        "released": "I2C-SCL",
+        "candidate": "I2C-SCL"
+      },
+      "use": {
+        "released": "Unused on both revisions",
+        "candidate": "Unused on both revisions"
+      },
+      "note": {
+        "released": "No external endpoint; I2C3 is not the LCD bus",
+        "candidate": "No external endpoint; I2C3 is not the LCD bus"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 16,
+      "name": "GPIO1_C6",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 22,
+      "legacyGpio": 54,
+      "functions": [
+        "GPIO",
+        "UART",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "UART4_RTSN_M1",
+          "kind": "UART",
+          "sourceToken": "uart4m1_rtsn"
+        },
+        {
+          "label": "PWM10_M1",
+          "kind": "PWM",
+          "sourceToken": "pwm10_m1"
+        }
+      ],
+      "net": {
+        "released": "JoystickPress",
+        "candidate": "JoystickPress"
+      },
+      "use": {
+        "released": "Joystick press",
+        "candidate": "Joystick press"
+      },
+      "note": {
+        "released": "SW503 \u2192 ground; do not enable default PWM10",
+        "candidate": "SW503 \u2192 ground; do not enable default PWM10"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 17,
+      "name": "GPIO1_C7",
+      "volts": 3.3,
+      "bank": 1,
+      "offset": 23,
+      "legacyGpio": 55,
+      "functions": [
+        "GPIO",
+        "UART",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "UART4_CTSN_M1",
+          "kind": "UART",
+          "sourceToken": "uart4m1_ctsn"
+        },
+        {
+          "label": "PWM11_M1",
+          "kind": "PWM",
+          "sourceToken": "pwm11_ir_m1"
+        }
+      ],
+      "net": {
+        "released": "JoystickDown",
+        "candidate": "JoystickDown"
+      },
+      "use": {
+        "released": "Joystick down",
+        "candidate": "Joystick down"
+      },
+      "note": {
+        "released": "SW504 \u2192 ground; do not enable default PWM11",
+        "candidate": "SW504 \u2192 ground; do not enable default PWM11"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 18,
+      "name": "GPIO0_A4",
+      "volts": 3.3,
+      "bank": 0,
+      "offset": 4,
+      "legacyGpio": 4,
+      "functions": [
+        "GPIO",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "PWM1_M0",
+          "kind": "PWM",
+          "sourceToken": "pwm1_m0"
+        }
+      ],
+      "net": {
+        "released": "JoystickRight",
+        "candidate": "JoystickRight"
+      },
+      "use": {
+        "released": "Joystick right",
+        "candidate": "Joystick right"
+      },
+      "note": {
+        "released": "SW505 \u2192 ground; GPIO input with pull-up",
+        "candidate": "SW505 \u2192 ground; GPIO input with pull-up"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 19,
+      "name": "GPIO4_C0",
+      "volts": 1.8,
+      "bank": 4,
+      "offset": 16,
+      "legacyGpio": 144,
+      "functions": [
+        "GPIO",
+        "ADC"
+      ],
+      "alternatives": [
+        {
+          "label": "ADC_IN0",
+          "kind": "ADC",
+          "sourceToken": "adc_in0"
+        }
+      ],
+      "net": {
+        "released": "Key1",
+        "candidate": "Key1"
+      },
+      "use": {
+        "released": "Button 1 \u00b7 1.8 V",
+        "candidate": "Button 1 \u00b7 1.8 V"
+      },
+      "note": {
+        "released": "SW506 \u2192 ground; internal pull-up, no 3.3 V pull-up",
+        "candidate": "SW506 \u2192 ground; internal pull-up, no 3.3 V pull-up"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 20,
+      "name": "GPIO4_C1",
+      "volts": 1.8,
+      "bank": 4,
+      "offset": 17,
+      "legacyGpio": 145,
+      "functions": [
+        "GPIO",
+        "ADC",
+        "PWM"
+      ],
+      "alternatives": [
+        {
+          "label": "ADC_IN1",
+          "kind": "ADC",
+          "sourceToken": "adc_in1"
+        },
+        {
+          "label": "PWM1_M1",
+          "kind": "PWM",
+          "sourceToken": "pwm1_m1"
+        }
+      ],
+      "net": {
+        "released": "Key2",
+        "candidate": "Key2"
+      },
+      "use": {
+        "released": "Button 2 \u00b7 1.8 V",
+        "candidate": "Button 2 \u00b7 1.8 V"
+      },
+      "note": {
+        "released": "SW507 \u2192 ground; internal pull-up, no 3.3 V pull-up",
+        "candidate": "SW507 \u2192 ground; internal pull-up, no 3.3 V pull-up"
+      },
+      "active": "gpio"
+    },
+    {
+      "pin": 21,
+      "name": "GND",
+      "volts": 0,
+      "bank": null,
+      "offset": null,
+      "legacyGpio": null,
+      "functions": [
+        "POWER"
+      ],
+      "alternatives": [],
+      "net": {
+        "released": "GND",
+        "candidate": "GND"
+      },
+      "use": {
+        "released": "Common ground",
+        "candidate": "Common ground"
+      },
+      "note": {
+        "released": "Second ground pin",
+        "candidate": "Second ground pin"
+      },
+      "active": "power"
+    },
+    {
+      "pin": 22,
+      "name": "1V8 OUT",
+      "volts": 1.8,
+      "bank": null,
+      "offset": null,
+      "legacyGpio": null,
+      "functions": [
+        "POWER"
+      ],
+      "alternatives": [],
+      "net": {
+        "released": "unconnected-(U202-1V8(OUT)-Pad22)",
+        "candidate": "unconnected-(U202-1V8(OUT)-Pad22)"
+      },
+      "use": {
+        "released": "1.8 V output \u00b7 unused",
+        "candidate": "1.8 V output \u00b7 unused"
+      },
+      "note": {
+        "released": "Not connected to the carrier; never tie to 3.3 V",
+        "candidate": "Not connected to the carrier; never tie to 3.3 V"
+      },
+      "active": "power"
+    }
+  ],
+  "extraPads": [
+    {
+      "name": "USER button",
+      "gpio": "GPIO1_A2",
+      "legacyGpio": 34,
+      "note": "On-module button; not a carrier header pin. PWM0_M0 alternative shares controller PWM0 with pin 14."
+    },
+    {
+      "name": "ACT",
+      "gpio": "GPIO3_C6",
+      "legacyGpio": 118,
+      "note": "On-module ACT indicator; not a carrier header pin."
+    },
+    {
+      "name": "Ethernet pads",
+      "gpio": "TXP / TXN / GND / RXP / RXN",
+      "legacyGpio": null,
+      "note": "Separate bottom pads, not the 22-pin header; not wired on this carrier. Not GPIO or an RJ45-ready interface."
+    }
+  ]
+}

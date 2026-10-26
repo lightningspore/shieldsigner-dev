@@ -14,7 +14,32 @@ fn self_test() -> Result<(), String> {
     if out.iter().any(|&v| v != 64) {
         return Err("LUT self-test failed".into());
     }
-    println!("PASS: reconstructed interpolation and complete 2187-value LUT. Full ARM-original differential test is separate.");
+    {
+        use shieldsigner_rkaiq::media::*;
+        let entities = [
+            Entity {
+                id: 1,
+                kind: CAMERA_SENSOR,
+            },
+            Entity { id: 2, kind: 0 },
+        ];
+        let link = Link {
+            source: Pad {
+                entity: 1,
+                ..Pad::default()
+            },
+            sink: Pad {
+                entity: 2,
+                ..Pad::default()
+            },
+            flags: 3,
+            ..Link::default()
+        };
+        if upstream_sensor(&entities, &[link], 2, &mut [0; 2]) != Ok(Binding::Unique(1)) {
+            return Err("Media topology self-test failed".into());
+        }
+    }
+    println!("PASS: reconstructed interpolation, complete 2187-value LUT and media topology traversal. Full ARM-original differential test is separate.");
     Ok(())
 }
 fn main() {
@@ -257,41 +282,169 @@ mod linux {
         }
         found
     }
+    fn device_node(major: u32, minor: u32) -> Option<String> {
+        use std::os::unix::fs::{FileTypeExt, MetadataExt};
+        let valid = |path: &std::path::Path| {
+            fs::metadata(path).ok().is_some_and(|m| {
+                m.file_type().is_char_device()
+                    && libc::major(m.rdev()) == major
+                    && libc::minor(m.rdev()) == minor
+            })
+        };
+        if let Ok(path) = fs::canonicalize(format!("/dev/char/{major}:{minor}")) {
+            if valid(&path) {
+                return Some(path.to_string_lossy().into_owned());
+            }
+        }
+        // BusyBox/mdev images may not create /dev/char symlinks.
+        if let Ok(info) = fs::read_to_string(format!("/sys/dev/char/{major}:{minor}/uevent")) {
+            if let Some(name) = info.lines().find_map(|line| line.strip_prefix("DEVNAME=")) {
+                let path = std::path::Path::new("/dev").join(name);
+                if valid(&path) {
+                    return Some(path.to_string_lossy().into_owned());
+                }
+            }
+        }
+        if let Ok(entries) = fs::read_dir("/dev") {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if valid(&path) {
+                    return Some(path.to_string_lossy().into_owned());
+                }
+            }
+        }
+        None
+    }
     fn media_graph() -> Vec<Value> {
-        // Reconstruct the daemon's entity-name discovery through public media UAPI.
-        // media_device_info and media_entity_desc are both 256 bytes on ARM32.
+        use shieldsigner_rkaiq::media::{self, Binding, Entity, Link, LinksQuery, Pad};
         let mut graph = Vec::new();
         for index in 0..32 {
             let path = format!("/dev/media{index}");
-            let Ok(file) = open(&path, false) else {
-                continue;
+            let file = match open(&path, false) {
+                Ok(file) => file,
+                Err(e) if e.kind() == io::ErrorKind::NotFound => continue,
+                Err(e) => {
+                    graph.push(json!({"device":path,"complete":false,"errors":[format!("Open media device: {e}")],"entities":[]}));
+                    continue;
+                }
             };
             let mut info = [0u8; 256];
             let info_request = (3u32 << 30) | (256u32 << 16) | ((b'|' as u32) << 8);
-            if ioctl(file.as_raw_fd(), info_request, &mut info).is_err() {
+            if let Err(e) = ioctl(file.as_raw_fd(), info_request, &mut info) {
+                graph.push(json!({"device":path,"complete":false,"errors":[format!("DEVICE_INFO: {e}")],"entities":[]}));
                 continue;
             }
             let mut entities = Vec::new();
+            let mut typed_entities = Vec::new();
+            let mut typed_links: Vec<Link> = Vec::new();
+            let mut links = Vec::new();
+            let mut errors = Vec::new();
             let mut last = 0u32;
+            let mut enumeration_ended = false;
             for _ in 0..1024 {
                 let mut entity = [0u8; 256];
                 put32(&mut entity, 0, last | 0x80000000);
-                if ioctl(file.as_raw_fd(), info_request | 1, &mut entity).is_err() {
+                if let Err(e) = ioctl(file.as_raw_fd(), info_request | 1, &mut entity) {
+                    if e.raw_os_error() != Some(libc::EINVAL) {
+                        errors.push(format!("ENUM_ENTITIES: {e}"));
+                    }
+                    enumeration_ended = true;
                     break;
                 }
                 let id = get32(&entity, 0);
-                if id <= last {
+                if id <= last || id & 0x80000000 != 0 {
+                    errors.push("Non-increasing/invalid entity ID".into());
                     break;
                 }
                 last = id;
                 let major = get32(&entity, 72);
                 let minor = get32(&entity, 76);
-                let node = fs::canonicalize(format!("/dev/char/{major}:{minor}"))
-                    .ok()
-                    .map(|p| p.to_string_lossy().into_owned());
-                entities.push(json!({"id":id,"name":cstr(&entity[4..36]),"major":major,"minor":minor,"device":node}));
+                let kind = get32(&entity, 36);
+                let pad_count = u16::from_ne_bytes(entity[52..54].try_into().unwrap()) as usize;
+                let link_count = u16::from_ne_bytes(entity[54..56].try_into().unwrap()) as usize;
+                let mut pads = Vec::new();
+                if pad_count > 4096 || link_count > 4096 {
+                    errors.push(format!("Entity {id}: unreasonable pad/link count"));
+                } else {
+                    let mut raw_pads = vec![Pad::default(); pad_count];
+                    let mut raw_links = vec![Link::default(); link_count];
+                    let mut query = LinksQuery {
+                        entity: id,
+                        pads: if pad_count == 0 {
+                            ptr::null_mut()
+                        } else {
+                            raw_pads.as_mut_ptr()
+                        },
+                        links: if link_count == 0 {
+                            ptr::null_mut()
+                        } else {
+                            raw_links.as_mut_ptr()
+                        },
+                        reserved: [0; 4],
+                    };
+                    let request = (3u32 << 30)
+                        | ((std::mem::size_of::<LinksQuery>() as u32) << 16)
+                        | ((b'|' as u32) << 8)
+                        | 2;
+                    match ioctl(file.as_raw_fd(), request, &mut query) {
+                        Err(e) => errors.push(format!("Entity {id} ENUM_LINKS: {e}")),
+                        Ok(()) => {
+                            for pad in raw_pads {
+                                pads.push(json!({"entity":pad.entity,"index":pad.index,"flags":pad.flags}));
+                            }
+                            for link in raw_links {
+                                if !typed_links.iter().any(|l| {
+                                    l.source.entity == link.source.entity
+                                        && l.source.index == link.source.index
+                                        && l.sink.entity == link.sink.entity
+                                        && l.sink.index == link.sink.index
+                                        && l.flags == link.flags
+                                }) {
+                                    links.push(json!({"source":{"entity":link.source.entity,"pad":link.source.index},"sink":{"entity":link.sink.entity,"pad":link.sink.index},"flags":link.flags,"enabled":link.flags&1!=0}));
+                                    typed_links.push(link);
+                                }
+                            }
+                        }
+                    }
+                }
+                typed_entities.push(Entity { id, kind });
+                entities.push(json!({"id":id,"name":cstr(&entity[4..36]),"type":kind,"major":major,"minor":minor,"device":device_node(major,minor),"padCount":pad_count,"linkCount":link_count,"pads":pads}));
             }
-            graph.push(json!({"device":path,"driver":cstr(&info[..16]),"model":cstr(&info[16..48]),"entities":entities}));
+            if !enumeration_ended {
+                errors.push("Entity enumeration did not reach its end".into());
+            }
+            let mut bindings = Vec::new();
+            if errors.is_empty() {
+                let mut scratch = vec![0; typed_entities.len()];
+                for entity in &entities {
+                    if entity["device"].is_null() {
+                        continue;
+                    }
+                    let id = entity["id"].as_u64().unwrap() as u32;
+                    match media::upstream_sensor(&typed_entities, &typed_links, id, &mut scratch) {
+                        Ok(binding) => {
+                            let (status, sensor) = match binding {
+                                Binding::None => ("none", None),
+                                Binding::Ambiguous => ("ambiguous", None),
+                                Binding::Unique(sensor) => (
+                                    "unique",
+                                    entities
+                                        .iter()
+                                        .find(|e| e["id"].as_u64() == Some(sensor as u64))
+                                        .cloned(),
+                                ),
+                            };
+                            bindings.push(json!({"device":entity["device"],"entity":id,"status":status,"sensor":sensor}));
+                        }
+                        Err(e) => {
+                            errors.push(format!("Topology validation: {e:?}"));
+                            bindings.clear();
+                            break;
+                        }
+                    }
+                }
+            }
+            graph.push(json!({"device":path,"driver":cstr(&info[..16]),"model":cstr(&info[16..48]),"complete":errors.is_empty(),"errors":errors,"entities":entities,"links":links,"sensorPaths":bindings,"scope":"One media device; enabled directed data links only; no cross-media inference or link changes"}));
         }
         graph
     }

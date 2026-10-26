@@ -13,7 +13,7 @@ for item in manifest['kernelHeaders']:
 installed=cache/'installed';(installed/'linux').mkdir(parents=True,exist_ok=True)
 for item in manifest['kernelHeaders']:
     source=cache/'linux'/item['name'];target=installed/'linux'/item['name']
-    if item['name']=='videodev2.h':
+    if item['name'] in ('videodev2.h','media.h'):
         target.write_text(source.read_text().replace('#include <linux/compiler.h>','').replace('__user',''))
     else:shutil.copyfile(source,target)
 obj=cache/'layout-arm.o'

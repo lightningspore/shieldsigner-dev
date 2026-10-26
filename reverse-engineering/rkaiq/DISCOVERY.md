@@ -20,3 +20,13 @@ The function accepts a null query (returns null). An empty query matches any pat
 The initial translation reversed two inferred string roles; exact comparisons exposed this and the mapping was corrected against binary literal addresses. Tests cover empty/null and partial queries, no sensors, multiple candidates, ISP/CIF precedence, special names, absent descriptors, media access/open/entity failures, zero links and several link-flag combinations.
 
 These checks do not verify the stubbed media operations or the library's global inventory-population code. The remaining implementation must discover sensor entities and ISP/CIF associations on the actual media graph, populate ordered records, and inspect links without relying on vendor initialization. The existing camera inventory command provides raw entities/device nodes but does not yet supply that complete native inventory.
+
+## Live media snapshot
+
+`camera-probe list` now reads `MEDIA_IOC_ENUM_LINKS` for each enumerated entity and includes pad descriptors, directed links, and entity-level upstream sensor paths for device nodes. Pad/link/query layouts, descriptor count offsets and the ARM ioctl number are checked against the pinned kernel UAPI by `camera:rust:layout`. The pinned kernel's `drivers/media/mc/mc-device.c` reports outbound-link counts (excluding backlinks) and returns outbound descriptors; the reader allocates those advertised counts and de-duplicates records.
+
+The report includes `complete` and `errors`. Entity/link enumeration failures suppress sensor-path conclusions. Missing `/dev/char` symlinks fall back to sysfs `DEVNAME` and matching character-device major/minor numbers. This helps BusyBox/mdev systems without assuming udev is installed.
+
+Traversal follows enabled directed data links, including enabled+immutable flags, and terminates cycles. Missing entities, duplicate entity IDs and insufficient scratch storage are explicit errors; two reachable sensor entities produce an ambiguous result. This topology rule is separate from the recovered selector's exact first-link-flags check above.
+
+Each snapshot covers **one media device**. It does not infer associations across CIF and ISP media devices or resolve internal subdevice routing. An entity-level path does not prove a usable pad route, sensor format, initialized ISP or frame delivery. The reader changes no links and does not populate the vendor-style complete sensor inventory yet. Host tests and ARM self-tests exercise traversal; actual media ioctls still require real camera validation.

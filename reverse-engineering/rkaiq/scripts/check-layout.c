@@ -22,3 +22,11 @@ _Static_assert(offsetof(struct v4l2_event,sequence)==76,"event sequence offset")
 _Static_assert(sizeof(struct v4l2_event_subscription)==32,"subscription size");
 _Static_assert(VIDIOC_DQEVENT==0x80805659,"old-time event ioctl");
 _Static_assert(VIDIOC_SUBSCRIBE_EVENT==0x4020565a,"subscribe ioctl");
+#include <linux/media.h>
+_Static_assert(sizeof(struct media_pad_desc)==20,"media pad size");
+_Static_assert(sizeof(struct media_link_desc)==52,"media link size");
+_Static_assert(sizeof(struct media_links_enum)==28,"ARM media links query size");
+_Static_assert(offsetof(struct media_entity_desc,pads)==52,"media entity pad count");
+_Static_assert(offsetof(struct media_entity_desc,links)==54,"media entity link count");
+_Static_assert(MEDIA_IOC_ENUM_LINKS==0xc01c7c02,"ARM media links ioctl");
+_Static_assert(MEDIA_ENT_F_CAM_SENSOR==0x20001,"sensor entity type");

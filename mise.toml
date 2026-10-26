@@ -300,3 +300,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:isp-demosaic"]
 description = "Compare demosaic hardware quantization and full ISP32 serialization against native ARM"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-demosaic.py --cases 1000 --emit-dir dist/reverse-engineering/isp-demosaic-fixtures"]
+
+[tasks."camera:rust:demosaic-selection"]
+description = "Compare demosaic IQ JSON/ISO tuning through hardware and ISP32 packing against native ARM"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/demosaic-selection.py --cases 1000 --emit-dir dist/reverse-engineering/demosaic-selection-fixtures"]

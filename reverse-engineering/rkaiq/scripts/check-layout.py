@@ -96,3 +96,26 @@ for field,offset in [('updatecfg',0),('enable',1),('filter_g_en',2),('filter_c_e
 source.write_text('#include <stdbool.h>\n#include <stddef.h>\n'+selected+'\n'+hardware+'\n'+'\n'.join(assertions)+'\n')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'demosaic-sdk-layout.o')],check=True)
 print('PASS: SDK demosaic selected=132/hardware=112 bytes; full kernel block=57 bytes at 0x1282')
+
+# Verify the complete public calibration table used by native automatic Process.
+item=next(x for x in manifest['headers'] if x['name']=='debayer_head.h')
+header=ROOT/'.tools/reverse-engineering/headers'/item['name']
+assert hashlib.sha256(header.read_bytes()).hexdigest()==item['sha256']
+text=header.read_text();records=[]
+for name in ['GInterp','GDirectWgt','GFilter','CFilter','Tuning']:
+    match=re.search(r'typedef struct CalibDbV2_Debayer_'+name+r'_s \{.*?\} CalibDbV2_Debayer_'+name+r'_t;',text,re.S);assert match
+    records.append(match.group(0))
+source=cache/'demosaic-calibration-layout.c'
+assertions=[]
+for name,size in [('GInterp',108),('GDirectWgt',132),('GFilter',92),('CFilter',564),('Tuning',968)]:
+    assertions.append(f'_Static_assert(sizeof(CalibDbV2_Debayer_{name}_t)=={size},"{name} size");')
+for name,fields in [
+ ('Tuning',[('debayer_en',0),('lowfreq_filter1',4),('highfreq_filter2',20),('c_alpha_gaus_coe',36),('c_guid_gaus_coe',48),('c_ce_gaus_coe',60),('g_interp',72),('g_drctwgt',180),('g_filter',312),('c_filter',404)]),
+ ('GInterp',[('iso',0),('debayer_clip_en',52),('debayer_gain_offset',66),('debayer_max_ratio',92)]),
+ ('GDirectWgt',[('iso',0),('debayer_hf_offset',52),('debayer_thed0',78),('debayer_thed1',91),('debayer_dist_scale',104),('debayer_select_thed',117)]),
+ ('GFilter',[('iso',0),('debayer_gfilter_en',52),('debayer_gfilter_offset',66)]),
+ ('CFilter',[('iso',0),('debayer_cfilter_en',52),('debayer_loggd_offset',66),('debayer_cfilter_str',92),('debayer_wet_clip',144),('debayer_wet_ghost',196),('debayer_wgtslope',248),('debayer_bf_sgm',300),('debayer_bf_clip',352),('debayer_bf_curwgt',365),('debayer_loghf_offset',378),('debayer_alpha_offset',404),('debayer_alpha_scale',432),('debayer_edge_offset',484),('debayer_edge_scale',512)])]:
+    for field,offset in fields:assertions.append(f'_Static_assert(offsetof(CalibDbV2_Debayer_{name}_t,{field})=={offset},"{name}.{field}");')
+source.write_text('#include <stdbool.h>\n#include <stddef.h>\n#define DEBAYER_ISO_STEP_MAX 13\n'+'\n'.join(records+assertions)+'\n')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'demosaic-calibration-layout.o')],check=True)
+print('PASS: SDK demosaic calibration=968 bytes; all four 13-step ISO table layouts verified')

@@ -191,6 +191,46 @@ fn main() {
                         .join(",")
                 );
             }
+            "demosaic-select" => {
+                use shieldsigner_rkaiq::{
+                    demosaic_selection::Calibration, isp32::PARAMETER_BYTES, isp_demosaic::*,
+                };
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let decode = |key: &str| {
+                    let s = v[key].as_str().unwrap();
+                    (0..s.len())
+                        .step_by(2)
+                        .map(|i| u8::from_str_radix(&s[i..i + 2], 16).unwrap())
+                        .collect::<Vec<_>>()
+                };
+                let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
+                let calibration = Calibration::from_value(&v["calibration"]).unwrap();
+                let mut record: [u8; SELECTED_BYTES] = decode("previous").try_into().unwrap();
+                let selected = calibration
+                    .select(v["iso"].as_i64().unwrap() as i32)
+                    .unwrap();
+                selected.write_record(&mut record);
+                let mut cached: HardwareRecord = decode("hardware").try_into().unwrap();
+                let hardware = quantize(&mut cached, selected).unwrap();
+                let mut state = v["seed"].as_u64().unwrap() as u32;
+                let mut params = [0u8; PARAMETER_BYTES];
+                for b in &mut params {
+                    state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                    *b = (state >> 24) as u8;
+                }
+                let before = params;
+                apply(&mut params, &hardware);
+                assert_eq!(&params[24..OFFSET], &before[24..OFFSET]);
+                assert_eq!(&params[OFFSET + BYTES..], &before[OFFSET + BYTES..]);
+                println!(
+                    "{}:{}:{}:{}:{}",
+                    hex(&record),
+                    hex(&params[..24]),
+                    hex(&params[OFFSET..OFFSET + BYTES]),
+                    hex(&hardware),
+                    hex(&cached)
+                );
+            }
             "isp-demosaic" => {
                 use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_demosaic::*};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

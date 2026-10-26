@@ -66,3 +66,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## ISP demosaic conversion
 
 `isp_demosaic::quantize` reconstructs `AdebayerGetProcResult`, ELF `0x115880`, with explicit selected values/cached hardware storage. `isp_demosaic::apply` reconstructs `Isp32Params::convertAiqAdebayerToIsp32Params`, ELF `0x2ca90`, including all masks and the complete 57-byte kernel block. [Contracts, native runtime evidence and limits](ISP.md#demosaic-hardware-controls).
+
+## Automatic demosaic tuning
+
+`demosaic_selection::Calibration::select` reconstructs the automatic branch of `AdebayerProcess` (ELF `0x1157a0`) and its full `AdebayerSelectParam` call (`0x115028`). `Calibration::from_value` loads an explicit `debayer_v2.param` JSON object through the optional diagnostic feature. [Contracts, SDK profile comparisons and limits](ISP.md#automatic-demosaic-tuning).

@@ -2,7 +2,7 @@
 
 `calibration::SensorCalibration` parses the SDK JSON `sensor_calib` section into the recovered exposure converter's types. It is enabled with the diagnostic/JSON feature; numerical code still builds without JSON or std. This is **not** the full native IQ database, scene parser or binary-IQ loader.
 
-The pinned SC3336 reference is `sc3336_CMK-OT2119-PC1_30IRC-F16.json`, SHA-256 `8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a`. Its exact SDK URL/hash and the public `sensorinfo_head.h` schema are in `artifacts.json`. Originals download to ignored cache. The kit contains a derived `sensor_calib`-only reference with attribution, not the original scene/color/noise tuning profile.
+The pinned SC3336 reference is `sc3336_CMK-OT2119-PC1_30IRC-F16.json`, SHA-256 `8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a`. Its exact SDK URL/hash and the public `sensorinfo_head.h` schema are in `artifacts.json`. Originals download to ignored cache. The exposure reference in the kit is a derived `sensor_calib`-only object with attribution. A separate demosaic subset now contains one explicit scene’s functional tuning tables; the full original scene/color/noise tuning profile is not bundled.
 
 Parsed fields include:
 
@@ -11,7 +11,7 @@ Parsed fields include:
 - DCG support flags and ratios, including disabled zero ratios.
 - Analogue, digital and ISP gain ranges; linear time/gain/DCG update delays.
 
-The loader rejects malformed array lengths, gain-band bounds, unsupported model names, numeric overflow, missing required fields, invalid linear timing and inconsistent enabled DCG ratios. It preserves HDR zero timing records as supplied, rather than inventing values to make HDR run. The existing converter rejects an invalid active timing step if that mode is requested. Other IQ sections are intentionally not interpreted yet.
+The loader rejects malformed array lengths, gain-band bounds, unsupported model names, numeric overflow, missing required fields, invalid linear timing and inconsistent enabled DCG ratios. It preserves HDR zero timing records as supplied, rather than inventing values to make HDR run. The existing converter rejects an invalid active timing step if that mode is requested. This exposure loader does not interpret other IQ sections. The separate demosaic loader is described below.
 
 For this reference, resolution is 2304×1296, gain scaling is 128 with exponent 1, time factors are `[0,0,1,0.5]`, and the linear step/offset is `[1,0]` with minimum 1. Linear time and gain updates each have delay 2; DCG delay is 0. DCG support is disabled and HDR timing steps are zero. These settings are SDK evidence; selecting this file does not establish that all optics/module tuning or firmware limits are qualified for our physical camera.
 
@@ -30,3 +30,7 @@ Both ARM and native Mac executables support this offline command. The kit's `exa
 The same task checks the command with ten cases: correct profile/synthetic descriptor, explicit frame length, resolution mismatch, too-short frame, incomplete gain row, f32 overflow, zero timing step, missing clock, nonfinite requested time and zero requested gain. These return structured output or clear errors rather than panics. [Frontend validation](iq-plan-validation.json).
 
 `camera:rust:smoke` replays the complete IQ corpus using the compiled ARM executable and runs an offline exposure plan with the explicitly synthetic snapshot. No reference or frontend test here performs a live sensor write, proves calibration loading for other profiles, or validates an AE control loop.
+
+## Explicit-scene demosaic tuning
+
+`demosaic_selection::Calibration::from_value` loads a selected `debayer_v2.param` object with exact-length tables and no invented defaults. The source scene remains an explicit caller choice; this is not a full IQ database/scene-selection engine. The derived `reference/sc3336-demosaic-subset.json` includes the original file URL/hash and scene pointer. [Selection algorithm, native comparison and remaining integration](ISP.md#automatic-demosaic-tuning).

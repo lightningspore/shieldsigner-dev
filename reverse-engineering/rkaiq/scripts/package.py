@@ -19,7 +19,7 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
-for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','ISP.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','isp-black-level-equivalence.json','isp-demosaic-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
+for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','ISP.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','isp-black-level-equivalence.json','isp-demosaic-equivalence.json','demosaic-selection-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
@@ -47,6 +47,9 @@ for name in ['inputs.txt','expected.txt']:copy(base/'isp-black-level-fixtures'/n
 assert smoke['ispBlackLevelReferenceCases']==1000 and smoke['ispBlackLevelMatch']
 for name in ['inputs.txt','expected.txt']:copy(base/'isp-demosaic-fixtures'/name,'isp-demosaic-fixtures/'+name)
 assert smoke['ispDemosaicReferenceCases']==2000 and smoke['ispDemosaicMatch']
+for name in ['inputs.txt','expected.txt']:copy(base/'demosaic-selection-fixtures'/name,'demosaic-selection-fixtures/'+name)
+copy(base/'demosaic-selection-fixtures/sc3336-demosaic-subset.json','reference/sc3336-demosaic-subset.json')
+assert smoke['demosaicSelectionReferenceCases']==1000 and smoke['demosaicSelectionMatch']
 assert smoke['aeBigGridReferenceCases']==1000 and smoke['aeBigGridMatch']
 assert smoke['aeHistogramReferenceCases']==1000 and smoke['aeHistogramMatch']
 assert smoke['aeGridReferenceCases']==1000 and smoke['aeGridMatch']
@@ -196,6 +199,13 @@ if cmp -s "$kit_dir/isp-demosaic-fixtures/expected.txt" "$result_dir/isp-demosai
     echo "PASS: demosaic hardware quantization and ISP32 parameters match the original reference."
 else
     echo "FAIL: demosaic conversion differs; preserve $result_dir/isp-demosaic-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/demosaic-selection-fixtures/inputs.txt" > "$result_dir/demosaic-selection-actual.txt"
+if cmp -s "$kit_dir/demosaic-selection-fixtures/expected.txt" "$result_dir/demosaic-selection-actual.txt"; then
+    echo "PASS: demosaic IQ/ISO tuning through hardware conversion matches the original reference."
+else
+    echo "FAIL: demosaic ISO selection differs; preserve $result_dir/demosaic-selection-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

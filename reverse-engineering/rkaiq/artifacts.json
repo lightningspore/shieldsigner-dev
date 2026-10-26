@@ -99,6 +99,11 @@
       "name": "rk_aiq_types_adebayer_hw.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/adebayer/rk_aiq_types_adebayer_hw.h",
       "sha256": "2ab47865525db38e95f49f4789df3dfeebf51736271bfdc02b53f881b40696ba"
+    },
+    {
+      "name": "debayer_head.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/debayer_head.h",
+      "sha256": "191cc662c49ccad1b54ca1a8ebab99fd7e8d3b81a9eb08cc3b5d16dc601b8620"
     }
   ],
   "kernelHeaders": [

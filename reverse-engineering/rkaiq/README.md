@@ -42,7 +42,9 @@ The ISP pad-format/crop setup sequence now matches **1,000 original-ARM traces**
 
 The ISP32 black-level converter now matches **1,000 original-ARM cases** for the complete BLS parameter block, masks and cache. Calibration selection and live parameter submission remain separate work. See [ISP.md](ISP.md#black-level-parameter-block).
 
-Demosaic hardware quantization and kernel parameter packing now match **2,000 original-ARM cases**, including original uClibc logarithm execution, complete output/cache records and enable/update behavior. The hardware ISP performs pixel demosaicing; these Rust functions prepare its controls. Automatic ISO/calibration selection and live submission remain unfinished. See [ISP.md](ISP.md#demosaic-hardware-controls).
+Demosaic hardware quantization and kernel parameter packing now match **2,000 original-ARM cases**, including original uClibc logarithm execution, complete output/cache records and enable/update behavior. The hardware ISP performs pixel demosaicing; these Rust functions prepare its controls. Automatic ISO selection is implemented separately below; live submission remains unfinished. See [ISP.md](ISP.md#demosaic-hardware-controls).
+
+Automatic demosaic tuning now loads an explicit scene’s `debayer_v2.param` JSON, selects four independent ISO curves and feeds the verified hardware/kernel conversion. **1,000 complete reference cases** match native automatic `AdebayerProcess`/`AdebayerSelectParam` and conversion results, including 100 SDK SC3336 profile cases. This does not supply the outer frame/update-state controller or live ISP queues. See [ISP.md](ISP.md#automatic-demosaic-tuning).
 
 ## Exact originals
 
@@ -110,6 +112,7 @@ mise run camera:rust:ae-damping
 mise run camera:rust:isp-pipeline
 mise run camera:rust:isp-black-level
 mise run camera:rust:isp-demosaic
+mise run camera:rust:demosaic-selection
 mise run camera:rust:arm
 mise run camera:rust:smoke
 mise run camera:rust:package

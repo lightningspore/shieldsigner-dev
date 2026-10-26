@@ -1,5 +1,6 @@
 //! Recovered demosaic hardware quantization and ISP32 serialization.
-//! Calibration selection, frame-state handling and live submission are separate.
+//! Automatic selection lives in demosaic_selection; frame-state handling and
+//! live submission remain separate.
 use crate::{isp32::PARAMETER_BYTES, InvalidInput};
 pub const SELECTED_BYTES: usize = 132;
 pub const HARDWARE_BYTES: usize = 112;
@@ -7,7 +8,7 @@ pub const OFFSET: usize = 0x1282;
 pub const BYTES: usize = 57;
 pub const MODULE_MASK: u64 = 1 << 35;
 pub type HardwareRecord = [u8; HARDWARE_BYTES];
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct SelectedParameters {
     pub debayer_en: bool,
     pub lowfreq_filter1: [i32; 4],
@@ -260,5 +261,53 @@ mod tests {
         record[0] = 0;
         apply(&mut params, &record);
         assert_eq!(params, original);
+    }
+}
+
+impl SelectedParameters {
+    /// Write named SDK fields while preserving all padding bytes.
+    pub fn write_record(&self, bytes: &mut [u8; SELECTED_BYTES]) {
+        bytes[0] = self.debayer_en as u8;
+        bytes[4..8].copy_from_slice(&self.lowfreq_filter1[0].to_le_bytes());
+        bytes[8..12].copy_from_slice(&self.lowfreq_filter1[1].to_le_bytes());
+        bytes[12..16].copy_from_slice(&self.lowfreq_filter1[2].to_le_bytes());
+        bytes[16..20].copy_from_slice(&self.lowfreq_filter1[3].to_le_bytes());
+        bytes[20..24].copy_from_slice(&self.highfreq_filter2[0].to_le_bytes());
+        bytes[24..28].copy_from_slice(&self.highfreq_filter2[1].to_le_bytes());
+        bytes[28..32].copy_from_slice(&self.highfreq_filter2[2].to_le_bytes());
+        bytes[32..36].copy_from_slice(&self.highfreq_filter2[3].to_le_bytes());
+        bytes[36..40].copy_from_slice(&self.c_alpha_gaus_coe[0].to_le_bytes());
+        bytes[40..44].copy_from_slice(&self.c_alpha_gaus_coe[1].to_le_bytes());
+        bytes[44..48].copy_from_slice(&self.c_alpha_gaus_coe[2].to_le_bytes());
+        bytes[48..52].copy_from_slice(&self.c_guid_gaus_coe[0].to_le_bytes());
+        bytes[52..56].copy_from_slice(&self.c_guid_gaus_coe[1].to_le_bytes());
+        bytes[56..60].copy_from_slice(&self.c_guid_gaus_coe[2].to_le_bytes());
+        bytes[60..64].copy_from_slice(&self.c_ce_gaus_coe[0].to_le_bytes());
+        bytes[64..68].copy_from_slice(&self.c_ce_gaus_coe[1].to_le_bytes());
+        bytes[68..72].copy_from_slice(&self.c_ce_gaus_coe[2].to_le_bytes());
+        bytes[72] = self.debayer_clip_en as u8;
+        bytes[74..76].copy_from_slice(&self.debayer_gain_offset.to_le_bytes());
+        bytes[76] = self.debayer_max_ratio as u8;
+        bytes[78..80].copy_from_slice(&self.debayer_hf_offset.to_le_bytes());
+        bytes[80] = self.debayer_thed0 as u8;
+        bytes[81] = self.debayer_thed1 as u8;
+        bytes[82] = self.debayer_dist_scale as u8;
+        bytes[83] = self.debayer_select_thed as u8;
+        bytes[84] = self.debayer_gfilter_en as u8;
+        bytes[86..88].copy_from_slice(&self.debayer_gfilter_offset.to_le_bytes());
+        bytes[88] = self.debayer_cfilter_en as u8;
+        bytes[90..92].copy_from_slice(&self.debayer_loggd_offset.to_le_bytes());
+        bytes[92..96].copy_from_slice(&self.debayer_cfilter_str.to_le_bytes());
+        bytes[96..100].copy_from_slice(&self.debayer_wet_clip.to_le_bytes());
+        bytes[100..104].copy_from_slice(&self.debayer_wet_ghost.to_le_bytes());
+        bytes[104..108].copy_from_slice(&self.debayer_wgtslope.to_le_bytes());
+        bytes[108..112].copy_from_slice(&self.debayer_bf_sgm.to_le_bytes());
+        bytes[112] = self.debayer_bf_clip as u8;
+        bytes[113] = self.debayer_bf_curwgt as u8;
+        bytes[114..116].copy_from_slice(&self.debayer_loghf_offset.to_le_bytes());
+        bytes[116..118].copy_from_slice(&self.debayer_alpha_offset.to_le_bytes());
+        bytes[120..124].copy_from_slice(&self.debayer_alpha_scale.to_le_bytes());
+        bytes[124..126].copy_from_slice(&self.debayer_edge_offset.to_le_bytes());
+        bytes[128..132].copy_from_slice(&self.debayer_edge_scale.to_le_bytes());
     }
 }

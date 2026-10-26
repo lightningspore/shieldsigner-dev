@@ -101,6 +101,11 @@
       "name": "media.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/media.h",
       "sha256": "003e1ea9efcee90d8e1f7add9783b7a8b2c0a9cbc0290769d12a2a1cd23bb8dd"
+    },
+    {
+      "name": "rk-video-format.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/rk-video-format.h",
+      "sha256": "9e7e6902b6815c10f0379bde057a4eb3ab6a397d4c09cd998e3411d197ecc3bf"
     }
   ],
   "kernelSources": [

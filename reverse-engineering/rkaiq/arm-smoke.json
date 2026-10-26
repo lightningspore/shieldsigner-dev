@@ -2,6 +2,8 @@
   "image": "alpine@sha256:ee16d92f96db08d9d2d07da48555a27f3a69d8f0759021dbc601195ed0d2b5bd",
   "platform": "linux/arm/v7",
   "execution": "Docker Desktop ARM emulation; no camera device attached",
+  "statisticsCaptureGuardsPassed": true,
+  "statisticsInvalidEndpointRejected": true,
   "statisticsReferenceCases": 100,
   "statisticsMatch": true,
   "bindingReferenceCases": 1000,
@@ -9,15 +11,15 @@
   "lifecycleReferenceTraces": 100,
   "lifecycleMatch": true,
   "invalidEventEndpointRejected": true,
-  "numericalReferenceLines": 9050,
+  "numericalReferenceLines": 1,
   "numericalMatch": true,
   "cameraSelfTest": "PASS: reconstructed interpolation, complete 2187-value LUT and media topology traversal. Full ARM-original differential test is separate.",
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "6850722318f7b76779928a1cd212f9c55cedc8fcfd4724625600b6724e791cb0",
-    "numeric-fixture": "b9d87f8f1c107a10a98f234965c1d242400c3e9dfceac1d1e16b0733b653e3d8",
-    "frame-preview": "8efad4a76ba6d985f6df99d61328ff4dce3bd9b99c2163c139b89e86d667aed7"
+    "camera-probe": "06b6fd9be4719800f7c5740387adba6ec450dae6f85fbe2accde815352069a35",
+    "numeric-fixture": "668f82e430e667565a3a54a80b98705dc3839cfade14084f77e19a329c206d5c",
+    "frame-preview": "a109ed17975f10bfa1f430c34dc3592634592f7798211e0b830b1284a78fefd8"
   },
   "limitations": [
     "ARM/Linux userspace execution is verified; real camera capture and end-to-end ISP behavior are not tested."

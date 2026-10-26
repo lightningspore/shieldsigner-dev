@@ -16,7 +16,7 @@ A recovered Rust service controller also matches **100 original-daemon event tra
 
 The sensor binding selector also matches **1,000 controlled inventories** against the original instructions. It preserves ISP/CIF path precedence, name exceptions and media-probe outcomes. The live media inventory now reads pads/links and reports enabled entity-level sensor paths within each media device; full cross-media inventory construction is not implemented by this selector. See [DISCOVERY.md](DISCOVERY.md).
 
-A borrowed full-ISP32 statistics decoder now exposes AE grids/histograms and AWB blocks/light sums/luma histogram. **100 AWB buffer comparisons** match the original translator; AE raw field layout is checked against kernel headers. This does not implement the exposure or white-balance algorithms. See [STATISTICS.md](STATISTICS.md).
+A borrowed full-ISP32 statistics decoder now exposes AE grids/histograms and AWB blocks/light sums/luma histogram. **100 AWB buffer comparisons** match the original translator; AE raw field layout is checked against kernel headers. `capture-statistics` reads the existing metadata queue with bounded MMAP capture and strict format checks. Real queue operation still needs hardware validation; this does not implement the exposure or white-balance algorithms. See [STATISTICS.md](STATISTICS.md).
 
 ## Exact originals
 

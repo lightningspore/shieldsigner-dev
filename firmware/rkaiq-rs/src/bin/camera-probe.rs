@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe self-test\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffer request, 1–4 (default 1)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe self-test\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -112,6 +112,7 @@ mod linux {
     };
     const CAPTURE: u32 = 1;
     const MPLANE: u32 = 9;
+    const META_CAPTURE: u32 = 13;
     const MMAP: u32 = 1;
     const PLANES: usize = 8;
     #[repr(C)]
@@ -278,6 +279,9 @@ mod linux {
     }
     fn format_json(value: &Format) -> Value {
         let raw = unsafe { &value.data.raw };
+        if value.kind == META_CAPTURE {
+            return json!({"bufferType":value.kind,"fourcc":fourcc(get32(raw,0)),"fourccValue":get32(raw,0),"bufferSize":get32(raw,4)});
+        }
         let multi = value.kind == MPLANE;
         let count = if multi { raw[180] as usize } else { 1 };
         let mut planes = Vec::new();
@@ -503,7 +507,7 @@ mod linux {
                 }
             };
             let mut formats = Vec::new();
-            for kind in [CAPTURE, MPLANE] {
+            for kind in [CAPTURE, MPLANE, META_CAPTURE] {
                 for index in 0..128 {
                     let mut desc = [0; 64];
                     put32(&mut desc, 0, index);
@@ -518,6 +522,8 @@ mod linux {
                 Some(CAPTURE)
             } else if flags & 0x1000 != 0 {
                 Some(MPLANE)
+            } else if flags & 0x00800000 != 0 {
+                Some(META_CAPTURE)
             } else {
                 None
             };
@@ -621,15 +627,16 @@ mod linux {
             }
         }
     }
-    fn capture(args: &[String]) -> io::Result<()> {
+    fn capture(args: &[String], statistics: bool) -> io::Result<()> {
         if args.len() < 2 {
             return Err(error("capture needs DEVICE and OUT; see --help"));
         }
         let device = &args[0];
         let output = &args[1];
         let (mut width, mut height, mut pixel) = (None, None, None);
-        let (mut buffers, mut timeout, mut warmup) = (1u32, 3000u64, 2u32);
-        let mut require_no_vendor = false;
+        let (mut buffers, mut timeout, mut warmup) =
+            (if statistics { 2u32 } else { 1u32 }, 3000u64, 2u32);
+        let mut require_no_vendor = statistics;
         let mut i = 2;
         while i < args.len() {
             let key = args[i].as_str();
@@ -637,6 +644,9 @@ mod linux {
                 require_no_vendor = true;
                 i += 1;
                 continue;
+            }
+            if statistics && matches!(key, "--width" | "--height" | "--fourcc") {
+                return Err(error("Statistics capture retains its metadata format; image dimensions/FourCC options are unsupported"));
             }
             let value = args
                 .get(i + 1)
@@ -668,6 +678,18 @@ mod linux {
                 "Options exceed bounds: buffers 1–4, timeout 1–60000 ms, warmup 0–100",
             ));
         }
+        if statistics && buffers < 2 {
+            return Err(error(
+                "The pinned statistics driver requires at least two buffers",
+            ));
+        }
+        if std::path::Path::new(output).exists()
+            || std::path::Path::new(&format!("{output}.json")).exists()
+        {
+            return Err(error(
+                "Capture output or metadata already exists; choose a new output name",
+            ));
+        }
         let active = vendor_processes();
         if require_no_vendor && !active.is_empty() {
             return Err(error(format!(
@@ -677,7 +699,12 @@ mod linux {
         let file = open(device, true)?;
         let fd = file.as_raw_fd();
         let (_, flags) = capability(&file)?;
-        let kind = if flags & 1 != 0 {
+        let kind = if statistics {
+            if flags & 0x00800000 == 0 {
+                return Err(error("Node is not a metadata-capture endpoint"));
+            }
+            META_CAPTURE
+        } else if flags & 1 != 0 {
             CAPTURE
         } else if flags & 0x1000 != 0 {
             MPLANE
@@ -688,6 +715,17 @@ mod linux {
             return Err(error("Node does not advertise streaming/MMAP capture"));
         }
         let mut fmt = format(&file, kind)?;
+        if statistics {
+            let raw = unsafe { &fmt.data.raw };
+            if get32(raw, 0) != u32::from_le_bytes(*b"RK1S")
+                || get32(raw, 4) != shieldsigner_rkaiq::statistics::BUFFER_BYTES as u32
+            {
+                return Err(error(format!(
+                    "Unsupported statistics format/layout: {}",
+                    format_json(&fmt)
+                )));
+            }
+        }
         if width.is_some() || height.is_some() || pixel.is_some() {
             let raw = unsafe { &mut fmt.data.raw };
             if let Some(w) = width {
@@ -808,12 +846,21 @@ mod linux {
         ioctl(fd, REQBUFS, &mut request)?;
         let (bytes, planes, sequence, seconds, microseconds) =
             saved.ok_or_else(|| error("No frame saved"))?;
+        let statistics_header = if statistics {
+            let decoded = shieldsigner_rkaiq::statistics::Statistics::parse(&bytes)
+                .map_err(|_| error("Driver returned an unsupported statistics payload size"))?;
+            Some(
+                json!({"layout":"full-ISP32","measurements":decoded.measurements(),"frameId":decoded.frame_id(),"parametersId":decoded.parameters_id()}),
+            )
+        } else {
+            None
+        };
         let mut out = OpenOptions::new()
             .write(true)
             .create_new(true)
             .open(output)?;
         out.write_all(&bytes)?;
-        let report = json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"device":device,"linksRkaiq":false,"vendorProcessesBeforeCapture":active,"requireNoRkaiq":require_no_vendor,"format":format_json(&fmt),"bytes":bytes.len(),"planes":planes,"sequence":sequence,"timestamp":{"seconds":seconds,"microseconds":microseconds},"limitations":["Captures from the existing kernel media graph; does not yet recreate ISP calibration, auto-exposure, white balance or graph initialization.","Absent vendor processes do not prove the graph was never initialized by vendor software during boot."]});
+        let report = json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"device":device,"captureKind":if statistics {"isp-statistics"}else{"image"},"statistics":statistics_header,"linksRkaiq":false,"vendorProcessesBeforeCapture":active,"vendorProcessesAfterCapture":vendor_processes(),"requireNoRkaiq":require_no_vendor,"format":format_json(&fmt),"bytes":bytes.len(),"planes":planes,"sequence":sequence,"timestamp":{"seconds":seconds,"microseconds":microseconds},"limitations":["Captures from the existing kernel media graph; does not yet recreate ISP calibration, auto-exposure, white balance or graph initialization.","Absent vendor processes do not prove the graph was never initialized by vendor software during boot."]});
         let meta = format!("{output}.json");
         let mut file = OpenOptions::new()
             .write(true)
@@ -928,7 +975,8 @@ mod linux {
     pub fn run(args: &[String]) -> io::Result<()> {
         match args.first().map(String::as_str) {
             Some("list") if args.len() == 1 => list(),
-            Some("capture") => capture(&args[1..]),
+            Some("capture") => capture(&args[1..], false),
+            Some("capture-statistics") => capture(&args[1..], true),
             Some("events") => events(&args[1..]),
             _ => Err(error("Unknown command; see --help")),
         }

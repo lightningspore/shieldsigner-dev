@@ -28,7 +28,15 @@ listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=T
 assert nodes['linksRkaiq'] is False and nodes['devices']==[] and nodes['mediaGraph']==[]
 negative=subprocess.run(command('camera-probe','capture','/dev/null','/tmp/should-not-exist'),text=True,capture_output=True)
 assert negative.returncode==1 and 'os error 25' in negative.stderr.lower(),negative
+stats_negative=subprocess.run(command('camera-probe','capture-statistics','/dev/null','/tmp/should-not-exist'),text=True,capture_output=True)
+assert stats_negative.returncode==1 and 'os error 25' in stats_negative.stderr.lower(),stats_negative
+for options,expected in [(['--buffers','1'],'at least two buffers'),(['--width','640'],'image dimensions/FourCC options are unsupported')]:
+ result=subprocess.run(command('camera-probe','capture-statistics','/dev/null','/tmp/should-not-exist',*options),text=True,capture_output=True)
+ assert result.returncode==1 and expected in result.stderr,result
+occupied=subprocess.run(command('camera-probe','capture-statistics','/dev/null','/work/camera-probe'),text=True,capture_output=True)
+assert occupied.returncode==1 and 'already exists' in occupied.stderr,occupied
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'statisticsCaptureGuardsPassed':True,'statisticsInvalidEndpointRejected':True,
  'statisticsReferenceCases':len(decoded.stdout.splitlines()),'statisticsMatch':True,
  'bindingReferenceCases':len(selected.stdout.splitlines()),'bindingMatch':True,
  'lifecycleReferenceTraces':len(trace.stdout.splitlines()),'lifecycleMatch':True,'invalidEventEndpointRejected':True,

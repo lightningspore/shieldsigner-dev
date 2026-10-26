@@ -138,3 +138,9 @@ _Static_assert(offsetof(struct isp32_isp_params_cfg,meas.rawhist2)==0x5ca,"histo
 _Static_assert(offsetof(struct isp32_isp_params_cfg,meas.rawhist3)==0x6bc,"histogram3 offset");
 _Static_assert((ISP32_MODULE_RAWAE0|ISP32_MODULE_RAWAE1|ISP32_MODULE_RAWAE2|ISP32_MODULE_RAWAE3|ISP2X_MODULE_YUVAE)==0x3c4000,"native AE mask including inherited bit");
 _Static_assert((ISP32_MODULE_RAWHIST0|ISP32_MODULE_RAWHIST1|ISP32_MODULE_RAWHIST2|ISP32_MODULE_RAWHIST3|ISP2X_MODULE_SIHST)==0x7800008,"native histogram mask including inherited bit");
+_Static_assert(sizeof(struct isp32_rawawb_meas_cfg)==807,"AWB measurement bytes");
+_Static_assert(offsetof(struct isp32_isp_params_cfg,meas.rawawb)==0xf4,"AWB measurement offset");
+_Static_assert(ISP32_MODULE_RAWAWB==(1ULL<<22),"AWB measurement mask");
+_Static_assert(offsetof(struct isp32_rawawb_meas_cfg,bnr2awb_sel)==2,"AWB preserved BNR selector");
+_Static_assert(offsetof(struct isp32_rawawb_meas_cfg,wp_blk_wei_w)==0x61,"AWB weights");
+_Static_assert(offsetof(struct isp32_rawawb_meas_cfg,bls2_val)==799,"AWB black-level tail");

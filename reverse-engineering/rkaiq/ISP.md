@@ -91,4 +91,4 @@ The recovered metadata queue core and bounded Linux submission diagnostic are no
 
 ## Exposure measurement configuration
 
-The selected AE grid/histogram result-to-kernel branches are now reconstructed with exact four-channel routing and cached records. [AE measurement configuration](AE.md#measurement-parameter-configuration). This supplies another part of the initial parameter record, not the window/weight selection policy or full calibrated initialization. AWB measurement configuration and the remaining module/service integration remain unfinished.
+The selected AE grid/histogram result-to-kernel branches are now reconstructed with exact four-channel routing and cached records. [AE measurement configuration](AE.md#measurement-parameter-configuration). The [AWB measurement converter](AWB.md) also reconstructs selected regions, thresholds, transforms, windows and grid weights. These supply parts of the initial parameter record; calibrated selection policy, the AWB algorithm and remaining module/service integration remain unfinished.

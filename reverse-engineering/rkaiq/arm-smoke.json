@@ -4,6 +4,8 @@
   "execution": "Docker Desktop ARM emulation; no camera device attached",
   "aeMeasurementReferenceCases": 2000,
   "aeMeasurementMatch": true,
+  "awbMeasurementReferenceCases": 2000,
+  "awbMeasurementMatch": true,
   "parameterQueueReferenceCases": 1000,
   "parameterQueueMatch": true,
   "parameterSubmitInvalidEndpointRejected": true,
@@ -53,8 +55,8 @@
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "ca5b3c949dec9db366bca88ddde7c1165ebeda4b0626169b7f348e354817a162",
-    "numeric-fixture": "3d9df03cc238fa1f3759209d4d201bae838bf39c3583fed23967d9a81bea0976",
+    "camera-probe": "f5e945d01a9fe19e69d10b97a63f1b7e0df8589c297b544d6cf359d13ac773ea",
+    "numeric-fixture": "65424966e19b0b10617f7b8995f1268ecf6f11adb6d33d264e8eec03d7dcf8b9",
     "frame-preview": "3e3dc62f951325b1dc7ecf8a46eab10c70dcb1a4ad68a58a4179b0242f5a8c54"
   },
   "limitations": [

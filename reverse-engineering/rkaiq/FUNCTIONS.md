@@ -78,3 +78,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## AE measurement parameter configuration
 
 `isp_ae_measurement::apply_ae` and `apply_histogram` reconstruct result types 1 and 2 inside `Isp32Params::convert3aResultsToIspCfg`, ELF `0x304c4` (Ghidra `0x404c4`). These are two dispatcher branches, not a reconstruction of the full dispatcher. [Routing, masks, cached records and reference evidence](AE.md#measurement-parameter-configuration).
+
+## AWB measurement parameter configuration
+
+`isp_awb_measurement::Measurement::apply` reconstructs `Isp32Params::convertAiqAwbToIsp32Params`, ELF `0x2b71c` (Ghidra `0x3b71c`). [SDK layout, native quirks and 2,000 original-ARM comparisons](AWB.md).

@@ -191,6 +191,34 @@ fn main() {
                         .join(",")
                 );
             }
+            "awb-measurement" => {
+                use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_awb_measurement::*};
+                fn hex_bytes(b: &[u8]) -> String {
+                    b.iter().map(|v| format!("{v:02x}")).collect()
+                }
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut state = v["seed"].as_u64().unwrap() as u32;
+                let mut params = [0u8; PARAMETER_BYTES];
+                for b in &mut params {
+                    state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                    *b = (state >> 24) as u8;
+                }
+                let original = params;
+                let source = v["record"].as_str().unwrap();
+                let record = (0..source.len())
+                    .step_by(2)
+                    .map(|i| u8::from_str_radix(&source[i..i + 2], 16).unwrap())
+                    .collect::<Vec<_>>();
+                Measurement(record.try_into().unwrap())
+                    .apply(&mut params, v["update"].as_bool().unwrap());
+                assert_eq!(&params[24..OFFSET], &original[24..OFFSET]);
+                assert_eq!(&params[OFFSET + BYTES..], &original[OFFSET + BYTES..]);
+                println!(
+                    "{}:{}",
+                    hex_bytes(&params[..24]),
+                    hex_bytes(&params[OFFSET..OFFSET + BYTES])
+                );
+            }
             "ae-measurement" => {
                 use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_ae_measurement::*};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

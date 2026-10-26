@@ -145,3 +145,38 @@ for name,size,fields in [
 source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n#define ISP_HW_V32 1\n#define RAWAEBIG_SUBWIN_NUM 4\n#define RAWHISTBIG_WIN_NUM 225\n#define RAWHISTLITE_WIN_NUM 25\n#pragma pack(push,1)\n'+'\n'.join(leaf)+'\n#pragma pack(pop)\n'+'\n'.join(outer+assertions)+'\n')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'ae-measurement-sdk-layout.o')],check=True)
 print('PASS: SDK AE=104/histogram=529 bytes; packed kernel blocks, routing offsets and masks verified')
+
+# AWB v32 public declarations, compiled verbatim with only needed constants.
+awb_declarations=[]
+for header,kind,tag,alias in [
+ ('v2xx','enum','rk_aiq_down_scale_mode_e','rk_aiq_down_scale_mode_t'),
+ ('v2xx','enum','rk_aiq_awb_exc_range_domain_e','rk_aiq_awb_exc_range_domain_t'),
+ ('v201','enum','rk_aiq_awb_xy_type_v201_e','rk_aiq_awb_xy_type_v201_t'),
+ ('v201','enum','rk_aiq_awb_blk_stat_mode_v201_e','rk_aiq_awb_blk_stat_mode_v201_t'),
+ ('v201','enum','RK_AIQ_AWB_BLK_STAT_REALWP_ILL_S','rk_aiq_awb_blk_stat_realwp_ill_e'),
+ ('v2xx','struct','rk_aiq_rgb2xy_para_s','rk_aiq_rgb2xy_para_t'),
+ ('v2xx','struct','rk_aiq_awb_xy_range_para_s','rk_aiq_awb_xy_range_para_t'),
+ ('v2xx','struct','rk_aiq_awb_uv_range_para_s','rk_aiq_awb_uv_range_para_t'),
+ ('v2xx','struct','rk_aiq_awb_rt3dyuv_range_para_s','rk_aiq_awb_rt3dyuv_range_para_t'),
+ ('v32','struct','rk_aiq_awb_exc_range_v32_s','rk_aiq_awb_exc_range_v32_t'),
+ ('v32','struct','rk_aiq_awb_blc_s','rk_aiq_awb_blc_t'),
+ ('v32','struct','rk_aiq_awb_stat_cfg_v32_s','rk_aiq_awb_stat_cfg_v32_t')]:
+    pattern=r'typedef '+kind+' '+tag+r' \{.*?\} '+alias+';'
+    record=sdk_record('rk_aiq_types_awb_stat_'+header+'.h',pattern)
+    if tag=='rk_aiq_down_scale_mode_e':
+        # The second declaration is the full-V32 branch, rather than V32LT.
+        record=re.findall(pattern,(ROOT/'.tools/reverse-engineering/headers/rk_aiq_types_awb_stat_v2xx.h').read_text(),re.S)[-1]
+    awb_declarations.append(record)
+assertions=['_Static_assert(sizeof(rk_aiq_awb_stat_cfg_v32_t)==1204,"AWB SDK size");', '_Static_assert(sizeof(rk_aiq_awb_exc_range_v32_t)==28,"exclusion stride");']
+for field,offset in [('awbEnable',0),('inputShiftEnable',8),('blc',12),('uvDetectionEnable',32),('threeDyuvIllu',38),('wpDiffWeiEnable',46),('blkWeightEnable',48),('dsMode',52),('blkMeasureMode',56),('frameChoose',62),('windowSet',64),('maxR',74),('pre_wbgain_inv_r',90),('overexposure_value',96),('icrgb2RYuv_matrix',100),('ic3Dyuv2Range_param',124),('uvRange_param',252),('rgb2xy_param',396),('xyRange_param',420),('multiwindow',612),('excludeWpRange',644),('wpDiffwei_y',840),('wpDiffwei_w',849),('xyRangeTypeForWpHist',860),('blkWeight',864),('xyRangeTypeForBlkStatistics',1092),('illIdxForBlkStatistics',1096),('blkStatisticsWithLumaWeightEn',1100),('timeSign',1124),('preWbgainSw',1188)]:
+    assertions.append(f'_Static_assert(offsetof(rk_aiq_awb_stat_cfg_v32_t,{field})=={offset},"AWB {field}");')
+macros=[]
+for version,names in [
+ ('v2xx',['RK_AIQ_AWB_YUV_LS_PARA_NUM','RK_AIQ_AWB_EXCLUDE_WP_RANGE_NUM','RK_AIQ_AWB_GRID_NUM_VERHOR','RK_AIQ_AWB_GRID_NUM_TOTAL']),
+ ('v201',['RK_AIQ_AWB_MULTIWINDOW_NUM_V201','RK_AIQ_AWB_WP_HIST_BIN_NUM','RK_AIQ_AWBWP_WEIGHT_CURVE_DOT_NUM']),
+ ('v32',['RK_AIQ_AWB_MAX_WHITEREGIONS_NUM_V32'])]:
+    for name in names:macros.append(sdk_record('rk_aiq_types_awb_stat_'+version+'.h',r'#define '+name+r'[^\n]*'))
+macros='\n'.join(macros)
+source=cache/'awb-measurement-sdk-layout.c';source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n'+macros+'\n'+'\n'.join(awb_declarations+assertions)+'\n')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'awb-measurement-sdk-layout.o')],check=True)
+print('PASS: AWB v32 SDK=1204 bytes, seven exclusion records and all used input groups verified')

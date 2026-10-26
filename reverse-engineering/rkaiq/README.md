@@ -48,7 +48,9 @@ Automatic demosaic tuning now loads an explicit scene’s `debayer_v2.param` JSO
 
 The metadata parameter queue core now matches **1,000 native ARM lifecycle/state traces**. `camera-probe submit-parameters` adds a bounded Linux MMAP adapter for a supplied complete kernel record, and node inventory now shows metadata-output formats. Successful device submission, full initial IQ assembly and persistent processing integration remain unfinished. See [PARAMETERS.md](PARAMETERS.md).
 
-AE grid and histogram measurement parameter conversion now matches **2,000 native ARM cases**, including four-channel routing, complete kernel blocks/caches and the native enable-mask behavior. These functions consume selected windows/weights; selection policy, AWB measurement setup and complete initial IQ remain unfinished. See [AE.md](AE.md#measurement-parameter-configuration).
+AE grid and histogram measurement parameter conversion now matches **2,000 native ARM cases**, including four-channel routing, complete kernel blocks/caches and the native enable-mask behavior. These functions consume selected windows/weights; selection policy and complete initial IQ remain unfinished. See [AE.md](AE.md#measurement-parameter-configuration).
+
+AWB measurement parameter conversion also matches **2,000 native ARM cases**, covering detection regions, transforms, thresholds, windows, exclusion flags, grid weights, masks and preservation. This is configuration packing; automatic white-balance decisions and calibrated startup remain unfinished. See [AWB.md](AWB.md).
 
 ## Exact originals
 

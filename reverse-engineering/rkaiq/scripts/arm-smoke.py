@@ -103,6 +103,10 @@ ae_measurement=ROOT/'dist/reverse-engineering/ae-measurement-fixtures'
 with (ae_measurement/'inputs.txt').open('rb') as source:
  measured=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert measured.stdout==(ae_measurement/'expected.txt').read_bytes(),'ARM AE/histogram parameter blocks differ from original dispatcher'
+awb_measurement=ROOT/'dist/reverse-engineering/awb-measurement-fixtures'
+with (awb_measurement/'inputs.txt').open('rb') as source:
+ awb_measured=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert awb_measured.stdout==(awb_measurement/'expected.txt').read_bytes(),'ARM AWB measurement block differs from original converter'
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -124,6 +128,7 @@ for values,message in [(['1600','2147483648','0','100'],'nonnegative signed 32-b
  assert rejected.returncode==1 and message in rejected.stderr and not rejected.stdout,rejected
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
  'aeMeasurementReferenceCases':len(measured.stdout.splitlines()),'aeMeasurementMatch':True,
+ 'awbMeasurementReferenceCases':len(awb_measured.stdout.splitlines()),'awbMeasurementMatch':True,
  'parameterQueueReferenceCases':len(parameter_queued.stdout.splitlines()),'parameterQueueMatch':True,
  'parameterSubmitInvalidEndpointRejected':True,'parameterSubmitInputGuardsPassed':True,
  'demosaicSelectionReferenceCases':len(demosaic_selected.stdout.splitlines()),'demosaicSelectionMatch':True,

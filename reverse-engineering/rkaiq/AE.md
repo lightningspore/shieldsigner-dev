@@ -78,3 +78,32 @@ The original writes raw trend, normalized trend and normalized current into the 
 `camera:rust:ae-damping` compares exact coefficient and diagnostic f32 bits in 1,000 native ARM executions. It covers the full 17×17 knot/half-knot lattice in both rule modes, disabled operation, history wrap, large/alternating histories and all HDR channel indices. Standard signed division/remainder for nonnegative frame counters is modeled explicitly; logging is discarded. [Report](ae-damping-equivalence.json). The compiled ARM Rust executable replays the same fixture corpus.
 
 The outer controller still has to combine this coefficient with the proposed and current exposure, enforce limits, split time/gain, honor delays and apply synchronized sensor/ISP updates. ISP configuration and independent cold startup also remain unfinished. Damping equivalence is not proof of complete camera operation.
+
+## Measurement parameter configuration
+
+`isp_ae_measurement` reconstructs result types 1 (AE measurement) and 2 (histogram measurement) inside `Isp32Params::convert3aResultsToIspCfg`, ELF `0x304c4`. The safe Rust APIs consume typed selected-result records and write the packed kernel blocks plus explicit cache storage. They do not reconstruct the entire dispatcher, select measurement windows/weights or publish results to a live queue.
+
+The ISP32 SDK supplies three configurations for four hardware channels. The native mapping is intentionally preserved:
+
+| Kernel block | Supplied SDK configuration | Bytes |
+| --- | --- | --- |
+| RAWAE0 | `rawae0` | 10 |
+| RAWAE1 | `rawae1` | 46 |
+| RAWAE2 | `rawae1` again | 46 |
+| RAWAE3 | `rawae3` | 46 |
+| RAWHIST0 | `rawhist0` | 41 |
+| RAWHIST1 | `rawhist1` | 242 |
+| RAWHIST2 | `rawhist3` | 242 |
+| RAWHIST3 | `rawhist3` again | 242 |
+
+All source-selection, raw window-mode, subwindow flags, coordinates, coefficients and weight bytes are copied without clipping or invented defaults. `window_mode` corresponds to the SDK `wnd_num` enum; it is not a literal number of windows. Windows use unsigned 16-bit horizontal/vertical offsets and dimensions. Big AE has four subwindows; lite/big histograms carry 25/225 byte weights respectively. Physical geometry and valid hardware mode selection remain the outer controller's responsibility.
+
+These dispatcher branches always OR their masks into enable-update, enables and configuration-update. They do **not** consult the source `*_meas_en`/`*_meas_update` booleans. The histogram branch also does not consult its source `ae_swap`/`ae_sel` fields. This is behavior at the selected-result publication stage, not an enable/disable API. Replacing it with conventional flag gating would diverge from the pinned binary.
+
+The AE mask is `0x003c4000`, including RAWAE0–3 and the inherited YUVAE bit. The histogram mask is `0x07800008`, including RAWHIST0–3 and the inherited SIHST bit. These are parameter-module masks, not the validity-bit masks in captured statistics. The extra bits are retained exactly; these branches do not write separate YUVAE/SIHST payload blocks. All unrelated bits/parameter bytes remain unchanged.
+
+AE occupies 148 contiguous bytes at `0x41b`, mirrored into the native cache beginning at virtual-base-relative `0x468`. Histograms occupy 767 bytes at `0x4af`, mirrored at `0x4fc`. Rust exposes those caches as fixed byte arrays without requiring the original C++ object layout. The input SDK records are 104-byte `rk_aiq_ae_meas_params_t` and 529-byte `rk_aiq_hist_meas_params_t` with `ISP_HW_V32` enabled. The checked decoders reject malformed bool values; window/control values are not qualified merely by successful decoding.
+
+`mise run camera:rust:ae-measurement` executes both original dispatcher branches for 1,000 cases each. It compares all three masks, every kernel/cache byte, source preservation and unrelated context/parameter preservation, across both source flag values, multi-ISP hint values and two virtual-base offsets. Random and zero/maximum patterns exercise routing/preservation; they are not camera recommendations. The typed-result cast is a controlled boundary returning the supplied valid SDK record; standard memcpy is explicit. Other dispatcher result types, failed casts and full polymorphic result ownership are outside this suite. [Report](ae-measurement-equivalence.json).
+
+Cross-compiling verbatim SDK declarations with their packed leaf-record rules and `ISP_HW_V32` independently checks every consumed input offset and record size. Kernel header assertions verify all eight output block locations/sizes and the complete masks. ARM executable replay repeats the reference corpus. This verifies selected-result serialization; AWB measurement configuration, calibrated window/weight selection, synchronized control and complete initial IQ/startup remain unfinished. No new complete parameter file suitable for hardware submission is supplied by these fixtures.

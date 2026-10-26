@@ -88,3 +88,7 @@ This completes the recovered automatic tuning-to-register path for this demosaic
 ## Parameter queue connection
 
 The recovered metadata queue core and bounded Linux submission diagnostic are now documented in [PARAMETERS.md](PARAMETERS.md). They accept a fully assembled kernel parameter record; they do not supply the remaining initial module configuration or persistent camera-service backend. Driver dequeue can acknowledge a saved first configuration before frame application. Successful hardware transport and independent startup are still unverified.
+
+## Exposure measurement configuration
+
+The selected AE grid/histogram result-to-kernel branches are now reconstructed with exact four-channel routing and cached records. [AE measurement configuration](AE.md#measurement-parameter-configuration). This supplies another part of the initial parameter record, not the window/weight selection policy or full calibrated initialization. AWB measurement configuration and the remaining module/service integration remain unfinished.

@@ -119,3 +119,29 @@ for name,fields in [
 source.write_text('#include <stdbool.h>\n#include <stddef.h>\n#define DEBAYER_ISO_STEP_MAX 13\n'+'\n'.join(records+assertions)+'\n')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'demosaic-calibration-layout.o')],check=True)
 print('PASS: SDK demosaic calibration=968 bytes; all four 13-step ISO table layouts verified')
+
+# Compile selected-measurement inputs using the SDK's actual ISP_HW_V32 shape
+# and its original packed leaf-record rules, not the V20/V30 four-input shape.
+item=next(x for x in manifest['headers'] if x['name']=='rk_aiq_types_ae_hw.h')
+header=ROOT/'.tools/reverse-engineering/headers'/item['name']
+assert hashlib.sha256(header.read_bytes()).hexdigest()==item['sha256']
+text=header.read_text();leaf=[];outer=[]
+for name in ['window','rawaebig_meas_cfg','rawaelite_meas_cfg','rawhistbig_cfg','rawhistlite_cfg']:
+    match=re.search(r'typedef struct '+name+r' \{.*?\} '+name+r'_t;',text,re.S);assert match;leaf.append(match.group(0))
+for name in ['ae','hist']:
+    match=re.search(r'typedef struct rk_aiq_'+name+r'_meas_params_s \{.*?\} rk_aiq_'+name+r'_meas_params_t;',text,re.S);assert match;outer.append(match.group(0))
+source=cache/'ae-measurement-sdk-layout.c'
+assertions=['_Static_assert(sizeof(rk_aiq_ae_meas_params_t)==104,"SDK AE result");','_Static_assert(sizeof(rk_aiq_hist_meas_params_t)==529,"SDK histogram result");']
+for name,size,fields in [
+ ('window',8,[('h_offs',0),('v_offs',2),('h_size',4),('v_size',6)]),
+ ('rawaelite_meas_cfg',10,[('rawae_sel',0),('wnd_num',1),('win',2)]),
+ ('rawaebig_meas_cfg',46,[('rawae_sel',0),('wnd_num',1),('subwin_en',2),('win',6),('subwin',14)]),
+ ('rawhistlite_cfg',41,[('data_sel',0),('waterline',1),('mode',2),('stepsize',3),('off',4),('bcc',5),('gcc',6),('rcc',7),('win',8),('weight',16)]),
+ ('rawhistbig_cfg',242,[('wnd_num',0),('data_sel',1),('waterline',2),('mode',3),('stepsize',4),('off',5),('bcc',6),('gcc',7),('rcc',8),('win',9),('weight',17)]),
+ ('rk_aiq_ae_meas_params',104,[('ae_meas_en',0),('ae_meas_update',1),('rawae0',2),('rawae1',12),('rawae3',58)]),
+ ('rk_aiq_hist_meas_params',529,[('hist_meas_en',0),('hist_meas_update',1),('ae_swap',2),('ae_sel',3),('rawhist0',4),('rawhist1',45),('rawhist3',287)])]:
+    assertions.append(f'_Static_assert(sizeof({name}_t)=={size},"{name} size");')
+    for field,offset in fields:assertions.append(f'_Static_assert(offsetof({name}_t,{field})=={offset},"{name}.{field}");')
+source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n#define ISP_HW_V32 1\n#define RAWAEBIG_SUBWIN_NUM 4\n#define RAWHISTBIG_WIN_NUM 225\n#define RAWHISTLITE_WIN_NUM 25\n#pragma pack(push,1)\n'+'\n'.join(leaf)+'\n#pragma pack(pop)\n'+'\n'.join(outer+assertions)+'\n')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'ae-measurement-sdk-layout.o')],check=True)
+print('PASS: SDK AE=104/histogram=529 bytes; packed kernel blocks, routing offsets and masks verified')

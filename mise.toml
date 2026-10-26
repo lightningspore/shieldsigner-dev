@@ -308,3 +308,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:parameter-queue"]
 description = "Compare metadata parameter queue lifecycle, ioctl records and failure state against native ARM"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/parameter-queue.py --cases 1000 --emit-dir dist/reverse-engineering/parameter-queue-fixtures"]
+
+[tasks."camera:rust:ae-measurement"]
+description = "Compare AE/histogram measurement blocks and cached channel routing with original ARM dispatcher branches"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-measurement.py --cases 1000 --emit-dir dist/reverse-engineering/ae-measurement-fixtures"]

@@ -74,3 +74,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## Metadata parameter queue
 
 `parameter_queue::Queue` reconstructs metadata-output branches of native `V4l2Device` prepare/start/queue/dequeue/return/stop and uses the recovered buffer reset/request logic. The Linux diagnostic supplies a real MMAP/ioctl adapter; its positive hardware path is untested. [Entries, contracts, controlled boundaries and validation](PARAMETERS.md).
+
+## AE measurement parameter configuration
+
+`isp_ae_measurement::apply_ae` and `apply_histogram` reconstruct result types 1 and 2 inside `Isp32Params::convert3aResultsToIspCfg`, ELF `0x304c4` (Ghidra `0x404c4`). These are two dispatcher branches, not a reconstruction of the full dispatcher. [Routing, masks, cached records and reference evidence](AE.md#measurement-parameter-configuration).

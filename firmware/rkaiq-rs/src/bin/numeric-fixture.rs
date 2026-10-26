@@ -191,6 +191,60 @@ fn main() {
                         .join(",")
                 );
             }
+            "ae-measurement" => {
+                use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_ae_measurement::*};
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut state = v["seed"].as_u64().unwrap() as u32;
+                let mut next = || {
+                    state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                    (state >> 24) as u8
+                };
+                let mut params = [0u8; PARAMETER_BYTES];
+                for b in &mut params {
+                    *b = next();
+                }
+                let mut ae = [0u8; AE_BYTES];
+                for b in &mut ae {
+                    *b = next();
+                }
+                let mut histogram = [0u8; HISTOGRAM_BYTES];
+                for b in &mut histogram {
+                    *b = next();
+                }
+                let original = params;
+                let source = v["record"].as_str().unwrap();
+                let record = (0..source.len())
+                    .step_by(2)
+                    .map(|i| u8::from_str_radix(&source[i..i + 2], 16).unwrap())
+                    .collect::<Vec<_>>();
+                if v["kind"].as_str().unwrap() == "ae" {
+                    apply_ae(
+                        &mut params,
+                        &mut ae,
+                        &AeMeasurement::from_record(&record.try_into().unwrap()).unwrap(),
+                    );
+                } else {
+                    apply_histogram(
+                        &mut params,
+                        &mut histogram,
+                        &HistogramMeasurement::from_record(&record.try_into().unwrap()).unwrap(),
+                    );
+                }
+                assert_eq!(&params[24..AE_OFFSET], &original[24..AE_OFFSET]);
+                assert_eq!(
+                    &params[HISTOGRAM_OFFSET + HISTOGRAM_BYTES..],
+                    &original[HISTOGRAM_OFFSET + HISTOGRAM_BYTES..]
+                );
+                let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
+                println!(
+                    "{}:{}:{}:{}:{}",
+                    hex(&params[..24]),
+                    hex(&params[AE_OFFSET..AE_OFFSET + AE_BYTES]),
+                    hex(&params[HISTOGRAM_OFFSET..HISTOGRAM_OFFSET + HISTOGRAM_BYTES]),
+                    hex(&ae),
+                    hex(&histogram)
+                );
+            }
             "parameter-queue" => {
                 use shieldsigner_rkaiq::parameter_queue::*;
                 fn hex(b: &[u8]) -> String {

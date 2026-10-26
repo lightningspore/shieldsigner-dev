@@ -48,6 +48,8 @@ Automatic demosaic tuning now loads an explicit scene’s `debayer_v2.param` JSO
 
 The metadata parameter queue core now matches **1,000 native ARM lifecycle/state traces**. `camera-probe submit-parameters` adds a bounded Linux MMAP adapter for a supplied complete kernel record, and node inventory now shows metadata-output formats. Successful device submission, full initial IQ assembly and persistent processing integration remain unfinished. See [PARAMETERS.md](PARAMETERS.md).
 
+AE grid and histogram measurement parameter conversion now matches **2,000 native ARM cases**, including four-channel routing, complete kernel blocks/caches and the native enable-mask behavior. These functions consume selected windows/weights; selection policy, AWB measurement setup and complete initial IQ remain unfinished. See [AE.md](AE.md#measurement-parameter-configuration).
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -116,6 +118,7 @@ mise run camera:rust:isp-black-level
 mise run camera:rust:isp-demosaic
 mise run camera:rust:demosaic-selection
 mise run camera:rust:parameter-queue
+mise run camera:rust:ae-measurement
 mise run camera:rust:arm
 mise run camera:rust:smoke
 mise run camera:rust:package

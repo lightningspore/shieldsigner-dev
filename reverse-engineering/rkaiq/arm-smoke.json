@@ -2,6 +2,8 @@
   "image": "alpine@sha256:ee16d92f96db08d9d2d07da48555a27f3a69d8f0759021dbc601195ed0d2b5bd",
   "platform": "linux/arm/v7",
   "execution": "Docker Desktop ARM emulation; no camera device attached",
+  "aeDampingReferenceCases": 1000,
+  "aeDampingMatch": true,
   "aeDecisionReferenceCases": 1000,
   "aeDecisionMatch": true,
   "sensorWriteInvalidEndpointRejected": true,
@@ -37,8 +39,8 @@
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "e948c97aa3f7d0898e11d0f2bbe1487897220da61ad842f190e22942633bdd6d",
-    "numeric-fixture": "7ff702770c797ef915d8ef3c15680ea39f284255724415798fce5b3fadd2396e",
+    "camera-probe": "660ec7fc0b3cce0e183d43dc07a355402c949a4d6ff635d264cc7d7aaebffa0e",
+    "numeric-fixture": "6f003112d7fdc5dd433bbdaada78b18ca88047e14bbf34dfc5e444ea15b4e29a",
     "frame-preview": "8efad4a76ba6d985f6df99d61328ff4dce3bd9b99c2163c139b89e86d667aed7"
   },
   "limitations": [

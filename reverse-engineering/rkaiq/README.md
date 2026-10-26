@@ -18,7 +18,7 @@ The sensor binding selector also matches **1,000 controlled inventories** agains
 
 A borrowed full-ISP32 statistics decoder now exposes AE grids/histograms and AWB blocks/light sums/luma histogram. **100 AWB buffer comparisons** match the original translator; AE raw field layout is checked against kernel headers. `capture-statistics` reads the existing metadata queue with bounded MMAP capture and strict format checks. Real queue operation still needs hardware validation; this does not implement the exposure or white-balance algorithms. See [STATISTICS.md](STATISTICS.md).
 
-The AE0 5×5 correction helper now matches **1,000 original-ARM cases** across all six selection branches and both luma ranges, including signed correction, clipping and weighted means. This helper consumes calibration/gain/weight inputs; the automatic exposure decision is still missing. See [AE.md](AE.md).
+The AE0 5×5 correction helper now matches **1,000 original-ARM cases** across all six selection branches and both luma ranges, including signed correction, clipping and weighted means. This helper consumes calibration/gain/weight inputs; the complete automatic exposure controller remains unfinished. See [AE.md](AE.md).
 
 AE histogram correction also matches **1,000 original-ARM cases**, covering 64/256 bins, R/G/B/luma modes and bypass. It retains native intermediate narrowing, bin-center selection and u32 count wrapping.
 
@@ -26,7 +26,7 @@ Large 15×15 AE grid correction and four RGB subwindow sums now match **1,000 or
 
 The linear sensor-write sequencer matches **1,000 original-ARM traces**, including write failures and cached frame-length side effects. A Linux write adapter now backs the explicit `apply-linear` command; actual camera operation remains unvalidated. See [SENSOR.md](SENSOR.md).
 
-`exposure::convert` now reconstructs gain and shutter register conversion, with **1,000 resulting-code comparisons** against original RKAIQ plus the pinned SDK uClibc math instructions. It covers linear/HDR timing, DCG ratios, gain-band/fallback and logarithmic models. Calibration must still be supplied; no live sensor programming is exposed.
+`exposure::convert` now reconstructs gain and shutter register conversion, with **1,000 resulting-code comparisons** against original RKAIQ plus the pinned SDK uClibc math instructions. It covers linear/HDR timing, DCG ratios, gain-band/fallback and logarithmic models. Calibration must still be supplied; live writes require the separate explicit `apply-linear` command.
 
 Sensor descriptor construction now matches **1,000 original-ARM cases**, including timing minima, pixel-clock fallback, format mapping and optional-query failures. `camera-probe sensor-info` adds a read-only driver adapter for hardware validation.
 
@@ -34,7 +34,9 @@ The IQ JSON exposure subset is now loaded into the recovered converter. **100 SD
 
 `camera-probe apply-linear` now provides manual driver control writes through the recovered sequencer, records each write and partial failures, and queries control readback/ranges. It does not run AE or initialize the camera pipeline.
 
-The histogram-driven `ClmExecute` exposure solver is now reconstructed, including tail-bin extrapolation, iterative clipped-brightness prediction, relative-growth cap and saturation-flag behavior. This is the inner proposal stage; outer AE damping, routes, limit application and synchronized control remain unfinished.
+The histogram-driven `ClmExecute` exposure solver is now reconstructed, including tail-bin extrapolation, iterative clipped-brightness prediction, relative-growth cap and saturation-flag behavior. This is the inner proposal stage; outer AE integration, routes, limit application and synchronized control remain unfinished.
+
+History-based `AecDynamicDamp` now matches **1,000 original-ARM cases**, including the 9×9 rule surface, custom mode, ring wrap, linear/HDR diagnostic writes and disabled behavior. This returns a damping coefficient; it does not complete the outer controller or independent ISP startup. See [AE.md](AE.md).
 
 ## Exact originals
 
@@ -98,6 +100,7 @@ mise run camera:rust:exposure
 mise run camera:rust:iq-calibration
 mise run camera:rust:ae-histogram
 mise run camera:rust:ae-decision
+mise run camera:rust:ae-damping
 mise run camera:rust:arm
 mise run camera:rust:smoke
 mise run camera:rust:package

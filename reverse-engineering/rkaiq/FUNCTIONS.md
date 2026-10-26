@@ -50,3 +50,7 @@ The exact pinned ARM kernel UAPI defines a packed 11,145-byte ISP32 parameter bu
 The original consumes a by-value `RKAiqAecExpInfo_s` aggregate: two words arrive in r2/r3 and its remaining bytes on the ARM stack. Public AE headers place ISP digital gain at byte 12 in each 48-byte exposure record: linear offset 12, HDR offsets 60/108/156. The harness models this calling convention directly. A zero context working mode selects linear; any nonzero mode uses all three HDR slots.
 
 Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, and three unity gains are a no-op. Otherwise the three AWB-bank-0 groups are scaled from the cached record, using f32 multiplication followed by f64 +0.5 and saturation at 65535. Bank 1 and the cache remain unchanged. Only the configuration-update mask (byte 16) receives the AWB bit; enable/update-enable masks remain untouched. Repeated application therefore does not compound gain. Checked Rust rejects negative/nonfinite inputs before mutation. The corpus compares all affected bytes and asserts unrelated-buffer/cache preservation; it is not a live exposure-control loop.
+
+## Dynamic exposure damping
+
+`ae_damping::calculate` reconstructs `AecDynamicDamp`, ELF `0xa4024`, and its active core at `0xa3ab8`. The wrapper returns the supplied coefficient unchanged when disabled; a native null context returns 8.0, which is outside this checked value API. [Behavior and reference evidence](AE.md#history-based-exposure-damping).

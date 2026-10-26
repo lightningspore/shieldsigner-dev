@@ -284,3 +284,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:ae-decision"]
 description = "Compare histogram AE exposure solving with the original ARM ClmExecute"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-decision.py --cases 1000 --emit-dir dist/reverse-engineering/ae-decision-fixtures"]
+
+[tasks."camera:rust:ae-damping"]
+description = "Compare history-based exposure damping and context writes with original ARM code"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-damping.py --cases 1000 --emit-dir dist/reverse-engineering/ae-damping-fixtures"]

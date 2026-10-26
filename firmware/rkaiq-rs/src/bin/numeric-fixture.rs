@@ -191,6 +191,48 @@ fn main() {
                         .join(",")
                 );
             }
+            "ae-damping" => {
+                use shieldsigner_rkaiq::ae_damping::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let n = |key: &str| v[key].as_f64().unwrap() as f32;
+                let history: [f32; 10] = v["history"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|x| x.as_f64().unwrap() as f32)
+                    .collect::<Vec<_>>()
+                    .try_into()
+                    .unwrap();
+                let mode = if v["custom"].as_bool().unwrap() {
+                    Mode::Custom {
+                        scale: n("custom_scale"),
+                        middle: n("middle"),
+                    }
+                } else {
+                    Mode::Default
+                };
+                let result = calculate(
+                    n("coefficient"),
+                    n("scale"),
+                    v["enabled"].as_bool().unwrap(),
+                    mode,
+                    v["frame"].as_u64().unwrap() as u32,
+                    &history,
+                )
+                .unwrap();
+                if let Some(d) = result.diagnostics {
+                    println!(
+                        "{:08x}:{}:{:08x}:{:08x}:{:08x}",
+                        result.coefficient.to_bits(),
+                        d.slot,
+                        d.trend.to_bits(),
+                        d.normalized_trend.to_bits(),
+                        d.normalized_current.to_bits()
+                    );
+                } else {
+                    println!("{:08x}:none", result.coefficient.to_bits());
+                }
+            }
             "ae-decision" => {
                 use shieldsigner_rkaiq::ae_decision::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

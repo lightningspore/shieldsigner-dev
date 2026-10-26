@@ -316,3 +316,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:awb-measurement"]
 description = "Compare AWB measurement configuration against the original ARM converter"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-measurement.py --cases 2000 --emit-dir dist/reverse-engineering/awb-measurement-fixtures"]
+
+[tasks."camera:rust:awb-gain"]
+description = "Compare six AWB gain and temporal routines against original ARM and SDK GCC instructions"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-gain.py --cases 1000 --emit-dir dist/reverse-engineering/awb-gain-fixtures"]

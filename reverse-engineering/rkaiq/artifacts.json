@@ -223,5 +223,12 @@
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/isp_iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json",
       "sha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a"
     }
-  ]
+  ],
+  "gccRuntime": {
+    "archiveUrl": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/runtime_lib/lib.tar.bz2",
+    "archiveSha256": "5bb5b44ab7d2259d05eb85b88faf4aa31cc585efbcdfe89816a2a0294c6d7643",
+    "member": "lib/libgcc_s.so.1",
+    "memberSha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+    "referenceOnly": true
+  }
 }

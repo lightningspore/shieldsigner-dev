@@ -19,7 +19,7 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
-for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','AWB.md','ISP.md','PARAMETERS.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','isp-black-level-equivalence.json','isp-demosaic-equivalence.json','demosaic-selection-equivalence.json','parameter-queue-equivalence.json','ae-measurement-equivalence.json','awb-measurement-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
+for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','AWB.md','ISP.md','PARAMETERS.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','isp-black-level-equivalence.json','isp-demosaic-equivalence.json','demosaic-selection-equivalence.json','parameter-queue-equivalence.json','ae-measurement-equivalence.json','awb-measurement-equivalence.json','awb-gain-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
@@ -57,6 +57,8 @@ for name in ['inputs.txt','expected.txt']:copy(base/'ae-measurement-fixtures'/na
 assert smoke['aeMeasurementReferenceCases']==2000 and smoke['aeMeasurementMatch']
 for name in ['inputs.txt','expected.txt']:copy(base/'awb-measurement-fixtures'/name,'awb-measurement-fixtures/'+name)
 assert smoke['awbMeasurementReferenceCases']==2000 and smoke['awbMeasurementMatch']
+for name in ['inputs.txt','expected.txt']:copy(base/'awb-gain-fixtures'/name,'awb-gain-fixtures/'+name)
+assert smoke['awbGainReferenceCases']==6000 and smoke['awbGainMatch']
 assert smoke['aeBigGridReferenceCases']==1000 and smoke['aeBigGridMatch']
 assert smoke['aeHistogramReferenceCases']==1000 and smoke['aeHistogramMatch']
 assert smoke['aeGridReferenceCases']==1000 and smoke['aeGridMatch']
@@ -234,6 +236,13 @@ if cmp -s "$kit_dir/awb-measurement-fixtures/expected.txt" "$result_dir/awb-meas
     echo "PASS: AWB measurement configuration matches the original reference."
 else
     echo "FAIL: AWB measurement configuration differs; preserve $result_dir/awb-measurement-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/awb-gain-fixtures/inputs.txt" > "$result_dir/awb-gain-actual.txt"
+if cmp -s "$kit_dir/awb-gain-fixtures/expected.txt" "$result_dir/awb-gain-actual.txt"; then
+    echo "PASS: AWB gain and temporal values match the original reference."
+else
+    echo "FAIL: AWB gain values differ; preserve $result_dir/awb-gain-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

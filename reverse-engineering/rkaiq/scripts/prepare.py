@@ -20,8 +20,9 @@ for item in manifest['binaries']:fetch(item['url'],cache/'rkaiq-original'/item['
 for item in manifest.get('headers',[]):fetch(item['url'],cache/'headers'/item['name'],item['sha256'])
 for item in manifest.get('kernelHeaders',[]):fetch(item['url'],cache/'kernel-uapi/linux'/item['name'],item['sha256'])
 for item in manifest.get('kernelSources',[]):fetch(item['url'],cache/'kernel-source'/item['name'],item['sha256'])
-if 'uclibcRuntime' in manifest:
- info=manifest['uclibcRuntime'];folder=cache/'uclibc-runtime';archive=folder/'lib.tar.bz2'
+for runtime_key in ['uclibcRuntime','gccRuntime']:
+ if runtime_key not in manifest:continue
+ info=manifest[runtime_key];folder=cache/'uclibc-runtime';archive=folder/'lib.tar.bz2'
  fetch(info['archiveUrl'],archive,info['archiveSha256'])
  member=folder/Path(info['member']).name
  if not member.exists():

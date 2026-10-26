@@ -107,6 +107,10 @@ awb_measurement=ROOT/'dist/reverse-engineering/awb-measurement-fixtures'
 with (awb_measurement/'inputs.txt').open('rb') as source:
  awb_measured=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert awb_measured.stdout==(awb_measurement/'expected.txt').read_bytes(),'ARM AWB measurement block differs from original converter'
+awb_gain=ROOT/'dist/reverse-engineering/awb-gain-fixtures'
+with (awb_gain/'inputs.txt').open('rb') as source:
+ awb_gains=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert awb_gains.stdout==(awb_gain/'expected.txt').read_bytes(),'ARM AWB gain/temporal values differ from original instructions'
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -129,6 +133,7 @@ for values,message in [(['1600','2147483648','0','100'],'nonnegative signed 32-b
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
  'aeMeasurementReferenceCases':len(measured.stdout.splitlines()),'aeMeasurementMatch':True,
  'awbMeasurementReferenceCases':len(awb_measured.stdout.splitlines()),'awbMeasurementMatch':True,
+ 'awbGainReferenceCases':len(awb_gains.stdout.splitlines()),'awbGainMatch':True,
  'parameterQueueReferenceCases':len(parameter_queued.stdout.splitlines()),'parameterQueueMatch':True,
  'parameterSubmitInvalidEndpointRejected':True,'parameterSubmitInputGuardsPassed':True,
  'demosaicSelectionReferenceCases':len(demosaic_selected.stdout.splitlines()),'demosaicSelectionMatch':True,

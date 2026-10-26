@@ -82,3 +82,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## AWB measurement parameter configuration
 
 `isp_awb_measurement::Measurement::apply` reconstructs `Isp32Params::convertAiqAwbToIsp32Params`, ELF `0x2b71c` (Ghidra `0x3b71c`). [SDK layout, native quirks and 2,000 original-ARM comparisons](AWB.md).
+
+## AWB gain and temporal stages
+
+`awb_gain` reconstructs six original routines for weighted-statistics gains, normalization, mixture, damping-coefficient adaptation and temporal gains. [Entries, precision, context effects and 6,000 native comparisons](AWB.md#gain-calculation-and-temporal-damping). These are stages of the AWB path; the surrounding classification, calibrated policy and service remain unfinished.

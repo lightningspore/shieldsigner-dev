@@ -6,6 +6,8 @@
   "aeMeasurementMatch": true,
   "awbMeasurementReferenceCases": 2000,
   "awbMeasurementMatch": true,
+  "awbGainReferenceCases": 6000,
+  "awbGainMatch": true,
   "parameterQueueReferenceCases": 1000,
   "parameterQueueMatch": true,
   "parameterSubmitInvalidEndpointRejected": true,
@@ -55,9 +57,9 @@
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "f5e945d01a9fe19e69d10b97a63f1b7e0df8589c297b544d6cf359d13ac773ea",
-    "numeric-fixture": "65424966e19b0b10617f7b8995f1268ecf6f11adb6d33d264e8eec03d7dcf8b9",
-    "frame-preview": "3e3dc62f951325b1dc7ecf8a46eab10c70dcb1a4ad68a58a4179b0242f5a8c54"
+    "camera-probe": "0ad309a23f461ed7ef5e79fce1d1cc878f2168d4c2310d4935a69f95ca08645a",
+    "numeric-fixture": "c5a2c0d2a2bfafac1b2b4809c31333d765b934997aba10d087c272bd083ead23",
+    "frame-preview": "8efad4a76ba6d985f6df99d61328ff4dce3bd9b99c2163c139b89e86d667aed7"
   },
   "limitations": [
     "ARM/Linux userspace execution is verified; real camera capture and end-to-end ISP behavior are not tested."

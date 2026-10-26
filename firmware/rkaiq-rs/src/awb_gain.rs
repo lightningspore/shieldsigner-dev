@@ -1,0 +1,159 @@
+//! Native AWB weighted-statistics gains, normalization, mixture and damping.
+//! These are stages of the original algorithm, not a standalone AWB controller.
+use crate::InvalidInput;
+
+/// Channel order throughout this module is R, Gr, Gb, B.
+pub type Gains = [f32; 4];
+fn finite(values: &[f32]) -> Result<(), InvalidInput> {
+    if values.iter().all(|v| v.is_finite()) {
+        Ok(())
+    } else {
+        Err(InvalidInput::NonFinite)
+    }
+}
+
+/// AwbGainNormal (ELF 0xca030): the divisor starts at 5, rather than infinity.
+/// Nonpositive or very small minima leave the values unchanged.
+pub fn normalize(mut gain: Gains) -> Result<Gains, InvalidInput> {
+    finite(&gain)?;
+    let mut divisor = 5.;
+    for value in gain {
+        if value <= divisor {
+            divisor = value;
+        }
+    }
+    if (divisor as f64) > 0.00001 {
+        for value in &mut gain {
+            *value /= divisor;
+        }
+    }
+    finite(&gain)?;
+    Ok(gain)
+}
+
+/// AwbGainMixture (ELF 0xca080): blend with weight on the first input, then
+/// normalize. The native blend uses a rounded product followed by an FMA.
+pub fn mixture(first: Gains, second: Gains, weight: f32) -> Result<Gains, InvalidInput> {
+    finite(&first)?;
+    finite(&second)?;
+    finite(&[weight])?;
+    let complement = 1. - weight;
+    normalize(core::array::from_fn(|i| {
+        libm::fmaf(first[i], weight, complement * second[i])
+    }))
+}
+
+/// AwbGainCalbyRgainBgain (ELF 0xca7cc). Inputs are accumulated gain statistics,
+/// not raw R/G/B pixel sums. Each signed total rounds to f32 before division.
+pub fn ratios(weighted_count: i64, red_total: i64, blue_total: i64) -> Gains {
+    if weighted_count == 0 {
+        [0.; 4]
+    } else {
+        let divisor = weighted_count as f32;
+        [
+            red_total as f32 / divisor,
+            1.,
+            1.,
+            blue_total as f32 / divisor,
+        ]
+    }
+}
+
+/// AwbCalGainForDiffIllumAndDiffXYType2 (ELF 0xc99d8): normalize one
+/// illumination/XY-region result and round its weighted count from Q10.
+pub fn statistics_gain(
+    weighted_count: i64,
+    red_total: i64,
+    blue_total: i64,
+) -> Result<(Gains, i64), InvalidInput> {
+    Ok((
+        normalize(ratios(weighted_count, red_total, blue_total))?,
+        weighted_count.wrapping_add(512) >> 10,
+    ))
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct DampingParameters {
+    pub variance_threshold: f32,
+    pub step: f32,
+    pub minimum: f32,
+    pub maximum: f32,
+}
+impl DampingParameters {
+    /// AwbCalDampFactor (ELF 0xc9f2c): adapt the prior coefficient up/down by
+    /// one step. Preserve the native ordered lower/upper-bound comparisons.
+    pub fn adapt(self, prior: f32, variance: f32) -> Result<f32, InvalidInput> {
+        finite(&[
+            self.variance_threshold,
+            self.step,
+            self.minimum,
+            self.maximum,
+            prior,
+            variance,
+        ])?;
+        let candidate = if self.variance_threshold < variance {
+            prior - self.step
+        } else {
+            prior + self.step
+        };
+        let value = if candidate < self.minimum {
+            self.minimum
+        } else if self.maximum < candidate {
+            self.maximum
+        } else {
+            candidate
+        };
+        finite(&[value])?;
+        Ok(value)
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Damped {
+    pub gain: Gains,
+    /// Base coefficient is reset to zero when previous R is below 1e-5.
+    pub base_coefficient: f32,
+    pub effective_coefficient: f32,
+}
+
+/// AwbCalDampGain (ELF 0xca0e0). Does not modify the previous-frame gains;
+/// the outer native caller advances that history after the remaining stages.
+pub fn damp(previous: Gains, candidate: Gains, coefficient: f32) -> Result<Damped, InvalidInput> {
+    finite(&previous)?;
+    finite(&candidate)?;
+    finite(&[coefficient])?;
+    if (previous[0] as f64) < 0.00001 {
+        return Ok(Damped {
+            gain: candidate,
+            base_coefficient: 0.,
+            effective_coefficient: 0.,
+        });
+    }
+    let mut difference = 0.;
+    for i in 0..4 {
+        let delta = libm::fabsf(candidate[i] - previous[i]);
+        if difference < delta {
+            difference = delta;
+        }
+    }
+    let adjustment = if (difference as f64) < 0.3 {
+        crate::interpolate(
+            &[0.01, 0.05, 0.1, 0.15, 0.3],
+            &[0., 0.5, 0.7, 0.9, 1.],
+            difference,
+        )?
+    } else {
+        1.
+    };
+    let effective = adjustment * coefficient;
+    let complement = 1. - effective;
+    let gain =
+        core::array::from_fn(|i| libm::fmaf(previous[i], effective, complement * candidate[i]));
+    finite(&gain)?;
+    finite(&[effective])?;
+    Ok(Damped {
+        gain,
+        base_coefficient: coefficient,
+        effective_coefficient: effective,
+    })
+}

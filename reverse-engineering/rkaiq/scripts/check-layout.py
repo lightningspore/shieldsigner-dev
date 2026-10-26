@@ -180,3 +180,20 @@ macros='\n'.join(macros)
 source=cache/'awb-measurement-sdk-layout.c';source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n'+macros+'\n'+'\n'.join(awb_declarations+assertions)+'\n')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'awb-measurement-sdk-layout.o')],check=True)
 print('PASS: AWB v32 SDK=1204 bytes, seven exclusion records and all used input groups verified')
+
+# The gain-statistics aggregate is passed by value across r0-r3 and the stack.
+weighted=sdk_record('rk_aiq_types_awb_stat_v201.h',r'typedef struct rk_aiq_awb_stat_wp_res_v201_s \{.*?\} rk_aiq_awb_stat_wp_res_v201_t;')
+gain=sdk_record('rk_aiq_types_awb_algo.h',r'typedef struct rk_aiq_wb_gain_v32_s \{.*?\} rk_aiq_wb_gain_v32_t;')
+position=sdk_record('rk_aiq_types_awb_algo.h',r'typedef enum rk_aiq_wb_gapin_aplly_pos_s\{.*?\}rk_aiq_wb_gapin_aplly_pos_e;')
+source=cache/'awb-gain-sdk-layout.c'
+source.write_text('#include <stddef.h>\n'+weighted+'\n'+position+'\n'+gain+'''
+_Static_assert(sizeof(rk_aiq_awb_stat_wp_res_v201_t)==24,"weighted AWB record size");
+_Static_assert(_Alignof(rk_aiq_awb_stat_wp_res_v201_t)==8,"weighted AWB alignment");
+_Static_assert(offsetof(rk_aiq_awb_stat_wp_res_v201_t,WpNo)==0,"weighted count");
+_Static_assert(offsetof(rk_aiq_awb_stat_wp_res_v201_t,RgainValue)==8,"red gain total");
+_Static_assert(offsetof(rk_aiq_awb_stat_wp_res_v201_t,BgainValue)==16,"blue gain total");
+_Static_assert(sizeof(rk_aiq_wb_gain_v32_t)==20,"AWB gain result size");
+_Static_assert(offsetof(rk_aiq_wb_gain_v32_t,applyPosition)==16,"gain position");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'awb-gain-sdk-layout.o')],check=True)
+print('PASS: SDK weighted AWB statistics=24 bytes/alignment 8, gain result=20 bytes')

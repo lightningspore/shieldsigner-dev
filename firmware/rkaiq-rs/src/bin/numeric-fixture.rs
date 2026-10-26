@@ -191,6 +191,62 @@ fn main() {
                         .join(",")
                 );
             }
+            "awb-gain" => {
+                use shieldsigner_rkaiq::awb_gain::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let value = |name: &str| v[name].as_f64().unwrap() as f32;
+                let gains =
+                    |name: &str| core::array::from_fn(|i| v[name][i].as_f64().unwrap() as f32);
+                if matches!(v["kind"].as_str().unwrap(), "ratios" | "statistics") {
+                    let count = v["count"].as_i64().unwrap();
+                    let red = v["red"].as_i64().unwrap();
+                    let blue = v["blue"].as_i64().unwrap();
+                    let (gain, rounded) = if v["kind"] == "statistics" {
+                        statistics_gain(count, red, blue).unwrap()
+                    } else {
+                        (ratios(count, red, blue), count)
+                    };
+                    println!(
+                        "{}:{:016x}",
+                        gain.iter()
+                            .map(|v| format!("{:08x}", v.to_bits()))
+                            .collect::<Vec<_>>()
+                            .join(":"),
+                        rounded as u64
+                    );
+                    continue;
+                }
+                let result = match v["kind"].as_str().unwrap() {
+                    "normalize" => normalize(gains("first")).unwrap().to_vec(),
+                    "mixture" => mixture(gains("first"), gains("second"), value("weight"))
+                        .unwrap()
+                        .to_vec(),
+                    "factor" => vec![DampingParameters {
+                        variance_threshold: value("threshold"),
+                        step: value("step"),
+                        minimum: value("minimum"),
+                        maximum: value("maximum"),
+                    }
+                    .adapt(value("coefficient"), value("variance"))
+                    .unwrap()],
+                    "damp" => {
+                        let result =
+                            damp(gains("first"), gains("second"), value("coefficient")).unwrap();
+                        let mut out = vec![result.base_coefficient, result.effective_coefficient];
+                        out.extend(result.gain);
+                        out
+                    }
+                    _ => panic!("unknown AWB gain operation"),
+                };
+                println!(
+                    "{}",
+                    result
+                        .iter()
+                        .map(|v| format!("{:08x}", v.to_bits()))
+                        .collect::<Vec<_>>()
+                        .join(":")
+                );
+            }
             "awb-measurement" => {
                 use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_awb_measurement::*};
                 fn hex_bytes(b: &[u8]) -> String {

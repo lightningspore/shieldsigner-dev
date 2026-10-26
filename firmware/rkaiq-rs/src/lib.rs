@@ -7,6 +7,7 @@ pub mod ae;
 pub mod ae_histogram;
 pub mod discovery;
 pub mod engine;
+pub mod exposure;
 pub mod gain;
 pub mod isp32;
 pub mod media;

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fetch pinned analysis inputs, preserving vendor originals in ignored cache."""
 from pathlib import Path
-import argparse,hashlib,json,os,platform,shutil,subprocess,urllib.request,zipfile
+import argparse,hashlib,json,os,platform,shutil,subprocess,urllib.request,zipfile,tarfile
 ROOT=Path(__file__).resolve().parents[3]
 manifest=json.loads((ROOT/'reverse-engineering/rkaiq/artifacts.json').read_text())
 cache=ROOT/'.tools/reverse-engineering';cache.mkdir(parents=True,exist_ok=True)
@@ -20,6 +20,15 @@ for item in manifest['binaries']:fetch(item['url'],cache/'rkaiq-original'/item['
 for item in manifest.get('headers',[]):fetch(item['url'],cache/'headers'/item['name'],item['sha256'])
 for item in manifest.get('kernelHeaders',[]):fetch(item['url'],cache/'kernel-uapi/linux'/item['name'],item['sha256'])
 for item in manifest.get('kernelSources',[]):fetch(item['url'],cache/'kernel-source'/item['name'],item['sha256'])
+if 'uclibcRuntime' in manifest:
+ info=manifest['uclibcRuntime'];folder=cache/'uclibc-runtime';archive=folder/'lib.tar.bz2'
+ fetch(info['archiveUrl'],archive,info['archiveSha256'])
+ member=folder/Path(info['member']).name
+ if not member.exists():
+  with tarfile.open(archive) as tar:
+   entry=tar.getmember(info['member']);assert entry.isfile()
+   member.write_bytes(tar.extractfile(entry).read())
+ assert hashlib.sha256(member.read_bytes()).hexdigest()==info['memberSha256'],'Runtime member hash mismatch'
 if args.ghidra:
  info=manifest['ghidra'];archive=cache/'ghidra_12.2.zip';fetch(info['url'],archive,info['sha256']);install=cache/info['directory']
  if not install.exists():

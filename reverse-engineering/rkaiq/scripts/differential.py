@@ -17,7 +17,7 @@ u32=lambda b:struct.unpack('<I',b)[0]
 f32=lambda x:struct.unpack('<f',struct.pack('<f',x))[0]
 fhex=lambda x:f'{u32(struct.pack("<f",x)):08x}'
 class OriginalArm:
- def __init__(self,path):
+ def __init__(self,path,tls=False):
   self.uc=Uc(UC_ARCH_ARM,UC_MODE_ARM|UC_MODE_LITTLE_ENDIAN);self.symbols={};self.stubs={}
   with path.open('rb') as f:
    e=ELFFile(f);segments=[s for s in e.iter_segments() if s['p_type']=='PT_LOAD']
@@ -28,12 +28,22 @@ class OriginalArm:
    for s in e.get_section_by_name('.symtab').iter_symbols():
     if s['st_info']['type']=='STT_FUNC' and s['st_shndx']!='SHN_UNDEF':self.symbols[s.name]=BASE+s['st_value']
    self.uc.mem_map(HEAP,0x100000);self.uc.mem_map(RETURN,0x10000);self.uc.mem_map(STACK,0x100000)
+   tls_offset=8
+   if tls:
+    segment=next(s for s in e.iter_segments() if s['p_type']=='PT_TLS')
+    tls_offset=(8+segment['p_align']-1)&~(segment['p_align']-1)
+    self.uc.mem_map(0x9000000,0x10000);self.uc.mem_write(0x9000000+tls_offset,segment.data())
+    self.uc.reg_write(regs.UC_ARM_REG_C13_C0_3,0x9000000)
    dyn=e.get_section_by_name('.dynsym')
    for section in e.iter_sections():
     if section['sh_type']!='SHT_REL':continue
     for rel in section.iter_relocations():
      where=BASE+rel['r_offset'];kind=rel['r_info_type'];old=u32(self.uc.mem_read(where,4))
-     if kind==20:
+     if kind in (17,18,19):
+      assert tls,'TLS relocation requires an explicit isolated runtime'
+      sym=dyn.get_symbol(rel['r_info_sym'])
+      target=1 if kind==17 else sym['st_value']+old+(tls_offset if kind==19 else 0)
+     elif kind==20:
       sym=dyn.get_symbol(rel['r_info_sym'])
       assert sym.name=='__ctype_b' and sym['st_size']==4,'Unsupported copied external data'
       # Unused by engine_thread. No character classification is emulated.

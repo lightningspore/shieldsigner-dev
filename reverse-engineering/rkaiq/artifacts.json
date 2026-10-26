@@ -119,5 +119,12 @@
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/isp_stats_v32.c",
       "sha256": "19d1aef84d28611547dec241dd9b4dfff5490a78434d795ea41648fd10d42a2d"
     }
-  ]
+  ],
+  "uclibcRuntime": {
+    "archiveUrl": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/runtime_lib/lib.tar.bz2",
+    "archiveSha256": "5bb5b44ab7d2259d05eb85b88faf4aa31cc585efbcdfe89816a2a0294c6d7643",
+    "member": "lib/libuClibc-1.0.31.so",
+    "memberSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+    "referenceOnly": true
+  }
 }

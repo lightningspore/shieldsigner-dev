@@ -191,6 +191,65 @@ fn main() {
                         .join(",")
                 );
             }
+            "exposure" => {
+                use shieldsigner_rkaiq::exposure::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let n = |name: &str| v[name].as_f64().unwrap() as f32;
+                let timing = |key: &str| {
+                    let t = &v[key];
+                    Timing {
+                        minimum: t["minimum"].as_u64().unwrap() as u16,
+                        step: t["step"].as_f64().unwrap() as f32,
+                        offset: t["offset"].as_f64().unwrap() as f32,
+                    }
+                };
+                let bands: Vec<_> = v["bands"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|b| {
+                        let f = |i: usize| b[i].as_f64().unwrap() as f32;
+                        GainBand {
+                            lower: f(0),
+                            upper: f(1),
+                            scale: f(2),
+                            offset: f(3),
+                            exponent: f(4),
+                            minimum: f(5),
+                            maximum: f(6),
+                        }
+                    })
+                    .collect();
+                let cfg = Calibration {
+                    gain: if v["model"] == 0 {
+                        GainModel::Bands(&bands)
+                    } else {
+                        GainModel::Logarithmic
+                    },
+                    factors: core::array::from_fn(|i| v["factors"][i].as_f64().unwrap() as f32),
+                    frame_length: n("frame_length"),
+                    pixel_clock_mhz: n("pixel_clock"),
+                    line_length_pixels: n("line_length"),
+                    linear: timing("linear"),
+                    hdr: [timing("hdr2"), timing("hdr3")],
+                    linear_dcg_ratio: n("linear_ratio"),
+                    hdr_dcg_ratio: n("hdr_ratio"),
+                };
+                let mode = match v["mode"].as_u64().unwrap() {
+                    0 => Mode::Linear,
+                    1 => Mode::HdrTwo,
+                    _ => Mode::HdrThree,
+                };
+                let result = convert(
+                    n("time"),
+                    n("gain"),
+                    mode,
+                    v["dcg"].as_i64().unwrap() as i32,
+                    cfg,
+                )
+                .unwrap();
+                println!("{}:{}", result.integration_time, result.gain);
+            }
             "sensor-linear" => {
                 use shieldsigner_rkaiq::sensor::*;
                 struct Trace {

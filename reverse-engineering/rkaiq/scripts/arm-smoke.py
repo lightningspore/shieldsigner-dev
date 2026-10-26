@@ -38,6 +38,10 @@ sensor_linear=ROOT/'dist/reverse-engineering/sensor-linear-fixtures'
 with (sensor_linear/'inputs.txt').open('rb') as source:
  controls=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert controls.stdout==(sensor_linear/'expected.txt').read_bytes(),'ARM sensor-write sequence differs from original method'
+exposure=ROOT/'dist/reverse-engineering/exposure-fixtures'
+with (exposure/'inputs.txt').open('rb') as source:
+ converted=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert converted.stdout==(exposure/'expected.txt').read_bytes(),'ARM exposure conversion differs from original RKAIQ/uClibc'
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -52,6 +56,7 @@ for options,expected in [(['--buffers','1'],'at least two buffers'),(['--width',
 occupied=subprocess.run(command('camera-probe','capture-statistics','/dev/null','/work/camera-probe'),text=True,capture_output=True)
 assert occupied.returncode==1 and 'already exists' in occupied.stderr,occupied
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'exposureReferenceCases':len(converted.stdout.splitlines()),'exposureMatch':True,
  'sensorLinearReferenceCases':len(controls.stdout.splitlines()),'sensorLinearMatch':True,
  'aeBigGridReferenceCases':len(big_grid.stdout.splitlines()),'aeBigGridMatch':True,
  'aeHistogramReferenceCases':len(histogram.stdout.splitlines()),'aeHistogramMatch':True,

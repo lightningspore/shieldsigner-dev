@@ -268,3 +268,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:sensor-linear"]
 description = "Compare linear sensor-write sequencing and failures against original ARM method"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/sensor-linear.py --cases 1000 --emit-dir dist/reverse-engineering/sensor-linear-fixtures"]
+
+[tasks."camera:rust:exposure"]
+description = "Compare gain/shutter register conversion with original RKAIQ and uClibc ARM code"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/exposure.py --cases 1000 --emit-dir dist/reverse-engineering/exposure-fixtures"]

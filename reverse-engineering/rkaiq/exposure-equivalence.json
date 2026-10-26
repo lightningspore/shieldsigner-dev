@@ -1,0 +1,44 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "runtimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "seed": "0x45585052",
+  "cases": 1000,
+  "branchCoverage": {
+    "0:0:0": 43,
+    "1:0:0": 43,
+    "2:0:0": 43,
+    "0:1:0": 42,
+    "1:1:0": 42,
+    "2:1:0": 42,
+    "0:2:0": 42,
+    "1:2:0": 42,
+    "2:2:0": 42,
+    "0:-1:1": 42,
+    "1:-1:1": 42,
+    "2:-1:1": 42,
+    "0:0:1": 42,
+    "1:0:1": 41,
+    "2:0:1": 41,
+    "0:1:1": 41,
+    "1:1:1": 41,
+    "2:1:1": 41,
+    "0:2:1": 41,
+    "1:2:1": 41,
+    "2:2:1": 41,
+    "0:-1:0": 41,
+    "1:-1:0": 41,
+    "2:-1:0": 41
+  },
+  "mismatchCount": 0,
+  "nativeRuntimeFunctions": [
+    "log10f",
+    "powf"
+  ],
+  "nativeRuntimeImportedCalls": [],
+  "scope": "AeReal2RegConv gain and integration-time codes; original uClibc powf/log10f execute as ARM instructions",
+  "limitations": [
+    "Finite valid calibration inputs; arbitrary invalid-pointer and unsupported-model behavior are outside the checked Rust API.",
+    "Corpus equivalence of resulting register codes does not prove all transcendental outputs match for every float.",
+    "Calibration loading, exposure decisions, frame scheduling and live sensor programming remain separate work."
+  ]
+}

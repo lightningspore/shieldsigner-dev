@@ -1,6 +1,6 @@
 {
   "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
-  "binarySha256": "01e1dc71eaff09482a34ab4145d61e2fa31f2b33ebb4060062e7cd0a3cb4ed9a",
+  "binarySha256": "03d385d38cf87039729599a3fa7fde328c9f8f4e3c898d459f995042db3ee1a7",
   "checks": [
     "SDK profile plus synthetic descriptor",
     "Explicit longer frame",

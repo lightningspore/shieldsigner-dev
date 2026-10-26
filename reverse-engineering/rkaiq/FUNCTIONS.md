@@ -86,3 +86,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## AWB gain and temporal stages
 
 `awb_gain` reconstructs six original routines for weighted-statistics gains, normalization, mixture, damping-coefficient adaptation and temporal gains. [Entries, precision, context effects and 6,000 native comparisons](AWB.md#gain-calculation-and-temporal-damping). These are stages of the AWB path; the surrounding classification, calibrated policy and service remain unfinished.
+
+## AWB illumination probabilities
+
+`awb_probability::calculate` reconstructs `AwbCalWpNoProbablity` followed by the complete `AwbCalTotalProbablity` call tree. `weighted_gain` reconstructs `AwbCalGainTotal`. [Six entries, retained counts, all per-light values and 2,000 full native sequences](AWB.md#illumination-probabilities-and-weighted-gain).

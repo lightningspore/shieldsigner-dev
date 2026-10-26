@@ -2,17 +2,9 @@
 """Compare AWB normalization, mixture, coefficient adaptation and temporal gains."""
 import argparse, hashlib, json, random, struct, subprocess
 from pathlib import Path
-from differential import OriginalArm, ROOT, BINARY, HEAP, f32, regs
+from differential import ROOT, BINARY, HEAP, f32
+from awb_reference import OriginalAwb, RUNTIME
 SYMBOLS={'normalize':'_Z13AwbGainNormalPf','mixture':'_Z14AwbGainMixturePfS_fS_', 'factor':'_Z16AwbCalDampFactorfffffPf','damp':'_Z14AwbCalDampGainP12awb_contex_s', 'ratios':'_Z22AwbGainCalbyRgainBgainxxxPf', 'statistics':'_Z36AwbCalGainForDiffIllumAndDiffXYType229rk_aiq_awb_stat_wp_res_v201_sPfPx'}
-RUNTIME=ROOT/'.tools/reverse-engineering/uclibc-runtime/libgcc_s.so.1'
-class OriginalAwb(OriginalArm):
- def __init__(self):
-  super().__init__(BINARY);self.runtime=OriginalArm(RUNTIME);self.runtime_calls=0
- def hook(self,uc,address,size,user):
-  if self.stubs.get(address)=='__aeabi_l2f':
-   self.runtime.invoke('__aeabi_l2f',[uc.reg_read(regs.UC_ARM_REG_R0),uc.reg_read(regs.UC_ARM_REG_R1)])
-   self.runtime_calls+=1;uc.reg_write(regs.UC_ARM_REG_R0,self.runtime.uc.reg_read(regs.UC_ARM_REG_R0));uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
-  super().hook(uc,address,size,user)
 def floats(data):return ':'.join(f'{x:08x}' for x in struct.unpack('<'+'I'*(len(data)//4),data))
 def run(arm,v):
  first=struct.pack('<4f',*v['first']);second=struct.pack('<4f',*v['second']);arm.uc.mem_write(HEAP,first);arm.uc.mem_write(HEAP+0x100,second);arm.uc.mem_write(HEAP+0x200,bytes([0xa7])*16)

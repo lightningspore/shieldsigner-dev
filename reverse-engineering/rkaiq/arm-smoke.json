@@ -8,6 +8,8 @@
   "awbMeasurementMatch": true,
   "awbGainReferenceCases": 6000,
   "awbGainMatch": true,
+  "awbProbabilityReferenceCases": 2000,
+  "awbProbabilityMatch": true,
   "parameterQueueReferenceCases": 1000,
   "parameterQueueMatch": true,
   "parameterSubmitInvalidEndpointRejected": true,
@@ -57,8 +59,8 @@
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "0ad309a23f461ed7ef5e79fce1d1cc878f2168d4c2310d4935a69f95ca08645a",
-    "numeric-fixture": "c5a2c0d2a2bfafac1b2b4809c31333d765b934997aba10d087c272bd083ead23",
+    "camera-probe": "36437df87b10a2f4dface7005fbcb2d5cb04390c6056e5e9bd75060c629a10c3",
+    "numeric-fixture": "90f487bdf76df77c89fb21b11bc9c9471ea93326d894942564f6a84563027fb2",
     "frame-preview": "8efad4a76ba6d985f6df99d61328ff4dce3bd9b99c2163c139b89e86d667aed7"
   },
   "limitations": [

@@ -54,6 +54,8 @@ AWB measurement parameter conversion also matches **2,000 native ARM cases**, co
 
 Six AWB gain/temporal routines now match **6,000 native ARM cases**, including weighted-statistics conversion, normalization, mixture, adaptive damping and the complete temporal gain stage. Integer-to-float reference conversion executes the SDK GCC runtime's original instructions. Illumination classification, full calibrated AWB policy and live publication remain unfinished. See [AWB.md](AWB.md#gain-calculation-and-temporal-damping).
 
+AWB illumination probabilities and their weighted output gain now match **2,000 complete native sequences**: selected-region white-point filtering, gain distance, brightness, per-light curves, combined probabilities and channel accumulation/normalization. Upstream construction of those selected-region/calibrated inputs and the outer AWB controller remain unfinished. See [AWB.md](AWB.md#illumination-probabilities-and-weighted-gain).
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.

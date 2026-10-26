@@ -191,6 +191,99 @@ fn main() {
                         .join(",")
                 );
             }
+            "awb-probability" => {
+                use shieldsigner_rkaiq::awb_probability::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let number = |name: &str| v[name].as_f64().unwrap() as f32;
+                let source = v["lights"].as_array().unwrap();
+                let knots: Vec<Vec<f32>> = source
+                    .iter()
+                    .map(|l| {
+                        l["knots"]
+                            .as_array()
+                            .unwrap()
+                            .iter()
+                            .map(|n| n.as_f64().unwrap() as f32)
+                            .collect()
+                    })
+                    .collect();
+                let weights: Vec<Vec<f32>> = source
+                    .iter()
+                    .map(|l| {
+                        l["weights"]
+                            .as_array()
+                            .unwrap()
+                            .iter()
+                            .map(|n| n.as_f64().unwrap() as f32)
+                            .collect()
+                    })
+                    .collect();
+                let lights: Vec<_> = source
+                    .iter()
+                    .enumerate()
+                    .map(|(i, l)| Light {
+                        reference_gain: core::array::from_fn(|j| {
+                            l["gain"][j].as_f64().unwrap() as f32
+                        }),
+                        statistic_gain: core::array::from_fn(|j| {
+                            l["statisticGain"][j].as_f64().unwrap() as f32
+                        }),
+                        kind: l["kind"].as_i64().unwrap() as i32,
+                        white_points: l["count"].as_u64().unwrap() as u32,
+                        prior: Curve {
+                            knots: &knots[i],
+                            weights: &weights[i],
+                        },
+                    })
+                    .collect();
+                let mut output: Vec<_> = source
+                    .iter()
+                    .map(|l| Probability {
+                        total: 0.,
+                        distance: 0.,
+                        luma: l["oldLuma"].as_f64().unwrap() as f32,
+                        prior: 0.,
+                        white_points: 0.,
+                    })
+                    .collect();
+                let count = calculate(
+                    &lights,
+                    &mut output,
+                    Settings {
+                        gain: core::array::from_fn(|i| v["gain"][i].as_f64().unwrap() as f32),
+                        frame: v["frame"].as_u64().unwrap() as u32,
+                        fast: v["fast"].as_bool().unwrap(),
+                        near_distance_squared: number("near"),
+                        far_distance_squared: number("far"),
+                        brightness: v["brightness"].as_u64().unwrap() as u32,
+                        brightness_thresholds: core::array::from_fn(|i| {
+                            v["thresholds"][i].as_u64().unwrap() as u32
+                        }),
+                        prior_sample: number("sample"),
+                        absolute_count_threshold: number("absolute"),
+                        relative_count_threshold: number("relative"),
+                    },
+                )
+                .unwrap();
+                let values = output
+                    .iter()
+                    .map(|p| {
+                        [p.total, p.distance, p.luma, p.prior, p.white_points]
+                            .iter()
+                            .map(|x| format!("{:08x}", x.to_bits()))
+                            .collect::<Vec<_>>()
+                            .join(":")
+                    })
+                    .collect::<Vec<_>>()
+                    .join(",");
+                let gain = weighted_gain(&lights, &output)
+                    .unwrap()
+                    .iter()
+                    .map(|x| format!("{:08x}", x.to_bits()))
+                    .collect::<Vec<_>>()
+                    .join(":");
+                println!("{count:08x}:{values}|{gain}");
+            }
             "awb-gain" => {
                 use shieldsigner_rkaiq::awb_gain::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

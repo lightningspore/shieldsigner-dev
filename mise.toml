@@ -204,3 +204,7 @@ run = "uv run --python 3.11 --with cadquery==2.8.0 --with trimesh --with manifol
 [tasks."variant:lcd:printable-fit"]
 description = "Create one watertight millimetre STL fit mockup and a bare carrier STL"
 run = "uv run --python 3.11 --with trimesh --with manifold3d --with networkx python scripts/build-printable-fit.py"
+
+[tasks."variant:lcd:pwm"]
+description = "Build the dedicated-backlight PWM revision candidate and run native checks"
+run = "uv run python scripts/build-backlight-pwm.py"

@@ -1,0 +1,30 @@
+{
+  "revision": "0.0.8-dev candidate",
+  "baseBoardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
+  "boardSha256": "c5644d7a6eb18ef013d008f880bb0813b05b33892b87eaa982da4638e973521a",
+  "nativeChecks": {
+    "erc": {
+      "violations": 0,
+      "unconnected": 0,
+      "parity": 0
+    },
+    "drc": {
+      "violations": 0,
+      "unconnected": 0,
+      "parity": 0
+    }
+  },
+  "preservedExistingComponentPoses": 60,
+  "preservedOriginalCopperNetAssignments": true,
+  "obsoleteBacklightSegmentsRemoved": 9,
+  "defaultMode": "Always on: JP201 closed, JP202 open",
+  "optionalMode": "PWM: JP201 open, JP202 closed; JP203/JP205 closed and JP204/JP206 open in both modes",
+  "pwm": {
+    "moduleHeaderPin": 14,
+    "gpio": "GPIO1_D2",
+    "function": "PWM0_M1",
+    "logicVolts": 3.3,
+    "pullDown": "R703 5.1 kohm 0805, C27834; 0.647 mA at 3.3 V"
+  },
+  "qualification": "Hardware route and topology verified; module PWM frequency/duty response and final OS pinmux require bench qualification. Existing released PCB/cart assets unchanged."
+}

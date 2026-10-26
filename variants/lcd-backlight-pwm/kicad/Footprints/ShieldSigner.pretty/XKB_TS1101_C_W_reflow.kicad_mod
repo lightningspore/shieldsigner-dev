@@ -1,0 +1,328 @@
+(footprint "XKB_TS1101_C_W_reflow"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "http://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1437566-3&DocType=Customer+Drawing&DocLang=English")
+	(tags "SPST button tactile switch")
+	(property "Reference" "SW501"
+		(at 0 -2.6 180)
+		(layer "F.SilkS")
+		(uuid "34b60116-976f-4317-a0c9-8f2eb64c50d1")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "TS-1101-C-W"
+		(at 0 3 180)
+		(layer "F.Fab")
+		(uuid "d637b4f4-3110-419b-82c5-875fc4175211")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9681a5d5-56d7-41b5-801e-b8e7cfbf68fc")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Push button switch, generic, two pins"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "305a7c96-b5d4-4161-8ad5-a9e4eda06c8a")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "LCSC" "C318938"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "14fa2454-a752-4c4b-8928-d06b590044ba")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "MPN" "TS-1101-C-W"
+		(at 0 0 270)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "4df814b7-5e34-45c3-a74d-bcb5e314dee2")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer" "XKB Connection"
+		(at 0 0 270)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "80655c24-3694-4a65-ab20-8fc0cdc29427")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(sheetname "/Buttons/")
+	(sheetfile "buttons.kicad_sch")
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -4.55 -3.25)
+		(end 4.55 -3.249999)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "75d02bad-b5aa-41a0-816e-4b6f23bc681d")
+	)
+	(fp_line
+		(start -4.55 3.249999)
+		(end -4.55 -3.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "48c93620-49eb-4ecd-bcfc-69da512b4295")
+	)
+	(fp_line
+		(start 4.55 -3.249999)
+		(end 4.55 3.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "db8d9e1b-de7d-4c17-ac82-537bf9fa1a49")
+	)
+	(fp_line
+		(start 4.55 3.25)
+		(end -4.55 3.249999)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "17e83eb7-4ee3-4d18-aad1-db05a6634556")
+	)
+	(fp_line
+		(start -3.06 -1.81)
+		(end 3.06 -1.81)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "e5226dfc-fdb7-416c-9b29-8b5b6e83a8bc")
+	)
+	(fp_line
+		(start -3.06 1.81)
+		(end -3.06 1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "95c13aaa-423f-4339-ad38-5e61997d6163")
+	)
+	(fp_line
+		(start -3 -1.75)
+		(end -3 1.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "3c801087-3eb3-4a20-9874-78cb5657d368")
+	)
+	(fp_line
+		(start -3 -1.75)
+		(end 3 -1.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "3fae4885-2ab6-41c0-afa9-41c3641ec35b")
+	)
+	(fp_line
+		(start -3 1.75)
+		(end 3 1.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "a23b92ea-4897-4bd9-b727-86683df3dd54")
+	)
+	(fp_line
+		(start -1.75 -1)
+		(end 1.75 -1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "c3c3b851-574f-4456-9055-1045ca0ff40a")
+	)
+	(fp_line
+		(start -1.75 1)
+		(end -1.75 -1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "41b7812b-98e7-454e-a538-f382ee3492d2")
+	)
+	(fp_line
+		(start -1.5 -0.8)
+		(end -1.5 0.8)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "4e5ca9f1-d2c2-4fbb-a3ae-434595ee8d3c")
+	)
+	(fp_line
+		(start -1.5 -0.8)
+		(end 1.5 -0.8)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "5217b151-12f3-4949-af71-bf4896d35fbf")
+	)
+	(fp_line
+		(start -1.5 0.8)
+		(end 1.5 0.8)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "064fc04b-5aa0-4ce2-8c81-470248ad708d")
+	)
+	(fp_line
+		(start 1.5 -0.8)
+		(end 1.5 0.8)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "984b315d-4862-4ecf-b223-9ccdcc88430e")
+	)
+	(fp_line
+		(start 1.75 -1)
+		(end 1.75 1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "4b425954-3513-41eb-aeab-9636bef09ccf")
+	)
+	(fp_line
+		(start 1.75 1)
+		(end -1.75 1)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "9f984b01-7650-4d52-b9b6-55493da45759")
+	)
+	(fp_line
+		(start 3 -1.75)
+		(end 3 1.75)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "ecf620f8-62d2-4d06-b6f7-8d4676f28f9b")
+	)
+	(fp_line
+		(start 3.06 -1.81)
+		(end 3.06 -1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "350402f6-d6d0-4914-88cc-260975475187")
+	)
+	(fp_line
+		(start 3.06 1.81)
+		(end -3.06 1.81)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "000b6ebd-907d-4d16-a7d8-f84844a6fd28")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 -2.6 180)
+		(layer "F.Fab")
+		(uuid "c7a00ca6-6547-4baa-966c-cdce05525028")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -3.7 0)
+		(size 1.2 1)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "18b0c789-6991-4c42-b12f-f603ed0cfa47")
+	)
+	(pad "2" smd rect
+		(at 3.7 0)
+		(size 1.2 1)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "78869f4c-b54a-43b2-b803-fb78815e1789")
+	)
+	(embedded_fonts no)
+	
+
+
+
+
+
+(model "${KIPRJMOD}/../../lcd-module-2.8/kicad/3dmodels/vendor/XKB-TS-1101-C-W.step" (offset (xyz 0 0 0.593671559)) (scale (xyz 1 1 1)) (rotate (xyz 0 0 0)))
+)

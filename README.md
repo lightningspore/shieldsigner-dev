@@ -18,6 +18,10 @@ The [printed enclosure guide](docs/ENCLOSURE.md) includes the screw list, camera
 
 The optional [DigiKey self-assembly guide](docs/SELF-ASSEMBLY.md) provides a separate purchase BOM for the same pill board. JLC remains the primary PCBA route.
 
+## Backlight PWM revision candidate
+
+The [0.0.8-dev backlight candidate](variants/lcd-backlight-pwm/README.md) adds a dedicated Luckfox PWM path and one pull-down resistor. **Always-on remains the factory default**; PWM is selected with the existing backlight straps. Native ERC/DRC/connectivity/parity and both mode checks pass. This candidate is separate from the released 0.0.7 manufacturing files and saved cart; module PWM response still needs a bench check. Rebuild it with `mise run variant:lcd:pwm`.
+
 ## Standard FPC reference documentation
 
 Read these in order:

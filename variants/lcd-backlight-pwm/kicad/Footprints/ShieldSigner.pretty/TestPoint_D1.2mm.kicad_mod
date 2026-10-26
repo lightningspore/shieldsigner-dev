@@ -1,0 +1,7 @@
+(footprint "TestPoint_D1.2mm" (version 20260101) (generator "pcbnew")
+ (layer "F.Cu")
+ (attr board_only exclude_from_pos_files exclude_from_bom)
+ (property "Reference" "TP" (at 0 -1.6) (layer "F.SilkS") (hide yes) (effects (font (size 0.8 0.8) (thickness 0.15))))
+ (property "Value" "TestPoint_D1.2mm" (at 0 1.6) (layer "F.Fab") (hide yes) (effects (font (size 0.8 0.8) (thickness 0.15))))
+ (pad "1" smd circle (at 0 0) (size 1.2 1.2) (layers "F.Cu" "F.Mask"))
+)

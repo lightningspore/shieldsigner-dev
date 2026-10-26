@@ -27,7 +27,7 @@ The weighted mean is `roundf((sum(weight × selected_8bit_value) as f32 × 256) 
 
 Its imported standard `roundf` is modeled explicitly with ties away from zero; it is not an unreported vendor algorithm stub. The remaining calculations, pointer writes and float conversions execute in the original instructions. Kernel headers independently verify the signed BLS record layout. Host tests verify zero-weight rejection is atomic and RGB-only preserves the mean/luma fields; ARM emulation repeats the entire corpus using the compiled Rust fixture runner.
 
-AE1/2/3 big-grid correction, full translator configuration/state, calibrated weights, exposure selection and sensor programming remain unfinished. Do not feed guessed gains, black levels or weights into a live control loop and describe it as the upstream algorithm. The measurement decoder and this helper are separate APIs until those inputs and synchronization are reconstructed.
+Full translator configuration/state, calibrated weights, exposure selection and sensor programming remain unfinished. Do not feed guessed gains, black levels or weights into a live control loop and describe it as the upstream algorithm. The measurement decoder and this helper are separate APIs until those inputs and synchronization are reconstructed.
 
 ## Histogram correction
 
@@ -40,3 +40,15 @@ The original narrows some products and weighted offsets to signed or unsigned 16
 `camera:rust:ae-histogram` compares every output counter in 1,000 deterministic original-ARM runs. All sixteen mode/size/bypass combinations are included, with both ordinary and larger corrections, full-width input counts that exercise wrapping, and bypass cases with zero gains. Standard `__aeabi_idiv` is an explicit truncating signed-division stub; the original bin-mapping instructions still execute. [Report](ae-histogram-equivalence.json). The compiled ARM Rust runner repeats the complete corpus under Docker emulation. Host tests cover atomic rejection and bypass behavior.
 
 This helper redistributes measured histogram counts; it does not choose sensor exposure or establish a calibrated control loop. Native invalid-pointer/out-of-bounds behavior and zero-divisor paths are outside the checked API.
+
+## Large AE grids and subwindows
+
+`ae::correct_big_grid` reconstructs `calcAecBigWinStatsV32`, ELF `0x86444` (Ghidra `0x96444`). It applies the same six channel-selection branches and luma ranges to 225 cells, and always corrects four subwindow RGB sums. AE0 and big-grid correction share the recovered cell calculation; both original-reference corpora run after changes to that calculation.
+
+The native output record is 1,928 bytes: four 225-element u16 arrays, four four-element window-channel arrays that this function leaves untouched, then four u64 sums per color. `camera:rust:layout` extracts the actual record declaration and array-count macros from the pinned SDK header, cross-compiles them for ARM, and checks size and offsets independently of the Rust serializer.
+
+For subwindow sums, red/blue use a quarter of the supplied pixel count and clip to `0x1fffffff`. Green uses half the pixel count and clips to `0xffffffff`. Grid cells use `black.green_red`, while green **sums** use `black.green_blue`. Gain scaling uses a signed 64-bit multiplication followed by a **logical** right shift by eight. The black-level×pixel term wraps at 32 bits and is then subtracted as unsigned. Those native operations have unusual results for negative/extreme inputs; replacing them with straightforward signed subtraction would fail the reference comparison. Rust preserves the pinned behavior and final saturation.
+
+All branches update sums, including RGB-only mode, which still leaves the prior weighted mean and luma cells intact. The untouched window-channel arrays are preserved in every branch. Zero mean-weight rejection happens before any grid/sum mutation.
+
+`camera:rust:ae-big-grid` compares all 1,928 output bytes and the mean for 1,000 deterministic original-ARM runs across all twelve channel/range combinations. Cases include signed gain and black-level boundaries, small/large pixel counts, saturation and preservation of prior output bytes. The standard `roundf` stub is shared with AE0's harness; other processing runs as original ARM instructions. [Report](ae-big-grid-equivalence.json). The compiled ARM Rust runner repeats the complete corpus. This still does not implement calibrated exposure decisions or the full resource-translator state machine.

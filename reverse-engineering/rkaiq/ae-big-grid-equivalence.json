@@ -1,0 +1,26 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "seed": "0x42494741",
+  "cases": 1000,
+  "branchCoverage": {
+    "0:0": 84,
+    "1:0": 84,
+    "2:0": 84,
+    "4:0": 84,
+    "8:0": 83,
+    "14:0": 83,
+    "0:1": 83,
+    "1:1": 83,
+    "2:1": 83,
+    "4:1": 83,
+    "8:1": 83,
+    "14:1": 83
+  },
+  "mismatchCount": 0,
+  "scope": "Full 1928-byte big-AE records: 225 RGB/luma cells, preserved window channels, four subwindow RGB sums, plus weighted mean",
+  "limitations": [
+    "Standard roundf uses the explicit ties-away stub shared with AE0; remaining processing executes original ARM instructions.",
+    "Valid positive weight sum; Rust rejects zero-weight mean atomically.",
+    "The helper does not implement exposure selection, calibration loading or sensor programming."
+  ]
+}

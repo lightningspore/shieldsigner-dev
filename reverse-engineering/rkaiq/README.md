@@ -22,6 +22,8 @@ The AE0 5×5 correction helper now matches **1,000 original-ARM cases** across a
 
 AE histogram correction also matches **1,000 original-ARM cases**, covering 64/256 bins, R/G/B/luma modes and bypass. It retains native intermediate narrowing, bin-center selection and u32 count wrapping.
 
+Large 15×15 AE grid correction and four RGB subwindow sums now match **1,000 original-ARM full-record comparisons**, including preserved window-channel fields and weighted means.
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -77,6 +79,7 @@ mise run camera:rust:lifecycle
 mise run camera:rust:binding
 mise run camera:rust:statistics
 mise run camera:rust:ae-grid
+mise run camera:rust:ae-big-grid
 mise run camera:rust:ae-histogram
 mise run camera:rust:arm
 mise run camera:rust:smoke

@@ -72,12 +72,39 @@ pub fn correct_lite_grid(
     black: Bls,
     gain: Bls,
 ) -> Result<(), InvalidInput> {
+    correct_grid(
+        input,
+        [
+            &mut output.red,
+            &mut output.green,
+            &mut output.blue,
+            &mut output.luma,
+        ],
+        mean,
+        weights,
+        selection,
+        range,
+        black,
+        gain,
+    )
+}
+fn correct_grid(
+    input: &[u32],
+    output: [&mut [u16]; 4],
+    mean: &mut u16,
+    weights: &[u8],
+    selection: Selection,
+    range: LumaRange,
+    black: Bls,
+    gain: Bls,
+) -> Result<(), InvalidInput> {
+    let [red_out, green_out, blue_out, luma_out] = output;
     let total: u32 = weights.iter().map(|w| *w as u32).sum();
     if total == 0 && !matches!(selection, Selection::Rgb) {
         return Err(InvalidInput::DegenerateRange);
     }
     let mut weighted = 0u32;
-    for i in 0..25 {
+    for i in 0..input.len() {
         let raw = crate::statistics::ae_sample(input[i]);
         let red = corrected(raw.red, gain.red, black.red);
         let green = corrected(raw.green, gain.green_red, black.green_red);
@@ -89,34 +116,34 @@ pub fn correct_lite_grid(
         );
         let sample = match selection {
             Selection::Red => {
-                output.red[i] = r;
+                red_out[i] = r;
                 r >> 2
             }
             Selection::Green => {
-                output.green[i] = g;
+                green_out[i] = g;
                 g >> 4
             }
             Selection::Blue => {
-                output.blue[i] = b;
+                blue_out[i] = b;
                 b >> 2
             }
             Selection::Luma => {
                 let y = luma(red >> 2, green >> 4, blue >> 2, range);
-                output.luma[i] = y;
+                luma_out[i] = y;
                 y
             }
             Selection::Rgb => {
-                output.red[i] = r;
-                output.green[i] = g;
-                output.blue[i] = b;
+                red_out[i] = r;
+                green_out[i] = g;
+                blue_out[i] = b;
                 0
             }
             Selection::RgbAndLuma => {
-                output.red[i] = r;
-                output.green[i] = g;
-                output.blue[i] = b;
+                red_out[i] = r;
+                green_out[i] = g;
+                blue_out[i] = b;
                 let y = luma((r >> 2) as i32, (g >> 4) as i32, (b >> 2) as i32, range);
-                output.luma[i] = y;
+                luma_out[i] = y;
                 y
             }
         };
@@ -174,5 +201,182 @@ mod tests {
         assert_eq!(mean, 77);
         assert_eq!(grid.luma, [123; 25]);
         assert_eq!(grid.red, [1023; 25]);
+    }
+}
+
+pub const BIG_RECORD_BYTES: usize = 1928;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct BigGrid {
+    pub red: [u16; 225],
+    pub green: [u16; 225],
+    pub blue: [u16; 225],
+    pub luma: [u16; 225],
+    pub window_channels: [[u16; 4]; 4],
+    pub red_sums: [u64; 4],
+    pub green_sums: [u64; 4],
+    pub blue_sums: [u64; 4],
+}
+impl BigGrid {
+    pub fn from_bytes(bytes: &[u8; BIG_RECORD_BYTES]) -> Self {
+        let words: [u16; 916] = core::array::from_fn(|i| {
+            u16::from_le_bytes(bytes[i * 2..i * 2 + 2].try_into().unwrap())
+        });
+        let sums: [u64; 12] = core::array::from_fn(|i| {
+            u64::from_le_bytes(bytes[1832 + i * 8..1840 + i * 8].try_into().unwrap())
+        });
+        Self {
+            red: words[..225].try_into().unwrap(),
+            green: words[225..450].try_into().unwrap(),
+            blue: words[450..675].try_into().unwrap(),
+            luma: words[675..900].try_into().unwrap(),
+            window_channels: core::array::from_fn(|i| {
+                words[900 + i * 4..904 + i * 4].try_into().unwrap()
+            }),
+            red_sums: sums[..4].try_into().unwrap(),
+            green_sums: sums[4..8].try_into().unwrap(),
+            blue_sums: sums[8..].try_into().unwrap(),
+        }
+    }
+    pub fn bytes(&self) -> [u8; BIG_RECORD_BYTES] {
+        let mut bytes = [0; BIG_RECORD_BYTES];
+        for (i, value) in self
+            .red
+            .iter()
+            .chain(&self.green)
+            .chain(&self.blue)
+            .chain(&self.luma)
+            .chain(self.window_channels.iter().flatten())
+            .enumerate()
+        {
+            bytes[i * 2..i * 2 + 2].copy_from_slice(&value.to_le_bytes());
+        }
+        for (i, value) in self
+            .red_sums
+            .iter()
+            .chain(&self.green_sums)
+            .chain(&self.blue_sums)
+            .enumerate()
+        {
+            bytes[1832 + i * 8..1840 + i * 8].copy_from_slice(&value.to_le_bytes());
+        }
+        bytes
+    }
+}
+#[derive(Clone, Copy, Debug)]
+pub struct RawSums {
+    pub red: [u32; 4],
+    pub green: [u32; 4],
+    pub blue: [u32; 4],
+}
+fn corrected_sum(raw: u32, gain: i16, black: i16, pixels: u32, shift: u32, maximum: u64) -> u64 {
+    // Preserve the binary's signed product, logical 64-bit shift, and wrapped
+    // *32-bit* BLS×pixel term rather than replacing them with signed arithmetic.
+    let scaled = ((raw as i64 * gain as i64) as u64) >> 8;
+    let subtraction = (pixels >> shift).wrapping_mul(black as u32) as u64;
+    let result = scaled.wrapping_sub(subtraction) as i64;
+    if result < 0 {
+        0
+    } else {
+        (result as u64).min(maximum)
+    }
+}
+/// Reconstruct calcAecBigWinStatsV32 (ELF 0x86444). All selection branches also
+/// update four subwindow RGB sums. The window-channel means remain untouched.
+pub fn correct_big_grid(
+    input: &[u32; 225],
+    raw_sums: RawSums,
+    output: &mut BigGrid,
+    mean: &mut u16,
+    weights: &[u8; 225],
+    selection: Selection,
+    range: LumaRange,
+    black: Bls,
+    gain: Bls,
+    pixels: [u32; 4],
+) -> Result<(), InvalidInput> {
+    correct_grid(
+        input,
+        [
+            &mut output.red,
+            &mut output.green,
+            &mut output.blue,
+            &mut output.luma,
+        ],
+        mean,
+        weights,
+        selection,
+        range,
+        black,
+        gain,
+    )?;
+    for i in 0..4 {
+        output.red_sums[i] = corrected_sum(
+            raw_sums.red[i],
+            gain.red,
+            black.red,
+            pixels[i],
+            2,
+            0x1fffffff,
+        );
+        output.green_sums[i] = corrected_sum(
+            raw_sums.green[i],
+            gain.green_red,
+            black.green_blue,
+            pixels[i],
+            1,
+            u32::MAX as u64,
+        );
+        output.blue_sums[i] = corrected_sum(
+            raw_sums.blue[i],
+            gain.blue,
+            black.blue,
+            pixels[i],
+            2,
+            0x1fffffff,
+        );
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod big_tests {
+    use super::*;
+    #[test]
+    fn preserves_native_logical_shift_and_unsigned_black_product() {
+        assert_eq!(corrected_sum(1, -1, 0, 0, 2, 0x1fffffff), 0x1fffffff);
+        assert_eq!(corrected_sum(0, 256, -1, 4, 2, 0x1fffffff), 0);
+        assert_eq!(corrected_sum(1, 256, 0, 0, 2, 0x1fffffff), 1);
+    }
+    #[test]
+    fn invalid_mean_weights_leave_entire_big_record_unchanged() {
+        let mut grid = BigGrid::from_bytes(&[7; BIG_RECORD_BYTES]);
+        let original = grid;
+        let mut mean = 9;
+        let values = Bls {
+            red: 256,
+            green_red: 256,
+            green_blue: 256,
+            blue: 256,
+        };
+        let sums = RawSums {
+            red: [1; 4],
+            green: [2; 4],
+            blue: [3; 4],
+        };
+        assert!(correct_big_grid(
+            &[0; 225],
+            sums,
+            &mut grid,
+            &mut mean,
+            &[0; 225],
+            Selection::Luma,
+            LumaRange::Full,
+            values,
+            values,
+            [4; 4]
+        )
+        .is_err());
+        assert_eq!(grid, original);
+        assert_eq!(mean, 9);
     }
 }

@@ -191,6 +191,73 @@ fn main() {
                         .join(",")
                 );
             }
+            "aebig" => {
+                use shieldsigner_rkaiq::ae::*;
+                let mut state: u32 = a[1].parse().unwrap();
+                fn next(s: &mut u32) -> u32 {
+                    *s = s.wrapping_mul(1664525).wrapping_add(1013904223);
+                    *s
+                }
+                let input = core::array::from_fn(|_| next(&mut state));
+                let raw_sums = RawSums {
+                    red: core::array::from_fn(|_| next(&mut state)),
+                    green: core::array::from_fn(|_| next(&mut state)),
+                    blue: core::array::from_fn(|_| next(&mut state)),
+                };
+                let initial = core::array::from_fn(|_| (next(&mut state) >> 24) as u8);
+                let mut output = BigGrid::from_bytes(&initial);
+                let weights = core::array::from_fn(|_| (next(&mut state) >> 24) as u8);
+                let read = |s: &str| {
+                    let v: Vec<i16> = s.split(',').map(|v| v.parse().unwrap()).collect();
+                    Bls {
+                        red: v[0],
+                        green_red: v[1],
+                        green_blue: v[2],
+                        blue: v[3],
+                    }
+                };
+                let selection = match a[2] {
+                    "1" => Selection::Luma,
+                    "2" => Selection::Red,
+                    "4" => Selection::Green,
+                    "8" => Selection::Blue,
+                    "14" => Selection::Rgb,
+                    _ => Selection::RgbAndLuma,
+                };
+                let range = if a[3] == "0" {
+                    LumaRange::Full
+                } else {
+                    LumaRange::Limited
+                };
+                let mut mean = a[7].parse().unwrap();
+                let pixels = a[6]
+                    .split(',')
+                    .map(|v| v.parse().unwrap())
+                    .collect::<Vec<u32>>()
+                    .try_into()
+                    .unwrap();
+                correct_big_grid(
+                    &input,
+                    raw_sums,
+                    &mut output,
+                    &mut mean,
+                    &weights,
+                    selection,
+                    range,
+                    read(a[4]),
+                    read(a[5]),
+                    pixels,
+                )
+                .unwrap();
+                println!(
+                    "{}:{mean}",
+                    output
+                        .bytes()
+                        .iter()
+                        .map(|v| format!("{v:02x}"))
+                        .collect::<String>()
+                );
+            }
             "aegrid" => {
                 use shieldsigner_rkaiq::ae::*;
                 let mut state: u32 = a[1].parse().unwrap();

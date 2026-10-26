@@ -1,0 +1,11 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "seed": "0x534e5352",
+  "cases": 1000,
+  "mismatchCount": 0,
+  "scope": "Sensor binding selection over controlled ordered inventories, ISP/CIF path precedence, special names and media-probe outcomes",
+  "limitations": [
+    "Inventory population and OS/media probes are not implemented or verified by these controlled inputs.",
+    "Finite ASCII strings with no embedded NUL; native invalid-pointer behavior is outside the checked Rust API."
+  ]
+}

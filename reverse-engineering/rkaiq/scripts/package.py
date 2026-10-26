@@ -19,9 +19,11 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
-for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
+for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
+for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
+assert smoke['bindingReferenceCases']==1000 and smoke['bindingMatch']
 assert smoke['lifecycleReferenceTraces']==100 and smoke['lifecycleMatch']
 # Copy source so the Rust implementation can be reviewed alongside the binary.
 source=ROOT/'firmware/rkaiq-rs'
@@ -67,6 +69,13 @@ if cmp -s "$kit_dir/lifecycle-fixtures/expected.txt" "$result_dir/lifecycle-actu
     echo "PASS: service call traces match the original daemon reference. ISP backend remains incomplete."
 else
     echo "FAIL: lifecycle output differs; preserve $result_dir/lifecycle-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/binding-fixtures/inputs.txt" > "$result_dir/binding-actual.txt"
+if cmp -s "$kit_dir/binding-fixtures/expected.txt" "$result_dir/binding-actual.txt"; then
+    echo "PASS: sensor selection matches the original controlled-inventory reference."
+else
+    echo "FAIL: sensor binding differs; preserve $result_dir/binding-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

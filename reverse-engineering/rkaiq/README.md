@@ -14,6 +14,8 @@ The probe uses Linux's existing V4L2/media interfaces. It does not call or link 
 
 A recovered Rust service controller also matches **100 original-daemon event traces** for initialization call order, stream subscriptions, and alternating start/stop filtering. Its processing backend is still incomplete: this is not a working substitute for the camera daemon. See [LIFECYCLE.md](LIFECYCLE.md). `camera-probe events` observes real driver events without configuring the ISP.
 
+The sensor binding selector also matches **1,000 controlled inventories** against the original instructions. It preserves ISP/CIF path precedence, name exceptions and media-probe outcomes. Live inventory construction is not implemented by this selector. See [DISCOVERY.md](DISCOVERY.md).
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -66,6 +68,7 @@ mise run camera:re:analyze
 mise run camera:rust:layout
 mise run camera:rust:test
 mise run camera:rust:lifecycle
+mise run camera:rust:binding
 mise run camera:rust:arm
 mise run camera:rust:smoke
 mise run camera:rust:package

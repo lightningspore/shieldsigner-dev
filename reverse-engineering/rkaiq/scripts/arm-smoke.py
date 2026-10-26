@@ -14,6 +14,10 @@ lifecycle=ROOT/'dist/reverse-engineering/lifecycle-fixtures'
 with (lifecycle/'inputs.txt').open('rb') as source:
  trace=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
 assert trace.stdout==(lifecycle/'expected.txt').read_bytes(),'ARM lifecycle differs from original daemon'
+binding=ROOT/'dist/reverse-engineering/binding-fixtures'
+with (binding/'inputs.txt').open('rb') as source:
+ selected=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
+assert selected.stdout==(binding/'expected.txt').read_bytes(),'ARM sensor selector differs from original library'
 events_negative=subprocess.run(command('camera-probe','events','/dev/null','--timeout-ms','1'),text=True,capture_output=True)
 assert events_negative.returncode==1 and 'os error 25' in events_negative.stderr.lower(),events_negative
 listing=subprocess.run(command('camera-probe','list'),text=True,capture_output=True,check=True);nodes=json.loads(listing.stdout)
@@ -21,6 +25,7 @@ assert nodes['linksRkaiq'] is False and nodes['devices']==[] and nodes['mediaGra
 negative=subprocess.run(command('camera-probe','capture','/dev/null','/tmp/should-not-exist'),text=True,capture_output=True)
 assert negative.returncode==1 and 'os error 25' in negative.stderr.lower(),negative
 report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM emulation; no camera device attached',
+ 'bindingReferenceCases':len(selected.stdout.splitlines()),'bindingMatch':True,
  'lifecycleReferenceTraces':len(trace.stdout.splitlines()),'lifecycleMatch':True,'invalidEventEndpointRejected':True,
  'numericalReferenceLines':len(expected.splitlines()),'numericalMatch':True,'cameraSelfTest':selftest.stdout.strip(),
  'nodeInventoryWithoutDevicePassed':True,'invalidVideoEndpointRejected':True,

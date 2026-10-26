@@ -147,6 +147,47 @@ fn main() {
                     hex(&params[AWB_GAIN_OFFSET..AWB_GAIN_OFFSET + 32])
                 );
             }
+            "binding" => {
+                use shieldsigner_rkaiq::discovery::*;
+                let input: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let sensors: Vec<_> = input["sensors"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|s| {
+                        let paths = |key: &str| {
+                            s[key]
+                                .as_array()
+                                .unwrap()
+                                .iter()
+                                .map(|v| v.as_str().unwrap())
+                                .collect::<Vec<_>>()
+                        };
+                        Sensor {
+                            name: s["name"].as_str().unwrap(),
+                            has_isp: s["isp"].as_bool().unwrap(),
+                            isp_paths: paths("paths").try_into().unwrap(),
+                            cif_paths: if s["cif"].is_null() {
+                                None
+                            } else {
+                                Some(paths("cif").try_into().unwrap())
+                            },
+                            media: match s["media"].as_i64().unwrap() {
+                                -1 => MediaStatus::Missing,
+                                -2 => MediaStatus::OpenFailed,
+                                -3 => MediaStatus::EntityUnavailable,
+                                -4 => MediaStatus::NoLinks,
+                                n => MediaStatus::FirstLinkFlags(n as u32),
+                            },
+                        }
+                    })
+                    .collect();
+                println!(
+                    "{}",
+                    serde_json::to_string(&bound_sensor(&sensors, input["query"].as_str()))
+                        .unwrap()
+                );
+            }
             "engine" => {
                 use shieldsigner_rkaiq::engine::*;
                 struct Trace(Vec<String>);

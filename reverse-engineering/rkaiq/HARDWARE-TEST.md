@@ -10,6 +10,7 @@ This kit is an **experimental partial reconstruction**. It supplies ten recovere
 - `fixtures/inputs.txt` and `fixtures/expected.txt`: 9,050 cases with reference results captured from the original ARM machine code under Unicorn.
 - `run-numeric-test.sh`: run and compare the numerical corpus on the device.
 - `lifecycle-fixtures/`: 100 call traces from the original daemon, replayed through the Rust orchestration core. This does not execute a complete Rust ISP backend.
+- `binding-fixtures/`: 1,000 controlled sensor-selection cases. This checks the selector, not live inventory discovery.
 - `manifest.json`: artifact sizes/hashes, target and source-file hashes.
 
 Use a development microSD/image and a connected compatible camera. Keep the existing working camera setup available for baseline comparison. The kit makes no persistent boot changes. Commands below use `/tmp` for test output; check available space first because full-resolution Bayer frames can be several MB.

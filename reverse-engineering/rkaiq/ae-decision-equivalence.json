@@ -1,0 +1,52 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "seed": "0x434c4d45",
+  "cases": 1000,
+  "histogramCoverage": {
+    "64:0": 63,
+    "256:0": 63,
+    "64:1": 63,
+    "256:1": 63,
+    "64:2": 63,
+    "256:2": 63,
+    "64:3": 63,
+    "256:3": 62,
+    "64:4": 62,
+    "256:4": 62,
+    "64:5": 62,
+    "256:5": 62,
+    "64:6": 62,
+    "256:6": 62,
+    "64:7": 62,
+    "256:7": 62,
+    "256:iteration-limit": 1
+  },
+  "iterationCoverage": {
+    "0": 321,
+    "1": 301,
+    "3": 110,
+    "2": 201,
+    "5": 14,
+    "7": 5,
+    "40": 1,
+    "16": 3,
+    "4": 28,
+    "8": 5,
+    "6": 2,
+    "23": 1,
+    "12": 2,
+    "9": 1,
+    "20": 1,
+    "17": 1,
+    "13": 2,
+    "51": 1
+  },
+  "mismatchCount": 0,
+  "scope": "ClmExecute final exposure f32 bits and saturation flag; triangle extension and iterative brightness prediction execute original ARM code",
+  "limitations": [
+    "Unsigned integer division is an explicit standard helper; logging is discarded.",
+    "Finite valid targets/exposure/tolerance and 64/256-bin histograms; invalid pointers and zero triangle divisors are outside the checked Rust API.",
+    "One beyond-normal-range target explicitly exercises the 51-iteration bound; it is not a proposed camera setting.",
+    "Outer damping, routes, gain splitting, calibration/state population and synchronized sensor/ISP application remain incomplete."
+  ]
+}

@@ -37,6 +37,8 @@ assert smoke['iqCalibrationReferenceCases']==100 and smoke['iqCalibrationMatch']
 assert smoke['sensorDescriptorReferenceCases']==1000 and smoke['sensorDescriptorMatch']
 assert smoke['exposureReferenceCases']==1000 and smoke['exposureMatch']
 assert smoke['sensorLinearReferenceCases']==1000 and smoke['sensorLinearMatch']
+for name in ['inputs.txt','expected.txt']:copy(base/'ae-decision-fixtures'/name,'ae-decision-fixtures/'+name)
+assert smoke['aeDecisionReferenceCases']==1000 and smoke['aeDecisionMatch']
 assert smoke['aeBigGridReferenceCases']==1000 and smoke['aeBigGridMatch']
 assert smoke['aeHistogramReferenceCases']==1000 and smoke['aeHistogramMatch']
 assert smoke['aeGridReferenceCases']==1000 and smoke['aeGridMatch']
@@ -151,6 +153,13 @@ if cmp -s "$kit_dir/iq-calibration-fixtures/expected.txt" "$result_dir/iq-calibr
     echo "PASS: IQ loading and conversion match the SDK-calibrated native reference."
 else
     echo "FAIL: IQ calibration conversion differs; preserve $result_dir/iq-calibration-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/ae-decision-fixtures/inputs.txt" > "$result_dir/ae-decision-actual.txt"
+if cmp -s "$kit_dir/ae-decision-fixtures/expected.txt" "$result_dir/ae-decision-actual.txt"; then
+    echo "PASS: histogram AE proposals match the original solver reference."
+else
+    echo "FAIL: histogram AE solver differs; preserve $result_dir/ae-decision-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

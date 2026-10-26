@@ -191,6 +191,32 @@ fn main() {
                         .join(",")
                 );
             }
+            "ae-decision" => {
+                use shieldsigner_rkaiq::ae_decision::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let n = |key: &str| v[key].as_f64().unwrap() as f32;
+                let histogram = v["histogram"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|x| x.as_u64().unwrap() as u32)
+                    .collect::<Vec<_>>();
+                let input = Input {
+                    target: n("target"),
+                    measured: n("measured"),
+                    current_exposure: n("exposure"),
+                    tolerance_percent: n("tolerance"),
+                    minimum_exposure: n("minimum"),
+                    maximum_exposure: n("maximum"),
+                    saturated: v["saturated"].as_bool().unwrap(),
+                };
+                let result = solve(&histogram, input).unwrap();
+                println!(
+                    "{:08x}:{}",
+                    result.exposure.to_bits(),
+                    result.saturated as u8
+                );
+            }
             "iq-exposure" => {
                 use shieldsigner_rkaiq::calibration::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

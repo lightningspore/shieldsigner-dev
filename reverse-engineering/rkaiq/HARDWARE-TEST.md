@@ -19,6 +19,7 @@ This kit is an **experimental partial reconstruction**. It supplies ten recovere
 - `exposure-fixtures/`: 1,000 gain/time code conversions against original RKAIQ and pinned uClibc math instructions. Replay does not program the camera.
 - `sensor-descriptor-fixtures/`: 1,000 full descriptor/query-order cases, including optional-query failures, compared with original ARM code.
 - `iq-calibration-fixtures/`: 100 SDK-profile load/conversion cases; the kit also includes a derived SC3336 exposure-only reference and an explicitly synthetic sensor snapshot.
+- `ae-decision-fixtures/`: 1,000 histogram-driven exposure proposals and saturation flags compared with the original ARM solver. Fixture replay does not run an automatic sensor-control loop.
 - `manifest.json`: artifact sizes/hashes, target and source-file hashes.
 
 Use a development microSD/image and a connected compatible camera. Keep the existing working camera setup available for baseline comparison. The kit makes no persistent boot changes. Commands below use `/tmp` for test output; check available space first because full-resolution Bayer frames can be several MB.

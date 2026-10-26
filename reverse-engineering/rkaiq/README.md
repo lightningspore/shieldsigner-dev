@@ -34,6 +34,8 @@ The IQ JSON exposure subset is now loaded into the recovered converter. **100 SD
 
 `camera-probe apply-linear` now provides manual driver control writes through the recovered sequencer, records each write and partial failures, and queries control readback/ranges. It does not run AE or initialize the camera pipeline.
 
+The histogram-driven `ClmExecute` exposure solver is now reconstructed, including tail-bin extrapolation, iterative clipped-brightness prediction, relative-growth cap and saturation-flag behavior. This is the inner proposal stage; outer AE damping, routes, limit application and synchronized control remain unfinished.
+
 ## Exact originals
 
 The [artifact manifest](artifacts.json) pins the SDK commit, download URLs and SHA-256 for `librkaiq.so` and `rkaiq_3A_server`. Originals remain in ignored `.tools/reverse-engineering/rkaiq-original/`; they are not included in the test kit or committed. The image's OS and SDK revisions are the existing documented build pins.
@@ -95,6 +97,7 @@ mise run camera:rust:sensor-descriptor
 mise run camera:rust:exposure
 mise run camera:rust:iq-calibration
 mise run camera:rust:ae-histogram
+mise run camera:rust:ae-decision
 mise run camera:rust:arm
 mise run camera:rust:smoke
 mise run camera:rust:package

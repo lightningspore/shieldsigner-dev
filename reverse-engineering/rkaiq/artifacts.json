@@ -81,6 +81,21 @@
       "name": "rk-isp32-config.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/rk-isp32-config.h",
       "sha256": "dbf3e0fc8bccc4f2f7211d0c43e39f793f61ff867de8ca21a4226c6933d0353a"
+    },
+    {
+      "name": "videodev2.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/videodev2.h",
+      "sha256": "2c69cc663e99edcfbe8891ec54e20c166e93505aca9cccda42d1d5f18269afc1"
+    },
+    {
+      "name": "v4l2-common.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/v4l2-common.h",
+      "sha256": "e83918121c875b16eb13946718e34e899b42e99d3805da713c62341a585c54a3"
+    },
+    {
+      "name": "v4l2-controls.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/v4l2-controls.h",
+      "sha256": "21392f3c3a4c4c2c04ad06d93fa01906e9dac8c890fbc82f8456093d09250a3b"
     }
   ]
 }

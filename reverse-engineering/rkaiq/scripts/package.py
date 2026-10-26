@@ -19,8 +19,10 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
-for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
+for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
+for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
+assert smoke['lifecycleReferenceTraces']==100 and smoke['lifecycleMatch']
 # Copy source so the Rust implementation can be reviewed alongside the binary.
 source=ROOT/'firmware/rkaiq-rs'
 for path in sorted(source.rglob('*')):
@@ -58,6 +60,13 @@ if cmp -s "$kit_dir/fixtures/expected.txt" "$result_dir/numeric-actual.txt"; the
     echo "PASS: all numerical results exactly match the original-reference corpus."
 else
     echo "FAIL: numerical output differs; preserve $result_dir/numeric-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/lifecycle-fixtures/inputs.txt" > "$result_dir/lifecycle-actual.txt"
+if cmp -s "$kit_dir/lifecycle-fixtures/expected.txt" "$result_dir/lifecycle-actual.txt"; then
+    echo "PASS: service call traces match the original daemon reference. ISP backend remains incomplete."
+else
+    echo "FAIL: lifecycle output differs; preserve $result_dir/lifecycle-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

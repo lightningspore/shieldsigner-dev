@@ -147,6 +147,55 @@ fn main() {
                     hex(&params[AWB_GAIN_OFFSET..AWB_GAIN_OFFSET + 32])
                 );
             }
+            "engine" => {
+                use shieldsigner_rkaiq::engine::*;
+                struct Trace(Vec<String>);
+                impl Backend for Trace {
+                    type Error = ();
+                    fn initialize(&mut self, sensor: &str, iq: &str) -> Result<(), ()> {
+                        self.0.push(format!("init:{sensor}:{iq}"));
+                        Ok(())
+                    }
+                    fn listen_in_library(&mut self, enabled: bool) -> Result<(), ()> {
+                        self.0.push(format!("listen:{}", enabled as u8));
+                        Ok(())
+                    }
+                    fn multiple_cameras(&mut self) -> Result<(), ()> {
+                        self.0.push("multicam:1".into());
+                        Ok(())
+                    }
+                    fn prepare_linear(&mut self, w: u32, h: u32) -> Result<(), ()> {
+                        self.0.push(format!("prepare:{w}:{h}:0"));
+                        Ok(())
+                    }
+                    fn subscribe(&mut self, e: u32) -> Result<(), ()> {
+                        self.0.push(format!("subscribe:{e}"));
+                        Ok(())
+                    }
+                    fn start(&mut self) -> Result<(), ()> {
+                        self.0.push("start".into());
+                        Ok(())
+                    }
+                    fn stop(&mut self, keep: bool) -> Result<(), ()> {
+                        self.0.push(format!("stop:{}", keep as u8));
+                        Ok(())
+                    }
+                }
+                let config = Config {
+                    sensor: a[4],
+                    iq_directory: a[5],
+                    width: a[2].parse().unwrap(),
+                    height: a[3].parse().unwrap(),
+                    multiple_cameras: a[1] == "1",
+                };
+                let mut engine = Engine::prepare(Trace(Vec::new()), config).unwrap();
+                if a[6] != "-" {
+                    for e in a[6].split(',') {
+                        engine.on_event(e.parse().unwrap()).unwrap();
+                    }
+                }
+                println!("{}", engine.backend().0.join(";"));
+            }
             "gain" => {
                 use shieldsigner_rkaiq::gain::*;
                 let mode = match a[1] {

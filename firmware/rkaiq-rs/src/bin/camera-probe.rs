@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe self-test\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffer request, 1–4 (default 1)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe self-test\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffer request, 1–4 (default 1)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -645,10 +645,113 @@ mod linux {
         println!("{}", serde_json::to_string_pretty(&report)?);
         Ok(())
     }
+    // Raw ARM32 kernel event storage: do not use musl's time64 timespec.
+    fn events(args: &[String]) -> io::Result<()> {
+        use shieldsigner_rkaiq::engine::{STREAM_START, STREAM_STOP};
+        if std::mem::size_of::<usize>() != 4 {
+            return Err(error("Stream-event ABI currently targets ARM32 Linux only"));
+        }
+        if args.is_empty() {
+            return Err(error("events requires the rkisp-input-params device path"));
+        }
+        let (mut timeout, mut count) = (10000u64, 8u32);
+        let mut i = 1;
+        while i < args.len() {
+            let value = args
+                .get(i + 1)
+                .ok_or_else(|| error("Missing event option value"))?;
+            match args[i].as_str() {
+                "--timeout-ms" => {
+                    timeout = value.parse().map_err(|_| error("Invalid event timeout"))?
+                }
+                "--count" => count = value.parse().map_err(|_| error("Invalid event count"))?,
+                _ => return Err(error("Unknown events option")),
+            }
+            i += 2;
+        }
+        if !(1..=60000).contains(&timeout) || !(1..=1000).contains(&count) {
+            return Err(error("Event deadline must be 1–60000 ms and count 1–1000"));
+        }
+        let file = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .custom_flags(libc::O_NONBLOCK)
+            .open(&args[0])?;
+        for event in [STREAM_START, STREAM_STOP] {
+            let mut subscription = [0u32; 8];
+            subscription[0] = event;
+            ioctl(file.as_raw_fd(), 0x4020565a, &mut subscription)?;
+        }
+        println!(
+            "{}",
+            json!({"status":"subscribed","device":args[0],"configuresIsp":false,"timeoutMs":timeout})
+        );
+        io::stdout().flush()?;
+        let deadline = Instant::now() + Duration::from_millis(timeout);
+        let mut received = 0;
+        while received < count {
+            let remaining = deadline.saturating_duration_since(Instant::now());
+            if remaining.is_zero() {
+                break;
+            }
+            let mut poll = libc::pollfd {
+                fd: file.as_raw_fd(),
+                events: libc::POLLPRI,
+                revents: 0,
+            };
+            let result = unsafe {
+                libc::poll(
+                    &mut poll,
+                    1,
+                    remaining.as_millis().max(1).min(i32::MAX as u128) as i32,
+                )
+            };
+            if result < 0 {
+                let e = io::Error::last_os_error();
+                if e.kind() == io::ErrorKind::Interrupted {
+                    continue;
+                }
+                return Err(e);
+            }
+            if result == 0 {
+                break;
+            }
+            if poll.revents & (libc::POLLERR | libc::POLLHUP | libc::POLLNVAL) != 0 {
+                return Err(error("Stream-event poll failed"));
+            }
+            if poll.revents & libc::POLLPRI == 0 {
+                continue;
+            }
+            let mut event = [0u32; 32];
+            if let Err(e) = ioctl(file.as_raw_fd(), 0x80805659, &mut event) {
+                if e.kind() == io::ErrorKind::WouldBlock {
+                    continue;
+                }
+                return Err(e);
+            }
+            let name = match event[0] {
+                STREAM_START => "stream-start",
+                STREAM_STOP => "stream-stop",
+                _ => "other",
+            };
+            println!(
+                "{}",
+                json!({"event":name,"type":event[0],"sequence":event[19]})
+            );
+            io::stdout().flush()?;
+            received += 1;
+        }
+        println!(
+            "{}",
+            json!({"status":"finished","events":received,"countLimitReached":received==count})
+        );
+        Ok(())
+    }
     pub fn run(args: &[String]) -> io::Result<()> {
         match args.first().map(String::as_str) {
             Some("list") if args.len() == 1 => list(),
             Some("capture") => capture(&args[1..]),
+            Some("events") => events(&args[1..]),
             _ => Err(error("Unknown command; see --help")),
         }
     }

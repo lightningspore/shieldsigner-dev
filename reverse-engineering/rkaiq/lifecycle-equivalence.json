@@ -1,0 +1,12 @@
+{
+  "binarySha256": "9025cf4b823e0f6b8dbbe8280267c3db1f200ef9b36d8a29ad0a5900b9ca16ae",
+  "seed": "0x33414556",
+  "cases": 100,
+  "mismatchCount": 0,
+  "scope": "Successful single-camera engine_thread initialization, subscription, event filtering and start/stop call sequence; multi-camera flag covered",
+  "limitations": [
+    "Imported RKAIQ routines and OS calls are stubs; their implementations are not verified by this test.",
+    "Errors and independent sensor/ISP initialization remain separate work.",
+    "Finite event sources stop the original at its next dequeue; no original shutdown path is claimed."
+  ]
+}

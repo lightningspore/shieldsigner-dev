@@ -9,3 +9,16 @@ _Static_assert(sizeof(struct isp32_awb_gain_cfg)==32,"AWB record size");
 _Static_assert(offsetof(struct isp32_isp_params_cfg,others.awb_gain_cfg)==0x1225,"AWB record offset");
 _Static_assert(ISP32_MODULE_AWB_GAIN==(1ULL<<5),"AWB enable mask");
 const unsigned int recovered_layout[]={sizeof(struct isp32_isp_params_cfg),offsetof(struct isp32_isp_params_cfg,others.awb_gain_cfg),sizeof(struct isp32_awb_gain_cfg)};
+
+/* Explicit old-time ARM32 userspace ABI used by the pinned daemon. musl's
+ * current native struct timespec is time64 and must not determine this ioctl. */
+#include <sys/time.h>
+struct recovered_timespec32 { int32_t tv_sec; int32_t tv_nsec; };
+#define timespec recovered_timespec32
+#include <linux/videodev2.h>
+#undef timespec
+_Static_assert(sizeof(struct v4l2_event)==128,"ARM32 old-time event size");
+_Static_assert(offsetof(struct v4l2_event,sequence)==76,"event sequence offset");
+_Static_assert(sizeof(struct v4l2_event_subscription)==32,"subscription size");
+_Static_assert(VIDIOC_DQEVENT==0x80805659,"old-time event ioctl");
+_Static_assert(VIDIOC_SUBSCRIBE_EVENT==0x4020565a,"subscribe ioctl");

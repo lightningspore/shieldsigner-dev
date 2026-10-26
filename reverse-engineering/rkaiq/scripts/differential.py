@@ -33,7 +33,12 @@ class OriginalArm:
     if section['sh_type']!='SHT_REL':continue
     for rel in section.iter_relocations():
      where=BASE+rel['r_offset'];kind=rel['r_info_type'];old=u32(self.uc.mem_read(where,4))
-     if kind==23:target=old+BASE
+     if kind==20:
+      sym=dyn.get_symbol(rel['r_info_sym'])
+      assert sym.name=='__ctype_b' and sym['st_size']==4,'Unsupported copied external data'
+      # Unused by engine_thread. No character classification is emulated.
+      target=0
+     elif kind==23:target=old+BASE
      elif kind in (2,21,22):
       sym=dyn.get_symbol(rel['r_info_sym'])
       if sym['st_shndx']!='SHN_UNDEF':target=BASE+sym['st_value']+(old if kind==2 else 0)

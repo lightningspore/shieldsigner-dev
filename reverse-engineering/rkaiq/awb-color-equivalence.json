@@ -1,0 +1,26 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "mathRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "cases": 5120,
+  "casesPerStage": 1024,
+  "mismatches": 0,
+  "arm": true,
+  "nativeMathCalls": {
+    "powf": 10111,
+    "sqrtf": 2048,
+    "atan2f": 2048
+  },
+  "elfEntries": {
+    "transfer": "0xcbda0",
+    "xyz": "0xcbce8",
+    "lab": "0xcbdf0",
+    "lch": "0xcbeb4"
+  },
+  "scope": "Original transfer, RGB-to-XYZ, XYZ-to-Lab, Lab-to-LCh and joined RGB pipeline; exact output bits and output padding preservation",
+  "limitations": [
+    "Finite checked inputs/outputs; synthetic RGB/XYZ range includes negative values and values above one, not physical calibration validity.",
+    "Pinned original uClibc powf/sqrtf/atan2f ARM bodies execute in an isolated emulator and return their actual result bits.",
+    "Corpus equivalence does not prove f64 libm equality for every possible input.",
+    "Grid classification, candidate/history construction and complete single-color orchestration remain unfinished."
+  ]
+}

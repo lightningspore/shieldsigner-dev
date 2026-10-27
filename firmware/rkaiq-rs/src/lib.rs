@@ -21,6 +21,7 @@ pub mod ae_shutter;
 pub mod ae_target;
 pub mod ae_translation;
 pub mod ae_weights;
+pub mod awb_color;
 pub mod awb_environment;
 pub mod awb_gain;
 pub mod awb_high_gain;

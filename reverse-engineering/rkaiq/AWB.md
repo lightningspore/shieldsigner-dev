@@ -603,3 +603,35 @@ The manager consumes explicit result statistics. The preceding 15×15 grid color
 classifier, its candidate/history construction, and enabled low-count
 orchestration remain unfinished and required by the pinned IQ. This manager
 alone does not enable live single-color AWB or change the frozen camera kit.
+
+## Single-color classifier color transforms
+
+`awb_color` implements the native `rgb2xyz` (ELF `0xcbce8`), Lab transfer
+`f(float)` (`0xcbda0`), `xyz2lab` (`0xcbdf0`) and `lab2lch` (`0xcbeb4`) routines
+used for every grid/candidate pair in single-color classification. RGB-to-XYZ
+uses the recovered double coefficients and FMA order. XYZ-to-Lab divides X and Z
+by double white-point constants, rounds to float before transfer, and uses the
+original float arithmetic for L*, a* and b*.
+
+The nonlinear transfer is not a cube root: its exponent is the rounded float
+1/3. In the pinned uClibc, `powf`, `sqrtf` and `atan2f` promote their arguments,
+run double math, then round the result to float. Rust mirrors those wrappers
+with its standalone `libm` double routines. LCh chroma starts from the original
+float square/FMA sum. Hue uses the recovered float divisor (one float step below
+the usual rounded pi), float division and multiplication by 180; negative angles
+remain negative rather than being wrapped into a full turn.
+
+`mise run camera:rust:awb-color` compares **5,120 cases**, 1,024 per individual
+stage and 1,024 joined RGB-to-LCh cases, on host and ARM. The oracle executes
+the original RKAIQ bodies and the actual pinned uClibc ARM `powf`, `sqrtf` and
+`atan2f` bodies in isolated emulators, passing their result bits back to RKAIQ.
+It does not substitute Python/host math. All output bits and output padding
+match. The corpus includes transfer boundaries, primary/neutral colors, signed
+zeros, all hue quadrants, subnormal square inputs, and finite negative/above-one
+RGB/XYZ inputs. Runtime SHA-256 is checked against the existing artifact pin.
+[Reference report](awb-color-equivalence.json).
+
+This establishes exact output equivalence for the tested corpus, not universal
+double-math equality for every input. The classifier's grid matching,
+neighborhood rejection, candidate votes/history and enabled low-count integration
+remain unfinished. The fixed-WB camera kit is unchanged.

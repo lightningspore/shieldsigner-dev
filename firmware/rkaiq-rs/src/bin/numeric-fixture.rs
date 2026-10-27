@@ -129,6 +129,33 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-color" => {
+                use shieldsigner_rkaiq::awb_color::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let input: [f32; 3] =
+                    core::array::from_fn(|i| v["input"][i].as_f64().unwrap() as f32);
+                let result: Vec<u32> = match v["kind"].as_str().unwrap() {
+                    "transfer" => vec![lab_transfer(input[0]).unwrap().to_bits()],
+                    "xyz" => rgb_to_xyz(input).unwrap().map(f32::to_bits).to_vec(),
+                    "lab" => xyz_to_lab(input).unwrap().map(f32::to_bits).to_vec(),
+                    "lch" => lab_to_lch([input[0], input[1]])
+                        .unwrap()
+                        .map(f32::to_bits)
+                        .to_vec(),
+                    "pipeline" => {
+                        let xyz = rgb_to_xyz(input).unwrap();
+                        let lab = xyz_to_lab(xyz).unwrap();
+                        let lch = lab_to_lch([lab[1], lab[2]]).unwrap();
+                        xyz.into_iter()
+                            .chain(lab)
+                            .chain(lch)
+                            .map(f32::to_bits)
+                            .collect()
+                    }
+                    _ => panic!("unknown color stage"),
+                };
+                println!("{}", serde_json::json!(result));
+            }
             "awb-single-color" => {
                 use shieldsigner_rkaiq::awb_single_color::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

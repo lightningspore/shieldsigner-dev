@@ -151,3 +151,7 @@ profile names, cached publication and early exits.
 `ccm_damping::State::process` reconstructs the CCM `Damping` routine
 (ELF `0xfd6f8`), including fused temporal blending and convergence.
 [Exact routine identification and persistent native/physical CPU comparison](ISP.md#ccm-temporal-damping-and-convergence-0034-development).
+
+`ccm_saturation::apply` reconstructs complete `Saturationadjust`
+(ELF `0xfd7e0`), preserving mixed-precision fused color transforms.
+[Arithmetic, domain and native/physical CPU evidence](ISP.md#ccm-saturation-adjustment-0034-development).

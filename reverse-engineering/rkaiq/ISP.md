@@ -741,3 +741,36 @@ library or write ISP registers. The surrounding `AccmAutoConfig` chooses the
 factor based on frame count, calibration, existing convergence and incoming
 AWB damping. That ownership, additional saturation/luma transforms and live CCM
 submission remain separate; current live capture still leaves CCM disabled.
+
+### CCM saturation adjustment (0.0.34 development)
+
+`ccm_saturation::apply` reconstructs complete `Saturationadjust` (ELF
+`0xfd7e0`, Ghidra `0x10d7e0`). This transforms an already selected matrix;
+it does not select an illuminant or choose calibrated alpha/saturation.
+Alpha below double-precision `1e-5` leaves all bytes untouched. Otherwise
+native first mixes matrix deviations from identity with alpha, transforms
+columns to luma/chroma, scales chroma by `(saturation − 50)/50 + 1`, transforms
+back, and removes the alpha mixing. Saturation 50 still executes that round
+trip; Rust does not replace it with a mathematically tempting no-op.
+
+The actual code mixes f32 and f64, explicit rounding between stages, and
+fused multiply-add/subtract instructions. The forward transform uses the
+binary's constants 0.299/0.587/0.114, −0.1687/−0.3313/0.5 and
+0.5/−0.4187/−0.0813. The inverse uses 1.402, 0.34414, 0.71414 and 1.772,
+plus native f32 zero terms. Rust uses `libm::fma`/`fmaf` in the recovered
+instruction order, including those zero operations and identity-diagonal
+handling, rather than a generic matrix library with different rounding.
+
+[Native/physical ARM evidence](ccm-saturation-equivalence.json) compares all
+36 output bytes across 1,000 identity/random matrices, neutral/end/intermediate
+saturations and alpha values below/at/above the cutoff. Complete original
+machine code executes, with no numerical substitutes. Rust accepts finite
+matrices, alpha in [0,1] and saturation in [0,100]; invalid input is rejected
+before modifying the matrix. Native out-of-domain behavior is not claimed.
+The 93 library/five Unix tests, no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:ccm-saturation -- --adb SERIAL --report LOCAL.json`
+after building host/ARM fixtures. Physical CPU replay makes no ISP writes and
+does not load the vendor library. Calibrated alpha/saturation ownership,
+luma-curve generation, outer scheduling and live CCM submission remain
+separate; live capture continues to leave CCM disabled.

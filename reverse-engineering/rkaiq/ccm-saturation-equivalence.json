@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "bytesComparedPerCase": 36,
+  "mismatches": 0,
+  "seed": "0x43434d41",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "710996a53074315e6647340104f63025b78c69546253b82a2da614da8d3594dd",
+  "physicalArmBinarySha256": "78e5fd895000c091d581c93a3c74352f15ab5baf5618d91b1d5ca1ed96489505",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Complete native Saturationadjust, all nine output float bit patterns; alpha [0,1] and saturation [0,100].",
+  "limitations": [
+    "Calibrated alpha/saturation ownership and live CCM integration remain separate.",
+    "Physical ARM replay does not enable CCM on the camera or qualify image quality."
+  ]
+}

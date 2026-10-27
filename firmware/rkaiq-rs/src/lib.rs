@@ -349,3 +349,4 @@ pub mod ccm_selection;
 pub mod ccm_illuminant;
 pub mod ccm_runtime;
 pub mod ccm_damping;
+pub mod ccm_saturation;

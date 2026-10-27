@@ -3256,6 +3256,12 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-saturation" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut matrix=v["matrix"].as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>().try_into().unwrap();
+                shieldsigner_rkaiq::ccm_saturation::apply(&mut matrix,v["alpha"].as_f64().unwrap() as f32,v["saturation"].as_f64().unwrap() as f32).unwrap();
+                println!("{}",matrix.iter().flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>());
+            }
             "ccm-damping" => {
                 use shieldsigner_rkaiq::ccm_damping::State;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

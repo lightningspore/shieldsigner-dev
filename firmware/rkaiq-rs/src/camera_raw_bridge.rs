@@ -1,4 +1,4 @@
-// Included in the Linux camera diagnostic. Linear, single-plane raw DMA-BUF
+// Included in the Linux camera diagnostic. Linear, one-image-plane raw DMA-BUF
 // transfer only. Formats/media links must already be configured explicitly.
 mod raw_bridge {
     #[cfg(test)]
@@ -74,6 +74,31 @@ mod raw_bridge {
             }
             Ok(())
         }
+        // Normalize the one-plane mplane ABI into the same logical descriptor
+        // used by the single-plane path. The plane pointer lives through ioctl.
+        fn buffer_ioctl(&self, request: u32, b: &mut Buffer) -> io::Result<()> {
+            if !matches!(self.kind, 9 | 10) {
+                return ioctl(self.file.as_raw_fd(), request, b);
+            }
+            let mut plane: Plane = zero();
+            plane.used = b.used;
+            plane.length = b.length;
+            if self.memory == 4 {
+                plane.memory.fd = unsafe { b.data.fd };
+            }
+            b.data.planes = &mut plane;
+            b.length = 1;
+            let outcome = ioctl(self.file.as_raw_fd(), request, b);
+            b.data = BufferMemory { offset: 0 };
+            if outcome.is_ok() && (b.length != 1 || plane.offset != 0) {
+                return Err(error(
+                    "Raw bridge requires exactly one plane with zero data offset",
+                ));
+            }
+            b.used = plane.used;
+            b.length = plane.length;
+            outcome
+        }
         fn record(&self, index: u32) -> Buffer {
             let mut b: Buffer = zero();
             b.index = index;
@@ -126,23 +151,48 @@ mod raw_bridge {
             let isp = open(isp_path, true)?;
             let (_, tx_caps) = capability(&tx_file)?;
             let (_, rx_caps) = capability(&rx_file)?;
-            if tx_caps & 0x04000001 != 0x04000001 || rx_caps & 0x04000002 != 0x04000002 {
-                return Err(error(
-                    "Raw bridge currently requires single-plane streaming capture TX and output RX",
-                ));
-            }
-            let tx_format = format(&tx_file, 1)?;
-            let rx_format = format(&rx_file, 2)?;
+            let kind = |caps: u32,
+                        single: u32,
+                        multi: u32,
+                        single_bit: u32,
+                        multi_bit: u32|
+             -> io::Result<u32> {
+                if caps & 0x04000000 == 0 {
+                    return Err(error("Raw endpoint lacks streaming capability"));
+                }
+                if caps & multi_bit != 0 {
+                    Ok(multi)
+                } else if caps & single_bit != 0 {
+                    Ok(single)
+                } else {
+                    Err(error("Raw endpoint lacks capture/output capability"))
+                }
+            };
+            let tx_kind = kind(tx_caps, 1, 9, 1, 0x1000)?;
+            let rx_kind = kind(rx_caps, 2, 10, 2, 0x2000)?;
+            let tx_format = format(&tx_file, tx_kind)?;
+            let rx_format = format(&rx_file, rx_kind)?;
             let t = unsafe { &tx_format.data.raw };
             let r = unsafe { &rx_format.data.raw };
+            let geometry = |f: &[u8], kind: u32| -> io::Result<(u32, u32)> {
+                if matches!(kind, 9 | 10) {
+                    if f[180] != 1 {
+                        return Err(error("Raw bridge supports one image plane only"));
+                    }
+                    Ok((get32(f, 24), get32(f, 20)))
+                } else {
+                    Ok((get32(f, 16), get32(f, 20)))
+                }
+            };
+            let (stride, size) = geometry(t, tx_kind)?;
             let raw_fourcc = get32(t, 8).to_le_bytes();
             if ![*b"BG10", *b"GB10", *b"BA10", *b"RG10"].contains(&raw_fourcc) {
-                return Err(error("Raw bridge requires an unpacked RAW10 Bayer format"));
+                return Err(error("Raw bridge requires a RAW10 Bayer format"));
             }
             if t[..12] != r[..12]
-                || get32(t, 20) == 0
-                || get32(t, 20) != get32(r, 20)
-                || get32(t, 16) != get32(r, 16)
+                || size == 0
+                || stride == 0
+                || (stride, size) != geometry(r, rx_kind)?
             {
                 return Err(error(
                     "Raw TX/RX dimensions, FourCC, stride and sizeimage must match",
@@ -151,7 +201,7 @@ mod raw_bridge {
             let mut bridge = Self {
                 rx: Endpoint {
                     file: rx_file,
-                    kind: 2,
+                    kind: rx_kind,
                     memory: 4,
                     allocated: false,
                     streaming: false,
@@ -159,7 +209,7 @@ mod raw_bridge {
                 exports: vec![],
                 tx: Endpoint {
                     file: tx_file,
-                    kind: 1,
+                    kind: tx_kind,
                     memory: 1,
                     allocated: false,
                     streaming: false,
@@ -180,12 +230,12 @@ mod raw_bridge {
             bridge.rx.allocate(count)?;
             for index in 0..count {
                 let mut b = bridge.tx.record(index);
-                ioctl(bridge.tx.file.as_raw_fd(), QUERYBUF, &mut b)?;
-                if b.length < get32(t, 20) || b.length > 128 * 1024 * 1024 {
+                bridge.tx.buffer_ioctl(QUERYBUF, &mut b)?;
+                if b.length < size || b.length > 128 * 1024 * 1024 {
                     return Err(error("Invalid raw TX buffer length"));
                 }
                 let mut export = Export {
-                    kind: 1,
+                    kind: tx_kind,
                     index,
                     plane: 0,
                     flags: libc::O_CLOEXEC as u32,
@@ -205,7 +255,7 @@ mod raw_bridge {
                     .push(unsafe { OwnedFd::from_raw_fd(export.fd) });
                 bridge.lengths.push(b.length);
                 bridge.inflight.push(false);
-                ioctl(bridge.tx.file.as_raw_fd(), QUEUE, &mut b)?;
+                bridge.tx.buffer_ioctl(QUEUE, &mut b)?;
             }
             Ok(bridge)
         }
@@ -242,7 +292,7 @@ mod raw_bridge {
                 // Complete RX before admitting more TX. A TX buffer remains held
                 // until the corresponding imported RX index has been dequeued.
                 let mut done = self.rx.record(0);
-                match ioctl(self.rx.file.as_raw_fd(), DEQUEUE, &mut done) {
+                match self.rx.buffer_ioctl(DEQUEUE, &mut done) {
                     Ok(()) => {
                         let index = done.index as usize;
                         if index >= self.inflight.len()
@@ -253,7 +303,7 @@ mod raw_bridge {
                         }
                         self.inflight[index] = false;
                         let mut b = self.tx.record(done.index);
-                        ioctl(self.tx.file.as_raw_fd(), QUEUE, &mut b)?;
+                        self.tx.buffer_ioctl(QUEUE, &mut b)?;
                         self.transferred += 1;
                         last = Instant::now();
                     }
@@ -261,7 +311,7 @@ mod raw_bridge {
                     Err(e) => return Err(e),
                 }
                 let mut raw = self.tx.record(0);
-                match ioctl(self.tx.file.as_raw_fd(), DEQUEUE, &mut raw) {
+                match self.tx.buffer_ioctl(DEQUEUE, &mut raw) {
                     Ok(()) => {
                         let index = raw.index as usize;
                         if index >= self.inflight.len()
@@ -285,7 +335,7 @@ mod raw_bridge {
                             seconds: raw.time.seconds,
                             microseconds: raw.time.microseconds,
                         };
-                        ioctl(self.rx.file.as_raw_fd(), QUEUE, &mut input)?;
+                        self.rx.buffer_ioctl(QUEUE, &mut input)?;
                         self.inflight[index] = true;
                         let us = (raw.time.seconds as u64)
                             .wrapping_mul(1_000_000)
@@ -378,6 +428,7 @@ mod raw_bridge_driver_test {
         isp: Option<RawFd>,
         trace: Vec<String>,
         mode: u8,
+        api: u8,
         tx_dequeued: bool,
         rx_queued: bool,
         triggered: bool,
@@ -396,14 +447,23 @@ mod raw_bridge_driver_test {
             QUERYCAP => {
                 let cap = if driver.tx.is_none() {
                     driver.tx = Some(fd);
-                    0x04000001
+                    if driver.api & 1 != 0 {
+                        0x04001000
+                    } else {
+                        0x04000001
+                    }
                 } else {
                     driver.rx = Some(fd);
-                    0x04000002
+                    if driver.api & 2 != 0 {
+                        0x04002000
+                    } else {
+                        0x04000002
+                    }
                 };
                 put32(b, 84, cap);
             }
             GETFMT => {
+                let multi = matches!(get32(b, 0), 9 | 10);
                 for (o, v) in [
                     (4, 640),
                     (8, 480),
@@ -412,6 +472,12 @@ mod raw_bridge_driver_test {
                     (24, 614400),
                 ] {
                     put32(b, o, v);
+                }
+                if multi {
+                    put32(b, 20, 0);
+                    put32(b, 24, 614400);
+                    put32(b, 28, 1280);
+                    b[184] = 1;
                 }
             }
             REQBUFS => {
@@ -422,7 +488,13 @@ mod raw_bridge_driver_test {
                 ));
             }
             QUERYBUF => {
-                put32(b, 56, 614400);
+                if matches!(get32(b, 4), 9 | 10) {
+                    assert_eq!(get32(b, 56), 1);
+                    let p = unsafe { &mut *(get32(b, 52) as usize as *mut Plane) };
+                    p.length = 614400;
+                } else {
+                    put32(b, 56, 614400);
+                }
             }
             0xc0405610 => {
                 let exported = unsafe { libc::dup(fd) };
@@ -470,8 +542,16 @@ mod raw_bridge_driver_test {
                 } else {
                     driver.trace.push("rx:queue".into());
                     assert_eq!(get32(b, 48), 4);
-                    assert_eq!(get32(b, 8), 614400);
-                    let imported = get32(b, 52) as RawFd;
+                    let imported = if get32(b, 4) == 10 {
+                        assert_eq!(get32(b, 56), 1);
+                        let p = unsafe { &*(get32(b, 52) as usize as *const Plane) };
+                        assert_eq!(p.used, 614400);
+                        assert_eq!(p.length, 614400);
+                        unsafe { p.memory.fd }
+                    } else {
+                        assert_eq!(get32(b, 8), 614400);
+                        get32(b, 52) as RawFd
+                    };
                     assert!(unsafe { libc::fcntl(imported, libc::F_GETFD) } >= 0);
                     if driver.mode == 2 {
                         driver.finished = true;
@@ -486,7 +566,13 @@ mod raw_bridge_driver_test {
                     driver.tx_dequeued = true;
                     driver.trace.push("tx:dequeue".into());
                     put32(b, 0, 0);
-                    put32(b, 8, 614400);
+                    if get32(b, 4) == 9 {
+                        let p = unsafe { &mut *(get32(b, 52) as usize as *mut Plane) };
+                        p.used = 614400;
+                        p.length = 614400;
+                    } else {
+                        put32(b, 8, 614400);
+                    }
                     put32(b, 20, 4);
                     put32(b, 24, 500);
                     put32(b, 44, 77);
@@ -527,39 +613,42 @@ mod raw_bridge_driver_test {
     }
     #[test]
     fn real_bridge_loop_success_and_driver_failures() {
-        for mode in 0..5 {
-            *DRIVER.lock().unwrap() = Some(Driver {
-                mode,
-                ..Driver::default()
-            });
-            let bridge =
-                raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full").unwrap();
-            let outcome = bridge.during(|| {
-                let deadline = Instant::now() + Duration::from_secs(2);
-                while !DRIVER.lock().unwrap().as_ref().unwrap().finished {
-                    assert!(Instant::now() < deadline, "mock bridge stalled");
-                    std::thread::sleep(Duration::from_millis(1));
+        for api in 0..4 {
+            for mode in 0..5 {
+                *DRIVER.lock().unwrap() = Some(Driver {
+                    mode,
+                    api,
+                    ..Driver::default()
+                });
+                let bridge =
+                    raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full").unwrap();
+                let outcome = bridge.during(|| {
+                    let deadline = Instant::now() + Duration::from_secs(2);
+                    while !DRIVER.lock().unwrap().as_ref().unwrap().finished {
+                        assert!(Instant::now() < deadline, "mock bridge stalled");
+                        std::thread::sleep(Duration::from_millis(1));
+                    }
+                    Ok(())
+                });
+                let driver = DRIVER.lock().unwrap().take().unwrap();
+                assert_eq!(outcome.is_ok(), mode == 0, "mode {mode}: {outcome:?}");
+                let position = |s: &str| driver.trace.iter().position(|v| v == s);
+                assert!(position("tx:off").is_some());
+                assert!(position("tx:req:0").is_some());
+                assert!(position("rx:req:0").is_some());
+                if mode != 1 {
+                    assert!(position("rx:off") < position("tx:off"));
                 }
-                Ok(())
-            });
-            let driver = DRIVER.lock().unwrap().take().unwrap();
-            assert_eq!(outcome.is_ok(), mode == 0, "mode {mode}: {outcome:?}");
-            let position = |s: &str| driver.trace.iter().position(|v| v == s);
-            assert!(position("tx:off").is_some());
-            assert!(position("tx:req:0").is_some());
-            assert!(position("rx:req:0").is_some());
-            if mode != 1 {
-                assert!(position("rx:off") < position("tx:off"));
-            }
-            if mode == 0 {
-                assert!(position("rx:queue") < position("isp:trigger"));
-                assert!(position("isp:trigger") < position("rx:dequeue"));
-                assert!(position("rx:dequeue") < position("tx:requeue"));
-            } else {
-                assert!(position("tx:requeue").is_none());
-            }
-            if mode == 2 {
-                assert!(position("isp:trigger").is_none());
+                if mode == 0 {
+                    assert!(position("rx:queue") < position("isp:trigger"));
+                    assert!(position("isp:trigger") < position("rx:dequeue"));
+                    assert!(position("rx:dequeue") < position("tx:requeue"));
+                } else {
+                    assert!(position("tx:requeue").is_none());
+                }
+                if mode == 2 {
+                    assert!(position("isp:trigger").is_none());
+                }
             }
         }
     }

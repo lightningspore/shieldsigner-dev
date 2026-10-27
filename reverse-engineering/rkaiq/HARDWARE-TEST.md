@@ -539,3 +539,23 @@ memory mode and returned plane geometry must also be tracked. Keep the working
 compact capture mode during initial investigation rather than changing an
 active device's memory mode. The saved local capture remains available while
 the device is offline.
+
+
+### Development bridge API follow-up
+
+The raw bridge now selects capture/output API types independently from endpoint
+capabilities. It accepts either the single-plane API or the multi-plane API
+with exactly one image plane. Multi-plane QUERYBUF/QBUF/DQBUF use a live
+`v4l2_plane` descriptor, plane lengths/bytes-used and the imported DMA-BUF fd;
+EXPBUF and stream operations use the selected endpoint type. Nonzero data
+offsets and additional image planes are rejected. Format comparison reads
+stride/size from the appropriate API layout. Matching RAW10 FourCC does not
+establish CSI memory-mode compatibility; matching storage layout is still an
+explicit setup obligation.
+
+The ARM driver-boundary test covers all four independent TX/RX API combinations,
+each with success, RX-start failure, RX-queue failure, trigger failure and
+corrupt RX completion (20 cases). FD export/import, scoped worker, TX retention,
+SOF matching and teardown execute in the real bridge code. These are simulated
+driver tests; the changed bridge has not yet captured on the physical board.
+Run `mise run camera:rust:raw-bridge-check` to reproduce.

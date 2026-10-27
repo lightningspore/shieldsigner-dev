@@ -1,7 +1,8 @@
 {
-  "testBinarySha256": "2b4f7146bf2d0f626f9f790d52b260ece5916bb5b85ac7cb96e0ea384dd60c2e",
+  "testBinarySha256": "a52a1f0ace1e8e8deb6d508620f5da4be7b84b1740c3f50775d532261a285eaa",
   "platform": "linux/arm/v7",
-  "cases": [
+  "endpointApiCombinations": 4,
+  "casesPerCombination": [
     "successful frame with matched SOF",
     "RX STREAMON failure",
     "RX QBUF failure suppresses trigger",
@@ -10,6 +11,141 @@
   ],
   "passed": true,
   "events": [
+    {
+      "cleanupErrors": [],
+      "completedFrames": 1,
+      "error": null,
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 0,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 0,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "Invalid/error raw RX completion",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 1,
+      "error": null,
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 0,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 0,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "Invalid/error raw RX completion",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 1,
+      "error": null,
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 0,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 0,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "Invalid/error raw RX completion",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
     {
       "cleanupErrors": [],
       "completedFrames": 1,

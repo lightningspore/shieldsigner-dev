@@ -333,3 +333,47 @@ fifteen submitted tuning records, concurrent real decoding/preview, clean
 shutdown and the default no-scene-image behavior. It measures increased
 userspace write-dispatch latency under scan load without claiming physical
 sensor application timing.
+
+### Selected-profile coverage audit (0.0.33 frozen startup)
+
+[Reproducible audit](profile-module-audit.json) compares the pinned full IQ's
+explicit enable flags with the actual `frame.initial.bin` retained from the
+0.0.33 clean-boot hardware run. It resolves the ISP32→ISP3X→ISP2X UAPI aliases
+from the pinned headers and verifies each bit before inspecting the captured
+three masks. IQ/startup/header hashes identify the inputs.
+
+Eight selected blocks are configured enabled in the profile but explicitly
+disabled by our startup enable-update request:
+
+| Block | Function | Rust startup |
+|---|---|---|
+| CCM | Calibrated RGB color correction, distinct from implemented RGB→YUV CSM | Disabled |
+| LSC | Spatial lens shading correction; calibration must match optics | Disabled |
+| DPCC | Defect/hot-pixel correction | Disabled |
+| BAYNR | Spatial Bayer noise reduction | Disabled |
+| BAY3D | Temporal Bayer noise reduction | Disabled |
+| YNR | Luma noise reduction | Disabled |
+| CNR | Chroma noise reduction | Disabled |
+| SHARP | Sharpening | Disabled |
+
+These are **implementation gaps for full supplied-profile parity**, not proof
+that every block is necessary to decode a QR. Profile flags alone do not prove
+the vendor daemon enabled those modules on this hardware; startup parameter
+requests are not independent register readback. This selected-block check is
+not a complete inventory of all IQ sections. BLS has independently controlled
+internal stages, so its outer enable bit must not be used to label all
+black-level processing disabled. Current BLC, demosaic, WB/gain, gamma, CSM/CGC
+and measurement configuration retain their separately documented evidence.
+
+The current path is a tested functional subset, not full vendor image-quality
+parity. Optical QR and physical scene/low-light checks should guide the order
+of remaining image-quality work; no block should be enabled with invented
+settings or without hardware testing and memory-budget checks. The existing
+DPCC interpolation component, for example, is not a completed DPCC live block.
+
+Reproduce with `uv run --python 3.13 python
+reverse-engineering/rkaiq/scripts/profile-module-audit.py PRIVATE-IQ
+CAPTURE.initial.bin --report LOCAL.json`. The default UAPI directory is the
+pinned local kernel-uapi/linux snapshot; `--uapi` may supply another explicit
+copy. This audit makes no device changes and stores no full IQ or scene pixels
+in the tracked report.

@@ -191,6 +191,12 @@ queues, automatic exposure/white balance, app frame delivery and restart have
 real hardware evidence. These do not imply that every optional IQ section or
 vendor algorithm is implemented.
 
+The [selected-profile audit](profile-module-audit.json) also identifies enabled
+profile blocks that our startup explicitly disables: CCM, LSC, DPCC, spatial
+and temporal Bayer noise reduction, YNR, CNR and sharpening. These remain
+implementation gaps for full profile parity, separate from the physical tests
+below. A working QR subset is not complete vendor image-quality equivalence.
+
 Still open:
 
 1. Successful optical decoding of a known public QR through the physical camera.

@@ -1576,3 +1576,25 @@ modes with the exact 0.0.33-dev binary: each delivers eight distinct live frames
 and exits cleanly; the default has no image file, and opt-in saves 460,800 bytes.
 The 85 library/five Unix transport tests, no-default-features build and six
 simulated finite-capture scenarios also pass, preserving explicit image capture.
+
+### Actual scan loops with live demosaic enabled (0.0.33 development)
+
+The installed scan/preview code was exercised again after live demosaic was
+connected. [Evidence](scan-demosaic-hardware-validation.json) records thirteen
+real decoder inputs, twenty-nine rendered previews and 119 AE/AWB statistics
+frames, with 118 accepted parameter submissions and at most two snapshots.
+All fifteen demosaic updates (ISO 50–163) independently match the full original
+callback's 112-byte record and converter's 57-byte packed block. Both loops
+shut down cleanly; no scene-image file was saved by the default streaming path.
+
+All twenty-two sensor writes succeeded during this scan workload. Maximum
+SOF-to-write-start was 10.592 ms and maximum write duration was 2.028 ms.
+This is slower than the earlier light-load timing test, so its sub-2 ms timings
+are not a general scheduling guarantee. These are userspace measurements;
+the scheduler's SOF+2 labels still do not independently prove physical gain
+application. The separate gain-settling exception remains open.
+
+This test uses the real application decoder and preview loops with real camera
+frames. Its display sink and cancellation input are software boundaries; a
+physical public QR target, actual LCD/buttons and physical power-cycle testing
+remain separate qualification steps. No arbitrary decoded contents are saved.

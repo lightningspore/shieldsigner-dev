@@ -326,3 +326,10 @@ shutdown may cancel final queued proposals. This does not prove that every
 proposal appeared in pixels, settle the observed physical gain-delay exception,
 or qualify optical QR/color accuracy, optional modes or full native service
 equivalence. Frozen 0.0.32-dev remains unchanged.
+
+The subsequent [actual scan-loop run](scan-demosaic-hardware-validation.json)
+also passes with live demosaic, including independent comparison of all
+fifteen submitted tuning records, concurrent real decoding/preview, clean
+shutdown and the default no-scene-image behavior. It measures increased
+userspace write-dispatch latency under scan load without claiming physical
+sensor application timing.

@@ -248,3 +248,41 @@ QR pixels through actual application methods, not optical QR evidence. The
 real captured scene contained text and yielded no QR. The launcher imports the
 real main.py and passes `--help`, but full UI rendering/buttons remain untested.
 See HARDWARE-TEST.md and `application-integration-hardware-validation.json`.
+
+### Persistent automatic linear demosaic frame gate (0.0.33 development)
+
+`demosaic_runtime::State` reconstructs the linear color-frame branch of the
+algorithm's `processing` callback, ELF `0x114a2c` (Ghidra `0x124a2c`). The
+`g_RkIspAlgoDescAdebayer` descriptor identifies this callback despite the binary
+containing many generic `processing` symbols. The Ghidra exporter now accepts
+an optional exact entry address after the name regex to avoid exporting every
+unrelated callback. Decompiled vendor code remains local and uncommitted.
+
+The callback multiplies analogue, sensor-digital and ISP gains in f32 order,
+then multiplies by 50 and truncates to integer ISO. Unlike AWB's metadata path,
+it does not clamp each gain to unity. Missing exposure falls back to ISO 50.
+An integer ISO change, pending cached update, or explicit reconfiguration runs
+the recovered selector and quantizer. Reconfiguration is consumed; unchanged
+frames publish no new result. The returned hardware update flag is preserved
+while the cached flag is cleared by the recovered quantizer. The Rust state
+commits after successful selection/quantization; nonfinite/negative gain inputs
+are rejected rather than sent into unchecked native float conversion.
+
+[Full persistent-callback comparison](demosaic-frame-equivalence.json) executes
+256 frames against the actual original callback and its real selection and
+quantization functions: 76 updates and 180 no-op frames. Every returned/cache
+byte, integer ISO and reconfiguration flag matches. Directed inputs include
+repeated values, same-truncated-ISO gain changes, sub-unity gain, changed gain
+products, missing exposure and forced reconfiguration. Native uClibc `log`
+executes; diagnostic logging alone is a modeled no-op. The same Rust replay
+executes on the physical Luckfox CPU with identical output, with no vendor
+library loaded there. This replay makes no camera/ISP writes.
+
+Rebuild host `numeric-fixture` and ARM binaries with mise, then run:
+`mise run camera:rust:demosaic-frames -- --adb SERIAL --report LOCAL.json`.
+The explicit SDK demosaic subset/header and pinned original library/runtime
+are required locally. HDR, monochrome and manual-mode lifecycle remain outside
+this automatic-color API. Live queues still retain startup demosaic tuning;
+connecting this verified frame gate to the associated exposure and atomic
+parameter enqueue is the next implementation step. This is a component
+checkpoint, not a claim that live ISO-dependent ISP tuning is finished.

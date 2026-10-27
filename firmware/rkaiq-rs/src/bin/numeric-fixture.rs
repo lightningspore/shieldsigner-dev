@@ -3160,6 +3160,23 @@ fn main() {
                     serde_json::json!({"status":status,"index":index,"queued":q.queued_count,"active":q.active,"requested":backend.requested,"trace":backend.trace,"buffers":buffers.iter().map(|b|serde_json::json!({"record":hex(&b.record),"queued":b.queued,"length":b.returned_length})).collect::<Vec<_>>()})
                 );
             }
+            "demosaic-frames" => {
+                use shieldsigner_rkaiq::{demosaic_selection::Calibration, demosaic_runtime::State};
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let calibration = Calibration::from_value(&v["calibration"]).unwrap();
+                let raw = v["hardware"].as_str().unwrap();
+                let hardware = (0..raw.len()).step_by(2).map(|i| u8::from_str_radix(&raw[i..i+2],16).unwrap()).collect::<Vec<_>>().try_into().unwrap();
+                let mut state = State { iso: 50, reconfigure: true, hardware };
+                let mut results = Vec::new();
+                for frame in v["frames"].as_array().unwrap() {
+                    state.reconfigure |= frame["reconfigure"].as_bool().unwrap();
+                    let gains = frame["gains"].as_array().map(|g| core::array::from_fn(|i| g[i].as_f64().unwrap() as f32));
+                    let result = state.process(&calibration, gains).unwrap();
+                    let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
+                    results.push(serde_json::json!({"iso":state.iso,"reconfigure":state.reconfigure,"hardware":result.map(|r|hex(&r)),"cache":hex(&state.hardware)}));
+                }
+                println!("{}",serde_json::to_string(&results).unwrap());
+            }
             "demosaic-select" => {
                 use shieldsigner_rkaiq::{
                     demosaic_selection::Calibration, isp32::PARAMETER_BYTES, isp_demosaic::*,

@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "frames": 256,
+  "updates": 76,
+  "noOpFrames": 180,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "calibrationSubsetSha256": "a5fe13ba77385ff1b2742fa565e9b84fd7432132409a0580b76aae19d353abc4",
+  "hostMatchesPhysicalArm": true,
+  "physicalArmBinarySha256": "9d7592a7629d881b9995fd0157566def683a6c473eaf0e25daa6a4e73810699e",
+  "hostBinarySha256": "15d2677d1b91a8c6ae7c284b2fdf07fdd824e29b51795cbc0a88d90c15f234d3",
+  "uclibcRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "sdkHeaderSha256": "191cc662c49ccad1b54ca1a8ebab99fd7e8d3b81a9eb08cc3b5d16dc601b8620",
+  "scope": "Complete native linear color-frame callback, ISO gate, selection, quantization and persistent cache; all 112 output/cache bytes compared.",
+  "limitations": [
+    "Monochrome, HDR and manual modes are outside this explicit automatic-color API.",
+    "Physical ARM replay does not program the live ISP; queue integration remains next.",
+    "Diagnostic logging is a modeled no-op; original selection/quantization and uClibc math execute."
+  ]
+}

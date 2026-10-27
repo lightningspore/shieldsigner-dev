@@ -56,6 +56,7 @@ pub mod awb_session;
 #[cfg(feature = "diagnostics")]
 pub mod demosaic_calibration;
 pub mod demosaic_selection;
+pub mod demosaic_runtime;
 pub mod discovery;
 pub mod engine;
 pub mod exposure;

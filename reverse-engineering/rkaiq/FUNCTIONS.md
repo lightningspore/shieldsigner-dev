@@ -102,3 +102,8 @@ Development `camera-probe configure-pipeline` supplies real Linux device methods
 ## Complete single-ISP AWB translation
 
 `awb_translation::translate` reconstructs the full RV1106 single-ISP value path of `RkAiqResourceTranslatorV32::translateAwbStats`, ELF `0x8818c`, including metadata, global RGB sums, debug descriptor and conditional output flags. `Configuration::from_measurement` reads the selected 1,204-byte SDK measurement record. [1,000 native comparisons](awb-translation-equivalence.json). This development addition after kit 0.0.28 does not establish applied-configuration correlation, live startup, multi-ISP delegation or C++ object ownership.
+
+`demosaic_runtime::State::process` reconstructs the persistent automatic linear
+color-frame gate in the demosaic `processing` callback (ELF `0x114a2c`), including
+integer ISO, reconfiguration consumption and cached update publication.
+[Persistent callback evidence and live integration boundary](ISP.md#persistent-automatic-linear-demosaic-frame-gate-0033-development).

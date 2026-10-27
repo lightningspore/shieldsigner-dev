@@ -1,0 +1,334 @@
+{
+  "passed": true,
+  "version": "0.0.33-dev",
+  "sourceRevision": "63d1ef9a8f756e4486e6b09cf8251ec10a0f4bf3",
+  "zipBytes": 25773946,
+  "zipSha256": "e65130f27ef6a3f2d322f5a1db20aab165e41d2dfa78ee6a3d42c97191dbe20e",
+  "manifestFilesVerifiedOnHostAndBoard": 321,
+  "manifestBytesVerified": 81295737,
+  "zipEntrySetMatchesManifest": true,
+  "numericalRunner": {
+    "exitCode": 0,
+    "passStatements": 24,
+    "resultsOnPersistentStorage": true,
+    "logSha256": "93b7888f0ed00bb89d93b7164fa8d1f5a6422c8874f08afba582f2016c6d9f2d"
+  },
+  "integration": {
+    "passed": true,
+    "integration": {
+      "sourceSha256": "7cf9c67797d5b14cfbea206e91bc5c85292ec01f36fca68edbaee13977a5809e",
+      "patchedSourceSha256": "726294bdd9d3a2b1b85a6109b9fd8db0f3761eadb1292f436f4767af19a2ff71",
+      "changes": [
+        "Rust PiVideoStream import",
+        "Preserve complete rotated preview canvas"
+      ],
+      "installedFilesModified": false
+    },
+    "opticalScanQualified": false,
+    "syntheticQrCases": [
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      }
+    ],
+    "changedSourceRejected": true,
+    "realFrameDecodeStatus": 4,
+    "capture": {
+      "directory": "/shieldsigner-camera-tests/kit-33-results/camera-ot7l91wz",
+      "firstFrameSeconds": 0.5290693330000522,
+      "first": 7,
+      "last": 236,
+      "samples": 69,
+      "received": 72,
+      "stopSeconds": 0.32183083299992177,
+      "ownerExitCode": 0
+    },
+    "realFrameRotations": [
+      {
+        "setting": 0,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 90,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 180,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 270,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      }
+    ],
+    "rotationBenchmark": {
+      "croppedSecondsPerFrame": 0.05127383320000263,
+      "expandedSecondsPerFrame": 0.0125301749999835
+    },
+    "installedCameraUnchanged": true
+  },
+  "demosaicNativeComparison": {
+    "passed": true,
+    "submittedUpdates": 15,
+    "isoRange": [
+      50,
+      158
+    ],
+    "frames": [
+      1,
+      6,
+      7,
+      9,
+      10,
+      12,
+      13,
+      15,
+      16,
+      18,
+      19,
+      21,
+      22,
+      24,
+      25
+    ],
+    "isos": [
+      50,
+      58,
+      82,
+      98,
+      107,
+      119,
+      126,
+      135,
+      139,
+      146,
+      149,
+      153,
+      155,
+      157,
+      158
+    ],
+    "processedStatistics": 165,
+    "parameterSubmissions": 164,
+    "maxParameterSnapshots": 2,
+    "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "ownerLogSha256": "c9a3b8a943f30578ca7067281765f0b7952b9c2fb1e17b1e0e39571423fed941",
+    "hardwareBytesComparedPerUpdate": 112,
+    "packedBytesComparedPerUpdate": 57,
+    "limitations": [
+      "Records are logged after successful QBUF; queued final proposals may be cancelled during shutdown.",
+      "Scheduler exposure association is not independent physical gain-timing proof.",
+      "Diagnostic logging is modeled; original callback, tuning, quantization and converter instructions execute."
+    ]
+  },
+  "sceneImageSaved": false,
+  "limitations": [
+    "Warm-board package check; exact 0.0.32 archive has separate controlled-clean-reboot evidence.",
+    "No successful optical QR, physical lighting/color change, physical LCD/button or power-cycle qualification.",
+    "Full IQ is a prerequisite and is not bundled; no vendor binary or private scene image is included."
+  ]
+}

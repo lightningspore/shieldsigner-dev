@@ -1598,3 +1598,36 @@ This test uses the real application decoder and preview loops with real camera
 frames. Its display sink and cancellation input are software boundaries; a
 physical public QR target, actual LCD/buttons and physical power-cycle testing
 remain separate qualification steps. No arbitrary decoded contents are saved.
+
+## Frozen development kit 0.0.33-dev
+
+Latest experimental archive:
+`dist/reverse-engineering/rkaiq-camera-test-0.0.33-dev.zip` (25,773,946 bytes).
+SHA-256: `e65130f27ef6a3f2d322f5a1db20aab165e41d2dfa78ee6a3d42c97191dbe20e`.
+Source: `63d1ef9a8f756e4486e6b09cf8251ec10a0f4bf3`. Prior archives are unchanged.
+
+All 321 manifest files (81,295,737 uncompressed bytes) pass host and physical
+Luckfox checks, and the ZIP entry set matches the manifest. The bundled
+numerical runner passes all 24 PASS checks on the physical board using SD-backed
+results. It now requires an explicit output directory instead of defaulting
+to this board's small RAM-backed /tmp. For example:
+
+```sh
+sh /shieldsigner-camera-tests/rkaiq-camera-test-0.0.33-dev/run-numeric-test.sh \
+  /shieldsigner-camera-tests/numeric-UNIQUE
+```
+
+The extracted package's real app integration passes: 69 sampled previews, first
+in 0.529 s, stop in 0.322 s, and owner exit zero. Its AE/AWB path processes
+165 statistics frames and 164 accepted parameter batches, retaining at most
+two snapshots. All fifteen submitted demosaic records and packed ISP blocks
+match original ARM processing/conversion. All sixteen generated QR rotation
+cases pass, and normal streaming saves no scene image. Measurement/log
+diagnostics remain retained.
+
+[Exact package evidence](kit-0.0.33-dev-hardware-validation.json) records the
+source, ZIP/manifest and measured results. This is warm-board qualification.
+The exact 0.0.32 package retains its separate controlled-clean-reboot result.
+Successful physical QR, physical lighting/color changes, LCD/buttons and a
+physical power cycle remain open. Use this archive's own quickstart with fresh
+configuration/results paths; do not replace an existing frozen archive.

@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """Assemble a checksummed hardware-test kit, excluding vendor binaries/pseudocode."""
 from pathlib import Path
-import hashlib,json,platform,shutil,subprocess,zipfile,tomllib
+import hashlib,json,os,platform,shutil,subprocess,tempfile,zipfile,tomllib
 from elftools.elf.elffile import ELFFile
 ROOT=Path(__file__).resolve().parents[3]
 version=tomllib.loads((ROOT/'firmware/rkaiq-rs/Cargo.toml').read_text())['package']['version']
-base=ROOT/'dist/reverse-engineering';kit=base/('rkaiq-camera-test-'+version);kit.mkdir(parents=True,exist_ok=True)
+revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip():
+ raise SystemExit('Commit source and test evidence before freezing a versioned kit')
+base=ROOT/'dist/reverse-engineering';base.mkdir(parents=True,exist_ok=True)
+staging=tempfile.TemporaryDirectory(prefix='rkaiq-kit-staging-',dir=base)
+kit=Path(staging.name)/('rkaiq-camera-test-'+version);kit.mkdir()
 arm=ROOT/'firmware/rkaiq-rs/target/armv7-unknown-linux-musleabihf/release'
 smoke=json.loads((ROOT/'reverse-engineering/rkaiq/arm-smoke.json').read_text())
 proof=json.loads((ROOT/'reverse-engineering/rkaiq/numeric-equivalence.json').read_text());assert proof['mismatchCount']==0
@@ -30,6 +35,21 @@ sequence=json.loads((ROOT/'reverse-engineering/rkaiq/first-frame-sequence-valida
 automatic=[s for s in sequence['scenarios'] if s.get('automaticAe')]
 assert sequence['passed'] and len(automatic)==2 and all(s['imageFrames']==33 and s['ae']['success'] for s in automatic)
 copy(ROOT/'reverse-engineering/rkaiq/examples/pipeline-linear.template.json','examples/pipeline-linear.template.json')
+for name in ['pipeline-luckfox-sc3336-observed.json','public-address-qr.png']:
+ copy(ROOT/'reverse-engineering/rkaiq/examples'/name,'examples/'+name)
+for name in ['verify_kit.py','configure_camera.py','optical_camera_check.py','shieldsigner_video_stream.py','shieldsigner_integration.py','stream_hardware_check.py','managed_hardware_check.py','integration_hardware_check.py']:
+ copy(ROOT/'firmware/rkaiq-rs/python'/name,'python/'+name)
+copy(ROOT/'firmware/rkaiq-rs/python/sc3336-owner.example.json','examples/sc3336-owner.example.json')
+for name in ['cold-camera-modules.sh','prepare-cold-boot.py','verify-cold-boot.py']:
+ copy(ROOT/'reverse-engineering/rkaiq/scripts'/name,'tools/'+name)
+for name in ['awb-live-hardware-validation.json','managed-camera-hardware-validation.json','clean-reboot-camera-hardware-validation.json','rgb-colorimetry-hardware-validation.json','application-integration-hardware-validation.json']:
+ copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
+application=json.loads((ROOT/'reverse-engineering/rkaiq/application-integration-hardware-validation.json').read_text())
+assert application['passed'] and application['cameraBinarySha256']==smoke['binaries']['camera-probe']
+for name,digest in application['sourceSha256'].items():
+ assert hashlib.sha256((ROOT/'firmware/rkaiq-rs/python'/name).read_bytes()).hexdigest()==digest,'Application hardware evidence is stale'
+assert hashlib.sha256((ROOT/'reverse-engineering/rkaiq/examples/public-address-qr.png').read_bytes()).hexdigest()==application['fixture']['sha256']
+
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'statistics-fixtures'/name,'statistics-fixtures/'+name)
@@ -80,42 +100,89 @@ assert smoke['bindingReferenceCases']==1000 and smoke['bindingMatch']
 assert smoke['lifecycleReferenceTraces']==100 and smoke['lifecycleMatch']
 # Copy source so the Rust implementation can be reviewed alongside the binary.
 source=ROOT/'firmware/rkaiq-rs'
-for path in sorted(source.rglob('*')):
- if path.is_file() and 'target' not in path.relative_to(source).parts and path.name!='.gitignore':copy(path,'source/rkaiq-rs/'+str(path.relative_to(source)))
+tracked=subprocess.check_output(['git','ls-files','-z','--','firmware/rkaiq-rs'],cwd=ROOT).decode().split('\0')
+for name in sorted(filter(None,tracked)):
+ path=ROOT/name
+ if path.is_file() and path.name!='.gitignore':copy(path,'source/rkaiq-rs/'+str(path.relative_to(source)))
 if platform.system()=='Darwin' and platform.machine()=='arm64':
  for name in ['frame-preview','camera-probe']:
   host=source/'target/release'/name
   if host.exists():copy(host,'host/'+name+'-macos-arm64').chmod(0o755)
-readme='''Experimental RKAIQ Rust camera test kit 0.0.1
+readme=r'''Experimental Rust SC3336 camera kit 0.0.1
 
-START WITH HARDWARE-TEST.md.
+Start with this quickstart, then HARDWARE-TEST.md for evidence and detailed scope.
+The ARM binary, managed Python adapter and opt-in application launcher are included.
+The current source passed real AE/AWB capture, owner restart/crash cleanup,
+full-range RGB delivery and application preview/decoder integration. A controlled
+clean reboot was also tested; its separately bundled report identifies that build.
+This is not complete RKAIQ ABI parity, physical power-cycle or optical QR proof.
+No vendor binary, full IQ profile, private scene image or device credential is bundled.
 
-This is a partial numerical reconstruction plus diagnostic tools, not a complete
-RKAIQ/ISP replacement. No firmware installation or boot-service changes are made.
-Explicit startup commands change graph, sensor and ISP state. The kit does
-not include or link the original vendor RKAIQ binaries. A real camera is required
-to test frame capture; the completed numerical/ARM-emulation tests do not prove it.
+Prerequisites on the Luckfox:
+- Matching installed SeedSigner application and its Python/Pillow/QR dependencies.
+- Camera kernel drivers loaded; no competing UI/vendor camera process.
+- Verified media graph plan and the matching full SC3336 IQ file already on-device.
+- Persistent results storage. /tmp is RAM-backed and is cleared at reboot.
+The observed graph example is specific to the tested image/module order; inspect
+bin/camera-probe list before using it on another image. The generic template is
+not runnable until filled. tools/cold-camera-modules.sh is the pinned driver-only
+loader; controlled one-boot skip helpers are documented in HARDWARE-TEST.md.
 
-All bin/ executables target ARMv7 Linux and are statically linked. On this Mac,
-host/frame-preview-macos-arm64 can convert captured raw frames for inspection.
-The PGM preview is uncalibrated; Bayer frames use 2x2 binning.
+After extracting this folder to persistent SD storage on the board:
 
-Run ./run-numeric-test.sh RESULTS_DIRECTORY on the Luckfox, then follow the guide.
-This version includes first-frame-sc3336: explicit graph plan + full existing
-SC3336 IQ JSON + parameter/image nodes + output basename. It connects fixed
-startup exposure, ISP parameters, raw DMA-BUF bridging and image capture.
-The full original IQ profile is NOT bundled: use the matching file already on
-your device or retrieve the SHA-pinned source from research/artifacts.json.
-Fill examples/pipeline-linear.template.json from actual inventory; placeholders
-are not runnable. No physical qualification of this automatic-exposure kit is claimed.
-auto-frame-sc3336 adds a bounded 33-frame automatic-exposure run, using the
-same arguments plus a required statistics node. White balance stays fixed at
-its calibrated startup gains. See HARDWARE-TEST.md before running it.
-The automatic command has passed simulated ARM adapter tests, but is not yet
-qualified on a physical camera. Automatic WB and full native fidelity remain
-unfinished.
-manifest.json records SHA-256 for each kit file. Source and dependency license
-texts are included. Full investigation and reproducible mise tasks:
+  camera_kit_dir=/shieldsigner-camera-tests/rkaiq-camera-test-0.0.1
+  python3 "$camera_kit_dir/python/verify_kit.py" "$camera_kit_dir"
+  chmod +x "$camera_kit_dir"/bin/*
+  python3 "$camera_kit_dir/python/configure_camera.py" \
+    --kit "$camera_kit_dir" \
+    --plan "$camera_kit_dir/examples/pipeline-luckfox-sc3336-observed.json" \
+    --iq /oem/usr/share/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json \
+    --results /shieldsigner-camera-tests/results \
+    --output /shieldsigner-camera-tests/camera-kit.json
+
+The configurator uses explicit absolute paths and refuses to overwrite an existing
+configuration. The default parameter/image/statistics nodes are 20/11/19; override
+its flags if your verified inventory differs. The full original IQ file is NOT
+included. First inspect the process-local patch without launching the UI:
+
+  python3 "$camera_kit_dir/python/shieldsigner_integration.py" \
+    --app-root /seedsigner --print-patch
+
+Run the headless, real-camera integration test (includes clearly synthetic QR cases):
+
+  python3 "$camera_kit_dir/python/integration_hardware_check.py" \
+    --app-root /seedsigner --config /shieldsigner-camera-tests/camera-kit.json \
+    --report /shieldsigner-camera-tests/integration-UNIQUE.json
+
+For an actual optical check, display or print examples/public-address-qr.png,
+point the camera at it, then run:
+
+  python3 "$camera_kit_dir/python/optical_camera_check.py" \
+    --app-root /seedsigner --config /shieldsigner-camera-tests/camera-kit.json \
+    --report /shieldsigner-camera-tests/optical-UNIQUE.json --seconds 60
+
+The image encodes the known public test address 1BoatSLRHtKNngkdXEeobR76b53LETtpyT;
+it is a camera fixture, not a payment request. The optical tool has no synthetic
+input path. Exit 0 means that target decoded and cleanup succeeded; exit 2 means
+no match by the deadline, 1 means an error and 130 means interruption. Unrelated
+QR/seed/wallet contents are not written to its report. Frame/log artifacts remain
+in the configured private results directory. A timeout is not optical success.
+
+For the actual app UI, with original UI/vendor services stopped:
+
+  python3 "$camera_kit_dir/python/shieldsigner_integration.py" \
+    --app-root /seedsigner --config /shieldsigner-camera-tests/camera-kit.json
+
+The launcher verifies the installed Camera source, swaps the backend and preserves
+complete rotated previews in memory. Installed Camera source and boot services
+are unchanged. Full UI rendering/button interaction is not qualified by headless
+integration tests. Append -- --help to test the real main.py import/argument path.
+
+All bin/ programs are static ARMv7 Linux executables. Optional host/ programs target
+macOS ARM64; frame-preview produces an uncalibrated PGM. run-numeric-test.sh runs
+original-reference numerical corpora on-board; its PASS is not optical/UI evidence.
+manifest.json hashes every kit file and identifies committed source. Source and
+dependency/runtime notices are included. Full research and mise tasks:
 https://github.com/lightningspore/shieldsigner-dev/tree/main/reverse-engineering/rkaiq
 '''
 (kit/'README.txt').write_text(readme.replace('0.0.1',version));items.append('README.txt')
@@ -309,8 +376,15 @@ zigroot=Path(subprocess.check_output(['mise','where','zig@0.15.2'],cwd=ROOT,text
 for path in [zigroot/'lib/libc/musl/COPYRIGHT',zigroot/'lib/libc/musl/COPYRIGHT.txt']:
  if path.exists():copy(path,'licenses/musl/'+path.name)
 (kit/'licenses/dependencies.json').write_text(json.dumps(licenses,indent=2)+'\n');items.append('licenses/dependencies.json')
-manifest={'sourceRevision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'sourceWorktreeDirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),'version':version,'target':'armv7-unknown-linux-musleabihf','status':'Partial reconstruction; hardware camera validation pending',
- 'numericCases':proof['totalCases'],'fullIspReplacement':False,'linksVendorRkaiq':False,'fixedFirstFrameCommand':'first-frame-sc3336','automaticExposureCommand':'auto-frame-sc3336','automaticExposureHardwareVerified':False,'automaticExposureFrames':33,'whiteBalancePolicy':'fixed calibrated startup gains republished per batch','automatic3A':False,'vendorFreeHardwareFrameVerified':False,'fullIqBundled':False,'files':[]}
+manifest={'sourceRevision':revision,'sourceWorktreeDirty':False,'version':version,'target':'armv7-unknown-linux-musleabihf',
+ 'status':'Experimental SC3336 live AE/AWB application path; optical/full UI gates remain open',
+ 'numericCases':proof['totalCases'],'fullIspReplacement':False,'linksVendorRkaiq':False,
+ 'fixedFirstFrameCommand':'first-frame-sc3336','automaticExposureCommand':'auto-frame-sc3336',
+ 'liveAutomaticCommand':'auto-awb-frame-sc3336','continuousCommand':'stream-sc3336',
+ 'automaticExposureHardwareVerified':True,'automaticWhiteBalanceHardwareVerified':True,
+ 'whiteBalancePolicy':'FAST-to-normal seven-light AWB with exact registered configuration snapshots',
+ 'automatic3A':False,'controlledCleanRebootEvidenceBundled':True,'opticalScanQualified':False,
+ 'fullUiQualified':False,'fullIqBundled':False,'publicQrFixturePayload':'1BoatSLRHtKNngkdXEeobR76b53LETtpyT','files':[]}
 for name in sorted(items):
  path=kit/name;manifest['files'].append({'name':name,'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
 (kit/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
@@ -319,6 +393,13 @@ if archive.exists():
  with zipfile.ZipFile(archive) as old:previous=json.loads(old.read(kit.name+'/manifest.json'))
  if previous!=manifest:raise SystemExit('Refusing to replace an existing kit version; bump Cargo package version first')
  print('Identical version already packaged:',archive);raise SystemExit(0)
-with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as out:
+staged_archive=Path(staging.name)/(kit.name+'.zip')
+with zipfile.ZipFile(staged_archive,'w',zipfile.ZIP_DEFLATED) as out:
  for name in [*sorted(items),'manifest.json']:out.write(kit/name,kit.name+'/'+name)
+# Publish without overwriting an existing immutable archive, then expose its tree.
+os.link(staged_archive,archive)
+published=base/kit.name
+if published.exists():shutil.rmtree(published)
+shutil.move(str(kit),str(published))
+staging.cleanup()
 print(archive,archive.stat().st_size,'bytes; sha256',hashlib.sha256(archive.read_bytes()).hexdigest())

@@ -1317,3 +1317,43 @@ returned DecodeQRStatus.FALSE because no known QR target was present. Optical
 scanning through sensor/ISP, complete UI interaction and physical power-cycle
 qualification remain separate gates. Evidence/hashes:
 `application-integration-hardware-validation.json`.
+
+## Reproducible current test kit and optical target
+
+The 0.0.31-dev packager now includes the live ARM binary, managed adapter,
+process-local app launcher, configuration generator, integration checks and
+manifest verifier at convenient top-level kit paths. Its source snapshot uses
+tracked files only, excluding private caches; complete IQ files, vendor binaries
+and real-scene captures remain excluded. The only image is the known public
+address QR fixture already decoded by the software integration tests.
+
+Build current ARM binaries and run `mise run camera:rust:smoke`, commit the
+reviewed source/evidence, then run `mise run camera:rust:package`. Packaging
+requires clean committed source, checks that native binary/Python integration
+hashes match hardware evidence, and refuses to replace a differing frozen
+version. It stages files before publishing an archive. The old 0.0.30-dev ZIP
+is retained unchanged. A package's README.txt is the quickstart; research docs
+retain chronological development context.
+
+On the board, `python/verify_kit.py KIT_DIRECTORY` verifies every manifest file.
+`configure_camera.py` then writes a new owner configuration using explicit kit,
+plan, existing IQ and persistent-results paths. The observed SC3336 example
+matches the tested module order; verify inventory for another image. The
+configurator refuses missing files/devices, nonexecutable camera binaries and
+an existing output file. It does not guess calibration or stop other services.
+
+`optical_camera_check.py` uses real managed Camera frames and installed DecodeQR,
+with no generated-image input option. It recognizes only the known public
+address encoded by `examples/public-address-qr.png`. Its report never includes
+unrelated QR, seed or wallet payloads. Display/print that image and point the
+camera at it before running the command in the kit README. The image is a test
+fixture, not a payment request.
+
+Exit 0 requires the target to decode and owner cleanup to succeed. Exit 2 means
+no match by the deadline; 1 is an error and 130 an interruption. On-board test
+30, with the existing text scene and a three-second deadline, examined eight
+real frames, returned 2 with opticalScanQualified false and shut down its owner
+cleanly. This checks the no-target/failure behavior; the optical success gate
+remains unproven until a physical target is presented. Configuration generation
+was also exercised against real device nodes. Packaged-artifact verification
+and subsequent hardware results are recorded separately from source tests.

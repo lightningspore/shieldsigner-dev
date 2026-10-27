@@ -1,0 +1,44 @@
+{
+  "sensor": "/dev/v4l-subdev2",
+  "isp": "/dev/v4l-subdev3",
+  "route": "cif",
+  "raw_tx": [
+    "/dev/video0"
+  ],
+  "raw_rx": [
+    "/dev/video18"
+  ],
+  "bridges": [
+    {
+      "device": "/dev/v4l-subdev1",
+      "pads": [
+        0
+      ]
+    },
+    {
+      "device": "/dev/v4l-subdev0",
+      "pads": [
+        0
+      ]
+    }
+  ],
+  "links": [
+    {
+      "media": "/dev/media1",
+      "source": 42,
+      "source_pad": 0,
+      "sink": 1,
+      "sink_pad": 0,
+      "enabled": false
+    },
+    {
+      "media": "/dev/media1",
+      "source": 48,
+      "source_pad": 0,
+      "sink": 1,
+      "sink_pad": 0,
+      "enabled": true
+    }
+  ],
+  "sof": "/dev/v4l-subdev0"
+}

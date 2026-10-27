@@ -3256,6 +3256,29 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-runtime" => {
+                use shieldsigner_rkaiq::{ccm_runtime::*,ccm_selection::Profile};
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let floats=|p: &serde_json::Value| p.as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>();
+                let mut all=Vec::new();
+                for cal in v["calibration"].as_array().unwrap() {
+                    all.push(cal["profiles"].as_array().unwrap().iter().map(|p| {
+                        let mut name=[0u8;25];let bytes=p["name"].as_str().unwrap().as_bytes();name[..bytes.len()].copy_from_slice(bytes);
+                        NamedProfile{name,profile:Profile{saturation:p["saturation"].as_f64().unwrap() as f32,matrix:floats(&p["matrix"]).try_into().unwrap(),offsets:floats(&p["offsets"]).try_into().unwrap()}}
+                    }).collect::<Vec<_>>());
+                }
+                let calibration=v["calibration"].as_array().unwrap().iter().zip(&all).map(|(cal,profiles)|Illuminant{gains:floats(&cal["gains"]).try_into().unwrap(),sensor_gains:floats(&cal["sensorGains"]).try_into().unwrap(),saturations:floats(&cal["saturations"]).try_into().unwrap(),profiles}).collect::<Vec<_>>();
+                let mut state=State{illuminant:0,saturation:0.,high_name:[0xa5;25],low_name:[0xa5;25],matrix:[0.;9],offsets:[0.;3]};
+                let mut output=Vec::new();
+                for frame in v["frames"].as_array().unwrap() {
+                    let mut updated=frame["updated"].as_bool().unwrap();
+                    state.process(&calibration,frame["sensorGain"].as_f64().unwrap() as f32,floats(&frame["gains"]).try_into().unwrap(),frame["force"].as_bool().unwrap(),frame["pending"].as_bool().unwrap(),&mut updated).unwrap();
+                    let hex=|b: &[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+                    let bytes=state.matrix.iter().chain(state.offsets.iter()).flat_map(|v|v.to_le_bytes()).collect::<Vec<_>>();
+                    output.push(serde_json::json!({"illuminant":state.illuminant,"saturation":state.saturation.to_bits(),"high":hex(&state.high_name),"low":hex(&state.low_name),"result":hex(&bytes),"updated":updated}));
+                }
+                println!("{}",serde_json::json!(output));
+            }
             "ccm-illuminant" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let pair = |p: &serde_json::Value| [p[0].as_f64().unwrap() as f32,p[1].as_f64().unwrap() as f32];

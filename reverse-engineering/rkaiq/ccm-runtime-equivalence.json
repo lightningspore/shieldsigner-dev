@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "cases": 100,
+  "frames": 2800,
+  "selectedProfileCases": 10,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "c269c0243998c0b0a4b9e7231767cd26be9e8b4a6dbc6ea3ff215e0218d648ee",
+  "physicalArmBinarySha256": "eaae73039ba83f42cd1b119eb5eb5797ce119b511e9671df22abe295355a8f35",
+  "hostMatchesPhysicalArm": true,
+  "seed": "0x43434d52",
+  "scope": "Complete native selectCCM call tree across persistent 28-frame sequences; all cached matrix/offset bits, saturation bits, names, illuminant and update flag. Only libc string/memory boundaries are modeled.",
+  "limitations": [
+    "Finite calibrated/current gain pairs; nonfinite Rust inputs rejected.",
+    "Constructor/JSON loading, outer flags, damping and live CCM remain separate.",
+    "Physical CPU replay does not write ISP registers."
+  ]
+}

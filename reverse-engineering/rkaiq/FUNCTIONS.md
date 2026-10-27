@@ -142,3 +142,8 @@ integer ISO, reconfiguration and cached-result publication.
 `ccm_illuminant::estimate` reconstructs complete nearest CCM illuminant
 selection (`illuminant_index_estimation_ccm`, ELF `0xfd394`).
 [Distance arithmetic, tie/no-match behavior and evidence](ISP.md#nearest-ccm-illuminant-0034-development).
+
+`ccm_runtime::State::process` reconstructs the persistent non-blended
+`selectCCM` call tree (ELF `0xfe000`), including gain-to-saturation mapping,
+profile names, cached publication and early exits.
+[State boundaries and full native sequence comparison](ISP.md#persistent-non-blended-ccm-selection-0034-development).

@@ -668,3 +668,44 @@ after building host and ARM fixtures. Full IQ remains a local prerequisite.
 This does not yet implement gain-to-saturation mapping, the persistent
 `selectCCM` update policy, damping or live CCM submission. No ISP writes occur
 in CPU replay and live CCM remains disabled.
+
+### Persistent non-blended CCM selection (0.0.34 development)
+
+`ccm_runtime::State::process` reconstructs the full numerical/cache path of
+`selectCCM` (ELF `0xfe000`, Ghidra `0x10e000`), joining nearest-illuminant
+selection, the four-knot sensor-gain→saturation interpolation, descending
+matrix-profile selection and fused matrix/offset interpolation. Its explicit
+calibration records correspond to the native illuminant records; the calibrated
+name buffers are fixed 25-byte NUL-terminated strings. The public API supports
+up to seven illuminants and five profiles each, matching native context slots.
+The existing verified saturation interpolation functions are reused, eliminating
+duplicate arithmetic in `ccm_selection`.
+
+The native context flags at `0x55f` and `0x560` are supplied explicitly as
+`force` and `pending`; this step does not invent their surrounding lifecycle.
+With both clear, the same illuminant and an absolute saturation delta no greater
+than double-precision `1e-5` cause an early return, preserving the caller's
+update flag and all cached bytes. Otherwise saturation/illuminant and profile
+names advance. Forced updates, changed saturation or changed profile names
+publish a matrix/offset result. Same-name/same-saturation paths retain cached
+matrix values. String copies preserve bytes after the terminating NUL, as the
+native `strcpy` does. Malformed selected calibration is rejected before committing
+state or the caller's flag; this safe API boundary is not claimed native behavior.
+
+[Whole native call-tree evidence](ccm-runtime-equivalence.json) compares 100
+persistent sequences of 28 frames (2,800 frames), including ten sequences using
+the selected profile's actual numerical calibrations. Profile names are short
+synthetic labels; full IQ and the raw vendor code remain local prerequisites.
+Repeated frames, gain changes, illuminant changes, forced/pending flags and
+near-epsilon saturation changes compare every matrix/offset float bit,
+saturation bits, illuminant index, both complete 25-byte name caches and the
+update flag. Original `selectCCM` and all its numerical callees execute; ordinary
+libc string/memory functions are controlled boundaries, not algorithm stubs.
+Host and physical Luckfox Rust replay agree. The 91 library/five Unix tests,
+no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:ccm-runtime -- --adb SERIAL --report LOCAL.json`
+after building host/ARM numeric fixtures. This is persistent selection, not
+native constructor/JSON loading, outer-frame flag ownership, temporal damping
+or live CCM integration. Physical CPU replay makes no ISP writes; the live
+camera still leaves CCM disabled until the remaining stages are verified.

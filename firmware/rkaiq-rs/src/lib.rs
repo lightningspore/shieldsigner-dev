@@ -347,3 +347,4 @@ pub mod awb_measurement_binding;
 pub mod isp_ccm;
 pub mod ccm_selection;
 pub mod ccm_illuminant;
+pub mod ccm_runtime;

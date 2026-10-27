@@ -1,11 +1,6 @@
 //! Saturation profile selection and interpolation (ELF 0xfd278/0xfd2e6/0xfd32e).
+pub use crate::ColorProfile as Profile;
 use crate::InvalidInput;
-#[derive(Clone, Copy, Debug)]
-pub struct Profile {
-    pub saturation: f32,
-    pub matrix: [f32; 9],
-    pub offsets: [f32; 3],
-}
 #[derive(Clone, Copy, Debug)]
 pub struct Selection {
     pub high: usize,
@@ -59,14 +54,8 @@ pub fn select(profiles: &[Profile], saturation: f32) -> Result<Selection, Invali
     if high != low {
         let a = profiles[high];
         let b = profiles[low];
-        let weight = (b.saturation - saturation) / (b.saturation - a.saturation);
-        let complement = 1. - weight;
-        for i in 0..9 {
-            result.matrix[i] = libm::fmaf(a.matrix[i], weight, b.matrix[i] * complement);
-        }
-        for i in 0..3 {
-            result.offsets[i] = libm::fmaf(a.offsets[i], weight, complement * b.offsets[i]);
-        }
+        result.matrix = crate::saturation_matrix(saturation, &a, &b)?;
+        result.offsets = crate::saturation_offsets(saturation, &a, &b)?;
     }
     Ok(result)
 }

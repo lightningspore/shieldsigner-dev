@@ -380,6 +380,31 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-geometry" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut record = [0x5au8; ae_geometry::RECORD_BYTES];
+                let geometry = ae_geometry::Geometry {
+                    width: v["width"].as_u64().unwrap() as u32,
+                    height: v["height"].as_u64().unwrap() as u32,
+                    input: core::array::from_fn(|i| v["input"][i].as_f64().unwrap() as f32),
+                    tone_mapped: core::array::from_fn(|i| v["tone"][i].as_f64().unwrap() as f32),
+                };
+                let selected = ae_geometry::configure(
+                    &mut record,
+                    geometry,
+                    v["mode"].as_i64().unwrap() as i32,
+                )
+                .unwrap();
+                println!(
+                    "{}:{}:{}",
+                    selected[0],
+                    selected[1],
+                    record
+                        .iter()
+                        .map(|v| format!("{v:02x}"))
+                        .collect::<String>()
+                );
+            }
             "isp-color" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let mut params = [0x5au8; isp32::PARAMETER_BYTES];

@@ -6,6 +6,7 @@
 pub mod ae;
 pub mod ae_damping;
 pub mod ae_decision;
+pub mod ae_geometry;
 pub mod ae_histogram;
 pub mod awb_gain;
 pub mod awb_preparation;

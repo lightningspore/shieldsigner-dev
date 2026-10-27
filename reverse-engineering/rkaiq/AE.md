@@ -107,3 +107,35 @@ AE occupies 148 contiguous bytes at `0x41b`, mirrored into the native cache begi
 `mise run camera:rust:ae-measurement` executes both original dispatcher branches for 1,000 cases each. It compares all three masks, every kernel/cache byte, source preservation and unrelated context/parameter preservation, across both source flag values, multi-ISP hint values and two virtual-base offsets. Random and zero/maximum patterns exercise routing/preservation; they are not camera recommendations. The typed-result cast is a controlled boundary returning the supplied valid SDK record; standard memcpy is explicit. Other dispatcher result types, failed casts and full polymorphic result ownership are outside this suite. [Report](ae-measurement-equivalence.json).
 
 Cross-compiling verbatim SDK declarations with their packed leaf-record rules and `ISP_HW_V32` independently checks every consumed input offset and record size. Kernel header assertions verify all eight output block locations/sizes and the complete masks. ARM executable replay repeats the reference corpus. This verifies selected-result serialization; AWB measurement configuration, calibrated window/weight selection, synchronized control and complete initial IQ/startup remain unfinished. No new complete parameter file suitable for hardware submission is supplied by these fixtures.
+
+## Measurement geometry recovered in 0.0.30-dev
+
+`ae_geometry::configure` reconstructs `AecHwConfig` (ELF 0xa7730) over the
+contiguous 104-byte selected AE and 529-byte selected histogram records. It
+sets the native source selectors, derives input/tone-mapped windows from
+sensor dimensions and calibrated fractions, and initializes hardware histogram
+weights to one. It preserves all other selected fields. This uniform hardware
+weight initialization is distinct from the profile's center-weighted AE policy;
+it does not establish where later policy weights are applied.
+
+The native linear branch selects sources 1/1/3; accepted modes 0x11/0x12 select
+0/0/0 and reuse the input window for the final measurement. Fraction products
+are truncated to signed integers, nonpositive products become zero and positive
+results narrow to u16. Rust rejects invalid modes/nonfinite or oversized checked
+inputs before mutation. Source selectors mirrored into native context fields
+are explicit return values instead of private C++ memory access.
+
+The focused original-ARM suite covers 120 cases, comparing all 633 selected
+bytes, mirrored selectors and preservation of other context bytes. ARM Linux
+replay executes the same cases with the Rust binary:
+
+```sh
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-geometry.py --arm
+```
+
+[Equivalence report](ae-geometry-equivalence.json). Default measurement-record
+construction, remaining calibration/control selection and startup measurement
+publication are still required before live statistics can drive the recovered
+AE solver. This helper is deliberately not enabled in the fixed first-frame
+command yet, which continues to disable measurement blocks and automatic 3A.

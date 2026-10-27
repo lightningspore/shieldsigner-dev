@@ -852,3 +852,37 @@ after building host/ARM fixtures. This is the static portion of calibration
 loading. Owned illuminant/profile tables, full constructor/outer-frame state,
 joined automatic configuration and live CCM remain unfinished. CPU replay
 makes no ISP writes; full IQ and raw vendor assets are not committed.
+
+### Owned CCM calibration tables (0.0.34 development)
+
+`ccm_calibration::Automatic::from_value` now loads the explicitly selected
+symmetric/non-blended `ccm_calib_v2` object into owned tables: up to nine
+illuminants, their gain→saturation curves and up to five named matrix profiles,
+thirteen symmetric luma rows, nine-knot alpha-scale/enhancement curves, control
+tolerances, enable/damping/enhancement flags, and the static result fields.
+`views` borrows the owned illuminant/profile data for the verified selector.
+No native pointers or full vendor JSON object are retained in the numerical path.
+
+The native `pCcmMatrixAll_init` (ELF `0xfdc04`) resolves each `matrixUsed` name
+through complete `CamCalibDbGetCcmProfileByName` (`0xfdba8`), then stable-sorts
+profiles descending by saturation. Rust follows that binding/order rather than
+assuming JSON order. Counts, finite arrays, increasing gain/ISO grids, NUL-free
+1–24-byte names, unique matrix names, resolvable references and strictly descending
+resolved saturations are validated. Duplicate/malformed inputs fail explicitly;
+this is a safe supported-input boundary, not a claim of native malformed-input
+semantics. Asymmetric or blended-illuminant profiles remain unsupported here.
+
+[Native binding/physical CPU evidence](ccm-tables-equivalence.json) checks the
+actual complete selected profile plus 31 varied/shuffled versions. Native full
+name lookup/sort and static configuration run; every resolved name and profile
+float bit matches. All loaded control/curve fields are independently mapped from
+JSON and compared by f32 bits; their downstream algorithms have separate native
+evidence. Libc string/memory helpers are explicit controlled boundaries.
+The native JSON parser/full constructor are not executed. Full IQ/fixture
+contents remain local and are not committed.
+
+The 96 library/five Unix tests, no-default-features and static ARM builds pass.
+Run `mise run camera:rust:ccm-tables -- --adb SERIAL --report LOCAL.json` after
+building host/ARM fixtures. Physical replay loads only the Rust fixture program,
+not the vendor library, and makes no ISP writes. The next integration is the
+outer automatic CCM state and result publication; live CCM remains disabled.

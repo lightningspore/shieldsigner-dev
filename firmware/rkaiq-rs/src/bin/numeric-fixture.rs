@@ -3256,6 +3256,19 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-tables" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let cal=shieldsigner_rkaiq::ccm_calibration::Automatic::from_value(&v).unwrap();
+                let hex=|b: &[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+                let floats=|v: &[f32]|hex(&v.iter().flat_map(|v|v.to_le_bytes()).collect::<Vec<_>>());
+                let illuminants=cal.illuminants.iter().map(|ill| {
+                    let values=ill.gains.iter().chain(ill.sensor_gains.iter()).chain(ill.saturations.iter()).copied().collect::<Vec<_>>();
+                    let profiles=ill.profiles.iter().map(|p|serde_json::json!({"name":hex(&p.name),"values":floats(&std::iter::once(p.profile.saturation).chain(p.profile.matrix).chain(p.profile.offsets).collect::<Vec<_>>())})).collect::<Vec<_>>();
+                    serde_json::json!({"values":floats(&values),"profiles":profiles})
+                }).collect::<Vec<_>>();
+                let luma=cal.luma.iter().flat_map(|r|std::iter::once(r.iso).chain(r.curve)).collect::<Vec<_>>();
+                println!("{}",serde_json::json!({"flags":[cal.enabled,cal.damping_enabled,cal.enhancement_enabled],"tolerances":floats(&[cal.wb_tolerance,cal.gain_tolerance]),"illuminants":illuminants,"luma":floats(&luma),"alphaGains":floats(&cal.alpha_gains),"alphaScales":floats(&cal.alpha_scales),"enhancementGains":floats(&cal.enhancement_gains),"enhancementRatios":floats(&cal.enhancement_ratios),"staticResult":hex(&cal.static_result)}));
+            }
             "ccm-calibration" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let s=v["result"].as_str().unwrap();

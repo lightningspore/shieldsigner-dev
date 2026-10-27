@@ -163,3 +163,8 @@ profile names, cached publication and early exits.
 `ccm_calibration::static_fields` reconstructs static result initialization by
 `ConfigHwbyCalib` (ELF `0xfecd0`) from explicit IQ JSON fields.
 [Public SDK ABI checks and native/physical CPU evidence](ISP.md#ccm-sdk-layouts-and-static-calibration-fields-0034-development).
+
+`ccm_calibration::Automatic::from_value` loads owned supported CCM tables,
+including native profile-name resolution/order from `pCcmMatrixAll_init`
+(ELF `0xfdc04`) and `CamCalibDbGetCcmProfileByName` (`0xfdba8`).
+[Validation boundaries and original/physical CPU table evidence](ISP.md#owned-ccm-calibration-tables-0034-development).

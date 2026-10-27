@@ -1,0 +1,16 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 640,
+  "processed": 572,
+  "skipped": 68,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "native standard AecPreProcess through error checkpoint with real run decision, then complete ordinary AecRun with real brightness controller",
+  "limitations": [
+    "DCG and register-value conversion are explicit successful no-op boundaries; call counts are checked.",
+    "Fixed target curve 45, standard mean mode, explicitly seeded runtime/policy and associated exposure; manual/HDR/iris/environment history excluded.",
+    "Successful control paths only; conversion failures and partially mutated error state are not covered.",
+    "No live writes or physical frame association are introduced.",
+    "Preprocessing stops at the current-error checkpoint; conversion and result publication are external."
+  ]
+}

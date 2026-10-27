@@ -810,3 +810,41 @@ nonnegative ISP gains in linear mode.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-convergence.py --arm
 ```
+
+## Connected standard frame step
+
+`ae_frame::linear` connects the recovered stages in their native order:
+process/skip selection from the previous Q8 mean, delay-change flag, route-force
+flag and convergence gating byte; active target selection; active/skipped
+error-history publication; dynamic-history/enable binding; then the automatic
+linear caller and brightness controller. A skipped frame retains the target,
+copies the previous error-history slot, preserves previous samples and control
+index, and returns no new control output. The caller retains its last output.
+
+The active branch derives mean brightness directly from Q8 statistics and uses
+`ae_target::select` for its target. Dynamic damping receives the updated history
+and the sticky damping-enable flag, while the delay gate receives the convergence
+gating flag. These flags are no longer independent fabricated decisions in the
+connected wrapper. Policy, target curves, limits and correctly associated current
+exposure remain explicit inputs.
+
+The connected comparison executes real native `AecGetRunFlag` inside standard
+preprocessing, stops at the current-error checkpoint, then executes native
+`AecRun` through normal return including its real brightness controller. Six
+hundred forty cases compare the connected Rust result, all ten error-history
+entries, all five control-history records, delay/cache/damping state, index and
+previous mean samples. The corpus includes real processed and skipped paths;
+the report records their counts. The fixed target curve is 45 for this comparison;
+variable target interpolation remains covered separately.
+[Connected frame comparison](ae-frame-equivalence.json).
+
+Conversion is still an explicit successful no-op boundary in this oracle, and
+result publication/convergence updating requires associated converted exposure
+records from the caller. Environment-compensated history, HDR, iris, manual
+modes, full preprocessing side effects, runtime calibration binding and live
+sensor writes remain outside this frame step. This does not establish physical
+exposure latency or complete the AE/AWB camera service.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-run.py --frame --arm
+```

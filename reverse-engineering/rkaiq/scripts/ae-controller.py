@@ -7,7 +7,7 @@ from differential import ROOT,BINARY,HEAP,RETURN,regs
 Base=runpy.run_path(str(Path(__file__).with_name('ae-route.py')))['OriginalRoute']
 class Original(Base):
  def __init__(self,binary):
-  super().__init__(binary);self.preprocessing=False;self.prepared=False;self.running=False;self.conversions=[]
+  super().__init__(binary);self.actual_run_flag=False;self.preprocessing=False;self.prepared=False;self.running=False;self.conversions=[]
   self.conversion_addresses={p&~1:n for n,p in self.symbols.items() if ('AecLinearDcgConvertion' in n or n=='_ZL21AecRegValueConvertionP12AecContext_s')}
   self.run_flag=next(p&~1 for n,p in self.symbols.items() if 'AecGetRunFlag' in n)
   self.uc.hook_add(UC_HOOK_MEM_WRITE,self.preprocess_store,begin=HEAP+0x12c,end=HEAP+0x12f)
@@ -17,7 +17,7 @@ class Original(Base):
  def hook(self,uc,address,size,user):
   if self.running and address in self.conversion_addresses:
    self.conversions.append(self.conversion_addresses[address]);uc.reg_write(regs.UC_ARM_REG_R0,0);uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
-  if self.preprocessing and address==self.run_flag:
+  if self.preprocessing and not self.actual_run_flag and address==self.run_flag:
    uc.reg_write(regs.UC_ARM_REG_R0,1);uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
   if self.stubs.get(address)=='__aeabi_uidiv':
    a=uc.reg_read(regs.UC_ARM_REG_R0);b=uc.reg_read(regs.UC_ARM_REG_R1);assert b
@@ -43,24 +43,25 @@ class Original(Base):
   self.uc.mem_write(HEAP,bytes(c));self.uc.mem_write(HEAP+0x20000,struct.pack('<256I',*v['histogram']));self.symbols['controller']=0xb40c9
   if v.get('preprocess',False):
    self.uc.mem_write(HEAP+0x40cc,struct.pack('<I',HEAP+0x30000));self.uc.mem_write(HEAP+0x30000,struct.pack('<4I',HEAP+0x31000,2,HEAP+0x32000,2));self.uc.mem_write(HEAP+0x31000,struct.pack('<2f',0.,1.));self.uc.mem_write(HEAP+0x32000,struct.pack('<2f',45.,45.))
-   stats=bytearray(0x3000);struct.pack_into('<H',stats,0x2e20,int(v['measured']*256));self.uc.mem_write(HEAP+0x40000,bytes(stats))
+   stats=bytearray(0x3000);struct.pack_into('<3H',stats,0x2e20,int(v['measured']*256),512,768);self.uc.mem_write(HEAP+0x40000,bytes(stats))
    stack=bytearray(240);struct.pack_into('<f',stack,0,1.);struct.pack_into('<II',stack,232,HEAP+0x40000,v['frame'])
    bits=lambda f:struct.unpack('<I',struct.pack('<f',f))[0]
-   self.preprocessing=True;self.prepared=False;self.invoke('AecPreProcess',[HEAP,bits(v['exposure']),bits(1.),bits(1.)],stack=bytes(stack),instructions=1000000);assert self.prepared;self.preprocessing=False
+   self.actual_run_flag=v.get('full_frame',False);self.preprocessing=True;self.prepared=False;self.invoke('AecPreProcess',[HEAP,bits(v['exposure']),bits(1.),bits(1.)],stack=bytes(stack),instructions=1000000);assert self.prepared;self.preprocessing=False
    c=bytearray(self.uc.mem_read(HEAP,len(c)))
   if v.get('run_wrapper',False):
-   assert not v.get('preprocess',False)
+   assert not v.get('preprocess',False) or v.get('full_frame',False)
    stats=bytearray(0x3000);struct.pack_into('<256I',stats,0x788,*v['histogram']);struct.pack_into('<3H',stats,0x2e20,int(v['measured']*256),512,768);self.uc.mem_write(HEAP+0x40000,bytes(stats))
    self.running=True;self.conversions=[]
    status=self.invoke('AecRun',[HEAP,HEAP+0x60000,HEAP+0x40000],instructions=3000000)
-   self.running=False;assert status==0;assert len(self.conversions)==(2 if v['run'] else 0),self.conversions
+   self.running=False;assert status==0;assert len(self.conversions)==(2 if c[0x22ed] else 0),self.conversions
   else:self.invoke('controller',[HEAP,HEAP+0x20000,256],instructions=3000000)
+  self.last_run=bool(c[0x22ed]) if v.get('run_wrapper',False) else True
   after=bytearray(self.uc.mem_read(HEAP,len(c)))
   offsets=[0xd4,0xdc,0xe0,0xe8,0x12c,0x124,0x128,0xd8,0x5574]
   words=[struct.unpack_from('<I',after,o)[0] for o in offsets]+[after[0x5994]]+[struct.unpack_from('<I',after,o)[0] for o in [0x40f4,0x40f8]]+[after[o] for o in [0x40fc,0x40fd,0x23cf]]+[struct.unpack_from('<I',after,o)[0] for o in [0x3ccc,0x3cdc,0x3d00,0x3cec]]+[after[0x3d3c],after[0x5995]]
   words+=list(struct.unpack('<55I',after[0x3fd8:0x40b4]))+list(struct.unpack('<6I',self.uc.mem_read(HEAP+0x10000,24)))
   for o,n in [(0xd4,4),(0xdc,8),(0xe8,4),(0x124,12),(0xd8,4),(0x5574,4),(0x5994,2),(0x40f4,10),(0x23cf,1),(0x3ccc,4),(0x3cdc,4),(0x3d00,4),(0x3cec,4),(0x3d3c,1),(0x3fd8,220)]:c[o:o+n]=after[o:o+n]
-  if v.get('dynamic',False) and v.get('dynamic_enabled',False) and (not v.get('run_wrapper',False) or v['run']):
+  if v.get('dynamic',False) and v.get('dynamic_enabled',False) and (not v.get('run_wrapper',False) or c[0x22ed]):
    slot=(v['frame']+1)%10;offsets=[0x2c44+slot*64,0x2c48+slot*64,0x2c4c+slot*64]
    words+=[slot]+[struct.unpack_from('<I',after,o)[0] for o in offsets]
    for o in offsets:c[o:o+4]=after[o:o+4]

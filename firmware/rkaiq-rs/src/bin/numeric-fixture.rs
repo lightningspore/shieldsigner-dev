@@ -655,7 +655,49 @@ fn main() {
                                    limits: ae_route::Limits,
                                    frame: i32,
                                    synchronized_frame: i32| {
-                    if v["run_wrapper"].as_bool().unwrap_or(false) {
+                    if v["full_frame"].as_bool().unwrap_or(false) {
+                        let mut frame_state = ae_frame::State {
+                            error_history: preprocessing_history,
+                            target: 45.,
+                            current_error: 0.,
+                            convergence: ae_convergence::State {
+                                gating_enabled: b("enabled") as u8,
+                                dynamic_enabled: b("dynamic_enabled") as u8,
+                            },
+                        };
+                        let output = ae_frame::linear(
+                            &mut frame_state,
+                            &mut runtime,
+                            state,
+                            route,
+                            histogram,
+                            input,
+                            policy,
+                            limits,
+                            ae_frame::Target {
+                                levels: &[0., 1.],
+                                points: &[45., 45.],
+                                bias_percent: 0.,
+                            },
+                            frame,
+                            synchronized_frame,
+                            0.009,
+                            [(input.measured * 256.) as u16, 512, 768],
+                            [2., 3., 4.],
+                        )?;
+                        preprocessing_history = frame_state.error_history;
+                        Ok(output.control.unwrap_or(ae_controller::Output {
+                            point: ae_route::Point {
+                                gain: 2.,
+                                isp_gain: 1.,
+                                time: 0.0045,
+                            },
+                            aggregate_exposure: 0.009,
+                            relative_error: output.preprocessing_error,
+                            held: false,
+                            damping_diagnostics: None,
+                        }))
+                    } else if v["run_wrapper"].as_bool().unwrap_or(false) {
                         let output = ae_run::linear(
                             &mut runtime,
                             state,

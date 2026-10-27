@@ -204,6 +204,16 @@
       "name": "rk_aiq_types_alsc_hw.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/alsc/rk_aiq_types_alsc_hw.h",
       "sha256": "c5ad5ee22d479f6f0deb57504353ca314c573af00b9e8e999007e15a7fdf5892"
+    },
+    {
+      "name": "alsc_head.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/alsc_head.h",
+      "sha256": "0da7c08cf951b4cd6b2a9ba6a2669d548b9c4451566f726da865426c8015fee0"
+    },
+    {
+      "name": "rk_aiq_types_alsc_common.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/alsc/rk_aiq_types_alsc_common.h",
+      "sha256": "fd65d3e0230d23a45e84c33be4c0de08cd8e57eedbfe442b0c18f9fe8d751dd2"
     }
   ],
   "kernelHeaders": [

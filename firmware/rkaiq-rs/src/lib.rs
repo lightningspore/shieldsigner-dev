@@ -360,3 +360,4 @@ pub mod ccm_automatic;
 pub mod ccm_frame;
 pub mod isp_lsc;
 pub mod lsc_geometry;
+pub mod lsc_illuminant;

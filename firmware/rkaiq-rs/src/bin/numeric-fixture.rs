@@ -3405,6 +3405,17 @@ fn main() {
                 isp_ccm::apply(&mut parameters, &result).unwrap();
                 println!("{}",parameters.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "lsc-illuminant" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let pair=|p: &serde_json::Value|[p[0].as_f64().unwrap() as f32,p[1].as_f64().unwrap() as f32];
+                let calibrated=v["calibrated"].as_array().unwrap().iter().map(pair).collect::<Vec<_>>();
+                let mut state=shieldsigner_rkaiq::lsc_illuminant::State::default();let mut output=Vec::new();
+                for frame in v["frames"].as_array().unwrap() {
+                    let estimate=state.process(&calibrated,pair(frame)).unwrap();
+                    output.push(match estimate {Some(e)=>serde_json::json!({"nearest":e.nearest,"selected":e.selected,"stable":e.stable_window,"history":&state.history[..state.len]}),None=>serde_json::json!({"nearest":null,"selected":null,"stable":false,"history":&state.history[..state.len]})});
+                }
+                println!("{}",serde_json::json!(output));
+            }
             "lsc-gradients" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let array=|key: &str|v[key].as_array().unwrap().iter().map(|v|u16::try_from(v.as_u64().unwrap()).unwrap()).collect::<Vec<_>>().try_into().unwrap();

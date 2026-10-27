@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "sequences": 104,
+  "frames": 6624,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "sqrtRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "hostBinarySha256": "4bd7bb67c26f314bf8ad8017f22be50700f58fdff75761f81327e81144e337ca",
+  "physicalArmBinarySha256": "0bd1d89cd1bacee42780cb1a0569988b7bbc3d64fde02fba24a8e58f6b86f69c",
+  "hostMatchesPhysicalArm": true,
+  "selectedProfileSequences": 10,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "scope": "Complete native nearest estimation, UpdateDominateIlluList and StableIlluEstimation; original uClibc sqrtf. Compare each selected index and full ordered intrusive history including backward links. Empty/no-match and 15-frame mode/ties covered.",
+  "boundaries": [
+    "Modeled malloc/free arena and suppressed logging; no algorithm stubs.",
+    "Finite inputs, at most seven illuminants; calibration changes require history reset.",
+    "Physical CPU replay only; automatic table interpolation and live LSC remain separate."
+  ]
+}

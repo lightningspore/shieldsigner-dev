@@ -200,3 +200,8 @@ mask clearing and cached enable state.
 `lsc_geometry::gradients` reconstructs positive-sector inverse gradients from
 complete `AlscManualGrad` (ELF `0x119018`).
 [Precision, selected calibration and native/physical CPU evidence](ISP.md#lsc-sector-gradients-0034-development).
+
+`lsc_illuminant::State` reconstructs nearest WB selection and the rolling
+15-frame mode from native `illuminant_index_estimation`,
+`UpdateDominateIlluList` and `StableIlluEstimation`.
+[State, rounded ties and native/physical CPU evidence](ISP.md#lsc-illuminant-history-0034-development).

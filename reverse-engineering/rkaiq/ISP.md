@@ -1156,3 +1156,33 @@ are 2304×1296; the VGA image output must not be substituted without verifying
 which sensor/ISP input crop the LSC stage actually covers. Automatic table and
 resolution selection, temporal state and live LSC remain unfinished. CPU replay
 makes no ISP writes and the current camera path still has LSC disabled.
+
+### LSC illuminant history (0.0.34 development)
+
+`lsc_illuminant::State` reconstructs the nearest-illuminant estimator (ELF
+`0x118498`) and the history used by `UpdateDominateIlluList` / 
+`StableIlluEstimation` (`0x118528` / `0x118576`). The estimator uses f32 deltas,
+fused red-square accumulation and a rounded square root, with strict `<`
+comparison against an initial 9,999,999 distance. Replacing this with squared
+distances can change rounded ties. Until fifteen successful observations,
+native selects the nearest illuminant. Once full, it chooses the most frequent
+index in the last fifteen observations; equal counts favor the lowest index.
+A no-match result leaves the output index and history unchanged.
+
+[Native/physical CPU evidence](lsc-illuminant-equivalence.json) covers 104
+persistent sequences / 6,624 frames, including ten sequences using the selected
+IQ profile's seven WB pairs, exact distance ties, mode ties, window turnover,
+empty groups and failed matches interleaved with successful observations.
+All three complete original routines execute, including native linked-list
+updates, with original uClibc `sqrtf`. The oracle models allocation/free and
+suppresses diagnostic logging; it checks the whole ordered history and each
+backward link as well as both nearest and stable selection. Host and physical
+Luckfox Rust agree on every output. All 101 library/five Unix tests,
+no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:lsc-illuminant -- --adb SERIAL --report LOCAL.json`
+after host/ARM fixture builds. Rust supports finite gains and SDK groups of up
+to seven illuminants; reset history when replacing calibration. This closes
+illuminant history only: resolution/table selection, vignetting interpolation,
+damping, OTP and live integration still need verification. CPU replay makes
+no ISP writes; the live camera keeps LSC disabled.

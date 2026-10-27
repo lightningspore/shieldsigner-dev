@@ -1,0 +1,13 @@
+{
+  "kind": "fresh-automatic-gain-state",
+  "cases": 7,
+  "mismatches": 0,
+  "arm": true,
+  "originalSha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "scope": "Software-result initializer; allocation/logging adapters; not full session initialization",
+  "limitations": [
+    "Fresh automatic non-bypass state only, with remosaic disabled.",
+    "Compares current/previous gains, gain-derived temperature, dispatcher fields, empty histories and five scalar diagnostics; not every context byte.",
+    "Calibration loading is checked separately; saved-site loading, measurement caches and numeric preprocessing remain session inputs."
+  ]
+}

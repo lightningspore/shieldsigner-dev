@@ -2003,3 +2003,29 @@ Whole native startup composition, persistent preprocessing/controller state,
 live gain publication, convergence/color qualification and vendor-free cold
 startup remain open. Private images, statistics, SDK payloads and the exposure
 IQ variant are not committed.
+
+
+### Fresh automatic controller state (2026-10-27)
+
+`Scene::initial_gain_state::<CAP>()` now constructs the gain controller from
+empty histories and the calibrated first-frame reference gain. It computes
+initial CCT/CCRI with the reconstructed native routine and rejects insufficient
+history capacity. This replaces the seeded test state as the starting point for
+future real-data controller execution; it does not activate live AWB.
+
+`mise run camera:rust:awb-initial-gain-state` executes the original
+`InitinalSwResParaCom2` to completion with explicit allocation/logging adapters.
+For each of the seven pinned SC3336 light sources, it compares starting
+current/previous gains, temperature, dispatcher fields, empty history heads,
+and five scalar diagnostics. Host and ARM Rust match with zero differences;
+see `awb-initial-gain-state-equivalence.json`. This is a projection of fresh
+automatic, non-bypass initialization with remosaic disabled, not a comparison
+of every context byte or complete camera startup. Calibration loading is
+verified separately. Saved-site loading, numeric preprocessing and measurement
+cache initialization remain required session work before live gain publication.
+
+The latest physical text capture was saved locally as
+`dist/reverse-engineering/hardware-2026-10-27/ss-20261027-awb-measurement-05.png`
+and opened for inspection. The raw frame and private scene stay outside Git.
+It uses 30 ms / 8x exposure and fixed calibrated white balance; readable text
+does not establish automatic white-balance operation or color accuracy.

@@ -296,6 +296,24 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-initial-gain-state" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut c = shieldsigner_rkaiq::awb_calibration::Scene::from_value(&v["iq"]).unwrap();
+                c.lights.first_frame = v["first"].as_u64().unwrap() as usize;
+                let s = c.initial_gain_state::<64>().unwrap();
+                let p = &s.controller.post;
+                println!("{}", serde_json::json!({
+                    "current":p.current.map(f32::to_bits),
+                    "previous":p.previous.map(f32::to_bits),
+                    "low_current":s.controller.low.low.current.map(f32::to_bits),
+                    "temperature":[p.temperature.valid as u32,p.temperature.cct.to_bits(),p.temperature.ccri.to_bits()],
+                    "frame":s.dispatch.frame,"countdown":s.dispatch.countdown,
+                    "history_lengths":[p.raw_history.values().len(),p.output_history.values().len(),s.controller.high_history.values().len()],
+                    "diagnostics":[p.coefficient.to_bits(),p.effective_coefficient.to_bits(),s.controller.density.to_bits(),s.controller.temporal_weight.to_bits(),s.controller.high_low_weight.to_bits()],
+                    "lines":c.common.lines.map(|l|serde_json::json!([l.a.to_bits(),l.b.to_bits(),l.c.to_bits(),l.valid as u32])),
+                    "gains":c.lights.entries.iter().map(|l|l.reference_gain.map(f32::to_bits)).collect::<Vec<_>>()
+                }));
+            }
             "awb-scene-parse" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
                 println!("{}",match shieldsigner_rkaiq::awb_calibration::Scene::from_value(&v){

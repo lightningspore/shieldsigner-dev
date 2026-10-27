@@ -1685,3 +1685,117 @@ pub fn assemble_measurement_startup(
         serde_json::json!({"kind":"experimental-awb-measurement-startup","automaticWhiteBalance":false,"dimensions":dimensions,"sampleScale":sample_scale,"physicalLights":selected.active,"groups":selected.groups,"window":geometry.window,"downsampling":geometry.block,"countThreshold":geometry.count_threshold,"lumaWeightThreshold":geometry.luma_weight_threshold,"applyPosition":"Gain1","source":"BayerNR","limitations":["One explicitly selected FAST linear BayerNR/Gain1 scene; normal time-share/HDR/OTP composition remains separate.","Composes verified components and observed startup stores; complete native startup composition and hardware validation are pending.","Enables measurement collection only when caller submits this record; does not enable a live automatic-WB controller."]}),
     ))
 }
+
+impl Scene {
+    /// Fresh automatic gain-controller state from initial software-result setup.
+    /// Saved-site reference I/O, measurement caches and numeric preprocessing
+    /// are separate session inputs; this is not a complete camera session.
+    pub fn initial_gain_state<const CAP: usize>(
+        &self,
+    ) -> Result<crate::awb_gain_frame::State<CAP>, crate::InvalidInput> {
+        use crate::{
+            awb_gain_controller, awb_gain_history, awb_low_gain, awb_low_single_color,
+            awb_luma_history, awb_postprocess, awb_single_color, awb_single_color_grid,
+            awb_xy_selection,
+        };
+        let needed = self
+            .common
+            .luma_history_target
+            .max(self.common.region_history_target)
+            .max(self.single.history_target as i32);
+        if needed < 0 || needed as usize > CAP {
+            return Err(crate::InvalidInput::Length);
+        }
+        let gain = self
+            .lights
+            .entries
+            .get(self.lights.first_frame)
+            .ok_or(crate::InvalidInput::Length)?
+            .reference_gain;
+        if gain.iter().any(|n| !n.is_finite() || *n <= 0.) {
+            return Err(crate::InvalidInput::GainRange);
+        }
+        let zero_temperature = awb_single_color::ColorTemperature {
+            valid: false,
+            cct: 0.,
+            ccri: 0.,
+        };
+        let temperature =
+            awb_single_color::color_temperature(gain, self.common.lines[0], self.common.lines[1])?;
+        let post = awb_postprocess::State {
+            raw_history: awb_gain_history::History::from_values(&[])?,
+            output_history: awb_gain_history::History::from_values(&[])?,
+            previous: gain,
+            current: gain,
+            coefficient: 0.,
+            effective_coefficient: 0.,
+            raw: [0.; 4],
+            clipped_gain: [0.; 4],
+            adjust_before: [0.; 4],
+            adjust_after: [0.; 4],
+            offset_gain: [0.; 4],
+            damped: [0.; 4],
+            adjust_coordinates_before: [0.; 2],
+            adjust_coordinates_after: [0.; 2],
+            clipped: false,
+            history_updated: false,
+            converged: false,
+            damping_stable: false,
+            temperature,
+            top: [zero_temperature; 4],
+        };
+        let low = awb_low_gain::State {
+            current: gain,
+            low_result: [0.; 4],
+            temporal_result: [0.; 4],
+            spatial_result: [0.; 4],
+            temporal_source: [0.; 4],
+            spatial_weight: 0.,
+            used_previous: false,
+            color_history: awb_luma_history::History::from_values(&[])?,
+        };
+        let detection = awb_single_color_grid::Detection {
+            selected: 0,
+            color: 0,
+            candidate_counts: [0; 14],
+            color_counts: [0; 14],
+            valid: false,
+            disagreements: 0,
+            votes: 0,
+            mean_distance: 0.,
+            gain: [0.; 4],
+        };
+        Ok(crate::awb_gain_frame::State {
+            dispatch: crate::awb_dispatch::State {
+                countdown: self.common.initial_countdown,
+                frame: 0,
+            },
+            site: crate::awb_site::State {
+                matched: false,
+                frames: 0,
+            },
+            controller: awb_gain_controller::State {
+                region: awb_xy_selection::State {
+                    history: awb_luma_history::History::from_values(&[])?,
+                    selected: awb_xy_selection::Region::Normal,
+                    retained: 0,
+                    kind: 0,
+                },
+                low: awb_low_single_color::State {
+                    low,
+                    detection,
+                    single_weight: 0.,
+                },
+                post,
+                high_history: awb_gain_history::History::from_values(&[])?,
+                estimated_gain: [0.; 4],
+                high_gain: [0.; 4],
+                high_low_weight: 0.,
+                temporal_weight: 0.,
+                density: 0.,
+                selection_status: 0,
+                strategy_flag: false,
+            },
+        })
+    }
+}

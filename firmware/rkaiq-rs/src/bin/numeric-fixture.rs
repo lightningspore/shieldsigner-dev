@@ -57,6 +57,8 @@ mod awb_measurement_transforms_fixture;
 mod awb_measurement_geometry_fixture;
 #[path = "../awb_measurement_limits_fixture.rs"]
 mod awb_measurement_limits_fixture;
+#[path = "../awb_input_selection_fixture.rs"]
+mod awb_input_selection_fixture;
 fn main() {
     for line in io::stdin().lock().lines() {
         let line = line.unwrap();
@@ -151,6 +153,7 @@ fn main() {
                 }
                 println!("{}", output.join(","));
             }
+            "awb-input-selection" => println!("{}", awb_input_selection_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-measurement-limits" => println!("{}", awb_measurement_limits_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-measurement-geometry" => println!("{}", awb_measurement_geometry_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-measurement-transforms" => println!("{}", awb_measurement_transforms_fixture::run(&serde_json::from_str(a[1]).unwrap())),

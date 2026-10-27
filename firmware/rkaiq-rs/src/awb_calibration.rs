@@ -1243,3 +1243,39 @@ impl MeasurementLimits {
         .apply(brightness, record)
     }
 }
+
+pub struct MeasurementInput {
+    pub source: crate::awb_input_selection::Source,
+    pub frame: u8,
+}
+impl MeasurementInput {
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        use crate::awb_input_selection::Source;
+        let v = at(wb, "/autoPara/rawSelectPara")?;
+        let source = match at(v, "/frameChooseMode")?.as_str() {
+            Some("CALIB_AWB_INPUT_RAW_FIXED") => Source::RawFixed,
+            Some("CALIB_AWB_INPUT_RAW_AUTO") => Source::RawAuto,
+            Some("CALIB_AWB_INPUT_BAYERNR") => Source::BayerNr,
+            Some("CALIB_AWB_INPUT_DRC") => Source::Drc,
+            _ => return Err(format!("Unknown AWB input source")),
+        };
+        Ok(Self {
+            source,
+            frame: integer(v, "/frameChoose", 0, 255)? as u8,
+        })
+    }
+    pub fn apply(
+        &self,
+        record: &mut [u8; crate::isp_awb_measurement::INPUT_BYTES],
+        working_mode: u32,
+        blc_pre_gain: Option<f32>,
+    ) -> Result<(), crate::InvalidInput> {
+        crate::awb_input_selection::configure(
+            record,
+            self.source,
+            self.frame,
+            working_mode,
+            blc_pre_gain,
+        )
+    }
+}

@@ -1,0 +1,13 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "cases": 981,
+  "iqLoaderCases": 1,
+  "mismatches": 0,
+  "arm": true,
+  "scope": "Both input bit helpers plus native prepare startup source selection and complete SDK record preservation",
+  "limitations": [
+    "Calibration update is an explicit success boundary; prepare stops after apply-position publication, before geometry.",
+    "Checked startup domain uses valid raw frame/source selections; later exposure-dependent RawAuto selection is separate."
+  ]
+}

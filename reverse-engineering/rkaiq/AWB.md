@@ -1770,3 +1770,30 @@ stops before luma-weight configuration. This closes limit selection, not the
 outer update policy or complete hardware reconfiguration. Luma/block weighting,
 input selection, initial group/FAST setup and whole-record assembly remain
 unfinished; automatic WB is still disabled in the live camera command.
+
+## Startup input source and bit depth
+
+`awb_input_selection` reconstructs startup RawFixed/RawAuto/BayerNR/DRC source
+selection plus `calcInputBitIs12Bit` (ELF 0xc1214) and
+`calcInputRightShift212Bit` (ELF 0xc124e). Linear raw modes select frame zero;
+HDR raw startup uses the configured frame. BayerNR/DRC select their pipeline
+stage directly. DRC forces the existing LSC-bypass flag on; other sources
+preserve that flag. Input-bit and right-shift decisions use the optional BLC
+pre-gain and working mode. The original ordered `gain > 1` test treats NaN as
+not high gain; Ghidra's apparent `gain <= 1` alternative would mis-handle it.
+The Rust implementation follows executed instructions, with a regression test.
+
+`MeasurementInput::from_value` loads the selected scene's `rawSelectPara` and
+rejects unknown source names. The SC3336 scene selects BayerNR. Native helper
+behavior and complete SDK record preservation are compared across 980 cases
+plus one actual IQ-loader case by `mise run camera:rust:awb-input-selection`,
+on host and ARM. Sources, raw selectors, linear/HDR mode ranges, absent/unity/
+high BLC pre-gain, infinity and NaN are covered. The startup oracle runs native
+prepare through apply-position publication, with calibration update an explicit
+success boundary and geometry following the stop point.
+[Input selection report](awb-input-selection-equivalence.json).
+
+Checked startup rejects unsupported mode ranges and invalid HDR raw frames
+before modifying the record. Exposure-dependent RawAuto reconfiguration is
+still separate. Live AWB remains disabled pending weighting, initial group/FAST
+policy, whole-record assembly and runtime integration.

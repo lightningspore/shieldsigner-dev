@@ -675,11 +675,12 @@ that error. It does **not** apply the brightness-controller tolerance deadband
 to this history. When the native run decision skips processing, it copies the
 previous ring entry to the current slot and publishes the copied value.
 
-Four hundred twenty cases execute native preprocessing to the current-error
+Eight hundred forty cases execute native preprocessing to the current-error
 publication checkpoint, comparing all ten history values and current error
 across ring wraps, active/skipped processing, and dark/target/bright readings.
-The run-flag decision is controlled and the selected target curve is fixed at
-45 to isolate the history stage. Native target selection itself remains covered
+Half control the run decision; half execute the native run decision with
+explicitly seeded previous/current Q8 means and flags. The target curve is fixed
+at 45 to isolate the history stage. Native target selection itself remains covered
 by its separate profile/interpolation comparison. Host and ARM replay pass.
 [History publication report](ae-preprocess-history-equivalence.json).
 
@@ -706,3 +707,37 @@ Environment-compensated history, alternate luma modes, HDR, complete run-flag
 selection and live sensor/statistics association remain outside this stage.
 The native error history is now produced by Rust, but this does not enable
 live automatic writes or complete the camera service.
+
+
+## Native process/skip decision
+
+`ae_run_flag::select` reconstructs the complete `AecGetRunFlag` function
+(ELF 0xb31f0), including its single-channel branch and accumulating channel
+branch. The change ratio is the absolute difference divided by the previous
+Q8 mean (denominator one if it was zero). The native operation divides in
+double precision, rounds to float, then compares that result against a double
+`0.03` literal. The exact threshold therefore matters at boundary samples.
+
+Disabled gating returns one. Otherwise the result depends on the change test,
+per-channel unchanged-sample flags and overrides. Raw nonzero flag bytes are
+preserved rather than normalized to a boolean. Field names retain their context
+offsets because the surrounding calibration and flag lifecycle have not yet
+been recovered; these are not user-facing operating-mode labels.
+
+The full native function returns normally in 3,091 comparison cases. They cover
+zero/maximum Q8 means, 3% boundaries, raw flag bytes, zero through three channels,
+mixed unchanged/changed channels and override precedence. Every context and
+sample byte is checked for preservation. The native null-context return is
+separately checked; Rust uses non-null typed inputs.
+[Process/skip comparison](ae-run-flag-equivalence.json).
+
+The history oracle also now connects the real native run decision to the
+preprocessing history checkpoint in 420 of its 840 cases. The Rust fixture
+connects `select` to `record_error` for those same inputs. Maintaining previous
+means and flags over a real stream, and handling the rest of skipped-frame
+output publication, remain integration work. No live automatic writes are
+introduced.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-run-flag.py --arm
+```

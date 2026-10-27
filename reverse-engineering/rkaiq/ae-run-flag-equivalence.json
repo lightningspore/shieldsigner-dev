@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 3091,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "complete native AecGetRunFlag through normal return; context and samples preserved",
+  "limitations": [
+    "Context flag lifecycle and previous-mean publication remain external.",
+    "Channel mode is bounded to zero through three channels; raw flag bytes are preserved.",
+    "Logging is inactive; native null-context return is separately checked, while Rust uses typed non-null inputs."
+  ]
+}

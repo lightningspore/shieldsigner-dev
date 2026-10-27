@@ -257,3 +257,5 @@ pub fn quantize_gain(value: f32, fractional_bits: u8) -> Result<i32, InvalidInpu
     let rounded = (scaled as f64) + if scaled > 0.0 { 0.5 } else { -0.5 };
     Ok(rounded as i32)
 }
+
+pub mod ae_run_flag;

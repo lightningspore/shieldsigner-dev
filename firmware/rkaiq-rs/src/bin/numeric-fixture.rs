@@ -380,14 +380,75 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-run-flag" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let previous: Vec<u16> = v["previous"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|x| x.as_u64().unwrap() as u16)
+                    .collect();
+                let current: Vec<u16> = v["current"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|x| x.as_u64().unwrap() as u16)
+                    .collect();
+                let overrides: Vec<u8> = v["overrides"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|x| x.as_u64().unwrap() as u8)
+                    .collect();
+                println!(
+                    "{}",
+                    ae_run_flag::select(
+                        ae_run_flag::Policy {
+                            enabled_4fb9: v["enabled"].as_u64().unwrap() as u8,
+                            channel_mode_23cd: v["mode"].as_u64().unwrap() as u8,
+                            unchanged_23cf: core::array::from_fn(|i| v["unchanged"][i]
+                                .as_u64()
+                                .unwrap()
+                                as u8),
+                            overrides_3d3c: overrides.try_into().unwrap(),
+                        },
+                        &previous,
+                        &current
+                    )
+                    .unwrap()
+                );
+            }
             "ae-preprocess-history" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let mut history =
                     core::array::from_fn(|i| v["history"][i].as_f64().unwrap() as f32);
+                let mut run = v["run"].as_bool().unwrap();
+                if v["native_run"].as_bool().unwrap_or(false) {
+                    let measured = (v["measured"].as_f64().unwrap() * 256.) as u16;
+                    let previous = if !run {
+                        measured
+                    } else if measured == 0 {
+                        65535
+                    } else {
+                        0
+                    };
+                    run = ae_run_flag::select(
+                        ae_run_flag::Policy {
+                            enabled_4fb9: 1,
+                            channel_mode_23cd: 0,
+                            unchanged_23cf: [0; 3],
+                            overrides_3d3c: [0; 3],
+                        },
+                        &[previous],
+                        &[measured],
+                    )
+                    .unwrap()
+                        != 0;
+                }
                 let error = ae_preprocess::record_error(
                     &mut history,
                     v["frame"].as_u64().unwrap() as u32,
-                    v["run"].as_bool().unwrap(),
+                    run,
                     v["measured"].as_f64().unwrap() as f32,
                     45.,
                 )

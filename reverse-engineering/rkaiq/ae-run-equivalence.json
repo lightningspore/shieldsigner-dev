@@ -1,0 +1,13 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 640,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "ordinary linear AecRun through normal return including real native AecClmExecute, run/skip bookkeeping, control-index advancement and previous-mean publication",
+  "limitations": [
+    "DCG and register-value conversion are explicit successful no-op boundaries; call counts are checked.",
+    "Preprocessing supplies run flag and current measurements; missing-statistics/manual/HDR/iris branches are excluded.",
+    "Successful control paths only; conversion failures and partially mutated error state are not covered.",
+    "No live writes or physical frame association are introduced."
+  ]
+}

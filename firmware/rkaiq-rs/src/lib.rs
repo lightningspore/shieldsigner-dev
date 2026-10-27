@@ -259,3 +259,5 @@ pub fn quantize_gain(value: f32, fractional_bits: u8) -> Result<i32, InvalidInpu
 }
 
 pub mod ae_run_flag;
+
+pub mod ae_run;

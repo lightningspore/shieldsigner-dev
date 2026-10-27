@@ -622,6 +622,11 @@ fn main() {
                     .collect::<Vec<_>>();
                 let mut preprocessing_history =
                     core::array::from_fn(|i| v["damping_history"][i].as_f64().unwrap() as f32);
+                let mut runtime = ae_run::State {
+                    previous_q8: [100, 200, 300],
+                    previous_mean: 11.,
+                    previous_hdr_means: [12., 13., 14.],
+                };
                 let mut execute = |state: &mut ae_controller::State,
                                    route: &mut [ae_route::Point],
                                    histogram: &[u32],
@@ -630,7 +635,34 @@ fn main() {
                                    limits: ae_route::Limits,
                                    frame: i32,
                                    synchronized_frame: i32| {
-                    if v["preprocess"].as_bool().unwrap_or(false) {
+                    if v["run_wrapper"].as_bool().unwrap_or(false) {
+                        let output = ae_run::linear(
+                            &mut runtime,
+                            state,
+                            route,
+                            histogram,
+                            input,
+                            policy,
+                            limits,
+                            frame,
+                            synchronized_frame,
+                            v["run"].as_bool().unwrap(),
+                            0.009,
+                            [(input.measured * 256.) as u16, 512, 768],
+                            [2., 3., 4.],
+                        )?;
+                        Ok(output.unwrap_or(ae_controller::Output {
+                            point: ae_route::Point {
+                                gain: 2.,
+                                isp_gain: 1.,
+                                time: 0.0045,
+                            },
+                            aggregate_exposure: 0.009,
+                            relative_error: 0.,
+                            held: false,
+                            damping_diagnostics: None,
+                        }))
+                    } else if v["preprocess"].as_bool().unwrap_or(false) {
                         ae_controller::step_with_history(
                             state,
                             route,
@@ -755,6 +787,12 @@ fn main() {
                 }
 
                 words.extend(preprocessing_history.map(f32::to_bits));
+                if v["run_wrapper"].as_bool().unwrap_or(false) {
+                    words.push(state.index);
+                    words.extend(runtime.previous_q8.map(u32::from));
+                    words.push(runtime.previous_mean.to_bits());
+                    words.extend(runtime.previous_hdr_means.map(f32::to_bits));
+                }
                 println!(
                     "{}",
                     words

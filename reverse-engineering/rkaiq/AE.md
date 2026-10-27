@@ -741,3 +741,41 @@ introduced.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-run-flag.py --arm
 ```
+
+## Ordinary linear caller bookkeeping
+
+`ae_run::linear` connects the ordinary statistics-present, automatic linear
+`AecRun` caller (ELF 0xb0d1c) to the recovered control body. This supplies two
+state lifecycle rules previously left to the caller:
+
+- Copy the last aggregate output into the environment held-exposure field
+  before testing the process/skip flag, including on skipped frames.
+- On a processed frame, increment the five-entry history index **before** the
+  control call, then publish current linear/HDR mean fields and all three Q8
+  means as previous samples. A skipped frame preserves the index and samples.
+
+The process decision's unchanged-sample flag at `+0x23cf` is the already
+recovered delay state's `changed` flag. Its override at `+0x3d3c` is the
+route-cache `force` flag. These identities follow the actual writer addresses;
+maintaining the gating-enable flag at `+0x4fb9` remains separate work.
+
+Six hundred forty comparisons execute native `AecRun` through normal return,
+including the real `AecClmExecute` and subordinate numerical routines, and
+compare outputs, complete history records, cache, damping diagnostics, index
+and previous samples. Process/skip cases cover fixed/dynamic damping, priming,
+route forcing and transition-delay state. Unrelated context bytes must remain
+unchanged. Host and ARM replay are required by the published report.
+[Caller comparison](ae-run-equivalence.json).
+
+DCG and register-value conversion are explicit successful no-op boundaries in
+this comparison; it checks their call counts (two on processed frames, zero on
+skipped frames), without claiming conversion or driver-write equivalence.
+Preprocessing supplies the run flag and measurements. Manual, missing-statistics,
+HDR and iris branches are excluded. The Rust wrapper returns `None` for skip so
+the caller retains its output. It only handles successful control paths; callers
+must not publish partially updated state after an error. Native signed index
+overflow is outside the accepted Rust numerical domain.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-run.py --arm
+```

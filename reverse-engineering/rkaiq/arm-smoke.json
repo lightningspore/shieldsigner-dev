@@ -55,15 +55,15 @@
   "lifecycleReferenceTraces": 100,
   "lifecycleMatch": true,
   "invalidEventEndpointRejected": true,
-  "numericalReferenceLines": 1,
+  "numericalReferenceLines": 9050,
   "numericalMatch": true,
   "cameraSelfTest": "PASS: reconstructed interpolation, complete 2187-value LUT and media topology traversal. Full ARM-original differential test is separate.",
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "bfea88dd170c54e728305497bcb319587673eaed03a93b18e71ce8d33a54f212",
-    "numeric-fixture": "fd75c3c5709db86ca0f4a3f97e9303eafb58cd01a2e2255daeeaea6309ccb404",
-    "frame-preview": "86c0c4bfc705cf94d28bb524252223f7947341134fdf672663e8eb533c878b3c"
+    "camera-probe": "890a77931eddef53b9c55de4ec7e86eaf855bff66919cec85be6aaaf367427ea",
+    "numeric-fixture": "a22ae7f4b33ef896fcd04dd56e7479fbe859599531165fb8b5e4050f19660da4",
+    "frame-preview": "f7ed30fab01abd812237c649da665a29dad0fb1256ead5c1220213fd52118b14"
   },
   "limitations": [
     "ARM/Linux userspace execution is verified; real camera capture and end-to-end ISP behavior are not tested."

@@ -26,8 +26,9 @@ def main():
   if not automatic:assert summary['sofEvents']>0 and summary['statisticsEvents']==summary['statisticsFrames']
   assert summary['imageFrames']==(33 if automatic else 3) and summary['rawFrames']>=summary['imageFrames'] and not summary['hardwareVerified']
   if automatic:
-   ae=next(e for e in events if e.get('event')=='automatic-ae-finished');assert ae['success'] and ae['processedStatistics']>=3 and ae['parameterSnapshots']>=3
-   summary['ae']=ae
+   ae=next(e for e in events if e.get('event')=='automatic-ae-finished');assert ae['success'] and ae['processedStatistics']>=3 and ae['parameterSnapshots']>=3 and len(ae['sensorWrites'])>3
+   summary['ae']={k:v for k,v in ae.items() if k not in ['sensorWrites','sensorQueries']}
+   summary['ae'].update(sensorWriteCount=len(ae['sensorWrites']),sensorQueryCount=len(ae['sensorQueries']))
   assert summary['statisticsEnabled']==statistics and summary['multiPlaneTx']==multi_tx
   if statistics:assert summary['statisticsFrames']>=3
   assert any(e.get('event')=='first-frame-finished' and e['success'] for e in events)

@@ -9,7 +9,7 @@ def command(name,*args):return ['docker','run','--rm','-i','--network=none','--p
 selftest=subprocess.run(command('camera-probe','self-test'),text=True,capture_output=True,check=True)
 with (fixtures/'inputs.txt').open('rb') as source:
  result=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
-expected=(fixtures/'expected.txt').read_bytes();assert result.stdout==expected,'ARM executable differs from original-reference corpus'
+numeric_expected=(fixtures/'expected.txt').read_bytes();assert result.stdout==numeric_expected,'ARM executable differs from original-reference corpus'
 lifecycle=ROOT/'dist/reverse-engineering/lifecycle-fixtures'
 with (lifecycle/'inputs.txt').open('rb') as source:
  trace=subprocess.run(command('numeric-fixture'),stdin=source,capture_output=True,check=True)
@@ -164,7 +164,7 @@ report={'image':image,'platform':'linux/arm/v7','execution':'Docker Desktop ARM 
  'statisticsReferenceCases':len(decoded.stdout.splitlines()),'statisticsMatch':True,
  'bindingReferenceCases':len(selected.stdout.splitlines()),'bindingMatch':True,
  'lifecycleReferenceTraces':len(trace.stdout.splitlines()),'lifecycleMatch':True,'invalidEventEndpointRejected':True,
- 'numericalReferenceLines':len(expected.splitlines()),'numericalMatch':True,'cameraSelfTest':selftest.stdout.strip(),
+ 'numericalReferenceLines':len(numeric_expected.splitlines()),'numericalMatch':True,'cameraSelfTest':selftest.stdout.strip(),
  'nodeInventoryWithoutDevicePassed':True,'invalidVideoEndpointRejected':True,
  'binaries':{name:hashlib.sha256((binaries/name).read_bytes()).hexdigest() for name in ['camera-probe','numeric-fixture','frame-preview']},
  'limitations':['ARM/Linux userspace execution is verified; real camera capture and end-to-end ISP behavior are not tested.']}

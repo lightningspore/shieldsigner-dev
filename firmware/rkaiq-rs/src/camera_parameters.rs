@@ -499,7 +499,7 @@ fn capture_with_parameters_controlled(
             );
             println!(
                 "{}",
-                json!({"event":"automatic-ae-finished","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string()),"processedStatistics":control.owner.processed,"parameterSnapshots":control.owner.parameters.len(),"lastSof":control.owner.last_sof,"lastSofTimestampNs":control.owner.last_sof_timestamp_ns,"automaticWhiteBalance":false,"physicalApplicationVerified":false})
+                json!({"event":"automatic-ae-finished","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string()),"processedStatistics":control.owner.processed,"parameterSnapshots":control.owner.parameters.len(),"lastSof":control.owner.last_sof,"lastSofTimestampNs":control.owner.last_sof_timestamp_ns,"sensorWrites":control.owner.sensor.writes,"sensorQueries":control.owner.sensor.queries,"automaticWhiteBalance":false,"physicalApplicationVerified":false})
             );
             result
         } else {

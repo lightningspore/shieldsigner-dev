@@ -1,6 +1,6 @@
 # First camera session
 
-Kit **0.0.29** includes the one-command fixed startup checkpoint documented at the end of this guide. The full matching IQ profile and actual device inventory are required; no vendor-free hardware frame has been verified.
+Kit **0.0.30-dev** adds the bounded `auto-frame-sc3336` automatic-exposure command with fixed calibrated white balance. Its six ARM adapter scenarios pass with simulated devices; the new automatic command is not yet qualified on the camera. The matching full IQ profile and actual device inventory remain required.
 
 This kit is an **experimental partial reconstruction**. It supplies recovered Rust numerical/control components and a camera diagnostic. It does not replace `librkaiq.so` or the existing image's startup/service scripts. No firmware flash is needed for these tests.
 
@@ -809,3 +809,44 @@ to zero after startup. Final image luma differed slightly (mean 11.01 versus
 12.39), but the per-frame corrected metric was too quantized to measure a
 transition. The latency result remains unestablished; this is recorded in the
 existing probe report. No automatic controller or inferred timing was enabled.
+
+## Bounded automatic-exposure capture (0.0.30-dev)
+
+First establish the fixed first-frame capture above using your actual plan and
+node inventory. The automatic command uses the same plan/IQ/node arguments,
+with a required statistics node and a new output basename:
+
+```sh
+./bin/camera-probe auto-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE /tmp/auto-ae STATS_NODE > /tmp/auto-ae.log 2>&1
+```
+
+Replace the uppercase placeholders with verified paths; the template's device
+numbers are not defaults. This programs sensor exposure/gain and submits ISP
+parameters. It refuses active vendor camera processes. It captures 33 frames,
+discarding the first 32, then saves the last image and associated metadata,
+initial parameter/calibration artifacts, and the last statistics payload/report.
+The output basename must be new. Keep the complete log: `automatic-ae-finished`
+reports processed statistics, snapshot count, last SOF/timestamp, and errors.
+A successful run reports automatic exposure, **not** automatic white balance;
+WB is held at the quantized calibrated startup gains and republished per batch.
+
+For the first hardware run, preserve the fixed-exposure image and this new
+image from the same scene, together with both logs, output JSON, initial JSON,
+and raw statistics. Compare brightness visually and inspect the observed sensor
+control writes/last SOF; emulator success and driver QBUF/DQBUF do not prove
+physical gain timing or optical convergence. Sensor settings may remain changed
+after either success or failure; the normal development image can restore its
+usual startup sequence without reflashing this kit.
+
+Expected stop conditions include unknown statistics parameter IDs, duplicate or
+regressing frame IDs, a full event/pending queue, pool exhaustion, driver errors,
+or final statistics still awaiting SOF. Preserve the exact error and artifacts
+rather than retrying with fabricated frame IDs or snapshots. The software uses
+explicit 64-event/16-pending/128-snapshot bounds, and the run is intentionally
+short. No startup files, kernel image or bootloader are replaced by this command.
+
+The `.stats.raw.json` file describes the statistics worker's diagnostic
+translation against its initial snapshot. The live AE owner separately selects
+registered snapshots by each statistics parameter ID; the worker's
+`controlsExposure:false` describes that diagnostic worker, not the automatic
+command's owner.

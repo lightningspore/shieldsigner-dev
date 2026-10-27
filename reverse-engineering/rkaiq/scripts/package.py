@@ -9,6 +9,7 @@ base=ROOT/'dist/reverse-engineering';kit=base/('rkaiq-camera-test-'+version);kit
 arm=ROOT/'firmware/rkaiq-rs/target/armv7-unknown-linux-musleabihf/release'
 smoke=json.loads((ROOT/'reverse-engineering/rkaiq/arm-smoke.json').read_text())
 proof=json.loads((ROOT/'reverse-engineering/rkaiq/numeric-equivalence.json').read_text());assert proof['mismatchCount']==0
+assert smoke['numericalReferenceLines']==proof['totalCases'] and smoke['numericalMatch']
 items=[]
 def copy(source,name):
  target=kit/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target);items.append(name);return target
@@ -23,6 +24,11 @@ for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCO
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
 for name in ['isp-color-equivalence.json','awb-translation-equivalence.json','raw-bridge-validation.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
+for name in ['first-frame-sequence-validation.json','ae-runtime-equivalence.json','ae-session-equivalence.json','sensor-submission-equivalence.json','isp-gain-results-equivalence.json','awb-publication-equivalence.json','isp-effective-equivalence.json']:
+ copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
+sequence=json.loads((ROOT/'reverse-engineering/rkaiq/first-frame-sequence-validation.json').read_text())
+automatic=[s for s in sequence['scenarios'] if s.get('automaticAe')]
+assert sequence['passed'] and len(automatic)==2 and all(s['imageFrames']==33 and s['ae']['success'] for s in automatic)
 copy(ROOT/'reverse-engineering/rkaiq/examples/pipeline-linear.template.json','examples/pipeline-linear.template.json')
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
@@ -101,8 +107,13 @@ startup exposure, ISP parameters, raw DMA-BUF bridging and image capture.
 The full original IQ profile is NOT bundled: use the matching file already on
 your device or retrieve the SHA-pinned source from research/artifacts.json.
 Fill examples/pipeline-linear.template.json from actual inventory; placeholders
-are not runnable. No successful vendor-free hardware frame is claimed.
-Automatic exposure/white balance and full native startup fidelity are unfinished.
+are not runnable. No physical qualification of this automatic-exposure kit is claimed.
+auto-frame-sc3336 adds a bounded 33-frame automatic-exposure run, using the
+same arguments plus a required statistics node. White balance stays fixed at
+its calibrated startup gains. See HARDWARE-TEST.md before running it.
+The automatic command has passed simulated ARM adapter tests, but is not yet
+qualified on a physical camera. Automatic WB and full native fidelity remain
+unfinished.
 manifest.json records SHA-256 for each kit file. Source and dependency license
 texts are included. Full investigation and reproducible mise tasks:
 https://github.com/lightningspore/shieldsigner-dev/tree/main/reverse-engineering/rkaiq
@@ -298,8 +309,8 @@ zigroot=Path(subprocess.check_output(['mise','where','zig@0.15.2'],cwd=ROOT,text
 for path in [zigroot/'lib/libc/musl/COPYRIGHT',zigroot/'lib/libc/musl/COPYRIGHT.txt']:
  if path.exists():copy(path,'licenses/musl/'+path.name)
 (kit/'licenses/dependencies.json').write_text(json.dumps(licenses,indent=2)+'\n');items.append('licenses/dependencies.json')
-manifest={'version':version,'target':'armv7-unknown-linux-musleabihf','status':'Partial reconstruction; hardware camera validation pending',
- 'numericCases':proof['totalCases'],'fullIspReplacement':False,'linksVendorRkaiq':False,'fixedFirstFrameCommand':'first-frame-sc3336','automatic3A':False,'vendorFreeHardwareFrameVerified':False,'fullIqBundled':False,'files':[]}
+manifest={'sourceRevision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'sourceWorktreeDirty':bool(subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()),'version':version,'target':'armv7-unknown-linux-musleabihf','status':'Partial reconstruction; hardware camera validation pending',
+ 'numericCases':proof['totalCases'],'fullIspReplacement':False,'linksVendorRkaiq':False,'fixedFirstFrameCommand':'first-frame-sc3336','automaticExposureCommand':'auto-frame-sc3336','automaticExposureHardwareVerified':False,'automaticExposureFrames':33,'whiteBalancePolicy':'fixed calibrated startup gains republished per batch','automatic3A':False,'vendorFreeHardwareFrameVerified':False,'fullIqBundled':False,'files':[]}
 for name in sorted(items):
  path=kit/name;manifest['files'].append({'name':name,'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
 (kit/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

@@ -2287,3 +2287,76 @@ physical sensor latency. Fixed FAST measurement configuration, sample-scale
 provenance, normal/adaptive measurement scheduling and continuous application
 integration remain work. All 85 library tests, the no-default-features build,
 ARM build and simulated capture/AE queue scenarios pass for this change.
+
+
+### Normal time-share configuration and registered SDK snapshots (2026-10-27)
+
+The live path now transitions from FAST startup to normal seven-light time
+sharing. Native `ReconfigHwParaV32` calls `ConfigHwParaTimeShare` after a pending
+measurement update; it does not keep FAST active until countdown zero. The
+zero-reserved pinned strategy schedules physical lights `[0,1,2,3]` and
+`[4,5,6]`. `awb_measurement_schedule::initialize` reconstructs fresh
+`AwbTimeShareInit` for this ordinary zero-reserved policy. All 164 table bytes
+match original ARM for 25 bounded combinations on host and ARM. Nonzero
+reserved-light policy and more than four groups remain outside this factory.
+The complete existing time-share record converter also still matches all
+1,204 bytes in its 360 native comparisons.
+
+`awb_session::Session` accepts FAST and normal records, uses the calibrated
+normal group count (two here), and can configure the next normal measurement
+record from the loaded UV/XY/rotated-YUV regions. The owner supplies an opaque
+stable normal-cohort signature, rather than a wall-clock timestamp. That is
+sufficient for this pinned profile's constant limit/weight tables; variable
+configuration epochs and the remaining outer reconfiguration decision policy
+are not yet connected. A pending normal record is retained by its source frame,
+including when several statistics frames are released together. The owner
+combines that record with AE/WB gain updates in one queued parameter batch.
+
+Every successful QBUF registers both its full effective parameter snapshot and
+its own SDK measurement record. Incoming AWB uses its exact driver-reported ID
+against that history. The initial SDK is no longer reused to decode later
+normal configurations. The final capture now also writes
+`OUT.awb-effective-sdk.bin`, corresponding to the saved raw/translated frame;
+`OUT.awb-sdk.bin` still records the initial FAST configuration. Use the effective
+SDK for native comparisons of the final normal frame.
+
+The first hardware attempt (capture 05) exposed a publication bug: the new
+combined path omitted the runtime frame ID and ordinary-batch marker, so kernel
+statistics retained ID zero while measurement registers changed. Its process
+completed but its AWB interpretation is **not valid evidence**. The private
+artifacts carry a `known-invalid.json` annotation and the committed validation
+marks the run rejected. The fix shares `mark_runtime_parameter_frame` with the
+existing gain-only path, setting both the ordinary high-mask bit and frame ID.
+
+Hardware capture 06 passed after that fix. Its 22 AE/AWB events contain two FAST
+frames followed by 20 normal frames spanning both four-light and three-light
+groups. The first normal group holds the existing gain with `complete=false`;
+normal gain calculation resumes after both groups arrive, with seven active
+calibrated lights. Stable final frames hold the gain without recalculation.
+Final gain is approximately `[1.437573, 1, 1, 1.833476]`; the saved 640x480 image
+has readable text. Final frame 31 / parameter ID 30, using the **effective normal
+SDK**, matches all 7,680 bytes of the original translator.
+
+`awb-live-capture-check.py BASE --native-report REPORT.json` verifies changing
+parameter IDs, registered IDs, FAST/normal group transitions, incomplete-cohort
+holds, final raw header and effective SDK metadata. It accepts capture 06 and
+rejects the retained zero-ID regression capture 05. These are complementary
+protocol checks: native numerical equivalence alone cannot detect a caller
+supplying the wrong configuration under a reused ID.
+
+The live command syntax is unchanged from capture 04; use output basename
+`/tmp/ss-20261027-live-awb-06` (or a fresh name). Compare the saved normal frame:
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python \
+  reverse-engineering/rkaiq/scripts/awb-captured-translation.py \
+  dist/reverse-engineering/hardware-2026-10-27/ss-20261027-live-awb-06.stats.raw \
+  dist/reverse-engineering/hardware-2026-10-27/ss-20261027-live-awb-06.awb-effective-sdk.bin \
+  dist/reverse-engineering/hardware-2026-10-27/ss-20261027-live-awb-06.awb-translated.bin \
+  --configuration-id 30
+```
+
+Source invariants and remaining limits are retained in the committed hardware
+validation. Sample-scale provenance, full variable reconfiguration policy,
+physical latency/color qualification, cold startup and continuous application
+integration remain work; this is not yet the completed replacement library.

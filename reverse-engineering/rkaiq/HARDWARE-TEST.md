@@ -1,8 +1,8 @@
 # First camera session
 
-Current **0.0.31-dev source** has passed four bounded live AE + AWB captures on
+Current **0.0.31-dev source** has passed bounded live AE + AWB captures, including FAST-to-normal time sharing, on
 the SC3336/Luckfox. The opt-in `auto-awb-frame-sc3336` command and its remaining
-runtime limitations are documented in [AWB.md](AWB.md#persistent-session-and-first-live-ae--awb-runs-2026-10-27).
+runtime limitations are documented in [AWB.md](AWB.md#normal-time-share-configuration-and-registered-sdk-snapshots-2026-10-27).
 Current live syntax ends at `SAMPLE_SCALE`: ISO is derived from the associated
 exposure gains, and brightness comes from the same-frame AE pre-result.
 The frozen **0.0.30-dev ZIP described below is unchanged** and does not contain

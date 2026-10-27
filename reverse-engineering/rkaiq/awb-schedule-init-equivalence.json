@@ -1,0 +1,14 @@
+{
+  "kind": "fresh-zero-reserved-awb-schedule",
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "runtimeSha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+  "cases": 25,
+  "bytesEach": 164,
+  "mismatches": 0,
+  "arm": true,
+  "scope": "Complete original AwbTimeShareInit with zeroed fresh table and zero reserved lights",
+  "limitations": [
+    "Nonzero reserved-light policy and configurations requiring more than four groups are excluded.",
+    "No camera writes or outer reconfiguration policy in this comparison."
+  ]
+}

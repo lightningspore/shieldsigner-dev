@@ -1,6 +1,6 @@
 {
   "kind": "experimental-live-ae-awb-hardware-check",
-  "cameraBinarySha256": "3ce99691c26228ccd23ca31df4c931de695dbdcfd438609b314b82275866d2b6",
+  "cameraBinarySha256": "732f70267ab6956c42ad04d43f15b6a841ec51e47000924ad490d719903df345",
   "runs": [
     {
       "run": "01",
@@ -121,23 +121,68 @@
         487.109375
       ],
       "lastIso": 288.28125
+    },
+    {
+      "run": "05",
+      "success": false,
+      "captureProcessSucceeded": true,
+      "validForAwbQualification": false,
+      "reason": "New combined submission path omitted ordinary-batch header and frame ID. Statistics remained ID zero while hardware measurement regions changed. Local capture checker rejects this known regression; do not use its AWB interpretation or image for qualification."
+    },
+    {
+      "run": "06",
+      "cameraBinarySha256": "732f70267ab6956c42ad04d43f15b6a841ec51e47000924ad490d719903df345",
+      "success": true,
+      "awbFrames": 22,
+      "aeFrames": 22,
+      "registeredParameterIds": 22,
+      "firstGain": [
+        1.4829915761947632,
+        1.0,
+        1.0,
+        1.8326910734176636
+      ],
+      "lastGain": [
+        1.4375728368759155,
+        1.0,
+        1.0,
+        1.8334755897521973
+      ],
+      "lastFrame": 31,
+      "lastParametersId": 30,
+      "controllerFrames": 19,
+      "countdown": 0,
+      "savedImageBytes": 460800,
+      "exposureMetadata": "same-frame-AE-normalized-brightness",
+      "isoSource": "same-frame-associated-real-gains",
+      "measurementConfiguration": "FAST-to-normal-timeshare",
+      "normalGroups": [
+        0,
+        1
+      ],
+      "normalFrames": 20,
+      "maxActiveLights": 7,
+      "incompleteNormalCohortHeld": true,
+      "allObservedAwbIdsRegistered": true,
+      "finalStatisticsTranslationMatchesSavedHeader": true,
+      "nativeEffectiveTranslationMismatches": 0
     }
   ],
   "libraryTests": 85,
   "simulatedFirstFrameSequencePassed": true,
   "rollbackChecksOnHostAndLuckfox": 64,
   "limitations": [
-    "Fixed four-window FAST startup measurement configuration; normal scheduling and adaptive measurement reconfiguration not connected.",
+    "Runs 01-04 used fixed FAST; 05 is rejected; 06 transitions to normal zero-reserved groups. Full native outer reconfiguration policy and variable-limit/weight signature epochs remain separate.",
     "Runs 01/02 use missing-exposure brightness fallback; 03 binds AE brightness with explicit ISO 400; 04 binds AE brightness and native-equivalent dynamic ISO. Sample scale 1 still lacks native provenance.",
     "Physical per-frame gain/exposure latency, color accuracy and vendor-free cold startup remain unqualified.",
     "Short bounded diagnostic captures, not yet a continuous application camera service.",
     "Full joined original startup/controller equivalence remains unproven."
   ],
   "lastTranslationComparisons": {
-    "runs": 4,
+    "runs": 5,
     "bytesEach": 7680,
     "mismatches": 0,
-    "snapshotAssociation": "Registered gain-only ID 30; measurement SDK unchanged"
+    "snapshotAssociation": "Per-run registered effective SDK; capture 06 uses saved normal time-share SDK, not initial FAST SDK."
   },
   "aePreResultBinding": {
     "normalizedBrightnessByteOffset": 52,
@@ -150,5 +195,11 @@
     "checkedInputErrors": 4,
     "hostAndArmReplayPassed": true,
     "originalWrapperPrefixOnly": true
+  },
+  "normalScheduleInitialization": {
+    "nativeCases": 25,
+    "bytesEach": 164,
+    "hostAndArmReplayPassed": true,
+    "reservedLights": 0
   }
 }

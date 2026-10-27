@@ -1,4 +1,4 @@
-//! Owned experimental FAST/linear AWB session. No devices or publication here.
+//! Owned experimental FAST/normal linear AWB session. No devices or publication here.
 //! Complete state is staged so rejected statistics cannot advance histories.
 extern crate alloc;
 use crate::{
@@ -155,6 +155,10 @@ pub struct Session {
     geometry: crate::awb_measurement_geometry::Geometry,
     extra: MeasurementExclusions,
     sample_scale: i32,
+    schedule: crate::awb_measurement_schedule::Schedule,
+    regions: crate::awb_calibration::MeasurementRegions,
+    uv_enabled: u16,
+    yuv_enabled: u16,
     state: State,
 }
 impl Session {
@@ -205,6 +209,16 @@ impl Session {
                 extra_weight: 0.,
             },
         };
+        let schedule = crate::awb_measurement_schedule::initialize(n as u8, 4)
+            .map_err(|e| format!("schedule initialization: {e:?}"))?;
+        let regions = crate::awb_calibration::MeasurementRegions::from_value(wb)?;
+        let enabled = |key: &str| match wb["autoPara"][key].as_u64() {
+            Some(0) => Ok(0u16),
+            Some(1) => Ok(1u16),
+            _ => Err(format!("Invalid detection flag: {key}")),
+        };
+        let uv_enabled = enabled("uvDetectionEnable")?;
+        let yuv_enabled = enabled("yuvDetectionEnable")?;
         let state = State {
             gain,
             numeric,
@@ -217,8 +231,39 @@ impl Session {
             geometry,
             extra,
             sample_scale: sample_scale as i32,
+            schedule,
+            regions,
+            uv_enabled,
+            yuv_enabled,
             state,
         })
+    }
+    /// Normal zero-reserved time-share record after a successful gain/preparation
+    /// transition. Caller owns signature epochs and commits only after enqueue.
+    pub fn next_measurement(
+        &self,
+        record: &mut [u8; crate::isp_awb_measurement::INPUT_BYTES],
+        signature: &[u8; 64],
+    ) -> Result<(), InvalidInput> {
+        crate::awb_measurement_schedule::configure(
+            record,
+            &crate::awb_measurement_schedule::Calibration {
+                uv_enabled: self.uv_enabled,
+                yuv_enabled: self.yuv_enabled,
+                capacity: 4,
+                rt_yuv: &self.regions.rotated_yuv,
+                uv: &self.regions.uv,
+                xy: &self.regions.xy,
+            },
+            &crate::awb_measurement_schedule::Strategy {
+                groups: &self.schedule.groups[..self.schedule.count],
+                signature,
+                xy_detection: None,
+            },
+        )?;
+        record[0x444..0x448]
+            .copy_from_slice(&(self.state.gain.controller.region.selected as u32).to_le_bytes());
+        Ok(())
     }
     pub fn geometry(&self) -> &crate::awb_measurement_geometry::Geometry {
         &self.geometry
@@ -227,14 +272,14 @@ impl Session {
         self.state.gain.controller.post.current
     }
     /// One translated, correctly snapshot-associated frame. Session supports
-    /// four-window FAST linear records; normal scheduling/HDR remain separate.
+    /// FAST and normal zero-reserved linear records; HDR remains separate.
     pub fn process(
         &mut self,
         raw: &[u8; FRAME_BYTES],
         input: &Input,
     ) -> Result<Output, InvalidInput> {
         let frame = awb_preparation::Frame(raw);
-        if !frame.fast()? || raw[0x1d74] != 4 {
+        if raw[0x1d74] > 4 || (frame.fast()? && raw[0x1d74] != 4) {
             return Err(InvalidInput::Length);
         }
         if !input.iso.is_finite() || input.iso <= 0. {
@@ -275,7 +320,7 @@ impl Session {
         };
         if continuation == awb_preprocess::Continuation::Ready {
             let settings = awb_preparation::Settings {
-                groups: 4,
+                groups: self.schedule.count,
                 fast_light_count: 4,
                 stability_threshold: next.numeric.smart[2],
                 prior_sample: next.numeric.luma,

@@ -7,6 +7,44 @@ pub struct Group {
     pub indices: [u32; 7],
     pub rt_yuv: [bool; 7],
 }
+/// Fresh zero-reserved AwbTimeShareInit table. Nonzero reserved-light policy
+/// remains separate; the ordinary pinned profile initializes that byte to zero.
+#[derive(Clone, Copy)]
+pub struct Schedule {
+    pub groups: [Group; 4],
+    pub count: usize,
+}
+pub fn initialize(total: u8, capacity: u8) -> Result<Schedule, InvalidInput> {
+    if total == 0 || total > 7 || capacity == 0 || capacity > 4 {
+        return Err(InvalidInput::Length);
+    }
+    let count = (total as usize).div_ceil(capacity as usize);
+    if count > 4 {
+        return Err(InvalidInput::Length);
+    }
+    let empty = Group {
+        count: 0,
+        indices: [0; 7],
+        rt_yuv: [false; 7],
+    };
+    let mut next = Schedule {
+        groups: [empty; 4],
+        count,
+    };
+    if total > capacity {
+        for group in &mut next.groups[..count] {
+            group.indices.fill(15);
+        }
+    }
+    for light in 0..total as usize {
+        let group = light / capacity as usize;
+        let slot = light % capacity as usize;
+        next.groups[group].indices[slot] = light as u32;
+        next.groups[group].rt_yuv[slot] = true;
+        next.groups[group].count += 1;
+    }
+    Ok(next)
+}
 pub struct Strategy<'a> {
     pub groups: &'a [Group],
     pub signature: &'a [u8; 64],

@@ -195,7 +195,11 @@ fn first_frame_sc3336_with_gain(
         }
     }
     if sdk.is_some() {
-        for suffix in [".awb-translated.bin", ".awb-translated.json"] {
+        for suffix in [
+            ".awb-translated.bin",
+            ".awb-translated.json",
+            ".awb-effective-sdk.bin",
+        ] {
             if std::path::Path::new(&format!("{}{suffix}", args[4])).exists() {
                 return Err(error("AWB translation output already exists"));
             }
@@ -326,6 +330,7 @@ fn first_frame_sc3336_with_gain(
                     sdk: sdk.ok_or_else(|| error("Live AWB requires an SDK snapshot"))?,
                     last_iso: None,
                     gains: vec![],
+                    measurements: vec![(0, sdk.unwrap())],
                     processed: 0,
                     last: None,
                 });

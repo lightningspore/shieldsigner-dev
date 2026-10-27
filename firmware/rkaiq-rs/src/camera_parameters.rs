@@ -1,3 +1,12 @@
+// Shared native ordinary-batch header for gain-only and measurement updates.
+fn mark_runtime_parameter_frame(
+    payload: &mut [u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES],
+    frame: u32,
+) {
+    let config = u64::from_le_bytes(payload[16..24].try_into().unwrap()) | (1u64 << 63);
+    payload[16..24].copy_from_slice(&config.to_le_bytes());
+    payload[24..28].copy_from_slice(&frame.to_le_bytes());
+}
 // Included in camera-probe's Linux module to reuse its verified legacy ARM32
 // V4L2 structs, syscall wrapper, mappings and device/process inventory.
 use shieldsigner_rkaiq::parameter_queue as parameter;
@@ -119,9 +128,7 @@ impl ParameterBackend {
             return Ok(None);
         }
         // Native setIspConfig marks an ordinary ISP batch in the high mask word.
-        let config = u64::from_le_bytes(payload[16..24].try_into().unwrap()) | (1u64 << 63);
-        payload[16..24].copy_from_slice(&config.to_le_bytes());
-        payload[24..28].copy_from_slice(&frame.to_le_bytes());
+        mark_runtime_parameter_frame(&mut payload, frame);
         let index = self.enqueue_payload(queue, &payload)?;
         *unscaled_wb = next_wb;
         Ok(Some((index, association)))

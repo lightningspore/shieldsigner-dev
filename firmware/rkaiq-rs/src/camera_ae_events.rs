@@ -18,13 +18,21 @@ fn emit_camera_ae_event(sender: &Option<CameraAeSender>, event: CameraAeEvent) -
     Ok(())
 }
 
-/// Experimental persistent AWB beside the AE owner. Measurement configuration
-/// remains the initial FAST record; only gain batches change during this run.
+/// Persistent AWB beside the AE owner, including FAST-to-normal scheduling.
+/// Each successful submission registers its own effective measurement record.
 struct CameraAwb {
     session: shieldsigner_rkaiq::awb_session::Session,
     sdk: [u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES],
     last_iso: Option<f32>,
-    gains: Vec<(u32, shieldsigner_rkaiq::isp32::WhiteBalanceGain)>,
+    gains: Vec<(
+        u32,
+        shieldsigner_rkaiq::isp32::WhiteBalanceGain,
+        Option<[u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES]>,
+    )>,
+    measurements: Vec<(
+        u32,
+        [u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES],
+    )>,
     processed: u64,
     last: Option<(u32, u32, Vec<u8>)>,
 }
@@ -32,7 +40,6 @@ impl CameraAwb {
     fn step(
         &mut self,
         bytes: &[u8],
-        parameters: &[(u32, [u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES])],
         ae_pre: &shieldsigner_rkaiq::ae_preprocess::Standard,
     ) -> io::Result<()> {
         use shieldsigner_rkaiq::{
@@ -44,13 +51,14 @@ impl CameraAwb {
                 "AE pre-result does not match the AWB statistics frame",
             ));
         }
-        // Every successful gain-only submission preserves the SDK measurement
-        // record. Register that unchanged record under its actual submitted ID.
-        let snapshots: Vec<_> = parameters
+        // Decode only against SDK records registered after successful QBUF.
+        // Old group configurations remain available while their frames arrive.
+        let snapshots: Vec<_> = self
+            .measurements
             .iter()
-            .map(|(id, _)| Snapshot {
+            .map(|(id, measurement)| Snapshot {
                 id: *id,
-                measurement: &self.sdk,
+                measurement,
             })
             .collect();
         let mut frame = [0; FRAME_BYTES];
@@ -63,6 +71,7 @@ impl CameraAwb {
         };
         let outcome = translate_associated(&stats, &snapshots, &mut destination)
             .map_err(|e| error(format!("Live AWB association: {e:?}")))?;
+        let mut next_measurement = None;
         if outcome == Outcome::Translated {
             let real_gain = |offset| {
                 f32::from_le_bytes(ae_pre.exposure[offset..offset + 4].try_into().unwrap())
@@ -85,12 +94,27 @@ impl CameraAwb {
                     },
                 )
                 .map_err(|e| error(format!("Live AWB session: {e:?}")))?;
+            if result.action.reconfigure && stats.frame_id() != 0 {
+                let mut record = self
+                    .gains
+                    .iter()
+                    .rev()
+                    .find_map(|(_, _, record)| *record)
+                    .unwrap_or(self.sdk);
+                let mut signature = [0u8; 64];
+                let name = b"RUST-AWB-NORMAL";
+                signature[..name.len()].copy_from_slice(name);
+                self.session
+                    .next_measurement(&mut record, &signature)
+                    .map_err(|e| error(format!("AWB next measurement: {e:?}")))?;
+                next_measurement = Some(record);
+            }
             self.last_iso = Some(iso);
             self.processed += 1;
             self.last = Some((stats.frame_id(), stats.parameters_id(), frame.to_vec()));
             println!(
                 "{}",
-                json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"exposureMetadata":"same-frame-AE-normalized-brightness","aeNormalizedBrightness":ae_pre.normalized_brightness,"brightness":result.numeric.luma,"iso":iso,"isoSource":"same-frame-associated-real-gains","measurementConfiguration":"fixed-FAST-startup"})
+                json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"complete":result.complete,"activeLights":result.active_lights,"group":i32::from_le_bytes(frame[0x1d78..0x1d7c].try_into().unwrap()),"physicalLights":frame[0x1d74],"exposureMetadata":"same-frame-AE-normalized-brightness","aeNormalizedBrightness":ae_pre.normalized_brightness,"brightness":result.numeric.luma,"iso":iso,"isoSource":"same-frame-associated-real-gains","measurementConfiguration":"FAST-to-normal-timeshare"})
             );
         }
         let g = self.session.gain();
@@ -106,15 +130,33 @@ impl CameraAwb {
                 blue: g[3],
                 position: isp32::ApplyPosition::Gain1,
             },
+            next_measurement,
         ));
         Ok(())
     }
     fn gain_for(&self, frame: u32) -> io::Result<shieldsigner_rkaiq::isp32::WhiteBalanceGain> {
         self.gains
             .iter()
-            .find(|(id, _)| *id == frame)
-            .map(|(_, g)| *g)
+            .find(|(id, _, _)| *id == frame)
+            .map(|(_, g, _)| *g)
             .ok_or_else(|| error("Missing exact-frame AWB gain"))
+    }
+    fn measurement_for(
+        &self,
+        frame: u32,
+    ) -> Option<[u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES]> {
+        self.gains
+            .iter()
+            .find(|(id, _, _)| *id == frame)
+            .and_then(|(_, _, record)| *record)
+    }
+    fn register(
+        &mut self,
+        id: u32,
+        record: [u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES],
+    ) {
+        self.measurements.push((id, record));
+        self.sdk = record;
     }
     fn save(&self, statistics_output: &str) -> io::Result<()> {
         let (frame, id, bytes) = self
@@ -129,7 +171,17 @@ impl CameraAwb {
             .create_new(true)
             .open(format!("{base}.awb-translated.bin"))?;
         file.write_all(bytes)?;
-        let report = json!({"event":"automatic-awb-finished","processedStatistics":self.processed,"frameId":frame,"parametersId":id,"association":"exact-registered-gain-only-snapshot","gain":self.session.gain(),"automaticWhiteBalance":true,"measurementConfiguration":"fixed-FAST-startup","exposureMetadata":"same-frame-AE-normalized-brightness","isoInput":self.last_iso,"isoSource":"same-frame-associated-real-gains","coldStartProven":false});
+        let effective = self
+            .measurements
+            .iter()
+            .find(|(registered, _)| registered == id)
+            .ok_or_else(|| error("Missing saved AWB configuration"))?;
+        let mut sdk_file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(format!("{base}.awb-effective-sdk.bin"))?;
+        sdk_file.write_all(&effective.1)?;
+        let report = json!({"event":"automatic-awb-finished","processedStatistics":self.processed,"frameId":frame,"parametersId":id,"association":"exact-registered-measurement-snapshot","gain":self.session.gain(),"automaticWhiteBalance":true,"measurementConfiguration":"FAST-to-normal-timeshare","exposureMetadata":"same-frame-AE-normalized-brightness","isoInput":self.last_iso,"isoSource":"same-frame-associated-real-gains","coldStartProven":false});
         let mut sidecar = OpenOptions::new()
             .write(true)
             .create_new(true)
@@ -191,7 +243,7 @@ where
         self.parameters.push((id, bytes));
         Ok(())
     }
-    /// Submit one gain-only ISP batch and register complete translator state
+    /// Submit a gain/optional measurement batch and register translator state
     /// under its frame ID. Queue failure cannot advance the snapshot cache.
     /// DQBUF confirms ownership only; statistics still choose their explicit ID.
     fn submit_gain(
@@ -221,6 +273,10 @@ where
         self.runtime
             .apply_isp_gain_results(frame, &mut planned, &mut planned_cache, white_balance)
             .map_err(error)?;
+        let measurement = self.awb.as_ref().and_then(|awb| awb.measurement_for(frame));
+        if let Some(record) = measurement {
+            shieldsigner_rkaiq::isp_awb_measurement::Measurement(record).apply(&mut planned, true);
+        }
         let updates = u64::from_le_bytes(planned[..8].try_into().unwrap())
             | u64::from_le_bytes(planned[16..24].try_into().unwrap());
         if updates == 0 {
@@ -229,15 +285,33 @@ where
         if self.parameters.len() == 128 || self.parameters.last().is_some_and(|p| p.0 >= frame) {
             return Err(error("Gain batch requires a new increasing parameter ID"));
         }
-        let Some((index, _)) =
-            backend.enqueue_runtime_gain(queue, &self.runtime, frame, &mut cache, white_balance)?
-        else {
-            return Err(error("Gain batch changed between planning and enqueue"));
+        let index = if self.awb.is_some() {
+            mark_runtime_parameter_frame(&mut planned, frame);
+            let index = backend.enqueue_payload(queue, &planned)?;
+            cache = planned_cache;
+            index
+        } else {
+            let Some((index, _)) = backend.enqueue_runtime_gain(
+                queue,
+                &self.runtime,
+                frame,
+                &mut cache,
+                white_balance,
+            )?
+            else {
+                return Err(error("Gain batch changed between planning and enqueue"));
+            };
+            index
         };
         // Effective translator metadata uses the unscaled converter WB cache,
         // not the ISP-digital-gain-scaled register words submitted to hardware.
         snapshot[isp32::AWB_GAIN_OFFSET..isp32::AWB_GAIN_OFFSET + 32].copy_from_slice(&cache);
         snapshot[24..28].copy_from_slice(&frame.to_le_bytes());
+        if let Some(awb) = self.awb.as_mut() {
+            let record = measurement.unwrap_or(awb.sdk);
+            shieldsigner_rkaiq::isp_awb_measurement::Measurement(record).apply(&mut snapshot, true);
+            awb.register(frame, record);
+        }
         self.parameters.push((frame, snapshot));
         Ok(Some(index))
     }
@@ -307,11 +381,7 @@ where
                 .map_err(error)?
             {
                 if let Some(awb) = self.awb.as_mut() {
-                    awb.step(
-                        &bytes,
-                        &self.parameters,
-                        &self.runtime.session.preprocessing,
-                    )?;
+                    awb.step(&bytes, &self.runtime.session.preprocessing)?;
                 }
                 self.processed += 1;
                 // Report the owner's snapshot-associated metric, rather than

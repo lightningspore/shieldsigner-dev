@@ -298,6 +298,25 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-schedule-init" => {
+                let n:u8=a[1].parse().unwrap(); let capacity:u8=a[2].parse().unwrap();
+                match awb_measurement_schedule::initialize(n,capacity) {
+                    Err(error)=>println!("error:{error:?}"),
+                    Ok(s)=>{
+                        let mut bytes=[0u8;164];
+                        bytes[1]=(n>capacity) as u8;
+                        bytes[4..8].copy_from_slice(&(s.count as u32).to_le_bytes());
+                        for (i,g) in s.groups.iter().enumerate() {
+                            bytes[148+i*4..152+i*4].copy_from_slice(&(g.count as u32).to_le_bytes());
+                            for j in 0..7 {
+                                bytes[8+(i*7+j)*4..12+(i*7+j)*4].copy_from_slice(&g.indices[j].to_le_bytes());
+                                bytes[120+i*7+j]=g.rt_yuv[j] as u8;
+                            }
+                        }
+                        println!("{}",bytes.iter().map(|b|format!("{b:02x}")).collect::<String>());
+                    }
+                }
+            }
             "awb-linear-iso" => {
                 let v=floats(a[1]);
                 match awb_exposure::linear_iso(v.try_into().unwrap()) {

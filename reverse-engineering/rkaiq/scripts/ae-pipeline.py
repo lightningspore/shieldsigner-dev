@@ -12,7 +12,7 @@ class Original(Base):
   super().__init__();self.preprocessing=False;self.uc.hook_add(UC_HOOK_MEM_WRITE,self.store,begin=HEAP+0x12c,end=HEAP+0x12f)
  def store(self,uc,access,address,size,value,user):
   if self.preprocessing:self.prepared=True;uc.reg_write(regs.UC_ARM_REG_PC,RETURN);uc.emu_stop()
- def run(self,v):
+ def initialize(self,v):
   sensor=self.setup(dict(v,seconds=.0045,gain=2.,isp=1.,dcg=-1,frame=1360,clock=114.24,line=2800,analogue_minimum=1.,isp_range=[1.,32.],time_range=[.00005,.03],gain_range=[1.,512.],automatic=True,suppress=False,flicker=True,quantum=.01))
   c=Controller.setup(self,v)
   for o,n in [(0x638,0x58),(0x6ec,4),(0x778,8),(0x3d14,4)]:c[o:o+n]=sensor[o:o+n]
@@ -22,11 +22,17 @@ class Original(Base):
   for i,(time,gain) in enumerate([(.003,1.),(.006,1.)]):struct.pack_into('<4f',c,0x4fbc+244*i,time,gain,1.,1.)
   struct.pack_into('<I',c,0x40cc,HEAP+0x30000)
   self.uc.mem_write(HEAP,bytes(c));self.uc.mem_write(HEAP+0x30000,struct.pack('<4I',HEAP+0x31000,2,HEAP+0x32000,2));self.uc.mem_write(HEAP+0x31000,struct.pack('<2f',0.,1.));self.uc.mem_write(HEAP+0x32000,struct.pack('<2f',45.,45.))
+ def run(self,v):
+  self.initialize(v);return self.step(v)
+ def step(self,v):
   stats=bytearray(0x3000);struct.pack_into('<256I',stats,0x788,*v['histogram']);struct.pack_into('<3H',stats,0x2e20,int(v['measured']*256),512,768);self.uc.mem_write(HEAP+0x40000,bytes(stats))
   stack=bytearray(240);struct.pack_into('<f',stack,0,1.);struct.pack_into('<II',stack,232,HEAP+0x40000,v['frame'])
+  seconds,gain=v['exposure'],1.
+  if v.get('effective_from_previous',False):
+   c=bytes(self.uc.mem_read(HEAP,0x6000));seconds=struct.unpack_from('<f',c,0xe8)[0];gain=struct.unpack_from('<f',c,0xdc)[0];isp=struct.unpack_from('<f',c,0xe0)[0];tc,gc=struct.unpack_from('<2I',c,0xec);struct.pack_into('<f',stack,0,isp);struct.pack_into('<2I',stack,20,tc,gc)
   bits=lambda f:struct.unpack('<I',struct.pack('<f',f))[0]
   self.preprocessing=True;self.prepared=False;self.mappings=0
-  self.invoke('AecPreProcess',[HEAP,bits(v['exposure']),bits(1.),bits(1.)],stack=bytes(stack),instructions=1000000);assert self.prepared;self.preprocessing=False
+  self.invoke('AecPreProcess',[HEAP,bits(seconds),bits(gain),bits(1.)],stack=bytes(stack),instructions=1000000);assert self.prepared;self.preprocessing=False
   self.last_run=bool(self.uc.mem_read(HEAP+0x22ed,1)[0]);assert self.invoke('AecRun',[HEAP,HEAP+0x60000,HEAP+0x40000],instructions=10000000)==0
   self.uc.mem_write(HEAP+0x50000,struct.pack('<6I',0,HEAP+0x60000,HEAP+0x61000,HEAP+0x62000,0,HEAP+0x80000));self.uc.mem_write(HEAP+0x60000,bytes(0x22000));assert self.invoke('AecGetProcResults',[HEAP,HEAP+0x50000],instructions=3000000)==0
   c=bytes(self.uc.mem_read(HEAP,0x6000));u=lambda o:struct.unpack_from('<I',c,o)[0]

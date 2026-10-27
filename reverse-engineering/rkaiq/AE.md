@@ -1040,3 +1040,39 @@ must discard partial state after any failure.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-pipeline.py --arm
 ```
+
+## Persistent multi-frame pipeline comparison
+
+The pipeline fixture now initializes state once per sequence and retains it
+across frames. The native oracle likewise retains its context, route arrays,
+converted proposals and publication/history state; it does not rebuild them
+between frame calls. Every frame still runs the native preprocessing checkpoint,
+complete automatic caller/conversion, and complete result publisher.
+
+24 sequences of 32 frames compare 768 frame results, including 712 processed
+and 56 skipped frames. Intermediate counts zero/two/five, dynamic damping on/off
+and priming on/off are covered. The comparisons include all the outputs and
+listed state from the single-frame corpus on **every** step, crossing the
+five-record control-history and ten-entry error-history ring boundaries.
+[Persistent sequence report](ae-pipeline-sequence-equivalence.json).
+
+Half the sequences supply an explicit exposure scalar and zero sensor codes
+as in the earlier fixture. The other half supply the previous converted point,
+ISP gain and codes as the next preprocessing exposure-info record. Rust derives
+those inputs independently from its retained converted proposals, and the native
+oracle reads its own converted context fields and passes the actual by-value
+sensor-info ABI. These cases exercise convergence and skipped frames later in
+the sequence as well as initial skips. Statistics follow a prescribed dark,
+target and bright pattern; they are not synthesized from an optical model.
+
+This establishes the tested state transitions, not real exposure latency or
+physical frame association. Feeding the previous proposal back as an explicit
+input is an idealized test strategy, not a claim that hardware applies it one
+frame later. Target45, runtime policy, linear non-iris/DCG-disabled scope and
+preprocessing checkpoint limitations remain. Runtime initialization/calibration
+binding, full preprocessing side effects, complete AWB and live feedback still
+need work.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-pipeline-sequence.py --arm
+```

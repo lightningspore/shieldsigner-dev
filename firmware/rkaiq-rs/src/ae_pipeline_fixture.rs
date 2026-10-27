@@ -1,5 +1,5 @@
 use shieldsigner_rkaiq::*;
-pub fn run(v: &serde_json::Value) -> String {
+fn initialize(v: &serde_json::Value) -> (ae_pipeline::State, Vec<ae_route::Point>) {
     let f = |k: &str| v[k].as_f64().unwrap() as f32;
     let b = |k: &str| v[k].as_bool().unwrap();
     let initial = ae_route::Point {
@@ -57,7 +57,7 @@ pub fn run(v: &serde_json::Value) -> String {
             published[i][o..o + 4].copy_from_slice(&x.to_le_bytes());
         }
     }
-    let mut state = ae_pipeline::State {
+    let state = ae_pipeline::State {
         frame: ae_frame::State {
             error_history: core::array::from_fn(|i| {
                 v["damping_history"][i].as_f64().unwrap() as f32
@@ -116,7 +116,7 @@ pub fn run(v: &serde_json::Value) -> String {
         retained_count: count + 1,
         last_aggregate: 0.009,
     };
-    let mut route: Vec<_> = [
+    let route: Vec<_> = [
         (0., 1.),
         (0.01, 1.),
         (0.01, 4.),
@@ -131,6 +131,16 @@ pub fn run(v: &serde_json::Value) -> String {
         isp_gain: 1.,
     })
     .collect();
+    (state, route)
+}
+fn step(
+    v: &serde_json::Value,
+    mut state: &mut ae_pipeline::State,
+    mut route: &mut Vec<ae_route::Point>,
+) -> String {
+    let f = |k: &str| v[k].as_f64().unwrap() as f32;
+    let b = |k: &str| v[k].as_bool().unwrap();
+    let count = v["count"].as_u64().unwrap() as usize;
     let h: Vec<_> = v["histogram"]
         .as_array()
         .unwrap()
@@ -139,6 +149,27 @@ pub fn run(v: &serde_json::Value) -> String {
         .collect();
     let calibration = calibration::SensorCalibration::from_value(&v["profile"]).unwrap();
     let q8 = [(f("measured") * 256.) as u16, 512, 768];
+    let (current_exposure, effective) = if v["effective_from_previous"].as_bool().unwrap_or(false) {
+        let r = &state.retained_records[state.retained_count - 1];
+        let word = |o| u32::from_le_bytes(r[o..o + 4].try_into().unwrap());
+        (
+            (f32::from_bits(word(4)) * f32::from_bits(word(0))) * f32::from_bits(word(12)),
+            ae_convergence::Exposure {
+                time_code: word(32),
+                gain_code: word(36),
+                isp_gain: f32::from_bits(word(12)),
+            },
+        )
+    } else {
+        (
+            f("exposure"),
+            ae_convergence::Exposure {
+                time_code: 0,
+                gain_code: 0,
+                isp_gain: 1.,
+            },
+        )
+    };
     let initial_error_history = state.frame.error_history;
     let out = ae_pipeline::linear(
         &mut state,
@@ -147,7 +178,7 @@ pub fn run(v: &serde_json::Value) -> String {
         ae_decision::Input {
             target: 45.,
             measured: f("measured"),
-            current_exposure: f("exposure"),
+            current_exposure,
             tolerance_percent: 10.,
             minimum_exposure: 0.00005,
             maximum_exposure: 15.36,
@@ -204,11 +235,7 @@ pub fn run(v: &serde_json::Value) -> String {
         v["frame"].as_i64().unwrap() as i32,
         q8,
         [2., 3., 4.],
-        ae_convergence::Exposure {
-            time_code: 0,
-            gain_code: 0,
-            isp_gain: 1.,
-        },
+        effective,
         count,
     )
     .unwrap();
@@ -283,4 +310,26 @@ pub fn run(v: &serde_json::Value) -> String {
     let bytes: Vec<_> = words.into_iter().flat_map(u32::to_le_bytes).collect();
     result += &hex(&bytes);
     result
+}
+
+pub fn run(v: &serde_json::Value) -> String {
+    let (mut state, mut route) = initialize(v);
+    step(v, &mut state, &mut route)
+}
+pub fn sequence(v: &serde_json::Value) -> String {
+    let initial = &v["initial"];
+    let (mut state, mut route) = initialize(initial);
+    v["frames"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|frame| {
+            let mut input = initial.clone();
+            for (key, value) in frame.as_object().unwrap() {
+                input[key] = value.clone();
+            }
+            step(&input, &mut state, &mut route)
+        })
+        .collect::<Vec<_>>()
+        .join("|")
 }

@@ -384,6 +384,10 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-pipeline-sequence" => println!(
+                "{}",
+                ae_pipeline_fixture::sequence(&serde_json::from_str(a[1]).unwrap())
+            ),
             "ae-pipeline" => println!(
                 "{}",
                 ae_pipeline_fixture::run(&serde_json::from_str(a[1]).unwrap())

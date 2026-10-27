@@ -20,6 +20,8 @@
   "preparedAdapter": true,
   "outerWrapper": true,
   "dispatchJoined": true,
+  "sceneCalibration": false,
+  "sceneFullRegionHistoryCases": 0,
   "siteOverrides": 6,
   "dispatchCoverage": {
     "False:False": 4,

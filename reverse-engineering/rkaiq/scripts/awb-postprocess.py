@@ -148,6 +148,8 @@ class Original(OriginalAwb):
         )
         if "outer" in v.get("controller", {}):
             self.setup_outer(v, context, config)
+        if "scene_iq" in v.get("controller", {}):
+            self.setup_scene(v, context, config, calibration, extra)
         blocks = [
             (0, context),
             (0x8000, config),

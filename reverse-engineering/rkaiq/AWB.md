@@ -1514,8 +1514,54 @@ summary checks assembled light/candidate/mode and saved-site fields; eight
 malformed scenes exercise the new validation boundaries.
 [Scene postprocessing report](awb-iq-scene-post-equivalence.json).
 
-This assembles scene calibration and supplies postprocessing settings; it is not
-yet a complete scene-driven gain-controller/session constructor. Full persistent
+The scene-driven gain-frame adapter described below now supplies the remaining
+controller settings. Persistent-session initialization remains separate. Full persistent
 initialization, raw preprocessing/measurement-to-gain composition, optional
 multi-LUT whole-scene replay, saved-site persistence, hardware reconfiguration/
 publication and live automatic-WB qualification remain unfinished.
+
+## Scene-configured gain-frame processing
+
+`Scene::process_gain_frame` now binds the loaded seven-light scene to the joined
+gain-frame dispatcher and real gain wrapper. Scene settings supply light priors/
+spatial gains, probability thresholds, region stabilization, night gain/weights,
+low-count thresholds, enabled single-color classifier/confidence, optional
+postprocessing, damping, tolerance and saved-site policy. Borrowed local settings
+stay inside the call; persistent histories remain owned by `awb_gain_frame::State`.
+
+`GainRuntime` supplies values that belong to preprocessing/session state: active
+light count, derived numeric controls, variance, environment, FAST mode,
+absolute count threshold, per-light extra-region flags, grid validity/data,
+saved-reference inputs, ISO and output scale. The adapter uses the active prefix
+of the scene/cache and rejects inconsistent active lengths. It does not require
+all seven calibrated lights to be active. No-update/incomplete-measurement paths
+preserve the earlier verified dispatch behavior without reading inactive tuning
+or record arrays. Complete processing retains the gain-frame stage's atomic
+rollback across controller, saved-site, outputs and counters.
+
+The pinned region history target is 50, so the combined fixture now uses capacity
+64 instead of 32. Its postprocessing initializer/output helpers support an
+explicit capacity while preserving the old 32-entry standalone interface. The
+scene's target is neither shortened nor disabled to make that fixture fit.
+
+`mise run camera:rust:awb-iq-scene-gain` compares 64 original continuation calls
+on host and ARM using the actual pinned scene calibration. The original wrapper,
+probability/high/low/classifier/common processing/site functions execute through
+output scaling and the hardware-reconfiguration request. The corpus includes
+active prefixes of four and seven lights, all sixteen environment/spatial slots,
+Normal/Big and mode-0 aggregate Exclusion, update/complete skips, valid accepted
+and empty classifier results, saved-gain replacement and three calls whose region
+history reaches the real 50-entry target. Four checked-error cases retain full
+rollback, including unsupported AUTO/ALWAYS Exclusion and late site/scaling errors.
+For the four-light prefix, unused trailing prepared records are poisoned with
+nonfinite bit patterns to verify they are ignored.
+[Scene gain-frame report](awb-iq-scene-gain-equivalence.json).
+
+The native oracle seeds calibration fields from IQ using the already verified
+ABI mappings; it does not run the entire calibration initializer. Diagnostics
+use empty native light labels. Geometry/derived thresholds and starting state
+are still explicit fixtures, not output from raw measurement preparation.
+This closes scene-to-gain configuration, not persistent-session bootstrap,
+raw preprocessing/measurement-to-gain composition, active-light scheduling,
+saved-site persistence, hardware reconfiguration/publication or live automatic-WB
+qualification. Those remain unfinished.

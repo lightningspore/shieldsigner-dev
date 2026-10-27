@@ -236,6 +236,101 @@ class Original(post.Original, color.OriginalColor):
                 struct.pack_into("<f", ctx, 0x3588, d["scale"][0])
                 struct.pack_into("<f", ctx, 0x3594, d["scale"][1])
 
+    def setup_scene(self, v, ctx, cfg, cal, extra):
+        s = v["controller"]
+        wb = s["scene_iq"]
+        e = wb["autoExtPara"]
+        d = e["dampFactor"]
+        sg = e["singleColorProces"]
+        f = lambda b, o, *a: struct.pack_into("<" + "f" * len(a), b, o, *a)
+        w = lambda b, o, n: struct.pack_into("<I", b, o, n)
+        w(ctx, 0x33E0, s["environment"])
+        cfg[0x380] = e["xyRegionStableSelection"]["enable"]
+        w(cfg, 0x384, e["xyRegionStableSelection"]["xyTypeListSize"])
+        f(cfg, 0x388, e["xyRegionStableSelection"]["varianceLumaTh"])
+        f(cfg, 0x1F4, e["probCalcWp"]["wpNumPercTh2"])
+        f(cfg, 0x1C0, e["probCalcDis"]["proDis_THL"], e["probCalcDis"]["proDis_THH"])
+        struct.pack_into(
+            "<4I",
+            cfg,
+            0x1C8,
+            0,
+            0,
+            e["probCalcLv"]["outdoorLumaValThLow"],
+            e["probCalcLv"]["outdoorLumaValThHigh"],
+        )
+        f(cfg, 0x1D8, *e["defaultNightGain"])
+        struct.pack_into("<16I", cfg, 0x168, *e["lumaValueMatrix"])
+        cfg[0x1F8:0x208] = bytes(e["defaultNightGainWeight"])
+        struct.pack_into(
+            "<4I",
+            cfg,
+            0x1A8,
+            *[
+                e["division"][k]
+                for k in [
+                    "lumaValThLow",
+                    "lumaValThLow2",
+                    "lumaValThHigh",
+                    "lumaValThHigh2",
+                ]
+            ],
+        )
+        cfg[0x1E8] = e["weightForNightGainCalc_len"]
+        f(cfg, 0x340, e["converged"]["varThforDamp"], e["converged"]["varThforUnDamp"])
+        f(cfg, 0x4AC, 0.005)
+        f(cfg, 0x14C, d["dFStep"], d["dFMin"], d["dFMax"])
+        f(cfg, 0x15C, d["lvVarTh"])
+        for o, k in [(0x348, "lineRgBg"), (0x358, "lineRgProjCCT")]:
+            f(cfg, o, *e[k])
+            w(cfg, o + 12, 1)
+        for o, key in [
+            (0x122, "wbGainClip"),
+            (0x123, "wbGainDaylightClip"),
+            (0x124, "wbGainOffset"),
+        ]:
+            cfg[o] = e[key]["enable"]
+        f(cfg, 0x128, *e["wbGainOffset"]["offset"])
+        cal[0x538] = e["wbGainAdjust"]["enable"]
+        tolerance = e["tolerance"]
+        w(cfg, 0x98, len(tolerance["lumaValue"]))
+        f(cfg, 0x9C, *tolerance["lumaValue"])
+        f(cfg, 0xBC, *tolerance["toleranceValue"])
+        f(
+            cal,
+            0x778,
+            sg["updateDpWbgnTh"],
+            sg["updateDpWbgnTh2"],
+            sg["updateEstWbgnTh"],
+        )
+        site = e["avaSiteRec"]
+        ctx[0xB0] = site["enable"]
+        ctx[0x11C] = site["avaEnable"]
+        w(ctx, 0xB4, site["frameNum"])
+        f(ctx, 0x120, site["wbgainTh"], site["lvValueTh"])
+        blocks = dict(extra)
+        reference = blocks[0x60000]
+        curves = blocks[0x64000]
+        priors = blocks[0x62000]
+        kinds = {
+            "CALIB_AWB_DOOR_TYPE_INDOOR": 1,
+            "CALIB_AWB_DOOR_TYPE_AMBIGUITY": 2,
+            "CALIB_AWB_DOOR_TYPE_OUTDOOR": 3,
+        }
+        for i, l in enumerate(wb["autoPara"]["lightSources"][: len(s["lights"])]):
+            struct.pack_into("<i", reference, i * 0xE4 + 0x64, kinds[l["doorType"]])
+            f(reference, i * 0xE4 + 0x80, *l["standardGainValue"])
+            reference[i * 0xE4 + 0x68 : i * 0xE4 + 0x78] = bytes(l["staWeight"])
+            struct.pack_into(
+                "<2I", reference, i * 0xE4 + 0x78, *reversed(l["dayGainLvThSet"])
+            )
+            f(reference, i * 0xE4 + 0x90, *l["defaultDayGainHigh"])
+            f(reference, i * 0xE4 + 0xA0, *l["defaultDayGainLow"])
+            prior = l["weight"]
+            w(priors, i * 0xFC + 0xF0, len(prior["lumaValue"]))
+            f(curves, i * 0x100, *prior["lumaValue"])
+            f(curves, i * 0x100 + 0x40, *prior["weight"])
+
     def setup_single(self, v, ctx, cal):
         s = v["controller"]["single"]
         ctx[0xF79] = s["grid_valid"]
@@ -324,7 +419,7 @@ class Original(post.Original, color.OriginalColor):
             node = word(head)
             previous = head
             while node != head:
-                assert len(values) < 32 and word(node + 4) == previous
+                assert len(values) < 64 and word(node + 4) == previous
                 values.append(
                     list(struct.unpack("<4I", self.uc.mem_read(node + 8, 16)))
                     if gain
@@ -456,7 +551,8 @@ def main():
     assert runtime_sha == manifest["gccRuntime"]["memberSha256"]
     math_sha = hashlib.sha256(color.MATH.read_bytes()).hexdigest()
     assert math_sha == manifest["uclibcRuntime"]["memberSha256"]
-    dispatch = "--dispatch" in sys.argv
+    scene_mode = "--scene" in sys.argv
+    dispatch = "--dispatch" in sys.argv or scene_mode
     outer = "--outer" in sys.argv or dispatch
     prepared = "--prepared" in sys.argv or outer
     single = "--single" in sys.argv
@@ -498,6 +594,15 @@ def main():
             and p["xyRegionStableSelection"]["wpNumTh"]["forExtraType"] == [216]
             for p in iq_profiles
         )
+    if scene_mode:
+        iq_file = (
+            ROOT / ".tools/reverse-engineering/iqfiles" / manifest["iqFiles"][0]["name"]
+        )
+        iq_sha = hashlib.sha256(iq_file.read_bytes()).hexdigest()
+        assert iq_sha == manifest["iqFiles"][0]["sha256"]
+        scene_wb = json.loads(iq_file.read_bytes())["main_scene"][0]["sub_scene"][0][
+            "scene_isp32"
+        ]["wb_v32"]
     arm = Original()
     rng = random.Random(0x434F4E54)
     cases = []
@@ -506,14 +611,14 @@ def main():
     site_overrides = 0
     classifier_calls = 0
     single_coverage = {}
-    for i in range(64 if single else 192):
+    for i in range(64 if single or scene_mode else 192):
         gain = lambda: [
             f32(rng.uniform(0.5, 4.0)),
             1.0,
             1.0,
             f32(rng.uniform(0.5, 4.0)),
         ]
-        n = 4 + i % 5
+        n = (4 if i % 5 == 0 else 7) if scene_mode else 4 + i % 5
         v = dict(
             candidate=gain(),
             previous=[0.0] * 4 if i % 11 == 0 else gain(),
@@ -667,6 +772,55 @@ def main():
                 countdown=[-1, 0, 1, 3][i // 4 % 4],
                 scale=None if i % 3 else [0.5, 2.0],
             )
+        if scene_mode:
+            mode = 0
+            s["mode"] = 0
+            s["scene_iq"] = scene_wb
+            s["environment"] = (i // 4 + i % 4) % 16
+            s["prior_sample"] = float(v["brightness"])
+            s["exclusion_count"] = 5 if i % 11 == 0 else 0
+            if i % 8 in (1, 2):
+                for light in s["lights"]:
+                    light["counts"] = [1, 1, 0, 0]
+            if i % 17 == 0:
+                s["xy_history"] = [j % 2 for j in range(49)]
+            e = scene_wb["autoExtPara"]
+            c = e["singleColorProces"]
+            confidence = dict(
+                brightness_knots=c["wgtLvX"],
+                brightness_weights=c["wgtLvY"],
+                density_knots=c["wgtWpNumthX"],
+                density_weights=c["wgtWpNumthY"],
+                distance_knots=c["wgtDisX"],
+                cct_knots=c["wgtDisCt"],
+                distance_weights=[c["wgtDisHCtY"], c["wgtDisMCtY"], c["wgtDisLCtY"]],
+                disagreement_knots=c["wgtClrGradX"],
+                disagreement_weights=c["wgtClrGradY"],
+            )
+            rgb = [0.1, 0.4, 0.7] if i % 3 else [0.3, 0.2, 0.1]
+            grid = [
+                rgb if i % 4 != 3 else [0.1 + ((j * 17) % 13) / 20.0, 0.2, 0.3]
+                for j in range(225)
+            ]
+            s["single"] = dict(
+                grid_valid=bool(i % 7),
+                grid=grid,
+                candidates=[[l["RGain"], l["BGain"]] for l in c["lsUsedForEstimation"]],
+                colors=[
+                    dict(
+                        chroma=l["meanC"],
+                        hue=l["meanH"],
+                        knots=l["ct"],
+                        thresholds=l["disTh"],
+                    )
+                    for l in c["colorBlock"]
+                ],
+                alpha=c["alpha"],
+                threshold=c["useSgcResth"],
+                confidence=confidence,
+            )
+            s["color_target"] = c["illuEstListSize"]
+            v["raw_history"] = [] if i % 4 < 2 else [[1.0] * 4] * 2
         s["prepared"] = prepared
         v["controller"] = s
         cases.append(v)
@@ -703,6 +857,16 @@ def main():
     if outer:
         assert site_overrides > 0
     native_cases = len(cases)
+    if scene_mode:
+        assert classifier_calls > 0
+        assert set(
+            v["controller"]["environment"]
+            for v in cases
+            if v["controller"]["dispatch"]["update"] and v["controller"]["complete"]
+        ) == set(range(16))
+        assert any(len(x["controller"]["xy_history"]) == 50 for x in expected)
+        assert any(":validTrue:" in k for k in single_coverage)
+        assert any(":validFalse:" in k for k in single_coverage)
     if prepared:
         for mode in (1, 2):
             v = json.loads(json.dumps(cases[0]))
@@ -719,6 +883,10 @@ def main():
                 light["counts"][0:2] = [0, 0]
             if dispatch:
                 s["dispatch"]["update"] = True
+            if scene_mode:
+                s["scene_iq"]["autoExtPara"]["singleColorProces"]["mode"] = (
+                    "AWB_SGC_CALL_AUTO" if mode == 1 else "AWB_SGC_CALL_ALWAYS"
+                )
             cases.append(v)
             expected.append(dict(error="UnsupportedRegion", unchanged=True))
     if outer:
@@ -825,6 +993,31 @@ def main():
         preparedAdapter=prepared,
         outerWrapper=outer,
         dispatchJoined=dispatch,
+        sceneCalibration=scene_mode,
+        sceneEnvironmentCoverage={
+            str(n): sum(
+                v["controller"]["environment"] == n
+                and v["controller"]["dispatch"]["update"]
+                and v["controller"]["complete"]
+                for v in cases[:native_cases]
+            )
+            for n in range(16)
+        }
+        if scene_mode
+        else {},
+        sceneActiveLightCoverage={
+            str(n): sum(
+                len(v["controller"]["lights"]) == n for v in cases[:native_cases]
+            )
+            for n in [4, 7]
+        }
+        if scene_mode
+        else {},
+        sceneFullRegionHistoryCases=sum(
+            len(x["controller"]["xy_history"]) == 50 for x in expected[:native_cases]
+        )
+        if scene_mode
+        else 0,
         siteOverrides=site_overrides,
         dispatchCoverage={
             key: sum(
@@ -856,21 +1049,27 @@ def main():
             else "Whole original gain-mode function: XY/probabilities/high/low/mix/retention plus common processing through ranked metadata"
         ),
         limitations=[
-            "Directed INITIAL-mode Exclusion: stability disabled, sparse counts, no full IQ initialization."
+            "Single-color uses the pinned scene settings, including the enabled INITIAL-mode classifier."
+            if scene_mode
+            else "Directed INITIAL-mode Exclusion: stability disabled, sparse counts, no full IQ initialization."
             if initial_exclusion
             else "Single-color is enabled in this corpus."
             if single
             else "This joined corpus disables single-color; its enabled suite is separate.",
             "Optional clipping/adjustment are disabled; their full native suites remain separate.",
             "Ordinary joined XY regions are Normal/Big; Exclusion is exercised through mode-0 direct aggregate fallback.",
-            "Finite explicit calibration and prepared measurements, 4-8 lights and bounded histories; calibration initialization and live frame lifecycle remain unfinished.",
+            "Pinned seven-light scene, explicit prepared measurements/runtime geometry and seeded state; full initialization/raw preprocessing/live lifecycle are not replayed."
+            if scene_mode
+            else "Finite explicit calibration and prepared measurements, 4-8 lights and bounded histories; calibration initialization and live frame lifecycle remain unfinished.",
             "Standard allocation, memory, strings and logging are explicit adapters; original numerical and policy bodies execute.",
         ],
     )
     (
         ROOT
         / (
-            (
+            "reverse-engineering/rkaiq/awb-iq-scene-gain-equivalence.json"
+            if scene_mode
+            else (
                 "reverse-engineering/rkaiq/awb-gain-frame-single-color-equivalence.json"
                 if single
                 else "reverse-engineering/rkaiq/awb-gain-frame-equivalence.json"

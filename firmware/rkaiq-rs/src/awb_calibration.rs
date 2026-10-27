@@ -789,3 +789,147 @@ impl Scene {
         Ok(run(&post))
     }
 }
+
+/// Values produced by preprocessing or held in the live session, not IQ tuning.
+pub struct GainRuntime<'a> {
+    pub active_lights: usize,
+    pub numeric: &'a crate::awb_preprocess::State,
+    pub variance: f32,
+    pub environment: usize,
+    pub fast: bool,
+    pub absolute_count_threshold: f32,
+    pub extra_enabled: &'a [bool],
+    pub grid_valid: bool,
+    pub grid: &'a [[f32; 3]; 225],
+    pub site_input: &'a crate::awb_site::Input,
+    pub iso: f32,
+    pub scale: Option<[f32; 2]>,
+}
+impl Scene {
+    /// Configure the complete joined gain-frame path from owned scene data.
+    /// Measurement geometry/count thresholds and runtime flags remain explicit.
+    pub fn process_gain_frame<const CAP: usize>(
+        &self,
+        state: &mut crate::awb_gain_frame::State<CAP>,
+        update: bool,
+        frame: &crate::awb_gain_controller::Frame,
+        records: &[crate::awb_preparation::LightRecord],
+        output: &mut [crate::awb_gain_controller::LightResult],
+        runtime: &GainRuntime<'_>,
+    ) -> Result<crate::awb_dispatch::Action, crate::InvalidInput> {
+        if !update || !frame.complete {
+            return state.dispatch.process(
+                update,
+                false,
+                &mut state.controller.post.current,
+                runtime.scale,
+                |_| unreachable!(),
+            );
+        }
+        let n = runtime.active_lights;
+        if n < 4
+            || n > self.lights.entries.len()
+            || records.len() < n
+            || output.len() != n
+            || runtime.extra_enabled.len() < n
+        {
+            return Err(crate::InvalidInput::Length);
+        }
+        let lights: Vec<_> = self.lights.entries[..n]
+            .iter()
+            .zip(&runtime.extra_enabled[..n])
+            .map(|(light, &extra)| light.controller_light(runtime.environment, extra))
+            .collect::<Result<_, _>>()?;
+        let numeric = runtime.numeric;
+        let region = crate::awb_xy_selection::Settings {
+            absolute: runtime.absolute_count_threshold,
+            relative: self.common.relative_count_threshold,
+            region_thresholds: numeric.regions,
+            count_thresholds: numeric.points,
+            stabilization: self.common.stabilization,
+            target: self.common.region_history_target,
+            variance: runtime.variance,
+            variance_threshold: self.common.region_variance_threshold,
+        };
+        let probability = crate::awb_probability::Settings {
+            gain: state.controller.post.current,
+            frame: state.dispatch.frame,
+            fast: runtime.fast,
+            near_distance_squared: self.common.distance_thresholds[0],
+            far_distance_squared: self.common.distance_thresholds[1],
+            brightness: numeric.luma_integer,
+            brightness_thresholds: self.common.probability_thresholds,
+            prior_sample: numeric.luma,
+            absolute_count_threshold: region.absolute,
+            relative_count_threshold: region.relative,
+        };
+        let high = self.common.high(runtime.fast, numeric.luma_integer);
+        let low = crate::awb_low_gain::Settings {
+            retained: 0,
+            count_threshold: numeric.points[0],
+            brightness: numeric.luma_integer,
+            low_brightness: self.common.environment_thresholds[0],
+            high_brightness: self.common.environment_thresholds[3],
+            temporal_default: self.common.night_gain,
+            color_history_value: self.single.candidates.len() as i32,
+            color_history_target: self.single.history_target,
+        };
+        let classifier = self
+            .single
+            .classifier(self.common.lines[0], self.common.lines[1]);
+        let single = if self.single.enabled {
+            Some(crate::awb_low_single_color::Input {
+                mode: self.single.mode,
+                grid_valid: runtime.grid_valid,
+                grid: runtime.grid,
+                classifier: &classifier,
+                confidence: &self.single.confidence,
+                brightness_sample: numeric.luma,
+                density: 0.,
+                acceptance_threshold: self.single.acceptance_threshold,
+                estimated_gain: [0.; 4],
+                high_history: &[],
+            })
+        } else {
+            None
+        };
+        self.with_post_settings(
+            numeric.luma_integer,
+            numeric.luma,
+            runtime.iso,
+            numeric.smart[1],
+            |post| {
+                let settings = crate::awb_gain_controller::Settings {
+                    mode: self.single.mode,
+                    region: &region,
+                    probability,
+                    high: &high,
+                    low: &low,
+                    single,
+                    post,
+                    high_history_threshold: self.single.high_history_threshold,
+                    estimated_density_threshold: self.single.estimated_density_threshold,
+                    estimated_single_threshold: self.single.estimated_single_threshold,
+                };
+                let controls = crate::awb_wrapper::Controls {
+                    damping: self.common.damping,
+                    variance: runtime.variance,
+                    tolerance_knots: &self.preprocessing.tolerance.knots,
+                    tolerance_values: &self.preprocessing.tolerance.values[0],
+                    site: &self.site,
+                    site_input: runtime.site_input,
+                };
+                state.process(
+                    update,
+                    frame,
+                    &records[..n],
+                    &lights,
+                    output,
+                    &settings,
+                    &controls,
+                    runtime.scale,
+                )
+            },
+        )?
+    }
+}

@@ -28,7 +28,7 @@ pub fn run(v: &Value) -> Value {
         .iter()
         .map(array)
         .collect();
-    let initial_post = awb_postprocess_fixture::initial(v);
+    let initial_post = awb_postprocess_fixture::initial_with_capacity(v);
     let low = awb_low_gain::State {
         current: initial_post.current,
         low_result: [8.; 4],
@@ -50,7 +50,7 @@ pub fn run(v: &Value) -> Value {
         mean_distance: f32::from_bits(0x5a5a5a5a),
         gain: [12.; 4],
     };
-    let mut state = State::<32> {
+    let mut state = State::<64> {
         region: awb_xy_selection::State {
             history: awb_luma_history::History::from_values(&xy).unwrap(),
             selected: if s["previous_region"].as_u64().unwrap() == 3 {
@@ -294,7 +294,7 @@ pub fn run(v: &Value) -> Value {
     let before = state.clone();
     let before_results = results.clone();
     let result = if s["prepared"].as_bool().unwrap_or(false) {
-        let records: Vec<_> = lights
+        let mut records: Vec<_> = lights
             .iter()
             .map(|light| {
                 let mut bytes = [0u8; crate::awb_preparation::LIGHT_BYTES];
@@ -310,6 +310,12 @@ pub fn run(v: &Value) -> Value {
                 crate::awb_preparation::LightRecord(bytes)
             })
             .collect();
+        if s.get("scene_iq").is_some() && records.len() == 4 {
+            records.extend(
+                [crate::awb_preparation::LightRecord([0xff; crate::awb_preparation::LIGHT_BYTES]);
+                    3],
+            );
+        }
         // Poison the unused explicit fields: the adapter must read records.
         let mut calibration = lights.clone();
         for light in &mut calibration {
@@ -355,16 +361,54 @@ pub fn run(v: &Value) -> Value {
                 let scale = d["scale"]
                     .as_array()
                     .map(|v| [v[0].as_f64().unwrap() as f32, v[1].as_f64().unwrap() as f32]);
-                let result = joined.process(
-                    d["update"].as_bool().unwrap(),
-                    &frame,
-                    &records,
-                    &calibration,
-                    &mut results,
-                    &settings,
-                    &controls,
-                    scale,
-                );
+                let result = if let Some(wb) = s.get("scene_iq") {
+                    let scene = crate::awb_calibration::Scene::from_value(wb).unwrap();
+                    let numeric = crate::awb_preprocess::State {
+                        mode: 0,
+                        update: d["update"].as_bool().unwrap(),
+                        luma_integer: probability.brightness,
+                        luma: probability.prior_sample,
+                        smart: [0.001, 0.005, 0.05],
+                        interval: 0,
+                        points: region.count_thresholds,
+                        regions: region.region_thresholds,
+                        frame_counter: dispatch_state.frame,
+                    };
+                    let extra: Vec<_> =
+                        lights.iter().map(|l| l.calibration.extra_enabled).collect();
+                    scene.process_gain_frame(
+                        &mut joined,
+                        numeric.update,
+                        &frame,
+                        &records,
+                        &mut results,
+                        &crate::awb_calibration::GainRuntime {
+                            active_lights: lights.len(),
+                            numeric: &numeric,
+                            variance: region.variance,
+                            environment: s["environment"].as_u64().unwrap() as usize,
+                            fast: probability.fast,
+                            absolute_count_threshold: region.absolute,
+                            extra_enabled: &extra,
+                            grid_valid: s["single"]["grid_valid"].as_bool().unwrap(),
+                            grid: &grid,
+                            site_input: &site_input,
+                            iso: 100.,
+                            scale,
+                        },
+                    )
+                } else {
+                    joined.process(
+                        d["update"].as_bool().unwrap(),
+                        &frame,
+                        &records,
+                        &calibration,
+                        &mut results,
+                        &settings,
+                        &controls,
+                        scale,
+                    )
+                };
                 if let Ok(value) = result {
                     action = value;
                 }
@@ -418,8 +462,21 @@ pub fn run(v: &Value) -> Value {
     if dispatch.is_some() {
         output["dispatch"] = json!({"frame":dispatch_state.frame,"countdown":dispatch_state.countdown,"calculated":action.calculated,"reconfigure":action.reconfigure});
     }
+    if let Some(wb) = s.get("scene_iq") {
+        if action.calculated {
+            let scene = crate::awb_calibration::Scene::from_value(wb).unwrap();
+            output["_scene_tolerance"] = json!(scene
+                .preprocessing
+                .tolerance(settings.probability.brightness)
+                .unwrap()
+                .to_bits());
+        }
+    }
     if outer.is_some() {
         output["outer"] = json!({"matched":site.matched,"frames":site.frames,"tolerance":if dispatch.is_some() && !action.calculated { post.tolerance.to_bits() } else { crate::interpolate(&[0.,100.,1000.], &[0.01,0.1,0.2], settings.probability.brightness as f32).unwrap().to_bits() }});
+    }
+    if let Some(tolerance) = output.as_object_mut().unwrap().remove("_scene_tolerance") {
+        output["outer"]["tolerance"] = tolerance;
     }
     if s.get("single").is_some() || outer.is_some() {
         let r = &state.low.detection;

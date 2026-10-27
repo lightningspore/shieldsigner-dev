@@ -12,6 +12,9 @@ fn temperature(t: ColorTemperature) -> Value {
     json!({"valid":t.valid,"cct":t.cct.to_bits(),"ccri":t.ccri.to_bits()})
 }
 pub fn initial(v: &Value) -> State<32> {
+    initial_with_capacity(v)
+}
+pub fn initial_with_capacity<const CAP: usize>(v: &Value) -> State<CAP> {
     let values = |key: &str| {
         v[key]
             .as_array()
@@ -27,7 +30,7 @@ pub fn initial(v: &Value) -> State<32> {
         cct: 0.,
         ccri: 0.,
     };
-    State::<32> {
+    State::<CAP> {
         raw_history: History::from_values(&raw).unwrap(),
         output_history: History::from_values(&out).unwrap(),
         previous: array(&v["previous"]),
@@ -153,7 +156,7 @@ pub fn run(v: &Value) -> Value {
     }
     output(&state)
 }
-pub fn output(state: &State<32>) -> Value {
+pub fn output<const CAP: usize>(state: &State<CAP>) -> Value {
     let raw: Vec<_> = state
         .raw_history
         .values()

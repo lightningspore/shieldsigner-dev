@@ -14,6 +14,7 @@ pub struct State {
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Policy {
+    pub dynamic: Option<ae_brightness::Dynamic>,
     pub damping_under: f32,
     pub damping_over: f32,
     pub fps: f32,
@@ -28,6 +29,7 @@ pub struct Output {
     pub aggregate_exposure: f32,
     pub relative_error: f32,
     pub held: bool,
+    pub damping_diagnostics: Option<crate::ae_damping::Diagnostics>,
 }
 pub fn step(
     state: &mut State,
@@ -40,12 +42,14 @@ pub fn step(
     synchronized_frame: i32,
 ) -> Result<Output, InvalidInput> {
     input.saturated = state.saturated;
-    let brightness = ae_brightness::standard(
+    let brightness = ae_brightness::controlled(
         histogram,
         input,
         policy.damping_under,
         policy.damping_over,
         policy.fps,
+        policy.dynamic.as_ref(),
+        frame as u32,
     )?;
     ae_environment::record_current(
         &mut state.history,
@@ -95,5 +99,6 @@ pub fn step(
         aggregate_exposure: (point.gain * point.time) * point.isp_gain,
         relative_error: brightness.relative_error,
         held,
+        damping_diagnostics: brightness.damping_diagnostics,
     })
 }

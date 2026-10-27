@@ -223,5 +223,131 @@
     "Controlled one-shot shutter writes, not automatic exposure.",
     "Statistics have gaps and low quantized signal; no physical application frame or optical integration duration is claimed.",
     "A stable illuminated scene or stronger raw metric is needed to isolate exposure-change latency."
-  ]
+  ],
+  "correctedGain1Gain16Followup": {
+    "scenarios": [
+      {
+        "label": "g16control",
+        "gain": 16,
+        "whiteBalancePosition": "Gain1",
+        "requestedStepFrame": 8,
+        "requestedStepSeconds": 0.003,
+        "measurements": [
+          {
+            "frameId": 0,
+            "weightedMeanLuma": 1.3359375
+          },
+          {
+            "frameId": 1,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 3,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 4,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 6,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 7,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 9,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 10,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 12,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 13,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 15,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 16,
+            "weightedMeanLuma": 0.0
+          }
+        ],
+        "imageLumaMean": 11.009475911458333,
+        "imageLumaMaximum": 23
+      },
+      {
+        "label": "g16step",
+        "gain": 16,
+        "whiteBalancePosition": "Gain1",
+        "requestedStepFrame": 8,
+        "requestedStepSeconds": 0.03,
+        "measurements": [
+          {
+            "frameId": 0,
+            "weightedMeanLuma": 1.3359375
+          },
+          {
+            "frameId": 1,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 3,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 4,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 6,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 7,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 9,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 10,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 12,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 13,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 15,
+            "weightedMeanLuma": 0.0
+          },
+          {
+            "frameId": 16,
+            "weightedMeanLuma": 0.0
+          }
+        ],
+        "imageLumaMean": 12.392018229166666,
+        "imageLumaMaximum": 26
+      }
+    ],
+    "modifiedIqField": "/main_scene/0/sub_scene/0/scene_isp32/ae_calib/LinearAeCtrl/InitExp/InitGainValue",
+    "modifiedIqSha256": "e32bea33722e138c66405a30f3ea67a67305310bc538e74229772aa3c3fe3205",
+    "exposureLatencyMeasured": false,
+    "conclusion": "Both corrected statistics streams fall to zero after startup; the image differs slightly, but this quantized dark-scene metric still cannot establish latency."
+  }
 }

@@ -800,3 +800,12 @@ See [WB position evidence and limits](AWB.md#initial-gain-application-position--
 Earlier purple captures and brightness figures are historical results of the
 old Gain0 checkpoint; they are not the current corrected baseline. Do not
 interpret this fix as automatic white balance or color qualification.
+
+
+The latency probe was repeated after the Gain1 correction, using an explicit
+local IQ variant with fixed initial gain 16× and both a same-exposure control
+and a 3→30 ms shutter step at SOF 8. Both corrected AE-statistics series dropped
+to zero after startup. Final image luma differed slightly (mean 11.01 versus
+12.39), but the per-frame corrected metric was too quantized to measure a
+transition. The latency result remains unestablished; this is recorded in the
+existing probe report. No automatic controller or inferred timing was enabled.

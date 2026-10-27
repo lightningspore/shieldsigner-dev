@@ -559,6 +559,24 @@ fn main() {
                         saturated: false,
                     },
                     ae_controller::Policy {
+                        dynamic: if v["dynamic"].as_bool().unwrap_or(false) {
+                            Some(ae_brightness::Dynamic {
+                                enabled: b("dynamic_enabled"),
+                                mode: if b("custom") {
+                                    ae_damping::Mode::Custom {
+                                        scale: 10.,
+                                        middle: 0.95,
+                                    }
+                                } else {
+                                    ae_damping::Mode::Default
+                                },
+                                history: core::array::from_fn(|i| {
+                                    v["damping_history"][i].as_f64().unwrap() as f32
+                                }),
+                            })
+                        } else {
+                            None
+                        },
                         damping_under: 0.5,
                         damping_over: 0.4,
                         fps: f("fps"),
@@ -615,6 +633,17 @@ fn main() {
                     words.push(r.queued_count);
                 }
                 words.extend(route.iter().map(|p| p.time.to_bits()));
+                if let Some(d) = out.damping_diagnostics {
+                    words.extend([
+                        d.slot as u32,
+                        d.trend.to_bits(),
+                        d.normalized_trend.to_bits(),
+                        d.normalized_current.to_bits(),
+                    ]);
+                } else {
+                    words.extend([u32::MAX, 0, 0, 0]);
+                }
+
                 println!(
                     "{}",
                     words

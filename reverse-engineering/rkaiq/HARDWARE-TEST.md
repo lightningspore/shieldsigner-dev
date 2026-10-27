@@ -742,3 +742,49 @@ The checker retains `frameExposureAssociationVerified:false`: matching IDs at
 fixed exposure do not measure sensor update latency or prove the exposure and
 parameter record that physically produced a frame. Exposure changes and
 per-frame application evidence remain to be tested before live AE scheduling.
+
+
+## One-shot shutter latency probe
+
+Development startup accepts an explicit diagnostic step when statistics are
+requested:
+
+```sh
+camera-probe first-frame-sc3336 pipeline.json SC3336_FULL_IQ.json /dev/video20 /dev/video11 step.raw /dev/video19 --step-at 6 --step-seconds 0.03
+```
+
+The initial exposure remains profile-derived (3 ms/1× in the pinned profile).
+The requested step is converted with the recovered sensor conversion and active
+timing. At the selected CIF SOF, the bridge writes only the exposure control
+and reads it back. Gain and frame length are unchanged. It logs
+`exposure-step-applied` with SOF/time and before/requested/readback codes, then
+captures additional warmup frames through at least eight frames beyond the
+chosen ID. The first-frame option limits the step to IDs 0–64. Use a CIF
+`sof` source in the plan; an ISP output event source is unsuitable for measuring
+capture-side update timing.
+
+The lower-level combined command accepts
+`--exposure-step SENSOR_NODE SOF_ID INTEGRATION_CODE` before `--`. It checks the
+active driver's exposure min/max/step before allocation and opens a distinct
+sensor character device. A missed target SOF, missing step, failed control
+operation or readback mismatch fails the probe. It does not restore the old
+exposure afterward; accepted writes remain applied. This is an explicit single
+hardware write, **not automatic AE**. Normal captures without this option keep
+their existing behavior.
+
+ARM driver tests verify a single SOF-selected write/readback before RX queueing
+and rejection of out-of-range codes before streaming. Existing bridge failure
+cases and full startup simulations pass. Four real probe runs also succeeded,
+with one write each and matching raw/statistics frame IDs.
+
+### Latency result: not established
+
+The 3 ms → 30 ms probes at SOF IDs 4, 6 and 8 all showed measured AE brightness
+rising from 3 to 4 near reported frame 6. A same-exposure 3 ms → 3 ms control at
+SOF 8 showed the same rise. Therefore this dark-scene metric is confounded by
+startup behavior; the rise cannot be attributed to the scheduled write, and
+no exposure-change latency or physical application frame is claimed. Statistics
+also omit some IDs. A stable illuminated scene or stronger raw measurement is
+needed to isolate the effect. The last control run left exposure at 3 ms.
+[Probe results](exposure-step-validation.json). Raw scene captures and detailed
+logs stay local. Automatic feedback remains off.

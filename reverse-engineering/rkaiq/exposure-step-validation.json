@@ -1,0 +1,227 @@
+{
+  "date": "2026-10-26",
+  "board": "Luckfox Pico / SC3336",
+  "scenarios": [
+    {
+      "label": "step4",
+      "stepFrame": 4,
+      "beforeCode": 122,
+      "requestedCode": 1224,
+      "readbackCode": 1224,
+      "frameIdChainObserved": true,
+      "measurements": [
+        {
+          "frameId": 0,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 1,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 3,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 4,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 6,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 7,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 9,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 10,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 12,
+          "weightedMeanLuma": 4.0
+        }
+      ]
+    },
+    {
+      "label": "step30",
+      "stepFrame": 6,
+      "beforeCode": 122,
+      "requestedCode": 1224,
+      "readbackCode": 1224,
+      "frameIdChainObserved": true,
+      "measurements": [
+        {
+          "frameId": 0,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 1,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 3,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 4,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 6,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 7,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 9,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 10,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 12,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 13,
+          "weightedMeanLuma": 4.0
+        }
+      ]
+    },
+    {
+      "label": "step8",
+      "stepFrame": 8,
+      "beforeCode": 122,
+      "requestedCode": 1224,
+      "readbackCode": 1224,
+      "frameIdChainObserved": true,
+      "measurements": [
+        {
+          "frameId": 0,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 1,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 3,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 4,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 6,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 7,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 9,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 10,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 12,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 13,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 15,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 16,
+          "weightedMeanLuma": 4.0
+        }
+      ]
+    },
+    {
+      "label": "stepcontrol",
+      "stepFrame": 8,
+      "beforeCode": 122,
+      "requestedCode": 122,
+      "readbackCode": 122,
+      "frameIdChainObserved": true,
+      "measurements": [
+        {
+          "frameId": 0,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 1,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 3,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 4,
+          "weightedMeanLuma": 3.0
+        },
+        {
+          "frameId": 6,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 7,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 9,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 10,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 12,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 13,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 15,
+          "weightedMeanLuma": 4.0
+        },
+        {
+          "frameId": 16,
+          "weightedMeanLuma": 4.0
+        }
+      ]
+    }
+  ],
+  "sensorWriteAndReadbackPassed": true,
+  "exposureLatencyMeasured": false,
+  "frameExposureAssociationVerified": false,
+  "conclusion": "All scenarios including the same-exposure control rise from mean 3 to 4 around frame 6, independent of write SOF; startup behavior confounds this dark-scene metric.",
+  "limitations": [
+    "Controlled one-shot shutter writes, not automatic exposure.",
+    "Statistics have gaps and low quantized signal; no physical application frame or optical integration duration is claimed.",
+    "A stable illuminated scene or stronger raw metric is needed to isolate exposure-change latency."
+  ]
+}

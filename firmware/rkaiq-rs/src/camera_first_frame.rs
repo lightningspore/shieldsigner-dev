@@ -5,11 +5,28 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
         sensor, sensor_descriptor,
     };
     use std::io::Read;
-    if !matches!(args.len(), 5 | 6) {
+    if !matches!(args.len(), 5 | 6 | 10) {
         return Err(error(
-            "first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE]",
+            "first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME --step-seconds SECONDS]]",
         ));
     }
+    let step = if args.len() == 10 {
+        if args[6] != "--step-at" || args[8] != "--step-seconds" {
+            return Err(error("Expected --step-at FRAME --step-seconds SECONDS"));
+        }
+        let frame = args[7]
+            .parse::<u32>()
+            .map_err(|_| error("Invalid step frame"))?;
+        let seconds = args[9]
+            .parse::<f32>()
+            .map_err(|_| error("Invalid step seconds"))?;
+        if frame > 64 || !seconds.is_finite() || seconds <= 0. {
+            return Err(error("Invalid exposure-step request"));
+        }
+        Some((frame, seconds))
+    } else {
+        None
+    };
     let read = |path: &str, limit: u64| -> io::Result<Vec<u8>> {
         let mut bytes = Vec::new();
         File::open(path)?.take(limit + 1).read_to_end(&mut bytes)?;
@@ -150,10 +167,26 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
             codes.integration_time.to_string(),
             "-1".into(),
         ])?;
+        let step_codes = step
+            .map(|(frame, seconds)| {
+                profile
+                    .linear_codes(seconds, gain, timing)
+                    .map(|c| (frame, c.integration_time))
+            })
+            .transpose()
+            .map_err(error)?;
         let capture = || {
             let mut command = vec![args[2].clone(), parameter_path.clone(), tx, rx, isp];
             if let Some(node) = sof {
                 command.extend(["--sof-node".into(), node]);
+            }
+            if let Some((frame, code)) = step_codes {
+                command.extend([
+                    "--exposure-step".into(),
+                    sensor_path.clone(),
+                    frame.to_string(),
+                    code.to_string(),
+                ]);
             }
             command.extend([
                 "--".into(),
@@ -164,6 +197,9 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
                 "--timeout-ms".into(),
                 "10000".into(),
             ]);
+            if let Some((frame, _)) = step_codes {
+                command.extend(["--warmup".into(), (frame + 8).to_string()]);
+            }
             capture_cif_with_parameters(&command)
         };
         match statistics {

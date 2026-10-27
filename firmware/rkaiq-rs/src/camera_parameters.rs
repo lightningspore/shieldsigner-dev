@@ -216,13 +216,35 @@ fn wait_parameter(fd: RawFd, deadline: Instant) -> io::Result<()> {
 }
 fn capture_cif_with_parameters(args: &[String]) -> io::Result<()> {
     use std::os::unix::fs::MetadataExt;
-    let separator = args.iter().position(|s| s == "--");
-    let sof = match separator {
-        Some(5) => None,
-        Some(7) if args[5] == "--sof-node" => Some(args[6].as_str()),
-        _ => return Err(error("capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE [--sof-node NODE] -- IMAGE_NODE OUT [capture options]")),
-    };
-    let separator = separator.unwrap();
+    let separator = args
+        .iter()
+        .position(|s| s == "--")
+        .ok_or_else(|| error("Missing capture separator"))?;
+    if separator < 5 {
+        return Err(error("Missing raw bridge endpoints"));
+    }
+    let mut sof = None;
+    let mut step = None;
+    let mut i = 5;
+    while i < separator {
+        if args[i] == "--sof-node" && i + 1 < separator && sof.is_none() {
+            sof = Some(args[i + 1].as_str());
+            i += 2;
+        } else if args[i] == "--exposure-step" && i + 3 < separator && step.is_none() {
+            step = Some(raw_bridge::ExposureStep {
+                sensor: args[i + 1].clone(),
+                frame: args[i + 2]
+                    .parse()
+                    .map_err(|_| error("Invalid step frame"))?,
+                code: args[i + 3]
+                    .parse()
+                    .map_err(|_| error("Invalid step code"))?,
+            });
+            i += 4;
+        } else {
+            return Err(error("Unknown/duplicate raw bridge option"));
+        }
+    }
     if args.len() < separator + 3 {
         return Err(error("Missing image endpoint/output"));
     }
@@ -242,7 +264,7 @@ fn capture_cif_with_parameters(args: &[String]) -> io::Result<()> {
             ));
         }
     }
-    let bridge = raw_bridge::Bridge::prepare(&args[2], &args[3], &args[4], sof)?;
+    let bridge = raw_bridge::Bridge::prepare(&args[2], &args[3], &args[4], sof, step)?;
     let mut combined = args[..2].to_vec();
     combined.extend_from_slice(&args[separator..]);
     capture_with_parameters_using(&combined, Some(bridge))

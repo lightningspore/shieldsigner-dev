@@ -112,6 +112,18 @@ mod raw_bridge {
             let _ = self.release();
         }
     }
+    pub struct ExposureStep {
+        pub sensor: String,
+        pub frame: u32,
+        pub code: i32,
+    }
+    struct PreparedStep {
+        file: File,
+        frame: u32,
+        code: i32,
+        before: i32,
+        applied: bool,
+    }
     pub struct Bridge {
         // RX must release imported buffers before exported handles/TX allocations.
         rx: Endpoint,
@@ -119,6 +131,7 @@ mod raw_bridge {
         tx: Endpoint,
         isp: File,
         sof_device: Option<File>,
+        exposure_step: Option<PreparedStep>,
         lengths: Vec<u32>,
         inflight: Vec<bool>,
         first: bool,
@@ -135,6 +148,7 @@ mod raw_bridge {
             rx_path: &str,
             isp_path: &str,
             sof_path: Option<&str>,
+            step: Option<ExposureStep>,
         ) -> io::Result<Self> {
             use std::os::unix::fs::{FileTypeExt, MetadataExt};
             if std::mem::size_of::<usize>() != 4 {
@@ -169,6 +183,40 @@ mod raw_bridge {
                     Some(open(path, true)?)
                 }
                 _ => None,
+            };
+            let exposure_step = if let Some(step) = step {
+                let m = fs::metadata(&step.sensor)?;
+                if !m.file_type().is_char_device()
+                    || devices.contains(&m.rdev())
+                    || step.frame > 255
+                {
+                    return Err(error("Invalid exposure-step endpoint/frame"));
+                }
+                let file = open(&step.sensor, true)?;
+                let mut query = [0u8; 68];
+                put32(&mut query, 0, 0x00980911);
+                ioctl(file.as_raw_fd(), 0xc0445624, &mut query)?;
+                let minimum = get32(&query, 40) as i32;
+                let maximum = get32(&query, 44) as i32;
+                let increment = get32(&query, 48) as i32;
+                if step.code < minimum
+                    || step.code > maximum
+                    || increment <= 0
+                    || (step.code - minimum) % increment != 0
+                {
+                    return Err(error("Exposure step outside active driver control range"));
+                }
+                let mut control = [0x00980911u32, 0];
+                ioctl(file.as_raw_fd(), 0xc008561b, &mut control)?;
+                Some(PreparedStep {
+                    file,
+                    frame: step.frame,
+                    code: step.code,
+                    before: control[1] as i32,
+                    applied: false,
+                })
+            } else {
+                None
             };
             let (_, tx_caps) = capability(&tx_file)?;
             let (_, rx_caps) = capability(&rx_file)?;
@@ -261,6 +309,7 @@ mod raw_bridge {
                 },
                 isp,
                 sof_device,
+                exposure_step,
                 lengths: vec![],
                 inflight: vec![],
                 first: true,
@@ -328,6 +377,25 @@ mod raw_bridge {
                         if let Some(pair) = shieldsigner_rkaiq::raw_readback::frame_sync(&event)
                             .map_err(|_| error("Invalid SOF timestamp"))?
                         {
+                            if let Some(step) = self.exposure_step.as_mut() {
+                                if !step.applied && pair.0 > step.frame {
+                                    return Err(error("Missed requested exposure-step SOF"));
+                                }
+                                if !step.applied && pair.0 == step.frame {
+                                    let mut control = [0x00980911u32, step.code as u32];
+                                    ioctl(step.file.as_raw_fd(), 0xc008561c, &mut control)?;
+                                    control[1] = 0;
+                                    ioctl(step.file.as_raw_fd(), 0xc008561b, &mut control)?;
+                                    if control[1] as i32 != step.code {
+                                        return Err(error("Exposure-step readback mismatch"));
+                                    }
+                                    step.applied = true;
+                                    println!(
+                                        "{}",
+                                        json!({"event":"exposure-step-applied","sofFrameId":pair.0,"sofTimestampNs":pair.1,"beforeCode":step.before,"requestedCode":step.code,"readbackCode":control[1],"gainChanged":false,"frameLengthChanged":false,"physicalApplicationVerified":false,"automaticExposure":false})
+                                    );
+                                }
+                            }
                             if let Some(entry) = self.sof.iter_mut().find(|entry| entry.0 == pair.0)
                             {
                                 *entry = pair;
@@ -472,6 +540,7 @@ mod raw_bridge {
                     let started=self.tx.start().and_then(|_|self.rx.start());
                     let _=ready_tx.send(started.as_ref().map(|_|()).map_err(|e|e.to_string()));
                     let outcome=started.and_then(|_|self.pump(&flag));
+                    let outcome=outcome.and_then(|_|if self.exposure_step.as_ref().is_some_and(|s|!s.applied){Err(error("Exposure-step SOF not observed"))}else{Ok(())});
                     let mut cleanup=Vec::new();
                     if let Err(e)=self.rx.release(){cleanup.push(e.to_string());}
                     self.exports.clear();
@@ -508,6 +577,7 @@ mod raw_bridge_driver_test {
         trace: Vec<String>,
         mode: u8,
         api: u8,
+        step_value: u32,
         tx_dequeued: bool,
         rx_queued: bool,
         triggered: bool,
@@ -523,6 +593,19 @@ mod raw_bridge_driver_test {
         };
         let mut outcome = Ok(());
         match request {
+            0xc0445624 => {
+                put32(b, 40, 1);
+                put32(b, 44, 65535);
+                put32(b, 48, 1);
+            }
+            0xc008561b => {
+                put32(b, 4, driver.step_value);
+            }
+            0xc008561c => {
+                assert_eq!(get32(b, 0), 0x00980911);
+                driver.step_value = get32(b, 4);
+                driver.trace.push("sensor:step".into());
+            }
             QUERYCAP => {
                 let cap = if driver.tx.is_none() {
                     driver.tx = Some(fd);
@@ -711,10 +794,30 @@ mod raw_bridge_driver_test {
             mode: 5,
             ..Driver::default()
         });
-        let outcome = raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full", None);
+        let outcome =
+            raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full", None, None);
         assert!(outcome.is_err());
         let driver = DRIVER.lock().unwrap().take().unwrap();
         assert!(driver.trace.is_empty());
+    }
+    #[test]
+    fn out_of_range_step_is_rejected_before_streaming() {
+        *DRIVER.lock().unwrap() = Some(Driver::default());
+        let result = raw_bridge::Bridge::prepare(
+            "/dev/null",
+            "/dev/zero",
+            "/dev/full",
+            None,
+            Some(raw_bridge::ExposureStep {
+                sensor: "/dev/urandom".into(),
+                frame: 77,
+                code: 65536,
+            }),
+        );
+        assert!(result.is_err());
+        let driver = DRIVER.lock().unwrap().take().unwrap();
+        assert!(driver.trace.is_empty());
+        assert_eq!(driver.step_value, 0);
     }
     #[test]
     fn real_bridge_loop_success_and_driver_failures() {
@@ -725,8 +828,17 @@ mod raw_bridge_driver_test {
                     api,
                     ..Driver::default()
                 });
+                let step = if api == 3 {
+                    Some(raw_bridge::ExposureStep {
+                        sensor: "/dev/urandom".into(),
+                        frame: 77,
+                        code: 123,
+                    })
+                } else {
+                    None
+                };
                 let bridge =
-                    raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full", None)
+                    raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full", None, step)
                         .unwrap();
                 let outcome = bridge.during(|| {
                     let deadline = Instant::now() + Duration::from_secs(2);
@@ -744,6 +856,18 @@ mod raw_bridge_driver_test {
                 assert!(position("rx:req:0").is_some());
                 if mode != 1 {
                     assert!(position("rx:off") < position("tx:off"));
+                }
+                if api == 3 && mode != 1 {
+                    assert_eq!(driver.step_value, 123);
+                    assert_eq!(
+                        driver
+                            .trace
+                            .iter()
+                            .filter(|s| s.as_str() == "sensor:step")
+                            .count(),
+                        1
+                    );
+                    assert!(position("sensor:step") < position("rx:queue"));
                 }
                 if mode == 0 {
                     assert!(position("rx:queue") < position("isp:trigger"));

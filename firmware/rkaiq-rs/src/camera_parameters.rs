@@ -335,6 +335,12 @@ fn wait_parameter(fd: RawFd, deadline: Instant) -> io::Result<()> {
     }
 }
 fn capture_cif_with_parameters(args: &[String]) -> io::Result<()> {
+    capture_cif_with_parameters_observed(args, None)
+}
+fn capture_cif_with_parameters_observed(
+    args: &[String],
+    observer: Option<CameraAeSender>,
+) -> io::Result<()> {
     use std::os::unix::fs::MetadataExt;
     let separator = args
         .iter()
@@ -384,7 +390,8 @@ fn capture_cif_with_parameters(args: &[String]) -> io::Result<()> {
             ));
         }
     }
-    let bridge = raw_bridge::Bridge::prepare(&args[2], &args[3], &args[4], sof, step)?;
+    let bridge =
+        raw_bridge::Bridge::prepare(&args[2], &args[3], &args[4], sof, step)?.observe_ae(observer);
     let mut combined = args[..2].to_vec();
     combined.extend_from_slice(&args[separator..]);
     capture_with_parameters_using(&combined, Some(bridge))

@@ -1288,6 +1288,7 @@ mod linux {
         );
         Ok(())
     }
+    include!("../camera_ae_events.rs");
     include!("../camera_raw_bridge.rs");
     include!("../camera_parameters.rs");
     include!("../camera_pipeline.rs");

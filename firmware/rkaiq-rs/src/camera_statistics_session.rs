@@ -89,6 +89,7 @@ mod statistics_session {
             &mut self,
             stop: &AtomicBool,
             parameters: &[u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES],
+            observer: &Option<CameraAeSender>,
         ) -> io::Result<()> {
             let mut progress = Instant::now();
             while !stop.load(Ordering::Acquire) {
@@ -141,10 +142,14 @@ mod statistics_session {
                     self.history.remove(0);
                 }
                 self.history.push(header);
+                let observed = observer.as_ref().map(|_| bytes.clone());
                 self.last = Some(bytes);
                 self.frames += 1;
                 progress = Instant::now();
                 ioctl(self.fd(), QUEUE, &mut b)?;
+                if let Some(bytes) = observed {
+                    emit_camera_ae_event(observer, CameraAeEvent::Statistics { bytes })?;
+                }
             }
             Ok(())
         }
@@ -201,6 +206,16 @@ mod statistics_session {
         initial_target: f32,
         work: F,
     ) -> io::Result<()> {
+        during_observed(node, out, parameters, initial_target, None, work)
+    }
+    pub fn during_observed<F: FnOnce() -> io::Result<()>>(
+        node: &str,
+        out: &str,
+        parameters: &[u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES],
+        initial_target: f32,
+        observer: Option<CameraAeSender>,
+        work: F,
+    ) -> io::Result<()> {
         let snapshot = *parameters;
         for path in [out, &format!("{out}.json")] {
             if std::path::Path::new(path).exists() {
@@ -215,7 +230,7 @@ mod statistics_session {
                 let mut session=match Session::prepare(node){Ok(s)=>s,Err(e)=>{let _=ready_tx.send(Err(e.to_string()));return Err(e);}};
                 println!("{}",json!({"event":"statistics-ready","device":node,"automaticExposure":false}));
                 let _=ready_tx.send(Ok(()));
-                let result=session.receive(&flag,&snapshot);session.release();
+                let result=session.receive(&flag,&snapshot,&observer);session.release();
                 let saved=if session.last.is_some(){session.save(out,initial_target)}else{Err(error("No statistics frames captured"))};
                 println!("{}",json!({"event":"statistics-finished","framesReceived":session.frames,"error":result.as_ref().err().map(|e|e.to_string()),"saveError":saved.as_ref().err().map(|e|e.to_string()),"cleanupErrors":session.cleanup,"automaticExposure":false}));
                 result.and(saved).and_then(|_|if session.cleanup.is_empty(){Ok(())}else{Err(error("Statistics cleanup failed"))})

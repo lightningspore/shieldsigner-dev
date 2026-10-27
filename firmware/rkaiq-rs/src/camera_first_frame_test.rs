@@ -7,6 +7,7 @@ mod first_frame_driver {
         roles: HashMap<RawFd, String>,
         trace: Vec<String>,
         formats: HashMap<String, Vec<u8>>,
+        sof_observed_frame: Option<u32>,
         parameter_on: bool,
         parameter_pending: std::collections::VecDeque<u32>,
         parameter_would_block: bool,
@@ -200,7 +201,17 @@ mod first_frame_driver {
             0x4020565a => {
                 assert_eq!(get32(b, 0), 4);
             }
-            0x80805659 => return again(),
+            0x80805659 => {
+                if d.sof_observed_frame == Some(d.raw_frames) {
+                    return again();
+                }
+                d.sof_observed_frame = Some(d.raw_frames);
+                b.fill(0);
+                put32(b, 0, 4);
+                put32(b, 8, d.raw_frames);
+                put32(b, 80, 4);
+                put32(b, 84, d.raw_frames * 1_000_000);
+            }
             STREAMON => {
                 d.trace.push(format!("{role}:on"));
                 if role == "statistics" {
@@ -325,6 +336,39 @@ mod first_frame_driver {
     #[test]
     #[ignore = "requires ARM32 Linux and the explicitly mounted full IQ fixture"]
     fn runtime_gain_parameter_reuse() {
+        let (sender, receiver) = std::sync::mpsc::sync_channel(1);
+        let observer = Some(sender);
+        emit_camera_ae_event(
+            &observer,
+            CameraAeEvent::Sof {
+                frame: 1,
+                timestamp_ns: 10,
+            },
+        )
+        .unwrap();
+        assert!(emit_camera_ae_event(
+            &observer,
+            CameraAeEvent::Statistics {
+                bytes: vec![0; 13040]
+            }
+        )
+        .is_err());
+        assert!(matches!(
+            receiver.try_recv().unwrap(),
+            CameraAeEvent::Sof {
+                frame: 1,
+                timestamp_ns: 10
+            }
+        ));
+        drop(receiver);
+        assert!(emit_camera_ae_event(
+            &observer,
+            CameraAeEvent::Sof {
+                frame: 2,
+                timestamp_ns: 20
+            }
+        )
+        .is_err());
         use shieldsigner_rkaiq::{
             ae_runtime, ae_session, calibration::RuntimeTiming, isp32, sensor_scheduler,
         };
@@ -552,9 +596,33 @@ mod first_frame_driver {
         if statistics {
             args.push("/dev/tty".into());
         }
-        let outcome = first_frame_sc3336(&args);
+        let (event_tx, event_rx) = std::sync::mpsc::sync_channel(64);
+        let outcome = first_frame_sc3336_observed(&args, Some(event_tx));
+        let events = event_rx.try_iter().collect::<Vec<_>>();
+        let mut sof_events = 0;
+        let mut statistics_events = 0;
+        for event in events {
+            match event {
+                CameraAeEvent::Sof {
+                    frame,
+                    timestamp_ns,
+                } => {
+                    assert!(frame < 64);
+                    assert_eq!(timestamp_ns, 4_000_000_000 + frame as u64 * 1_000_000);
+                    sof_events += 1;
+                }
+                CameraAeEvent::Statistics { bytes } => {
+                    let stats = shieldsigner_rkaiq::statistics::Statistics::parse(&bytes).unwrap();
+                    assert_eq!(stats.parameters_id(), 0);
+                    assert!(stats.frame_id() > 0);
+                    statistics_events += 1;
+                }
+            }
+        }
+        assert!(sof_events > 0);
         let driver = DRIVER.lock().unwrap().take().unwrap();
         outcome.unwrap();
+        assert_eq!(statistics_events, driver.statistics_frames);
         assert_eq!(driver.image_frames, 3);
         assert!(driver.raw_frames >= 3);
         assert_eq!(fs::metadata(&output).unwrap().len(), 4478976);
@@ -605,7 +673,7 @@ mod first_frame_driver {
         }
         println!(
             "{}",
-            json!({"event":"simulated-startup-verified","statisticsEnabled":statistics,"multiPlaneTx":multi_tx,"statisticsFrames":driver.statistics_frames,"imageFrames":driver.image_frames,"rawFrames":driver.raw_frames,"savedBytes":4478976,"hardwareVerified":false,"imageContent":"anonymous zero-filled simulated memory"})
+            json!({"event":"simulated-startup-verified","sofEvents":sof_events,"statisticsEvents":statistics_events,"statisticsEnabled":statistics,"multiPlaneTx":multi_tx,"statisticsFrames":driver.statistics_frames,"imageFrames":driver.image_frames,"rawFrames":driver.raw_frames,"savedBytes":4478976,"hardwareVerified":false,"imageContent":"anonymous zero-filled simulated memory"})
         );
         fs::remove_dir_all(folder).unwrap();
     }

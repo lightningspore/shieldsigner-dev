@@ -131,6 +131,7 @@ mod raw_bridge {
         tx: Endpoint,
         isp: File,
         sof_device: Option<File>,
+        ae_observer: Option<CameraAeSender>,
         exposure_step: Option<PreparedStep>,
         lengths: Vec<u32>,
         inflight: Vec<bool>,
@@ -309,6 +310,7 @@ mod raw_bridge {
                 },
                 isp,
                 sof_device,
+                ae_observer: None,
                 exposure_step,
                 lengths: vec![],
                 inflight: vec![],
@@ -364,6 +366,10 @@ mod raw_bridge {
             }
             Ok(bridge)
         }
+        pub fn observe_ae(mut self, sender: Option<CameraAeSender>) -> Self {
+            self.ae_observer = sender;
+            self
+        }
         fn drain_sof(&mut self) -> io::Result<()> {
             // Bounded drain/cache prevents a noisy event source from starving raw I/O.
             for _ in 0..64 {
@@ -377,6 +383,13 @@ mod raw_bridge {
                         if let Some(pair) = shieldsigner_rkaiq::raw_readback::frame_sync(&event)
                             .map_err(|_| error("Invalid SOF timestamp"))?
                         {
+                            emit_camera_ae_event(
+                                &self.ae_observer,
+                                CameraAeEvent::Sof {
+                                    frame: pair.0,
+                                    timestamp_ns: pair.1,
+                                },
+                            )?;
                             if let Some(step) = self.exposure_step.as_mut() {
                                 if !step.applied && pair.0 > step.frame {
                                     return Err(error("Missed requested exposure-step SOF"));

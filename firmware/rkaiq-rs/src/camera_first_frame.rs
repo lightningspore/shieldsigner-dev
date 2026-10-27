@@ -1,5 +1,11 @@
 // Included in camera-probe's Linux module. Fixed initial checkpoint, not 3A.
 fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
+    first_frame_sc3336_observed(args, None)
+}
+fn first_frame_sc3336_observed(
+    args: &[String],
+    observer: Option<CameraAeSender>,
+) -> io::Result<()> {
     use shieldsigner_rkaiq::{
         calibration::{RuntimeTiming, SensorCalibration},
         sensor, sensor_descriptor,
@@ -200,10 +206,10 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
             if let Some((frame, _)) = step_codes {
                 command.extend(["--warmup".into(), (frame + 8).to_string()]);
             }
-            capture_cif_with_parameters(&command)
+            capture_cif_with_parameters_observed(&command, observer.clone())
         };
         match statistics {
-            Some(node) => statistics_session::during(
+            Some(node) => statistics_session::during_observed(
                 node,
                 &format!("{}.stats.raw", args[4]),
                 &parameters,
@@ -211,6 +217,7 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
                     .as_f64()
                     .ok_or_else(|| error("Missing calibrated initial AE target"))?
                     as f32,
+                observer.clone(),
                 capture,
             ),
             None => capture(),

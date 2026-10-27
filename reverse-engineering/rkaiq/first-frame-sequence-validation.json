@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "9026539763072d43405d6436093bd981a203a94e27d77ffdac7dc58be6852ec4",
+  "testBinarySha256": "2f986f69a909ffc82197fcd2331048a04d32d278d35b9827460b3fe445a0f23c",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -10,7 +10,9 @@
     "multiPlaneTx": false,
     "rawFrames": 5,
     "savedBytes": 4478976,
+    "sofEvents": 6,
     "statisticsEnabled": false,
+    "statisticsEvents": 0,
     "statisticsFrames": 0
   },
   "scenarios": [
@@ -22,7 +24,9 @@
       "multiPlaneTx": false,
       "rawFrames": 5,
       "savedBytes": 4478976,
+      "sofEvents": 6,
       "statisticsEnabled": false,
+      "statisticsEvents": 0,
       "statisticsFrames": 0
     },
     {
@@ -31,10 +35,12 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
+      "sofEvents": 7,
       "statisticsEnabled": true,
-      "statisticsFrames": 5
+      "statisticsEvents": 6,
+      "statisticsFrames": 6
     },
     {
       "event": "simulated-startup-verified",
@@ -44,7 +50,9 @@
       "multiPlaneTx": true,
       "rawFrames": 5,
       "savedBytes": 4478976,
+      "sofEvents": 6,
       "statisticsEnabled": false,
+      "statisticsEvents": 0,
       "statisticsFrames": 0
     },
     {
@@ -55,12 +63,15 @@
       "multiPlaneTx": true,
       "rawFrames": 5,
       "savedBytes": 4478976,
+      "sofEvents": 6,
       "statisticsEnabled": true,
+      "statisticsEvents": 5,
       "statisticsFrames": 5
     }
   ],
   "verified": [
     "runtime effective-exposure gains through persistent MMAP parameter enqueue, pool exhaustion, EAGAIN preservation, ordered completion/reuse, invalid-completion quarantine and unity no-op",
+    "owned SOF and statistics events emitted from actual capture workers into a bounded channel",
     "actual first-frame-sc3336 userspace orchestration",
     "graph format readback and profile loading",
     "active timing conversion and sensor writes",

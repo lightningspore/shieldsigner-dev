@@ -1806,3 +1806,32 @@ snapshots and sensor maps match host and ARM Rust after each event. Synthetic
 scenes remain independent of exposure, and result-list inclusion is explicit
 fixture input. This proves the joined data flow, not optical convergence, WB
 controller behavior, full setIspConfig execution, or live ISP submission.
+
+### Capture-worker AE event transport
+
+The first-frame capture implementation now has an internal observed path that
+feeds a bounded `SyncSender<CameraAeEvent>` from its existing raw and statistics
+workers. SOF events contain the parsed driver frame ID and nanosecond timestamp;
+statistics events own a complete copied payload. The statistics worker requeues
+its driver buffer before emission, so an event consumer cannot retain mapped
+capture-buffer memory. The raw bridge continues its normal SOF timestamp cache
+and raw readback after emitting the event.
+
+Emission is nonblocking. A full or disconnected channel fails the emitting
+worker instead of silently dropping input or blocking the raw/statistics queue.
+This is transport policy for the Rust adapter, not a recovered vendor scheduling
+policy. Events preserve channel arrival order; cross-worker arrival order is
+not proof of sensor/ISP chronology. The event owner must still associate frame
+IDs and handle statistics arriving before a corresponding SOF.
+
+The four ARM startup scenarios now run this observed capture path and check
+SOF timestamps plus every emitted statistics payload and frame/parameter ID.
+The number of received statistics events equals the worker's captured count.
+The same ARM suite exercises channel overflow and receiver disconnection as
+explicit errors. Device syscalls and mappings remain simulated; these tests
+verify actual worker orchestration and owned message transport, not camera
+pixels or physical exposure timing.
+
+The existing CLI still selects the fixed initial-exposure path. The observed
+entry point is internal; it does not yet create the continuous AE event owner,
+issue automatic sensor writes, or submit dynamic parameters during capture.

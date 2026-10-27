@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 270,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "complete native AecRegValueConvertion, direct automatic routing, disabled-DCG selection and real sensor/ISP conversion through normal return",
+  "limitations": [
+    "Zero through five intermediate entries, explicit prior publication and frame inputs; non-iris automatic SC3336 path only.",
+    "Native math runtime executes log10f/pow/powf/roundf/floorf/ceilf as needed; allocation and integer division modeled.",
+    "Result packaging/publication and real exposure association remain external; no hardware writes."
+  ]
+}

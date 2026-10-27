@@ -380,6 +380,90 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-conversion-queue" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let profile = calibration::SensorCalibration::from_value(&v["profile"]).unwrap();
+                let calibration = profile.conversion(calibration::RuntimeTiming {
+                    frame_length: 1360,
+                    pixel_clock_mhz: 114.24,
+                    line_length_pixels: 2800,
+                });
+                let number = |k: &str| v[k].as_f64().unwrap() as f32;
+                let point = |x: &serde_json::Value| ae_route::Point {
+                    time: x[0].as_f64().unwrap() as f32,
+                    gain: x[1].as_f64().unwrap() as f32,
+                    isp_gain: x[2].as_f64().unwrap() as f32,
+                };
+                let mut route: Vec<_> = v["route"].as_array().unwrap().iter().map(point).collect();
+                let published: Vec<_> = v["published"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(point)
+                    .collect();
+                let limits = ae_route::Limits {
+                    minimum_time: 0.00005,
+                    maximum_time: 0.03,
+                    minimum_gain: 1.,
+                    maximum_gain: 512.,
+                    time_quantum: 0.01,
+                    floor_tolerance_coefficient: 8.,
+                    line_length: 2800.,
+                    pixel_clock_mhz: 114.24,
+                };
+                let out = ae_conversion_queue::linear(
+                    point(&v["proposed"]),
+                    number("target"),
+                    number("held"),
+                    &published,
+                    v["frame_id"].as_i64().unwrap() as i32,
+                    v["sync"].as_i64().unwrap() as i32,
+                    v["count"].as_u64().unwrap() as usize,
+                    &mut route,
+                    limits,
+                    calibration,
+                    ae_register::Policy {
+                        isp_range: [1., 32.],
+                        time_range: [0.00005, 0.03],
+                        gain_range: [1., 512.],
+                        analogue_minimum: 1.,
+                        time_quantum: 0.01,
+                        flicker_enabled: true,
+                        automatic: true,
+                        suppress_isp_compensation: false,
+                    },
+                )
+                .unwrap();
+                let mut words = vec![
+                    out.current.gain.to_bits(),
+                    out.current.isp_gain.to_bits(),
+                    out.current.seconds.to_bits(),
+                    out.current.codes.integration_time,
+                    out.current.codes.gain,
+                ];
+                for entry in out.intermediate.into_iter().flatten() {
+                    let c = entry.converted;
+                    words.extend([
+                        entry.aggregate.to_bits(),
+                        c.gain.to_bits(),
+                        c.isp_gain.to_bits(),
+                        c.seconds.to_bits(),
+                        u32::MAX,
+                        c.codes.integration_time,
+                        c.codes.gain,
+                        0,
+                    ]);
+                }
+                words.extend(route.iter().map(|p| p.time.to_bits()));
+                println!(
+                    "{}",
+                    words
+                        .iter()
+                        .map(|w| format!("{w:08x}"))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                );
+            }
             "ae-register" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let profile = calibration::SensorCalibration::from_value(&v["profile"]).unwrap();

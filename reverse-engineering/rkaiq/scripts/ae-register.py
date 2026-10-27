@@ -15,10 +15,13 @@ class Original(Base):
    self.math.invoke(name,floats=[value]);self.math_calls.add(name)
    uc.reg_write(regs.UC_ARM_REG_S0,self.math.uc.reg_read(regs.UC_ARM_REG_S0));uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
   super().hook(uc,address,size,user)
- def run(self,v):
+ def setup(self,v):
   s=v['profile']['sensor_calib'];c=bytearray(0x6000);table=HEAP+0x10000
   struct.pack_into('<III',c,0x638,0,table,7);struct.pack_into('<4f',c,0x644,*s['Time2Reg']['fCoeff']);struct.pack_into('<f',c,0x654,v['analogue_minimum']);struct.pack_into('<H',c,0x678,s['CISTimeSet']['Linear']['CISTimeRegMin']);struct.pack_into('<2f',c,0x684,*s['CISTimeSet']['Linear']['CISTimeRegOdevity']['fCoeff']);struct.pack_into('<f',c,0x6ec,s['CISDcgSet']['Linear']['dcg_ratio']);struct.pack_into('<2f',c,0x778,*v['isp_range']);struct.pack_into('<2f',c,0xfc,*v['time_range']);struct.pack_into('<2f',c,0x104,*v['gain_range']);struct.pack_into('<I',c,0x22f0,1 if v['automatic'] else 2);struct.pack_into('<H',c,0x23c0,0x1000 if v['suppress'] else 0);c[0x23e4]=int(v['flicker']);struct.pack_into('<f',c,0x3cc4,v['quantum']);struct.pack_into('<3f',c,0x3d14,v['frame'],v['clock'],v['line'])
-  self.uc.mem_write(HEAP,bytes(c));self.uc.mem_write(table,struct.pack('<7f',*s['Gain2Reg']['GainRange']));self.uc.mem_write(HEAP+0x20000,struct.pack('<3fIIi',v['seconds'],v['gain'],v['isp'],0,0,v['dcg']));self.mappings=0
+  self.uc.mem_write(HEAP,bytes(c));self.uc.mem_write(table,struct.pack('<7f',*s['Gain2Reg']['GainRange']));return c
+ def run(self,v):
+  c=self.setup(v)
+  self.uc.mem_write(HEAP+0x20000,struct.pack('<3fIIi',v['seconds'],v['gain'],v['isp'],0,0,v['dcg']));self.mappings=0
   status=self.invoke('__AecRegConvertion',[HEAP,HEAP+0x20000,HEAP+0x20004,HEAP+0x20008],stack=struct.pack('<III',HEAP+0x2000c,HEAP+0x20010,HEAP+0x20014),instructions=3000000)
   assert status==0;assert bytes(self.uc.mem_read(HEAP,len(c)))==bytes(c);assert struct.unpack('<i',self.uc.mem_read(HEAP+0x20014,4))[0]==v['dcg']
   time,gain,isp,tc,gc=struct.unpack('<5I',self.uc.mem_read(HEAP+0x20000,20));return ','.join(f'{x:08x}' for x in [tc,gc,gain,time,isp,self.mappings])

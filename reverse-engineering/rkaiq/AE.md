@@ -848,3 +848,42 @@ exposure latency or complete the AE/AWB camera service.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-run.py --frame --arm
 ```
+
+## Converted intermediate exposure queue
+
+`ae_conversion_queue::linear` ports the ordinary automatic, non-iris,
+DCG-disabled `AecRegValueConvertion` caller (ELF 0xaf0b0), including its real
+sensor/ISP converter. It first converts the proposed output. It then selects
+a starting aggregate exposure from the previous publication: the frame delta
+is signed/wrapping and clamped to at least one; if that index is below the
+published count, the selected point's product is `(gain * ISP gain) * time`.
+Otherwise the held aggregate exposure is used. This multiplication order differs
+from some other native aggregate writers and is preserved.
+
+For each requested intermediate step, the function interpolates in logarithmic
+exposure space, routes the result through the direct automatic route, selects
+disabled DCG (`-1`), and performs the complete register correction and ISP
+compensation loop. Its published aggregate is recomputed from the corrected
+real point as `(gain * time) * ISP gain`. The target aggregate remains an explicit
+input, matching the native caller's separate aggregate field. Zero through five
+intermediate slots are supported; the final exposure is returned separately.
+
+270 comparisons execute the complete native caller through normal return,
+including real automatic routing, native disabled-DCG selection, register
+conversion and inverse mapping. They compare the converted final exposure,
+every populated intermediate aggregate/point/code/DCG/iris slot, mutated route
+time knots, and preservation of unrelated context. Cases cover all six queue
+lengths, negative/zero/positive frame differences, empty/short/full prior queues,
+and increasing/decreasing/equal aggregate transitions.
+[Conversion queue comparison](ae-conversion-queue-equivalence.json).
+
+The native oracle executes pinned uClibc logarithm, power and rounding code as
+needed. Allocation/free and integer division are explicit boundary models.
+Policy, actual exposure association and prior publication are supplied inputs;
+result packaging and subsequent history/publication updates remain external.
+The checked Rust wrapper rejects manual modes and oversized queues. It does not
+enable live automatic sensor writes.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-conversion-queue.py --arm
+```

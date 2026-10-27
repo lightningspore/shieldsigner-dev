@@ -27,6 +27,7 @@ pub mod awb_gain;
 pub mod awb_gain_adjust;
 pub mod awb_gain_clip;
 pub mod awb_gain_controller;
+pub mod awb_site;
 pub mod awb_gain_history;
 pub mod awb_high_gain;
 pub mod awb_low_gain;

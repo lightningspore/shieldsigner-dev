@@ -1,0 +1,29 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "elfEntry": "0xc7e70",
+  "sequences": 256,
+  "directedCases": 8,
+  "events": 2056,
+  "mismatchCount": 0,
+  "arm": true,
+  "coverage": {
+    "enabledFalse:reuseFalse:matchedFalse:gainEqualsReferenceFalse": 72,
+    "enabledTrue:reuseTrue:matchedTrue:gainEqualsReferenceFalse": 409,
+    "enabledTrue:reuseTrue:matchedTrue:gainEqualsReferenceTrue": 343,
+    "enabledTrue:reuseTrue:matchedFalse:gainEqualsReferenceFalse": 352,
+    "enabledTrue:reuseTrue:matchedFalse:gainEqualsReferenceTrue": 256,
+    "enabledTrue:reuseFalse:matchedTrue:gainEqualsReferenceFalse": 119,
+    "enabledTrue:reuseFalse:matchedTrue:gainEqualsReferenceTrue": 113,
+    "enabledTrue:reuseFalse:matchedFalse:gainEqualsReferenceFalse": 126,
+    "enabledTrue:reuseFalse:matchedFalse:gainEqualsReferenceTrue": 98,
+    "enabledFalse:reuseFalse:matchedTrue:gainEqualsReferenceFalse": 64,
+    "enabledFalse:reuseFalse:matchedTrue:gainEqualsReferenceTrue": 48,
+    "enabledFalse:reuseFalse:matchedFalse:gainEqualsReferenceTrue": 48
+  },
+  "scope": "Saved-site gain override, matched flag, frame counter and unrelated context preservation; original ARM body runs to return.",
+  "limitations": [
+    "Finite synthetic reference/state; no saved-reference file loading or complete outer AWB wrapper integration.",
+    "Context +4/+8 application meanings remain unnamed; their exact predicate is modeled.",
+    "Sequence state is carried through original outputs, then replayed through Rust inputs."
+  ]
+}

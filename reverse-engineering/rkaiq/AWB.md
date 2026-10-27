@@ -1085,3 +1085,44 @@ host and ARM fixtures. Reports:
 Full IQ initialization, shared frame-state construction, outer lifecycle and
 live AWB integration remain unfinished; the AUTO/ALWAYS Exclusion boundary is
 an explicit unresolved requirement rather than a completed vendor replacement.
+
+## Saved-site startup gain reuse
+
+`awb_site::State::apply` reconstructs `runAvaSiteRec` (ELF `0xc7e70`), recovered
+with Ghidra from the pinned library. `AwbCalAwbGain` calls this **after** the
+complete gain-mode function and **before** copying current gain into previous
+gain. It can replace the computed gain, so omitting it would change the result
+of the outer wrapper. The pinned IQ enables recording and reuse, with a
+three-frame limit, gain threshold 0.2 and sample threshold 2.
+
+Disabled recording or an exhausted unsigned frame counter returns unchanged.
+With reuse enabled, only frame 0 tests a match. Relative sample distance is
+`abs(reference - current) / ((reference + current) * 0.5)` when that mean is
+strictly above the original double 1e-5 constant; otherwise distance is zero.
+Only a strict sample-threshold pass reaches the gain comparison. A missing
+reference or current green-product <= 1e-5 supplies gain distance 10; otherwise
+it sums absolute differences of R/Gr and B/Gb ratios. A strict gain-threshold
+pass sets the persistent matched flag; failure preserves an existing true flag.
+
+When reuse is enabled but no match exists, the function only advances the
+counter. Otherwise it copies all four saved gain words if context +4 is false,
+context +8 equals 1, and the saved reference is valid. The application meanings
+of those two fields are still unresolved and the Rust API names them by their
+stored predicates. In particular, disabling reuse does not by itself prevent
+this final copy in native code. The counter advances once per active call,
+including a call that finds no match. There is no reference-file access in this
+helper: loading/saving `/tmp/avaSiteInfo` belongs elsewhere in initialization.
+
+`mise run camera:rust:awb-site` compares 256 eight-event sequences plus eight
+directed boundary cases (**2,056 calls**) on host and ARM. It verifies exact gain
+bits, match flag, counter and preservation of unrelated context. Sequence state
+is carried through native outputs and replayed as Rust inputs. Directed cases
+include exact sample/gain thresholds, invalid reference, zero mean and zero
+current green product. Logging is adapted; the original policy executes through
+return. Two Rust checks cover nonfinite-ratio rollback and disabled-input
+short-circuiting. [Comparison report](awb-site-equivalence.json).
+
+The outer wrapper's per-frame reset literal at ELF `0xc8200` is **-1.0**,
+verified from its bytes `00 00 80 bf`; its diagnostic weights must not be reset
+to zero or unity during subsequent composition. Full reset/damping/tolerance
+composition, saved-reference initialization and live AWB remain unfinished.

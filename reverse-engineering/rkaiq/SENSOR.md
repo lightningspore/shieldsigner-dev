@@ -104,3 +104,39 @@ A fallback result is the original library's best available record, not proof
 that it produced a particular frame. Sensor scheduling, effect-frame insertion,
 retention, startup offsets and real statistics/exposure association remain to
 be connected. Live AE must retain the lookup status and its timing evidence.
+
+
+## Sensor delay-policy configuration
+
+`sensor_timing::Delays::configure` follows complete native
+`SensorHw::set_exp_delay_info` (ELF 0x3a7a0). It stores time/gain/DCG delays,
+selects split gain when gain delay is shorter than shutter delay, and updates
+the native DCG scheduling flags. It rejects gain or DCG delays longer than the
+shutter delay with native status -2. It intentionally preserves partial writes
+and flags the native routine leaves untouched, including on errors; callers
+must check status before using the configuration for hardware scheduling.
+
+For a freshly zeroed policy, the pinned SC3336 tuple (time 2, gain 2, DCG 0)
+is accepted, with gain unsplit and DCG not sharing the time-delay path. These
+are profile inputs, not an independent optical measurement of sensor latency.
+
+The reference executes the complete original routine, comparing status, all
+six delay/flag fields and preservation of unrelated sensor-object bytes in
+1,728 cases. It covers six signed delay values and all eight initial flag
+combinations, including rejected combinations and stale-flag preservation.
+Host and ARM replay pass. Negative inputs are behavior tests, not proposed
+sensor settings. [Equivalence report](sensor-delays-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/sensor-delays.py --arm
+```
+
+SOF-driven queue processing, effective-frame insertion/retention and actual
+sensor/statistics association remain separate work. Ghidra inspection shows
+that the ordinary SOF path trims the effective map to ten retained entries
+before processing and associates a newly dequeued main exposure with SOF plus
+the shutter delay, with additional conditional handling. That scheduling path
+has not yet been ported or differentially verified; the lookup/configuration
+helpers alone do not establish physical association.

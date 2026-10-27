@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 1728,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "complete native set_exp_delay_info return/status and all object changes, including rejected combinations",
+  "limitations": [
+    "Logging is discarded; native policy arithmetic executes.",
+    "Negative test inputs document behavior, not supported camera settings.",
+    "SOF queues, effective-frame insertion and physical sensor latency remain separate scheduling work."
+  ]
+}

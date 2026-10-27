@@ -380,6 +380,32 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "sensor-delays" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut d = sensor_timing::Delays {
+                    time: 10,
+                    gain: 11,
+                    dcg: 12,
+                    split_gain: v["flags"][0].as_bool().unwrap(),
+                    split_dcg: v["flags"][1].as_bool().unwrap(),
+                    dcg_with_time: v["flags"][2].as_bool().unwrap(),
+                };
+                let status = d.configure(
+                    v["time"].as_i64().unwrap() as i32,
+                    v["gain"].as_i64().unwrap() as i32,
+                    v["dcg"].as_i64().unwrap() as i32,
+                );
+                println!(
+                    "{},{},{},{},{},{},{}",
+                    status,
+                    d.time,
+                    d.gain,
+                    d.dcg,
+                    d.split_gain as u8,
+                    d.split_dcg as u8,
+                    d.dcg_with_time as u8
+                );
+            }
             "exposure-association" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let frames = v["frames"]

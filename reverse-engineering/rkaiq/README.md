@@ -36,6 +36,10 @@ physical QR scanning, physical lighting/color response, complete LCD/button
 interaction and power-cycle qualification. Preserve the single-camera critical
 path before adding optional HDR/multi-camera/tuning modes.
 
+Development 0.0.33-dev omits the final scene-image dump during normal app
+streaming; explicit diagnostic image saving remains available.
+[Hardware behavior and scope](stream-image-artifact-validation.json).
+
 ## What is implemented
 
 - Ten recovered numerical routines in [`firmware/rkaiq-rs`](../../firmware/rkaiq-rs): scalar interpolation, saturation color-matrix interpolation, saturation-offset interpolation, 9×9×9 RGB LUT blending, defect-pixel calibration interpolation, the multiplicative gain-quantization branch, and the full linear/two-frame/three-frame gain-register conversion, ISO calibration selection, ISP32 white-balance gain serialization, and exposure digital-gain application.

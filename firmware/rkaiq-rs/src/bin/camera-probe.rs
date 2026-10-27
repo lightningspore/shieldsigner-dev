@@ -1061,12 +1061,18 @@ mod linux {
             None
         };
         check_camera_cancel(cancel)?;
-        let mut out = OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(output)?;
-        out.write_all(&bytes)?;
-        let report = json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"device":device,"captureKind":if statistics {"isp-statistics"}else{"image"},"statistics":statistics_header,"linksRkaiq":false,"vendorProcessesBeforeCapture":active,"vendorProcessesAfterCapture":vendor_processes(),"requireNoRkaiq":require_no_vendor,"format":format_json(&fmt),"bytes":bytes.len(),"planes":planes,"sequence":sequence,"timestamp":{"seconds":seconds,"microseconds":microseconds},"limitations":["This low-level capture report does not establish ISP calibration or automatic-control behavior; consult the enclosing command log for applied parameters, exposure control and white-balance mode.","Absent vendor processes do not prove the graph was never initialized by vendor software during boot."]});
+        // App streaming delivers scene pixels over the private socket. Saving a
+        // final scene image is a diagnostic opt-in, not normal scan behavior.
+        let scene_image_saved = !continuous
+            || std::env::var("SHIELDSIGNER_CAMERA_SAVE_IMAGE").as_deref() == Ok("1");
+        if scene_image_saved {
+            let mut out = OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(output)?;
+            out.write_all(&bytes)?;
+        }
+        let report = json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"device":device,"captureKind":if statistics {"isp-statistics"}else{"image"},"payloadSaved":scene_image_saved,"sceneImageSaved":!statistics && scene_image_saved,"statistics":statistics_header,"linksRkaiq":false,"vendorProcessesBeforeCapture":active,"vendorProcessesAfterCapture":vendor_processes(),"requireNoRkaiq":require_no_vendor,"format":format_json(&fmt),"bytes":bytes.len(),"planes":planes,"sequence":sequence,"timestamp":{"seconds":seconds,"microseconds":microseconds},"limitations":["This low-level capture report does not establish ISP calibration or automatic-control behavior; consult the enclosing command log for applied parameters, exposure control and white-balance mode.","Absent vendor processes do not prove the graph was never initialized by vendor software during boot."]});
         let meta = format!("{output}.json");
         let mut file = OpenOptions::new()
             .write(true)

@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "diagnosticImageRequested": false,
+      "imageFileExists": false,
+      "reportedSceneImageSaved": false,
+      "liveFrames": 8,
+      "ownerExitCode": 0,
+      "directory": "/shieldsigner-camera-tests/dev-0.0.33/results/camera-argxph1h"
+    },
+    {
+      "diagnosticImageRequested": true,
+      "imageFileExists": true,
+      "reportedSceneImageSaved": true,
+      "liveFrames": 8,
+      "ownerExitCode": 0,
+      "directory": "/shieldsigner-camera-tests/dev-0.0.33/results/camera-eork6ymj"
+    }
+  ],
+  "binarySha256": "6c5be734cdbedba0fb60b079cdbaa5ccfc140e4c005e99baec0d0201c25a6cee",
+  "version": "0.0.33-dev",
+  "helperSha256": "718dadd707183d0d037cae9f2a3f16b7d5dd9e52e026a121baef3ad5847c6412",
+  "reportSha256": "31c082e40cb0a2a86be6648173855c81941daa5cc6499defccc62ab534c80076",
+  "limitations": [
+    "Only the final scene image is suppressed; calibration, statistics and logs remain diagnostic artifacts.",
+    "Frozen 0.0.32-dev behavior and existing captures are unchanged.",
+    "No optical QR or physical LCD/button qualification is implied."
+  ]
+}

@@ -1023,8 +1023,10 @@ WB gain feedback/publication remains unfinished.
 
 `stream-sc3336` runs the Rust AE/AWB owner continuously and publishes RGB888 to
 one local reader. SIGINT or SIGTERM finishes capture and releases image, raw,
-statistics and parameter queues. It saves the final image and diagnostics on
-exit. It neither launches a vendor process nor installs a boot service.
+statistics and parameter queues. Through frozen 0.0.32-dev it saves the final
+image and diagnostics on exit. Development 0.0.33-dev saves diagnostics but
+omits the scene image unless `SHIELDSIGNER_CAMERA_SAVE_IMAGE=1` is explicitly
+set. It neither launches a vendor process nor installs a boot service.
 
 Build with `mise run camera:rust:arm`. Copy `camera-probe` and
 `firmware/rkaiq-rs/python/shieldsigner_video_stream.py` to the board. The latter
@@ -1550,3 +1552,27 @@ matched all 7,680 original ARM output bytes with zero mismatches.
 warm-board and controlled-clean-reboot checks. The frozen ZIP and its checksum
 are unchanged. A software reboot does not qualify a physical power cycle,
 optical scanning, physical lighting changes or complete LCD/button interaction.
+
+## Development 0.0.33: streamed scene images are not saved by default
+
+Normal `stream-sc3336` sessions deliver pixels over the private Unix socket and
+do not create the final `OUT` scene-image file. `OUT.json` reports
+`sceneImageSaved=false` and `payloadSaved=false`. The managed Python adapter
+uses this default automatically. For a deliberate diagnostic capture only,
+set `SHIELDSIGNER_CAMERA_SAVE_IMAGE=1` in the owner's environment (or before
+launching the Python adapter). The image is then saved as before, with the
+metadata flags true. Finite capture commands still save their requested image.
+
+This does not remove existing images or disable calibration/measurement
+diagnostics: initial parameters, raw statistics, translated AWB records and
+logs are still retained in the private session directory. Frozen 0.0.32-dev
+is unchanged and retains its previous behavior. Development sources include
+`python/image_artifact_hardware_check.py --config CONFIG --report UNIQUE.json`
+which exercises eight live frames in both default and opt-in sessions and
+checks the actual image path, metadata and clean owner shutdown.
+
+[Hardware policy evidence](stream-image-artifact-validation.json) verifies both
+modes with the exact 0.0.33-dev binary: each delivers eight distinct live frames
+and exits cleanly; the default has no image file, and opt-in saves 460,800 bytes.
+The 85 library/five Unix transport tests, no-default-features build and six
+simulated finite-capture scenarios also pass, preserving explicit image capture.

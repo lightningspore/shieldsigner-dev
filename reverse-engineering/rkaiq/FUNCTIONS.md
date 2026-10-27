@@ -228,3 +228,7 @@ checking Rust defaults and native SDK name lookup/grouping/geometry end to end.
 `lsc_frame::State::seeded` and `CameraLsc` now integrate accepted startup and
 transactional live LSC with raw geometry and AE/AWB input checks.
 [Live camera/application and full native packing evidence](ISP.md#transactional-live-lsc-0034-development).
+
+`isp_baynr::apply` reconstructs the complete ISP32 result-type-12 Bayer spatial
+NR conversion, including mask clearing and gain/weight permutations.
+[SDK/kernel layouts and full native/physical CPU evidence](ISP.md#baynr-selected-result-serialization-0034-development).

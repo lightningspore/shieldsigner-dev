@@ -1404,3 +1404,31 @@ simulated-device scenarios pass. Cold reboot with these exact new bytes,
 optical QR/LCD/buttons and a new frozen kit remain open. The
 [current profile audit](profile-module-audit-0.0.34-lsc.json) leaves five blocks:
 BAYNR, BAY3D, YNR, CNR and SHARP.
+
+### BAYNR selected-result serialization (0.0.34 development)
+
+`isp_baynr::apply` reconstructs `convertAiqRawnrToIsp32Params` (ELF `0x2c58e`)
+through result type 12 of the complete ISP32 dispatcher. The 152-byte SDK record
+contains an enable byte/padding absent from the 150-byte packed kernel record
+at `0x27d3`. Digital gains zero/one exchange positions and the three spatial
+weights reverse order. Other fields copy directly, including sixteen sigma
+x/y and gain x/y entries. No quantization or clamping occurs here. Native
+always sets enable-update/config-update bit 36, sets module-enable for any
+nonzero SDK enable byte and clears an already set enable bit for zero.
+Unrelated masks, bytes, SDK padding and input/context storage are preserved.
+
+[Native/physical CPU evidence](isp-baynr-equivalence.json) checks 1,000 cases,
+comparing all 11,145 parameter bytes per case, including random prior masks,
+zero/nonzero enable and explicit gain/weight permutations. Complete native
+dispatcher and converter execute; a valid typed C++ `dynamic_cast` is the
+controlled boundary. Input result and every converter context byte are checked
+unchanged. Host and physical Luckfox Rust outputs match exactly. Pinned SDK
+and kernel declarations independently compile with ARM C size/offset/mask
+assertions. All 102 library/five Unix tests, no-default-features and static ARM
+builds pass.
+
+Run `mise run camera:rust:isp-baynr -- --adb SERIAL --report LOCAL.json` after
+host/ARM fixture builds. Physical CPU replay makes no ISP writes and loads
+no vendor library on the board. Calibration, ISO selection, fixed-register
+quantization and live BAYNR remain separate; the live camera still has this
+module disabled.

@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "parameterBytesComparedPerCase": 11145,
+  "packedBaynrBytes": 150,
+  "sdkResultBytes": 152,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "3b6fae783db4d5c27543daa88b957c2bbb402496d92ab1b496b81b14c97e2dd0",
+  "physicalArmBinarySha256": "9b006181755ff1b66d5c1f54271209ccc5a1f25f668f57de73fee5337f953923",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Full original ISP32 dispatcher result type 12 and complete convertAiqRawnrToIsp32Params. All output parameter bytes compared; original result and all converter context bytes checked unchanged.",
+  "boundaries": [
+    "Controlled valid typed C++ dynamic_cast; original dispatcher/converter instructions execute with no algorithm substitutes.",
+    "Random prior masks/bytes, zero/nonzero enable, SDK padding and explicit digital-gain/spatial-weight permutations covered.",
+    "Register serialization only; calibration, tuning, quantization, runtime and live BAYNR remain separate.",
+    "Physical CPU replay makes no ISP writes and loads no vendor library on the board."
+  ]
+}

@@ -3455,6 +3455,14 @@ fn main() {
                 let (x,y)=shieldsigner_rkaiq::lsc_geometry::gradients(&array("x"),&array("y")).unwrap();
                 println!("{}",x.iter().chain(y.iter()).flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "isp-baynr" => {
+                use shieldsigner_rkaiq::{isp_baynr,isp32::PARAMETER_BYTES};
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                let decode=|key:&str|{let s=v[key].as_str().unwrap();(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>()};
+                let result=decode("result").try_into().unwrap();let mut parameters:[u8;PARAMETER_BYTES]=decode("parameters").try_into().unwrap();
+                isp_baynr::apply(&mut parameters,&result);
+                println!("{}",parameters.iter().map(|v|format!("{v:02x}")).collect::<String>());
+            }
             "isp-lsc" => {
                 use shieldsigner_rkaiq::{isp_lsc,isp32::PARAMETER_BYTES};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

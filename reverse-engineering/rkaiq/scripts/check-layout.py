@@ -297,3 +297,19 @@ _Static_assert(LSC_DATA_TBL_SIZE==289,"LSC SDK plane count differs from kernel")
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'lsc-sdk-layout.o')],check=True)
 print('PASS: SDK LSC result=2442/289 entries per plane; packed kernel=2449/290 entries per plane')
+
+baynr_hw=dpcc_header('rk_aiq_types_abayer2dnr_hw_v23.h').replace('#include "rk_aiq_comm.h"','')
+source=cache/'baynr-sdk-layout.c'
+source.write_text('#include <stdint.h>\n#include <stddef.h>\n'+baynr_hw+'''
+_Static_assert(sizeof(RK_Bayer2dnr_Fix_V23_t)==152,"BAYNR SDK result size");
+_Static_assert(offsetof(RK_Bayer2dnr_Fix_V23_t,bayer_en)==4,"BAYNR SDK enable");
+_Static_assert(offsetof(RK_Bayer2dnr_Fix_V23_t,dgain)==6,"BAYNR SDK digital gains");
+_Static_assert(offsetof(RK_Bayer2dnr_Fix_V23_t,sigma_x)==22,"BAYNR SDK sigma x");
+_Static_assert(offsetof(RK_Bayer2dnr_Fix_V23_t,sigma_y)==54,"BAYNR SDK sigma y");
+_Static_assert(offsetof(RK_Bayer2dnr_Fix_V23_t,weit_d)==86,"BAYNR SDK spatial weights");
+_Static_assert(offsetof(RK_Bayer2dnr_Fix_V23_t,dat_max)==96,"BAYNR SDK data maximum");
+_Static_assert(offsetof(RK_Bayer2dnr_Fix_V23_t,gain_x)==104,"BAYNR SDK gain x");
+_Static_assert(offsetof(RK_Bayer2dnr_Fix_V23_t,gain_y)==120,"BAYNR SDK gain y");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'baynr-sdk-layout.o')],check=True)
+print('PASS: BAYNR SDK=152/kernel=150, enable/dgain/sigma/weight/gain offsets and module mask verified')

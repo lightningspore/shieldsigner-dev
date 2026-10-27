@@ -202,3 +202,14 @@ _Static_assert(offsetof(struct isp3x_lsc_cfg,gr_data_tbl)==581,"LSC second plane
 _Static_assert(offsetof(struct isp3x_lsc_cfg,x_grad_tbl)==2321,"LSC gradient offset");
 _Static_assert(ISP3X_LSC_DATA_TBL_SIZE==290,"LSC kernel plane count");
 _Static_assert(ISP32_MODULE_LSC==(1ULL<<4),"LSC module bit");
+
+_Static_assert(sizeof(struct isp32_baynr_cfg)==150,"BAYNR packed size");
+_Static_assert(offsetof(struct isp32_isp_params_cfg,others.baynr_cfg)==0x27d3,"BAYNR packed offset");
+_Static_assert(ISP32_MODULE_BAYNR==(1ULL<<36),"BAYNR module mask");
+_Static_assert(offsetof(struct isp32_baynr_cfg,dgain1)==4,"BAYNR swapped dgain1");
+_Static_assert(offsetof(struct isp32_baynr_cfg,dgain0)==6,"BAYNR swapped dgain0");
+_Static_assert(offsetof(struct isp32_baynr_cfg,sigma_x)==20,"BAYNR sigma table");
+_Static_assert(offsetof(struct isp32_baynr_cfg,weit_d2)==84,"BAYNR reversed spatial weights");
+_Static_assert(offsetof(struct isp32_baynr_cfg,dat_max)==94,"BAYNR data maximum");
+_Static_assert(offsetof(struct isp32_baynr_cfg,gain_x)==102,"BAYNR gain x table");
+_Static_assert(offsetof(struct isp32_baynr_cfg,gain_y)==118,"BAYNR gain y table");

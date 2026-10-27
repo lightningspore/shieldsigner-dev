@@ -367,3 +367,4 @@ pub mod lsc_damping;
 pub mod lsc_calibration;
 #[cfg(feature = "diagnostics")]
 pub mod lsc_frame;
+pub mod isp_baynr;

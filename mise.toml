@@ -668,3 +668,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:lsc-result-handoff"]
 description = "Check native LSC result handoff mirror/flip behavior with unique grid entries"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/lsc-result-handoff.py"
+
+[tasks."camera:rust:isp-baynr"]
+description = "Compare Bayer spatial NR result packing with the complete native ISP32 dispatcher"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-baynr.py"

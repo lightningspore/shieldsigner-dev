@@ -1047,3 +1047,41 @@ aggregate without inventing per-light region-3 gains. A future prepared-data
 adapter must explicitly guard mode-1/2 Exclusion until its boundary-crossing
 native behavior has a deliberate, documented resolution. Full IQ loading,
 preprocessing/controller composition and live AWB remain unfinished.
+
+## Prepared-light adapter
+
+`awb_gain_controller::State::process_prepared` accepts the bounded
+`awb_preparation::LightRecord` slice directly, alongside per-light calibration,
+priors, frame aggregates and controller settings. It loads Normal, Big and
+extra-region count/gain fields from each record's actual `0x34`-byte blocks.
+The explicit arrays in the calibration-bearing `Light` arguments are ignored.
+The existing value API remains available for isolated numerical comparisons.
+
+After region selection, the prepared adapter returns
+`InvalidInput::UnsupportedRegion` for Exclusion with mode >= 1, before committing
+any controller or per-light output state. It neither reads adjacent record bytes
+nor fabricates a fourth measurement. INITIAL-mode Exclusion continues through
+the verified aggregate bypass. Incomplete measurements bypass region selection
+and retain the normal fallback behavior, including when the prior region was
+Exclusion in mode 1 or 2. All processing is staged, so errors leave caller state
+and output unchanged.
+
+The prepared-record comparison corpus poisons the ignored explicit count/gain
+arrays with `u32::MAX` and NaNs, ensuring successful output actually comes from
+the record adapter. It compares whole native controller outputs on host and ARM:
+192 ordinary cases, 192 directed INITIAL-mode Exclusion cases, and 64 enabled
+single-color cases. Each corpus also checks two explicit mode-1/2 Exclusion
+rejections with unchanged state/output. Those rejection cases intentionally
+have no native equivalence claim: native's unchecked cross-record read is the
+reason for the checked API boundary. The records are fixture-encoded; this is
+not yet a native-preprocessor-to-controller whole-frame comparison.
+
+Run `camera:rust:awb-prepared-controller` for the first two corpora; the enabled
+suite uses `awb-gain-controller.py --prepared --single --arm` after building the
+host and ARM fixtures. Reports:
+[ordinary](awb-prepared-controller-equivalence.json),
+[INITIAL Exclusion](awb-prepared-controller-initial-equivalence.json),
+[enabled single-color](awb-prepared-controller-single-color-equivalence.json).
+Full IQ initialization, shared frame-state construction, outer lifecycle and
+live AWB integration remain unfinished; the AUTO/ALWAYS Exclusion boundary is
+an explicit unresolved requirement rather than a completed vendor replacement.

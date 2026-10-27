@@ -73,6 +73,7 @@ pub mod statistics;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum InvalidInput {
+    UnsupportedRegion,
     Length,
     BooleanValue,
     NonFinite,

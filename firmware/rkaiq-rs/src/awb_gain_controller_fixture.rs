@@ -269,9 +269,42 @@ pub fn run(v: &Value) -> Value {
         exclusion_gain: [2., 1., 1., 3.],
         divisors: [10, 20],
     };
-    state
-        .process(&frame, &lights, &mut results, &settings)
-        .unwrap();
+    let before = state.clone();
+    let before_results = results.clone();
+    let result = if s["prepared"].as_bool().unwrap_or(false) {
+        let records: Vec<_> = lights
+            .iter()
+            .map(|light| {
+                let mut bytes = [0u8; crate::awb_preparation::LIGHT_BYTES];
+                for region in 0..3 {
+                    let at = region * crate::awb_preparation::REGION_BYTES;
+                    bytes[at..at + 4].copy_from_slice(&light.counts[region].to_le_bytes());
+                    for channel in 0..4 {
+                        let offset = at + 4 + channel * 4;
+                        bytes[offset..offset + 4]
+                            .copy_from_slice(&light.gains[region][channel].to_le_bytes());
+                    }
+                }
+                crate::awb_preparation::LightRecord(bytes)
+            })
+            .collect();
+        // Poison the unused explicit fields: the adapter must read records.
+        let mut calibration = lights.clone();
+        for light in &mut calibration {
+            light.counts = [u32::MAX; 4];
+            light.gains = [[f32::NAN; 4]; 4];
+        }
+        state.process_prepared(&frame, &records, &calibration, &mut results, &settings)
+    } else {
+        state.process(&frame, &lights, &mut results, &settings)
+    };
+    if s["expect_prepared_error"].as_bool().unwrap_or(false) {
+        assert_eq!(result, Err(crate::InvalidInput::UnsupportedRegion));
+        assert_eq!(state, before);
+        assert_eq!(results, before_results);
+        return json!({"error":"UnsupportedRegion", "unchanged":true});
+    }
+    result.unwrap();
     let lights:Vec<_>=results.iter().map(|v|json!({"probability":([v.probability.total,v.probability.distance,v.probability.luma,v.probability.prior,v.probability.white_points].map(f32::to_bits)),"statistic":v.gain.statistic.map(f32::to_bits),"spatial":v.gain.spatial.map(f32::to_bits),"spatial_weight":v.gain.spatial_weight.to_bits(),"extra_weight":v.gain.extra_weight.to_bits()})).collect();
     let high: Vec<_> = state
         .high_history

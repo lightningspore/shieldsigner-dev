@@ -352,6 +352,7 @@ def main():
     assert runtime_sha == manifest["gccRuntime"]["memberSha256"]
     math_sha = hashlib.sha256(color.MATH.read_bytes()).hexdigest()
     assert math_sha == manifest["uclibcRuntime"]["memberSha256"]
+    prepared = "--prepared" in sys.argv
     single = "--single" in sys.argv
     initial_exclusion = "--initial-exclusion" in sys.argv
     assert not (single and initial_exclusion)
@@ -535,6 +536,9 @@ def main():
             )
             for light in s["lights"]:
                 light["counts"][0:2] = [0, 0]
+        if prepared and not s["complete"]:
+            s["previous_region"] = 3
+        s["prepared"] = prepared
         v["controller"] = s
         cases.append(v)
         expected.append(arm.run(v))
@@ -564,6 +568,23 @@ def main():
         assert any(k.startswith("mode2:") for k in single_coverage)
         assert any(":validFalse:" in k for k in single_coverage)
         assert any(":validTrue:" in k for k in single_coverage)
+    native_cases = len(cases)
+    if prepared:
+        for mode in (1, 2):
+            v = json.loads(json.dumps(cases[0]))
+            s = v["controller"]
+            s.update(
+                mode=mode,
+                complete=True,
+                exclusion_count=5,
+                stabilization=False,
+                xy_target=0,
+                expect_prepared_error=True,
+            )
+            for light in s["lights"]:
+                light["counts"][0:2] = [0, 0]
+            cases.append(v)
+            expected.append(dict(error="UnsupportedRegion", unchanged=True))
     inputs = "".join(
         "awb-gain-controller " + json.dumps(v, separators=(",", ":")) + "\n"
         for v in cases
@@ -611,6 +632,9 @@ def main():
         nativeRuntimeFunctions=sorted(arm.runtime_functions),
         modeledStringCalls=arm.standard_calls,
         cases=len(cases),
+        nativeCases=native_cases,
+        preparedAdapter=prepared,
+        atomicRejectionCases=2 if prepared else 0,
         mismatches=0,
         arm=replay,
         coverage=coverage,
@@ -631,11 +655,23 @@ def main():
     (
         ROOT
         / (
-            "reverse-engineering/rkaiq/awb-gain-controller-initial-exclusion-equivalence.json"
-            if initial_exclusion
-            else "reverse-engineering/rkaiq/awb-gain-controller-single-color-equivalence.json"
-            if single
-            else "reverse-engineering/rkaiq/awb-gain-controller-equivalence.json"
+            (
+                "reverse-engineering/rkaiq/awb-prepared-controller-initial-equivalence.json"
+                if initial_exclusion
+                else (
+                    "reverse-engineering/rkaiq/awb-prepared-controller-single-color-equivalence.json"
+                    if single
+                    else "reverse-engineering/rkaiq/awb-prepared-controller-equivalence.json"
+                )
+            )
+            if prepared
+            else (
+                "reverse-engineering/rkaiq/awb-gain-controller-initial-exclusion-equivalence.json"
+                if initial_exclusion
+                else "reverse-engineering/rkaiq/awb-gain-controller-single-color-equivalence.json"
+                if single
+                else "reverse-engineering/rkaiq/awb-gain-controller-equivalence.json"
+            )
         )
     ).write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))

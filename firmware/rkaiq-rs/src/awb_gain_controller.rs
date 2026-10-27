@@ -8,6 +8,7 @@ use crate::{
     awb_xy_selection::{self, Region},
     InvalidInput,
 };
+#[derive(Clone, Copy)]
 pub struct Light<'a> {
     pub counts: [u32; 4],
     pub gains: [Gains; 4],
@@ -63,6 +64,46 @@ impl<const CAP: usize> State<CAP> {
         output: &mut [LightResult],
         settings: &Settings<'_>,
     ) -> Result<(), InvalidInput> {
+        self.process_inner(frame, lights, output, settings, false)
+    }
+
+    /// Consume the three bounded measurement blocks in prepared native records.
+    /// Calibration/prior fields come from `lights`; its explicit count/gain
+    /// arrays are ignored. Exclusion in INITIAL mode uses `frame`'s aggregate.
+    /// AUTO/ALWAYS Exclusion is rejected atomically: native reads past records.
+    pub fn process_prepared(
+        &mut self,
+        frame: &Frame,
+        records: &[crate::awb_preparation::LightRecord],
+        lights: &[Light<'_>],
+        output: &mut [LightResult],
+        settings: &Settings<'_>,
+    ) -> Result<(), InvalidInput> {
+        let n = lights.len();
+        if n < 4 || n > 255 || records.len() != n || output.len() != n {
+            return Err(InvalidInput::Length);
+        }
+        let mut adapted = [lights[0]; 255];
+        for i in 0..n {
+            adapted[i] = lights[i];
+            adapted[i].counts = [0; 4];
+            adapted[i].gains = [[0.; 4]; 4];
+            for region in 0..3 {
+                adapted[i].counts[region] = records[i].count(region).unwrap();
+                adapted[i].gains[region] = records[i].gain(region).unwrap();
+            }
+        }
+        self.process_inner(frame, &adapted[..n], output, settings, true)
+    }
+
+    fn process_inner(
+        &mut self,
+        frame: &Frame,
+        lights: &[Light<'_>],
+        output: &mut [LightResult],
+        settings: &Settings<'_>,
+        prepared: bool,
+    ) -> Result<(), InvalidInput> {
         let n = lights.len();
         if n < 4 || n > 255 || output.len() != n {
             return Err(InvalidInput::Length);
@@ -111,6 +152,9 @@ impl<const CAP: usize> State<CAP> {
                 &mut probabilities[..n],
                 settings.region,
             )?;
+            if prepared && next.region.selected == Region::Exclusion && settings.mode >= 1 {
+                return Err(InvalidInput::UnsupportedRegion);
+            }
             next.density = ((next.region.retained as f32 / frame.divisors[0] as f32)
                 / frame.divisors[1] as f32)
                 * 100000.;

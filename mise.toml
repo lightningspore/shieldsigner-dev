@@ -432,3 +432,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:awb-gain-controller-initial-exclusion"]
 description = "Compare INITIAL-mode Exclusion bypass with the complete native AWB gain controller"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-gain-controller.py --initial-exclusion --arm"]
+
+[tasks."camera:rust:awb-prepared-controller"]
+description = "Verify prepared-light adapter against whole native gain controller on host and ARM"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-gain-controller.py --prepared --arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-gain-controller.py --prepared --initial-exclusion --arm"]

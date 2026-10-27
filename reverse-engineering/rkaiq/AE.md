@@ -1111,3 +1111,38 @@ and damping outside zero through one.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-policy.py --arm
 ```
+
+## Profile transition-delay binding
+
+`ae_delay_calibration::Calibration` reads `CommCtrl.AecDelay` and binds its
+black/white values to the negative/positive transition counters used by
+`AecCheckDelay`. These are controller transition delays, **not** sensor
+register-application latency or the sensor's separate time/gain/DCG delays.
+
+The pinned SDK [`aec_head.h`](https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/aec_head.h)
+defines `DELAY_TYPE_FRAME=0` and `DELAY_TYPE_TIME=1`. Its hash is now pinned in
+`artifacts.json`. Frame mode copies both bytes directly. Time mode computes the
+runtime period as `((frameLength * lineLength) / pixelClockMHz) / 1_000_000`,
+then converts each byte using `(value / 30) / period + 0.5` before truncation.
+The final native byte store wraps values above 255; Rust preserves this for
+finite, bounded inputs instead of silently saturating them. Extreme values
+outside the checked signed-conversion domain are rejected.
+
+120 comparisons execute complete native `AecUpdateConfig` through normal return,
+checking both delay bytes and confirming the selected timing values. Cases cover
+both modes, four frame lengths, three clock/line geometries, zero and asymmetric
+delays, and values that wrap at high frame rates.
+[Delay calibration comparison](ae-delay-calibration-equivalence.json).
+The inherited configuration oracle explicitly supplies runtime/configuration
+inputs and models allocation, comparison, division, rounding and diagnostics;
+it does not establish full private-context or calibration-loader equivalence.
+
+The actual profile uses frame mode with black/white delay two. Its twelve
+persistent profile-policy sequences now pass those counts into the controller
+alongside the previously bound tolerances and damping coefficients. Time mode
+is qualified separately at the configuration binding level; the persistent
+pipeline corpus currently exercises the profile's frame mode only.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-delay-calibration.py --arm
+```

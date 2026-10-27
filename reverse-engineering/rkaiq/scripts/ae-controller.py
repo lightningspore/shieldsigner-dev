@@ -44,6 +44,8 @@ class Original(Base):
    linear=v['policy_scene']['ae_calib']['LinearAeCtrl'];speed=v['policy_scene']['ae_calib']['CommCtrl']['AecSpeed']
    for o,x in [(0x10,linear['ToleranceIn']),(0x14,linear['ToleranceOut']),(0x2404,speed['DampOver']),(0x2408,speed['DampUnder']),(0x240c,speed['DampDark2Bright']),(0x2410,speed['DampBright2Dark'])]:struct.pack_into('<f',c,o,x)
    c[0x23ce]=int(v['alternate'])
+   if v.get('bind_delay',False):
+    d=v['policy_scene']['ae_calib']['CommCtrl']['AecDelay'];assert d['DelayType']=='DELAY_TYPE_FRAME';c[0x40d0]=d['BlackDelay'];c[0x40d1]=d['WhiteDelay']
   return c
  def run(self,v):
   c=self.setup(v)

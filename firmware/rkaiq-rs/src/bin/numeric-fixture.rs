@@ -384,6 +384,18 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-delay-calibration" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let c = ae_delay_calibration::Calibration::from_scene(&v["scene"]).unwrap();
+                let n = c
+                    .counts(
+                        v["frame"].as_f64().unwrap() as f32,
+                        v["line"].as_f64().unwrap() as f32,
+                        v["clock"].as_f64().unwrap() as f32,
+                    )
+                    .unwrap();
+                println!("{},{}", n[0], n[1]);
+            }
             "ae-pipeline-sequence" => println!(
                 "{}",
                 ae_pipeline_fixture::sequence(&serde_json::from_str(a[1]).unwrap())

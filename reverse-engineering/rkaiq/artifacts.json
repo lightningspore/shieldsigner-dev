@@ -124,6 +124,11 @@
       "name": "rk_aiq_types_awb_stat_v2xx.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/awb/rk_aiq_types_awb_stat_v2xx.h",
       "sha256": "541707d064f6b5b788b7172b07a2f531674453aea8b938eb52ed4c1e003c30e4"
+    },
+    {
+      "name": "aec_head.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/aec_head.h",
+      "sha256": "06c18174d9cad642660ad867a3c21103c38b1dd329e2338e51bf5610941f93fa"
     }
   ],
   "kernelHeaders": [

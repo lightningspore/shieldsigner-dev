@@ -185,6 +185,14 @@ fn step(
             damping_over: 0.4,
         }
     };
+    let delays = if v["bind_delay"].as_bool().unwrap_or(false) {
+        ae_delay_calibration::Calibration::from_scene(&v["policy_scene"])
+            .unwrap()
+            .counts(1360., 2800., 114.24)
+            .unwrap()
+    } else {
+        [3, 2]
+    };
     let initial_error_history = state.frame.error_history;
     let out = ae_pipeline::linear(
         &mut state,
@@ -214,8 +222,8 @@ fn step(
             fps: f("fps"),
             delay_enabled: b("enabled"),
             same_mode: b("same_mode"),
-            negative_delay: 3,
-            positive_delay: 2,
+            negative_delay: delays[0],
+            positive_delay: delays[1],
         },
         ae_route::Limits {
             minimum_time: 0.00005,

@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 160,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "native standard linear AecClmExecute prefix through histogram solver, deadband, fixed directional damping, saturation cap and exposure clamp",
+  "limitations": [
+    "Stops at ELF 0xa4446 before environment-history adjustment; not complete AecClmExecute.",
+    "Dynamic damping, alternate tolerance/policy modes, environment corrections, delay/route dispatch and live scheduling remain separate.",
+    "Histogram division/logging boundaries inherited from solver harness."
+  ]
+}

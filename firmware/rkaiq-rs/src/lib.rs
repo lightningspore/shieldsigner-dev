@@ -4,6 +4,7 @@
 //! Function behavior is checked against original ARM machine code under Unicorn.
 #![no_std]
 pub mod ae;
+pub mod ae_brightness;
 pub mod ae_configuration;
 pub mod ae_damping;
 pub mod ae_decision;

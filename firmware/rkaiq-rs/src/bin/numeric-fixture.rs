@@ -380,6 +380,38 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-brightness" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let f = |k: &str| v[k].as_f64().unwrap() as f32;
+                let h = v["histogram"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_u64().unwrap() as u32)
+                    .collect::<Vec<_>>();
+                let o = ae_brightness::standard(
+                    &h,
+                    ae_decision::Input {
+                        target: f("target"),
+                        measured: f("measured"),
+                        current_exposure: f("exposure"),
+                        tolerance_percent: f("tolerance"),
+                        minimum_exposure: f("minimum"),
+                        maximum_exposure: f("maximum"),
+                        saturated: v["saturated"].as_bool().unwrap(),
+                    },
+                    f("under"),
+                    f("over"),
+                    f("fps"),
+                )
+                .unwrap();
+                println!(
+                    "{:08x},{:08x},{}",
+                    o.exposure.to_bits(),
+                    o.relative_error.to_bits(),
+                    o.saturated as u8
+                );
+            }
             "ae-delay" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let f = |k: &str| v[k].as_f64().unwrap() as f32;

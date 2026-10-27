@@ -507,3 +507,40 @@ register-to-frame delay. Its policy flags, error history and frame IDs still
 need to be supplied by the surrounding controller. HDR, full damping/brightness
 integration, frame/parameter/exposure history and live automatic writes remain
 unfinished.
+
+
+## Histogram-to-damped-exposure prefix
+
+`ae_brightness::standard` now joins the recovered histogram solver to the
+standard linear prefix of `AecClmExecute` (ELF 0xa40c8). It computes signed
+relative brightness error, applies the selected tolerance deadband, chooses
+under/over-target fixed damping, applies the native saturation/FPS damping cap
+on the over-target path, blends old exposure with the solver request and
+clamps to aggregate exposure bounds.
+
+The blend follows the actual ARM instructions: first round
+`damping * oldExposure`, then use a fused multiply-add for
+`(1 - damping) * requestedExposure + roundedOldTerm`. A generic unfused blend
+would change float bits. Native saturation limits the damping coefficient to
+`0.05 * min(fps / 30, 1)` on the applicable branch.
+
+The native reference executes the real `AecClmExecute` prefix and its actual
+`ClmExecute` call, stopping at ELF 0xa4446 immediately before environment
+history processing. It compares candidate exposure, signed relative error and
+saturation state in 160 cases. Inputs cover histogram shapes, zero/dark/bright
+measurements, tolerance boundaries, fixed damping extremes and multiple frame
+rates. Host and ARM replay pass.
+[Equivalence report](ae-brightness-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-brightness.py --arm
+```
+
+This API covers standard histogram mode with environment compensation and
+dynamic damping disabled. Alternate policy/tolerance modes, environment-history
+correction, transition holding, route dispatch and sensor scheduling are not
+included in this prefix. The output must not yet be treated as a complete live
+AE command. The separately recovered dynamic damping and delay routines remain
+to be integrated with their native context/history population.

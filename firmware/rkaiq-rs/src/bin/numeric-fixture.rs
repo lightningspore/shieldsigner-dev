@@ -258,6 +258,13 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-lights-parse" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                println!("{}",match shieldsigner_rkaiq::awb_calibration::Lights::from_value(&v){
+                    Ok(c)=>serde_json::json!({"first":c.first_frame,"lights":c.entries.iter().map(|l|serde_json::json!({"name":l.name,"kind":l.kind,"reference":l.reference_gain.map(f32::to_bits),"uv":l.uv.map(|a|a.map(f32::to_bits)),"xy":l.xy.map(|a|a.map(f32::to_bits)),"yuv_knots":l.yuv_knots.map(f32::to_bits),"yuv_thresholds":l.yuv_thresholds.map(f32::to_bits),"yuv_line":l.yuv_line.map(f32::to_bits),"yuv_distance":l.yuv_distance.to_bits()})).collect::<Vec<_>>()}),
+                    Err(e)=>serde_json::json!({"error":e}),
+                });
+            }
             "awb-sgc-parse" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
                 println!("{}", match shieldsigner_rkaiq::awb_calibration::SingleColor::from_value(&v) {
@@ -530,7 +537,7 @@ fn main() {
                 let gains = |v: &serde_json::Value| -> [f32; 4] {
                     core::array::from_fn(|i| v[i].as_f64().unwrap() as f32)
                 };
-                let lights: Vec<_> = v["lights"]
+                let mut lights: Vec<_> = v["lights"]
                     .as_array()
                     .unwrap()
                     .iter()
@@ -548,6 +555,15 @@ fn main() {
                         probability: l["probability"].as_f64().unwrap() as f32,
                     })
                     .collect();
+                let loaded=v.get("light_iq").map(shieldsigner_rkaiq::awb_calibration::Lights::from_value).transpose().unwrap();
+                if let Some(iq)=&loaded {
+                    assert_eq!(lights.len(),iq.entries.len());
+                    for (light,cal) in lights.iter_mut().zip(&iq.entries){
+                        let c=cal.controller_light(v["group"].as_u64().unwrap() as usize, light.extra_enabled).unwrap().calibration;
+                        light.low_threshold=c.low_threshold;light.high_threshold=c.high_threshold;
+                        light.low_gain=c.low_gain;light.high_gain=c.high_gain;light.spatial_percentage=c.spatial_percentage;
+                    }
+                }
                 let mut output = vec![
                     LightResult {
                         statistic: [0.; 4],
@@ -1194,7 +1210,7 @@ fn main() {
                             .collect()
                     })
                     .collect();
-                let lights: Vec<_> = source
+                let mut lights: Vec<_> = source
                     .iter()
                     .enumerate()
                     .map(|(i, l)| Light {
@@ -1212,6 +1228,11 @@ fn main() {
                         },
                     })
                     .collect();
+                let loaded=v.get("light_iq").map(shieldsigner_rkaiq::awb_calibration::Lights::from_value).transpose().unwrap();
+                if let Some(iq)=&loaded{
+                    assert_eq!(lights.len(),iq.entries.len());
+                    for (light,cal) in lights.iter_mut().zip(&iq.entries){*light=cal.probability(light.statistic_gain,light.white_points);}
+                }
                 let mut output: Vec<_> = source
                     .iter()
                     .map(|l| Probability {

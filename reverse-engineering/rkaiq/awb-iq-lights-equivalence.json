@@ -1,0 +1,18 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "runtimeSha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+  "lightCount": 7,
+  "probabilityCases": 128,
+  "highGainCases": 128,
+  "metadataChecks": 1,
+  "malformedRejections": 10,
+  "mismatches": 0,
+  "arm": true,
+  "scope": "JSON-loaded seven-light references/priors and spatial calibration used in original probability/weighted-gain and complete high-gain call-tree comparisons.",
+  "limitations": [
+    "Shared global settings, statistics and extra-region flag remain explicit inputs; full AWB initialization is not replayed.",
+    "Detection geometry is checked as parsed metadata, not yet applied to hardware reconfiguration.",
+    "Finite synthetic statistics; no live automatic-white-balance qualification."
+  ]
+}

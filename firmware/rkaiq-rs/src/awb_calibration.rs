@@ -183,3 +183,170 @@ impl SingleColor {
         }
     }
 }
+
+/// An owned prior curve; numerical adapters borrow its slices.
+pub struct Prior {
+    pub knots: Vec<f32>,
+    pub weights: Vec<f32>,
+}
+pub struct Illumination {
+    pub name: String,
+    pub kind: i32,
+    pub reference_gain: [f32; 4],
+    pub spatial_percentages: [u8; 16],
+    /// JSON order [low, high]; native strategy stores [high, low].
+    pub day_thresholds: [u32; 2],
+    pub low_gain: [f32; 4],
+    pub high_gain: [f32; 4],
+    pub prior: Prior,
+    pub uv: [[f32; 4]; 2],
+    pub xy: [[f32; 4]; 2],
+    pub yuv_knots: [f32; 6],
+    pub yuv_thresholds: [f32; 6],
+    pub yuv_line: [f32; 6],
+    pub yuv_distance: f32,
+}
+pub struct Lights {
+    pub entries: Vec<Illumination>,
+    pub first_frame: usize,
+}
+impl Lights {
+    /// Parse one explicitly selected wb_v32 scene's light table and first-frame
+    /// name. Other autoPara/autoExtPara settings are not defaulted or loaded.
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        let auto = at(wb, "/autoPara")?;
+        let values = at(auto, "/lightSources")?
+            .as_array()
+            .ok_or_else(|| format!("Expected lightSources array"))?;
+        let count = integer(auto, "/lightSources_len", 1, 255)? as usize;
+        if count != values.len() {
+            return Err(format!("Light count mismatch"));
+        }
+        let mut entries: Vec<Illumination> = Vec::new();
+        for v in values {
+            let name = at(v, "/name")?
+                .as_str()
+                .ok_or_else(|| format!("Expected light name"))?;
+            if name.is_empty()
+                || name.as_bytes().contains(&0)
+                || name.len() > 19
+                || entries.iter().any(|l| l.name == name)
+            {
+                return Err(format!("Invalid/duplicate light name"));
+            }
+            let kind = match at(v, "/doorType")?.as_str() {
+                Some("CALIB_AWB_DOOR_TYPE_INDOOR") => 1,
+                Some("CALIB_AWB_DOOR_TYPE_AMBIGUITY") => 2,
+                Some("CALIB_AWB_DOOR_TYPE_OUTDOOR") => 3,
+                _ => return Err(format!("Unknown doorType")),
+            };
+            let mut percentages = [0u8; 16];
+            if at(v, "/staWeight")?.as_array().map(|a| a.len()) != Some(16) {
+                return Err(format!("Expected 16 spatial weights"));
+            }
+            for (i, p) in percentages.iter_mut().enumerate() {
+                *p = integer(v, &format!("/staWeight/{i}"), 0, 255)? as u8;
+            }
+            if at(v, "/dayGainLvThSet")?.as_array().map(|a| a.len()) != Some(2) {
+                return Err(format!("Expected two daylight thresholds"));
+            }
+            let day_thresholds = [
+                integer(v, "/dayGainLvThSet/0", 0, u32::MAX as i64)? as u32,
+                integer(v, "/dayGainLvThSet/1", 0, u32::MAX as i64)? as u32,
+            ];
+            let weight = at(v, "/weight")?;
+            let count = integer(weight, "/lumaValue_len", 1, i32::MAX as i64)? as usize;
+            if integer(weight, "/weight_len", 1, i32::MAX as i64)? as usize != count {
+                return Err(format!("Prior length mismatch"));
+            }
+            let mut knots = Vec::new();
+            let mut weights = Vec::new();
+            for (key, out) in [("lumaValue", &mut knots), ("weight", &mut weights)] {
+                if at(weight, &format!("/{key}"))?.as_array().map(|a| a.len()) != Some(count) {
+                    return Err(format!("Prior array length mismatch"));
+                }
+                for i in 0..count {
+                    out.push(number(weight, &format!("/{key}/{i}"))?);
+                }
+            }
+            if knots.windows(2).any(|x| x[0] >= x[1]) {
+                return Err(format!("Prior knots must increase"));
+            }
+            entries.push(Illumination {
+                name: name.to_string(),
+                kind,
+                reference_gain: array(v, "/standardGainValue")?,
+                spatial_percentages: percentages,
+                day_thresholds,
+                low_gain: array(v, "/defaultDayGainLow")?,
+                high_gain: array(v, "/defaultDayGainHigh")?,
+                prior: Prior { knots, weights },
+                uv: [array(v, "/uvRegion/u")?, array(v, "/uvRegion/v")?],
+                xy: [array(v, "/xyRegion/normal")?, array(v, "/xyRegion/big")?],
+                yuv_knots: array(v, "/rtYuvRegion/thcurve_u")?,
+                yuv_thresholds: array(v, "/rtYuvRegion/thcure_th")?,
+                yuv_line: array(v, "/rtYuvRegion/lineVector")?,
+                yuv_distance: number(v, "/rtYuvRegion/disP1P2")?,
+            });
+        }
+        let first = at(wb, "/autoExtPara/lightSourceForFirstFrame")?
+            .as_str()
+            .ok_or_else(|| format!("Expected first-frame light name"))?;
+        let first_frame = entries
+            .iter()
+            .position(|l| l.name == first)
+            .ok_or_else(|| format!("First-frame light not found"))?;
+        Ok(Self {
+            entries,
+            first_frame,
+        })
+    }
+}
+impl Illumination {
+    pub fn probability(
+        &self,
+        statistic_gain: [f32; 4],
+        white_points: u32,
+    ) -> crate::awb_probability::Light<'_> {
+        crate::awb_probability::Light {
+            reference_gain: self.reference_gain,
+            statistic_gain,
+            kind: self.kind,
+            white_points,
+            prior: crate::awb_probability::Curve {
+                knots: &self.prior.knots,
+                weights: &self.prior.weights,
+            },
+        }
+    }
+    /// Runtime selects the environment index and extra-region flag; these are
+    /// deliberately not inferred from static JSON or its detection geometry.
+    pub fn controller_light(
+        &self,
+        environment: usize,
+        extra_enabled: bool,
+    ) -> Result<crate::awb_gain_controller::Light<'_>, crate::InvalidInput> {
+        let percentage = *self
+            .spatial_percentages
+            .get(environment)
+            .ok_or(crate::InvalidInput::Length)?;
+        Ok(crate::awb_gain_controller::Light {
+            counts: [0; 4],
+            gains: [[0.; 4]; 4],
+            probability: self.probability([0.; 4], 0),
+            calibration: crate::awb_high_gain::Light {
+                selected_gain: [0.; 4],
+                selected_count: 0,
+                extra_gain: [0.; 4],
+                extra_count: 0,
+                extra_enabled,
+                low_threshold: self.day_thresholds[0],
+                high_threshold: self.day_thresholds[1],
+                low_gain: self.low_gain,
+                high_gain: self.high_gain,
+                spatial_percentage: percentage,
+                probability: 0.,
+            },
+        })
+    }
+}

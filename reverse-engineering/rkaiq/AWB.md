@@ -1301,3 +1301,52 @@ and the raw-frame/session composition still need implementation. It does not
 claim to replay the original IQ database parser or `AwbInitV32` in full, nor to
 qualify live automatic white balance. The generic 2,048-case confidence/CCT
 regression remains required after extending the fixture to use loaded settings.
+
+## Loading the seven-light calibration
+
+`awb_calibration::Lights::from_value` owns the explicitly selected `wb_v32`
+scene's `autoPara.lightSources` table and resolves
+`autoExtPara.lightSourceForFirstFrame` by name. All seven SC3336 lights are
+loaded, including indoor/ambiguous/outdoor kind, unmodified four-channel
+reference gain, sixteen spatial percentages, daylight thresholds and low/high
+gains, prior brightness/weight curves, and UV/XY/rotated-YUV detection geometry.
+The latter is retained for future hardware configuration rather than applied
+by this loader.
+
+Ghidra's `UpdateAwbCalibV2Para` (ELF `0xc1e18`) establishes the mapping into
+native strategy records: reference gain `raw +0x18 -> strategy +0x80`, spatial
+bytes `+0xb4 -> +0x68`, low threshold `+0xc4 -> +0x7c`, high threshold
+`+0xc8 -> +0x78`, low gain `+0xcc -> +0xa0`, and high gain
+`+0xdc -> +0x90`. The internal threshold order is therefore reversed relative
+to JSON's `[low, high]`; the gain meaning is not reversed. The Rust adapter
+names both endpoints explicitly and copies reference/gain words without
+inventing normalization. Door kinds use the pinned SDK enum values 1/2/3.
+
+`Illumination::probability` borrows the owned prior curve and reference data.
+`controller_light` constructs the calibration-bearing input for the prepared
+controller. Its count/gain placeholders are replaced by prepared measurements.
+Environment/spatial-weight index and extra-region-enable remain explicit runtime
+inputs, with index bounds checked; neither is guessed from static geometry.
+
+The checked loader rejects inconsistent counts/prior lengths, missing or
+unsupported enums, duplicate/invalid/overlong light names, absent first-frame
+name, malformed fixed geometry, nonfinite/out-of-f32 values, noninteger/out-of-
+range byte/u32 fields and nonincreasing prior knots. It preserves all sixteen
+weight bytes and does not clamp their percentage values to 100. It chooses no
+scene and defaults no missing calibration field.
+
+`mise run camera:rust:awb-iq-lights` compares **128 probability/filter/weighted-
+gain calls and 128 complete high-gain calls** using the actual seven-light IQ
+on host and ARM. Cases cover all sixteen spatial indices, FAST/normal behavior,
+daylight threshold boundaries, selected/extra-region mixes, varied counts and
+prior samples. Manual reference/kind/prior and spatial-calibration fixture
+values are poisoned to prove loaded settings are authoritative. Separate checks
+compare parsed names/kinds/reference and every detection-geometry word, and
+reject ten malformed scene objects. Binary/IQ/GCC hashes are verified.
+[Seven-light comparison report](awb-iq-lights-equivalence.json).
+
+This closes light-table loading, not full initialization. Shared global
+preprocessing/controller settings, line derivation, runtime extra-range policy,
+raw preprocessing-to-session composition, hardware reconfiguration/publication
+and live qualification remain unfinished. The native IQ parser and complete
+`AwbInitV32` have not been replayed by this test.

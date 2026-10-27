@@ -50,6 +50,36 @@ pub struct Queue {
     pub active: bool,
 }
 impl Queue {
+    /// Native get_buffer: prefer a free requested slot, otherwise scan from 0.
+    /// Acquisition changes only the shared queued/in-use flag, not metadata or
+    /// mapped parameter payload. Empty/exhausted pools return -3. Invalid
+    /// preferred indexes are rejected instead of native unchecked vector access.
+    pub fn get_buffer<B: Backend>(
+        &self,
+        backend: &mut B,
+        buffers: &mut [BufferState],
+        preferred: Option<usize>,
+    ) -> Result<usize, i32> {
+        backend.lock();
+        let result = if buffers.is_empty() {
+            Err(-3)
+        } else if preferred.is_some_and(|i| i >= buffers.len()) {
+            Err(-6)
+        } else {
+            let selected = preferred
+                .filter(|&i| !buffers[i].queued)
+                .or_else(|| buffers.iter().position(|b| !b.queued));
+            if let Some(i) = selected {
+                buffers[i].queued = true;
+                Ok(i)
+            } else {
+                Err(-3)
+            }
+        };
+        backend.unlock();
+        result
+    }
+
     pub fn prepare<B: Backend>(&mut self, backend: &mut B) -> i32 {
         let result = backend.request_buffers();
         if result != 0 {
@@ -204,6 +234,19 @@ mod tests {
         let before = queue;
         assert_eq!(queue.dequeue(&mut Driver, &mut buffers, 1, false), Err(-6));
         assert_eq!(queue, before);
+        assert_eq!(buffers, [buffer]);
+    }
+    #[test]
+    fn invalid_preferred_buffer_is_rejected_before_acquisition() {
+        let mut record = [0; BUFFER_BYTES];
+        put(&mut record, 4, META_OUTPUT);
+        put(&mut record, 48, 1);
+        let buffer = BufferState::from_record(record).unwrap();
+        let mut buffers = [buffer];
+        assert_eq!(
+            Queue::default().get_buffer(&mut Driver, &mut buffers, Some(1)),
+            Err(-6)
+        );
         assert_eq!(buffers, [buffer]);
     }
 }

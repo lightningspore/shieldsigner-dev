@@ -2172,9 +2172,14 @@ fn main() {
                     .as_array()
                     .unwrap()
                     .iter()
-                    .map(|r| {
+                    .enumerate()
+                    .map(|(i, r)| {
                         let mut b = BufferState::from_record(decode(r)).unwrap();
-                        b.queued = v["buffer_queued"].as_bool().unwrap();
+                        b.queued = v
+                            .get("busy")
+                            .map_or(v["buffer_queued"].as_bool().unwrap(), |v| {
+                                v[i].as_bool().unwrap()
+                            });
                         b.returned_length = v["initial_length"].as_u64().unwrap() as u32;
                         b
                     })
@@ -2190,6 +2195,29 @@ fn main() {
                 };
                 let mut index = None;
                 let status = match v["op"].as_str().unwrap() {
+                    "get" => {
+                        let preferred = v["preferred"].as_i64().unwrap();
+                        let count = if v["has_pool"].as_bool().unwrap() {
+                            buffers.len()
+                        } else {
+                            0
+                        };
+                        match q.get_buffer(
+                            &mut backend,
+                            &mut buffers[..count],
+                            if preferred < 0 {
+                                None
+                            } else {
+                                Some(preferred as usize)
+                            },
+                        ) {
+                            Ok(i) => {
+                                index = Some(i);
+                                0
+                            }
+                            Err(e) => e,
+                        }
+                    }
                     "prepare" => q.prepare(&mut backend),
                     "start" => q.start(&mut backend, v["prepared"].as_bool().unwrap()),
                     "queue" => q.queue(

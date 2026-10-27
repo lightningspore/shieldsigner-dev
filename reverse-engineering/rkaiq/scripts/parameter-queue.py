@@ -7,6 +7,7 @@ class OriginalQueue(OriginalArm):
  def __init__(self):
   super().__init__(BINARY)
   for symbol,name in [('_ZN4XCam10V4l2Device16init_buffer_poolEv','init'),('_ZN4XCam10V4l2Device16fini_buffer_poolEv','finalize'),('_ZN4XCam9SmartLockD2Ev','unlock'),('_ZNSt6vectorIN4XCam8SmartPtrINS0_10V4l2BufferEEESaIS3_EEixEj','vector'),('_ZN4XCam8SmartPtrINS_10V4l2BufferEEaSERKS2_','assign'),('xcam_print_log','log')]:self.stubs[self.symbols[symbol]&~1]=name
+  self.stubs[self.symbols['_ZNKSt6vectorIN4XCam8SmartPtrINS0_10V4l2BufferEEESaIS3_EEixEj']&~1]='vector'
   for i,name in enumerate(['ioctl','close']):
    address=RETURN+0xe000+i*16;self.uc.mem_write(address,b'\x70\x47');self.stubs[address]=name
  def hook(self,uc,address,size,user):
@@ -38,32 +39,40 @@ class OriginalQueue(OriginalArm):
   data[0x18]=v['cache_sync'];data[0xf8]=v['active'];self.uc.mem_write(context,bytes(data));self.uc.mem_write(vtable,bytes(0x100));self.uc.mem_write(vtable+0x30,struct.pack('<I',(RETURN+0xe000)|1));self.uc.mem_write(vtable+0x18,struct.pack('<I',(RETURN+0xe010)|1));self.uc.mem_write(output,bytes(8))
   objects=[]
   for i,record in enumerate(v['records']):
-   pointer=HEAP+0x8000+i*0x200;obj=bytearray([0x66]*0x124);obj[4:72]=bytes.fromhex(record);obj[0x120]=v['buffer_queued'];struct.pack_into('<I',obj,0x114,v['initial_length']);self.uc.mem_write(pointer,bytes(obj));self.uc.mem_write(pool+i*8,struct.pack('<II',pointer,0));objects.append(bytes(obj))
+   pointer=HEAP+0x8000+i*0x200;obj=bytearray([0x66]*0x124);obj[4:72]=bytes.fromhex(record);obj[0x120]=v.get('busy',[v['buffer_queued']]*v['count'])[i];struct.pack_into('<I',obj,0x114,v['initial_length']);self.uc.mem_write(pointer,bytes(obj));self.uc.mem_write(pool+i*8,struct.pack('<II',pointer,0));objects.append(bytes(obj))
   op=v['op'];symbols={'prepare':'7prepareEv','start':'5startEb','queue':'12queue_bufferERNS_8SmartPtrINS_10V4l2BufferEEEb','dequeue':'14dequeue_bufferERNS_8SmartPtrINS_10V4l2BufferEEE','return':'21return_buffer_to_poolERNS_8SmartPtrINS_10V4l2BufferEEE','stop':'4stopEv'}
   args=[context,v['prepared']] if op=='start' else [context,pool,v['locked']] if op=='queue' else [context,output] if op=='dequeue' else [context,pool] if op=='return' else [context]
-  result=self.invoke('_ZN4XCam10V4l2Device'+symbols[op],args);status=struct.unpack('<i',struct.pack('<I',result))[0] if op not in ['return','stop'] else 0
+  if op=='get':args=[context,output,v['preferred']]
+  symbol='_ZNK4XCam10V4l2Device10get_bufferERNS_8SmartPtrINS_10V4l2BufferEEEi' if op=='get' else '_ZN4XCam10V4l2Device'+symbols[op]
+  result=self.invoke(symbol,args);status=struct.unpack('<i',struct.pack('<I',result))[0] if op not in ['return','stop'] else 0
   after=bytearray(self.uc.mem_read(context,len(data)));queued=u32(after[0x10c:0x110]);active=bool(after[0xf8]);requested=u32(after[0x108:0x10c]);after[0x108:0x110]=data[0x108:0x110];after[0xf8]=data[0xf8];assert bytes(after)==bytes(data),'Unexpected device context mutation'
   buffers=[]
   for i,before in enumerate(objects):
    after=bytearray(self.uc.mem_read(HEAP+0x8000+i*0x200,len(before)));buffers.append(dict(record=bytes(after[4:72]).hex(),queued=bool(after[0x120]),length=u32(after[0x114:0x118])))
    after[24:52]=before[24:52];after[0x120]=before[0x120];after[0x114:0x118]=before[0x114:0x118];assert bytes(after)==before,'Unexpected buffer object mutation'
-  index=(u32(self.uc.mem_read(output,4))-HEAP-0x8000)//0x200 if op=='dequeue' and status==0 else None
+  index=(u32(self.uc.mem_read(output,4))-HEAP-0x8000)//0x200 if op in ['dequeue','get'] and status==0 else None
   return json.dumps(dict(status=status,index=index,queued=queued,active=active,requested=requested,trace=self.trace,buffers=buffers),sort_keys=True,separators=(',',':'))
 def main():
- p=argparse.ArgumentParser();p.add_argument('--cases',type=int,default=1000);p.add_argument('--emit-dir',type=Path);a=p.parse_args();manifest=json.loads((ROOT/'reverse-engineering/rkaiq/artifacts.json').read_text());sha=hashlib.sha256(BINARY.read_bytes()).hexdigest();assert sha==next(x['sha256'] for x in manifest['binaries'] if x['name']==BINARY.name)
+ p=argparse.ArgumentParser();p.add_argument('--cases',type=int,default=1000);p.add_argument('--emit-dir',type=Path);p.add_argument('--arm',action='store_true');a=p.parse_args();manifest=json.loads((ROOT/'reverse-engineering/rkaiq/artifacts.json').read_text());sha=hashlib.sha256(BINARY.read_bytes()).hexdigest();assert sha==next(x['sha256'] for x in manifest['binaries'] if x['name']==BINARY.name)
  arm=OriginalQueue();rng=random.Random(0x51554555);inputs=[];expected=[];coverage={}
  for i in range(a.cases):
-  op=['queue','prepare','start','dequeue','return','stop'][i%6];count=rng.randrange(2,5);memory=rng.choice([1,2]);records=[]
+  op=['queue','prepare','start','dequeue','return','stop','get'][i%7];count=rng.randrange(2,5);memory=rng.choice([1,2]);records=[]
   for index in range(count):
    r=bytearray(rng.randbytes(68))
    for o,n in [(0,index),(4,14),(48,memory),(56,rng.randrange(11145,16385))]:struct.pack_into('<I',r,o,n)
    records.append(r.hex())
   response=bytearray(rng.randbytes(68));struct.pack_into('<I',response,0,rng.choice([0,count-1,count+1]));struct.pack_into('<I',response,56,rng.randrange(11145,16385))
   v=dict(op=op,count=count,returned_count=rng.randrange(2,5),memory=memory,records=records,queued=rng.randrange(0,9),active=bool(i//6%2),buffer_queued=bool(i//12%2),initial_length=rng.randrange(0,20000),cache_sync=bool(i//24%2),prepared=bool(i//48%2),locked=bool(i//96%2),has_pool=bool(i//192%2),request_result=rng.choice([-22,0,2]),init_result=rng.choice([-2,0,3]),stream_result=rng.choice([-22,0,2]),io_result=rng.choice([-22,0,2]),mutation=rng.randbytes(68).hex(),response=response.hex())
+  v['busy']=[rng.choice([False,True]) for _ in range(count)];v['preferred']=rng.choice([-1,0,count-1])
   inputs.append('parameter-queue '+json.dumps(v,separators=(',',':')));expected.append(arm.run(v));key=f'{op}:{int(v["active"])}:{int(v["cache_sync"])}:{int(v["prepared"])}:{int(v["locked"])}';coverage[key]=coverage.get(key,0)+1
  actual=subprocess.run([str(ROOT/'firmware/rkaiq-rs/target/release/numeric-fixture')],input='\n'.join(inputs)+'\n',text=True,capture_output=True,check=True).stdout.splitlines();assert len(actual)==len(expected)
  mismatches=[dict(case=i,input=inputs[i],expected=x,actual=y) for i,(x,y) in enumerate(zip(expected,actual)) if x!=y]
- report=dict(binarySha256=sha,seed='0x51554555',cases=a.cases,mismatchCount=len(mismatches),coverage=coverage,scope='Metadata-output V4l2Device prepare/start/QBUF/DQBUF/return/stop branches: ioctl records, lock/call order, counters, active/queued flags, cached buffer fields and preservation',limitations=['Pool allocation/finalization, close, mutex/destructor and smart-pointer/vector boundaries are controlled stubs; their implementations are not proved by this suite.','Original reset, request-buffer wrapper and queue/state-control instructions execute; standard memcpy/memset are explicit helpers.','Valid metadata MMAP/USERPTR descriptors; checked Rust additionally rejects the native one-past-end dequeue index bug.','No real camera or complete ISP startup is proved by these controlled traces.'])
+ if a.arm:
+  directory=ROOT/'firmware/rkaiq-rs/target/armv7-unknown-linux-musleabihf/release'
+  actual_arm=subprocess.run(['docker','run','--rm','-i','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={directory},dst=/bincheck,readonly','alpine@sha256:ee16d92f96db08d9d2d07da48555a27f3a69d8f0759021dbc601195ed0d2b5bd','/bincheck/numeric-fixture'],input='\n'.join(inputs)+'\n',text=True,capture_output=True,check=True).stdout.splitlines()
+  assert actual_arm==expected,'ARM parameter-queue replay mismatch'
+
+ report=dict(binarySha256=sha,seed='0x51554555',cases=a.cases,arm=a.arm,mismatchCount=len(mismatches),coverage=coverage,scope='Metadata-output V4l2Device get-buffer/prepare/start/QBUF/DQBUF/return/stop branches: ioctl records, lock/call order, counters, active/queued flags, cached buffer fields and preservation',limitations=['Pool allocation/finalization, close, mutex/destructor and smart-pointer/vector boundaries are controlled stubs; their implementations are not proved by this suite.','Original reset, request-buffer wrapper and queue/state-control instructions execute; standard memcpy/memset are explicit helpers.','Valid metadata MMAP/USERPTR descriptors; checked Rust additionally rejects the native one-past-end dequeue index bug.','No real camera or complete ISP startup is proved by these controlled traces.'])
  if mismatches:report['firstMismatches']=mismatches[:3]
  (ROOT/'reverse-engineering/rkaiq/parameter-queue-equivalence.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='coverage'},indent=2));assert not mismatches
  if a.emit_dir:

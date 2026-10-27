@@ -48,3 +48,36 @@ Normal stream-off disables ISP parameter-controlled blocks and clears saved firs
 The adapter deliberately uses the native legacy ARM32 68-byte V4L2 buffer record, with 32-bit timeval fields, even though current musl time types are 64-bit. Header cross-compilation explicitly substitutes the legacy timeval/timespec declarations and checks field offsets, metadata constants and ioctl numbers. Ghidra's native 68-byte descriptor copies independently corroborate that layout. Using musl's current time64 record here would select different offsets/request numbers.
 
 ARM/Linux emulation replays the entire native-reference corpus and checks the new command's invalid-device, short/oversized file, empty update-mask and option-range rejection paths. The synthetic payload used only against `/dev/null`/nonexistent devices is excluded from the kit. No test so far exercises successful real parameter MMAP, submission, image-frame application, stop/restart or complete cold startup. [Hardware session guide](HARDWARE-TEST.md).
+
+### Pooled buffer acquisition and payload reuse
+
+`parameter_queue::Queue::get_buffer` recovers native `V4l2Device::get_buffer`
+(ELF `0x5b734`). Under the pool lock, a free preferred slot is selected first;
+if it is busy or no preference was supplied, selection scans from index 0.
+The selected slot's shared in-use/queued flag is set. Empty or exhausted pools
+return -3 without changing a slot. The Rust API rejects an out-of-range
+preferred index with -6; native vector access is unchecked in that case.
+Acquisition does not reset descriptor fields or mapped payload contents.
+
+`return_buffer_to_pool` calls native `V4l2Buffer::reset` (ELF `0x5a930`), which
+clears descriptor timestamp/timecode/sequence fields and the in-use flag. It
+does not clear or restore the mapped ISP parameter record. `CamHwIsp20::setIspConfig`
+(ELF `0x2a944`) clears the three 64-bit update/enable masks at offsets 0/8/16
+before merging a new batch; the rest of the pooled payload can retain old bytes.
+
+For interpreting this reuse, the pinned open kernel `isp_params_v32.c` gates
+`ops->awbgain_config` on `module_cfg_update & ISP32_MODULE_AWB_GAIN`. A buffer
+containing old boosted gain words does not by itself reprogram them: without
+the update bit, those words are ignored. Conversely, a unity exposure result
+that sets no update bit does not restore previously applied hardware gains.
+The recovered WB/exposure composition preserves that native behavior; the
+controller's publication policy and live sequence still need integration and
+hardware verification before claiming correct automatic return to unity.
+
+The existing parameter-queue oracle now covers acquisition along with the six
+lifecycle operations in 1,000 native comparisons. It varies busy flags per slot,
+free/busy preferred slots, scanning, exhausted/empty pools, and verifies all
+cached buffer records and lock traces. Standard vector indexing and smart-pointer
+assignment remain explicit adapters. Full payload reuse observations above
+come from the native reset/acquisition/configuration code and the pinned kernel
+source; this oracle does not execute the complete `setIspConfig` method.

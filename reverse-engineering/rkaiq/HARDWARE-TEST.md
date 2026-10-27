@@ -513,3 +513,29 @@ and no boot configuration was changed.
 
 Private scene captures and logs remain under ignored
 `dist/reverse-engineering/hardware-2026-10-26/`; they are not checked into Git.
+
+
+### Input-link failure analysis
+
+The pinned kernel's [`__media_entity_setup_link`](https://github.com/LuckfoxTECH/luckfox-pico/blob/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/mc/mc-entity.c#L830)
+returns EBUSY when a non-dynamic link changes while its source or sink has a
+nonzero stream count. The failed operation was disabling
+`rkcif-mipi-lvds:0 -> rkisp-isp-subdev:0`, not a failed image dequeue. Process
+absence and an empty `fuser` result do not establish that this kernel count is
+zero. The stalled device prevented checking the remaining stream owner/state.
+
+The [`rkisp_subdev_link_setup`](https://github.com/LuckfoxTECH/luckfox-pico/blob/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/rkisp.c#L3198)
+handler permits `INP_CIF` and raw-readback input bits together. Therefore the
+next experiment should retain the existing CIF link and enable the required
+raw-readback link only after establishing idle streaming state. Do not treat
+these inputs as necessarily mutually exclusive. This is source evidence for
+an experiment, not proof of successful capture with that graph.
+
+The real CIF endpoint also advertised **multi-plane capture with one plane**;
+the existing raw bridge requires the single-plane V4L2 API. Its endpoint API
+handling must be extended before claiming that the combined bridge works on
+this board. The captured BG10 FourCC did not imply unpacked storage: CSI
+memory mode and returned plane geometry must also be tracked. Keep the working
+compact capture mode during initial investigation rather than changing an
+active device's memory mode. The saved local capture remains available while
+the device is offline.

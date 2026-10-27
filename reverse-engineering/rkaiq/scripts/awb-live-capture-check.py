@@ -75,7 +75,17 @@ def main():
     assert sdk[0x48] == decoded[0x1D74]
     assert sdk[0x450:0x464] == decoded[0x1D78:0x1D8C]
     assert sdk[0x464:0x4A4] == decoded[0x1D8C:0x1DCC]
-    assert args.base.stat().st_size == 460800, "Wrong image byte count"
+    image = json.loads(path(".json").read_text())
+    image_saved = image.get("sceneImageSaved", True)
+    assert isinstance(image_saved, bool)
+    assert image["captureKind"] == "image" and image["bytes"] == 460800
+    if image_saved:
+        assert args.base.stat().st_size == 460800, "Wrong image byte count"
+    else:
+        assert image["payloadSaved"] is False and not args.base.exists(), (
+            "Unexpected scene image"
+        )
+
     numerical = False
     if args.native_report:
         native = json.loads(args.native_report.read_text())
@@ -114,6 +124,7 @@ def main():
         finalParametersId=parameter,
         maxActiveLights=max(v["activeLights"] for v in awb),
         nativeTranslationChecked=numerical,
+        sceneImageSaved=image_saved,
         parameterSubmissions=submissions,
         maxParameterSnapshots=peak,
         retiredParameterSnapshots=retired,

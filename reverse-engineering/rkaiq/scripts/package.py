@@ -44,7 +44,7 @@ for name in ['cold-camera-modules.sh','prepare-cold-boot.py','verify-cold-boot.p
  copy(ROOT/'reverse-engineering/rkaiq/scripts'/name,'tools/'+name)
 for name in ['awb-live-hardware-validation.json','managed-camera-hardware-validation.json','clean-reboot-camera-hardware-validation.json','rgb-colorimetry-hardware-validation.json','application-integration-hardware-validation.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
-for name in ['awb-scene-sequence-validation.json','exposure-step-latency-validation.json','gain-step-latency-validation.json','live-ae-write-timing-validation.json','camera-restart-hardware-validation.json','scan-loop-hardware-validation.json','ae-startup-convergence-validation.json','demosaic-frame-equivalence.json','demosaic-live-validation.json','stream-image-artifact-validation.json']:
+for name in ['awb-scene-sequence-validation.json','exposure-step-latency-validation.json','gain-step-latency-validation.json','live-ae-write-timing-validation.json','camera-restart-hardware-validation.json','scan-loop-hardware-validation.json','ae-startup-convergence-validation.json','demosaic-frame-equivalence.json','demosaic-live-validation.json','stream-image-artifact-validation.json','scan-demosaic-hardware-validation.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
 application=json.loads((ROOT/'reverse-engineering/rkaiq/application-integration-hardware-validation.json').read_text())
 assert application['passed'] and application['cameraBinarySha256']==smoke['binaries']['camera-probe']
@@ -114,6 +114,9 @@ readme=r'''Experimental Rust SC3336 camera kit 0.0.1
 
 Start with this quickstart, then HARDWARE-TEST.md for evidence and detailed scope.
 The ARM binary, managed Python adapter and opt-in application launcher are included.
+Development adds live ISO-dependent demosaic batches and default streaming
+without a final scene-image dump; explicit diagnostic saving remains available.
+Calibration, statistics and logs are still retained.
 The current source passed real AE/AWB capture, owner restart/crash cleanup,
 full-range RGB delivery and application preview/decoder integration. A controlled
 clean reboot was also tested; its separately bundled report identifies that build.
@@ -167,8 +170,8 @@ The image encodes the known public test address 1BoatSLRHtKNngkdXEeobR76b53LETtp
 it is a camera fixture, not a payment request. The optical tool has no synthetic
 input path. Exit 0 means that target decoded and cleanup succeeded; exit 2 means
 no match by the deadline, 1 means an error and 130 means interruption. Unrelated
-QR/seed/wallet contents are not written to its report. Frame/log artifacts remain
-in the configured private results directory. A timeout is not optical success.
+QR/seed/wallet contents are not written to its report. Measurement/log artifacts remain in the configured private results directory;
+streamed scene images are saved only with SHIELDSIGNER_CAMERA_SAVE_IMAGE=1. A timeout is not optical success.
 
 For the actual app UI, with original UI/vendor services stopped:
 
@@ -181,8 +184,12 @@ are unchanged. Full UI rendering/button interaction is not qualified by headless
 integration tests. Append -- --help to test the real main.py import/argument path.
 
 All bin/ programs are static ARMv7 Linux executables. Optional host/ programs target
-macOS ARM64; frame-preview produces an uncalibrated PGM. run-numeric-test.sh runs
-original-reference numerical corpora on-board; its PASS is not optical/UI evidence.
+macOS ARM64; frame-preview produces an uncalibrated PGM. Run numerical corpora
+with an explicit persistent output directory (the board has little RAM):
+
+  sh "$camera_kit_dir/run-numeric-test.sh" /shieldsigner-camera-tests/numeric-UNIQUE
+
+run-numeric-test.sh runs original-reference numerical corpora on-board; its PASS is not optical/UI evidence.
 manifest.json hashes every kit file and identifies committed source. Source and
 dependency/runtime notices are included. Full research and mise tasks:
 https://github.com/lightningspore/shieldsigner-dev/tree/main/reverse-engineering/rkaiq
@@ -191,7 +198,7 @@ https://github.com/lightningspore/shieldsigner-dev/tree/main/reverse-engineering
 script='''#!/bin/sh
 set -eu
 kit_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-result_dir=${1:-/tmp/shieldsigner-rust-results}
+result_dir=${1:?Pass a persistent results directory; /tmp is RAM-backed}
 mkdir -p "$result_dir"
 "$kit_dir/bin/camera-probe" self-test
 "$kit_dir/bin/numeric-fixture" < "$kit_dir/fixtures/inputs.txt" > "$result_dir/numeric-actual.txt"

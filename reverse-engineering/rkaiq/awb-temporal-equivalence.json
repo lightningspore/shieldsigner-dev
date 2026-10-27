@@ -1,0 +1,17 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 1024,
+  "mismatches": 0,
+  "arm": true,
+  "elfEntries": {
+    "default": "0xc5d3c",
+    "history": "0xc5d5c",
+    "blend": "0xc6860"
+  },
+  "scope": "Both native temporal source routines followed by the original brightness-dependent blend; exact gain/weight bits and unrelated-memory preservation",
+  "limitations": [
+    "Finite gains; nonempty weighted-history cases have nonzero total weight. Rust rejects nonfinite results, including all-zero history weights.",
+    "Caller supplies calibration and list-order history; list update/lifetime and full gain controllers remain unfinished.",
+    "Synthetic calibration includes unordered knots and percentages above 100; no physical calibration validity is claimed."
+  ]
+}

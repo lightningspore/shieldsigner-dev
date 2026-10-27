@@ -456,3 +456,35 @@ These are components of the high-count strategy, not its complete controller.
 Calibration, brightness and measured gains are explicit inputs. Temporal gain
 construction, full high/low orchestration, calibration initialization and live
 AWB integration remain unfinished. The frozen fixed-WB camera kit is unchanged.
+
+## Temporal gain sources and brightness blend
+
+Ghidra exports of `AwbCalGainInTemporalGain2` (ELF `0xc5d3c`) and
+`AwbCalGainInTemporalGain` (`0xc5d5c`) establish two different sources: the first
+copies configured default gains directly, while the second averages gain-list
+entries with calibration-byte weights in list order. Empty history uses the
+same default. `awb_gain::temporal_history` implements the latter; callers of the
+first use the configured gain directly. Weighted accumulation uses native FMA
+order and divides by the signed wrapping weight sum without normalization.
+Rust rejects missing weights and nonfinite results, including a nonempty list
+with all zero weights. Empty history does not read unused weights.
+
+`awb_gain::temporal_blend` reconstructs `AwbCalGainTotalMulTemp` (ELF `0xc6860`).
+Its 16-point brightness curve uses u32 comparisons to select endpoints or an
+interval, then f32 interpolation with an FMA. Widths below 0.001 retain the lower
+percentage. It preserves native interval scanning for unordered input rather
+than sorting calibration. The percentage is not clamped: each channel computes
+`fma(temporal, percentage, (100 - percentage) * current) / 100`, then the complete
+gain is normalized. The returned weight remains the raw percentage.
+
+`mise run camera:rust:awb-temporal` compares **1,024 cases** on host and ARM
+against each original temporal source followed by the complete original blend.
+It verifies exact intermediate/final gain and weight bits and unrelated-memory
+preservation. Cases cover 0–16 history entries, zero individual weights, default
+copies, endpoint/equal/unordered knots, full-width brightness, float-collapsed
+large knots, zero gains and percentage extrapolation.
+[Reference report](awb-temporal-equivalence.json).
+
+History insertion/eviction and complete high/low gain orchestration remain
+unfinished, as do calibration loading and live AWB integration. This stage does
+not change the frozen fixed-WB camera kit or establish camera image quality.

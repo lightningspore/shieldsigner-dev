@@ -82,6 +82,93 @@ pub fn spatial_statistics(
     Ok((mixture(statistics, spatial, weight)?, weight))
 }
 
+/// AwbCalGainInTemporalGain (ELF 0xc5d5c): list-order weighted history,
+/// without normalization. Empty history copies the configured default, as
+/// AwbCalGainInTemporalGain2 (ELF 0xc5d3c) does unconditionally.
+pub fn temporal_history(
+    history: &[Gains],
+    weights: &[u8],
+    default: Gains,
+) -> Result<Gains, InvalidInput> {
+    if history.is_empty() {
+        finite(&default)?;
+        return Ok(default);
+    }
+    if weights.len() < history.len() {
+        return Err(InvalidInput::Length);
+    }
+    let mut sum = [0.; 4];
+    let mut total = 0i32;
+    for (gain, &weight) in history.iter().zip(weights) {
+        finite(gain)?;
+        total = total.wrapping_add(weight as i32);
+        for i in 0..4 {
+            sum[i] = libm::fmaf(gain[i], weight as f32, sum[i]);
+        }
+    }
+    for value in &mut sum {
+        *value /= total as f32;
+    }
+    finite(&sum)?;
+    Ok(sum)
+}
+
+/// AwbCalGainTotalMulTemp (ELF 0xc6860). The 16-point percentage curve uses
+/// unsigned integer comparisons before f32 interpolation. Returned weight is
+/// the raw percentage, not a fraction. No clamp or sorting is applied.
+pub fn temporal_blend(
+    current: Gains,
+    temporal: Gains,
+    brightness: u32,
+    knots: &[u32; 16],
+    percentages: &[u8; 16],
+) -> Result<(Gains, f32), InvalidInput> {
+    finite(&current)?;
+    finite(&temporal)?;
+    let weight = if brightness <= knots[0] {
+        percentages[0] as f32
+    } else if brightness >= knots[15] {
+        percentages[15] as f32
+    } else {
+        let index = knots
+            .iter()
+            .position(|&v| brightness < v)
+            .map_or(14, |i| i - 1);
+        let low = knots[index] as f32;
+        let width = knots[index + 1] as f32 - low;
+        let base = percentages[index] as f32;
+        if width as f64 >= 0.001 {
+            let ratio = (brightness as f32 - low) / width;
+            libm::fmaf(ratio, percentages[index + 1] as f32 - base, base)
+        } else {
+            base
+        }
+    };
+    let complement = 100. - weight;
+    let gain = normalize(core::array::from_fn(|i| {
+        libm::fmaf(temporal[i], weight, complement * current[i]) / 100.
+    }))?;
+    Ok((gain, weight))
+}
+
+#[cfg(test)]
+mod temporal_tests {
+    use super::*;
+
+    #[test]
+    fn history_rejects_missing_or_zero_weights_but_empty_uses_default() {
+        assert_eq!(
+            temporal_history(&[[1.; 4]], &[], [2.; 4]),
+            Err(InvalidInput::Length)
+        );
+        assert_eq!(
+            temporal_history(&[[1.; 4]], &[0], [2.; 4]),
+            Err(InvalidInput::NonFinite)
+        );
+        assert_eq!(temporal_history(&[], &[], [2.; 4]), Ok([2.; 4]));
+    }
+}
+
 /// AwbGainCalbyRgainBgain (ELF 0xca7cc). Inputs are accumulated gain statistics,
 /// not raw R/G/B pixel sums. Each signed total rounds to f32 before division.
 pub fn ratios(weighted_count: i64, red_total: i64, blue_total: i64) -> Gains {

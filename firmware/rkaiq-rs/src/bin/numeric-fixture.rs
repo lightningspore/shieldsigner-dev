@@ -129,6 +129,41 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-temporal" => {
+                use shieldsigner_rkaiq::awb_gain;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let gains = |v: &serde_json::Value| -> [f32; 4] {
+                    core::array::from_fn(|i| v[i].as_f64().unwrap() as f32)
+                };
+                let history: Vec<_> = v["history"].as_array().unwrap().iter().map(gains).collect();
+                let weights: Vec<_> = v["weights"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_u64().unwrap() as u8)
+                    .collect();
+                let default = gains(&v["default"]);
+                let temporal = if v["direct"].as_bool().unwrap() {
+                    default
+                } else {
+                    awb_gain::temporal_history(&history, &weights, default).unwrap()
+                };
+                let knots = core::array::from_fn(|i| v["knots"][i].as_u64().unwrap() as u32);
+                let percentages =
+                    core::array::from_fn(|i| v["percentages"][i].as_u64().unwrap() as u8);
+                let (gain, weight) = awb_gain::temporal_blend(
+                    gains(&v["current"]),
+                    temporal,
+                    v["brightness"].as_u64().unwrap() as u32,
+                    &knots,
+                    &percentages,
+                )
+                .unwrap();
+                println!(
+                    "{}",
+                    serde_json::json!({"temporal": temporal.map(f32::to_bits), "gain": gain.map(f32::to_bits), "weight": weight.to_bits()})
+                );
+            }
             "awb-spatial" => {
                 use shieldsigner_rkaiq::awb_gain;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

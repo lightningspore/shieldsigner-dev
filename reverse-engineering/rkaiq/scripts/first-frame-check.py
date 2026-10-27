@@ -15,6 +15,7 @@ def main():
   def run(*args):
    return subprocess.run(['docker','run','--rm','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={binary.parent},dst=/bincheck,readonly','--mount',f'type=bind,src={d},dst=/plans,readonly',image,'/bincheck/camera-probe','first-frame-sc3336',*args],text=True,capture_output=True)
   cases=[([], 'first-frame-sc3336'),(['/plans/bad-plan.json','/plans/iq.json','/dev/urandom','/dev/tty','/plans/out'],'one explicit CIF'),(['/plans/plan.json','/plans/bad-iq.json','/dev/urandom','/dev/tty','/plans/out'],'SC3336 2304x1296'),(['/plans/plan.json','/plans/iq.json','/dev/urandom','/dev/tty','/etc/passwd'],'output already exists'),(['/plans/plan.json','/plans/iq.json','/dev/urandom','/dev/tty','/plans/out'],'os error 25')]
+  cases.append((['/plans/plan.json','/plans/iq.json','/dev/urandom','/dev/tty','/plans/out','/dev/null'],'Statistics endpoint must be distinct'))
   for args,expected in cases:
    result=run(*args)
    assert result.returncode!=0 and expected.lower() in (result.stdout+result.stderr).lower(),(args,result.stdout,result.stderr)

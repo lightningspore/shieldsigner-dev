@@ -12,10 +12,39 @@ mod first_frame_driver {
         triggered: bool,
         raw_frames: u32,
         image_frames: u32,
+        statistics_frames: u32,
+        statistics_required: bool,
+        statistics_on: bool,
+        statistics_mapping: usize,
     }
     static DRIVER: Mutex<Option<Driver>> = Mutex::new(None);
     pub(super) fn active() -> bool {
         DRIVER.lock().unwrap().is_some()
+    }
+    pub(super) fn statistics_file(path: &str) -> Option<io::Result<File>> {
+        if path != "/dev/tty" || !active() {
+            return None;
+        }
+        let result = File::open("/dev/zero");
+        if let Ok(file) = &result {
+            DRIVER
+                .lock()
+                .unwrap()
+                .as_mut()
+                .unwrap()
+                .roles
+                .insert(file.as_raw_fd(), "statistics".into());
+        }
+        Some(result)
+    }
+    pub(super) fn mapped(fd: RawFd, address: *mut libc::c_void, _length: usize) {
+        let mut lock = DRIVER.lock().unwrap();
+        let Some(d) = lock.as_mut() else {
+            return;
+        };
+        if d.roles.get(&fd).map(String::as_str) == Some("statistics") {
+            d.statistics_mapping = address as usize;
+        }
     }
     pub(super) fn opened(path: &str, fd: RawFd) {
         let role = match path {
@@ -57,6 +86,7 @@ mod first_frame_driver {
                     "tx" | "image" => 0x04000001,
                     "rx" => 0x04000002,
                     "parameters" => 0x0c000000,
+                    "statistics" => 0x04800000,
                     _ => panic!("caps {role}"),
                 };
                 put32(b, 84, cap);
@@ -64,6 +94,9 @@ mod first_frame_driver {
             GETFMT => {
                 if let Some(format) = d.formats.get(&role) {
                     b.copy_from_slice(format);
+                } else if role == "statistics" {
+                    put32(b, 4, u32::from_le_bytes(*b"RK1S"));
+                    put32(b, 8, 13040);
                 } else if role == "parameters" {
                     put32(b, 4, u32::from_le_bytes(*b"RK1P"));
                     put32(b, 8, 11145);
@@ -119,7 +152,9 @@ mod first_frame_driver {
                 put32(
                     b,
                     56,
-                    if role == "parameters" {
+                    if role == "statistics" {
+                        13040
+                    } else if role == "parameters" {
                         11145
                     } else if role == "image" {
                         4478976
@@ -140,6 +175,12 @@ mod first_frame_driver {
             0x80805659 => return again(),
             STREAMON => {
                 d.trace.push(format!("{role}:on"));
+                if role == "statistics" {
+                    d.statistics_on = true;
+                }
+                if role == "tx" && d.statistics_required {
+                    assert!(d.statistics_on);
+                }
                 if role == "parameters" {
                     d.parameter_on = true;
                 }
@@ -152,6 +193,8 @@ mod first_frame_driver {
                 d.trace.push(format!("{role}:off"));
                 if role == "parameters" {
                     d.parameter_on = false;
+                } else if role == "statistics" {
+                    d.statistics_on = false;
                 } else {
                     assert!(d.parameter_on, "parameters closed too early");
                 }
@@ -190,7 +233,26 @@ mod first_frame_driver {
                     d.raw_inflight = false;
                     d.trace.push("rx:complete".into());
                 }
+                "statistics" => {
+                    if d.raw_frames <= d.statistics_frames {
+                        return again();
+                    }
+                    d.statistics_frames += 1;
+                    put32(b, 0, 1);
+                    put32(b, 8, 13040);
+                    put32(b, 56, 13040);
+                    put32(b, 44, d.statistics_frames);
+                    let bytes = unsafe {
+                        std::slice::from_raw_parts_mut(d.statistics_mapping as *mut u8, 13040)
+                    };
+                    put32(bytes, 13024, (1 << 8) | (1 << 12));
+                    put32(bytes, 13028, d.statistics_frames);
+                    put32(bytes, 13032, 0);
+                }
                 "image" => {
+                    if d.statistics_required && d.statistics_frames <= d.image_frames {
+                        return again();
+                    }
                     if d.raw_frames <= d.image_frames {
                         return again();
                     }
@@ -221,14 +283,22 @@ mod first_frame_driver {
         let plan = format!("{folder}/plan.json");
         let output = format!("{folder}/frame.raw");
         fs::write(&plan,serde_json::to_vec(&json!({"sensor":"/dev/null","isp":"/dev/urandom","route":"cif","raw_tx":["/dev/full"],"raw_rx":["/dev/random"],"bridges":[],"links":[]})).unwrap()).unwrap();
-        *DRIVER.lock().unwrap() = Some(Driver::default());
-        let outcome = first_frame_sc3336(&[
+        let statistics = std::env::var("SHIELDSIGNER_TEST_STATS").is_ok();
+        *DRIVER.lock().unwrap() = Some(Driver {
+            statistics_required: statistics,
+            ..Driver::default()
+        });
+        let mut args = vec![
             plan,
             iq,
             "/dev/zero".into(),
             "/dev/ptmx".into(),
             output.clone(),
-        ]);
+        ];
+        if statistics {
+            args.push("/dev/tty".into());
+        }
+        let outcome = first_frame_sc3336(&args);
         let driver = DRIVER.lock().unwrap().take().unwrap();
         outcome.unwrap();
         assert_eq!(driver.image_frames, 3);
@@ -243,9 +313,35 @@ mod first_frame_driver {
         assert!(position("image:off") < position("rx:off"));
         assert!(position("rx:off") < position("parameters:off"));
         assert!(position("sensor:write:9e0901") < position("parameters:on"));
+        if statistics {
+            assert!(position("statistics:on") < position("tx:on"));
+            assert!(position("parameters:off") < position("statistics:off"));
+            assert_eq!(
+                fs::metadata(format!("{output}.stats.raw")).unwrap().len(),
+                13040
+            );
+            assert!(driver.statistics_frames >= 3);
+            let report: Value =
+                serde_json::from_slice(&fs::read(format!("{output}.stats.raw.json")).unwrap())
+                    .unwrap();
+            assert_eq!(
+                report["framesReceived"].as_u64(),
+                Some(driver.statistics_frames as u64)
+            );
+            assert_eq!(
+                report["lastFrame"]["frameId"].as_u64(),
+                Some(driver.statistics_frames as u64)
+            );
+            assert_eq!(
+                report["lastFrame"]["measurements"].as_u64(),
+                Some((1 << 8) | (1 << 12))
+            );
+            assert_eq!(report["automaticExposure"], false);
+            assert_eq!(report["frameExposureAssociationVerified"], false);
+        }
         println!(
             "{}",
-            json!({"event":"simulated-startup-verified","imageFrames":driver.image_frames,"rawFrames":driver.raw_frames,"savedBytes":4478976,"hardwareVerified":false,"imageContent":"anonymous zero-filled simulated memory"})
+            json!({"event":"simulated-startup-verified","statisticsEnabled":statistics,"statisticsFrames":driver.statistics_frames,"imageFrames":driver.image_frames,"rawFrames":driver.raw_frames,"savedBytes":4478976,"hardwareVerified":false,"imageContent":"anonymous zero-filled simulated memory"})
         );
         fs::remove_dir_all(folder).unwrap();
     }

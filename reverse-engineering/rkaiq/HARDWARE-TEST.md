@@ -419,3 +419,37 @@ schedule sensor updates or alter `first-frame-sc3336` defaults. Persistent
 statistics capture with image/raw/parameter streams and feedback integration are
 still required before automatic exposure is available. Frozen kit 0.0.29 does
 not include this development option.
+
+### Persistent statistics with first-frame capture (0.0.30-dev)
+
+Append the actual RK1S metadata-capture node to the first-frame command:
+
+```sh
+camera-probe first-frame-sc3336 pipeline.json SC3336_FULL_IQ.json /dev/videoPARAM /dev/videoIMAGE frame.raw /dev/videoSTATS > startup-events.txt 2> startup-errors.txt
+```
+
+This optional sixth argument selects the measurement-enabled initial record and
+starts a separate persistent statistics queue before parameter/raw/image startup.
+A readiness barrier requires successful statistics STREAMON before camera
+capture proceeds. The queue stays open through image, raw and parameter teardown,
+then stops and releases its mappings/buffers. The default five-argument command
+retains its prior fixed first-frame configuration without AE measurements.
+
+The statistics worker uses two MMAP buffers (accepting bounded driver allocation
+of 2–8), nonblocking dequeues, an interruptible 1 ms backoff and a 10 s no-progress
+limit. It validates layout, buffer index/type/memory, error flags and payload
+bounds, copies 13,036-byte payloads or the driver's 13,040-byte aligned buffers,
+and requeues each completed buffer. It saves the last buffer to
+`frame.raw.stats.raw` and up to 256 recent frame headers to its `.json` sidecar.
+Existing statistics outputs and aliases of the other camera nodes are rejected.
+The report includes measurements, frame IDs, parameter IDs and cleanup errors;
+a camera run with no received statistics returns an error. Partial artifacts
+and already accepted settings may remain after failures.
+
+This collects the inputs for feedback; it does not compute or apply automatic
+exposure. A validity mask or matching-looking IDs are not proof of exposure/frame
+association, and the report leaves that verification false. The full ARM
+userspace simulation now covers both five-argument capture and this statistics
+variant, verifying readiness/teardown order and saved artifact sizes. Its device
+responses, pixels and metadata are synthetic. Real metadata delivery, validity,
+frame correlation, restart and image quality remain hardware checks.

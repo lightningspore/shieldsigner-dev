@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "2b4f7146bf2d0f626f9f790d52b260ece5916bb5b85ac7cb96e0ea384dd60c2e",
+  "testBinarySha256": "5157fa5dcbc3103c327f0f794f3b609dc193ba1bdab02ac584dc5f36b37e8cf1",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -8,8 +8,32 @@
     "imageContent": "anonymous zero-filled simulated memory",
     "imageFrames": 3,
     "rawFrames": 5,
-    "savedBytes": 4478976
+    "savedBytes": 4478976,
+    "statisticsEnabled": false,
+    "statisticsFrames": 0
   },
+  "scenarios": [
+    {
+      "event": "simulated-startup-verified",
+      "hardwareVerified": false,
+      "imageContent": "anonymous zero-filled simulated memory",
+      "imageFrames": 3,
+      "rawFrames": 5,
+      "savedBytes": 4478976,
+      "statisticsEnabled": false,
+      "statisticsFrames": 0
+    },
+    {
+      "event": "simulated-startup-verified",
+      "hardwareVerified": false,
+      "imageContent": "anonymous zero-filled simulated memory",
+      "imageFrames": 3,
+      "rawFrames": 6,
+      "savedBytes": 4478976,
+      "statisticsEnabled": true,
+      "statisticsFrames": 6
+    }
+  ],
   "verified": [
     "actual first-frame-sc3336 userspace orchestration",
     "graph format readback and profile loading",
@@ -17,7 +41,9 @@
     "parameter dequeue before raw stream startup",
     "raw readback during three image dequeues",
     "image shutdown before raw shutdown before parameter shutdown",
-    "full-sized saved image and 11145-byte initial parameter artifact"
+    "full-sized saved image and 11145-byte initial parameter artifact",
+    "optional statistics queue ready before raw startup and retained through camera teardown",
+    "metadata frame headers and raw statistics artifact"
   ],
   "limitations": [
     "ioctl, readiness and image/metadata MMAP are test-only simulated boundaries; no actual camera/kernel pipeline is exercised.",

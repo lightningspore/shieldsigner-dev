@@ -5,9 +5,9 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
         sensor, sensor_descriptor,
     };
     use std::io::Read;
-    if args.len() != 5 {
+    if !matches!(args.len(), 5 | 6) {
         return Err(error(
-            "first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT",
+            "first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE]",
         ));
     }
     let read = |path: &str, limit: u64| -> io::Result<Vec<u8>> {
@@ -29,8 +29,34 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
             "This first-frame command supports the SC3336 2304x1296 profile with DCG disabled",
         ));
     }
-    let (parameters, initial) =
-        shieldsigner_rkaiq::initial_parameters::assemble(&iq).map_err(error)?;
+    let statistics = args.get(5);
+    if let Some(node) = statistics {
+        use std::os::unix::fs::{FileTypeExt, MetadataExt};
+        let info = fs::metadata(node)?;
+        if !info.file_type().is_char_device() {
+            return Err(error("Statistics endpoint must be a character device"));
+        }
+        for path in [&sensor_path, &isp, &tx, &rx, &args[2], &args[3]] {
+            if fs::metadata(path)?.rdev() == info.rdev() {
+                return Err(error(
+                    "Statistics endpoint must be distinct from other camera nodes",
+                ));
+            }
+        }
+        for path in [
+            format!("{}.stats.raw", args[4]),
+            format!("{}.stats.raw.json", args[4]),
+        ] {
+            if std::path::Path::new(&path).exists() {
+                return Err(error("Statistics output already exists"));
+            }
+        }
+    }
+    let (parameters, initial) = if statistics.is_some() {
+        shieldsigner_rkaiq::initial_parameters::assemble_with_ae(&iq).map_err(error)?
+    } else {
+        shieldsigner_rkaiq::initial_parameters::assemble(&iq).map_err(error)?
+    };
     let parameter_path = format!("{}.initial.bin", args[4]);
     let report_path = format!("{}.initial.json", args[4]);
     for path in [
@@ -124,20 +150,28 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
             codes.integration_time.to_string(),
             "-1".into(),
         ])?;
-        capture_cif_with_parameters(&[
-            args[2].clone(),
-            parameter_path.clone(),
-            tx,
-            rx,
-            isp,
-            "--".into(),
-            args[3].clone(),
-            args[4].clone(),
-            "--fourcc".into(),
-            "NV12".into(),
-            "--timeout-ms".into(),
-            "10000".into(),
-        ])
+        let capture = || {
+            capture_cif_with_parameters(&[
+                args[2].clone(),
+                parameter_path.clone(),
+                tx,
+                rx,
+                isp,
+                "--".into(),
+                args[3].clone(),
+                args[4].clone(),
+                "--fourcc".into(),
+                "NV12".into(),
+                "--timeout-ms".into(),
+                "10000".into(),
+            ])
+        };
+        match statistics {
+            Some(node) => {
+                statistics_session::during(node, &format!("{}.stats.raw", args[4]), capture)
+            }
+            None => capture(),
+        }
     })();
     println!(
         "{}",

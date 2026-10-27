@@ -220,3 +220,14 @@ been reconstructed. The selected records can now be packed by the optional offli
 does not publish them or run statistics feedback. Full measurement publication, statistics
 association, exposure route/limit selection, delay scheduling and live feedback
 remain required work. Automatic exposure is still disabled in capture.
+
+### Persistent measurement collection in development
+
+The optional statistics-node argument to `first-frame-sc3336` now selects the
+measurement-enabled startup record and keeps a statistics queue open around
+camera capture. It records raw measurements and frame/parameter IDs from the
+same live session, with an explicit readiness barrier and bounded header history.
+See [the command and limitations](HARDWARE-TEST.md#persistent-statistics-with-first-frame-capture-0030-dev).
+The ARM userspace simulator exercises both variants and checks the lifecycle.
+Actual measurements and exposure/frame association remain unverified. No AE
+solver, limit/delay policy or feedback sensor writes have been enabled yet.

@@ -1,0 +1,29 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "mathRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "cases": 64,
+  "classifierCalls": 34,
+  "coverage": {
+    "mode0:historyFalse:gridFalse": 2,
+    "mode0:historyFalse:gridTrue": 6,
+    "mode0:historyTrue:gridTrue": 7,
+    "mode1:historyFalse:gridTrue": 14,
+    "mode1:historyTrue:gridTrue": 13,
+    "mode1:historyTrue:gridFalse": 3,
+    "mode2:historyFalse:gridTrue": 7,
+    "mode2:historyTrue:gridTrue": 7,
+    "mode1:historyFalse:gridFalse": 2,
+    "mode0:historyTrue:gridFalse": 1,
+    "mode2:historyTrue:gridFalse": 1,
+    "mode2:historyFalse:gridFalse": 1
+  },
+  "mismatches": 0,
+  "arm": true,
+  "elfEntry": "0xc6a90",
+  "scope": "Complete original low-WP strategy with enabled single-color classifier/manager and actual runtime math, including gain/history/result preservation",
+  "limitations": [
+    "Standard allocation, memory and logging boundaries are adapted; native strategy, classifier, confidence, color and math bodies execute.",
+    "Explicit checked finite calibration, bounded valid candidate histories; native unsafe index domains are rejected.",
+    "Calibration loading, complete outer AWB lifecycle/postprocessing and live integration remain unfinished."
+  ]
+}

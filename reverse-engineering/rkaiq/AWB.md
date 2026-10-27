@@ -1,5 +1,11 @@
 # AWB measurement configuration
 
+Current reconstruction includes measurement conversion/preparation, region
+selection, probabilities, and high/low gain strategies including single-color
+classification and confidence. These are verified value-level components;
+complete calibrated outer AWB and live frame integration remain unfinished.
+The sections below describe each stage and its reference-test boundary.
+
 `isp_awb_measurement::Measurement::apply` reconstructs the pinned library's `RkCam::Isp32Params::convertAiqAwbToIsp32Params` at ELF `0x2b71c` (Ghidra `0x3b71c`). It converts an existing SDK v32 AWB measurement configuration into the kernel ISP32 record. It does not select white-balance gains, derive calibrated detection regions, or implement the AWB algorithm.
 
 The input is the exact 1,204-byte little-endian `rk_aiq_awb_stat_cfg_v32_t` value record. `camera:rust:layout` extracts its public SDK declarations and compiles ARM C assertions independently of Rust. Header SHA pins live in `artifacts.json`. The packed kernel AWB block is 807 bytes at `0xf4` of the 11,145-byte full parameter record; its final eight bytes hold the black-level values.
@@ -680,3 +686,54 @@ bounded scratch. [Reference report](awb-single-color-grid-equivalence.json).
 The next required step is joining this classifier and confidence manager into
 the enabled low-count strategy. IQ initialization, full gain postprocessing,
 frame lifecycle and live AWB integration remain unfinished.
+
+## Enabled single-color low-count orchestration
+
+`awb_low_single_color::State::calculate` joins the low-count temporal/spatial
+core, single-color grid classifier and confidence manager through a complete
+return from `AwbCalGainWpTypeLow` (ELF `0xc6a90`). Its enable flag is explicitly
+true; disabled profiles retain `calculate_without_single_color`. Modes 0, 1 and
+2 follow the recovered caller policy rather than replacing classification with
+an independent gain estimate.
+
+Mode 2 bypasses the sufficient-count early return. With empty gain history,
+single-color processing runs only for a valid grid in the intermediate
+brightness range. An accepted result replaces the current gain and sets its
+weight to 1, preserving the older spatial weight; rejection retains the
+temporal/spatial blend and clears single-color weight. A nonempty gain history
+allows single-color processing when the grid is valid and mode is at least 1.
+Mode 2 supplies no optional prior; other active modes may use the first gain of
+the high-count history list as an additional classifier candidate.
+
+After classification, invalid detections fall back to the last ordinary gain
+history entry and clear single-color weight. A valid mode-1 detection with a
+positive estimated red gain above 1e-5 blends detected and estimated gains using
+the computed confidence, including native normalization. Otherwise confidence
+chooses either the detected gain at weight 1 or the ordinary history fallback
+at weight 0. Successful detections preserve temporal-result/previous-use fields
+when native code does not write them. Sufficient-count shortcuts and missing-grid
+paths likewise preserve inactive single-color results.
+
+State includes the classifier result and its gain buffer, confidence weight,
+shared color history and low-strategy caches. All state and per-light outputs
+commit atomically. A unit test forces confidence failure after classification
+and spatial processing and verifies the old detection, history, gain caches and
+per-light outputs all remain intact. Calibration/list inputs remain explicit;
+callers supply the same candidate count/history target to both representations
+of the shared native single-color configuration.
+
+`mise run camera:rust:awb-low-single-color` compares **64 complete native calls**
+on host and ARM, including **34 classifier calls** with their original
+confidence/color/math helpers. Coverage crosses modes 0–2, empty/nonempty gain
+history, valid/missing grids, sufficient-count bypass, valid/empty detections,
+confidence acceptance/rejection, optional high-history candidates, estimated-gain
+mixtures, cache preservation and history updates. The oracle shares the existing
+disabled low-count harness with explicit enabled setup; that original
+1,024-case regression remains unchanged. Standard memory, allocation and logging
+are adapters; strategy and all numerical bodies execute original ARM code.
+[Reference report](awb-low-single-color-equivalence.json).
+
+This joins the previously missing enabled low-count branch required by the
+pinned IQ. It still needs calibration initialization, integration with the
+caller’s high/low interpolation and gain postprocessing, complete frame
+lifecycle and live AWB submission. The frozen camera kit remains fixed-WB.

@@ -1,5 +1,5 @@
-//! AwbCalGainWpTypeLow (ELF 0xc6a90), with single-color processing disabled.
-//! The enabled single-color path remains required for the pinned SC3336 IQ.
+//! AwbCalGainWpTypeLow (ELF 0xc6a90), temporal/spatial/history core.
+//! Enabled single-color orchestration is in awb_low_single_color.
 use crate::{
     awb_gain::{self, Gains},
     awb_high_gain::{Light, LightResult},
@@ -19,6 +19,7 @@ pub struct State<const CAP: usize> {
     pub color_history: History<CAP>,
 }
 
+#[derive(Clone, Copy)]
 pub struct Settings {
     pub retained: u32,
     pub count_threshold: u32,

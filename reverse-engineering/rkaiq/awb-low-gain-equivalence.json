@@ -16,7 +16,7 @@
   },
   "scope": "Original low-WP strategy with single-color disabled, complete return: gain fields, per-light values, history updates and memory preservation",
   "limitations": [
-    "Single-color explicitly disabled. Pinned SC3336 IQ enables it, so its enabled branch remains required and unported.",
+    "Single-color explicitly disabled in this suite; its enabled branch is covered separately by awb-low-single-color.py.",
     "Memory copy, allocation and logging are explicit adapters; original strategy and numerical/list helpers execute.",
     "Explicit finite inputs and bounded histories; native corrupting singleton target-1 case is excluded and rejected by Rust.",
     "Calibration initialization, complete outer AWB and live integration remain unfinished."

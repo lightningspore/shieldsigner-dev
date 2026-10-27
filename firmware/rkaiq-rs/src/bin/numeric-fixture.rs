@@ -9,6 +9,8 @@ mod ae_result_fixture;
 mod ae_runtime_fixture;
 #[path = "../ae_session_fixture.rs"]
 mod ae_session_fixture;
+#[path = "../awb_low_single_color_fixture.rs"]
+mod awb_low_single_color_fixture;
 #[path = "../awb_preparation_fixture.rs"]
 mod awb_preparation_fixture;
 #[path = "../awb_translation_fixture.rs"]
@@ -302,7 +304,7 @@ fn main() {
                     println!("{}", serde_json::json!({"weight":r.to_bits()}));
                 }
             }
-            "awb-low-gain" => {
+            "awb-low-gain" | "awb-low-single-color" => {
                 use shieldsigner_rkaiq::{
                     awb_high_gain::{Light, LightResult},
                     awb_low_gain::*,
@@ -366,14 +368,29 @@ fn main() {
                     };
                     lights.len()
                 ];
-                state
-                    .calculate_without_single_color(&lights, &mut output, &history, &settings)
-                    .unwrap();
+                let single = if a[0] == "awb-low-single-color" {
+                    let (low, single) = awb_low_single_color_fixture::run(
+                        state,
+                        &lights,
+                        &mut output,
+                        &history,
+                        &settings,
+                        &v,
+                    );
+                    state = low;
+                    Some(single)
+                } else {
+                    state
+                        .calculate_without_single_color(&lights, &mut output, &history, &settings)
+                        .unwrap();
+                    None
+                };
                 let lights: Vec<_> = output.iter().map(|r| serde_json::json!({"statistic": r.statistic.map(f32::to_bits), "spatial": r.spatial.map(f32::to_bits), "spatial_weight": r.spatial_weight.to_bits(), "extra_weight": r.extra_weight.to_bits()})).collect();
-                println!(
-                    "{}",
-                    serde_json::json!({"current": state.current.map(f32::to_bits), "low_result": state.low_result.map(f32::to_bits), "temporal_result": state.temporal_result.map(f32::to_bits), "spatial_result": state.spatial_result.map(f32::to_bits), "temporal_source": state.temporal_source.map(f32::to_bits), "weight": state.spatial_weight.to_bits(), "used_previous": state.used_previous, "colors": state.color_history.values(), "lights": lights})
-                );
+                let mut result = serde_json::json!({"current": state.current.map(f32::to_bits), "low_result": state.low_result.map(f32::to_bits), "temporal_result": state.temporal_result.map(f32::to_bits), "spatial_result": state.spatial_result.map(f32::to_bits), "temporal_source": state.temporal_source.map(f32::to_bits), "weight": state.spatial_weight.to_bits(), "used_previous": state.used_previous, "colors": state.color_history.values(), "lights": lights});
+                if let Some(single) = single {
+                    result["single"] = single;
+                }
+                println!("{}", result);
             }
             "awb-high-gain" => {
                 use shieldsigner_rkaiq::awb_high_gain::*;

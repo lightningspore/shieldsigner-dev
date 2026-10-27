@@ -76,8 +76,10 @@ def native(arm, v):
     for i, node in enumerate(color_nodes):
         arm.uc.mem_write(node, struct.pack('<III', color_nodes[i + 1] if i + 1 < len(color_nodes) else color_head,
                                         color_nodes[i - 1] if i else color_head, v['colors'][i]))
+    extra = arm.setup_single(v, context, config, calibration) if 'single' in v else []
     blocks = [(0, context), (0x8000, config), (0x9000, calibration), (0x10000, reference),
               (0x20000, results), (0x50000, statistics)]
+    blocks += extra
     for offset, data in blocks:
         arm.uc.mem_write(HEAP + offset, bytes(data))
     arm.arena, arm.live = HEAP + 0x40000, set()
@@ -94,7 +96,11 @@ def native(arm, v):
         output['colors'].append(word(node + 8))
         previous, node = node, word(node)
     assert word(color_head + 4) == previous
-    assert len(arm.live) == len(output['colors']) - len(v['colors'])
+    assert len(arm.live) == len(output['colors']) - len(v['colors']) + (2 * arm.single_calls if 'single' in v else 0)
+    if 'single' in v:
+        output['single'] = arm.read_single(after)
+        for offset, size in [(0x3450, 20), (0x35bc, 0x88)]:
+            after[offset:offset + size] = context[offset:offset + size]
     for offset, size in [(0x353c, 16), (0x342c, 16), (0x3440, 16), (0x3464, 20), (0x33e8, 16), (0x3419, 1), (0x35a0, 8)]:
         after[offset:offset + size] = context[offset:offset + size]
     assert after == context, 'Unexpected low-gain context write'
@@ -160,7 +166,7 @@ def main():
                  '/bincheck/numeric-fixture'])
     report = dict(binarySha256=sha, cases=len(cases), mismatches=0, arm=replay, branches=branches, elfEntry='0xc6a90', modeledMemoryCalls={'memcpy': len(arm.calls)},
                   scope='Original low-WP strategy with single-color disabled, complete return: gain fields, per-light values, history updates and memory preservation',
-                  limitations=['Single-color explicitly disabled. Pinned SC3336 IQ enables it, so its enabled branch remains required and unported.',
+                  limitations=['Single-color explicitly disabled in this suite; its enabled branch is covered separately by awb-low-single-color.py.',
                                'Memory copy, allocation and logging are explicit adapters; original strategy and numerical/list helpers execute.',
                                'Explicit finite inputs and bounded histories; native corrupting singleton target-1 case is excluded and rejected by Rust.',
                                'Calibration initialization, complete outer AWB and live integration remain unfinished.'])

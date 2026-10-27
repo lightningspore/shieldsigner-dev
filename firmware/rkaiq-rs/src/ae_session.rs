@@ -166,6 +166,15 @@ impl Session {
         histogram: &[u32],
         effective: ae_publication::Record,
     ) -> Result<ae_pipeline::Output, String> {
+        let line = u16::from_le_bytes(effective[228..230].try_into().unwrap()) as u32;
+        let frame_length = u32::from_le_bytes(effective[232..236].try_into().unwrap());
+        let clock = u32::from_le_bytes(effective[236..240].try_into().unwrap());
+        if line != self.prepared.timing.line_length_pixels
+            || frame_length != self.prepared.timing.frame_length
+            || clock != self.prepared.timing.pixel_clock_mhz.to_bits()
+        {
+            return Err("Incomplete or changed exposure timing; reconfigure the session".into());
+        }
         let q = [q8[0], q8[1], q8[2]];
         let run = ae_frame::should_run(
             &self.state.frame,
@@ -256,5 +265,74 @@ impl Session {
             self.preprocessing.near_minimum as u8,
         ]);
         Ok(output)
+    }
+}
+
+/// Caller-owned complete parameter state identified by the driver's params ID.
+/// Partial ISP update buffers must be accumulated before being supplied here.
+pub struct ParameterSnapshot<'a> {
+    pub id: u32,
+    pub bytes: &'a [u8; crate::isp32::PARAMETER_BYTES],
+}
+pub struct StatisticsOutput {
+    pub frame: u32,
+    pub parameters: u32,
+    pub exposure_frame: u32,
+    pub exact_exposure: bool,
+    pub mean_q8: u16,
+    pub control: ae_pipeline::Output,
+}
+impl Session {
+    /// Join raw ISP32 translation, explicit snapshot IDs and native effective-
+    /// exposure lookup. The supplied map reports scheduling state, not measured
+    /// physical application. Missing measurements leave the session untouched.
+    pub fn step_statistics(
+        &mut self,
+        bytes: &[u8],
+        parameters: &[ParameterSnapshot<'_>],
+        effective: &[crate::sensor_scheduler::Entry<ae_publication::Record>],
+    ) -> Result<Option<StatisticsOutput>, String> {
+        let stats = crate::statistics::Statistics::parse(bytes)
+            .map_err(|_| String::from("Invalid ISP32 statistics length"))?;
+        let frame = stats.frame_id();
+        let parameter_id = stats.parameters_id();
+        if stats.measurements() & ((1 << 8) | (1 << 12)) != ((1 << 8) | (1 << 12)) {
+            return Ok(None);
+        }
+        if frame > i32::MAX as u32 - 9 {
+            return Err("Frame ID outside qualified AE history range".into());
+        }
+        if parameters.windows(2).any(|v| v[0].id >= v[1].id) {
+            return Err("Parameter snapshots must have unique increasing IDs".into());
+        }
+        let p = parameters
+            .binary_search_by_key(&parameter_id, |p| p.id)
+            .ok()
+            .map(|i| parameters[i].bytes)
+            .ok_or_else(|| format!("Missing parameter snapshot {parameter_id}"))?;
+        let frames = effective.iter().map(|v| v.frame).collect::<Vec<_>>();
+        let selected = crate::exposure_association::effective_index(&frames, frame)
+            .map_err(|e| format!("Effective exposure map: {e:?}"))?
+            .ok_or("No effective exposure records")?;
+        let record = effective[selected.index];
+        let m = crate::ae_translation::measure_linear(bytes, p)
+            .map_err(|e| format!("AE translation: {e:?}"))?
+            .ok_or("Missing primary AE measurements")?;
+        // This qualified source routing produces only channel zero. Optional
+        // channels are not synthesized from an uncorrected raw mean.
+        let control = self.step(
+            frame as i32,
+            [m.mean, 0, 0, 0],
+            &m.histogram,
+            record.exposure,
+        )?;
+        Ok(Some(StatisticsOutput {
+            frame,
+            parameters: parameter_id,
+            exposure_frame: record.frame,
+            exact_exposure: selected.exact,
+            mean_q8: m.mean,
+            control,
+        }))
     }
 }

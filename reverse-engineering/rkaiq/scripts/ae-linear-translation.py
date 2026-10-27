@@ -30,7 +30,7 @@ class OriginalLinear(Base):
   ctx[0xbad4:0xbad7]=bytes([1,1,1]);ctx[0xbad7:0xbad7+225]=p[0x4af+58:0x4af+283]
   self.uc.mem_write(HEAP,bytes(ctx));self.uc.mem_write(HEAP+0x20000,raw);self.uc.mem_write(HEAP+0x38000,bytes(0x100));self.uc.mem_write(HEAP+0x40000,bytes(0x3000));self.uc.mem_write(HEAP+0x50000,struct.pack('<II',HEAP+0x60000,0));proxy=bytearray(0x100);struct.pack_into('<II',proxy,0x6c,HEAP+0x40000,HEAP+0x70000);self.uc.mem_write(HEAP+0x60000,bytes(proxy));self.uc.mem_write(HEAP+0x70000,struct.pack('<II',0,100)+bytes(248))
   status=self.invoke(SYMBOL,[HEAP,0,HEAP+0x50000],instructions=1000000)
-  if raw[0x32e0:0x32e4]!=struct.pack('<I',(1<<8)|(1<<12)):assert status==1;return 'invalid'
+  if struct.unpack_from('<I',raw,0x32e0)[0]&((1<<8)|(1<<12))!=((1<<8)|(1<<12)):assert status==1;return 'invalid'
   assert status==0
   output=bytes(self.uc.mem_read(HEAP+0x40000,0x3000));return str(struct.unpack_from('<H',output,0x2e28)[0])+':'+output[8:8+1928].hex()+':'+output[0x790:0x790+1024].hex()
 def main():

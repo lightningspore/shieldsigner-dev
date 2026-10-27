@@ -182,3 +182,8 @@ preprocessing at the earlier checkpoint. [Session evidence and boundaries](AE.md
 cover the retained controller/publication state and remaining optional modes.
 Exposure association is still an explicit input; no live sensor/ISP control or
 complete AE/AWB camera-service qualification is implied.
+
+`Session::step_statistics` additionally joins raw ISP32 translation to explicit
+parameter-snapshot IDs and effective-exposure lookup. [Raw-buffer comparison](AE.md#raw-isp-statistics-parameter-ids-and-exposure-map-association)
+checks the native composition and rejection of missing metadata/changed timing.
+The caller still owns the complete parameter snapshots and reported exposure map.

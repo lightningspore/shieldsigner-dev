@@ -1,0 +1,27 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "runtimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "profileSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "sequences": 4,
+  "buffers": 68,
+  "counts": {
+    "valid": 52,
+    "invalid_measurements": 4,
+    "missing_parameters": 4,
+    "missing_exposure": 4,
+    "changed_timing": 4,
+    "exact": 36,
+    "fallback": 16,
+    "control_runs": 51,
+    "control_skips": 1
+  },
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "Native source-1 ISP32 translation, native effective-exposure lookup and complete SDK AE wrappers versus Rust raw-statistics session entry point; persistent state snapshots compared.",
+  "limitations": [
+    "Translator object access/run flag/single-ISP predicate and native map ownership/container boundaries remain explicit inherited harness models. Native grid/histogram, map lookup and AE bodies execute.",
+    "Parameter snapshot ID validation/lookup and rejection of missing metadata or changed exposure timing are Rust integration policies, not newly recovered vendor parameter-cache/reconfiguration behavior. Parameter snapshots must contain complete accumulated state.",
+    "Exposure maps contain explicit predicted effective-frame entries; the two-frame example delay is test input, not measured physical latency.",
+    "Source-1/full-range/fixed-rate/ordinary-linear profile subset only. Additional AE modes, live parameter accumulation, SOF coordination, sensor/ISP writes, AWB and physical association remain unfinished."
+  ]
+}

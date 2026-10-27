@@ -32,6 +32,10 @@ fn main() {
         let line = line.unwrap();
         let a: Vec<_> = line.split_whitespace().collect();
         match a[0] {
+            "ae-raw-session" => println!(
+                "{}",
+                ae_session_fixture::run_raw(&serde_json::from_str(a[1]).unwrap())
+            ),
             "ae-session" => println!(
                 "{}",
                 ae_session_fixture::run(&serde_json::from_str(a[1]).unwrap())

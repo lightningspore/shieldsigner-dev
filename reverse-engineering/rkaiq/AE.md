@@ -1465,3 +1465,61 @@ remain open. This is a software session, not a claim of a complete camera servic
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-session.py --arm
 ```
+
+## Raw ISP statistics, parameter IDs and exposure-map association
+
+`ae_session::Session::step_statistics` now accepts a raw full-ISP32 statistics
+buffer, complete parameter snapshots keyed by ID, and the sensor scheduler's
+reported effective-exposure map. It reads the frame/parameter IDs from the
+buffer, selects an exact parameter snapshot, applies the recovered effective-
+exposure lookup, translates the grid/histogram with the snapshot's BLS/WB
+corrections and weights, then runs the persistent AE session. The output includes
+the selected IDs, exact/fallback exposure-match status, corrected Q8 mean and AE
+control/publication results. No sensor or ISP write is performed.
+
+The parameter-ID lookup is an explicit Rust integration rule, not a claim that
+the vendor parameter-cache algorithm has been ported. Callers must supply the
+complete accumulated ISP state for that ID; individual partial update buffers
+are insufficient. Missing parameter or exposure metadata returns an error.
+Missing AE/histogram validity bits returns `None`. These paths leave session
+state unchanged. Effective-exposure selection uses the already recovered native
+map behavior and reports whether the frame matched exactly. A reported map entry
+still does not prove when the physical sensor applied its exposure.
+
+The qualified routing remains source 1, full-range luma with the native auxiliary
+source selection 3. In this configuration the SDK translator produces its primary
+Q8 mean in channel zero and leaves the other mean channels zero; the composed
+native test verifies those fields rather than inventing auxiliary measurements.
+Additional driver validity bits are permitted: the real captured mask **0x5d80**
+is included in the corpus. The older translator oracle incorrectly treated any
+mask other than the two required bits as invalid in its assertion; that harness
+assertion now tests required-bit inclusion, matching the native translator.
+
+The session is still prepared for fixed timing. Complete effective-exposure
+records must carry matching frame length, line length and pixel clock. Changed
+or incomplete timing is rejected before controller state changes, because native
+reprepare/timing-update orchestration is not yet joined. This matters when long
+exposures change VBLANK; callers must not reinterpret those frames with a stale
+1,360-line configuration.
+
+[Raw-session comparison](ae-raw-session-equivalence.json) passes on host and ARM
+with zero mismatches. It composes real native
+`translateAecStats`, `getEffectiveExpParams` lookup and full AE SDK wrappers on
+persistent contexts. Four sequences cover 68 input buffers: 52 valid frames,
+four missing-measurement buffers, four missing parameter snapshots, four empty
+exposure maps and four changed-timing records. The valid frames exercise exact
+and fallback exposure matches, two different parameter snapshots, changed WB
+correction, initial exposure and smoothing. Native full state snapshots from
+the earlier session test are compared after every input, including rejected
+inputs. The explicit two-frame exposure-map example is test data, not a measured
+sensor latency. Existing translator object/run-flag and map ownership/container
+boundaries remain modeled; their numerical and lookup bodies execute natively.
+
+Live snapshot accumulation, parameter-cache behavior, SOF-driven exposure-map
+updates, physical frame/exposure association, driver writes and AWB remain open.
+The raw-buffer entry point connects those explicit inputs to the verified AE
+session; it does not establish a live automatic camera loop.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-raw-session.py --arm
+```

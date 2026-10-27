@@ -106,3 +106,68 @@ pub fn run(v: &Value) -> String {
     }
     serde_json::to_string(&results).unwrap()
 }
+
+fn decode(text: &str) -> Vec<u8> {
+    (0..text.len())
+        .step_by(2)
+        .map(|i| u8::from_str_radix(&text[i..i + 2], 16).unwrap())
+        .collect()
+}
+pub fn run_raw(v: &Value) -> String {
+    let mut session = ae_session::Session::from_profile(
+        &v["profile"],
+        calibration::RuntimeTiming {
+            frame_length: 1360,
+            line_length_pixels: 2800,
+            pixel_clock_mhz: 114.24,
+        },
+        2304,
+        1296,
+    )
+    .unwrap();
+    let owned = v["parameters"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|p| {
+            (
+                p["id"].as_u64().unwrap() as u32,
+                decode(p["bytes"].as_str().unwrap()).try_into().unwrap(),
+            )
+        })
+        .collect::<Vec<(u32, [u8; isp32::PARAMETER_BYTES])>>();
+    let parameters = owned
+        .iter()
+        .map(|(id, bytes)| ae_session::ParameterSnapshot { id: *id, bytes })
+        .collect::<Vec<_>>();
+    let mut results = vec![json!({"status":"initial","state":snapshot(&session,0.)})];
+    let mut last_error = 0.;
+    for frame in v["frames"].as_array().unwrap() {
+        let raw = decode(frame["raw"].as_str().unwrap());
+        let map = frame["effective"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|e| sensor_scheduler::Entry {
+                frame: e["frame"].as_u64().unwrap() as u32,
+                exposure: decode(e["record"].as_str().unwrap()).try_into().unwrap(),
+            })
+            .collect::<Vec<_>>();
+        let report = match session.step_statistics(&raw, &parameters, &map) {
+            Ok(Some(out)) => {
+                last_error = out
+                    .control
+                    .frame
+                    .control
+                    .map_or(out.control.frame.preprocessing_error, |c| c.relative_error);
+                json!({"status":"processed","frame":out.frame,"parameters":out.parameters,"exposure_frame":out.exposure_frame,"exact":out.exact_exposure,"mean":out.mean_q8,"state":snapshot(&session,last_error)})
+            }
+            Ok(None) => json!({"status":"no-measurement","state":snapshot(&session,last_error)}),
+            Err(error) => {
+                json!({"status":"error","error":error,"state":snapshot(&session,last_error)})
+            }
+        };
+        results.push(report);
+    }
+    serde_json::to_string(&results).unwrap()
+}

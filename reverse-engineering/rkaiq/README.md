@@ -30,7 +30,7 @@ Recent hardware evidence:
 
 [HARDWARE-TEST.md](HARDWARE-TEST.md) is the runnable procedure. The frozen
 0.0.33-dev kit includes live ISP tuning, default streaming without a scene-image
-dump, and current hardware/numerical checks.
+dump, and current hardware/numerical checks, including a controlled clean reboot.
 [Current kit evidence](kit-0.0.33-dev-hardware-validation.json). Prior archives
 remain unchanged; exact 0.0.32 retains controlled clean-reboot evidence. Next priorities are successful
 physical QR scanning, physical lighting/color response, complete LCD/button
@@ -204,7 +204,7 @@ Still open:
    required by this fixed profile. Existing comparisons cover many components
    and the live composition, with narrower oracle scopes stated explicitly.
 6. Repeat the remaining physical qualification with the exact 0.0.33-dev kit
-   before treating its warm-board tests as complete deployment qualification.
+   before treating its controlled-reboot tests as complete deployment qualification.
 
 Optional modes remain outside the current single-camera priority unless the
 actual QR capture path needs them. No completion claim follows from passing

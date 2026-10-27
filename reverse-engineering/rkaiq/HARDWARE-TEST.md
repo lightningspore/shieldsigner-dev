@@ -1631,3 +1631,26 @@ The exact 0.0.32 package retains its separate controlled-clean-reboot result.
 Successful physical QR, physical lighting/color changes, LCD/buttons and a
 physical power cycle remain open. Use this archive's own quickstart with fresh
 configuration/results paths; do not replace an existing frozen archive.
+
+### Exact 0.0.33-dev package after controlled clean reboot
+
+The same frozen ZIP subsequently passes a vendor/UI-skipped reboot test. Both
+startup scripts restored their original pinned bytes during that boot; markers,
+new boot ID, initially empty module inventory and absence of vendor camera
+processes, vendor library mappings and Rockit were verified before the
+driver-only loader ran. Matching temporary backups were removed after checking,
+and restored scripts/absent backups/vendor mappings were checked again afterward.
+
+The bundled integration test produced 69 sampled previews, first in 0.692 s,
+with clean owner exit and 0.284 s stop. AE/AWB processed 165 statistics frames
+and 164 accepted parameter batches, with at most two snapshots. Both normal
+AWB groups appeared. All fifteen submitted demosaic records/packed blocks
+match the original full callback/converter, and the final exact-SDK AWB
+translation matches all 7,680 bytes. Default streaming saved no scene image.
+
+[The exact-package report](kit-0.0.33-dev-hardware-validation.json) retains warm
+and controlled-clean-reboot results separately. The ZIP/source hash is unchanged.
+This qualifies software-reboot startup without vendor camera bootstrap; it is
+not a physical power-cycle, optical QR, physical scene/color-change or complete
+LCD/button result. Original installed application and startup scripts remain
+unchanged after testing.

@@ -1,6 +1,6 @@
 {
   "kind": "experimental-live-ae-awb-hardware-check",
-  "cameraBinarySha256": "182741ae2b6c633306c5ec10c7475c88f6dd727d098e9cfe3815e2ca8c899707",
+  "cameraBinarySha256": "3ce99691c26228ccd23ca31df4c931de695dbdcfd438609b314b82275866d2b6",
   "runs": [
     {
       "run": "01",
@@ -87,6 +87,40 @@
       "exposureMetadata": "same-frame-AE-normalized-brightness",
       "firstBrightness": 423.89324951171875,
       "lastBrightness": 741.446533203125
+    },
+    {
+      "run": "04",
+      "cameraBinarySha256": "3ce99691c26228ccd23ca31df4c931de695dbdcfd438609b314b82275866d2b6",
+      "success": true,
+      "awbFrames": 22,
+      "aeFrames": 22,
+      "registeredParameterIds": 22,
+      "firstGain": [
+        1.4850846529006958,
+        1.0,
+        1.0,
+        1.8263955116271973
+      ],
+      "lastGain": [
+        1.4315495491027832,
+        1.0,
+        1.0,
+        1.8987544775009155
+      ],
+      "lastFrame": 31,
+      "lastParametersId": 30,
+      "controllerFrames": 22,
+      "countdown": 0,
+      "savedImageBytes": 460800,
+      "allObservedAwbIdsRegistered": true,
+      "finalStatisticsTranslationMatchesSavedHeader": true,
+      "exposureMetadata": "same-frame-AE-normalized-brightness",
+      "isoSource": "same-frame-associated-real-gains",
+      "isoRange": [
+        212.5,
+        487.109375
+      ],
+      "lastIso": 288.28125
     }
   ],
   "libraryTests": 85,
@@ -94,13 +128,13 @@
   "rollbackChecksOnHostAndLuckfox": 64,
   "limitations": [
     "Fixed four-window FAST startup measurement configuration; normal scheduling and adaptive measurement reconfiguration not connected.",
-    "Runs 01/02 use the missing-exposure fallback; run 03 uses same-frame native-equivalent AE pre-result brightness. ISO remains explicit 400 and sample scale 1 remains without native provenance.",
+    "Runs 01/02 use missing-exposure brightness fallback; 03 binds AE brightness with explicit ISO 400; 04 binds AE brightness and native-equivalent dynamic ISO. Sample scale 1 still lacks native provenance.",
     "Physical per-frame gain/exposure latency, color accuracy and vendor-free cold startup remain unqualified.",
     "Short bounded diagnostic captures, not yet a continuous application camera service.",
     "Full joined original startup/controller equivalence remains unproven."
   ],
   "lastTranslationComparisons": {
-    "runs": 3,
+    "runs": 4,
     "bytesEach": 7680,
     "mismatches": 0,
     "snapshotAssociation": "Registered gain-only ID 30; measurement SDK unchanged"
@@ -110,5 +144,11 @@
     "nativeFrameChecks": 128,
     "hostAndArmReplayPassed": true,
     "linearOnly": true
+  },
+  "linearIsoBinding": {
+    "nativeCases": 340,
+    "checkedInputErrors": 4,
+    "hostAndArmReplayPassed": true,
+    "originalWrapperPrefixOnly": true
   }
 }

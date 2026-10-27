@@ -2240,3 +2240,50 @@ measurement configuration remains fixed FAST startup. Binding those runtime
 inputs and native measurement reconfiguration remains required; this change
 does not establish complete startup/controller equivalence or cold-boot
 independence. The 85 library tests and simulated capture/queue scenarios pass.
+
+
+### Frame-associated dynamic ISO (2026-10-27)
+
+`awb_exposure::linear_iso` now reconstructs the actual linear exposure-gain
+binding inside `awbProcessing` (ELF 0x10f848). Each of analogue, sensor-digital
+and ISP gain is accepted when >= 1, otherwise replaced with unity. Native f32
+multiplications run in that order, followed by a 50x scale. The native scale
+literal is 50.0, verified from the pinned library; this is ISO, not a unitless
+gain. Rust rejects nonfinite input or overflow rather than passing them into
+calibrated interpolation.
+
+`mise run camera:rust:awb-linear-iso` executes the original wrapper from entry
+to its completed linear ISO store (mapped checkpoint 0x11fa14, context +0x5c).
+AE proxies are absent, logging is an explicit adapter, and execution stops
+before statistics/controller/proxy processing. All 340 finite cases match on
+host and ARM Rust; four checked nonfinite/overflow inputs are rejected. This
+is prefix equivalence, not a complete wrapper claim. The older common-tail
+reference fixture also now seeds ISO at +0x5c rather than the unused +0x58;
+its existing 256 host/ARM comparisons still pass. The separate gain-adjustment
+component already uses +0x5c.
+
+The live owner reads real gain fields +4/+8/+12 from the exact exposure record
+used by same-frame AE preprocessing and derives ISO with this helper. It no
+longer accepts a manual ISO argument. The offline replay still accepts an
+explicit diagnostic ISO input. The current live command is:
+
+```sh
+/tmp/shieldsigner-camera-probe-live-awb auto-awb-frame-sc3336 \
+  /tmp/shieldsigner-pipeline-sof.json /tmp/sc3336-awb-30ms-8x.private.json \
+  /dev/video20 /dev/video11 /tmp/ss-20261027-live-awb-04 /dev/video19 1
+```
+
+Earlier example commands containing trailing `400` describe the older builds
+that produced their named captures. Use a fresh basename when running current
+source. Camera capture 04 passed with 22 AE/AWB updates, dynamic ISO between
+212.5 and 487.109375 (last 288.28125), final gain approximately
+`[1.43155, 1, 1, 1.89875]`, and readable image output. Final frame 31 / parameter
+ID 30 again matches all 7,680 translated bytes of original ARM code. Registered
+parameter IDs and the saved raw/translated frame headers agree. The committed
+hardware validation retains each run's own executable hash and runtime sources.
+
+The source exposure record represents scheduler-associated settings, not proven
+physical sensor latency. Fixed FAST measurement configuration, sample-scale
+provenance, normal/adaptive measurement scheduling and continuous application
+integration remain work. All 85 library tests, the no-default-features build,
+ARM build and simulated capture/AE queue scenarios pass for this change.

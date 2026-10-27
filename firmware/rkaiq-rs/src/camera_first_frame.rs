@@ -12,19 +12,16 @@ fn auto_frame_sc3336(args: &[String]) -> io::Result<()> {
     first_frame_sc3336_mode(args, None, true, None)
 }
 fn auto_awb_frame_sc3336(args: &[String]) -> io::Result<()> {
-    if args.len() != 8 {
-        return Err(error("auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE ISO"));
+    if args.len() != 7 {
+        return Err(error("auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE"));
     }
     let scale = args[6]
         .parse::<u32>()
         .map_err(|_| error("Invalid AWB sample scale"))?;
-    let iso = args[7]
-        .parse::<f32>()
-        .map_err(|_| error("Invalid AWB ISO"))?;
-    if scale == 0 || scale > i32::MAX as u32 || !iso.is_finite() || iso <= 0. {
+    if scale == 0 || scale > i32::MAX as u32 {
         return Err(error("Invalid AWB runtime inputs"));
     }
-    first_frame_sc3336_with_gain(&args[..6], None, true, Some(scale), None, Some(iso))
+    first_frame_sc3336_with_gain(&args[..6], None, true, Some(scale), None, true)
 }
 fn awb_measurement_frame_sc3336(args: &[String]) -> io::Result<()> {
     if args.len() != 7 {
@@ -55,7 +52,7 @@ fn awb_gain_frame_sc3336(args: &[String]) -> io::Result<()> {
             return Err(error("Gain outside ISP Q8 range"));
         }
     }
-    first_frame_sc3336_with_gain(&args[..6], None, false, Some(scale), Some(gain), None)
+    first_frame_sc3336_with_gain(&args[..6], None, false, Some(scale), Some(gain), false)
 }
 fn first_frame_sc3336_mode(
     args: &[String],
@@ -63,7 +60,7 @@ fn first_frame_sc3336_mode(
     automatic: bool,
     awb_sample_scale: Option<u32>,
 ) -> io::Result<()> {
-    first_frame_sc3336_with_gain(args, observer, automatic, awb_sample_scale, None, None)
+    first_frame_sc3336_with_gain(args, observer, automatic, awb_sample_scale, None, false)
 }
 fn first_frame_sc3336_with_gain(
     args: &[String],
@@ -71,7 +68,7 @@ fn first_frame_sc3336_with_gain(
     automatic: bool,
     awb_sample_scale: Option<u32>,
     gain_override: Option<[f32; 4]>,
-    awb_iso: Option<f32>,
+    live_awb: bool,
 ) -> io::Result<()> {
     use shieldsigner_rkaiq::{
         calibration::{RuntimeTiming, SensorCalibration},
@@ -145,7 +142,7 @@ fn first_frame_sc3336_with_gain(
         }
     }
     let (mut parameters, mut initial, sdk) = if let Some(scale) = awb_sample_scale {
-        if (automatic && awb_iso.is_none()) || statistics.is_none() || step.is_some() {
+        if (automatic && !live_awb) || statistics.is_none() || step.is_some() {
             return Err(error(
                 "AWB measurement capture requires fixed startup and a statistics node",
             ));
@@ -228,7 +225,7 @@ fn first_frame_sc3336_with_gain(
     report.sync_all()?;
     println!(
         "{}",
-        json!({"event":"first-frame-starting","sensor":sensor_path,"parameters":parameter_path,"initialReport":report_path,"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":awb_iso.is_some(),"coldStartProven":false})
+        json!({"event":"first-frame-starting","sensor":sensor_path,"parameters":parameter_path,"initialReport":report_path,"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":live_awb,"coldStartProven":false})
     );
     let outcome = (|| -> io::Result<()> {
         pipeline_configuration::run(&[args[0].clone()])?;
@@ -318,7 +315,7 @@ fn first_frame_sc3336_with_gain(
             };
             let (sender, events) = std::sync::mpsc::sync_channel(64);
             let mut owner = CameraAeOwner::new(runtime, sensor, 0, parameters);
-            if let Some(iso) = awb_iso {
+            if live_awb {
                 owner.awb = Some(CameraAwb {
                     session: shieldsigner_rkaiq::awb_session::Session::new(
                         &iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["wb_v32"],
@@ -327,7 +324,7 @@ fn first_frame_sc3336_with_gain(
                     )
                     .map_err(error)?,
                     sdk: sdk.ok_or_else(|| error("Live AWB requires an SDK snapshot"))?,
-                    iso,
+                    last_iso: None,
                     gains: vec![],
                     processed: 0,
                     last: None,
@@ -410,7 +407,7 @@ fn first_frame_sc3336_with_gain(
         }
     })();
     let outcome = outcome.and_then(|()| {
-        if let Some(sdk) = sdk.filter(|_| awb_iso.is_none()) {
+        if let Some(sdk) = sdk.filter(|_| !live_awb) {
             save_awb_capture_translation(
                 &format!("{}.stats.raw", args[4]),
                 &sdk,
@@ -422,7 +419,7 @@ fn first_frame_sc3336_with_gain(
     });
     println!(
         "{}",
-        json!({"event":"first-frame-finished","success":outcome.is_ok(),"error":outcome.as_ref().err().map(|e|e.to_string()),"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":awb_iso.is_some(),"coldStartProven":false,"partialSettingsMayRemain":true})
+        json!({"event":"first-frame-finished","success":outcome.is_ok(),"error":outcome.as_ref().err().map(|e|e.to_string()),"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":live_awb,"coldStartProven":false,"partialSettingsMayRemain":true})
     );
     outcome
 }

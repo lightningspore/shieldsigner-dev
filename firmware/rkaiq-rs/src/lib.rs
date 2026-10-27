@@ -23,6 +23,7 @@ pub mod ae_translation;
 pub mod ae_weights;
 pub mod awb_color;
 pub mod awb_environment;
+pub mod awb_exposure;
 pub mod awb_gain;
 pub mod awb_gain_adjust;
 pub mod awb_gain_clip;

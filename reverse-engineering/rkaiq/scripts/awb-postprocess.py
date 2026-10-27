@@ -60,7 +60,7 @@ class Original(OriginalAwb):
         context[0x348C] = v["clipped"]
         struct.pack_into("<I", context, 0x33D8, v["brightness"])
         struct.pack_into("<f", context, 0x33DC, v.get("sample", 0.0))
-        struct.pack_into("<f", context, 0x58, v.get("iso", 100.0))
+        struct.pack_into("<f", context, 0x5C, v.get("iso", 100.0))
         struct.pack_into("<f", context, 0x33B4, v["tolerance"])
         for offset in [0x334C, 0x353C]:
             struct.pack_into("<4f", context, offset, *v["candidate"])

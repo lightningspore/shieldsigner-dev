@@ -298,6 +298,12 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-linear-iso" => {
+                let v=floats(a[1]);
+                match awb_exposure::linear_iso(v.try_into().unwrap()) {
+                    Ok(iso)=>emit(&[iso]), Err(error)=>println!("error:{error:?}"),
+                }
+            }
             "awb-captured-gain" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 println!("{}", match awb_capture_replay_fixture::run(&v) { Ok(value)=>value, Err(error)=>serde_json::json!({"error":error}) });

@@ -23,7 +23,7 @@ fn emit_camera_ae_event(sender: &Option<CameraAeSender>, event: CameraAeEvent) -
 struct CameraAwb {
     session: shieldsigner_rkaiq::awb_session::Session,
     sdk: [u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES],
-    iso: f32,
+    last_iso: Option<f32>,
     gains: Vec<(u32, shieldsigner_rkaiq::isp32::WhiteBalanceGain)>,
     processed: u64,
     last: Option<(u32, u32, Vec<u8>)>,
@@ -64,6 +64,15 @@ impl CameraAwb {
         let outcome = translate_associated(&stats, &snapshots, &mut destination)
             .map_err(|e| error(format!("Live AWB association: {e:?}")))?;
         if outcome == Outcome::Translated {
+            let real_gain = |offset| {
+                f32::from_le_bytes(ae_pre.exposure[offset..offset + 4].try_into().unwrap())
+            };
+            let iso = shieldsigner_rkaiq::awb_exposure::linear_iso([
+                real_gain(4),
+                real_gain(8),
+                real_gain(12),
+            ])
+            .map_err(|e| error(format!("Live AWB ISO: {e:?}")))?;
             let result = self
                 .session
                 .process(
@@ -71,16 +80,17 @@ impl CameraAwb {
                     &shieldsigner_rkaiq::awb_session::Input {
                         requested_update: self.processed == 0,
                         exposure_luma: Some([ae_pre.normalized_brightness, 0.]),
-                        iso: self.iso,
+                        iso,
                         site_reference: None,
                     },
                 )
                 .map_err(|e| error(format!("Live AWB session: {e:?}")))?;
+            self.last_iso = Some(iso);
             self.processed += 1;
             self.last = Some((stats.frame_id(), stats.parameters_id(), frame.to_vec()));
             println!(
                 "{}",
-                json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"exposureMetadata":"same-frame-AE-normalized-brightness","aeNormalizedBrightness":ae_pre.normalized_brightness,"brightness":result.numeric.luma,"measurementConfiguration":"fixed-FAST-startup"})
+                json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"exposureMetadata":"same-frame-AE-normalized-brightness","aeNormalizedBrightness":ae_pre.normalized_brightness,"brightness":result.numeric.luma,"iso":iso,"isoSource":"same-frame-associated-real-gains","measurementConfiguration":"fixed-FAST-startup"})
             );
         }
         let g = self.session.gain();
@@ -119,7 +129,7 @@ impl CameraAwb {
             .create_new(true)
             .open(format!("{base}.awb-translated.bin"))?;
         file.write_all(bytes)?;
-        let report = json!({"event":"automatic-awb-finished","processedStatistics":self.processed,"frameId":frame,"parametersId":id,"association":"exact-registered-gain-only-snapshot","gain":self.session.gain(),"automaticWhiteBalance":true,"measurementConfiguration":"fixed-FAST-startup","exposureMetadata":"same-frame-AE-normalized-brightness","isoInput":self.iso,"coldStartProven":false});
+        let report = json!({"event":"automatic-awb-finished","processedStatistics":self.processed,"frameId":frame,"parametersId":id,"association":"exact-registered-gain-only-snapshot","gain":self.session.gain(),"automaticWhiteBalance":true,"measurementConfiguration":"fixed-FAST-startup","exposureMetadata":"same-frame-AE-normalized-brightness","isoInput":self.last_iso,"isoSource":"same-frame-associated-real-gains","coldStartProven":false});
         let mut sidecar = OpenOptions::new()
             .write(true)
             .create_new(true)

@@ -391,3 +391,36 @@ the stability code. [Joined reference report](awb-prepared-frame-equivalence.jso
 The next gap is the caller's calibrated `AwbCalAwbGain` path and its subsequent
 hardware/publication policy, followed by complete IQ initialization and live AWB
 integration. The automatic-exposure kit remains fixed-WB and unchanged.
+
+## Gain-mode XY region selection
+
+`awb_xy_selection::State::select` now implements the beginning of
+`AwbCalGainByWbMode` (ELF `0xc72b8`): Normal count filtering, Big fallback,
+Exclusion proposal, rolling region-history stabilization, and white-point kind
+classification. It shares the existing probability implementation's extracted
+`count_probabilities` routine. Errors leave both state and output unchanged.
+
+Recovered details matter here: Normal/Big vote ties choose Big; Exclusion must
+strictly beat both. Unknown history entries receive no votes. NaN variance enters
+voting through the native unsigned ARM branch, unlike the earlier brightness
+stability gate. White-point kind compares the stored count words as signed i32.
+If stabilization changes the proposed region to Exclusion, its aggregate count
+replaces the retained count without recalculating per-light probabilities. If an
+Exclusion proposal stays unchanged, the retained count remains the preceding Big
+filter's count. The Rust implementation preserves this distinction.
+
+`mise run camera:rust:awb-xy-selection` compares **768 cases**, with zero
+mismatches on host and ARM. The oracle executes the original gain-mode prefix,
+count-filter, history-list, stabilization and classifier bodies, stopping
+immediately after native `AwbCalWPType` returns. It checks region/count/kind,
+history, exact per-light probability bits, unrelated-memory preservation and
+allocation balance. Inputs include full-width counts, signed thresholds,
+NaN variance, ties, disabled/short/full histories and up to 255 lights.
+[Reference report](awb-xy-selection-equivalence.json).
+
+This covers the complete-measurement branch with calibration mode 1. The direct
+Exclusion/calibration-mode-0 gain branch, subsequent gain strategies and complete
+outer AWB integration remain unfinished. Calibration and starting state are
+explicit inputs; allocation and logging use bounded adapters. The existing
+2,000-case probability regression still matches native code after sharing the
+count filter. These comparisons establish software behavior, not camera quality.

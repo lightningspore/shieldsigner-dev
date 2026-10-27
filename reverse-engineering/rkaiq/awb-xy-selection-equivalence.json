@@ -1,0 +1,17 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 768,
+  "mismatches": 0,
+  "arm": true,
+  "selected": {
+    "0": 321,
+    "1": 251,
+    "3": 196
+  },
+  "scope": "Native gain-mode region/count fallback, rolling stabilization, signed WP classification and exact per-light count probabilities",
+  "limitations": [
+    "Complete-measurement branch with calibration mode 1; execution stops immediately after native AwbCalWPType returns.",
+    "Allocation/logging are explicit adapters; original count-filter/list/stabilization/classification bodies execute.",
+    "Final illumination probabilities, high/low gain mix and postprocessing remain separate."
+  ]
+}

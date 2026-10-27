@@ -30,6 +30,7 @@ pub mod awb_probability;
 pub mod awb_publication;
 pub mod awb_stability;
 pub mod awb_translation;
+pub mod awb_xy_selection;
 #[cfg(feature = "diagnostics")]
 pub mod calibration;
 #[cfg(feature = "diagnostics")]

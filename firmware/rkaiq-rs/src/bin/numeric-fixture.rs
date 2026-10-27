@@ -129,6 +129,71 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-xy-selection" => {
+                use shieldsigner_rkaiq::{
+                    awb_luma_history, awb_probability::Probability, awb_xy_selection::*,
+                };
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let values = |key: &str| {
+                    v[key]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|v| v.as_u64().unwrap() as u32)
+                        .collect::<Vec<_>>()
+                };
+                let history = values("history");
+                let normal = values("normal");
+                let big = values("big");
+                let mut state = State {
+                    history: awb_luma_history::History::<32>::from_values(&history).unwrap(),
+                    selected: match v["previous"].as_u64().unwrap() {
+                        0 => Region::Normal,
+                        1 => Region::Big,
+                        3 => Region::Exclusion,
+                        _ => panic!(),
+                    },
+                    retained: 0,
+                    kind: 9,
+                };
+                let mut output = vec![
+                    Probability {
+                        total: 0.25,
+                        distance: 0.5,
+                        luma: 0.75,
+                        prior: 1.,
+                        white_points: 1.25
+                    };
+                    normal.len()
+                ];
+                let settings = Settings {
+                    absolute: v["absolute"].as_f64().unwrap() as f32,
+                    relative: v["relative"].as_f64().unwrap() as f32,
+                    region_thresholds: core::array::from_fn(|i| {
+                        v["region_thresholds"][i].as_f64().unwrap() as f32
+                    }),
+                    count_thresholds: core::array::from_fn(|i| {
+                        v["count_thresholds"][i].as_u64().unwrap() as u32
+                    }),
+                    stabilization: v["enabled"].as_bool().unwrap(),
+                    target: v["target"].as_i64().unwrap() as i32,
+                    variance: f32::from_bits(v["variance"].as_u64().unwrap() as u32),
+                    variance_threshold: v["variance_threshold"].as_f64().unwrap() as f32,
+                };
+                state
+                    .select(
+                        &normal,
+                        &big,
+                        v["exclusion"].as_u64().unwrap() as u32,
+                        &mut output,
+                        &settings,
+                    )
+                    .unwrap();
+                println!(
+                    "{}",
+                    serde_json::json!({"selected":state.selected as u8,"retained":state.retained,"kind":state.kind,"history":state.history.values(),"probabilities":output.iter().map(|p|[p.total,p.distance,p.luma,p.prior,p.white_points].map(f32::to_bits)).collect::<Vec<_>>()})
+                );
+            }
             "awb-prepared-frame" => println!(
                 "{}",
                 awb_preparation_fixture::run_with_preprocess(

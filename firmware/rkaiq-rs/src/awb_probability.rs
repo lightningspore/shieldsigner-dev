@@ -102,33 +102,13 @@ pub fn calculate(
         }
     }
     let uniform = 1. / n as f32;
-    let total_count: u64 = lights.iter().map(|l| l.white_points as u64).sum();
-    let cutoff = settings.absolute_count_threshold as u32;
-    let retained = |light: &Light<'_>| {
-        total_count != 0
-            && !((light.white_points as f32 / total_count as f32)
-                <= settings.relative_count_threshold
-                && light.white_points <= cutoff)
-    };
-    let retained_count: u64 = lights
-        .iter()
-        .filter(|l| retained(l))
-        .map(|l| l.white_points as u64)
-        .sum();
-    let mut sum = 0.;
-    for (light, probability) in lights.iter().zip(output.iter_mut()) {
-        probability.white_points = if retained(light) {
-            light.white_points as f32 / retained_count as f32
-        } else {
-            0.
-        };
-        sum += probability.white_points;
-    }
-    if (sum as f64) <= 0.00001 {
-        for probability in output.iter_mut() {
-            probability.white_points = uniform;
-        }
-    }
+    let retained_count = count_probabilities(
+        lights.iter().map(|l| l.white_points),
+        output,
+        settings.absolute_count_threshold,
+        settings.relative_count_threshold,
+    )?;
+    let mut sum;
 
     let [red, green_red, green_blue, blue] = settings.gain;
     let product = ((red * blue) * green_red) * green_blue;
@@ -253,4 +233,40 @@ pub fn calculate(
         ])?;
     }
     Ok(retained_count as u32)
+}
+
+/// AwbCalWpNoProbablity count filtering. Writes only white-point probability;
+/// other output fields remain available for later stages. Returns retained sum's
+/// low u32 word, while probability division uses the full 64-bit sum.
+pub fn count_probabilities<I: Iterator<Item = u32> + Clone>(
+    counts: I,
+    output: &mut [Probability],
+    absolute: f32,
+    relative: f32,
+) -> Result<u32, InvalidInput> {
+    let n = output.len();
+    if n == 0 || n > 255 || counts.clone().count() != n {
+        return Err(InvalidInput::Length);
+    }
+    finite(&[absolute, relative])?;
+    let total: u64 = counts.clone().map(u64::from).sum();
+    let cutoff = absolute as u32;
+    let keep =
+        |value: u32| total != 0 && !((value as f32 / total as f32) <= relative && value <= cutoff);
+    let retained: u64 = counts.clone().filter(|v| keep(*v)).map(u64::from).sum();
+    let mut sum = 0.;
+    for (value, p) in counts.zip(output.iter_mut()) {
+        p.white_points = if keep(value) {
+            value as f32 / retained as f32
+        } else {
+            0.
+        };
+        sum += p.white_points;
+    }
+    if sum as f64 <= 0.00001 {
+        for p in output {
+            p.white_points = 1. / n as f32;
+        }
+    }
+    Ok(retained as u32)
 }

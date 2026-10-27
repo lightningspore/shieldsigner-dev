@@ -380,6 +380,20 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-preprocess-history" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut history =
+                    core::array::from_fn(|i| v["history"][i].as_f64().unwrap() as f32);
+                let error = ae_preprocess::record_error(
+                    &mut history,
+                    v["frame"].as_u64().unwrap() as u32,
+                    v["run"].as_bool().unwrap(),
+                    v["measured"].as_f64().unwrap() as f32,
+                    45.,
+                )
+                .unwrap();
+                emit(&history.into_iter().chain([error]).collect::<Vec<_>>());
+            }
             "awb-prepare-position" => {
                 let mode = a[1].parse::<i32>().unwrap();
                 println!(
@@ -545,7 +559,42 @@ fn main() {
                     .iter()
                     .map(|x| x.as_u64().unwrap() as u32)
                     .collect::<Vec<_>>();
-                let out = ae_controller::step(
+                let mut preprocessing_history =
+                    core::array::from_fn(|i| v["damping_history"][i].as_f64().unwrap() as f32);
+                let mut execute = |state: &mut ae_controller::State,
+                                   route: &mut [ae_route::Point],
+                                   histogram: &[u32],
+                                   input: ae_decision::Input,
+                                   policy: ae_controller::Policy,
+                                   limits: ae_route::Limits,
+                                   frame: i32,
+                                   synchronized_frame: i32| {
+                    if v["preprocess"].as_bool().unwrap_or(false) {
+                        ae_controller::step_with_history(
+                            state,
+                            route,
+                            histogram,
+                            input,
+                            policy,
+                            limits,
+                            frame,
+                            synchronized_frame,
+                            &mut preprocessing_history,
+                        )
+                    } else {
+                        ae_controller::step(
+                            state,
+                            route,
+                            histogram,
+                            input,
+                            policy,
+                            limits,
+                            frame,
+                            synchronized_frame,
+                        )
+                    }
+                };
+                let out = execute(
                     &mut state,
                     &mut route,
                     &h,
@@ -644,6 +693,7 @@ fn main() {
                     words.extend([u32::MAX, 0, 0, 0]);
                 }
 
+                words.extend(preprocessing_history.map(f32::to_bits));
                 println!(
                     "{}",
                     words

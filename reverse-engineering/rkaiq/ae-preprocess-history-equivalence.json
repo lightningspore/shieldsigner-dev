@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 420,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "standard linear AecPreProcess error-history/current-error publication checkpoint, active and skipped processing",
+  "limitations": [
+    "Run-flag decision is controlled; native preprocessing executes through current-error store, not full return.",
+    "Fixed target curve 45, standard mean mode, no environment/backlight/overexposure or HDR.",
+    "Physical exposure/statistics association and complete preprocessing policy remain external."
+  ]
+}

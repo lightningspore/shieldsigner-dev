@@ -619,7 +619,7 @@ remains a separate call after the surrounding controller supplies its queue.
 
 The comparison now executes the **complete native brightness-control call
 through normal return**, including the original subordinate numerical/control
-routines. Six hundred forty cases compare resulting gain, ISP gain, shutter,
+routines. The connected corpus now covers 1,280 cases comparing resulting gain, ISP gain, shutter,
 aggregate exposure, relative/previous/reference errors, environment/hold state,
 delay counters, cache, all 220 history bytes and route-time mutation. Other
 native context bytes are checked for preservation. Cases exercise bright/dark
@@ -661,7 +661,48 @@ scenario runs with no dynamic call, an inner-disabled call, automatic rules,
 and custom rules. Native coefficient effects, all three diagnostic writes and
 preservation of unrelated context bytes are checked together with the rest of
 the controller. Host and ARM replay pass; the original 160 fixed-prefix cases
-also still pass. Producing the ten-frame error history from live preprocessing,
+also still pass. The history producer is connected below; live statistics input,
 calibration/policy binding, exposure association and actual sensor/ISP updates
-remain caller/integration work. Dynamic history is explicit, not fabricated
-from the latest statistics sample.
+remain caller/integration work.
+
+
+## Native preprocessing error history
+
+`ae_preprocess::record_error` reconstructs the standard linear history write
+in `AecPreProcess` (ELF 0xb33d0). Active processing stores
+`(measured - selectedTarget) / selectedTarget` at `frame % 10` and publishes
+that error. It does **not** apply the brightness-controller tolerance deadband
+to this history. When the native run decision skips processing, it copies the
+previous ring entry to the current slot and publishes the copied value.
+
+Four hundred twenty cases execute native preprocessing to the current-error
+publication checkpoint, comparing all ten history values and current error
+across ring wraps, active/skipped processing, and dark/target/bright readings.
+The run-flag decision is controlled and the selected target curve is fixed at
+45 to isolate the history stage. Native target selection itself remains covered
+by its separate profile/interpolation comparison. Host and ARM replay pass.
+[History publication report](ae-preprocess-history-equivalence.json).
+
+`ae_controller::step_with_history` connects the active history write to the
+existing controller, supplying the updated ring to dynamic damping. The
+connected corpus now has 1,280 cases: the 640 fixed/dynamic controller scenarios
+each run with explicit prior history and with native preprocessing/history
+publication followed by the complete native control call. It checks all ten
+history values as well as controller outputs, cache, delay/environment records
+and damping diagnostics. The preprocessing comparison stops at its documented
+checkpoint; the control call executes through normal return.
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-preprocess-history.py --arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-controller.py --arm
+```
+
+The active helper requires the caller to establish the run decision and select
+the target first. Skipped frames update history through `record_error(run=false)`;
+this addition does not claim the surrounding skipped-frame output policy.
+Environment-compensated history, alternate luma modes, HDR, complete run-flag
+selection and live sensor/statistics association remain outside this stage.
+The native error history is now produced by Rust, but this does not enable
+live automatic writes or complete the camera service.

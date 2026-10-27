@@ -2,10 +2,20 @@
 """Compare connected Rust standard controller with complete native AecClmExecute."""
 import hashlib,json,random,runpy,struct,subprocess,sys
 from pathlib import Path
-from differential import ROOT,BINARY,HEAP,regs
+from unicorn import UC_HOOK_MEM_WRITE
+from differential import ROOT,BINARY,HEAP,RETURN,regs
 Base=runpy.run_path(str(Path(__file__).with_name('ae-route.py')))['OriginalRoute']
 class Original(Base):
+ def __init__(self,binary):
+  super().__init__(binary);self.preprocessing=False;self.prepared=False
+  self.run_flag=next(p&~1 for n,p in self.symbols.items() if 'AecGetRunFlag' in n)
+  self.uc.hook_add(UC_HOOK_MEM_WRITE,self.preprocess_store,begin=HEAP+0x12c,end=HEAP+0x12f)
+ def preprocess_store(self,uc,access,address,size,value,user):
+  if self.preprocessing:
+   self.prepared=True;uc.reg_write(regs.UC_ARM_REG_PC,RETURN);uc.emu_stop()
  def hook(self,uc,address,size,user):
+  if self.preprocessing and address==self.run_flag:
+   uc.reg_write(regs.UC_ARM_REG_R0,1);uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
   if self.stubs.get(address)=='__aeabi_uidiv':
    a=uc.reg_read(regs.UC_ARM_REG_R0);b=uc.reg_read(regs.UC_ARM_REG_R1);assert b
    uc.reg_write(regs.UC_ARM_REG_R0,a//b);uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
@@ -25,6 +35,13 @@ class Original(Base):
   arrays=[[0.,.01,.01,.02,.03,.03],[1.,1.,4.,8.,15.5,512.],[1.]*6]
   for i,(o,p) in enumerate([(0x3c8c,HEAP+0x10000),(0x3c90,HEAP+0x11000),(0x3c94,HEAP+0x12000)]):struct.pack_into('<I',c,o,p);self.uc.mem_write(p,struct.pack('<6f',*arrays[i]))
   self.uc.mem_write(HEAP,bytes(c));self.uc.mem_write(HEAP+0x20000,struct.pack('<256I',*v['histogram']));self.symbols['controller']=0xb40c9
+  if v.get('preprocess',False):
+   self.uc.mem_write(HEAP+0x40cc,struct.pack('<I',HEAP+0x30000));self.uc.mem_write(HEAP+0x30000,struct.pack('<4I',HEAP+0x31000,2,HEAP+0x32000,2));self.uc.mem_write(HEAP+0x31000,struct.pack('<2f',0.,1.));self.uc.mem_write(HEAP+0x32000,struct.pack('<2f',45.,45.))
+   stats=bytearray(0x3000);struct.pack_into('<H',stats,0x2e20,int(v['measured']*256));self.uc.mem_write(HEAP+0x40000,bytes(stats))
+   stack=bytearray(240);struct.pack_into('<f',stack,0,1.);struct.pack_into('<II',stack,232,HEAP+0x40000,v['frame'])
+   bits=lambda f:struct.unpack('<I',struct.pack('<f',f))[0]
+   self.preprocessing=True;self.prepared=False;self.invoke('AecPreProcess',[HEAP,bits(v['exposure']),bits(1.),bits(1.)],stack=bytes(stack),instructions=1000000);assert self.prepared;self.preprocessing=False
+   c=bytearray(self.uc.mem_read(HEAP,len(c)))
   self.invoke('controller',[HEAP,HEAP+0x20000,256],instructions=3000000)
   after=bytearray(self.uc.mem_read(HEAP,len(c)))
   offsets=[0xd4,0xdc,0xe0,0xe8,0x12c,0x124,0x128,0xd8,0x5574]
@@ -36,6 +53,7 @@ class Original(Base):
    words+=[slot]+[struct.unpack_from('<I',after,o)[0] for o in offsets]
    for o in offsets:c[o:o+4]=after[o:o+4]
   else:words+=[4294967295,0,0,0]
+  words+=[struct.unpack_from('<I',after,0x2c50+i*64)[0] for i in range(10)]
   assert c==after
   return ','.join(f'{w:08x}' for w in words)
 def main():
@@ -45,6 +63,7 @@ def main():
   h=[0]*256;h[[3,120,254,255][k%4]]=1000
   cases.append(dict(histogram=h,measured=[0.,3.,40.5,45.,49.5,120.,240.][k%7],exposure=[.003,.02,.1][k%3],previous=[-.5,0.,.5][k%3],reference=[-.5,0.,.5][(k//3)%3],fps=[2.,30.][k%2],enabled=bool(k%2),same_mode=k%5!=0,priming=k%7==0,saturated=bool(k%2),force=k%3==0,index=k%20,frame=30+k,sync=28+k))
  cases=[dict(v,dynamic=called,dynamic_enabled=enabled,custom=custom,damping_history=[((i+v['index'])%7-3)*.01 for i in range(10)]) for v in cases for called,enabled,custom in [(False,False,False),(True,False,False),(True,True,False),(True,True,True)]]
+ cases=[dict(v,preprocess=preprocess) for v in cases for preprocess in [False,True]]
  arm=Original(BINARY);expected=[arm.run(v) for v in cases];inputs=''.join('ae-controller '+json.dumps(v,separators=(',',':'))+'\n' for v in cases)
  def compare(cmd):
   actual=subprocess.run(cmd,input=inputs,text=True,capture_output=True,check=True).stdout.splitlines();assert len(actual)==len(expected)
@@ -52,6 +71,6 @@ def main():
  compare([str(ROOT/'firmware/rkaiq-rs/target/release/numeric-fixture')])
  if '--arm' in sys.argv:
   b=ROOT/'firmware/rkaiq-rs/target/armv7-unknown-linux-musleabihf/release/numeric-fixture';compare(['docker','run','--rm','-i','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={b.parent},dst=/bincheck,readonly','alpine@sha256:ee16d92f96db08d9d2d07da48555a27f3a69d8f0759021dbc601195ed0d2b5bd','/bincheck/numeric-fixture'])
- report=dict(binarySha256=hashlib.sha256(BINARY.read_bytes()).hexdigest(),cases=len(cases),mismatches=0,armReplayPassed='--arm' in sys.argv,scope='complete native standard linear AecClmExecute through normal return with real solver, history, delay and cached automatic route routines',limitations=['Fixed/dynamic damping, uniform selected tolerance, standard histogram mode, non-iris successful paths only; alternate control modes excluded.','Runtime limits, applied current exposure, policy and history inputs remain explicit.','Unsigned division, signed division/remainder and imported rounding are modeled; the native control bodies execute.', 'No sensor writes, real frame association or complete AE/AWB service is introduced.'])
+ report=dict(binarySha256=hashlib.sha256(BINARY.read_bytes()).hexdigest(),cases=len(cases),mismatches=0,armReplayPassed='--arm' in sys.argv,scope='active standard preprocessing history checkpoint plus complete native standard linear AecClmExecute through normal return with real solver, history, delay and cached automatic route routines',limitations=['Fixed/dynamic damping, uniform selected tolerance, standard histogram mode, non-iris successful paths only; alternate control modes excluded.','Runtime limits, applied current exposure, policy and initial history remain explicit; active preprocessing run flag is controlled.','Unsigned division, signed division/remainder and imported rounding are modeled; the native control bodies execute.', 'No sensor writes, real frame association or complete AE/AWB service is introduced.'])
  (ROOT/'reverse-engineering/rkaiq/ae-controller-equivalence.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

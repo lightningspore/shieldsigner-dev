@@ -102,3 +102,34 @@ pub fn step(
         damping_diagnostics: brightness.damping_diagnostics,
     })
 }
+
+/// Active standard preprocessing branch followed by the connected controller.
+/// The caller must first establish the native run flag and select the target.
+/// Skipped frames use ae_preprocess::record_error(run=false) without calling
+/// this active-step helper.
+pub fn step_with_history(
+    state: &mut State,
+    route: &mut [ae_route::Point],
+    histogram: &[u32],
+    input: ae_decision::Input,
+    mut policy: Policy,
+    limits: ae_route::Limits,
+    frame: i32,
+    synchronized_frame: i32,
+    history: &mut [f32; 10],
+) -> Result<Output, InvalidInput> {
+    crate::ae_preprocess::record_error(history, frame as u32, true, input.measured, input.target)?;
+    if let Some(dynamic) = policy.dynamic.as_mut() {
+        dynamic.history = *history;
+    }
+    step(
+        state,
+        route,
+        histogram,
+        input,
+        policy,
+        limits,
+        frame,
+        synchronized_frame,
+    )
+}

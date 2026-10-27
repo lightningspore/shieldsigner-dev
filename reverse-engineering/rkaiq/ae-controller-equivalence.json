@@ -1,12 +1,12 @@
 {
   "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
-  "cases": 640,
+  "cases": 1280,
   "mismatches": 0,
   "armReplayPassed": true,
-  "scope": "complete native standard linear AecClmExecute through normal return with real solver, history, delay and cached automatic route routines",
+  "scope": "active standard preprocessing history checkpoint plus complete native standard linear AecClmExecute through normal return with real solver, history, delay and cached automatic route routines",
   "limitations": [
     "Fixed/dynamic damping, uniform selected tolerance, standard histogram mode, non-iris successful paths only; alternate control modes excluded.",
-    "Runtime limits, applied current exposure, policy and history inputs remain explicit.",
+    "Runtime limits, applied current exposure, policy and initial history remain explicit; active preprocessing run flag is controlled.",
     "Unsigned division, signed division/remainder and imported rounding are modeled; the native control bodies execute.",
     "No sensor writes, real frame association or complete AE/AWB service is introduced."
   ]

@@ -15,6 +15,7 @@ pub mod ae_flicker;
 pub mod ae_gain_limits;
 pub mod ae_geometry;
 pub mod ae_histogram;
+pub mod ae_preprocess;
 pub mod ae_route;
 pub mod ae_shutter;
 pub mod ae_target;

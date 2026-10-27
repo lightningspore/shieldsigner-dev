@@ -238,6 +238,9 @@ _Static_assert(offsetof(CalibDbV2_Dpcc_t,DpccTuningPara.Expert_Mode.set1)==308,"
 _Static_assert(sizeof(CalibDb_Dpcc_Expert_Mode_V20_t)==1204,"DPCC IQ expert size");
 _Static_assert(sizeof(Adpcc_basic_params_select_t)==108,"DPCC ISO row");
 _Static_assert(sizeof(Adpcc_basic_cfg_params_t)==103,"DPCC basic fields");
+_Static_assert(sizeof(CalibDbV2_Dpcc_t)==0x548,"DPCC complete IQ record");
+_Static_assert(sizeof(Adpcc_bpt_params_t)==24,"DPCC BPT record");
+_Static_assert(sizeof(Adpcc_pdaf_params_t)==62,"DPCC PDAF record");
 _Static_assert(sizeof(AdpccProcResult_t)==192,"DPCC complete result");
 _Static_assert(offsetof(AdpccProcResult_t,stBpt)==104,"DPCC BPT offset");
 _Static_assert(offsetof(AdpccProcResult_t,stPdaf)==128,"DPCC PDAF offset");

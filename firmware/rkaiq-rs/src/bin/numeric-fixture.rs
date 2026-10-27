@@ -3217,6 +3217,14 @@ fn main() {
                     hex(&cached)
                 );
             }
+            "dpcc-auto" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let calibration = shieldsigner_rkaiq::dpcc_calibration::Automatic::from_value(&v["calibration"]).unwrap();
+                let s = v["result"].as_str().unwrap();
+                let mut result = (0..s.len()).step_by(2).map(|i| u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>().try_into().unwrap();
+                calibration.process(v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
+                println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
+            }
             "dpcc-expert-init" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let table = shieldsigner_rkaiq::dpcc_calibration::expert_table(&v).unwrap();

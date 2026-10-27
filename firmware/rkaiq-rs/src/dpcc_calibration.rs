@@ -120,3 +120,96 @@ pub fn expert_table(value: &Value) -> Result<[u8; TABLE_BYTES], String> {
     }
     Ok(result)
 }
+
+fn signed(value: &Value, label: &str) -> Result<i32, String> {
+    value
+        .as_i64()
+        .and_then(|v| i32::try_from(v).ok())
+        .ok_or_else(|| format!("Expected i32 at {label}"))
+}
+fn point(value: &Value, key: &str, index: usize) -> Result<u8, String> {
+    let a = value[key]
+        .as_array()
+        .filter(|a| a.len() == 16)
+        .ok_or_else(|| format!("Expected 16 entries at {key}"))?;
+    byte(&a[index], key)
+}
+/// Native dpcc_pdaf_params_init: normalize point enables, narrow i32 offsets
+/// and counts to u16, retain x/y ordering, and zero fresh allocation padding.
+pub fn pdaf_fields(value: &Value) -> Result<[u8; 62], String> {
+    let mut out = [0; 62];
+    out[0] = flag(&value["en"], "PDAF en")?;
+    for i in 0..16 {
+        out[1 + i] = (point(value, "point_en", i)? != 0) as u8;
+        out[28 + i * 2] = point(value, "point_y", i)?;
+        out[29 + i * 2] = point(value, "point_x", i)?;
+    }
+    for (offset, key) in [
+        (18, "offsety"),
+        (20, "offsetx"),
+        (24, "wrapy_num"),
+        (26, "wrapx_num"),
+    ] {
+        out[offset..offset + 2].copy_from_slice(&(signed(&value[key], key)? as u16).to_le_bytes());
+    }
+    out[22] = byte(&value["wrapy"], "wrapy")?;
+    out[23] = byte(&value["wrapx"], "wrapx")?;
+    out[60] = byte(&value["forward_med"], "forward_med")?;
+    Ok(out)
+}
+
+/// Fresh automatic expert configuration with no PDAF or sensor-side auto DPCC.
+/// Those are the explicit modes in the pinned SC3336 profile, not fallbacks.
+pub struct Automatic {
+    table: [u8; TABLE_BYTES],
+    pdaf: [u8; 62],
+}
+impl Automatic {
+    pub fn from_value(value: &Value) -> Result<Self, String> {
+        if flag(
+            &value["Sensor_dpcc"]["sensor_dpcc_auto_en"],
+            "sensor_dpcc_auto_en",
+        )? != 0
+        {
+            return Err("Sensor-side automatic DPCC is not supported".into());
+        }
+        if flag(&value["Dpcc_pdaf"]["en"], "PDAF en")? != 0 {
+            return Err("Live SC3336 DPCC requires PDAF disabled".into());
+        }
+        Ok(Self {
+            table: expert_table(value)?,
+            pdaf: pdaf_fields(&value["Dpcc_pdaf"])?,
+        })
+    }
+    /// Recovered automatic AdpccProcess output for the explicit linear ISO.
+    /// Native fresh construction zeroes BPT; neither auto init nor this mode
+    /// modifies that cache. Preserve result padding, just as native does.
+    pub fn process(
+        &self,
+        iso: i32,
+        result: &mut [u8; crate::isp_dpcc::RESULT_BYTES],
+    ) -> Result<usize, crate::InvalidInput> {
+        let mut next = *result;
+        let row = crate::dpcc_selection::select(&self.table, iso, &mut next)?;
+        next[104..128].fill(0);
+        next[128..190].copy_from_slice(&self.pdaf);
+        *result = next;
+        Ok(row)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn unsupported_modes_are_rejected_without_defaults() {
+        assert!(Automatic::from_value(
+            &serde_json::json!({"Sensor_dpcc":{"sensor_dpcc_auto_en":1}})
+        )
+        .is_err());
+        assert!(Automatic::from_value(
+            &serde_json::json!({"Sensor_dpcc":{"sensor_dpcc_auto_en":0},"Dpcc_pdaf":{"en":1}})
+        )
+        .is_err());
+    }
+}

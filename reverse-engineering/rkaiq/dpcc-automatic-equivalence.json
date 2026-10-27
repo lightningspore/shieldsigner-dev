@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "cases": 200,
+  "resultBytesComparedPerCase": 192,
+  "actualProfileCases": 41,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "sdkHeaderSha256": "7532db62a6d7ac7e9b779068fa6e5f219f71848d2328fe3ce8ccbc2fc14bf06b",
+  "hostBinarySha256": "1b5d354afb21ea354c97868a43c47e7e7280356ef8ea8e8130c3bf1c1f186bc2",
+  "physicalArmBinarySha256": "8ee7b320223794d12cd40fb47977f0d3839c8b13ad759ec567110e4041c72585",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Complete native AdpccInit and AdpccProcess for fresh auto-expert, disabled PDAF/sensor auto; full 192-byte output including padding.",
+  "boundaries": [
+    "Allocator returns one controlled context; original memset/init executes.",
+    "IQ module lookup returns an independently SDK-packed object; native SDK JSON parsing is not executed.",
+    "Diagnostic logging is a modeled no-op."
+  ],
+  "limitations": [
+    "Fast/manual, enabled PDAF and sensor-side DPCC are outside this profile-bound Rust API.",
+    "Outer frame/update policy and live ISP queue integration remain separate."
+  ]
+}

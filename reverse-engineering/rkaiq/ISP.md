@@ -490,3 +490,46 @@ This closes expert-table construction, not full DPCC processing. BPT/PDAF
 assembly, complete automatic-processing composition and live frame/enqueue
 integration remain next; no speculative zero/default peripheral fields have
 been enabled on the camera. The frozen 0.0.33 kit is unchanged.
+
+### Complete automatic DPCC result assembly (0.0.34 development)
+
+`dpcc_calibration::Automatic` composes the verified expert table/selection with
+the remaining output fields for this explicit profile: automatic expert mode,
+PDAF disabled, and sensor-side automatic DPCC disabled. Unsupported modes are
+rejected rather than silently falling back. `pdaf_fields` reconstructs
+`dpcc_pdaf_params_init` (ELF `0x11afc4`): point-enable bytes become booleans,
+x/y points keep native ordering, signed i32 offsets/counts narrow to u16,
+and fresh allocation padding is zero. Disabled PDAF does not mean its
+configuration fields can be invented or omitted.
+
+The original `AdpccInit` (ELF `0x11cacc`) zeroes its full context before running
+the actual calibration initializers. The automatic BPT cache at context
+`0x5e8` remains zero; the full-constructor comparison verifies it, replacing
+the earlier unverified zero-default assumption. `AdpccProcess` (ELF `0x11cc1c`)
+copies all 24 BPT bytes and 62 PDAF bytes after expert selection. Rust preserves
+result padding at byte 103 and bytes 190–191 and commits the complete result
+only after selection succeeds. Public SDK C assertions independently verify
+full IQ size 1352, BPT size 24, PDAF size 62 and result size 192.
+
+[Whole-init/process evidence](dpcc-automatic-equivalence.json) compares every
+byte of 200 complete 192-byte results against actual original `AdpccInit` and
+`AdpccProcess` execution. Forty-one cases use the actual profile at ISO-grid
+boundaries/neighbors and i32 extremes; 159 vary expert and disabled-PDAF
+configuration, including negative/overflowing-to-u16 offsets and non-boolean
+point-enable bytes. Prior result padding is randomized. Host and physical
+Luckfox Rust replay are identical. The original allocator is modeled as one
+controlled context and the native IQ-module lookup receives an independently
+SDK-packed object; original memset/initializers/process execute. Diagnostic
+logging is a no-op boundary. Native SDK JSON parsing is not claimed.
+
+The 87 library/five Unix tests, no-default-features/static ARM builds and
+expanded SDK layout assertions pass. Run
+`mise run camera:rust:dpcc-automatic -- --adb SERIAL --report LOCAL.json` after
+building host numeric-fixture and ARM tools. Reference input lives temporarily
+on persistent board storage and is removed afterward. This replay makes no
+ISP writes and loads no vendor library on the board.
+
+Outer per-frame update/reconfiguration policy and transactional live enqueue
+remain next. DPCC is still disabled in the live path and frozen 0.0.33 kit;
+this result is complete supported-mode output assembly, not live defect-pixel
+correction or optical quality qualification.

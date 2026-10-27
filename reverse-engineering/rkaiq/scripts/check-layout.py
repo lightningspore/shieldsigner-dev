@@ -382,3 +382,19 @@ _Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,gain_adj)==56,"BAYNR tuni
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'baynr-json-sdk-layout.o')],check=True)
 print('PASS: BAYNR IQ=32/calibration row=132/tuning row=120, settings=16 and every preparation offset verified')
+
+cis_sdk=dpcc_header('rk_aiq_types_ae_hw.h')
+cis_records={m[1]:m[0] for m in re.finditer(r'typedef struct(?:\s+\w+)?\s*\{[^{}]*\}\s*(\w+);',cis_sdk,re.S)}
+cis_names=['CISFeature_t','RkAiqExpRealParam_t','RkAiqExpSensorParam_t','RkAiqExpParamComb_t','RkAiqPIrisParam_t','RkAiqDCIrisParam_t','RkAiqHDCIrisParam_t','RkAiqIrisParamComb_t','RKAiqAecExpInfo_t']
+source=cache/'ae-cis-sdk-layout.c'
+source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n'+'\n'.join(cis_records[n] for n in cis_names)+'''
+_Static_assert(sizeof(RKAiqAecExpInfo_t)==244,"SDK complete exposure record");
+_Static_assert(sizeof(RkAiqExpParamComb_t)==48,"SDK linear/HDR exposure slot");
+_Static_assert(offsetof(RKAiqAecExpInfo_t,LinearExp.exp_real_params.analog_gain)==4,"SDK analogue gain");
+_Static_assert(offsetof(RKAiqAecExpInfo_t,LinearExp.exp_real_params.dcg_mode)==20,"SDK signed DCG mode");
+_Static_assert(offsetof(RKAiqAecExpInfo_t,CISFeature)==240,"SDK CIS flags");
+_Static_assert(offsetof(RKAiqAecExpInfo_t,CISFeature.SNR)==240,"SDK SNR byte");
+_Static_assert(sizeof(CISFeature_t)==4,"SDK independent sensor feature flags");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'ae-cis-sdk-layout.o')],check=True)
+print('PASS: SDK exposure=244, analogue gain=4/DCG=20/CIS SNR=240 verified independently')

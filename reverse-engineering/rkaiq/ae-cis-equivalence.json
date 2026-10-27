@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "batches": 1000,
+  "records": 2997,
+  "recordBytesCompared": 244,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "eb46912ee97b7a18049ad3d3cda33bca8aafb55084575f998aa039ef33c1d3e7",
+  "physicalArmBinarySha256": "876cf9ae205a4263d971e55dde3018d73a96c431d29173b34ce71abb12a5126f",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Complete native AecCISFeature normal batch path and AeCISFeature normal per-record path independently compared to Rust. All 244 record bytes, batch header and both native contexts checked; no algorithm, math or logging stubs.",
+  "boundaries": [
+    "Optional NR switch direction/unsigned rational thresholds with nonzero divisor and finite gain; disabled switch ignores gain and derives flag from signed DCG>0.",
+    "Zero to six records per batch; exact thresholds, reversed/overlapping thresholds, retained flag bytes, signed DCG extremes and unused NaN gain included. Rust rejects zero-divisor switch before output.",
+    "HDR policy and AE queue publication integration remain separate. This stage establishes the SNR metadata helper for live BAYNR handoff.",
+    "Physical CPU replay makes no ISP writes and loads no vendor library."
+  ]
+}

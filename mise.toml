@@ -688,3 +688,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:baynr-frames"]
 description = "Compare complete Bayer spatial NR constructor/prepare and persistent normal-frame processing"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/baynr-frames.py"
+
+[tasks."camera:rust:ae-cis"]
+description = "Compare normal AE sensor SNR metadata with original core/C++ routines"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-cis.py"

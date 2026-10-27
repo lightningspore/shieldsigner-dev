@@ -1605,3 +1605,35 @@ ioctls return `ENOTTY` on the connected SC3336. Native `AecCISFeature` /
 Existing Rust exposure records explicitly leave CIS feature publication
 external, so their currently zero byte must not be treated as independent
 proof of correct SNR metadata. This field will be verified before live BAYNR.
+
+### AE normal sensor SNR metadata (0.0.34 development)
+
+`ae_cis::normal` reconstructs the normal-exposure paths of both native
+`AecCISFeature` (ELF `0xb07a8`) and `AeCISFeature` (`0x43b38`). Without optional
+kernel NR switching, the SNR byte is signed DCG `>0`, independent of gain. With
+NR switching, native compares analogue gain against unsigned rational upper
+and lower thresholds. At/above the upper threshold writes `direction==0`;
+below the lower threshold writes `direction!=0`; the middle band retains the
+prior flag byte. The second write wins when thresholds overlap. Equality at
+the lower threshold retains the current flag. Rust rejects a zero divisor or
+non-finite switched gain before changing the record; no-switch fallback does
+not consume gain. Only SDK byte 240 changes.
+
+[Native/physical CPU evidence](ae-cis-equivalence.json) checks 1,000 batches /
+2,997 complete exposure records through both original routines independently.
+All 244 bytes match Rust, including retained flags and all other metadata;
+native batch headers and both contexts remain unchanged. Cases cover zero to
+six records, exact thresholds, both directions, reversed/overlapping thresholds,
+large unsigned ratios, signed DCG extremes and unused NaN gain. No algorithm,
+math or diagnostic stubs execute. Verbatim SDK declarations independently
+compile as ARM C: full exposure=244, analogue gain offset=4, signed DCG=20,
+SNR=240 and four independent CIS feature bytes. All 107 library/five Unix
+tests, no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:ae-cis -- --adb SERIAL --report LOCAL.json` after
+host/ARM fixture builds. This establishes normal metadata policy; HDR and its
+integration into AE queue publication remain separate. The connected SC3336
+reports optional NR-switch unsupported, so the current live consumer can use
+the independently verified signed-DCG fallback rather than assuming that an
+unpopulated exposure flag byte is correct. Physical CPU replay makes no ISP
+writes; the live BAYNR handoff is the next gate.

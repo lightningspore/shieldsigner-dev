@@ -251,3 +251,7 @@ and complete calibration/tuning table merge with retained rows/padding.
 reloads, strict ISO gate and fixed-result publication. It stages all changes
 for a future accepted hardware batch.
 [Full native constructor/callback and physical CPU evidence](ISP.md#persistent-baynr-controller-0034-development).
+
+`ae_cis::normal` reconstructs the normal sensor SNR flag from both native AE
+core/batch and C++/per-record routines, including hysteresis and DCG fallback.
+[Full native/physical CPU evidence and SDK field offsets](ISP.md#ae-normal-sensor-snr-metadata-0034-development).

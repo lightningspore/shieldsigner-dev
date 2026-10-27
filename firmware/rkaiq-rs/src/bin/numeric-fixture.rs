@@ -3455,6 +3455,16 @@ fn main() {
                 let (x,y)=shieldsigner_rkaiq::lsc_geometry::gradients(&array("x"),&array("y")).unwrap();
                 println!("{}",x.iter().chain(y.iter()).flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ae-cis" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                let noise=v["noise"].as_array().map(|a|core::array::from_fn(|i|u32::try_from(a[i].as_u64().unwrap()).unwrap()));
+                let output=v["records"].as_array().unwrap().iter().map(|s|{
+                    let s=s.as_str().unwrap();let mut record=(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>().try_into().unwrap();
+                    shieldsigner_rkaiq::ae_cis::normal(&mut record,noise).unwrap();
+                    record.iter().map(|v|format!("{v:02x}")).collect::<String>()
+                }).collect::<Vec<_>>();
+                println!("{}",serde_json::json!(output));
+            }
             "baynr-frames" => {
                 use shieldsigner_rkaiq::baynr_frame;
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();let mut state=baynr_frame::State::new(&v["calibration"]).unwrap();let mut result=[0xa5;152];let mut frames=Vec::new();

@@ -170,6 +170,10 @@ impl parameter::Backend for ParameterBackend {
     }
 }
 fn wait_parameter(fd: RawFd, deadline: Instant) -> io::Result<()> {
+    #[cfg(test)]
+    if first_frame_driver::active() {
+        return Ok(());
+    }
     loop {
         let remaining = deadline.saturating_duration_since(Instant::now());
         if remaining.is_zero() {

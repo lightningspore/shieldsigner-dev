@@ -310,6 +310,10 @@ mod linux {
     }
     fn ioctl<T>(fd: RawFd, request: u32, value: &mut T) -> io::Result<()> {
         #[cfg(test)]
+        if let Some(result) = first_frame_driver::ioctl(fd, request, value) {
+            return result;
+        }
+        #[cfg(test)]
         if let Some(result) = raw_bridge::mock_ioctl(fd, request, value) {
             return result;
         }
@@ -341,11 +345,14 @@ mod linux {
             .collect()
     }
     fn open(path: &str, write: bool) -> io::Result<File> {
-        OpenOptions::new()
+        let file = OpenOptions::new()
             .read(true)
             .write(write)
             .custom_flags(libc::O_NONBLOCK | libc::O_CLOEXEC)
-            .open(path)
+            .open(path)?;
+        #[cfg(test)]
+        first_frame_driver::opened(path, file.as_raw_fd());
+        Ok(file)
     }
     fn capability(file: &File) -> io::Result<([u8; 104], u32)> {
         let mut cap = [0; 104];
@@ -637,6 +644,23 @@ mod linux {
     }
     impl Mapping {
         fn new(fd: RawFd, length: usize, offset: u32) -> io::Result<Self> {
+            #[cfg(test)]
+            if first_frame_driver::active() {
+                let address = unsafe {
+                    libc::mmap(
+                        ptr::null_mut(),
+                        length,
+                        libc::PROT_READ | libc::PROT_WRITE,
+                        libc::MAP_PRIVATE | libc::MAP_ANONYMOUS,
+                        -1,
+                        0,
+                    )
+                };
+                if address == libc::MAP_FAILED {
+                    return Err(io::Error::last_os_error());
+                }
+                return Ok(Self { address, length });
+            }
             if length == 0 || length > 128 * 1024 * 1024 {
                 return Err(error("Invalid/oversized driver MMAP length"));
             }
@@ -684,6 +708,10 @@ mod linux {
         value
     }
     fn wait(fd: RawFd, deadline: Instant) -> io::Result<()> {
+        #[cfg(test)]
+        if first_frame_driver::active() {
+            return Ok(());
+        }
         loop {
             let left = deadline.saturating_duration_since(Instant::now());
             if left.is_zero() {
@@ -1254,6 +1282,8 @@ mod linux {
     include!("../camera_parameters.rs");
     include!("../camera_pipeline.rs");
     include!("../camera_first_frame.rs");
+    #[cfg(test)]
+    include!("../camera_first_frame_test.rs");
     pub fn run(args: &[String]) -> io::Result<()> {
         match args.first().map(String::as_str) {
             Some("list") if args.len() == 1 => list(),

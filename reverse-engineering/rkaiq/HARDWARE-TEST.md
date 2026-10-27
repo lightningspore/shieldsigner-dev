@@ -370,6 +370,24 @@ the saved frame; verify that on the camera.
 
 `uv run --python 3.13 python reverse-engineering/rkaiq/scripts/first-frame-check.py`
 executes five static ARM preflight rejection cases, including a real nonsensor
-ioctl failure. The full positive startup sequence has not yet run on hardware
-or a complete simulated driver. The goal remains usable independent frames,
+ioctl failure. The full positive startup sequence has not yet run on hardware. The following
+development test exercises its userspace path with simulated device boundaries. The goal remains usable independent frames,
 QR validation and the required automatic controller, not a passing preflight.
+
+### Full userspace startup simulation (0.0.30-dev)
+
+Run `mise run camera:rust:first-frame-sequence-check`. It builds and executes the
+actual ARM camera diagnostic test executable, including `first-frame-sc3336`,
+using the SHA-pinned full SC3336 profile. Test-only boundaries supply ioctl
+responses, readiness and anonymous image/metadata mappings. The real Rust
+startup code performs graph setup, active timing conversion, driver-range
+checks, sensor writes, parameter queue submission, raw bridging, three image
+dequeues and artifact writing. Assertions verify parameter readiness before raw
+startup and image → raw → parameter shutdown order. The test is explicitly
+ignored by default and enabled only by this fixture runner.
+
+[Recorded validation](first-frame-sequence-validation.json) identifies the test
+binary and coverage. Saved pixels are zero-filled simulated memory. This is
+userspace integration evidence, not sensor output, QR decoding, driver fidelity
+or cold-start hardware evidence. Production builds contain none of these
+simulated boundaries. Frozen kit 0.0.29 is unchanged.

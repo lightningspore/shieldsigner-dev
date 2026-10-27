@@ -5,6 +5,11 @@ typedef int8_t s8; typedef int16_t s16; typedef int32_t s32; typedef int64_t s64
 #define BIT(n) (1UL << (n))
 #define BIT_ULL(n) (1ULL << (n))
 #include <linux/rk-isp32-config.h>
+_Static_assert(sizeof(struct isp2x_dpcc_cfg)==186,"DPCC packed size");
+_Static_assert(offsetof(struct isp32_isp_params_cfg,others.dpcc_cfg)==0x7da,"DPCC packed offset");
+_Static_assert(offsetof(struct isp2x_dpcc_cfg,point)==153,"DPCC packed point table offset");
+_Static_assert(ISP32_MODULE_DPCC==1,"DPCC module mask");
+
 _Static_assert(sizeof(struct isp32_awb_gain_cfg)==32,"AWB record size");
 _Static_assert(offsetof(struct isp32_isp_params_cfg,others.awb_gain_cfg)==0x1225,"AWB record offset");
 _Static_assert(ISP32_MODULE_AWB_GAIN==(1ULL<<5),"AWB enable mask");

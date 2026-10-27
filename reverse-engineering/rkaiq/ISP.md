@@ -377,3 +377,42 @@ CAPTURE.initial.bin --report LOCAL.json`. The default UAPI directory is the
 pinned local kernel-uapi/linux snapshot; `--uapi` may supply another explicit
 copy. This audit makes no device changes and stores no full IQ or scene pixels
 in the tracked report.
+
+### DPCC selected-result serializer (0.0.34 development)
+
+`isp_dpcc::apply` reconstructs the DPCC case in the complete ISP32
+`convert3aResultsToIspCfg` dispatcher (ELF `0x304c4`, type ID 6). The API takes
+a 192-byte selected-result input window; this branch reads only through byte
+188, skips source enable/padding fields, widens two u8 values to u16, and
+serializes the full 186-byte kernel block at `0x7da`. ARM-target C assertions
+against the pinned UAPI independently verify its size/offset, point-table
+offset 153 and module mask bit 0. This does not assert an independently
+recovered complete SDK result declaration.
+
+Native always sets enable-update and configuration-update bit 0. A nonzero
+result enable also sets module-enable bit 0; a zero enable leaves the previous
+module-enable bit untouched. The Rust converter preserves that asymmetry, not
+an invented automatic disable operation. Unrelated parameters and mask bits
+are preserved. Source padding and trailing bytes are ignored.
+
+[Original-ARM comparison](isp-dpcc-equivalence.json) checks 1,000 deterministic
+cases against the full original dispatcher, comparing every one of the 11,145
+output bytes. Inputs vary prior masks, all selected-result bytes and zero/one/255
+enable values. The controlled C++ typed-proxy cast is the oracle boundary;
+actual conversion instructions execute. Host output and execution of the Rust
+fixture on the physical Luckfox are identical. Replay uses no camera devices
+and does not enable DPCC. The 85 library/five Unix tests, no-default-features
+build, static ARM build and new UAPI layout assertions pass.
+
+Rebuild host numeric-fixture and ARM binaries through mise, then run
+`mise run camera:rust:isp-dpcc -- --adb SERIAL --report LOCAL.json`. The script
+uses the development numeric binary at
+`/shieldsigner-camera-tests/dev-0.0.34/bin/numeric-fixture`. Its temporary
+reference input is stored on persistent board storage and removed afterward.
+No vendor library is deployed to or loaded on the board.
+
+Calibrated selection/AdpccProcess, frame-state decisions and live parameter
+submission still need to be connected. The existing scalar interpolation and
+this serializer are components, not a completed DPCC implementation. DPCC
+remains explicitly disabled in the runnable 0.0.33 frozen kit and current live
+path. That archive and its hardware qualification remain unchanged.

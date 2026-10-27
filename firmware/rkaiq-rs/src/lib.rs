@@ -70,6 +70,7 @@ pub mod isp_awb_measurement;
 pub mod isp_black_level;
 pub mod isp_color;
 pub mod isp_demosaic;
+pub mod isp_dpcc;
 pub mod isp_effective;
 pub mod isp_pipeline;
 pub mod media;

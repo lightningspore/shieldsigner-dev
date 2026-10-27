@@ -107,3 +107,8 @@ Development `camera-probe configure-pipeline` supplies real Linux device methods
 color-frame gate in the demosaic `processing` callback (ELF `0x114a2c`), including
 integer ISO, reconfiguration consumption and cached update publication.
 [Persistent callback evidence and live integration boundary](ISP.md#persistent-automatic-linear-demosaic-frame-gate-0033-development).
+
+`isp_dpcc::apply` reconstructs the DPCC selected-result case (type ID 6) within
+`Isp32Params::convert3aResultsToIspCfg`, ELF `0x304c4`. All 11,145 output bytes
+match original ARM for 1,000 cases, with physical Luckfox CPU replay.
+[Input window, native mask asymmetry and live integration boundary](ISP.md#dpcc-selected-result-serializer-0034-development).

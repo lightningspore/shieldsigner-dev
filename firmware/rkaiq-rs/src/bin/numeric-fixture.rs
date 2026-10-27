@@ -3217,6 +3217,18 @@ fn main() {
                     hex(&cached)
                 );
             }
+            "isp-dpcc" => {
+                use shieldsigner_rkaiq::{isp_dpcc, isp32::PARAMETER_BYTES};
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let decode = |key: &str| {
+                    let s = v[key].as_str().unwrap();
+                    (0..s.len()).step_by(2).map(|i| u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>()
+                };
+                let result = decode("result").try_into().unwrap();
+                let mut parameters: [u8; PARAMETER_BYTES] = decode("parameters").try_into().unwrap();
+                isp_dpcc::apply(&mut parameters, &result);
+                println!("{}",parameters.iter().map(|v|format!("{v:02x}")).collect::<String>());
+            }
             "isp-demosaic" => {
                 use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_demosaic::*};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

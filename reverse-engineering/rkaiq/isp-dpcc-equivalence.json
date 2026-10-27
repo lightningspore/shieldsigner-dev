@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "bytesComparedPerCase": 11145,
+  "mismatches": 0,
+  "seed": "0x44504343",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "1e657c43e171991d93cda3c9efba0886c032be85fdcb9f12d278f50598c798b1",
+  "physicalArmBinarySha256": "1e0999528c580dbfe976bcd88f8d52ecb72cdf2ce421a0eac9cd1a4b559bd56e",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Original full ISP32 result dispatcher DPCC branch, complete output parameter buffer, all mask bits and all 186 packed DPCC bytes.",
+  "limitations": [
+    "Typed C++ proxy cast is a controlled oracle boundary.",
+    "Calibration selection and AdpccProcess are not implemented by this serializer.",
+    "Physical ARM replay does not enable DPCC on the camera or qualify image quality."
+  ]
+}

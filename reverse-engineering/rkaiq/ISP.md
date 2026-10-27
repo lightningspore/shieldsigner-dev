@@ -573,3 +573,37 @@ retaining at most two snapshots. Final AWB translation matches all 7,680 bytes.
 This is accepted-submission and functional capture evidence, not optical
 quality, defect-removal efficacy or per-frame register readback. The frozen
 0.0.33 kit remains unchanged and has DPCC disabled.
+
+### CCM register conversion (0.0.34 development)
+
+`isp_ccm::apply` reconstructs the complete
+`Isp32Params::convertAiqCcmToIsp32Params` routine (ELF `0x2d0cc`, Ghidra
+`0x3d0cc`). It accepts an explicit 156-byte SDK-layout record and writes the
+79-byte packed kernel CCM block at `0x12bb`. ARM-target C assertions against
+pinned kernel headers check its size, offset, matrix/curve/enhancement offsets
+and module bit 8. SDK input layout is recovered from the converter's accesses;
+a separate public SDK declaration assertion remains to be added.
+
+The 3×3 matrix subtracts identity on its diagonal, multiplies by 128 and rounds
+half steps away from zero before narrowing to signed 16-bit fields. Offsets
+use the same rounding without scaling. Luma coefficients, eighteen alpha-curve
+values and bounds use positive-only truncation with native low-bit narrowing;
+the enhancement ratio additionally scales by 1024. The high-Y disable field
+is the source byte XOR one, not normalized boolean negation. Update masks gain
+bit 8; enabled input sets that enable bit, while disabled input preserves any
+previous enable bit. Other bytes and mask bits remain unchanged.
+
+[Original/physical ARM comparison](isp-ccm-equivalence.json) checks all 11,145
+parameter bytes across 1,000 deterministic cases with random prior contents,
+positive/negative values, half steps, zeros, narrowing, identity matrices and
+non-boolean control bytes. Original machine code executes directly, with no
+C++ proxy or reconstructed numerical substitute. Rust deliberately rejects
+non-finite inputs or magnitudes over 1,000,000 before changing any bytes; behavior
+outside this domain is not claimed. An atomic-failure test covers invalid input.
+
+Build the host numeric fixture and ARM tools, then run
+`mise run camera:rust:isp-ccm -- --adb SERIAL --report LOCAL.json`.
+Physical replay executes Rust numerical conversion only; it does not load the
+vendor library or write ISP registers. This closes register conversion, not
+calibrated CCM matrix selection, temporal damping or live controller integration.
+CCM remains disabled on the live camera until those inputs are verified.

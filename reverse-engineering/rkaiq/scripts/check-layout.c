@@ -189,3 +189,9 @@ _Static_assert(offsetof(struct isp32_stat,rawae1_1)==0xb98,"linear AE1 subwindow
 _Static_assert(offsetof(struct isp32_stat,rawhist1)==0x1400,"linear AE1 histogram");
 _Static_assert(sizeof(struct isp32_rawaebig_stat1)==48,"AE RGB sums record");
 _Static_assert(offsetof(struct isp32_rawaebig_stat1,sumg)==16 && offsetof(struct isp32_rawaebig_stat1,sumb)==32,"AE green/blue sum arrays");
+_Static_assert(sizeof(struct isp32_ccm_cfg)==79,"CCM kernel bytes");
+_Static_assert(offsetof(struct isp32_isp_params_cfg,others.ccm_cfg)==0x12bb,"CCM kernel offset");
+_Static_assert(offsetof(struct isp32_ccm_cfg,coeff0_r)==5,"CCM coefficient offset");
+_Static_assert(offsetof(struct isp32_ccm_cfg,alp_y)==35,"CCM alpha curve offset");
+_Static_assert(offsetof(struct isp32_ccm_cfg,color_enh_rat_max)==77,"CCM enhancement ratio offset");
+_Static_assert(ISP32_MODULE_CCM==(1ULL<<8),"CCM module bit");

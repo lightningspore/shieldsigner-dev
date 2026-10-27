@@ -129,3 +129,7 @@ match original ARM for 1,000 cases, with physical Luckfox CPU replay.
 frame callback gate (ELF `0x11a67c`), including native gain multiplication order,
 integer ISO, reconfiguration and cached-result publication.
 [Persistent callback and live transactional evidence](ISP.md#persistent-dpcc-and-live-submission-0034-development).
+
+`isp_ccm::apply` reconstructs complete CCM register conversion,
+`Isp32Params::convertAiqCcmToIsp32Params` (ELF `0x2d0cc`).
+[Quantization, native mask behavior and comparison scope](ISP.md#ccm-register-conversion-0034-development).

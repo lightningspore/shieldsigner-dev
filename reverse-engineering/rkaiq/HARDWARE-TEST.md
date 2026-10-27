@@ -850,3 +850,40 @@ translation against its initial snapshot. The live AE owner separately selects
 registered snapshots by each statistics parameter ID; the worker's
 `controlsExposure:false` describes that diagnostic worker, not the automatic
 command's owner.
+
+### Physical checkpoint — 2026-10-27, 0.0.31-dev
+
+Ran both commands on the SC3336/Luckfox hardware using the current ARM Rust
+binary, the existing CIF/SOF plan, and the pinned SC3336 IQ file. Both captured
+640×480 NV12 successfully, with no vendor camera processes detected before or
+after capture. No boot files or services were changed. These runs used fixed
+calibrated white balance; automatic white balance is still unfinished.
+
+The fixed-startup image was nearly black (mean encoded Y 3.41, range 0–21).
+The bounded automatic-exposure image showed a recognizable scene (mean Y
+86.41, range 24–251). The automatic owner processed 22 statistics frames,
+registered 22 parameter snapshots, and reached SOF 34 without an error.
+Its 78 sensor-control writes all reported success. This is physical evidence
+of useful capture and a brightness response, not proof of optical convergence,
+exact exposure-to-frame latency, color accuracy, or vendor-free cold startup.
+The tool continues to report `physicalApplicationVerified:false` and
+`coldStartProven:false`.
+
+Raw images, metadata, complete logs, initial parameter artifacts, statistics,
+and RGB inspection previews are kept locally in the ignored directory
+`dist/reverse-engineering/hardware-2026-10-27/` under basenames
+`ss-20261027-fixed` and `ss-20261027-auto`. The previews use a simple NV12
+conversion and are inspection aids, not a color qualification. Private scene
+captures are not committed. The frozen 0.0.30-dev test kit remains unchanged.
+
+A second bounded hardware run added `automatic-ae-statistics` log events from
+the live owner, including parameter/exposure association, translated mean,
+preprocessing error and proposed exposure. It again processed 22 statistics
+frames and exited successfully. Mean Q8 increased from 0 to 7555; preprocessing
+error fell from −1.0 to −0.03405. The last five decisions retained 30 ms,
+gain 42.4453125 and ISP gain 1.0, with controller relative error 0. This supports
+settling in this scene within the bounded run; it does not establish behavior
+under changing illumination or physical frame timing. Some exposure lookups
+used the preceding effective-map entry (`exactExposureLookup:false`), which
+remains visible in the log rather than being labeled exact association.
+The local log is `ss-20261027-ae-telemetry.log` in the same ignored directory.

@@ -1020,7 +1020,7 @@ mod linux {
             .create_new(true)
             .open(output)?;
         out.write_all(&bytes)?;
-        let report = json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"device":device,"captureKind":if statistics {"isp-statistics"}else{"image"},"statistics":statistics_header,"linksRkaiq":false,"vendorProcessesBeforeCapture":active,"vendorProcessesAfterCapture":vendor_processes(),"requireNoRkaiq":require_no_vendor,"format":format_json(&fmt),"bytes":bytes.len(),"planes":planes,"sequence":sequence,"timestamp":{"seconds":seconds,"microseconds":microseconds},"limitations":["Captures from the existing kernel media graph; does not yet recreate ISP calibration, auto-exposure, white balance or graph initialization.","Absent vendor processes do not prove the graph was never initialized by vendor software during boot."]});
+        let report = json!({"tool":format!("camera-probe {}",env!("CARGO_PKG_VERSION")),"device":device,"captureKind":if statistics {"isp-statistics"}else{"image"},"statistics":statistics_header,"linksRkaiq":false,"vendorProcessesBeforeCapture":active,"vendorProcessesAfterCapture":vendor_processes(),"requireNoRkaiq":require_no_vendor,"format":format_json(&fmt),"bytes":bytes.len(),"planes":planes,"sequence":sequence,"timestamp":{"seconds":seconds,"microseconds":microseconds},"limitations":["This low-level capture report does not establish ISP calibration or automatic-control behavior; consult the enclosing command log for applied parameters, exposure control and white-balance mode.","Absent vendor processes do not prove the graph was never initialized by vendor software during boot."]});
         let meta = format!("{output}.json");
         let mut file = OpenOptions::new()
             .write(true)

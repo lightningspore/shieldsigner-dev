@@ -183,6 +183,19 @@ where
                 .map_err(error)?
             {
                 self.processed += 1;
+                // Report the owner's snapshot-associated metric, rather than
+                // the statistics worker's initial-snapshot diagnostic metric.
+                let decision = out.control.frame.control.map(|c| {
+                    json!({"timeSeconds":c.point.time,"analogueGain":c.point.gain,
+                        "ispGain":c.point.isp_gain,"relativeError":c.relative_error,
+                        "held":c.held})
+                });
+                println!("{}", json!({"event":"automatic-ae-statistics",
+                    "frame":out.frame,"parametersId":out.parameters,
+                    "exposureFrame":out.exposure_frame,"exactExposureLookup":out.exact_exposure,
+                    "meanQ8":out.mean_q8,"run":out.control.frame.run,
+                    "preprocessingError":out.control.frame.preprocessing_error,
+                    "decision":decision,"physicalApplicationVerified":false}));
                 results.push(out);
             }
         }

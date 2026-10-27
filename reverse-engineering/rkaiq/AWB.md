@@ -424,3 +424,35 @@ outer AWB integration remain unfinished. Calibration and starting state are
 explicit inputs; allocation and logging use bounded adapters. The existing
 2,000-case probability regression still matches native code after sharing the
 count filter. These comparisons establish software behavior, not camera quality.
+
+## Spatial calibration and statistics blend
+
+`awb_gain::spatial` reconstructs `AwbCalGainInSpatial` (ELF `0xc66d0`) for
+each illumination. Below the low brightness threshold it copies the low gain;
+above the high threshold it copies the high gain. Between thresholds it blends
+using the original normalized mixture. Endpoint copies are deliberately not
+normalized. Thresholds compare as u32 before conversion to f32. If their f32
+width is below 0.0001, the interpolation ratio is 1, including distinct large
+integer thresholds which round to the same float. Reversed thresholds preserve
+native branch order.
+
+`awb_gain::spatial_statistics` reconstructs
+`AwbCalGainBySpatialMulStatistics` (ELF `0xc67a8`). Its weight is the selected
+calibration byte divided by 100; values above 100 extrapolate without clamping.
+The native routine replaces the per-light statistics gain at result offset
+`0x64`, preserves the spatial gain at `0x84`, and stores the weight at `0x98`.
+The Rust value API returns the replacement statistics gain and weight explicitly.
+
+`mise run camera:rust:awb-spatial` compares both native routines consecutively
+against host and ARM Rust: **1,024 cases / 6,348 illumination results**, exact
+intermediate/final gain and weight bits, and unrelated-memory preservation.
+Coverage includes 0–8 and 255 lights, four calibration groups, threshold
+boundaries, equal/reversed/float-collapsed thresholds, zero gains, endpoint gains
+above 5, and percentages from 0 through 255. The native mixture and normalization
+bodies execute without replacement.
+[Reference report](awb-spatial-equivalence.json).
+
+These are components of the high-count strategy, not its complete controller.
+Calibration, brightness and measured gains are explicit inputs. Temporal gain
+construction, full high/low orchestration, calibration initialization and live
+AWB integration remain unfinished. The frozen fixed-WB camera kit is unchanged.

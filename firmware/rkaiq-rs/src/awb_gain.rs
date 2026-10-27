@@ -43,6 +43,45 @@ pub fn mixture(first: Gains, second: Gains, weight: f32) -> Result<Gains, Invali
     }))
 }
 
+/// AwbCalGainInSpatial (ELF 0xc66d0), for one illumination. Endpoints are
+/// copied verbatim; only interpolation calls the normalizing gain mixture.
+/// Threshold order is intentionally not changed or validated as ascending.
+pub fn spatial(
+    brightness: u32,
+    low_threshold: u32,
+    high_threshold: u32,
+    low_gain: Gains,
+    high_gain: Gains,
+) -> Result<Gains, InvalidInput> {
+    if brightness < low_threshold {
+        finite(&low_gain)?;
+        return Ok(low_gain);
+    }
+    if brightness > high_threshold {
+        finite(&high_gain)?;
+        return Ok(high_gain);
+    }
+    let low = low_threshold as f32;
+    let width = high_threshold as f32 - low;
+    let ratio = if width as f64 >= 0.0001 {
+        (brightness as f32 - low) / width
+    } else {
+        1.
+    };
+    mixture(low_gain, high_gain, 1. - ratio)
+}
+
+/// AwbCalGainBySpatialMulStatistics (ELF 0xc67a8), for one illumination.
+/// The stored byte is a percentage, including values above 100; no clamp.
+pub fn spatial_statistics(
+    statistics: Gains,
+    spatial: Gains,
+    percentage: u8,
+) -> Result<(Gains, f32), InvalidInput> {
+    let weight = percentage as f32 / 100.;
+    Ok((mixture(statistics, spatial, weight)?, weight))
+}
+
 /// AwbGainCalbyRgainBgain (ELF 0xca7cc). Inputs are accumulated gain statistics,
 /// not raw R/G/B pixel sums. Each signed total rounds to f32 before division.
 pub fn ratios(weighted_count: i64, red_total: i64, blue_total: i64) -> Gains {

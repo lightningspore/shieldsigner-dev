@@ -129,6 +129,36 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-spatial" => {
+                use shieldsigner_rkaiq::awb_gain;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let gains = |v: &serde_json::Value| -> [f32; 4] {
+                    core::array::from_fn(|i| v[i].as_f64().unwrap() as f32)
+                };
+                let mut output = Vec::new();
+                for light in v["lights"].as_array().unwrap() {
+                    let spatial = awb_gain::spatial(
+                        v["brightness"].as_u64().unwrap() as u32,
+                        light["low"].as_u64().unwrap() as u32,
+                        light["high"].as_u64().unwrap() as u32,
+                        gains(&light["low_gain"]),
+                        gains(&light["high_gain"]),
+                    )
+                    .unwrap();
+                    let (mixed, weight) = awb_gain::spatial_statistics(
+                        gains(&light["statistics"]),
+                        spatial,
+                        light["percentage"].as_u64().unwrap() as u8,
+                    )
+                    .unwrap();
+                    output.push(serde_json::json!({
+                        "spatial": spatial.map(f32::to_bits),
+                        "mixed": mixed.map(f32::to_bits),
+                        "weight": weight.to_bits(),
+                    }));
+                }
+                println!("{}", serde_json::json!(output));
+            }
             "awb-xy-selection" => {
                 use shieldsigner_rkaiq::{
                     awb_luma_history, awb_probability::Probability, awb_xy_selection::*,

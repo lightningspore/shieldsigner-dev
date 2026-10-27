@@ -455,3 +455,12 @@ _Static_assert(offsetof(CalibDbV2_CNRV30_T_ISO_t,gaus_coeff)==160,"CNR IQ gaussi
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'cnr-json-sdk-layout.o')],check=True)
 print('PASS: CNR IQ root=16/setting=16/row=184 and preparation offsets verified')
+
+source=cache/'cnr-strength-sdk-layout.c'
+source.write_text('#include <stdbool.h>\n#include <stddef.h>\n'+sync_enum.group(0)+'\n'+dpcc_record('rk_aiq_uapi_sync_s',baynr_comm)+'\n'+dpcc_record('rk_aiq_cnr_strength_v30_s',cnr_int)+'''
+_Static_assert(sizeof(rk_aiq_cnr_strength_v30_t)==16,"CNR strength SDK bytes");
+_Static_assert(offsetof(rk_aiq_cnr_strength_v30_t,percent)==8,"CNR strength factor");
+_Static_assert(offsetof(rk_aiq_cnr_strength_v30_t,strength_enable)==12,"CNR strength enable");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'cnr-strength-sdk-layout.o')],check=True)
+print('PASS: CNR SDK strength=16, factor=8/enable=12 verified from verbatim declarations')

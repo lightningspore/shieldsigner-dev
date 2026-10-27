@@ -277,3 +277,9 @@ and retained SDK padding. [Full native and physical CPU evidence](ISP.md#cnr-iso
 `cnr_calibration::prepare` reconstructs complete SNR lookup and calibrated
 chroma NR table preparation, preserving untouched rows and SDK padding.
 [Full native and physical CPU evidence](ISP.md#cnr-calibration-preparation-0034-development).
+
+
+`cnr_quantize::quantize` reconstructs complete chroma NR fixed-register
+conversion, including signed double rounding, logarithmic recursive scale,
+clipping, reversed coefficients and preserved padding.
+[Full native/original-log and physical CPU evidence](ISP.md#cnr-fixed-register-quantization-0034-development).

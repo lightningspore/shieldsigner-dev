@@ -380,3 +380,4 @@ pub mod cnr_selection;
 
 #[cfg(feature = "diagnostics")]
 pub mod cnr_calibration;
+pub mod cnr_quantize;

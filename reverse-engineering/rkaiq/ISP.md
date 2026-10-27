@@ -1791,3 +1791,52 @@ its old helper did not retain the failing counts. A repeat on the identical
 binary passed (ten decoder frames/27 renders), with all live native comparisons
 exact. Both outcomes are retained in the report; the first shortfall's exact
 cause is unqualified. This is regression evidence, not live CNR qualification.
+
+
+### CNR fixed-register quantization (0.0.34 development)
+
+`cnr_quantize::quantize` reconstructs complete `cnr_fix_transfer_V30`
+(ELF `0xe1180`). It produces all writes to the 66-byte fixed result, retaining
+SDK padding. The exposure pointer is required by native but its contents are
+not read. Disabled strength uses one; nonpositive enabled strength floors to
+f32 `0x358637bd` (about 1e-6). Finite selected fields/strength are validated
+before output publication.
+
+The conversion covers thumbnail downscale mode, global gain/scales, thumbnail
+sigma and filter weights, recursive-filter slope/strength/exponent, ghost/clip
+limits, reversed Gaussian coefficients, bilateral strengths, saturation
+adjustments, the thirteen-point sigma curve and fixed recursive gain alpha.
+Zero/negative widths and nonpositive strengths retain native saturating casts,
+wrapping signed products and clipping behavior. The native routine is not an
+input-validation reference.
+
+Instruction inspection resolves precision that Ghidra's pseudocode obscures:
+rounding promotes each f32 to double before adding signed 0.5, then saturates
+to signed 32 bits. The recursive scale calls double `log` on the integer
+product converted directly to double, with no intervening f32 rounding. After
+logarithmic division/exponent truncation, integer-to-f32 conversion is used for
+the final scaled strength. Preserving these distinctions avoids different
+registers near large integer products and rounding boundaries.
+
+[Full native/original-log and physical ARM evidence](cnr-quantize-equivalence.json)
+checks 1,441 cases: 26 untouched LSNR/HSNR profile selections, 974 varied
+strength/scalar/mode/width cases and 441 adjacent-f32 rounding-boundary cases.
+Every fixed-result byte is compared, and selected, strength and exposure inputs
+are checked unchanged. Original uClibc double `log` executes once per case;
+only diagnostic fixed-result printing is suppressed. The Rust implementation
+uses `libm::log`; corpus-level final register equivalence does not assert every
+transcendental output is identical for every possible double.
+
+Run `mise run camera:rust:cnr-quantize -- --adb SERIAL --report LOCAL.json`
+after building/deploying the exact fixture. SDK ARM declarations independently
+verify strength size 16 and factor/enable offsets 8/12, beside the already
+verified selected/exposure/fixed layouts. All 110 library/five Unix tests,
+no-default-features and static ARM builds pass. CPU replay makes no ISP writes;
+persistent CNR controller and live handoff remain separate gates.
+
+
+The exact quantizer-build camera executable additionally passes a 192-image
+regression and installed scan loop (ten decoder inputs/27 headless renders).
+All five existing live IQ modules and final AWB translation match native on
+both captures. The report pins that executable separately from CPU fixtures;
+this does not claim CNR was enabled during the regression.

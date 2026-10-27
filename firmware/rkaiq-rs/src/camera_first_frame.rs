@@ -1,3 +1,10 @@
+// Continuous application owner; SIGINT/SIGTERM finish the current image and unwind all queues.
+fn stream_sc3336(args: &[String]) -> io::Result<()> {
+    if args.len() != 7 { return Err(error("stream-sc3336 PLAN IQ PARAM IMAGE OUT STATS SOCKET")); }
+    let _signals = CameraStreamSignals::install()?;
+    std::env::set_var("SHIELDSIGNER_CAMERA_SOCKET", &args[6]);
+    auto_awb_frame_sc3336(&args[..6])
+}
 // Included in camera-probe's Linux module. Fixed initial checkpoint, not 3A.
 fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
     first_frame_sc3336_observed(args, None)

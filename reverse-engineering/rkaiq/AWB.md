@@ -2469,3 +2469,36 @@ This removes the short-run ownership barrier. Continuous application frame
 delivery, environmental/restart testing, variable measurement epochs and
 cold-start qualification remain required work; no whole-process memory or
 color/latency qualification is inferred from these bounded-history checks.
+
+## Application frame delivery and graceful owner shutdown (2026-10-27)
+
+The live owner now has an opt-in `stream-sc3336` command and a bounded Unix
+socket transport. RGB conversion and delivery run outside capture/3A. A slow
+reader is disconnected after an absolute two-second deadline; one queued frame
+bounds backlog. The Python adapter matches PiVideoStream's start/read/stop
+contract and returns Pillow images. The existing installed Camera wrapper was
+exercised by a process-local override; no default app or boot files were edited.
+
+Run 18, using the original full IQ profile, passed two reader sessions, a
+consumer stall/reconnect, SIGINT cleanup and final capture checks. It processed
+399 AE and AWB statistics frames with 398 parameter submissions and at most
+three retained snapshots. Its final frame 597 / parameters ID 595 translates
+identically across all 7,680 original ARM output bytes using the saved effective
+normal SDK. Run 17 separately passed SIGTERM. Run 15 passed a 900-image bounded
+capture with 600 AE/AWB frames and 599 submissions. No color or physical frame
+latency equivalence is inferred.
+
+Early integration attempts exposed actual board memory pressure: old test
+artifacts occupied most of RAM-backed `/tmp`, and the kernel killed camera or
+Python processes. Those attempts are not successful integration evidence.
+Archived files were SHA-verified before deleting only our temporary board
+copies; fresh outputs now go to SD. Saving PNGs during a timed reader test also
+consumed enough CPU/time to overlap the end of a bounded capture, so the test
+now saves them after capture. The full application wrapper currently supplies
+about 3–4 distinct previews per second; performance still needs work.
+
+Commands, transport format, memory requirements and remaining integration work
+are in [HARDWARE-TEST.md](HARDWARE-TEST.md#live-frames-for-the-application-0031-dev-source).
+Private images/raw statistics/logs remain ignored. Full UI/QR scanning,
+app-owned lifetime, cold-start independence and variable configuration policy
+remain required work toward a complete solution.

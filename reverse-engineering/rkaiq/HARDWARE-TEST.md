@@ -3,7 +3,8 @@
 Current **0.0.31-dev source** has passed bounded live AE + AWB captures, including FAST-to-normal time sharing, on
 the SC3336/Luckfox. The opt-in `auto-awb-frame-sc3336` command and its remaining
 runtime limitations are documented in [AWB.md](AWB.md#rolling-snapshot-ownership-beyond-short-captures-2026-10-27).
-Current live syntax takes the six path arguments and optional `--frames 33..3600`.
+Current bounded live syntax takes the six path arguments and optional `--frames 33..3600`.
+Continuous application streaming is documented [below](#live-frames-for-the-application-0031-dev-source).
 It derives scale from the single-camera binding, ISO from associated real gains,
 and brightness from the same-frame AE pre-result.
 The frozen **0.0.30-dev ZIP described below is unchanged** and does not contain
@@ -1010,3 +1011,87 @@ preceding offline-only checkpoint for measurement collection and translation.
 It does not prove automatic-WB convergence, persistent controller initialization,
 color accuracy, exposure-to-frame latency or vendor-free cold startup. Automatic
 WB gain feedback/publication remains unfinished.
+
+## Live frames for the application (0.0.31-dev source)
+
+`stream-sc3336` runs the Rust AE/AWB owner continuously and publishes RGB888 to
+one local reader. SIGINT or SIGTERM finishes capture and releases image, raw,
+statistics and parameter queues. It saves the final image and diagnostics on
+exit. It neither launches a vendor process nor installs a boot service.
+
+Build with `mise run camera:rust:arm`. Copy `camera-probe` and
+`firmware/rkaiq-rs/python/shieldsigner_video_stream.py` to the board. The latter
+needs the app's existing Python/Pillow installation, not OpenCV or RKAIQ.
+Use the verified graph plan for **your device nodes**, a fresh output basename,
+and the matching full IQ file already on the board. For the tested SC3336 graph:
+
+```sh
+mkdir -p /mnt/sdcard/shieldsigner-camera-tests
+/tmp/shieldsigner-camera-probe-live-awb stream-sc3336 \
+  /tmp/shieldsigner-pipeline-sof.json \
+  /oem/usr/share/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json \
+  /dev/video20 /dev/video11 \
+  /mnt/sdcard/shieldsigner-camera-tests/session-UNIQUE \
+  /dev/video19 /tmp/shieldsigner-camera.sock \
+  > /mnt/sdcard/shieldsigner-camera-tests/session-UNIQUE.log 2>&1
+```
+
+A reader in another process uses the same `start/read/stop` interface as the
+app's `PiVideoStream`; `read()` returns the latest Pillow RGB image or `None`
+until the first frame arrives. Reader stop does **not** stop the separate Rust
+owner. Stop that owner explicitly when camera use finishes.
+
+```python
+from shieldsigner_video_stream import PiVideoStream
+stream = PiVideoStream('/tmp/shieldsigner-camera.sock').start()
+# image = stream.read()  # Pillow RGB; existing Camera wrapper accepts it
+# ... consume frames ...
+stream.stop()
+```
+
+For application integration, the opt-in change is replacing Camera's
+`from seedsigner.hardware.pivideostream import PiVideoStream` import with
+`from shieldsigner_video_stream import PiVideoStream` and making the module
+available on Python's import path. Start the Rust owner separately. This import
+change has **not** been installed on the test board. The test instead overrides
+that class reference in its own process, exercising the installed Camera's
+start, image conversion/rotation, read and stop methods without launching the
+UI or changing settings.
+
+`python/stream_hardware_check.py` provides that reproducible test. Copy it beside
+the adapter, then run it with `--continuous --stall-reader --stop-signal INT`,
+`--app-root /mnt/sdcard/seedsigner`, a fresh `--output`, matching `--socket`, and
+`--` followed by the complete `stream-sc3336` command above (without shell
+redirection). It runs two eight-second reader sessions, checks increasing frame
+sequences, tests a stalled consumer, stops the owner, and saves images after
+capture. Use `--stop-signal TERM` for the other graceful shutdown path.
+
+The Unix socket has mode 0600 and refuses to replace any existing endpoint.
+Protocol: 24-byte little-endian header (`SSRGB001`, width, height, V4L2 sequence,
+RGB byte length), followed by tightly packed RGB888. One queued source frame,
+one conversion in progress, and a two-second absolute write deadline bound
+backpressure. A partial write disconnects that reader; reconnect starts with a
+fresh header. Capture/AE/AWB never waits for the reader. The current conversion
+is limited-range BT.601 NV12; colorimetry negotiation remains future work.
+Only contiguous, single-memory-plane, even-sized NV12 is accepted.
+
+**Memory matters on the 45 MB image.** `/tmp` is RAM-backed. Archived captures
+and spare test binaries consumed about 20 MB and caused real OOM kills during
+early integration attempts. SHA-verified local backups were retained before
+removing only our old board artifacts; `/tmp` then used about 2 MB. Write test
+images/logs to SD storage and retain headroom for Python, RGB frames and CMA.
+A larger tmpfs limit does not create more RAM. No swap/kernel changes were made.
+
+Run 18 passed with the original IQ profile: 399 AE/AWB statistics frames, 398
+parameter submissions, both normal AWB groups, at most three retained parameter
+snapshots, two application-reader sessions, stalled-reader recovery, and clean
+SIGINT shutdown. Original ARM translation matched all 7,680 bytes of the final
+statistics. Run 17 separately passed SIGTERM. The installed Camera wrapper
+produced 29 and 30 distinct rotated previews over its two eight-second windows
+(about 3–4 fps); this is a functional checkpoint, not final UI/QR performance.
+See `application-stream-hardware-validation.json` for hashes and exact scope.
+
+Remaining: app-owned process lifetime/default integration, real scan/UI tests,
+restart/environment qualification, variable AWB configuration epochs and a
+cold start without prior vendor initialization. No vendor-free boot claim is
+made by these tests. The frozen 0.0.30-dev ZIP remains unchanged.

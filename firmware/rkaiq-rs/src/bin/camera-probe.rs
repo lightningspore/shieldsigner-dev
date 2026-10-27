@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE [--frames 33..3600]\n  camera-probe awb-gain-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE R GR GB B\n  camera-probe awb-measurement-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE\n  camera-probe auto-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE\n  camera-probe first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME --step-seconds SECONDS]]\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe configure-pipeline PLAN.json [--dry-run]\n  camera-probe apply-linear /dev/v4l-subdevN FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]\n  camera-probe make-initial-parameters IQ.json OUT.bin [--ae-measurements | --awb-measurements SDK.bin SAMPLE_SCALE]\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE [--sof-node NODE] [--exposure-step SENSOR FRAME CODE] -- IMAGE_NODE OUT [capture options]\n  camera-probe capture-with-parameters PARAM_NODE PARAM.bin -- IMAGE_NODE OUT [capture options]\n  camera-probe submit-parameters /dev/videoN FULL_PARAMETERS.bin [--timeout-ms 3000] [--hold-ms 30000]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe stream-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SOCKET\n  camera-probe auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE [--frames 33..3600]\n  camera-probe awb-gain-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE R GR GB B\n  camera-probe awb-measurement-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE\n  camera-probe auto-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE\n  camera-probe first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME --step-seconds SECONDS]]\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe configure-pipeline PLAN.json [--dry-run]\n  camera-probe apply-linear /dev/v4l-subdevN FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]\n  camera-probe make-initial-parameters IQ.json OUT.bin [--ae-measurements | --awb-measurements SDK.bin SAMPLE_SCALE]\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE [--sof-node NODE] [--exposure-step SENSOR FRAME CODE] -- IMAGE_NODE OUT [capture options]\n  camera-probe capture-with-parameters PARAM_NODE PARAM.bin -- IMAGE_NODE OUT [capture options]\n  camera-probe submit-parameters /dev/videoN FULL_PARAMETERS.bin [--timeout-ms 3000] [--hold-ms 30000]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -913,6 +913,7 @@ mod linux {
             }
             ioctl(fd, SETFMT, &mut fmt)?;
         }
+        let live_stream = if statistics { None } else { CameraFrameStream::from_environment(&fmt)? };
         let mut request = RequestBuffers {
             count: buffers,
             kind,
@@ -955,7 +956,10 @@ mod linux {
         ioctl(fd, STREAMON, &mut stream_kind)?;
         let stream = Stream { fd, kind };
         let mut saved = None;
-        for frame in 0..=warmup {
+        let continuous = !statistics && CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed);
+        if continuous && live_stream.is_none() { return Err(error("Continuous capture requires an application socket")); }
+        for frame in 0..=if continuous { u32::MAX } else { warmup } {
+            if continuous && CAMERA_STREAM_STOP.load(std::sync::atomic::Ordering::Relaxed) { break; }
             check_camera_cancel(cancel)?;
             let deadline = Instant::now() + Duration::from_millis(timeout);
             let mut planes: [Plane; PLANES] = zero();
@@ -980,7 +984,7 @@ mod linux {
             if kind == MPLANE && b.length as usize != mappings.len() {
                 return Err(error("Dequeued plane count changed unexpectedly"));
             }
-            if frame == warmup {
+            if frame == warmup || live_stream.is_some() {
                 let mut bytes = Vec::new();
                 let mut metadata = Vec::new();
                 for (n, mapping) in mappings.iter().enumerate() {
@@ -1001,13 +1005,14 @@ mod linux {
                     metadata.push(json!({"plane":n,"fileOffset":bytes.len(),"bytes":data.len(),"dataOffset":offset}));
                     bytes.extend_from_slice(data);
                 }
-                saved = Some((
+                if let Some(stream) = &live_stream { stream.publish(b.sequence, &bytes); }
+                if frame == warmup || continuous { saved = Some((
                     bytes,
                     metadata,
                     b.sequence,
                     b.time.seconds,
                     b.time.microseconds,
-                ));
+                )); }
             }
             ioctl(fd, QUEUE, &mut b)?;
         }
@@ -1336,6 +1341,7 @@ mod linux {
         );
         Ok(())
     }
+    include!("../camera_stream.rs");
     include!("../camera_ae_events.rs");
     include!("../camera_raw_bridge.rs");
     include!("../camera_parameters.rs");
@@ -1356,6 +1362,7 @@ mod linux {
             Some("capture-with-parameters") => capture_with_parameters(&args[1..]),
             Some("capture-cif-with-parameters") => capture_cif_with_parameters(&args[1..]),
             Some("configure-pipeline") => pipeline_configuration::run(&args[1..]),
+            Some("stream-sc3336") => stream_sc3336(&args[1..]),
             Some("auto-awb-frame-sc3336") => auto_awb_frame_sc3336(&args[1..]),
             Some("awb-gain-frame-sc3336") => awb_gain_frame_sc3336(&args[1..]),
             Some("awb-measurement-frame-sc3336") => awb_measurement_frame_sc3336(&args[1..]),

@@ -8,6 +8,9 @@ mod first_frame_driver {
         trace: Vec<String>,
         formats: HashMap<String, Vec<u8>>,
         parameter_on: bool,
+        parameter_pending: std::collections::VecDeque<u32>,
+        parameter_would_block: bool,
+        parameter_error_flag: bool,
         raw_inflight: bool,
         triggered: bool,
         raw_frames: u32,
@@ -226,6 +229,9 @@ mod first_frame_driver {
             }
             QUEUE => {
                 d.trace.push(format!("{role}:queue"));
+                if role == "parameters" {
+                    d.parameter_pending.push_back(get32(b, 0));
+                }
                 if role == "rx" {
                     assert!(!d.raw_inflight);
                     d.raw_inflight = true;
@@ -233,7 +239,17 @@ mod first_frame_driver {
             }
             DEQUEUE => match role.as_str() {
                 "parameters" => {
-                    put32(b, 0, 0);
+                    if d.parameter_would_block {
+                        d.parameter_would_block = false;
+                        return again();
+                    }
+                    let Some(index) = d.parameter_pending.pop_front() else {
+                        return again();
+                    };
+                    put32(b, 0, index);
+                    if d.parameter_error_flag {
+                        put32(b, 12, 0x40);
+                    }
                     put32(b, 8, 11145);
                     put32(b, 56, 11145);
                     d.trace.push("parameters:ready".into());
@@ -423,12 +439,20 @@ mod first_frame_driver {
             .unwrap()
             .is_none());
         assert_eq!(queue.queued_count, 2);
-        let mut buffers = std::mem::take(&mut backend.buffers);
-        let index = queue
-            .dequeue(&mut backend, &mut buffers, MMAP, false)
-            .unwrap();
-        queue.return_to_pool(&mut backend, &mut buffers[index]);
-        backend.buffers = buffers;
+        DRIVER
+            .lock()
+            .unwrap()
+            .as_mut()
+            .unwrap()
+            .parameter_would_block = true;
+        let before_buffers = backend.buffers.clone();
+        assert!(backend.try_complete(&mut queue).unwrap().is_none());
+        assert_eq!(backend.buffers, before_buffers);
+        assert_eq!(queue.queued_count, 2);
+        let completed = backend.try_complete(&mut queue).unwrap().unwrap();
+        assert_eq!(completed["bufferIndex"], 0);
+        assert_eq!(queue.queued_count, 1);
+        assert!(!backend.buffers[0].queued);
         let wb = isp32::WhiteBalanceGain {
             red: 2.,
             green_red: 1.,
@@ -468,6 +492,22 @@ mod first_frame_driver {
             512
         );
         assert_eq!(queue.queued_count, 2);
+        assert_eq!(
+            backend.try_complete(&mut queue).unwrap().unwrap()["bufferIndex"],
+            1
+        );
+        assert_eq!(queue.queued_count, 1);
+        DRIVER
+            .lock()
+            .unwrap()
+            .as_mut()
+            .unwrap()
+            .parameter_error_flag = true;
+        assert!(backend.try_complete(&mut queue).is_err());
+        assert!(
+            backend.buffers[0].queued,
+            "invalid completion must not recycle slot"
+        );
         let allocated = backend.allocated;
         queue.stop(&mut backend, allocated);
         assert!(backend.cleanup_errors.is_empty());

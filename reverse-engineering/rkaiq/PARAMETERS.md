@@ -114,3 +114,23 @@ uses fixed initial exposure. Live SOF/statistics dispatch, completion draining,
 parameter snapshot accumulation and automatic WB publication are not yet
 connected into a continuously running capture loop. These adapter tests do
 not use a physical camera.
+
+### Nonblocking persistent parameter completions
+
+`ParameterBackend::try_complete` drains at most one completion per call and
+returns `None` when no submissions are outstanding or DQBUF reports EAGAIN.
+An EAGAIN leaves buffer ownership and the queued count unchanged. Successful
+DQBUF uses the recovered queue state machine, then validates that the returned
+slot is in use, the buffer error flag is clear, type/memory match metadata-output
+MMAP, and returned lengths/bytes-used fit its mapping and a full ISP32 record.
+Only a validated completion returns its slot to the pool. Invalid results are
+errors requiring teardown; no automatic retry or recycling is performed.
+
+The fixed startup submission now calls this same method rather than maintaining
+a separate completion path. The runtime-gain ARM test uses ordered pending
+indexes in its simulated driver, checks EAGAIN before completion, completes
+slots 0 and 1, reuses slot 0, and injects an error-flagged completion to confirm
+that slot remains unavailable until teardown. All four full startup scenarios
+pass with the shared enqueue/completion path. A dequeued parameter buffer is
+still not proof of which sensor image received the settings; frame association
+and physical application require the continuous event owner and hardware tests.

@@ -127,6 +127,48 @@ impl ParameterBackend {
         *unscaled_wb = next_wb;
         Ok(Some((index, association)))
     }
+    /// Drain one nonblocking completion. EAGAIN preserves pool ownership;
+    /// validated completions release their slot. Invalid driver results require
+    /// teardown, and are never silently made available for another submission.
+    fn try_complete(&mut self, queue: &mut parameter::Queue) -> io::Result<Option<Value>> {
+        if queue.queued_count == 0 {
+            return Ok(None);
+        }
+        let mut buffers = std::mem::take(&mut self.buffers);
+        let result = (|| {
+            let index = match queue.dequeue(self, &mut buffers, MMAP, false) {
+                Ok(index) => index,
+                Err(-9) if self.last_errno == Some(libc::EAGAIN) => return Ok(None),
+                Err(status) => return Err(self.failure("Parameter DQBUF", status)),
+            };
+            let record = self
+                .last_dequeue
+                .as_ref()
+                .ok_or_else(|| error("Missing parameter completion record"))?;
+            let mapping = self
+                .mappings
+                .get(index)
+                .ok_or_else(|| error("Missing completed parameter mapping"))?;
+            let length = parameter::word(record, 56) as usize;
+            if !buffers[index].queued
+                || parameter::word(record, 12) & 0x40 != 0
+                || parameter::word(record, 4) != META_OUTPUT
+                || parameter::word(record, 48) != MMAP
+                || length < shieldsigner_rkaiq::isp32::PARAMETER_BYTES
+                || length > mapping.length
+                || parameter::word(record, 8) as usize > length
+            {
+                return Err(error(
+                    "Driver returned invalid parameter completion flags/bounds/type/ownership",
+                ));
+            }
+            let completed = json!({"bufferIndex":index,"sequence":parameter::word(record,44),"bytesUsed":parameter::word(record,8),"length":parameter::word(record,56),"flags":parameter::word(record,12)});
+            queue.return_to_pool(self, &mut buffers[index]);
+            Ok(Some(completed))
+        })();
+        self.buffers = buffers;
+        result
+    }
     fn initialize(&mut self) -> io::Result<()> {
         if !(2..=8).contains(&self.requested) {
             return Err(error(
@@ -501,44 +543,20 @@ fn submit_parameters_then<F: FnOnce() -> io::Result<()>>(
             return Err(backend.failure("Parameter startup", status));
         }
         backend.enqueue_payload(&mut queue, &payload)?;
-        let mut buffers = std::mem::take(&mut backend.buffers);
         accepted = true;
         let deadline = Instant::now() + Duration::from_millis(timeout);
-        let index = loop {
+        loop {
             let fd = backend
                 .file
                 .as_ref()
                 .ok_or_else(|| error("Parameter device is closed"))?
                 .as_raw_fd();
             wait_parameter(fd, deadline)?;
-            match queue.dequeue(&mut backend, &mut buffers, MMAP, false) {
-                Ok(index) => break index,
-                Err(_) if backend.last_errno == Some(libc::EAGAIN) => continue,
-                Err(status) => return Err(backend.failure("Parameter DQBUF", status)),
+            if let Some(record) = backend.try_complete(&mut queue)? {
+                completed = Some(record);
+                break;
             }
-        };
-        let record = backend
-            .last_dequeue
-            .as_ref()
-            .ok_or_else(|| error("Missing parameter completion record"))?;
-        if parameter::word(record, 12) & 0x40 != 0 {
-            return Err(error("Driver returned a parameter buffer error flag"));
         }
-        let length = parameter::word(record, 56) as usize;
-        if parameter::word(record, 4) != META_OUTPUT
-            || parameter::word(record, 48) != MMAP
-            || length < payload.len()
-            || length > backend.mappings[index].length
-            || parameter::word(record, 8) as usize > length
-        {
-            return Err(error(
-                "Driver returned invalid parameter completion bounds/type",
-            ));
-        }
-        completed = Some(
-            json!({"bufferIndex":index,"sequence":parameter::word(record,44),"bytesUsed":parameter::word(record,8),"length":parameter::word(record,56),"flags":parameter::word(record,12)}),
-        );
-        queue.return_to_pool(&mut backend, &mut buffers[index]);
         println!(
             "{}",
             json!({"event":"parameters-dequeued","frameApplicationVerified":false,"holdMs":hold,"completion":completed})

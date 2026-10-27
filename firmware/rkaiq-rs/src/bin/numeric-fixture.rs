@@ -129,6 +129,79 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-low-gain" => {
+                use shieldsigner_rkaiq::{
+                    awb_high_gain::{Light, LightResult},
+                    awb_low_gain::*,
+                    awb_luma_history::History,
+                };
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let gains = |v: &serde_json::Value| -> [f32; 4] {
+                    core::array::from_fn(|i| v[i].as_f64().unwrap() as f32)
+                };
+                let colors: Vec<_> = v["colors"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_u64().unwrap() as u32)
+                    .collect();
+                let history: Vec<_> = v["history"].as_array().unwrap().iter().map(gains).collect();
+                let mut state = State {
+                    current: [2.; 4],
+                    low_result: [3.; 4],
+                    temporal_result: [4.; 4],
+                    spatial_result: [5.; 4],
+                    temporal_source: [6.; 4],
+                    spatial_weight: 0.25,
+                    used_previous: v["used_previous"].as_bool().unwrap(),
+                    color_history: History::<32>::from_values(&colors).unwrap(),
+                };
+                let settings = Settings {
+                    retained: v["retained"].as_u64().unwrap() as u32,
+                    count_threshold: v["threshold"].as_u64().unwrap() as u32,
+                    brightness: v["brightness"].as_u64().unwrap() as u32,
+                    low_brightness: v["low"].as_u64().unwrap() as u32,
+                    high_brightness: v["high"].as_u64().unwrap() as u32,
+                    temporal_default: gains(&v["default"]),
+                    color_history_value: v["color_value"].as_i64().unwrap() as i32,
+                    color_history_target: v["target"].as_u64().unwrap() as u16,
+                };
+                let lights: Vec<_> = v["lights"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|l| Light {
+                        selected_gain: [0.; 4],
+                        selected_count: 0,
+                        extra_gain: [0.; 4],
+                        extra_count: 0,
+                        extra_enabled: false,
+                        low_threshold: l["low"].as_u64().unwrap() as u32,
+                        high_threshold: l["high"].as_u64().unwrap() as u32,
+                        low_gain: gains(&l["low_gain"]),
+                        high_gain: gains(&l["high_gain"]),
+                        spatial_percentage: 0,
+                        probability: l["probability"].as_f64().unwrap() as f32,
+                    })
+                    .collect();
+                let mut output = vec![
+                    LightResult {
+                        statistic: [7.; 4],
+                        spatial: [8.; 4],
+                        spatial_weight: 0.5,
+                        extra_weight: 0.75
+                    };
+                    lights.len()
+                ];
+                state
+                    .calculate_without_single_color(&lights, &mut output, &history, &settings)
+                    .unwrap();
+                let lights: Vec<_> = output.iter().map(|r| serde_json::json!({"statistic": r.statistic.map(f32::to_bits), "spatial": r.spatial.map(f32::to_bits), "spatial_weight": r.spatial_weight.to_bits(), "extra_weight": r.extra_weight.to_bits()})).collect();
+                println!(
+                    "{}",
+                    serde_json::json!({"current": state.current.map(f32::to_bits), "low_result": state.low_result.map(f32::to_bits), "temporal_result": state.temporal_result.map(f32::to_bits), "spatial_result": state.spatial_result.map(f32::to_bits), "temporal_source": state.temporal_source.map(f32::to_bits), "weight": state.spatial_weight.to_bits(), "used_previous": state.used_previous, "colors": state.color_history.values(), "lights": lights})
+                );
+            }
             "awb-high-gain" => {
                 use shieldsigner_rkaiq::awb_high_gain::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

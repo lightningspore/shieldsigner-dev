@@ -1,0 +1,24 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 1024,
+  "mismatches": 0,
+  "arm": true,
+  "branches": {
+    "count": 532,
+    "temporal": 109,
+    "history": 128,
+    "spatial": 194,
+    "blend": 61
+  },
+  "elfEntry": "0xc6a90",
+  "modeledMemoryCalls": {
+    "memcpy": 1024
+  },
+  "scope": "Original low-WP strategy with single-color disabled, complete return: gain fields, per-light values, history updates and memory preservation",
+  "limitations": [
+    "Single-color explicitly disabled. Pinned SC3336 IQ enables it, so its enabled branch remains required and unported.",
+    "Memory copy, allocation and logging are explicit adapters; original strategy and numerical/list helpers execute.",
+    "Explicit finite inputs and bounded histories; native corrupting singleton target-1 case is excluded and rejected by Rust.",
+    "Calibration initialization, complete outer AWB and live integration remain unfinished."
+  ]
+}

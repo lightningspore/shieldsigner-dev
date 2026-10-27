@@ -380,3 +380,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:awb-high-gain"]
 description = "Verify complete native AWB high-count gain orchestration against ARM"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-high-gain.py --arm"]
+
+[tasks."camera:rust:awb-low-gain"]
+description = "Verify native low-count AWB paths with single-color explicitly disabled"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-low-gain.py --arm"]

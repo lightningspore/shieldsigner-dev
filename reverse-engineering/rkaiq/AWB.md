@@ -524,3 +524,43 @@ This completes the high-count strategy for explicit finite calibration,
 selected-region measurements and total probabilities. It does not complete the
 low-count strategy, caller's high/low interpolation, postprocessing, IQ loading,
 outer frame lifecycle or live AWB integration. The camera kit remains fixed-WB.
+
+## Low-count strategy without single-color processing
+
+`awb_low_gain::State::calculate_without_single_color` reconstructs the
+single-color-disabled branches of `AwbCalGainWpTypeLow` (ELF `0xc6a90`). This
+restriction is explicit in the API: the pinned SC3336 IQ enables
+`singleColorProces` in `AWB_SGC_CALL_INITIAL` mode, so its enabled branch remains
+required work rather than an optional improvement to this implementation.
+
+When the retained count is sufficient (unsigned comparison), the native routine
+only updates color history and preserves all gain results. Otherwise a nonempty
+gain history supplies its last entry, marks previous-gain usage and updates the
+temporal and low-strategy results. With no gain history, brightness selects the
+configured temporal default, a spatially weighted illumination gain, or a blend
+between them. The middle blend uses the native rounded product plus FMA, without
+the normalization performed by `AwbGainMixture`. Only fields written by the
+chosen branch change; previous-use flags and other gain caches can remain stale.
+Outputs and owned history are staged until success.
+
+The two brightness thresholds first compare as u32. Distinct large integer
+thresholds can then collapse to the same f32 value; native interpolation clamps
+to its first endpoint before testing span. The value API handles that case
+before calling the shared interpolation helper, whose general checked interface
+requires increasing knots.
+
+`mise run camera:rust:awb-low-gain` compares **1,024 cases** against a complete
+return from the original low-count routine with single-color disabled:
+532 sufficient-count, 128 history-fallback, 109 temporal, 194 spatial and 61
+blended cases. Host and ARM compare all represented gain fields, prior-use flag,
+per-light gains/weights, updated color-list contents and links, allocation
+balance, and unrelated-memory preservation. Input gain-list nodes are preserved.
+Original numerical/list helpers execute; memory copy, allocation and logging
+are explicit adapters. The corpus covers unsigned count boundaries, 1–255
+lights, empty/nonempty histories, zero probabilities, equal/reversed and
+float-collapsed brightness thresholds, and append/rotate/no-op list updates.
+[Reference report](awb-low-gain-equivalence.json).
+
+The enabled single-color processing/manager branch is the next missing part of
+this low-count strategy. Complete high/low orchestration, postprocessing,
+calibration loading, frame lifecycle and live integration remain unfinished.

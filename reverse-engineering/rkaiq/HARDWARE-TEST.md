@@ -1072,8 +1072,9 @@ Protocol: 24-byte little-endian header (`SSRGB001`, width, height, V4L2 sequence
 RGB byte length), followed by tightly packed RGB888. One queued source frame,
 one conversion in progress, and a two-second absolute write deadline bound
 backpressure. A partial write disconnects that reader; reconnect starts with a
-fresh header. Capture/AE/AWB never waits for the reader. The current conversion
-is limited-range BT.601 NV12; colorimetry negotiation remains future work.
+fresh header. Capture/AE/AWB never waits for the reader. The conversion uses BT.601 NV12 and driver-reported full/limited quantization.
+High-level RGB startup rejects unsupported CSM/CGC profiles; capture JSON records
+colorspace, YCbCr encoding, quantization and transfer-function codes.
 Only contiguous, single-memory-plane, even-sized NV12 is accepted.
 
 **Memory matters on the 45 MB image.** `/tmp` is RAM-backed. Archived captures
@@ -1236,3 +1237,21 @@ qualification or a color/physical-latency guarantee. Per-command
 `coldStartProven:false` stays conservative; the separate external boot report
 records the conditions of this particular test. Full IQ data and private scene
 images remain outside the repository.
+
+
+## Full-range RGB preview correction
+
+Run 26 uses BT.601 full-range RGB conversion, corroborated by the original IQ,
+serialized CSM/CGC, kernel behavior and V4L2 quantization metadata. It passes
+both application-reader sessions, stalled-reader recovery and live AE/AWB;
+396 statistics frames, 395 submissions and at most three retained snapshots
+pass the control checker. Full original ARM statistics translation still
+matches. An altered color-matrix profile is rejected before acquisition in
+run 27. Host numerical conversion checks cover 92,352 sample combinations
+within one RGB level of independent floating-point equations. This corrects
+an output-range bug; physical color calibration remains unqualified.
+
+See [ISP.md](ISP.md#rgb-preview-quantization-matches-isp-output) and
+`rgb-colorimetry-hardware-validation.json`. The existing Camera wrapper's
+90-degree rotation retains its original canvas and introduces black borders;
+that application integration issue is separate from the native range fix.

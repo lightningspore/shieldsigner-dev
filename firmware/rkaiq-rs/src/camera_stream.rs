@@ -74,6 +74,14 @@ impl CameraFrameStream {
                 "Application stream requires contiguous even-sized NV12, at most 4096x4096",
             ));
         }
+        let (colorspace, encoding, quantization, _) = camera_colorimetry(fmt);
+        let full_range = camera_bt601_range(colorspace, encoding, quantization)?;
+        println!(
+            "{}",
+            serde_json::json!({"event":"application-rgb-conversion","matrix":"BT.601",
+            "range":if full_range {"full"} else {"limited"},"driverColorspace":colorspace,
+            "driverYcbcrEncoding":encoding,"driverQuantization":quantization})
+        );
         // Never unlink an existing endpoint: another camera owner may be using it.
         let listener = UnixListener::bind(&path)?;
         let setup = (|| {
@@ -101,7 +109,8 @@ impl CameraFrameStream {
                     }
                 }
                 if let Some(stream) = &mut client {
-                    let Some(rgb) = camera_nv12_rgb(&nv12, width, height, stride) else {
+                    let Some(rgb) = camera_nv12_rgb(&nv12, width, height, stride, full_range)
+                    else {
                         continue;
                     };
                     let mut header = Vec::from(*b"SSRGB001");
@@ -141,7 +150,43 @@ impl Drop for CameraFrameStream {
         let _ = fs::remove_file(&self.path);
     }
 }
-fn camera_nv12_rgb(bytes: &[u8], width: usize, height: usize, stride: usize) -> Option<Vec<u8>> {
+fn camera_colorimetry(fmt: &Format) -> (u32, u32, u32, u32) {
+    let raw = unsafe { &fmt.data.raw };
+    if fmt.kind == MPLANE {
+        (
+            get32(raw, 16),
+            raw[182] as u32,
+            raw[183] as u32,
+            raw[184] as u32,
+        )
+    } else {
+        (
+            get32(raw, 24),
+            get32(raw, 36),
+            get32(raw, 40),
+            get32(raw, 44),
+        )
+    }
+}
+fn camera_bt601_range(colorspace: u32, encoding: u32, quantization: u32) -> io::Result<bool> {
+    // Pinned V4L2_MAP_YCBCR_ENC_DEFAULT: 709/DCI-P3, 2020 and 240M differ.
+    if (encoding == 0 && matches!(colorspace, 2 | 3 | 10 | 12)) || encoding > 1 {
+        return Err(error("Application stream supports BT.601 YCbCr only"));
+    }
+    match quantization {
+        0 => Ok(colorspace == 7), // V4L2 YUV default: limited, except JPEG.
+        1 => Ok(true),
+        2 => Ok(false),
+        _ => Err(error("Unsupported application stream quantization")),
+    }
+}
+fn camera_nv12_rgb(
+    bytes: &[u8],
+    width: usize,
+    height: usize,
+    stride: usize,
+    full_range: bool,
+) -> Option<Vec<u8>> {
     if width == 0
         || height == 0
         || width % 2 != 0
@@ -152,17 +197,22 @@ fn camera_nv12_rgb(bytes: &[u8], width: usize, height: usize, stride: usize) -> 
         return None;
     }
     let mut rgb = Vec::with_capacity(width.checked_mul(height)?.checked_mul(3)?);
+    let (y_offset, y_scale, r_cr, g_cb, g_cr, b_cb) = if full_range {
+        (0, 256, 359, 88, 183, 454)
+    } else {
+        (16, 298, 409, 100, 208, 516)
+    };
     for y in 0..height {
         for x in 0..width {
-            let c = i32::from(bytes[y * stride + x]) - 16;
+            let c = i32::from(bytes[y * stride + x]) - y_offset;
             let uv = stride * height + y / 2 * stride + (x & !1);
             let d = i32::from(bytes[uv]) - 128;
             let e = i32::from(bytes[uv + 1]) - 128;
-            // Limited-range BT.601, matching the existing app's NV12 converter.
+            // BT.601 Q8 inverse, with range selected from driver metadata.
             for v in [
-                298 * c + 409 * e,
-                298 * c - 100 * d - 208 * e,
-                298 * c + 516 * d,
+                y_scale * c + r_cr * e,
+                y_scale * c - g_cb * d - g_cr * e,
+                y_scale * c + b_cb * d,
             ] {
                 rgb.push(((v + 128) >> 8).clamp(0, 255) as u8);
             }
@@ -176,12 +226,19 @@ mod camera_stream_tests {
     #[test]
     fn nv12_stride_range_and_rejection() {
         assert_eq!(
-            camera_nv12_rgb(&[16, 235, 0, 0, 81, 145, 0, 0, 128, 128, 0, 0], 2, 2, 4).unwrap(),
+            camera_nv12_rgb(
+                &[16, 235, 0, 0, 81, 145, 0, 0, 128, 128, 0, 0],
+                2,
+                2,
+                4,
+                false
+            )
+            .unwrap(),
             [0, 0, 0, 255, 255, 255, 76, 76, 76, 150, 150, 150]
         );
-        assert!(camera_nv12_rgb(&[0; 5], 2, 2, 2).is_none());
-        assert!(camera_nv12_rgb(&[0; 12], 3, 2, 4).is_none());
-        assert!(camera_nv12_rgb(&[0; 12], 2, 2, 1).is_none());
+        assert!(camera_nv12_rgb(&[0; 5], 2, 2, 2, false).is_none());
+        assert!(camera_nv12_rgb(&[0; 12], 3, 2, 4, false).is_none());
+        assert!(camera_nv12_rgb(&[0; 12], 2, 2, 1, false).is_none());
     }
 }
 
@@ -217,4 +274,23 @@ fn camera_stream_write(
 fn camera_stream_cancelled() -> bool {
     CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed)
         && CAMERA_STREAM_STOP.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+fn camera_bt601_parameters(params: &[u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES]) -> bool {
+    let enabled = u64::from_le_bytes(params[8..16].try_into().unwrap());
+    let required = (1u64 << 43) | (1u64 << 44);
+    if enabled & required != required
+        || params[0x2b55..0x2b59] != [0; 4]
+        || params[0x2b7d] > 1
+        || params[0x2b7e] != 0
+    {
+        return false;
+    }
+    [38, 75, 15, -22, -42, 64, 64, -54, -10]
+        .iter()
+        .enumerate()
+        .all(|(i, expected)| {
+            let offset = 0x2b59 + i * 4;
+            i32::from_le_bytes(params[offset..offset + 4].try_into().unwrap()) == *expected
+        })
 }

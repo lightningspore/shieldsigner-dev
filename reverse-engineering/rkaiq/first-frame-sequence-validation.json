@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "9f5a31a71695ae23f725321f85a1edf57b2c01f9e9bcb8ff66be582798d3efed",
+  "testBinarySha256": "070cf593e00669b13ce832c0a0ec3e14bc9dcaa27c0848061edda128139d488f",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -38,12 +38,12 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
-      "sofEvents": 6,
+      "sofEvents": 7,
       "statisticsEnabled": true,
-      "statisticsEvents": 5,
-      "statisticsFrames": 5
+      "statisticsEvents": 6,
+      "statisticsFrames": 6
     },
     {
       "automaticAe": false,
@@ -66,12 +66,12 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
-      "sofEvents": 6,
+      "sofEvents": 7,
       "statisticsEnabled": true,
-      "statisticsEvents": 5,
-      "statisticsFrames": 5
+      "statisticsEvents": 6,
+      "statisticsFrames": 6
     },
     {
       "automaticAe": true,
@@ -100,8 +100,8 @@
         "retiredParameterSnapshots": 0,
         "sensorTraceLimit": 256,
         "success": true,
-        "sensorWriteCount": 57,
-        "sensorQueryCount": 133
+        "sensorWriteCount": 54,
+        "sensorQueryCount": 126
       }
     },
     {

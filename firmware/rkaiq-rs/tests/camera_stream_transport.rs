@@ -97,3 +97,91 @@ fn stalled_reader_can_cancel_without_waiting_for_socket_timeout() {
     );
     assert!(before.elapsed() < Duration::from_millis(250));
 }
+
+#[test]
+fn colorimetry_abi_defaults_and_profile_contract() {
+    for kind in [1, MPLANE] {
+        let mut raw = [0; 200];
+        if kind == MPLANE {
+            raw[182] = 1;
+            raw[183] = 1;
+            raw[184] = 2;
+            raw[16..20].copy_from_slice(&8u32.to_le_bytes());
+        } else {
+            for (offset, value) in [(24, 8u32), (36, 1), (40, 1), (44, 2)] {
+                raw[offset..offset + 4].copy_from_slice(&value.to_le_bytes());
+            }
+        }
+        assert_eq!(
+            camera_colorimetry(&Format {
+                kind,
+                data: Data { raw }
+            }),
+            (8, 1, 1, 2)
+        );
+    }
+    assert!(camera_bt601_range(0, 0, 1).unwrap());
+    assert!(!camera_bt601_range(0, 0, 2).unwrap());
+    assert!(!camera_bt601_range(0, 0, 0).unwrap());
+    assert!(camera_bt601_range(7, 0, 0).unwrap());
+    for (space, encoding, range) in [(3, 0, 1), (10, 0, 1), (0, 2, 1), (0, 0, 3)] {
+        assert!(camera_bt601_range(space, encoding, range).is_err());
+    }
+    let mut params = [0; shieldsigner_rkaiq::isp32::PARAMETER_BYTES];
+    params[8..16].copy_from_slice(&((1u64 << 43) | (1u64 << 44)).to_le_bytes());
+    for (i, value) in [38i32, 75, 15, -22, -42, 64, 64, -54, -10]
+        .iter()
+        .enumerate()
+    {
+        params[0x2b59 + i * 4..0x2b5d + i * 4].copy_from_slice(&value.to_le_bytes());
+    }
+    assert!(camera_bt601_parameters(&params));
+    params[0x2b7d] = 1;
+    assert!(camera_bt601_parameters(&params));
+    params[0x2b7e] = 1;
+    assert!(!camera_bt601_parameters(&params));
+    params[0x2b7e] = 0;
+    params[0x2b59] = 37;
+    assert!(!camera_bt601_parameters(&params));
+}
+#[test]
+fn full_range_matches_independent_float_reference() {
+    let clamp = |v: f64| v.round().clamp(0., 255.) as i32;
+    let mut cases = 0;
+    for full in [false, true] {
+        for y in (0..=255u8).step_by(5) {
+            for u in (0..=255u8).step_by(7) {
+                for v in (0..=255u8).step_by(11) {
+                    let result = camera_nv12_rgb(&[y, y, y, y, u, v], 2, 2, 2, full).unwrap();
+                    let d = f64::from(u) - 128.;
+                    let e = f64::from(v) - 128.;
+                    let (c, r, g1, g2, b) = if full {
+                        (f64::from(y), 1.402, 0.344136, 0.714136, 1.772)
+                    } else {
+                        (
+                            (f64::from(y) - 16.) * 255. / 219.,
+                            1.596027,
+                            0.391762,
+                            0.812968,
+                            2.017232,
+                        )
+                    };
+                    for (actual, expected) in result[..3].iter().zip([
+                        clamp(c + r * e),
+                        clamp(c - g1 * d - g2 * e),
+                        clamp(c + b * d),
+                    ]) {
+                        assert!((i32::from(*actual) - expected).abs() <= 1);
+                    }
+                    cases += 1;
+                }
+            }
+        }
+    }
+    assert_eq!(cases, 92352);
+    // Full-range neutral tones retain their level; limited-range expands 16..235.
+    assert_eq!(
+        camera_nv12_rgb(&[16, 235, 81, 145, 128, 128], 2, 2, 2, true).unwrap(),
+        [16, 16, 16, 235, 235, 235, 81, 81, 81, 145, 145, 145]
+    );
+}

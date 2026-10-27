@@ -2,13 +2,27 @@
 
 The Rust replacement continues to use the Luckfox SDK's Linux ISP/sensor drivers and physical ISP hardware. The proprietary userspace RKAIQ library chooses calibrated parameters, configures the graph/queues, and runs the automatic control algorithms. Replacing that library requires all of those responsibilities; a frame captured from an already initialized pipeline does not establish independent startup.
 
-## Current implementation priority
+## Current functional status (0.0.31-dev)
 
-The next deliverable is one runnable SC3336/RV1106 camera path, rather than another release containing isolated routines. The first hardware checkpoint is a usable frame after starting with the vendor camera/bootstrap services disabled. Then verify the application's QR capture and the exposure/white-balance behavior required to make it reliable. This is a staged checkpoint toward the Rust replacement, not a redefinition of completion as fixed controls or vendor-assisted capture.
+The SC3336/RV1106 Rust path now configures the graph and calibrated startup
+parameters, owns image/raw/statistics/parameter queues, runs live AE and AWB,
+and publishes RGB frames to a PiVideoStream-compatible Python adapter. The
+installed Camera wrapper has passed opt-in managed start/read/stop, restart,
+consumer-stall, duplicate-owner, early-cancellation and parent-exit tests.
+A controlled clean reboot with vendor startup skipped passed the automatic
+application path; original startup scripts were restored. See
+[HARDWARE-TEST.md](HARDWARE-TEST.md#controlled-clean-reboot-with-live-aeawb-and-the-application-adapter)
+and its checksummed hardware reports.
 
-The immediate bottlenecks are the live media/format backend, a sufficient calibrated initial ISP parameter record, and persistent ownership/order of the parameter and capture queues. Connect those before extending optional algorithm modes or adding broader equivalence corpora. Reuse the recovered algorithms needed by the actual single-camera linear path. HDR, multiple cameras/ISPs, unused tuning branches and optional image-quality features are deferred unless the functional path demonstrates a dependency on them.
+The next functional work is the application's scan/UI path and preview
+handling, rather than more isolated routine counts. Physical power-cycle,
+optical QR, color-chart/latency qualification, default application integration
+and remaining variable AWB configuration policy remain open. The source is
+not a complete RKAIQ ABI replacement. Optional HDR, multi-camera and unused
+branches stay deferred unless the actual single-camera linear path needs them.
 
-The live Linux format/link adapter is now implemented below, with positive device operation still untested. The kit still does not generate a sufficient initial parameter record, and capture may depend on earlier vendor initialization. The existing numerical results remain useful validation, but additional passing routine counts do not satisfy this hardware checkpoint. Development after kit 0.0.28 is being assembled toward the runnable camera milestone rather than released as another standalone-routine kit.
+The remaining reconstruction sections below are implementation history; their
+older untested/unfinished checkpoint statements do not describe current source.
 
 ## Live Linux configuration adapter
 
@@ -187,3 +201,34 @@ checks, sensor writes and combined CIF/image capture in one command. See
 It retains explicit device inventory and rejects existing outputs. This is a
 fixed first-frame checkpoint; full positive startup, QR image quality and the
 automatic controller remain unverified/unfinished.
+
+
+## RGB preview quantization matches ISP output
+
+The pinned IQ's CSM uses BT.601 coefficients with full-range output, zero Y/C
+offsets, and CGC ratio/limit disabled. The kernel's `isp_csm_config` enables
+full Y/C range; `isp_cgc_config` reports full quantization unless `yuv_limit`
+is set. The device reports NV12 quantization 1 (full). The initial application
+converter incorrectly used limited-range math, expanding 16..235 and clipping
+valid full-range values. It now uses driver-reported quantization for the RGB
+inverse and records color metadata in capture JSON and an
+`application-rgb-conversion` event.
+
+The supported full-range Q8 inverse is R=Y+359*Cr/256,
+G=Y-88*Cb/256-183*Cr/256, B=Y+454*Cb/256, with chroma centered at 128,
+rounding and output clipping. Limited range retains the existing 298/409/100/
+208/516 coefficients and Y offset 16. V4L2 YUV default quantization maps to
+limited except JPEG, as defined by the pinned UAPI. Unsupported encoding/range
+metadata is rejected; high-level RGB startup also checks the actual serialized
+BT.601 CSM coefficients, zero offsets and unscaled CGC. This avoids silently
+decoding an arbitrary profile matrix as BT.601.
+
+The host test compares 92,352 full/limited sample combinations with independent
+floating-point equations within one level per RGB channel; it also covers
+single/multiplanar metadata offsets and invalid profile/encoding/range cases.
+Real run 26 passes full-range RGB delivery through the installed Camera wrapper,
+stalled-reader recovery and 396 live AE/AWB statistics frames. Its final
+statistics still match all 7,680 original ARM translation bytes. A changed CSM
+profile is rejected on ARM before acquisition. See
+`rgb-colorimetry-hardware-validation.json`. Private previews stay local. These
+checks validate range handling, not physical color calibration or optical QR.

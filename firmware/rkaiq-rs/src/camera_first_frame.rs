@@ -242,6 +242,9 @@ fn first_frame_sc3336_with_gain(
         initial["diagnosticWhiteBalanceOverride"] = json!(g);
         initial["automaticWhiteBalance"] = json!(false);
     }
+    if std::env::var_os("SHIELDSIGNER_CAMERA_SOCKET").is_some() && !camera_bt601_parameters(&parameters) {
+        return Err(error("RGB streaming requires the supported BT.601 CSM and unscaled CGC profile"));
+    }
     let sdk_path = format!("{}.awb-sdk.bin", args[4]);
     if sdk.is_some() && std::path::Path::new(&sdk_path).exists() {
         return Err(error("AWB SDK output already exists"));

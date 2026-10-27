@@ -409,7 +409,8 @@ mod linux {
                 json!({"sizeImage":get32(raw,20),"bytesPerLine":get32(raw,16)})
             });
         }
-        json!({"bufferType":value.kind,"width":get32(raw,0),"height":get32(raw,4),"fourcc":fourcc(get32(raw,8)),"fourccValue":get32(raw,8),"planeCount":count,"planes":planes})
+        let (colorspace, ycbcr, quantization, transfer) = camera_colorimetry(value);
+        json!({"bufferType":value.kind,"width":get32(raw,0),"height":get32(raw,4),"fourcc":fourcc(get32(raw,8)),"fourccValue":get32(raw,8),"planeCount":count,"planes":planes,"colorspace":colorspace,"ycbcrEncoding":ycbcr,"quantization":quantization,"transferFunction":transfer})
     }
     fn vendor_processes() -> Vec<String> {
         let mut found = Vec::new();

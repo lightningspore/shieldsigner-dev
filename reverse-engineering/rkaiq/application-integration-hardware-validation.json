@@ -207,13 +207,13 @@
   "changedSourceRejected": true,
   "realFrameDecodeStatus": 4,
   "capture": {
-    "directory": "/shieldsigner-camera-tests/camera-goluitkb",
-    "firstFrameSeconds": 0.5672199169998748,
-    "first": 6,
+    "directory": "/shieldsigner-camera-tests/live-37-results/camera-rgu25c3t",
+    "firstFrameSeconds": 0.4910094589995424,
+    "first": 9,
     "last": 233,
-    "samples": 68,
+    "samples": 67,
     "received": 72,
-    "stopSeconds": 0.2726940410000225,
+    "stopSeconds": 0.2700285000000804,
     "ownerExitCode": 0
   },
   "realFrameRotations": [
@@ -251,14 +251,14 @@
     }
   ],
   "rotationBenchmark": {
-    "croppedSecondsPerFrame": 0.051361099999985525,
-    "expandedSecondsPerFrame": 0.012637274999997316
+    "croppedSecondsPerFrame": 0.05082723340001394,
+    "expandedSecondsPerFrame": 0.012465308200080471
   },
   "installedCameraUnchanged": true,
   "kind": "opt-in-camera-integration-and-synthetic-qr-hardware-check",
-  "version": "0.0.31-dev",
-  "run": "29",
-  "cameraBinarySha256": "983163bd2ee33ed8de80bff8131ccb7317ef6c152f6c4dc608a106370ed021ba",
+  "version": "0.0.32-dev",
+  "run": "49",
+  "cameraBinarySha256": "fac67aba8fe99fbcf4d7cb5bd90637f19aab9869d645796d1e1f65d774cea4f8",
   "sourceSha256": {
     "shieldsigner_integration.py": "2dfb752ce4529f66f5cb1713337f84bac3c6a51653a21b578e652f986d7766a5",
     "integration_hardware_check.py": "beeee86cbc96265b2dfaa2bb915c05ba071c499590fc7d6478b30f56660c3f85",
@@ -285,9 +285,9 @@
   },
   "nativeTranslation": {
     "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
-    "statisticsSha256": "b8577347a30b5dd533e69413d2aa38944b08926b1ab38720fb141a82191e77b4",
+    "statisticsSha256": "a8b8cc33d5f51200545bc7a0238f7fc2c93ee1be19c8da3969dca14711e2ab34",
     "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
-    "translatedSha256": "d0cb3ed7a9b7ede3c4b57c1ff2c89aed3b78f494c590bd093b0564575d634d74",
+    "translatedSha256": "e225d7fba53dbd5d8999652c692d15602ca72fe936f9631c38790cc6354f2f63",
     "frameId": 244,
     "parametersId": 243,
     "bytesCompared": 7680,
@@ -298,22 +298,15 @@
       "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
     ]
   },
-  "launcher": {
-    "mainHelpExitCode": 0,
-    "helpLogSha256": "2859948d4c7c408e610cdead6b29e465f547e11835d5b1e46c307eff706747b1",
-    "fullUiStarted": false
-  },
   "fixture": {
     "kind": "generated public Bitcoin-address QR; no private wallet data",
     "sha256": "01c5263f30716c8536ce7e98881019cbe532bcf2a3f791172690e43ad86b37c1",
     "passedCases": 16
   },
-  "ownerLogSha256": "cbfcdda44a144dc35e7921da3ca7387c4ba304fd2140c49879d927088826bea9",
+  "ownerLogSha256": "17764773684a2b20682a8f5f98706229e438b40a4f67fc357f1a57503216b4a9",
   "limitations": [
-    "Generated fixture pixels were passed through Camera and DecodeQR; this is not optical QR evidence.",
-    "Live scene returned DecodeQRStatus.FALSE; no known optical target was present.",
-    "Complete UI rendering/button interaction was not started; launcher main.py --help and import wiring were tested.",
-    "Rotation timing is a five-iteration microbenchmark on a retained hardware frame after capture stopped.",
-    "Warm-board integration iteration, following the separately documented controlled clean reboot."
+    "Generated QR fixture pixels are software decoder checks; no optical target qualification.",
+    "Warm-board development integration; controlled clean-reboot evidence identifies a separate build.",
+    "Complete physical LCD/button interaction remains unqualified."
   ]
 }

@@ -37,12 +37,14 @@ assert sequence['passed'] and len(automatic)==2 and all(s['imageFrames']==33 and
 copy(ROOT/'reverse-engineering/rkaiq/examples/pipeline-linear.template.json','examples/pipeline-linear.template.json')
 for name in ['pipeline-luckfox-sc3336-observed.json','public-address-qr.png']:
  copy(ROOT/'reverse-engineering/rkaiq/examples'/name,'examples/'+name)
-for name in ['verify_kit.py','configure_camera.py','optical_camera_check.py','shieldsigner_video_stream.py','shieldsigner_integration.py','stream_hardware_check.py','managed_hardware_check.py','integration_hardware_check.py']:
+for name in ['verify_kit.py','configure_camera.py','optical_camera_check.py','shieldsigner_video_stream.py','shieldsigner_integration.py','stream_hardware_check.py','managed_hardware_check.py','integration_hardware_check.py','restart_hardware_check.py','scan_loop_hardware_check.py']:
  copy(ROOT/'firmware/rkaiq-rs/python'/name,'python/'+name)
 copy(ROOT/'firmware/rkaiq-rs/python/sc3336-owner.example.json','examples/sc3336-owner.example.json')
 for name in ['cold-camera-modules.sh','prepare-cold-boot.py','verify-cold-boot.py']:
  copy(ROOT/'reverse-engineering/rkaiq/scripts'/name,'tools/'+name)
 for name in ['awb-live-hardware-validation.json','managed-camera-hardware-validation.json','clean-reboot-camera-hardware-validation.json','rgb-colorimetry-hardware-validation.json','application-integration-hardware-validation.json']:
+ copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
+for name in ['awb-scene-sequence-validation.json','exposure-step-latency-validation.json','gain-step-latency-validation.json','live-ae-write-timing-validation.json','camera-restart-hardware-validation.json','scan-loop-hardware-validation.json','ae-startup-convergence-validation.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
 application=json.loads((ROOT/'reverse-engineering/rkaiq/application-integration-hardware-validation.json').read_text())
 assert application['passed'] and application['cameraBinarySha256']==smoke['binaries']['camera-probe']

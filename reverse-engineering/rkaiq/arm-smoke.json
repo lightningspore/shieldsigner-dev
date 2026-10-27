@@ -61,8 +61,8 @@
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "983163bd2ee33ed8de80bff8131ccb7317ef6c152f6c4dc608a106370ed021ba",
-    "numeric-fixture": "749823fd1d00fcd482ab2c49e330776fa4bb08e34bf76001f2ff7f54d31f2846",
+    "camera-probe": "fac67aba8fe99fbcf4d7cb5bd90637f19aab9869d645796d1e1f65d774cea4f8",
+    "numeric-fixture": "3070c184b1fc247bdf790da73e9e568151ebf90ab36f81380d635eedc8e53e39",
     "frame-preview": "db4acafff87e258547df7086595fc3aa74be36ee05effb8ba0ecb4641ae1cd10"
   },
   "limitations": [

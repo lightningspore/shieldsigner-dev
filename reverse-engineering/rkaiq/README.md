@@ -1,10 +1,39 @@
 # RKAIQ → Rust reconstruction
 
-**Status: partial numerical reconstruction and camera-test tools. This is not a replacement `librkaiq.so`, and the existing image is unchanged.** The active objective is a Rust implementation of the camera-processing path used by ShieldSigner. A clean-boot hardware session has now produced a recognizable 640×480 ISP frame and valid AE statistics; automatic 3A and application integration remain unfinished.
+**Status: experimental runnable Rust SC3336 camera path, with live automatic
+exposure/white balance and opt-in SeedSigner integration.** It uses Linux's
+existing open kernel camera drivers and does not link or call RKAIQ. It is not
+a drop-in `librkaiq.so`, and installed application/boot files are unchanged by
+the launcher. Complete qualification of the requested replacement remains open.
 
-**Experimental automatic exposure:** `camera-probe auto-frame-sc3336` now joins SOF/statistics, recovered AE, sensor writes and ISP gain queues for a bounded 33-frame capture with fixed calibrated WB. Two end-to-end ARM adapter scenarios pass with simulated devices; real-camera qualification remains outstanding. [Command, evidence and limits](AE.md#runnable-automatic-exposure-capture-command).
+The independently initialized path has been exercised after a controlled clean
+reboot without vendor camera startup. It configures the supplied media graph,
+loads the supported calibration subset, streams VGA RGB frames, runs persistent
+AE/AWB, and owns sensor/ISP queues through shutdown. The actual application
+Camera adapter and installed scan/preview loops have received real frames.
+The default application has not been switched over permanently.
 
-**Current priority: a runnable single-camera path.** Connect live graph/format setup, calibrated initial parameters and persistent queues before expanding optional algorithms or releasing more isolated routine kits. The next functional checkpoint is a usable SC3336 frame without vendor bootstrap, followed by the application's QR capture and required exposure/white-balance behavior. [Critical path and current blockers](ISP.md#current-implementation-priority).
+Recent hardware evidence:
+
+- [Opposite-start exposure convergence](ae-startup-convergence-validation.json):
+  dim and bright starts both settle inside the calibrated 10% target band.
+- [Repeated ownership](camera-restart-hardware-validation.json): process/socket
+  cleanup and zero allocated CMA after each of ten measured stop cycles.
+- [Installed scan-loop composition](scan-loop-hardware-validation.json): actual
+  decoder and preview code run concurrently; display/cancel boundaries are software.
+- [Physical shutter delay](exposure-step-latency-validation.json): six captures
+  support two frames. [Gain transitions](gain-step-latency-validation.json)
+  retain one four-frame settling exception among thirteen captures.
+- [Post-convergence AWB replay](awb-scene-sequence-validation.json): resumes,
+  corrects and settles under transformed captured statistics; this is not an
+  optical lighting-change test or full joined-native-controller comparison.
+
+[HARDWARE-TEST.md](HARDWARE-TEST.md) is the runnable procedure. The frozen
+0.0.31-dev kit remains available; current 0.0.32-dev source adds diagnostics
+and evidence without replacing that archive. Next priorities are successful
+physical QR scanning, physical lighting/color response, complete LCD/button
+interaction and power-cycle qualification. Preserve the single-camera critical
+path before adding optional HDR/multi-camera/tuning modes.
 
 ## What is implemented
 
@@ -14,7 +43,9 @@
 - A Rust **`frame-preview`** converter for uncalibrated grayscale inspection of supported YUV/luma/Bayer captures. Bayer preview uses simple 2×2 binning, not the vendor ISP algorithm.
 - A static ARM `numeric-fixture` executable and reference corpus for checking the recovered routines on the actual processor.
 
-The probe uses Linux's existing V4L2/media interfaces and does not call or link RKAIQ. Development can now configure explicitly supplied media links and formats, but **does not yet supply complete calibrated ISP startup, an exposure/white-balance loop, or a replacement camera service**. Capturing from a graph previously initialized by the vendor is a useful diagnostic, not proof of an independent cold-start implementation.
+The component records below describe their original comparison scopes. Later live
+composition and hardware evidence are summarized above and in HARDWARE-TEST.md;
+an isolated numerical comparison must not be read as complete service qualification.
 
 A recovered Rust service controller also matches **100 original-daemon event traces** for initialization call order, stream subscriptions, and alternating start/stop filtering. Its processing backend is still incomplete: this is not a working substitute for the camera daemon. See [LIFECYCLE.md](LIFECYCLE.md). `camera-probe events` observes real driver events without configuring the ISP.
 
@@ -144,15 +175,32 @@ The probe explicitly uses the kernel's ARM32, long-sized V4L2 timestamp layout, 
 
 [HARDWARE-TEST.md](HARDWARE-TEST.md) explains the next session and how to report results. Numerical emulation, ARM-container execution and mesh-/board checks do not establish live camera operation.
 
-## Remaining implementation
+## Remaining implementation and qualification
 
-1. Recover the exact single-camera initialization and stream-event lifecycle; reproduce sensor/media graph setup without temporary vendor `rkipc`.
-2. Finish the full ISP32 parameter/statistics queue integration and remaining ISP/3A IQ-file sections needed by the selected sensor.
-3. Reconstruct the required exposure/gain loop and sensor-control behavior, then the minimal image-processing configuration needed for reliable QR capture.
-4. Integrate the recovered processing blocks, with tests for each behavior against the pinned binary. Add register/parameter packing and state-machine coverage.
-5. Provide the required RKAIQ API surface or replace its callers, then verify startup, frame delivery, exposure transitions, shutdown and restart on real hardware.
+The explicit-plan SC3336 path now replaces its application camera caller rather
+than implementing the full RKAIQ ABI. Graph setup, persistent parameter/statistics
+queues, automatic exposure/white balance, app frame delivery and restart have
+real hardware evidence. These do not imply that every optional IQ section or
+vendor algorithm is implemented.
 
-The completed numeric routines and diagnostic tools are an initial milestone toward this objective. They do not close the remaining implementation above.
+Still open:
+
+1. Successful optical decoding of a known public QR through the physical camera.
+2. Physical lighting/color changes and broader image quality, including the
+   observed variable sensor-gain settling and its exposure-association implications.
+3. Actual LCD/buttons and complete application interaction; current scan-loop
+   tests substitute the display and cancellation boundaries.
+4. Physical power-cycle testing and a reviewed permanent startup choice;
+   controlled reboot and opt-in launch have been tested separately.
+5. Complete joined-native AWB controller equivalence and any remaining policy
+   required by this fixed profile. Existing comparisons cover many components
+   and the live composition, with narrower oracle scopes stated explicitly.
+6. Freeze and independently verify a current development kit before replacing
+   the recommended 0.0.31-dev archive.
+
+Optional modes remain outside the current single-camera priority unless the
+actual QR capture path needs them. No completion claim follows from passing
+numerical or simulated-device tests alone.
 
 
 ### First physical ISP capture

@@ -10,6 +10,15 @@ pub enum ApplyPosition {
     Gain0,
     Gain1,
 }
+/// Initial apply-position selection in AwbPrepareV32 (ELF 0xc3a4c).
+/// This is the prepare default; later automatic policy may reconfigure it.
+pub fn awb_prepare_position(working_mode: i32) -> ApplyPosition {
+    if working_mode == 0 {
+        ApplyPosition::Gain1
+    } else {
+        ApplyPosition::Gain0
+    }
+}
 #[derive(Clone, Copy, Debug)]
 pub struct WhiteBalanceGain {
     pub red: f32,

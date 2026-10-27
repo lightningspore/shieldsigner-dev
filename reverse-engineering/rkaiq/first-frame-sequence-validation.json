@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "964353232ca1cc85ae2ecae4c9f6be10c03b4d023d562372a8251523fbc81150",
+  "testBinarySha256": "801fe7de13627969024517ebc98d2cf53d6bf3e1a1b58f915912e974f5334bcf",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -42,7 +42,7 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 5,
+      "rawFrames": 4,
       "savedBytes": 4478976,
       "statisticsEnabled": false,
       "statisticsFrames": 0
@@ -53,10 +53,10 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
       "statisticsEnabled": true,
-      "statisticsFrames": 5
+      "statisticsFrames": 6
     }
   ],
   "verified": [

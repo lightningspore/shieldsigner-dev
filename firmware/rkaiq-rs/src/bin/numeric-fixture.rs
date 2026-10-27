@@ -380,6 +380,16 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "awb-prepare-position" => {
+                let mode = a[1].parse::<i32>().unwrap();
+                println!(
+                    "{}",
+                    match isp32::awb_prepare_position(mode) {
+                        isp32::ApplyPosition::Gain0 => 0,
+                        isp32::ApplyPosition::Gain1 => 1,
+                    }
+                );
+            }
             "sensor-sof" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let delay = v["delay"].as_i64().unwrap() as i32;

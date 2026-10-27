@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 10,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "AwbPrepareV32 initial apply-position publication: linear mode zero selects Gain1",
+  "limitations": [
+    "Calibration-update call is a success boundary; controlled preconfigured context bypasses preceding geometry/bit-depth setup.",
+    "Stops immediately after the context position store, not full prepare return.",
+    "Later AWB reconfiguration policy and automatic gain calculation remain separate."
+  ]
+}

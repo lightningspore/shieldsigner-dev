@@ -23,6 +23,8 @@ def main():
   assert data[0x130a:0x130c]==bytes([0,1])
   assert struct.unpack_from('<49H',data,0x130e)==tuple(iq['main_scene'][0]['sub_scene'][0]['scene_isp32']['agamma_calib_v11']['GammaTuningPara']['Gamma_curve'])
   assert report['iso']==50 and report['sensorExposureApplied'] is False
+  assert report['whiteBalanceApplyPosition']=='Gain1'
+  assert struct.unpack_from('<16H',data,0x1225)==(256,256,439,390)+(256,)*12
   ae_out=d/'initial-ae.bin'
   ae_run=subprocess.run([str(binary),'make-initial-parameters',str(iq_path),str(ae_out),'--ae-measurements'],text=True,capture_output=True,check=True)
   ae_report=json.loads(ae_run.stdout);ae_data=ae_out.read_bytes();assert ae_report['aeMeasurementsConfigured'] and not ae_report['automaticExposure']

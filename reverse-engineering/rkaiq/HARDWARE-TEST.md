@@ -788,3 +788,15 @@ also omit some IDs. A stable illuminated scene or stronger raw measurement is
 needed to isolate the effect. The last control run left exposure at 3 ms.
 [Probe results](exposure-step-validation.json). Raw scene captures and detailed
 logs stay local. Automatic feedback remains off.
+
+
+### Dark purple pedestal correction
+
+A subsequent controlled Gain0/Gain1/unity comparison isolated the dark purple
+bias to the startup WB gain stage. The native linear prepare default is Gain1;
+the development startup now uses it and records the choice in its report.
+A fresh real startup/ISP/statistics capture succeeded with near-neutral chroma.
+See [WB position evidence and limits](AWB.md#initial-gain-application-position--corrected).
+Earlier purple captures and brightness figures are historical results of the
+old Gain0 checkpoint; they are not the current corrected baseline. Do not
+interpret this fix as automatic white balance or color qualification.

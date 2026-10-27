@@ -165,3 +165,10 @@ boot. The original startup script was restored and checksum-verified.
 the scope. This demonstrates a physical ISP frame, not a complete replacement
 camera service: fixed exposure/WB, missing SOF matches, frame association,
 automatic control, QR quality and application integration remain open.
+
+
+Development follow-up: the fixed startup white-balance seed now uses the native
+linear **Gain1** position. This removes the purple black-level bias observed
+in earlier captures; [native and hardware evidence](AWB.md#initial-gain-application-position--corrected)
+records the correction. Automatic white balance and broader color accuracy
+remain unfinished.

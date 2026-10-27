@@ -144,3 +144,43 @@ Missing input preserves all destination fields. Input without the AWB-valid bit 
 `mise run camera:rust:awb-translation` compares all SDK bytes and conditional fields against 1,000 native executions, including both driver payload lengths, 0–4 physical lights, missing/invalid input and debug modes. It checks preservation of unrelated native object/proxy bytes, the configuration/context, source statistics and retained-owner reference count. Object access and the single-ISP predicate are controlled boundaries; vendor logging is discarded. [Reference report](awb-translation-equivalence.json).
 
 This development work follows kit 0.0.28 and is not a new camera-test release. The next release is prioritized around the runnable camera path described in [ISP.md](ISP.md#current-implementation-priority), rather than another standalone-routine kit. Live startup, calibrated initialization, configuration association and the surrounding controller remain unfinished.
+
+
+## Initial gain application position — corrected
+
+The first-frame checkpoint originally placed the fixed D50 gains in Gain0.
+Hardware comparison showed a purple black-level pedestal: at 3 ms/1× in the
+dark scene, average NV12 chroma was approximately U=149.45, V=149.44 (neutral
+is 128). Changing only the 32-byte AWB gain block to Gain1 gave U=129.05,
+V=128.83; a unity-gain control gave U=128.63, V=128.63. The fresh corrected
+startup capture gave U=127.68, V=129.35. This isolates gain placement as the
+cause of the observed dark purple bias; it does not establish full color
+accuracy, CCM tuning or automatic WB.
+[Hardware comparison](awb-position-hardware-validation.json).
+
+Ghidra `AwbPrepareV32` (ELF 0xc3a4c) publishes context field 0x3644 as
+`working_mode == 0`. The pinned AWB header defines Gain0=0 and Gain1=1;
+`awbProcessing` copies that field to the output `applyPosition`. Executing the
+native prepare publication checkpoint confirms mode zero selects **Gain1**.
+The checked helper `isp32::awb_prepare_position` now supplies that default to
+linear startup; the initial report records `whiteBalanceApplyPosition: Gain1`.
+[Position equivalence report](awb-prepare-position-equivalence.json).
+
+Ten host/ARM cases check the position store for linear and other mode values.
+Calibration update is an explicit success boundary and a controlled
+preconfigured context bypasses prior geometry/bit-depth setup. This is not
+full prepare equivalence or the later reconfiguration policy. The existing
+native gain serializer already supported both positions and is unchanged.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-prepare-position.py --arm
+```
+
+Parameter assembly/mask checks, malformed-profile guards, static ARM preflight,
+full startup simulations, library/no-std checks and primary AE translation
+comparisons pass after the correction. Development base parameter SHA-256 is
+`b5e031ec216f3a007d6b9b6c21bcd6b726d7edda0a6b98913016b66fe91ef2cd`;
+measurement-enabled parameter SHA-256 is
+`2ffab69fcf67ac36ea58c446352acbcc6fcdb51079ae0afdf0377adce29cdebc`.
+Frozen prior kits retain their original parameters and limitations. Automatic
+AWB, illuminated-scene color testing and complete result policy remain open.

@@ -143,7 +143,7 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
             green_red: g[1],
             green_blue: g[2],
             blue: g[3],
-            position: ApplyPosition::Gain0,
+            position: crate::isp32::awb_prepare_position(0),
         },
         true,
     )
@@ -205,7 +205,7 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
     );
     Ok((
         params,
-        json!({"kind":"experimental-linear-first-frame-parameters","scene":"/main_scene/0/sub_scene/0/scene_isp32","bytes":PARAMETER_BYTES,"iso":iso,"requestedExposureSeconds":seconds,"requestedGain":gain,"sensorExposureApplied":false,"whiteBalanceLight":light,"whiteBalanceSeed":g,"limitations":["Fixed first-frame checkpoint; no automatic exposure/white balance controller.","Constant BLC tables only; selected CSM/CGC profile values are explicit inputs, not recovered automatic selection.","No hardware qualification or usable-frame claim; other ISP modules explicitly disabled."]}),
+        json!({"kind":"experimental-linear-first-frame-parameters","scene":"/main_scene/0/sub_scene/0/scene_isp32","bytes":PARAMETER_BYTES,"iso":iso,"requestedExposureSeconds":seconds,"requestedGain":gain,"sensorExposureApplied":false,"whiteBalanceLight":light,"whiteBalanceSeed":g,"whiteBalanceApplyPosition":"Gain1","limitations":["Fixed first-frame checkpoint; no automatic exposure/white balance controller.","Constant BLC tables only; selected CSM/CGC profile values are explicit inputs, not recovered automatic selection.","No hardware qualification or usable-frame claim; other ISP modules explicitly disabled."]}),
     ))
 }
 

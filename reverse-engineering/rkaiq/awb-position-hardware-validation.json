@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-26",
+  "board": "Luckfox Pico / SC3336",
+  "scenarios": [
+    {
+      "label": "gain0",
+      "rawSha256": "5407d59c4d23fa36df79d95730c41340473140a37d112d8729939ae71242d717",
+      "channels": {
+        "Y": {
+          "minimum": 23,
+          "maximum": 30,
+          "mean": 25.025579427083333
+        },
+        "U": {
+          "minimum": 147,
+          "maximum": 151,
+          "mean": 149.453828125
+        },
+        "V": {
+          "minimum": 147,
+          "maximum": 151,
+          "mean": 149.4440234375
+        }
+      }
+    },
+    {
+      "label": "gain1",
+      "rawSha256": "a64905810746bf39c790c4f8ce2c2ec10b4d79ce29ae37595cb3077a0113a610",
+      "channels": {
+        "Y": {
+          "minimum": 0,
+          "maximum": 11,
+          "mean": 3.1755696614583333
+        },
+        "U": {
+          "minimum": 125,
+          "maximum": 135,
+          "mean": 129.0492578125
+        },
+        "V": {
+          "minimum": 125,
+          "maximum": 134,
+          "mean": 128.831640625
+        }
+      }
+    },
+    {
+      "label": "unity",
+      "rawSha256": "52896859d40b96e8a15584e19af3e9b63d3fb662a98d0f635695d8be86b0e519",
+      "channels": {
+        "Y": {
+          "minimum": 0,
+          "maximum": 11,
+          "mean": 2.8136165364583334
+        },
+        "U": {
+          "minimum": 126,
+          "maximum": 133,
+          "mean": 128.6265625
+        },
+        "V": {
+          "minimum": 125,
+          "maximum": 133,
+          "mean": 128.6304296875
+        }
+      }
+    },
+    {
+      "label": "gain1-startup",
+      "rawSha256": "3c57200e12e6669995d4d868c5a05dae07c1e143f40afad115f7fd416233e6c4",
+      "channels": {
+        "Y": {
+          "minimum": 0,
+          "maximum": 12,
+          "mean": 1.8865885416666666
+        },
+        "U": {
+          "minimum": 126,
+          "maximum": 130,
+          "mean": 127.68157552083333
+        },
+        "V": {
+          "minimum": 125,
+          "maximum": 135,
+          "mean": 129.34782552083334
+        }
+      }
+    }
+  ],
+  "conclusion": "Gain1 removes the observed purple black-level bias and matches the linear native prepare default; unity control is also near neutral.",
+  "automaticWhiteBalance": false,
+  "limitations": [
+    "Dark-scene fixed-seed comparison; not daylight color accuracy, complete AWB or CCM qualification.",
+    "Probe variants differ only in the 32-byte AWB gain block.",
+    "Fresh startup uses the corrected default; other captures use controlled explicit parameter records."
+  ]
+}

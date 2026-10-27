@@ -235,3 +235,66 @@ mod exposure_tests {
         assert_eq!(params, original);
     }
 }
+
+/// Apply an ordered WB/exposure result pair, as in the native ISP result list.
+/// `white_balance=None` preserves the previous cache and current output bytes.
+/// `exposure=None` leaves exposure scaling untouched. This function does not
+/// manage parameter-pool reuse, frame IDs, or decide whether WB is published.
+/// Validate both inputs before changing the output or the unscaled cache.
+pub fn apply_gain_results(
+    params: &mut [u8; PARAMETER_BYTES],
+    cached: &mut [u8; AWB_GAIN_BYTES],
+    white_balance: Option<WhiteBalanceGain>,
+    exposure: Option<ExposureDigitalGain>,
+) -> Result<(), InvalidInput> {
+    if let Some(gain) = white_balance {
+        for value in [gain.red, gain.green_red, gain.green_blue, gain.blue] {
+            quantize(value)?;
+        }
+    }
+    if let Some(gain) = exposure {
+        let finite = match gain {
+            ExposureDigitalGain::Linear(v) => v.is_finite(),
+            ExposureDigitalGain::Hdr(v) => v.iter().all(|v| v.is_finite()),
+        };
+        if !finite {
+            return Err(InvalidInput::NonFinite);
+        }
+    }
+    if let Some(gain) = white_balance {
+        apply_awb_gain(params, cached, gain, true)?;
+    }
+    if let Some(gain) = exposure {
+        apply_exposure_digital_gain(params, cached, gain)?;
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod ordered_gain_tests {
+    use super::*;
+    #[test]
+    fn invalid_exposure_cannot_partially_publish_white_balance() {
+        let mut params = [0x5a; PARAMETER_BYTES];
+        let mut cache = [0x3c; AWB_GAIN_BYTES];
+        let original = params;
+        let original_cache = cache;
+        assert_eq!(
+            apply_gain_results(
+                &mut params,
+                &mut cache,
+                Some(WhiteBalanceGain {
+                    red: 2.,
+                    green_red: 1.,
+                    green_blue: 1.,
+                    blue: 3.,
+                    position: ApplyPosition::Gain1,
+                }),
+                Some(ExposureDigitalGain::Hdr([2., f32::NAN, 1.]))
+            ),
+            Err(InvalidInput::NonFinite)
+        );
+        assert_eq!(params, original);
+        assert_eq!(cache, original_cache);
+    }
+}

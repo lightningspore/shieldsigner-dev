@@ -1660,3 +1660,37 @@ maximum finite f32 gains. It checks parameter preservation outside the gain
 words and configuration mask, and preservation of the complete converter
 context. Host and ARM Rust replay match the original instructions exactly.
 This is converter evidence, not yet proof of live ISP update timing.
+
+### Ordered white-balance and exposure gain results
+
+`isp32::apply_gain_results` composes optional white-balance and exposure results
+in that order, preserving both the output buffer and the independent unscaled
+WB cache across calls. Both inputs are validated before either output changes.
+It deliberately leaves result inclusion, frame IDs and buffer reuse to callers.
+
+Ghidra traces establish the ordering: `CamHwIsp20::setIspConfig` (ELF `0x2a944`)
+gets effective sensor exposure for the result-list frame and appends that result
+to the list. `Isp20Params::merge_isp_results` (ELF `0x3178c`) walks the list in
+order. `Isp32Params::convert3aResultsToIspCfg` (ELF `0x304c4`) case 4 invokes the
+WB converter with update=true; case 0 invokes the exposure converter using the
+sensor's effective exposure record. Thus a WB result in that list precedes the
+appended exposure scaling. The merge function itself does not restore a base
+AWB record before conversion.
+
+The native AWB result publisher (ELF `0x5ce20`) uses update/synchronization flags
+and can copy the last WB result into a new parameter item. Whether every such
+item reaches the hardware result list still needs tracing; this does not prove
+that WB restoration happens every frame. We retain the converter's literal
+unity no-op behavior rather than invent a restoration policy.
+
+`isp-gain-results.py` executes the original two converters in six persistent
+sequences (60 events), covering both WB positions, all three working modes,
+changed WB, repeated exposure boosts, unity without WB, WB followed by unity,
+subunity requests, WB-only and empty batches. It compares all 11,145 parameter
+bytes and the 32-byte cache after every event against host and ARM Rust.
+The sequence demonstrates both nonaccumulating boosts from the cache and the
+need for an explicit WB result to reset a previously boosted output.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-gain-results.py --arm
+```

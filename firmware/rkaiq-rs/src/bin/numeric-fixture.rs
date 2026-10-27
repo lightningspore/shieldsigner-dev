@@ -227,6 +227,45 @@ fn main() {
                     hex(&cache)
                 );
             }
+            "gain-results" => {
+                use shieldsigner_rkaiq::isp32::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut params = [0x5a; PARAMETER_BYTES];
+                let mut cache = [0; AWB_GAIN_BYTES];
+                let mut outputs = Vec::new();
+                for event in v.as_array().unwrap() {
+                    let wb = event.get("wb").map(|v| {
+                        let g = v.as_array().unwrap();
+                        WhiteBalanceGain {
+                            red: g[0].as_f64().unwrap() as f32,
+                            green_red: g[1].as_f64().unwrap() as f32,
+                            green_blue: g[2].as_f64().unwrap() as f32,
+                            blue: g[3].as_f64().unwrap() as f32,
+                            position: if g[4].as_u64().unwrap() == 0 {
+                                ApplyPosition::Gain0
+                            } else {
+                                ApplyPosition::Gain1
+                            },
+                        }
+                    });
+                    let exposure = event.get("gain").map(|v| {
+                        let g = v.as_array().unwrap();
+                        if event["mode"].as_u64().unwrap() == 0 {
+                            ExposureDigitalGain::Linear(g[0].as_f64().unwrap() as f32)
+                        } else {
+                            ExposureDigitalGain::Hdr(core::array::from_fn(|i| {
+                                g[i].as_f64().unwrap() as f32
+                            }))
+                        }
+                    });
+                    apply_gain_results(&mut params, &mut cache, wb, exposure).unwrap();
+                    let hex =
+                        |bytes: &[u8]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
+                    outputs
+                        .push(serde_json::json!({"parameters":hex(&params),"cache":hex(&cache)}));
+                }
+                println!("{}", serde_json::json!(outputs));
+            }
             "dgain" => {
                 use shieldsigner_rkaiq::isp32::*;
                 let mut state: u32 = a[1].parse().unwrap();

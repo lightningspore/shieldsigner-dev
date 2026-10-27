@@ -1,0 +1,13 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "sequences": 6,
+  "events": 60,
+  "host": true,
+  "arm": true,
+  "mismatches": 0,
+  "comparison": "Complete 11145-byte parameter buffer and unscaled 32-byte WB cache after each ordered event",
+  "limitations": [
+    "Native WB and exposure converters execute sequentially; C++ list/RTTI dispatch is not executed.",
+    "Result inclusion, parameter-pool reuse, frame timing and live driver submission remain outside this test."
+  ]
+}

@@ -1548,3 +1548,140 @@ impl FastStart {
         crate::awb_fast_configuration::configure(record, &regions.xy, valid_lights, mode)
     }
 }
+
+/// Assemble the actual FAST/linear BayerNR startup measurement path. Runtime
+/// inputs remain explicit; this does not run the persistent AWB controller.
+pub fn assemble_measurement_startup(
+    wb: &Value,
+    dimensions: [u32; 2],
+    sample_scale: u32,
+    black_level: crate::isp_black_level::Configuration,
+    iso: f32,
+    digital_gain: f32,
+) -> Result<([u8; crate::isp_awb_measurement::INPUT_BYTES], Value), String> {
+    if sample_scale == 0 {
+        return Err(format!("Measurement sample scale must be positive"));
+    }
+    if flag(wb, "/control/byPass")?
+        || at(wb, "/control/mode")?.as_str() != Some("CALIB_WB_MODE_AUTO")
+    {
+        return Err(format!(
+            "Measurement startup requires enabled automatic WB calibration"
+        ));
+    }
+    let regions = MeasurementRegions::from_value(wb)?;
+    let transforms = MeasurementTransforms::from_value(wb)?;
+    let input = MeasurementInput::from_value(wb)?;
+    let limits = MeasurementLimits::from_value(wb)?;
+    let weighting = MeasurementWeighting::from_value(wb)?;
+    let exclusions = MeasurementExclusions::from_value(wb)?;
+    let fast = FastStart::from_value(wb)?;
+    if !fast.enabled {
+        return Err(format!(
+            "Normal time-share startup assembly is not yet connected"
+        ));
+    }
+    let geometry = MeasurementGeometry::from_value(wb)?
+        .derive(dimensions, sample_scale, None)
+        .map_err(|e| format!("Measurement geometry: {e:?}"))?;
+    let mut record = [0; crate::isp_awb_measurement::INPUT_BYTES];
+    record[0] = 1;
+    record[1] = flag(wb, "/autoPara/lscBypass")? as u8;
+    let xy = flag(wb, "/autoPara/xyDetectionEnable")? as u8;
+    record[0x22..0x24].fill(xy);
+    record[0x2e..0x30].fill(weighting.enabled as u8);
+    record[0x30..0x32].fill(weighting.block_enabled as u8);
+    record[0x32] = flag(wb, "/autoPara/blkStatisticsEnable")? as u8;
+    let block_mode = match at(wb, "/autoPara/blkMeasureMode")?.as_str() {
+        Some("CALIB_AWB_BLK_STAT_MODE_AL_V201") => 0u32,
+        Some("CALIB_AWB_BLK_STAT_MODE_WP_V201") => 1,
+        _ => return Err(format!("Unknown block measure mode")),
+    };
+    record[0x38..0x3c].copy_from_slice(&block_mode.to_le_bytes());
+    record[0x44c] = (block_mode & 1) as u8;
+    record[0x450..0x454].copy_from_slice(&u32::MAX.to_le_bytes());
+    record[0x448..0x44c].copy_from_slice(&7u32.to_le_bytes());
+    let selected = fast
+        .apply(&mut record, &regions, regions.xy.len())
+        .map_err(|e| format!("FAST configuration: {e:?}"))?;
+    record[0x64..0x7c].copy_from_slice(&transforms.rotated_yuv);
+    record[0x18c..0x1a4].copy_from_slice(&transforms.xy);
+    exclusions
+        .initialize(&mut record)
+        .map_err(|e| format!("Extra regions: {e:?}"))?;
+    record[0x348..0x351].copy_from_slice(&weighting.y);
+    record[0x351..0x35a].fill(63);
+    record[0x360..0x441].copy_from_slice(&weighting.block);
+    // The calibration-update initializer chooses the first threshold entries
+    // and samples include weights at zero, before live brightness feedback.
+    for i in 0..8 {
+        let value = limits.values[i][0];
+        let rounded = ((value as f64 + 0.5) as u32) as u16;
+        record[0x4a + i * 2..0x4c + i * 2].copy_from_slice(&rounded.to_le_bytes());
+    }
+    exclusions
+        .apply_weights(&mut record, 0.)
+        .map_err(|e| format!("Initial include weights: {e:?}"))?;
+    geometry.apply(&mut record);
+    input
+        .apply(&mut record, 0, Some(black_level.optical_black_predgain))
+        .map_err(|e| format!("Input selection: {e:?}"))?;
+    let blc = at(wb, "/autoPara/blc2ForAwb")?;
+    let table = at(blc, "/offset")?;
+    let count = integer(table, "/ISO_len", 1, i32::MAX as i64)? as usize;
+    let read = |name: &str| -> Result<Vec<f32>, String> {
+        if integer(table, &format!("/{name}_len"), 1, i32::MAX as i64)? as usize != count
+            || at(table, &format!("/{name}"))?.as_array().map(Vec::len) != Some(count)
+        {
+            return Err(format!("AWB BLC length mismatch"));
+        }
+        (0..count)
+            .map(|i| number(table, &format!("/{name}/{i}")))
+            .collect()
+    };
+    let knots = read("ISO")?;
+    let mut offsets = [0.; 4];
+    for (i, key) in ["R_Channel", "Gr_Channel", "Gb_Channel", "B_Channel"]
+        .iter()
+        .enumerate()
+    {
+        let values = read(key)?;
+        let selected = crate::interpolate(
+            &knots,
+            &values,
+            iso * black_level.optical_black_predgain.max(1.),
+        )
+        .map_err(|e| format!("AWB BLC selection: {e:?}"))?;
+        if flag(blc, "/enable")? {
+            offsets[i] = selected;
+        }
+    }
+    let rem = at(wb, "/autoExtPara/remosaicCfg")?;
+    let remosaic = if flag(rem, "/enable")? && flag(rem, "/applyInvWbGainEnable")? {
+        if at(rem, "/sensorWbGain")?.as_array().map(Vec::len) != Some(4) {
+            return Err(format!("Expected four remosaic gains"));
+        }
+        let mut gains = [0.; 4];
+        for (i, n) in gains.iter_mut().enumerate() {
+            *n = number(rem, &format!("/sensorWbGain/{i}"))?;
+        }
+        Some(gains)
+    } else {
+        None
+    };
+    crate::awb_measurement_binding::bind_gain1_linear(
+        &mut record,
+        &crate::awb_measurement_binding::Input {
+            black_level: Some(black_level),
+            awb_offsets: offsets,
+            digital_gain,
+            remosaic_inverse: remosaic,
+            software_pre_gain: None,
+        },
+    )
+    .map_err(|e| format!("Linear Gain1 measurement binding: {e:?}"))?;
+    Ok((
+        record,
+        serde_json::json!({"kind":"experimental-awb-measurement-startup","automaticWhiteBalance":false,"dimensions":dimensions,"sampleScale":sample_scale,"physicalLights":selected.active,"groups":selected.groups,"window":geometry.window,"downsampling":geometry.block,"countThreshold":geometry.count_threshold,"lumaWeightThreshold":geometry.luma_weight_threshold,"applyPosition":"Gain1","source":"BayerNR","limitations":["One explicitly selected FAST linear BayerNR/Gain1 scene; normal time-share/HDR/OTP composition remains separate.","Composes verified components and observed startup stores; complete native startup composition and hardware validation are pending.","Enables measurement collection only when caller submits this record; does not enable a live automatic-WB controller."]}),
+    ))
+}

@@ -1,0 +1,26 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 129,
+  "mismatches": 0,
+  "arm": true,
+  "checkpoint": {
+    "blc": [
+      256,
+      256,
+      256,
+      256
+    ],
+    "inverse": [
+      256,
+      256,
+      256
+    ],
+    "overexposure": 238
+  },
+  "scope": "Full AwbReCfgPregnBlc return for linear BayerNR/Gain1 with no sensor OTP",
+  "limitations": [
+    "Other input/working-mode/apply-position and OTP branches remain separate.",
+    "AWB offsets are supplied already selected; original calibration interpolation executes on constant tables matching those inputs.",
+    "Logging is an explicit adapter; remaining numerical bodies execute."
+  ]
+}

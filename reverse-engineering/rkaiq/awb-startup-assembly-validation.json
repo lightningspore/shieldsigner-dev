@@ -1,0 +1,14 @@
+{
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "parameterSha256": "4d517e61d099a909f53c29f557b0930db7e25419d156a56919f79dda19bd226b",
+  "sdkSha256": "4c081c95fe115f1c52ca84223e7a75cf647e64d3573accdcf5fa6c9c6352ccd1",
+  "parameterBytes": 11145,
+  "sdkBytes": 1204,
+  "arm": true,
+  "preservesExistingAeAndFixedWb": true,
+  "scope": "Offline composed FAST linear BayerNR/Gain1 measurement candidate",
+  "limitations": [
+    "Complete original startup composition equivalence and hardware validation are pending.",
+    "Normal time-share/HDR/OTP startup composition remains separate; no automatic WB controller is enabled."
+  ]
+}

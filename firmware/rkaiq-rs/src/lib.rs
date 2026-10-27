@@ -332,3 +332,4 @@ pub mod awb_input_selection;
 pub mod awb_measurement_weights;
 pub mod awb_measurement_exclusions;
 pub mod awb_fast_configuration;
+pub mod awb_measurement_binding;

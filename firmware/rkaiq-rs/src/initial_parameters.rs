@@ -34,21 +34,7 @@ fn constant(v: &Value) -> Result<f32, String> {
     }
     Ok(first)
 }
-pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
-    let scene = iq
-        .pointer("/main_scene/0/sub_scene/0/scene_isp32")
-        .ok_or("missing explicit scene 0/0")?;
-    let exp = &scene["ae_calib"]["LinearAeCtrl"]["InitExp"];
-    let seconds = number(&exp["InitTimeValue"])?;
-    let gain = number(&exp["InitGainValue"])?;
-    let isp_gain = number(&exp["InitIspDGainValue"])?;
-    if seconds <= 0. || gain <= 0. || isp_gain != 1. {
-        return Err("startup requires positive exposure/gain and unity ISP digital gain".into());
-    }
-    let iso = (gain * isp_gain * 50.) as i32;
-    let mut params = [0u8; PARAMETER_BYTES];
-    // Explicitly disable other ordinary modules plus VSM; CSM/CGC add their bits.
-    params[..8].copy_from_slice(&((1u64 << 43) - 1 | 1u64 << 45).to_le_bytes());
+fn startup_black_level(scene: &Value) -> Result<isp_black_level::Configuration, String> {
     let blc = &scene["ablcV32_calib"];
     let channels = |stage: &str| -> Result<[i16; 4], String> {
         let mut out = [0; 4];
@@ -76,33 +62,47 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
     }
     let enabled = flag(&blc["Blc0TuningPara"]["enable"])?;
     let stage1_enabled = flag(&blc["Blc1TuningPara"]["enable"])?;
-    isp_black_level::apply(
-        &mut params,
-        &mut [0; 44],
-        isp_black_level::Configuration {
-            enabled,
-            fixed: if enabled {
-                channels("Blc0TuningPara")?
-            } else {
-                [0; 4]
-            },
-            stage1_enabled,
-            stage1: if stage1_enabled {
-                channels("Blc1TuningPara")?
-            } else {
-                [0; 4]
-            },
-            optical_black_enabled: ob_enabled,
-            optical_black_offset: if ob_enabled { offset as i16 } else { 0 },
-            optical_black_predgain: if ob_enabled { predgain } else { 1. },
-            optical_black_maximum: if ob_enabled {
-                (predgain * 4096.) as i32 - offset as i32
-            } else {
-                1048575
-            },
+    Ok(isp_black_level::Configuration {
+        enabled,
+        fixed: if enabled {
+            channels("Blc0TuningPara")?
+        } else {
+            [0; 4]
         },
-    )
-    .map_err(|e| format!("BLC: {e:?}"))?;
+        stage1_enabled,
+        stage1: if stage1_enabled {
+            channels("Blc1TuningPara")?
+        } else {
+            [0; 4]
+        },
+        optical_black_enabled: ob_enabled,
+        optical_black_offset: if ob_enabled { offset as i16 } else { 0 },
+        optical_black_predgain: if ob_enabled { predgain } else { 1. },
+        optical_black_maximum: if ob_enabled {
+            (predgain * 4096.) as i32 - offset as i32
+        } else {
+            1048575
+        },
+    })
+}
+
+pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
+    let scene = iq
+        .pointer("/main_scene/0/sub_scene/0/scene_isp32")
+        .ok_or("missing explicit scene 0/0")?;
+    let exp = &scene["ae_calib"]["LinearAeCtrl"]["InitExp"];
+    let seconds = number(&exp["InitTimeValue"])?;
+    let gain = number(&exp["InitGainValue"])?;
+    let isp_gain = number(&exp["InitIspDGainValue"])?;
+    if seconds <= 0. || gain <= 0. || isp_gain != 1. {
+        return Err("startup requires positive exposure/gain and unity ISP digital gain".into());
+    }
+    let iso = (gain * isp_gain * 50.) as i32;
+    let mut params = [0u8; PARAMETER_BYTES];
+    // Explicitly disable other ordinary modules plus VSM; CSM/CGC add their bits.
+    params[..8].copy_from_slice(&((1u64 << 43) - 1 | 1u64 << 45).to_le_bytes());
+    isp_black_level::apply(&mut params, &mut [0; 44], startup_black_level(scene)?)
+        .map_err(|e| format!("BLC: {e:?}"))?;
     let calibration = Calibration::from_value(&scene["debayer_v2"]["param"])?;
     let selected = calibration
         .select(iso)
@@ -263,4 +263,45 @@ pub fn assemble_with_ae(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), St
     report["aePolicy"] = json!({"histogramMode":policy.histogram_mode,"rawMode":policy.raw_mode,"yRange":policy.y_range,"channelMask":policy.channel_mask});
     report["limitations"][2]=json!("Measurement configuration only; active ISP dimensions must match the profile. No live feedback or image-quality qualification; unselected modules remain disabled.");
     Ok((params, report))
+}
+
+/// Offline candidate with AWB measurement collection; fixed calibrated WB is
+/// unchanged. Caller must explicitly opt into submitting this experimental record.
+pub fn assemble_with_awb(
+    iq: &Value,
+    sample_scale: u32,
+) -> Result<
+    (
+        [u8; PARAMETER_BYTES],
+        Value,
+        [u8; crate::isp_awb_measurement::INPUT_BYTES],
+    ),
+    String,
+> {
+    let (mut params, mut report) = assemble_with_ae(iq)?;
+    let scene = iq
+        .pointer("/main_scene/0/sub_scene/0/scene_isp32")
+        .ok_or("Missing selected scene")?;
+    let dimensions = ["width", "height"].map(|k| {
+        iq["sensor_calib"]["resolution"][k]
+            .as_u64()
+            .and_then(|v| u32::try_from(v).ok())
+    });
+    let dimensions = [
+        dimensions[0].ok_or("Invalid sensor width")?,
+        dimensions[1].ok_or("Invalid sensor height")?,
+    ];
+    let (measurement, setup) = crate::awb_calibration::assemble_measurement_startup(
+        &scene["wb_v32"],
+        dimensions,
+        sample_scale,
+        startup_black_level(scene)?,
+        report["iso"].as_i64().ok_or("Missing startup ISO")? as f32,
+        1.,
+    )?;
+    crate::isp_awb_measurement::Measurement(measurement).apply(&mut params, true);
+    report["awbMeasurementsConfigured"] = json!(true);
+    report["automaticWhiteBalance"] = json!(false);
+    report["awbMeasurementSetup"] = setup;
+    Ok((params, report, measurement))
 }

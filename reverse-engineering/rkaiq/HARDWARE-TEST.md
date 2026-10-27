@@ -887,3 +887,18 @@ under changing illumination or physical frame timing. Some exposure lookups
 used the preceding effective-map entry (`exactExposureLookup:false`), which
 remains visible in the log rather than being labeled exact association.
 The local log is `ss-20261027-ae-telemetry.log` in the same ignored directory.
+
+## AWB measurement candidate — offline only
+
+The current development build can generate a separate measurement-enabled
+candidate using `make-initial-parameters IQ.json OUT.bin --awb-measurements
+SDK.bin SAMPLE_SCALE`. It includes AE measurements and retains the existing
+fixed white balance. This is an offline opt-in; the established first-frame and
+automatic-exposure commands do not submit it yet.
+
+See [AWB assembly scope](AWB.md#post-assembly-binding-and-first-complete-measurement-candidate)
+for component comparisons and outstanding integration. Preserve the full SDK
+snapshot with any future capture, since AWB translation needs its actual
+parameter-ID association. Do not call a measurement-enabled capture automatic
+white balance: persistent preprocessing/gain feedback/publication still needs
+connection and hardware testing.

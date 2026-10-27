@@ -1902,3 +1902,56 @@ not complete initialization. Next is binding these verified pieces into the
 whole measurement record, including controls, weights and BLC/pre-gain metadata,
 then connecting the live statistics and gain-publication path. Live automatic WB
 remains disabled until that integration is tested.
+
+## Post-assembly binding and first complete measurement candidate
+
+`awb_measurement_binding::bind_gain1_linear` reconstructs the actual camera's
+linear BayerNR/Gain1/no-OTP path through `AwbReCfgPregnBlc` (ELF 0xc5158).
+It binds inverse gains, software pre-gain metadata, AWB/primary BLC contributions
+and the overexposure threshold, preserving FMA and rounding order. Remosaic
+inverse gains and optional software pre-gains are explicit inputs. Selected AWB
+BLC offsets are explicit values; whole-scene assembly selects them at ISO times
+optical-black pre-gain. Checked errors stage the complete measurement record.
+
+`mise run camera:rust:awb-measurement-binding` compares full native returns and
+all SDK bytes across 129 host/ARM cases. Native calibration interpolation runs
+on constant tables supplying the selected offsets. Logging is an explicit
+adapter. Other input/working-mode/apply-position and OTP branches remain open.
+The current camera checkpoint binds BLC `[256,256,256,256]`, inverse gains
+`[256,256,256]` and threshold **238**; leaving these fields zero would not match
+upstream's post-initialization measurement configuration.
+[Binding comparison](awb-measurement-binding-equivalence.json).
+
+`initial_parameters::assemble_with_awb` now composes a complete candidate for
+the selected FAST linear scene: initial controls, converted regions/transforms,
+FAST grouping, weights, extra regions, first-entry channel limits, zero-sampled
+include weights, geometry/input flags and post-assembly binding. It returns the
+SDK snapshot together with the serialized ISP parameters and a scope report.
+The primary BLC selection helper is shared with existing startup assembly;
+known base and AE-only parameter hashes remain identical after that refactor.
+
+Offline generation (new output paths required):
+
+```sh
+camera-probe make-initial-parameters IQ.json OUT.bin --awb-measurements SDK.bin SAMPLE_SCALE
+```
+
+Sample scale stays an explicit input. The local SC3336 candidate uses 1; its
+value must be bound to the live session before count thresholds are qualified.
+This command only writes files. It does not submit the payload, start capture,
+change boot configuration or enable automatic WB. The existing first-frame and
+automatic-exposure commands retain their established AE-only measurement setup.
+
+`mise run camera:rust:awb-startup-assembly` verifies host/ARM deterministic
+composition, payload dimensions, key bindings and isolation: compared with the
+AE-only record, only AWB masks and the AWB measurement block change. AE and the
+fixed calibrated WB gain block are byte-identical. The candidate is 11145 bytes
+and its SDK snapshot is 1204 bytes. Full original startup-composition comparison
+and hardware validation remain pending; component equivalence and these
+integration checks do not prove those broader claims.
+[Assembly validation](awb-startup-assembly-validation.json).
+
+Local generated files are under ignored
+`dist/reverse-engineering/awb-assembly-2026-10-27/`. No IQ source or binary
+calibration payload is committed. Normal time-share/HDR/OTP composition and
+persistent AWB/live gain publication still remain outside this candidate.

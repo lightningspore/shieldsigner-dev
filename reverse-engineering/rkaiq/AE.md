@@ -961,3 +961,34 @@ partially updated state on errors.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-publication.py --state --arm
 ```
+
+## Joined conversion, record assembly and publication
+
+`ae_result::linear` joins corrected queue conversion, native record assembly,
+convergence, publication selection and saved exposure/history state. It decodes
+the prior published records for the conversion base, converts the proposed
+point and intermediate points, packs the corrected results with timing derived
+from calibration, then invokes `ae_publication::finish` on those records.
+The aggregate requested by the controller remains separate from the corrected
+physical point, matching the native fields and history writer.
+
+300 comparisons execute the complete native register/queue converter followed
+by complete native result publication **on the same context without resetting
+it between stages**. They compare final/intermediate points and sensor codes,
+route changes, selected 244-byte records, count/synchronized frame, convergence
+flags, saved publication, previous-final replacement, last-result frame and all
+five environment-history records. Thirty cases use an exact native-converted
+prior-final record to exercise unchanged-final/converged publication, alongside
+270 transition cases spanning queue lengths zero through five and frame deltas.
+[Joined result comparison](ae-result-equivalence.json).
+
+The wrapper accepts the controller's proposed point, aggregate and associated
+effective exposure as inputs. It does not yet invoke preprocessing or the
+brightness controller itself. Other ISP result fields, CIS flags, physical
+exposure association and hardware writes remain outside this scope. Fixed
+timing, automatic routing and the ordinary non-iris/DCG-disabled SC3336 path
+are the checked domain. Partial state after an error must be discarded.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-result.py --arm
+```

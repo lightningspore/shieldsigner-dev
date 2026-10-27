@@ -1,0 +1,13 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 300,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "native register/queue conversion followed by complete result publication on the same context; converted points/codes, selected records, convergence and history state",
+  "limitations": [
+    "Explicit proposed point, aggregate, history index, effective exposure and prior publication; automatic fixed-timing non-iris DCG-disabled SC3336 path.",
+    "All subordinate numerical/conversion/publication bodies execute; imported integer division, byte comparison and allocation boundaries modeled and pinned native math executes.",
+    "Other ISP result fields, CIS flags and unlisted context bytes are not compared.",
+    "Preprocessing/controller and real statistics/exposure association remain separate; no hardware writes."
+  ]
+}

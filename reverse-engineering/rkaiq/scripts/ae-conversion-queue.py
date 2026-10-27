@@ -24,6 +24,7 @@ class Original(Base):
   for i,(time,gain,isp) in enumerate(v['published']):struct.pack_into('<4f',c,0x4fbc+244*i,time,gain,1.,isp)
   struct.pack_into('<I',c,0x3c84,len(v['route']))
   for col,(o,ptr) in enumerate([(0x3c8c,HEAP+0x30000),(0x3c90,HEAP+0x31000),(0x3c94,HEAP+0x32000)]):struct.pack_into('<I',c,o,ptr);self.uc.mem_write(ptr,struct.pack('<6f',*[p[col] for p in v['route']]))
+  if v.get('result',False):self.seed_result(c,v)
   self.uc.mem_write(HEAP,bytes(c));self.mappings=0
   status=self.invoke('_ZL21AecRegValueConvertionP12AecContext_s',[HEAP],instructions=10000000);assert status==0
   after=bytes(self.uc.mem_read(HEAP,len(c)));words=[struct.unpack_from('<I',after,o)[0] for o in [0xdc,0xe0,0xe8,0xec,0xf0]]

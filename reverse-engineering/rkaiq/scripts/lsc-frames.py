@@ -13,6 +13,7 @@ import subprocess
 import tempfile
 import uuid
 from differential import ROOT, BINARY, HEAP, f32, u32
+from exposure import RUNTIME
 
 reference = importlib.import_module("lsc-tables")
 
@@ -23,6 +24,9 @@ class OriginalFrames(reference.OriginalTables):
         self.symbols["lsc-frame"] = self.resolve_symbol("processing", 0x1281C8)
 
     def run(self, value):
+        return self.process_frames(value, self.initialize(value))
+
+    def initialize(self, value):
         cal = value["calibration"]
         self.bump = HEAP + 0x20000
         ctx, root = HEAP + 0x60000, HEAP + 0x19000
@@ -84,13 +88,16 @@ class OriginalFrames(reference.OriginalTables):
         self.uc.mem_write(ctx + 0xD78C, struct.pack("<2f", 0.2, 0.05))
         self.uc.mem_write(ctx + 0xD794, b"\x01")
         self.uc.mem_write(ctx + 0xD798, struct.pack("<3f", -1.0, -1.0, -1.0))
-        self.uc.mem_write(ctx + 0xD7A4, b"\x01")
         self.uc.mem_write(ctx + 0x1CB4, struct.pack("<I", 2))
         resolution = cal["common"]["resolutionAll"][0]
         x, y = resolution["lsc_sect_size_x"], resolution["lsc_sect_size_y"]
         self.uc.mem_write(ctx + 0x1CB8, struct.pack("<32H", *x, *y))
         self.uc.mem_write(ctx + 0x1C68, struct.pack("<32H", *x, *y))
         assert self.invoke("AlscManualGrad", [ctx]) == 0
+        return ctx
+
+    def process_frames(self, value, ctx):
+        cal = value["calibration"]
         wrapper, inp, out, result = [
             HEAP + x for x in (0xA0000, 0xA1000, 0xA2000, 0xA3000)
         ]
@@ -149,7 +156,7 @@ class OriginalFrames(reference.OriginalTables):
         return frames
 
 
-def main():
+def main(original_class=OriginalFrames, initialized=False):
     parser = argparse.ArgumentParser()
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--adb")
@@ -199,7 +206,7 @@ def main():
                 frame["seedFrameCount"] = 65534
             frames.append(frame)
         cases.append(dict(calibration=cal, frames=frames))
-    arm = OriginalFrames()
+    arm = original_class()
     expected = [arm.run(v) for v in cases]
     lines = "".join(
         "lsc-frames " + json.dumps(v, separators=(",", ":")) + "\n" for v in cases
@@ -254,6 +261,7 @@ def main():
         mismatches=0,
         originalBinarySha256=hashlib.sha256(BINARY.read_bytes()).hexdigest(),
         hostBinarySha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
+        sqrtRuntimeSha256=hashlib.sha256(RUNTIME.read_bytes()).hexdigest(),
         physicalArmBinarySha256=board_sha,
         hostMatchesPhysicalArm=board_sha is not None,
         iqSha256=hashlib.sha256(iq.read_bytes()).hexdigest(),
@@ -265,6 +273,17 @@ def main():
             "CPU replay only; no ISP writes or image quality qualification.",
         ],
     )
+    if initialized:
+        report["sdkModuleOffset"] = hex(arm.module_offset)
+        report["boundaries"].append(
+            "Selected resolution name supplied at AlscPrepare boundary; descriptor prepare callback and sensor/input geometry handoff remain separate."
+        )
+        report["scope"] += (
+            " Native AlscInit and AlscPrepare execute first, resolving SDK module, table names, sorting, groups and sector gradients from raw calibration. No context/default/geometry seed substitutions."
+        )
+        report["boundaries"][0] = (
+            "SDK raw calibration records constructed from selected JSON; native JSON parser not executed. Native constructor and prepare execute completely."
+        )
     args.report.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report))
 

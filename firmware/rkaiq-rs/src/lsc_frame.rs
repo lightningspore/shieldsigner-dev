@@ -41,7 +41,7 @@ impl Default for State {
             high: [0; 32],
             low: [0; 32],
             converged: false,
-            input_changed: true,
+            input_changed: false,
             frame_count: 0,
             force: true,
         }

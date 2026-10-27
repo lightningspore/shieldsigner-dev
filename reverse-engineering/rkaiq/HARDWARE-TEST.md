@@ -1731,3 +1731,20 @@ software substitutes and no successful optical QR is claimed. The current
 [audit](profile-module-audit-0.0.34-ccm.json) leaves six IQ blocks disabled: LSC,
 spatial/temporal Bayer noise reduction, YNR, CNR and sharpening. Frozen 0.0.33
 artifacts remain unchanged and still have CCM disabled.
+
+### Development LSC controller CPU replay (2026-10-27)
+
+The connected Luckfox ran the new `lsc-frames` fixture and its constructor-backed
+`lsc-initialized` comparison on the SD-backed development path. Each checks
+24 sequences / 1,152 frames, all 2,442 published/retained SDK bytes plus target,
+history/cache/deadband/convergence/frame state. Both match original native ARM
+execution after correcting the initial input-change flag. The initialized
+oracle runs full `AlscInit`, `AlscPrepare` and descriptor-confirmed processing;
+492 frames publish, 660 hold. Inputs are removed from SD after replay. Reports:
+[lsc-frames-equivalence.json](lsc-frames-equivalence.json) and
+[lsc-initialized-equivalence.json](lsc-initialized-equivalence.json).
+
+This is CPU evidence, not a camera test: no ISP writes occur, no vendor library
+is installed/loaded on the board, and the live camera retains LSC disabled.
+The next gate is sensor/ISP geometry and input handoff followed by transactional
+parameter submission and actual camera/application captures.

@@ -1299,3 +1299,36 @@ Manual/attribute cloning, OTP, gray/HDR and multicamera paths are separate.
 Original callback/algorithm code executes; only allocation, string operations,
 logging and original `sqrtf` runtime linkage form the controlled boundaries.
 Physical CPU replay makes no ISP writes. Live LSC stays disabled.
+
+### LSC constructor and calibration preparation (0.0.34 development)
+
+[Initialized native/physical CPU evidence](lsc-initialized-equivalence.json)
+closes the constructor/default/geometry seeding boundary above. The complete
+native `AlscInit` resolves the ISP32 SDK module `lsc_v2` at offset `0x5954` and
+allocates/initializes its fresh context. Complete `AlscPrepare` builds its
+illumination/resolution handles, resolves `resolutionName_tableSuffix` against
+the raw table array, sorts profiles, partitions case groups, computes gradients
+and copies selected sector sizes. The original descriptor-confirmed processing
+callback then executes all 24 sequences / 1,152 frames. Every compared frame
+agrees with Rust on host and physical Luckfox: 492 publications and 660 held
+results, including initial disabled calibration and frame-counter rollover.
+
+This check found and corrected one startup default: native leaves the
+input-change flag clear before processing. The first implementation's manually
+seeded oracle had set it; enabled frames overwrote the flag immediately, but
+initial disabled calibration exposed the discrepancy. `lsc_frame::State` and
+the manually constructed callback oracle now start with the verified clear
+flag, and both complete frame suites were replayed on the corrected ARM build.
+
+Run `mise run camera:rust:lsc-initialized -- --adb SERIAL --report LOCAL.json`.
+Raw SDK calibration records are constructed from selected JSON; the native
+JSON parser is not executed. Allocation is modeled in an isolated arena;
+`strcmp`, `strcpy`, the checked `%s_%s` formatting boundary and diagnostic
+logging are controlled libc boundaries. Original uClibc `sqrtf` is pinned and
+executed, as are all constructor/prepare/controller algorithms. The selected
+resolution name is supplied at the `AlscPrepare` boundary; descriptor prepare
+callback and the real sensor/ISP geometry handoff still need verification.
+No OTP, manual/attribute cloning, gray/HDR or multicamera qualification is
+claimed. All 102 library/five Unix tests, no-default-features and static ARM
+builds pass. This is physical CPU replay, with no ISP writes. Live LSC remains
+disabled pending geometry/handoff and transactional camera integration.

@@ -220,3 +220,7 @@ and serializes verified geometry. `lsc_frame::State` joins deadband, target
 cache, temporal state and result publication through the full descriptor-confirmed
 LSC processing callback.
 [Full native/physical CPU evidence and remaining initialization boundary](ISP.md#persistent-lsc-processing-0034-development).
+
+The full native `AlscInit` / `AlscPrepare` now precede the LSC callback oracle,
+checking Rust defaults and native SDK name lookup/grouping/geometry end to end.
+[Initialized native/physical CPU evidence](ISP.md#lsc-constructor-and-calibration-preparation-0034-development).

@@ -16,6 +16,10 @@ from exposure import RUNTIME
 
 class OriginalIlluminant(OriginalArm):
     def __init__(self):
+        assert (
+            hashlib.sha256(RUNTIME.read_bytes()).hexdigest()
+            == "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb"
+        )
         self.math = OriginalArm(RUNTIME, tls=True)
         super().__init__(BINARY)
         self.stubs[self.symbols["xcam_print_log"] & ~1] = "xcam_print_log"

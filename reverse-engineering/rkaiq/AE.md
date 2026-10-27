@@ -299,3 +299,42 @@ an initial configuration diagnostic, not a claim that target/exposure/frame
 association is verified. There are still no feedback exposure writes; the next
 required controller stages include state association, damping, exposure-route
 selection, limit/flicker rules and frame-delay scheduling.
+
+## Linear exposure route splitting
+
+`ae_route::split` reconstructs non-iris `EcmExecuteAuto` (ELF 0xb5bcc) and its
+`EcmExecuteBrief2` helper (0xb57a4). It consumes explicit runtime limits and a
+mutable route of time/combined gain/ISP gain. It adjusts time knots using the
+native flicker quantum and line-based tolerance, selects the first route knot
+with strictly greater total exposure, and follows the native same-time,
+same-gain and fixed-ISP interpolation branches. It preserves native time/gain
+quantization fallbacks and redistribution when combined gain exceeds its limit.
+The routine mutates route times in-place; gain/ISP arrays stay unchanged.
+
+The tolerance calculation mixes f32 and f64 in the original: coefficient × 1.5
+and line length use f64, while pixel-clock × 1,000,000 is rounded to f32 first.
+The residual uses the native fused multiply/subtract. Using an ordinary
+interpolation helper or rounding every time to the nearest quantum would change
+results. `from_profile` binds equal-length TimeDot/GainDot/IspDGainDot arrays and
+their declared counts from the SC3336 route without inventing runtime limits.
+
+The original reference executes the complete native automatic route and brief
+interpolation bodies through normal return. Ninety-one comparisons cover the
+SC3336 route, varying time/gain/ISP segments, 50/60 Hz-style quantums, gain/time
+limits, endpoint requests, time-knot mutation and profile binding. It checks all
+returned float bits, iris output zero and preservation of context/gain arrays.
+Imported floor/ceil/round functions are explicit mathematical boundaries.
+[Route equivalence report](ae-route-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-route.py --arm
+```
+
+This implements a required actuator-decision stage, but does not choose the
+runtime limits/quantum/tolerance values. Those inputs are controlled explicitly
+in the comparison. The checked API excludes iris and simultaneous three-variable
+intervals, which the native interpolation helper rejects. Outer `EcmExecute`
+caching, frame/exposure association, remaining limit/flicker policy and delayed
+sensor scheduling remain unfinished. No live feedback writes are enabled.

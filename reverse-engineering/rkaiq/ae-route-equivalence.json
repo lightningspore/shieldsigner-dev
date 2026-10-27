@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 91,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "complete non-iris EcmExecuteAuto and native Brief2 interpolation, returned time/gain/ISP gain, all mutated time knots and preservation of context/gain arrays",
+  "limitations": [
+    "floorf/ceilf/roundf imports are modeled; original ARM automatic route and interpolation bodies execute.",
+    "Runtime limits/quantum/tolerance inputs are explicit controlled values, not a reconstruction of their outer selection.",
+    "Iris, simultaneous three-variable interpolation errors, outer EcmExecute caching and live sensor feedback remain outside scope."
+  ]
+}

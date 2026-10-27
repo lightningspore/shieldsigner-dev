@@ -380,6 +380,48 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-route" | "ae-route-profile" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let n = |key: &str| v[key].as_f64().unwrap() as f32;
+                let mut route = if a[0] == "ae-route-profile" {
+                    ae_route::from_profile(&v["profile"]).unwrap()
+                } else {
+                    v["route"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|p| ae_route::Point {
+                            time: p[0].as_f64().unwrap() as f32,
+                            gain: p[1].as_f64().unwrap() as f32,
+                            isp_gain: p[2].as_f64().unwrap() as f32,
+                        })
+                        .collect::<Vec<_>>()
+                };
+                let result = ae_route::split(
+                    &mut route,
+                    n("exposure"),
+                    ae_route::Limits {
+                        minimum_time: n("tmin"),
+                        maximum_time: n("tmax"),
+                        minimum_gain: n("gmin"),
+                        maximum_gain: n("gmax"),
+                        time_quantum: n("quantum"),
+                        floor_tolerance_coefficient: n("coefficient"),
+                        line_length: n("line"),
+                        pixel_clock_mhz: n("clock"),
+                    },
+                )
+                .unwrap();
+                println!(
+                    "{}",
+                    [result.gain, result.isp_gain, result.time]
+                        .into_iter()
+                        .chain(route.iter().map(|p| p.time))
+                        .map(|v| format!("{:08x}", v.to_bits()))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                );
+            }
             "ae-initial-target" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 println!(

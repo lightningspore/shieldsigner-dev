@@ -582,7 +582,8 @@ quality, defect-removal efficacy or per-frame register readback. The frozen
 79-byte packed kernel CCM block at `0x12bb`. ARM-target C assertions against
 pinned kernel headers check its size, offset, matrix/curve/enhancement offsets
 and module bit 8. SDK input layout is recovered from the converter's accesses;
-a separate public SDK declaration assertion remains to be added.
+the public SDK declaration is now independently compiled for ARM32
+([layout evidence](#ccm-sdk-layouts-and-static-calibration-fields-0034-development)).
 
 The 3×3 matrix subtracts identity on its diagonal, multiplies by 128 and rounds
 half steps away from zero before narrowing to signed 16-bit fields. Offsets
@@ -677,7 +678,9 @@ selection, the four-knot sensor-gain→saturation interpolation, descending
 matrix-profile selection and fused matrix/offset interpolation. Its explicit
 calibration records correspond to the native illuminant records; the calibrated
 name buffers are fixed 25-byte NUL-terminated strings. The public API supports
-up to seven illuminants and five profiles each, matching native context slots.
+up to nine illuminants and five profiles each, matching native context slots.
+The initial implementation limited this to seven; public SDK layout verification
+subsequently corrected the capacity to nine (the selected profile uses seven).
 The existing verified saturation interpolation functions are reused, eliminating
 duplicate arithmetic in `ccm_selection`.
 
@@ -813,3 +816,39 @@ or write ISP registers. Asymmetric curves, calibration loading/ABI assertions,
 outer flag/weight ownership and joined live CCM remain separate. The selected
 profile sets asymmetric mode off; live CCM still remains disabled pending the
 remaining integration and validation.
+
+### CCM SDK layouts and static calibration fields (0.0.34 development)
+
+Four public headers from the pinned Luckfox SDK commit are now provenance-pinned
+in `artifacts.json`: `ccm_head.h` and the ACCM algorithm, internal and hardware
+headers. Raw files remain in the ignored local header cache. ARM32 C assertions
+compile the public declarations and verify complete IQ size 2164, result size
+156, illuminant size 56, matrix-profile size 60 and symmetric-luma row size 72.
+Assertions cover all consumed result fields and static IQ offsets. They also
+establish native capacity of nine illuminants/five profiles each; runtime
+selection's initial seven-illuminant limit was corrected and nine-illuminant
+persistent native/physical replay added. The selected profile uses seven.
+
+`ccm_calibration::static_fields` reconstructs `ConfigHwbyCalib` (ELF `0xfecd0`,
+Ghidra `0x10ecd0`) from the explicit selected `ccm_calib_v2` JSON object. It sets
+asymmetric/high-Y flags, left/right bounds, RGB→luma coefficients and three
+u8 enhancement coefficients. Symmetric mode duplicates the bound and sets the
+eighteenth alpha point to 1024; asymmetric mode preserves that point, forces
+high-Y enabled and loads independent bounds. All unrelated fields and padding,
+including enable/matrix/offsets/other alpha points/enhancement ratio, are retained.
+This supports static fields in either layout, not asymmetric curve processing.
+
+[Native/physical CPU evidence](ccm-calibration-equivalence.json) compares all
+156 result bytes for the actual profile and 199 varied calibrations, both static
+layouts and randomized prior results. Original `ConfigHwbyCalib` executes with
+no algorithm substitutes. Input contains independently SDK-packed consumed
+fields; native JSON parsing and the full constructor are not executed. Rust
+validates every consumed field before mutation; malformed JSON preserves the
+whole result. The 95 library/five Unix tests, no-default-features/static ARM
+builds and expanded SDK layout checks pass.
+
+Run `mise run camera:rust:ccm-calibration -- --adb SERIAL --report LOCAL.json`
+after building host/ARM fixtures. This is the static portion of calibration
+loading. Owned illuminant/profile tables, full constructor/outer-frame state,
+joined automatic configuration and live CCM remain unfinished. CPU replay
+makes no ISP writes; full IQ and raw vendor assets are not committed.

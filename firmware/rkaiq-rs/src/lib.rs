@@ -351,3 +351,5 @@ pub mod ccm_runtime;
 pub mod ccm_damping;
 pub mod ccm_saturation;
 pub mod ccm_luma;
+#[cfg(feature = "diagnostics")]
+pub mod ccm_calibration;

@@ -3256,6 +3256,13 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-calibration" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let s=v["result"].as_str().unwrap();
+                let mut result=(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>().try_into().unwrap();
+                shieldsigner_rkaiq::ccm_calibration::static_fields(&v["calibration"],&mut result).unwrap();
+                println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
+            }
             "ccm-luma" => {
                 use shieldsigner_rkaiq::ccm_luma::{Row,symmetric};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

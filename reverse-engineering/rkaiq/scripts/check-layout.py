@@ -247,3 +247,32 @@ _Static_assert(offsetof(AdpccProcResult_t,stPdaf)==128,"DPCC PDAF offset");
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'dpcc-sdk-layout.o')],check=True)
 print('PASS: SDK DPCC expert=1204, row=108, basic=103, result=192 bytes; IQ/BPT/PDAF offsets verified')
+
+# Complete CCM IQ and hardware result declarations, compiled verbatim for ARM32.
+ccm_iq=dpcc_header('ccm_head.h').replace('#include "rk_aiq_comm.h"','')
+ccm_hw=dpcc_header('rk_aiq_types_accm_hw.h').replace('#include "rk_aiq_comm.h"','')
+source=cache/'ccm-sdk-layout.c'
+source.write_text('#include <stdbool.h>\n#include <stdint.h>\n#include <stddef.h>\n#define RKAIQ_BEGIN_DECLARE\n#define RKAIQ_END_DECLARE\n'+ccm_iq+'\n'+ccm_hw+'''
+_Static_assert(sizeof(rk_aiq_ccm_cfg_v2_t)==156,"CCM result size");
+_Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,matrix)==8,"CCM matrix");
+_Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,offs)==44,"CCM offsets");
+_Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,alp_y)==56,"CCM alpha");
+_Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,right_bit)==128,"CCM right bound");
+_Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,bound_bit)==132,"CCM left bound");
+_Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,rgb2y_para)==136,"CCM luma coeffs");
+_Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,enh_rgb2y_para)==148,"CCM enhancement coeffs");
+_Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,enh_rat_max)==152,"CCM enhancement ratio");
+_Static_assert(sizeof(CalibDbV2_Ccm_Para_V32_t)==0x874,"CCM complete IQ");
+_Static_assert(offsetof(CalibDbV2_Ccm_Para_V32_t,lumaCCM)==12,"CCM IQ luma");
+_Static_assert(offsetof(CalibDbV2_Ccm_Para_V32_t,lumaCCM.asym_enable)==0x18,"CCM IQ asym");
+_Static_assert(offsetof(CalibDbV2_Ccm_Para_V32_t,lumaCCM.y_alp_sym)==0x1c,"CCM IQ sym");
+_Static_assert(offsetof(CalibDbV2_Ccm_Para_V32_t,lumaCCM.y_alp_asym)==0x3cc,"CCM IQ asym config");
+_Static_assert(offsetof(CalibDbV2_Ccm_Para_V32_t,enhCCM.enh_rgb2y_para)==0x844,"CCM IQ enhancement coeffs");
+_Static_assert(offsetof(CalibDbV2_Ccm_Para_V32_t,TuningPara)==0x848,"CCM IQ tuning");
+_Static_assert(sizeof(CalibDbV2_Ccm_Accm_Cof_Para_t)==56,"CCM illuminant");
+_Static_assert(sizeof(CalibDbV2_Ccm_Matrix_Para_t)==60,"CCM profile");
+_Static_assert(sizeof(CalibDbV2_Ccm_Gain_Yalp_t)==72,"CCM luma row");
+_Static_assert(CCM_ILLUMINATION_MAX==9 && CCM_PROFILES_NUM_MAX==5,"CCM context capacity");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'ccm-sdk-layout.o')],check=True)
+print('PASS: SDK CCM IQ=2164/result=156, illuminant=56/profile=60/luma row=72 bytes; all used offsets verified')

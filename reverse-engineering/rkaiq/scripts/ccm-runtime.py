@@ -159,7 +159,7 @@ def main():
                         for j, s in enumerate([100.0, 60.0, 20.0])
                     ],
                 )
-                for i in range(3)
+                for i in range(9 if sequence >= 90 else 3)
             ]
         )
         frames = []
@@ -251,6 +251,7 @@ def main():
     report = dict(
         passed=True,
         cases=len(cases),
+        maxIlluminants=max(len(v["calibration"]) for v in cases),
         frames=sum(len(v["frames"]) for v in cases),
         selectedProfileCases=profile_cases,
         iqSha256=hashlib.sha256(iq.read_bytes()).hexdigest(),

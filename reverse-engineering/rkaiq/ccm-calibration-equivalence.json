@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "cases": 200,
+  "bytesComparedPerCase": 156,
+  "mismatches": 0,
+  "seed": "0x43434d43",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "c845d9a0526a4659e7f502dd3c0a0219a15af3e6c2ae4fa35e33f197ea0df7fd",
+  "physicalArmBinarySha256": "994189f27dae250c0c34382d2644b1d0831618cc20918ccddce85ae2bdd33dc3",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Complete native ConfigHwbyCalib; all 156 result bytes compared from random prior contents. Independent SDK ARM layout assertions cover source and result offsets.",
+  "limitations": [
+    "Native JSON parser/constructor are not executed; only consumed static IQ fields are independently SDK-packed.",
+    "Physical ARM replay does not enable CCM on the camera or qualify image quality."
+  ],
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "selectedProfileCases": 1
+}

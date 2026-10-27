@@ -32,10 +32,10 @@ impl State {
         pending: bool,
         updated: &mut bool,
     ) -> Result<(), InvalidInput> {
-        if calibration.len() > 7 {
+        if calibration.len() > 9 {
             return Err(InvalidInput::Length);
         }
-        let mut pairs = [[0.; 2]; 7];
+        let mut pairs = [[0.; 2]; 9];
         for (i, cal) in calibration.iter().enumerate() {
             pairs[i] = cal.gains;
         }

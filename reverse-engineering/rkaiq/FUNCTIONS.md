@@ -159,3 +159,7 @@ profile names, cached publication and early exits.
 `ccm_luma::symmetric` reconstructs complete `YAlpSymAutoCfg`
 (ELF `0xfe250`), including interpolation/cache gates and whole-curve publication.
 [Verified ARM calling convention and native uClibc/physical CPU evidence](ISP.md#symmetric-ccm-luma-curve-0034-development).
+
+`ccm_calibration::static_fields` reconstructs static result initialization by
+`ConfigHwbyCalib` (ELF `0xfecd0`) from explicit IQ JSON fields.
+[Public SDK ABI checks and native/physical CPU evidence](ISP.md#ccm-sdk-layouts-and-static-calibration-fields-0034-development).

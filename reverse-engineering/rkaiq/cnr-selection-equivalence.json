@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "selectedRecordBytesComparedPerCase": 180,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "fa35e7562b78e11f42d8ff0864d61b00212145a57e050c4fa3cf9dbe45521b39",
+  "physicalArmBinarySha256": "09ebf005b3d499ae379d5da77b730c9900bc35bd3c5d1df4dfb26ebee31cd924",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Complete native cnr_select_params_by_ISO_V30, all selected bytes including retained padding and both chosen ISO indices. Full calibration and all unrelated exposure bytes verified unchanged. No algorithm/math/log stubs executed.",
+  "boundaries": [
+    "Thirteen positive strictly increasing float ISO knots with distinct truncated integer bounds. Malformed knots/nonfinite arithmetic and overflowing signed distances are rejected transactionally.",
+    "Power-of-two, nonstandard and fractional ISO knots; below/above-range extrapolation, exact knots, interior samples, nearest-row ties, raw discrete fields and poisoned padding included.",
+    "Synthetic SDK records; actual JSON calibration preparation and fixed-register quantization remain separate. Selecting exposure slots 0/1/2 does not qualify HDR camera operation.",
+    "Physical CPU replay makes no ISP writes; live CNR remains disabled."
+  ]
+}

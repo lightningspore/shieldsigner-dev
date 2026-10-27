@@ -1716,3 +1716,36 @@ SHA remains identical to the preceding BAYNR-validated binary: CNR is not yet
 wired into capture. Calibration, selection, quantization and persistent/live
 CNR remain gates; four profile blocks remain. All 107 library/five Unix tests,
 no-default-features, static ARM and SDK/kernel layouts pass.
+
+
+### CNR ISO tuning selection (0.0.34 development)
+
+`cnr_selection::select` reconstructs complete `cnr_select_params_by_ISO_V30`
+(ELF `0xe0d9c`). The 2,396-byte table contains thirteen 180-byte selected rows.
+It compares integer ISO converted to float against the original float knots,
+then uses truncated integer bounds for the interpolation fraction. All twelve
+inclusive intervals are examined, with the last matching interval winning.
+ISO below/above the table extrapolates the first/last interval. This differs
+from Bayer spatial NR's integer-gain quantization and unsupported outer range.
+
+Thirty-three float fields use fused multiply-add interpolation. Downscale
+bytes, the discrete weight-selection byte, four thumbnail coefficients and six
+Gaussian coefficients use the nearest row; equal distances choose lower.
+The table-wide integer enable normalizes to one byte. All output padding is
+preserved. Rust rejects invalid/non-increasing truncated knots, nonfinite
+arithmetic and overflowing signed distances before changing the output.
+
+[Full native and physical CPU evidence](cnr-selection-equivalence.json)
+compares all selected bytes and both chosen indices across 1,000 synthetic
+records, including fractional/nonstandard knots, ties, exact knots, outer-range
+extrapolation, arbitrary discrete fields and poisoned padding. The full native
+selector executes without algorithm/math/log substitutes, and all table and
+unrelated exposure bytes are checked unchanged. Verbatim pinned SDK declarations
+compile for ARM and independently verify table/selected/exposure sizes and every
+field group. All 108 library/five Unix tests, no-default-features and static ARM
+builds pass, including transactional rejection checks.
+
+Run `mise run camera:rust:cnr-selection -- --adb SERIAL --report LOCAL.json`
+after building and deploying the exact ARM fixture. Physical CPU replay makes
+no ISP writes. JSON preparation, fixed quantization and persistent/live CNR
+remain separate gates; four profile blocks remain disabled in live capture.

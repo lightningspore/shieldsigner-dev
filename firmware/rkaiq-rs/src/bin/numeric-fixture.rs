@@ -3489,6 +3489,14 @@ fn main() {
                 shieldsigner_rkaiq::baynr_quantize::quantize(&selected,&strength,&exposure,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "cnr-select" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                let decode=|key:&str|{let s=v[key].as_str().unwrap();(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>()};
+                let table=decode("table").try_into().unwrap();let mut output=decode("output").try_into().unwrap();
+                let mode=v["mode"].as_u64().unwrap() as usize;let iso=v["iso"][mode].as_i64().unwrap() as i32;
+                let bracket=shieldsigner_rkaiq::cnr_selection::select(&table,iso,&mut output).unwrap();
+                println!("{}",serde_json::json!({"output":output.iter().map(|v|format!("{v:02x}")).collect::<String>(),"bracket":bracket}));
+            }
             "baynr-select" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
                 let decode=|key:&str|{let s=v[key].as_str().unwrap();(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>()};

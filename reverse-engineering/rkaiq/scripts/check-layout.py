@@ -416,3 +416,23 @@ _Static_assert(offsetof(RK_CNR_Fix_V30_t,iir_global_gain)==64,"CNR SDK last fiel
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'cnr-sdk-layout.o')],check=True)
 print('PASS: CNR SDK=66/packed=59, enable, weights, gains, sigma and bypass alpha offsets verified')
+
+cnr_uapi=dpcc_header('cnr_uapi_head_v30.h')
+cnr_int=dpcc_header('rk_aiq_types_acnr_algo_int_v30.h')
+source=cache/'cnr-selection-sdk-layout.c'
+source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n#define ISP_HW_V32 1\n#define RK_CNR_V30_MAX_ISO_NUM 13\n'+dpcc_record('RK_CNR_Params_V30_Select_s',cnr_uapi)+'\n'+dpcc_record('RK_CNR_Params_V30_s',cnr_int)+'\n'+dpcc_record('AcnrV30_ExpInfo_s',cnr_uapi)+'''
+_Static_assert(sizeof(RK_CNR_Params_V30_Select_t)==180,"CNR selected record");
+_Static_assert(sizeof(RK_CNR_Params_V30_t)==2396,"CNR 13-row tuning table");
+_Static_assert(offsetof(RK_CNR_Params_V30_t,CnrParamsISO)==56,"CNR table rows");
+_Static_assert(offsetof(RK_CNR_Params_V30_Select_t,thumb_sigma)==4,"CNR first float");
+_Static_assert(offsetof(RK_CNR_Params_V30_Select_t,bf_wgt0_sel)==52,"CNR discrete weight mode");
+_Static_assert(offsetof(RK_CNR_Params_V30_Select_t,global_alpha)==56,"CNR second float group");
+_Static_assert(offsetof(RK_CNR_Params_V30_Select_t,gain_adj_strength_ratio)==88,"CNR sigma curve");
+_Static_assert(offsetof(RK_CNR_Params_V30_Select_t,thumb_filter_wgt_coeff)==140,"CNR discrete spatial weights");
+_Static_assert(offsetof(RK_CNR_Params_V30_Select_t,gaus_coeff)==156,"CNR discrete gaussian weights");
+_Static_assert(sizeof(AcnrV30_ExpInfo_t)==88,"CNR exposure");
+_Static_assert(offsetof(AcnrV30_ExpInfo_t,arIso)==60,"CNR ISO array");
+_Static_assert(offsetof(AcnrV30_ExpInfo_t,isoLevelLow)==72,"CNR bracket");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'cnr-selection-sdk-layout.o')],check=True)
+print('PASS: CNR table=2396/selected=180/exposure=88 and all selector offsets verified')

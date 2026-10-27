@@ -267,3 +267,8 @@ frames. [Live evidence, sensor guards and verification tasks](ISP.md#live-baynr-
 `isp_cnr::apply` reconstructs complete chroma NR fixed-result packing and the
 native always-enabled/zero-alpha disable policy, preserving unrelated data.
 [Full native dispatcher and physical CPU evidence](ISP.md#cnr-selected-result-serialization-0034-development).
+
+
+`cnr_selection::select` reconstructs complete chroma NR ISO selection with
+float-knot/integer-bound interpolation, extrapolation, nearest-row filter shapes
+and retained SDK padding. [Full native and physical CPU evidence](ISP.md#cnr-iso-tuning-selection-0034-development).

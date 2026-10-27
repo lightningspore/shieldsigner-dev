@@ -309,6 +309,10 @@ mod linux {
         unsafe { std::mem::zeroed() }
     }
     fn ioctl<T>(fd: RawFd, request: u32, value: &mut T) -> io::Result<()> {
+        #[cfg(test)]
+        if let Some(result) = raw_bridge::mock_ioctl(fd, request, value) {
+            return result;
+        }
         loop {
             let result = unsafe { libc::ioctl(fd, request as _, value as *mut T) };
             if result >= 0 {

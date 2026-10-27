@@ -1,6 +1,14 @@
 // Included in the Linux camera diagnostic. Linear, single-plane raw DMA-BUF
 // transfer only. Formats/media links must already be configured explicitly.
 mod raw_bridge {
+    #[cfg(test)]
+    pub(super) fn mock_ioctl<T>(
+        fd: super::RawFd,
+        request: u32,
+        value: &mut T,
+    ) -> Option<super::io::Result<()>> {
+        super::raw_bridge_driver_test::mock(fd, request, value)
+    }
     use super::*;
     use std::os::fd::{FromRawFd, OwnedFd};
     use std::sync::{
@@ -355,6 +363,204 @@ mod raw_bridge {
                     .map_err(|_| error("Raw bridge worker panicked"))?;
                 result.and(bridge_result)
             })
+        }
+    }
+}
+
+#[cfg(test)]
+mod raw_bridge_driver_test {
+    use super::*;
+    use std::sync::Mutex;
+    #[derive(Default)]
+    struct Driver {
+        tx: Option<RawFd>,
+        rx: Option<RawFd>,
+        isp: Option<RawFd>,
+        trace: Vec<String>,
+        mode: u8,
+        tx_dequeued: bool,
+        rx_queued: bool,
+        triggered: bool,
+        finished: bool,
+        sof_sent: bool,
+    }
+    static DRIVER: Mutex<Option<Driver>> = Mutex::new(None);
+    pub(super) fn mock<T>(fd: RawFd, request: u32, value: &mut T) -> Option<io::Result<()>> {
+        let mut lock = DRIVER.lock().unwrap();
+        let driver = lock.as_mut()?;
+        let b = unsafe {
+            std::slice::from_raw_parts_mut((value as *mut T).cast::<u8>(), std::mem::size_of::<T>())
+        };
+        let mut outcome = Ok(());
+        match request {
+            QUERYCAP => {
+                let cap = if driver.tx.is_none() {
+                    driver.tx = Some(fd);
+                    0x04000001
+                } else {
+                    driver.rx = Some(fd);
+                    0x04000002
+                };
+                put32(b, 84, cap);
+            }
+            GETFMT => {
+                for (o, v) in [
+                    (4, 640),
+                    (8, 480),
+                    (12, u32::from_le_bytes(*b"BG10")),
+                    (20, 1280),
+                    (24, 614400),
+                ] {
+                    put32(b, o, v);
+                }
+            }
+            REQBUFS => {
+                driver.trace.push(format!(
+                    "{}:req:{}",
+                    if driver.tx == Some(fd) { "tx" } else { "rx" },
+                    get32(b, 0)
+                ));
+            }
+            QUERYBUF => {
+                put32(b, 56, 614400);
+            }
+            0xc0405610 => {
+                let exported = unsafe { libc::dup(fd) };
+                assert!(exported >= 0);
+                put32(b, 16, exported as u32);
+            }
+            0x4020565a => {
+                assert_eq!(get32(b, 0), 4);
+                driver.isp = Some(fd);
+                driver.trace.push("sof:subscribe".into());
+            }
+            0x80805659 => {
+                if driver.sof_sent {
+                    outcome = Err(io::Error::from_raw_os_error(libc::EAGAIN));
+                } else {
+                    driver.sof_sent = true;
+                    b.fill(0);
+                    for (o, v) in [(0, 4), (8, 77), (76, 999), (80, 3), (84, 456)] {
+                        put32(b, o, v);
+                    }
+                }
+            }
+            STREAMON => {
+                let role = if driver.tx == Some(fd) { "tx" } else { "rx" };
+                driver.trace.push(format!("{role}:on"));
+                if driver.mode == 1 && role == "rx" {
+                    outcome = Err(io::Error::from_raw_os_error(libc::EIO));
+                    driver.finished = true;
+                }
+            }
+            STREAMOFF => {
+                driver.trace.push(format!(
+                    "{}:off",
+                    if driver.tx == Some(fd) { "tx" } else { "rx" }
+                ));
+            }
+            QUEUE => {
+                if driver.tx == Some(fd) {
+                    if driver.tx_dequeued {
+                        assert!(driver.finished, "TX reused before RX completion");
+                        driver.trace.push("tx:requeue".into());
+                    } else {
+                        driver.trace.push("tx:initial-queue".into());
+                    }
+                } else {
+                    driver.trace.push("rx:queue".into());
+                    assert_eq!(get32(b, 48), 4);
+                    assert_eq!(get32(b, 8), 614400);
+                    let imported = get32(b, 52) as RawFd;
+                    assert!(unsafe { libc::fcntl(imported, libc::F_GETFD) } >= 0);
+                    if driver.mode == 2 {
+                        driver.finished = true;
+                        outcome = Err(io::Error::from_raw_os_error(libc::EIO));
+                    } else {
+                        driver.rx_queued = true;
+                    }
+                }
+            }
+            DEQUEUE => {
+                if driver.tx == Some(fd) && !driver.tx_dequeued {
+                    driver.tx_dequeued = true;
+                    driver.trace.push("tx:dequeue".into());
+                    put32(b, 0, 0);
+                    put32(b, 8, 614400);
+                    put32(b, 20, 4);
+                    put32(b, 24, 500);
+                    put32(b, 44, 77);
+                } else if driver.rx == Some(fd) && driver.triggered && !driver.finished {
+                    driver.finished = true;
+                    driver.trace.push("rx:dequeue".into());
+                    put32(b, 0, 0);
+                    if driver.mode == 4 {
+                        put32(b, 12, 0x40);
+                    }
+                } else {
+                    outcome = Err(io::Error::from_raw_os_error(libc::EAGAIN));
+                }
+            }
+            shieldsigner_rkaiq::raw_readback::TRIGGER_IOCTL => {
+                assert!(driver.rx_queued);
+                assert_eq!(driver.isp, Some(fd));
+                let expected = shieldsigner_rkaiq::raw_readback::linear_trigger(
+                    77,
+                    3_000_000_456,
+                    4_000_500,
+                    0,
+                    true,
+                    false,
+                );
+                assert_eq!(b, &expected);
+                driver.trace.push("isp:trigger".into());
+                if driver.mode == 3 {
+                    driver.finished = true;
+                    outcome = Err(io::Error::from_raw_os_error(libc::EIO));
+                } else {
+                    driver.triggered = true;
+                }
+            }
+            _ => panic!("unexpected mocked request {request:x}"),
+        }
+        Some(outcome)
+    }
+    #[test]
+    fn real_bridge_loop_success_and_driver_failures() {
+        for mode in 0..5 {
+            *DRIVER.lock().unwrap() = Some(Driver {
+                mode,
+                ..Driver::default()
+            });
+            let bridge =
+                raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full").unwrap();
+            let outcome = bridge.during(|| {
+                let deadline = Instant::now() + Duration::from_secs(2);
+                while !DRIVER.lock().unwrap().as_ref().unwrap().finished {
+                    assert!(Instant::now() < deadline, "mock bridge stalled");
+                    std::thread::sleep(Duration::from_millis(1));
+                }
+                Ok(())
+            });
+            let driver = DRIVER.lock().unwrap().take().unwrap();
+            assert_eq!(outcome.is_ok(), mode == 0, "mode {mode}: {outcome:?}");
+            let position = |s: &str| driver.trace.iter().position(|v| v == s);
+            assert!(position("tx:off").is_some());
+            assert!(position("tx:req:0").is_some());
+            assert!(position("rx:req:0").is_some());
+            if mode != 1 {
+                assert!(position("rx:off") < position("tx:off"));
+            }
+            if mode == 0 {
+                assert!(position("rx:queue") < position("isp:trigger"));
+                assert!(position("isp:trigger") < position("rx:dequeue"));
+                assert!(position("rx:dequeue") < position("tx:requeue"));
+            } else {
+                assert!(position("tx:requeue").is_none());
+            }
+            if mode == 2 {
+                assert!(position("isp:trigger").is_none());
+            }
         }
     }
 }

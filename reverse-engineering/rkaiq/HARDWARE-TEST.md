@@ -315,3 +315,22 @@ ARM compilation, kernel ABI assertions and CLI rejection tests establish only
 their stated offline coverage. Preserve errors and driver logs if STREAMON,
 DMA-BUF import/export, trigger or capture fails; do not call it functional based
 on compilation or parameter completion alone.
+
+### ARM raw-bridge lifecycle simulation
+
+`mise run camera:rust:raw-bridge-check` cross-compiles the camera diagnostic's
+Rust test executable and runs its actual bridge preparation, worker and cleanup
+under ARM Linux emulation. Only its ioctl boundary is replaced by a test-only
+scripted driver; production builds do not include that replacement. Exported
+buffer descriptors are real duplicated FDs whose ownership is checked during
+RX queueing. The five scenarios cover a successful raw frame with matching SOF,
+RX STREAMON failure, RX QBUF failure, trigger failure and a corrupted RX buffer.
+The test asserts RX queue → trigger → RX completion → TX reuse order, no TX reuse
+on failures, trigger suppression on failed queueing, and resource-release order.
+[Recorded results](raw-bridge-validation.json) identify the test executable hash.
+
+This is stronger coverage of userspace lifetime behavior than CLI rejection
+checks, but it does not simulate the real kernel's internal buffer handling or
+prove the selected startup order on hardware. It also does not exercise the
+surrounding metadata/image capture paths or compare the complete native C++
+queue controller. Keep those distinctions when assessing readiness.

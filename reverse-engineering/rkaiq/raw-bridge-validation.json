@@ -1,0 +1,64 @@
+{
+  "testBinarySha256": "bf323b4cf31d831091dd04416a4f55cc1cdda7a546705abfa7fbb54b4b3f52c2",
+  "platform": "linux/arm/v7",
+  "cases": [
+    "successful frame with matched SOF",
+    "RX STREAMON failure",
+    "RX QBUF failure suppresses trigger",
+    "trigger ioctl failure",
+    "corrupted RX completion"
+  ],
+  "passed": true,
+  "events": [
+    {
+      "cleanupErrors": [],
+      "completedFrames": 1,
+      "error": null,
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 0,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 0,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "I/O error (os error 5)",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    },
+    {
+      "cleanupErrors": [],
+      "completedFrames": 0,
+      "error": "Invalid/error raw RX completion",
+      "event": "raw-bridge-finished",
+      "hardwareVerified": false,
+      "sofMatches": 1,
+      "sofMissing": 0
+    }
+  ],
+  "limitations": [
+    "A cfg(test)-only ioctl boundary simulates the driver; actual ARM bridge logic, FD export ownership, scoped worker and cleanup execute.",
+    "No positive device, kernel-driver or original RKAIQ queue-controller equivalence is established.",
+    "Image capture and the metadata queue are outside this focused bridge test."
+  ]
+}

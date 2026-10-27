@@ -336,3 +336,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:startup-check"]
 description = "Check live pipeline ABI, CIF pad records and static ARM configuration-command preflight failures"
 run = ["mise run camera:rust:layout", "mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/live-pipeline-check.py"]
+
+[tasks."camera:rust:raw-bridge-check"]
+description = "Execute ARM raw bridge lifecycle with a simulated ioctl driver"
+run = "uv run --python 3.13 python reverse-engineering/rkaiq/scripts/raw-bridge-check.py"

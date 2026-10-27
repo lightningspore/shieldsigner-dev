@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "parameterBytesComparedPerCase": 11145,
+  "packedCnrBytes": 59,
+  "sdkResultBytes": 66,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "9b477b44c88a15a24daf682188670b9aab8bf8142068eb97d024e4ad502f24e0",
+  "physicalArmBinarySha256": "ca5a8a1d14153a30db17210c5f60361cb15814b42abbecd267b99881a3f150e9",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Full original ISP32 dispatcher result type 34 and complete convertAiqUvnrToIsp32Params. All output parameter bytes compared; original result and all converter context bytes checked unchanged. SDK disable retains module enable but clears global alpha.",
+  "boundaries": [
+    "Controlled valid typed C++ dynamic_cast; original dispatcher/converter instructions execute with no algorithm substitutes.",
+    "Random prior masks/bytes, zero/nonzero SDK enable, bypass alpha, SDK padding and packed register reordering covered.",
+    "Register serialization only; calibration, tuning, quantization, runtime and live CNR remain separate.",
+    "Physical CPU replay makes no ISP writes and loads no vendor library on the board."
+  ]
+}

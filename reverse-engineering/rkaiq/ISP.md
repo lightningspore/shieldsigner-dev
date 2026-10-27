@@ -1690,3 +1690,29 @@ layout and six ARM sequence scenarios pass. The
 [current audit](profile-module-audit-0.0.34-baynr.json) leaves BAY3D, YNR, CNR
 and SHARP. Physical optical/lighting/UI qualification, a controlled cold boot
 of this exact binary and a new frozen kit remain open; frozen 0.0.33 is unchanged.
+
+
+### CNR selected-result serialization (0.0.34 development)
+
+`isp_cnr::apply` reconstructs complete `convertAiqUvnrToIsp32Params`
+(ELF `0x2c982`) through original ISP32 dispatcher result type 34. Its 66-byte
+SDK fixed record becomes 59 packed bytes at `0x2a08`; field ordering differs
+and SDK padding is discarded. All three masks OR bit 39, including when SDK
+`cnr_en` is zero. Disable instead writes zero to packed `global_alpha`; other
+fields still copy. A generic enable/disable-mask helper would be incorrect.
+
+[Native and physical ARM CPU evidence](isp-cnr-equivalence.json) compares all
+11,145 parameter bytes for 1,000 cases with random prior masks/registers,
+zero/nonzero SDK enable, poisoned padding and explicit distinguishable field
+values. Source and all converter context bytes remain unchanged. The full
+original dispatcher and converter execute; valid C++ dynamic_cast is the
+explicit typed-object boundary. SDK and kernel ARM compilation separately
+verify sizes, offsets, weights, gains, sigma and bypass alpha.
+
+Run `mise run camera:rust:isp-cnr -- --adb SERIAL --report LOCAL.json` after
+building host/ARM fixtures and deploying the exact ARM fixture. Physical CPU
+replay loads no vendor library and performs no ISP writes. Live camera binary
+SHA remains identical to the preceding BAYNR-validated binary: CNR is not yet
+wired into capture. Calibration, selection, quantization and persistent/live
+CNR remain gates; four profile blocks remain. All 107 library/five Unix tests,
+no-default-features, static ARM and SDK/kernel layouts pass.

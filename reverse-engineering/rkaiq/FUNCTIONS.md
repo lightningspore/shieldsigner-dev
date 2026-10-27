@@ -262,3 +262,8 @@ native CIS/DCG SNR fallback to the live BAYNR owner. Startup and runtime state
 are staged transactionally with parameter submission and verified against the
 full native constructor/callback/converter on actual camera captures and app
 frames. [Live evidence, sensor guards and verification tasks](ISP.md#live-baynr-startup-and-transactional-capture-0034-development).
+
+
+`isp_cnr::apply` reconstructs complete chroma NR fixed-result packing and the
+native always-enabled/zero-alpha disable policy, preserving unrelated data.
+[Full native dispatcher and physical CPU evidence](ISP.md#cnr-selected-result-serialization-0034-development).

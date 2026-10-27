@@ -214,3 +214,10 @@ _Static_assert(offsetof(struct isp32_baynr_cfg,dat_max)==94,"BAYNR data maximum"
 _Static_assert(offsetof(struct isp32_baynr_cfg,gain_x)==102,"BAYNR gain x table");
 _Static_assert(offsetof(struct isp32_baynr_cfg,gain_y)==118,"BAYNR gain y table");
 _Static_assert(ISP32_MODULE_BAY3D==(1ULL<<37),"BAYNR dependency enable metadata");
+
+_Static_assert(sizeof(struct isp32_cnr_cfg)==59,"CNR packed bytes");
+_Static_assert(offsetof(struct isp32_isp_params_cfg,others.cnr_cfg)==0x2a08,"CNR packed offset");
+_Static_assert(offsetof(struct isp32_cnr_cfg,global_gain)==39,"CNR packed gain");
+_Static_assert(offsetof(struct isp32_cnr_cfg,global_alpha)==51,"CNR packed bypass alpha");
+_Static_assert(offsetof(struct isp32_cnr_cfg,adj_ratio)==57,"CNR packed last field");
+_Static_assert(ISP32_MODULE_CNR==(1ULL<<39),"CNR module mask");

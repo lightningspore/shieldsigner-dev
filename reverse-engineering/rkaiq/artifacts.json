@@ -249,6 +249,11 @@
       "name": "bayer2dnr_uapi_head_v23.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/bayer2dnr_uapi_head_v23.h",
       "sha256": "37d73396d9541fd67d499487317808165ab0972ba1acd5abcae8eec40b691fbd"
+    },
+    {
+      "name": "rk_aiq_types_acnr_hw_v30.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/acnrV30/rk_aiq_types_acnr_hw_v30.h",
+      "sha256": "8691aa84652fc1d0c5e577f778b991134af601e359c1113ec47735d907cd688c"
     }
   ],
   "kernelHeaders": [

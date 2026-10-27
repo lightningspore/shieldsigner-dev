@@ -700,3 +700,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:verify-live"]
 description = "Verify every live reconstructed IQ module and final saved AWB translation"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/verify-live-capture.py"
+
+[tasks."camera:rust:isp-cnr"]
+description = "Compare complete native ISP32 chroma NR packing, bypass and preserved parameter bytes"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-cnr.py"

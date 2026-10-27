@@ -398,3 +398,21 @@ _Static_assert(sizeof(CISFeature_t)==4,"SDK independent sensor feature flags");
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'ae-cis-sdk-layout.o')],check=True)
 print('PASS: SDK exposure=244, analogue gain=4/DCG=20/CIS SNR=240 verified independently')
+
+cnr_hw=dpcc_header('rk_aiq_types_acnr_hw_v30.h').replace('#include "rk_aiq_comm.h"','')
+source=cache/'cnr-sdk-layout.c'
+source.write_text('#include <stdint.h>\n#include <stddef.h>\n'+cnr_hw+'''
+_Static_assert(sizeof(RK_CNR_Fix_V30_t)==66,"CNR SDK bytes");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,cnr_en)==0,"CNR SDK enable");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,global_gain)==8,"CNR SDK gain");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,lbf1x7_weit_d)==16,"CNR SDK spatial weights");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,wgt_slope)==24,"CNR SDK slope");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,gaus_coe)==28,"CNR SDK gaussian weights");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,global_alpha)==38,"CNR SDK bypass alpha");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,sigma_r)==42,"CNR SDK range sigma");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,adj_offset)==46,"CNR SDK adjustment");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,sigma_y)==50,"CNR SDK luma sigma");
+_Static_assert(offsetof(RK_CNR_Fix_V30_t,iir_global_gain)==64,"CNR SDK last field");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'cnr-sdk-layout.o')],check=True)
+print('PASS: CNR SDK=66/packed=59, enable, weights, gains, sigma and bypass alpha offsets verified')

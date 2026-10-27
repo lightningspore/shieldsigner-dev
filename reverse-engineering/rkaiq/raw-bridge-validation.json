@@ -1,6 +1,7 @@
 {
-  "testBinarySha256": "a52a1f0ace1e8e8deb6d508620f5da4be7b84b1740c3f50775d532261a285eaa",
+  "testBinarySha256": "4b3dbeb10827eb3c8cfef27c5ca597b96eb3cbbb49a6be73ee6a0617dc6553e5",
   "platform": "linux/arm/v7",
+  "storageMismatchRejectedBeforeAllocation": true,
   "endpointApiCombinations": 4,
   "casesPerCombination": [
     "successful frame with matched SOF",

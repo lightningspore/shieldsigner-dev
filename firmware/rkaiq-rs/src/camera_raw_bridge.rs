@@ -198,6 +198,30 @@ mod raw_bridge {
                     "Raw TX/RX dimensions, FourCC, stride and sizeimage must match",
                 ));
             }
+            // Read only: never change an active device's memory mode here.
+            let mut tx_mode = -1i32;
+            let mut rx_mode = -1i32;
+            ioctl(tx_file.as_raw_fd(), 0x800456c0, &mut tx_mode)?;
+            ioctl(rx_file.as_raw_fd(), 0x80045724, &mut rx_mode)?;
+            if tx_mode != rx_mode || !matches!(tx_mode, 0 | 2) {
+                return Err(error(
+                    "Raw CSI memory modes must match (compact or word-high-aligned)",
+                ));
+            }
+            let width = get32(t, 0) as u64;
+            let height = get32(t, 4) as u64;
+            let minimum_stride = if tx_mode == 0 {
+                (width * 10).div_ceil(8)
+            } else {
+                width * 2
+            };
+            if width == 0
+                || height == 0
+                || (stride as u64) < minimum_stride
+                || (size as u64) < stride as u64 * height
+            {
+                return Err(error("Raw storage dimensions exceed stride/sizeimage"));
+            }
             let mut bridge = Self {
                 rx: Endpoint {
                     file: rx_file,
@@ -462,6 +486,17 @@ mod raw_bridge_driver_test {
                 };
                 put32(b, 84, cap);
             }
+            0x800456c0 | 0x80045724 => {
+                put32(
+                    b,
+                    0,
+                    if driver.mode == 5 && driver.rx == Some(fd) {
+                        2
+                    } else {
+                        0
+                    },
+                );
+            }
             GETFMT => {
                 let multi = matches!(get32(b, 0), 9 | 10);
                 for (o, v) in [
@@ -610,6 +645,17 @@ mod raw_bridge_driver_test {
             _ => panic!("unexpected mocked request {request:x}"),
         }
         Some(outcome)
+    }
+    #[test]
+    fn mismatched_storage_is_rejected_before_allocation() {
+        *DRIVER.lock().unwrap() = Some(Driver {
+            mode: 5,
+            ..Driver::default()
+        });
+        let outcome = raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full");
+        assert!(outcome.is_err());
+        let driver = DRIVER.lock().unwrap().take().unwrap();
+        assert!(driver.trace.is_empty());
     }
     #[test]
     fn real_bridge_loop_success_and_driver_failures() {

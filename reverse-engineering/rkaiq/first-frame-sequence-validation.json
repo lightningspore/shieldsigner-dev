@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "a52a1f0ace1e8e8deb6d508620f5da4be7b84b1740c3f50775d532261a285eaa",
+  "testBinarySha256": "4b3dbeb10827eb3c8cfef27c5ca597b96eb3cbbb49a6be73ee6a0617dc6553e5",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -7,7 +7,7 @@
     "hardwareVerified": false,
     "imageContent": "anonymous zero-filled simulated memory",
     "imageFrames": 3,
-    "rawFrames": 5,
+    "rawFrames": 6,
     "savedBytes": 4478976,
     "statisticsEnabled": false,
     "statisticsFrames": 0
@@ -18,7 +18,7 @@
       "hardwareVerified": false,
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
       "statisticsEnabled": false,
       "statisticsFrames": 0
@@ -28,10 +28,10 @@
       "hardwareVerified": false,
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
-      "rawFrames": 6,
+      "rawFrames": 5,
       "savedBytes": 4478976,
       "statisticsEnabled": true,
-      "statisticsFrames": 6
+      "statisticsFrames": 5
     }
   ],
   "verified": [

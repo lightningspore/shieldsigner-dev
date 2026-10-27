@@ -154,6 +154,8 @@ _Static_assert(VIDIOC_QUERYCAP==0x80685600,"video capability request");
 _Static_assert(V4L2_BUF_TYPE_VIDEO_OUTPUT==2 && V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE==10,"raw RX types");
 _Static_assert(V4L2_FIELD_NONE==1,"raw no-field selector");
 _Static_assert(RKCIF_CMD_SET_CSI_MEMORY_MODE==0x400456c1,"CIF high-alignment ioctl");
+_Static_assert(RKCIF_CMD_GET_CSI_MEMORY_MODE==0x800456c0,"CIF memory query ioctl");
+_Static_assert(RKISP_CMD_GET_CSI_MEMORY_MODE==0x80045724,"ISP memory query ioctl");
 _Static_assert(RKISP_CMD_SET_CSI_MEMORY_MODE==0x40045725,"ISP high-alignment ioctl");
 _Static_assert(CSI_LVDS_MEM_WORD_HIGH_ALIGN==2 && CSI_MEM_WORD_BIG_ALIGN==2,"paired high-alignment enum");
 

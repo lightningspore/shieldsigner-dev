@@ -559,3 +559,21 @@ corrupt RX completion (20 cases). FD export/import, scoped worker, TX retention,
 SOF matching and teardown execute in the real bridge code. These are simulated
 driver tests; the changed bridge has not yet captured on the physical board.
 Run `mise run camera:rust:raw-bridge-check` to reproduce.
+
+
+### CSI storage compatibility guard
+
+Bridge preparation now issues read-only `RKCIF_CMD_GET_CSI_MEMORY_MODE` on TX
+and `RKISP_CMD_GET_CSI_MEMORY_MODE` on RX before buffer allocation. Both must
+report the same supported layout: compact (0) or word-high-aligned (2).
+Mode 1 is rejected because the pinned UAPI describes different representations
+across SoCs; no platform equivalence is assumed. Failed queries also abort.
+The guard checks positive dimensions and that stride/sizeimage can contain the
+RAW10 rows. It never sets either memory mode.
+
+An additional ARM driver test returns different TX/RX modes and verifies
+rejection before allocation, event subscription or streaming. The existing
+20 lifecycle cases and both full startup simulations pass with matching
+compact-mode query responses. Pinned-header ARM compilation independently
+checks both query ioctl numbers. This prevents a known class of DMA layout
+mismatches; it does not prove a positive device capture or cold startup.

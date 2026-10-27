@@ -169,6 +169,9 @@ mod first_frame_driver {
                 assert!(export >= 0);
                 put32(b, 16, export as u32);
             }
+            0x800456c0 | 0x80045724 => {
+                put32(b, 0, 0);
+            }
             0x4020565a => {
                 assert_eq!(get32(b, 0), 4);
             }

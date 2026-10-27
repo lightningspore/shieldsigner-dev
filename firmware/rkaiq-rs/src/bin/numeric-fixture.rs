@@ -1017,6 +1017,18 @@ fn main() {
                         )
                     }
                 };
+                let selected = if let Some(scene) = v.get("policy_scene") {
+                    ae_policy::Calibration::from_scene(scene)
+                        .unwrap()
+                        .select(b("enabled"), v["alternate"].as_bool().unwrap())
+                        .unwrap()
+                } else {
+                    ae_policy::Selected {
+                        tolerance_percent: 10.,
+                        damping_under: 0.5,
+                        damping_over: 0.4,
+                    }
+                };
                 let out = execute(
                     &mut state,
                     &mut route,
@@ -1025,7 +1037,7 @@ fn main() {
                         target: 45.,
                         measured: f("measured"),
                         current_exposure: f("exposure"),
-                        tolerance_percent: 10.,
+                        tolerance_percent: selected.tolerance_percent,
                         minimum_exposure: 0.00005,
                         maximum_exposure: 15.36,
                         saturated: false,
@@ -1049,8 +1061,8 @@ fn main() {
                         } else {
                             None
                         },
-                        damping_under: 0.5,
-                        damping_over: 0.4,
+                        damping_under: selected.damping_under,
+                        damping_over: selected.damping_over,
                         fps: f("fps"),
                         delay_enabled: b("enabled"),
                         same_mode: b("same_mode"),

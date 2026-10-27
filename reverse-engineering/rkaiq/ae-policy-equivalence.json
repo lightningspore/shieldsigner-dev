@@ -1,0 +1,14 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 256,
+  "actualProfileCases": 128,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "IQ tolerance/damping values selected by native AecClmExecute through complete control return, including controller state and diagnostics",
+  "limitations": [
+    "Profile fields are injected into their recovered context slots; this is not complete native calibration-loader equivalence.",
+    "Runtime alternate flag +0x23ce and convergence gating flag are explicit; alternate-flag producer remains external.",
+    "Uniform selected tolerance is bound; other runtime policy, limits, dynamics/delay calibration and hardware writes are not added.",
+    "Half the cases deliberately change tolerances and all four damping coefficients to distinguish selector branches."
+  ]
+}

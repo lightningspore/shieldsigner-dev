@@ -1049,15 +1049,15 @@ converted proposals and publication/history state; it does not rebuild them
 between frame calls. Every frame still runs the native preprocessing checkpoint,
 complete automatic caller/conversion, and complete result publisher.
 
-24 sequences of 32 frames compare 768 frame results, including 712 processed
-and 56 skipped frames. Intermediate counts zero/two/five, dynamic damping on/off
+36 sequences of 32 frames compare 1,152 frame results, including 1,052 processed
+and 100 skipped frames. Twelve bind actual profile damping/tolerances. Intermediate counts zero/two/five, dynamic damping on/off
 and priming on/off are covered. The comparisons include all the outputs and
 listed state from the single-frame corpus on **every** step, crossing the
 five-record control-history and ten-entry error-history ring boundaries.
 [Persistent sequence report](ae-pipeline-sequence-equivalence.json).
 
-Half the sequences supply an explicit exposure scalar and zero sensor codes
-as in the earlier fixture. The other half supply the previous converted point,
+Twelve sequences supply an explicit exposure scalar and zero sensor codes
+as in the earlier fixture. The other twenty-four supply the previous converted point,
 ISP gain and codes as the next preprocessing exposure-info record. Rust derives
 those inputs independently from its retained converted proposals, and the native
 oracle reads its own converted context fields and passes the actual by-value
@@ -1075,4 +1075,39 @@ need work.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-pipeline-sequence.py --arm
+```
+
+## Profile tolerance and damping selectors
+
+`ae_policy::Calibration::from_scene` reads `ToleranceIn`/`ToleranceOut` from
+`LinearAeCtrl` and all four damping coefficients from `CommCtrl.AecSpeed`.
+`select` binds them to the standard control inputs: gating disabled uses
+`ToleranceIn`, gating enabled uses `ToleranceOut`. Native context `+0x23ce`
+selects the alternate coefficient pair. The ordinary pair is `DampUnder` /
+`DampOver`; the alternate under/over pair is `DampBright2Dark` /
+`DampDark2Bright`, matching the native context accesses rather than inferring
+behavior from the field names.
+
+The pinned profile therefore uses 10% versus 15% tolerance, with regular
+under/over damping 0.45/0.15. Its alternate coefficients happen to be identical,
+so the comparison also deliberately substitutes distinct values to distinguish
+all selector branches. The producer of `+0x23ce` remains an explicit runtime
+input; this helper does not claim to reconstruct that producer or `SmoothEn`
+handling, dynamic-mode/slow parameters, delay calibration or FPS selection.
+
+256 comparisons execute complete native `AecClmExecute`, checking control
+outputs and the existing full controller/history/cache/delay/damping diagnostic
+comparison. Half use the actual profile; half change tolerances and all four
+damping values. The recovered context slots are seeded explicitly, so this is
+not a claim of complete native calibration-loader equivalence.
+[Policy selector comparison](ae-policy-equivalence.json).
+
+The persistent pipeline corpus additionally includes twelve sequences using
+these actual profile coefficients and selecting tolerance from the live
+convergence state on each frame. The other runtime limits and policy remain
+explicit. The JSON loader rejects missing/nonfinite values, negative tolerances
+and damping outside zero through one.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-policy.py --arm
 ```

@@ -40,6 +40,10 @@ class Original(Base):
   if v.get('run_wrapper',False):
    for o,x in [(0xd4,.009),(0xdc,2.),(0xe0,1.),(0xe8,.0045),(0x118,11.),(0x3c8,12.),(0x3cc,13.),(0x3d0,14.),(0x3bc,2.),(0x3c0,3.),(0x3c4,4.)]:struct.pack_into('<f',c,o,x)
    c[0x22ed]=int(v['run']);c[0xc]=1;struct.pack_into('<H',c,6,256);struct.pack_into('<3H',c,0x404,100,200,300)
+  if 'policy_scene' in v:
+   linear=v['policy_scene']['ae_calib']['LinearAeCtrl'];speed=v['policy_scene']['ae_calib']['CommCtrl']['AecSpeed']
+   for o,x in [(0x10,linear['ToleranceIn']),(0x14,linear['ToleranceOut']),(0x2404,speed['DampOver']),(0x2408,speed['DampUnder']),(0x240c,speed['DampDark2Bright']),(0x2410,speed['DampBright2Dark'])]:struct.pack_into('<f',c,o,x)
+   c[0x23ce]=int(v['alternate'])
   return c
  def run(self,v):
   c=self.setup(v)

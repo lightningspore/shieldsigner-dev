@@ -1,16 +1,17 @@
 {
   "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
   "runtimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
-  "sequences": 24,
-  "frames": 768,
-  "processed": 712,
-  "skipped": 56,
+  "sequences": 36,
+  "profilePolicySequences": 12,
+  "frames": 1152,
+  "processed": 1052,
+  "skipped": 100,
   "mismatches": 0,
   "armReplayPassed": true,
   "scope": "persistent native/Rust standard pipeline state over 32-frame sequences with per-frame outputs and listed state compared",
   "limitations": [
     "Synthetic statistics with two effective-input strategies: explicit scalar/zero codes, or prior converted point and codes supplied on the next frame. This is not a physical exposure-delay model.",
-    "Fixed target45 and explicit runtime policy, linear non-iris/DCG-disabled path; preprocessing stops at current-error checkpoint.",
+    "Fixed target45; twelve sequences bind profile damping/tolerances, other policy remains explicit. Linear non-iris/DCG-disabled path; preprocessing stops at current-error checkpoint.",
     "Other ISP results/CIS flags/unlisted context excluded; no hardware writes or real latency qualification."
   ]
 }

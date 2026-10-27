@@ -170,6 +170,21 @@ fn step(
             },
         )
     };
+    let selected = if let Some(scene) = v.get("policy_scene") {
+        ae_policy::Calibration::from_scene(scene)
+            .unwrap()
+            .select(
+                state.frame.convergence.gating_enabled != 0,
+                v["alternate"].as_bool().unwrap(),
+            )
+            .unwrap()
+    } else {
+        ae_policy::Selected {
+            tolerance_percent: 10.,
+            damping_under: 0.5,
+            damping_over: 0.4,
+        }
+    };
     let initial_error_history = state.frame.error_history;
     let out = ae_pipeline::linear(
         &mut state,
@@ -179,7 +194,7 @@ fn step(
             target: 45.,
             measured: f("measured"),
             current_exposure,
-            tolerance_percent: 10.,
+            tolerance_percent: selected.tolerance_percent,
             minimum_exposure: 0.00005,
             maximum_exposure: 15.36,
             saturated: false,
@@ -194,8 +209,8 @@ fn step(
             } else {
                 None
             },
-            damping_under: 0.5,
-            damping_over: 0.4,
+            damping_under: selected.damping_under,
+            damping_over: selected.damping_over,
             fps: f("fps"),
             delay_enabled: b("enabled"),
             same_mode: b("same_mode"),

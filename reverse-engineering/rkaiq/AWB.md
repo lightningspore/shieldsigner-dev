@@ -1469,3 +1469,53 @@ prefix rather than checking the two settings blocks only in isolation.
 It still stops before complete measurement preparation/gain processing;
 full shared-session composition, remaining initialization blocks, hardware
 reconfiguration/publication and live automatic-WB qualification remain unfinished.
+
+## Scene-owned settings and optional postprocessing
+
+`awb_calibration::Scene::from_value` now assembles one explicitly selected
+`wb_v32` object from the validated light, single-color, common and preprocessing
+loaders. It also owns optional clipping/adjustment/offset configuration and
+saved-site policy/path metadata. It performs no file I/O and does not implicitly
+select a scene, load saved-site contents or initialize persistent histories.
+
+The optional loader validates all 9×11 adjustment LUTs, selectors, sample levels
+and strictly ascending/descending axes, preserving the descending gain-mode Y
+axis used by SC3336. LUT sample levels may repeat but may not descend. It loads
+clipping/daylight/offset enable flags explicitly and preserves the four offset
+words without normalization. ISO/LV and GAIN/CT selectors use the pinned SDK enum
+mapping. Unknown selectors, wrong LUT shape/count, invalid axes, malformed flags
+and invalid saved-site metadata return checked errors.
+
+`Scene::with_post_settings` constructs borrowed settings inside their valid
+lifetime and invokes a closure, avoiding self-referential configuration storage.
+It supplies history length from the night-history weights, tolerance from the
+loaded brightness curve, common convergence/line settings, optional clipping,
+LUT selection/sample and offsets. Runtime brightness/luma/ISO and the current
+smart-run damping threshold remain explicit inputs. Saved-site settings are
+owned for the gain wrapper but are not applied by this postprocessing method.
+
+The native JSON tint names are counterintuitive: the common initializer stores
+`cri_bound_up` at strategy +0x378 and `cri_bound_low` at +0x37c; `AwbGainClip`
+**negates +0x378 for its negative/lower limit**, then uses +0x37c as its positive/
+upper limit. The scene adapter follows those instructions, rather than guessing
+from the JSON labels. Asymmetric bound curves explicitly test this mapping.
+
+`mise run camera:rust:awb-iq-scene-post` compares **128 complete native
+postprocessing calls** on host and ARM, beginning at the original normalized
+incomplete-measurement gain-mode path and returning normally. It covers all
+64 combinations of bound/daylight/adjustment/offset enable flags, ISO/LV sample
+selection and GAIN/CT adjustment modes, with two cases per combination. The
+pinned disabled-optional scene is included; variations enable the optional
+paths with one LUT each, asymmetric tint bounds and varying tolerance. Manual
+fixture enable/history/tolerance/convergence values are poisoned so successful
+comparison requires scene-owned settings. Exact gain/cache/history/convergence,
+CCT and ranked metadata checks use the existing full native oracle. A scene
+summary checks assembled light/candidate/mode and saved-site fields; eight
+malformed scenes exercise the new validation boundaries.
+[Scene postprocessing report](awb-iq-scene-post-equivalence.json).
+
+This assembles scene calibration and supplies postprocessing settings; it is not
+yet a complete scene-driven gain-controller/session constructor. Full persistent
+initialization, raw preprocessing/measurement-to-gain composition, optional
+multi-LUT whole-scene replay, saved-site persistence, hardware reconfiguration/
+publication and live automatic-WB qualification remain unfinished.

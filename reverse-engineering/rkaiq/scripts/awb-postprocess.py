@@ -47,14 +47,20 @@ class Original(OriginalAwb):
         config = bytearray(0x800)
         calibration = bytearray(0x800)
         results = bytearray([0x6B]) * (n * 0xA0)
-        curves = struct.pack("<9f", 2000.0, 5000.0, 8000.0, *([0.2] * 6))
+        clip_knots = v.get("clip_knots", [2000.0, 5000.0, 8000.0])
+        clip_lower = v.get("clip_lower", [0.2] * 3)
+        clip_upper = v.get("clip_upper", [0.2] * 3)
+        curves = struct.pack(
+            "<" + "f" * (len(clip_knots) * 3), *clip_knots, *clip_upper, *clip_lower
+        )
         table = adjust.encode(v["lut"])
         for offset, pointer in [(0x8C, 0x8000), (0x80, 0x9000), (0x33E4, 0x20000)]:
             struct.pack_into("<I", context, offset, HEAP + pointer)
         context[0x13C] = 0
         context[0x348C] = v["clipped"]
         struct.pack_into("<I", context, 0x33D8, v["brightness"])
-        struct.pack_into("<f", context, 0x33DC, 0.0)
+        struct.pack_into("<f", context, 0x33DC, v.get("sample", 0.0))
+        struct.pack_into("<f", context, 0x58, v.get("iso", 100.0))
         struct.pack_into("<f", context, 0x33B4, v["tolerance"])
         for offset in [0x334C, 0x353C]:
             struct.pack_into("<4f", context, offset, *v["candidate"])
@@ -73,12 +79,12 @@ class Original(OriginalAwb):
         struct.pack_into("<2f", context, 0x3504, 14.0, 15.0)
         config[0x138], config[0x1E8] = n, v["target"]
         config[0x122], config[0x123], config[0x124] = (
-            v["clip"],
+            v.get("bounds_enabled", v["clip"]),
             v["clip"] and v["daylight"],
             v["offset_enabled"],
         )
         struct.pack_into("<4f", config, 0x128, *v["offsets"])
-        struct.pack_into("<I", config, 0x1D4, 100)
+        struct.pack_into("<I", config, 0x1D4, v.get("daylight_threshold", 100))
         for offset, value in [
             (0x340, v["damped_convergence"]),
             (0x344, v["history_convergence"]),
@@ -89,16 +95,24 @@ class Original(OriginalAwb):
             "<f4I",
             config,
             0x36C,
-            5000.0,
-            3,
+            v.get("daylight_minimum", 5000.0),
+            len(clip_knots),
             HEAP + 0x12000,
-            HEAP + 0x1200C,
-            HEAP + 0x12018,
+            HEAP + 0x12000 + 4 * len(clip_knots),
+            HEAP + 0x12000 + 8 * len(clip_knots),
         )
         for offset, line in [(0x348, v["first"]), (0x358, v["second"])]:
             struct.pack_into("<3fI", config, offset, *line[:3], line[3])
         calibration[0x538] = v["adjust"]
-        struct.pack_into("<4I", calibration, 0x53C, 1, 1, HEAP + 0x10000, 1)
+        struct.pack_into(
+            "<4I",
+            calibration,
+            0x53C,
+            v.get("sample_selector", 1),
+            v.get("temperature_mode", True),
+            HEAP + 0x10000,
+            1,
+        )
         for i, light in enumerate(v["lights"]):
             struct.pack_into(
                 "<4ff", results, i * 0xA0 + 0x64, *light["gain"], light["probability"]

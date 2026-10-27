@@ -617,3 +617,175 @@ impl Preprocessing {
         )
     }
 }
+
+pub struct OptionalProcessing {
+    pub bounds_enabled: bool,
+    pub daylight_enabled: bool,
+    pub adjustment_enabled: bool,
+    pub temperature_mode: bool,
+    pub sample_from_luma: bool,
+    pub luts: Vec<crate::awb_gain_adjust::Lut>,
+    pub offsets: Option<[f32; 4]>,
+}
+impl OptionalProcessing {
+    pub fn from_value(v: &Value) -> Result<Self, String> {
+        let a = at(v, "/wbGainAdjust")?;
+        let temperature_mode = match at(a, "/adjDataSelt")?.as_str() {
+            Some("AWB_GAIN_ADJ_DATA_GAIN") => false,
+            Some("AWB_GAIN_ADJ_DATA_CT") => true,
+            _ => return Err(format!("Unknown adjustment data selector")),
+        };
+        let sample_from_luma = match at(a, "/ctrlDataSelt")?.as_str() {
+            Some("AWB_CTRL_DATA_LV") => true,
+            Some("AWB_CTRL_DATA_ISO") => false,
+            _ => return Err(format!("Unknown adjustment control selector")),
+        };
+        let n = integer(a, "/lutAll_len", 1, 8)? as usize;
+        let values = at(a, "/lutAll")?
+            .as_array()
+            .ok_or_else(|| format!("Expected adjustment LUT array"))?;
+        if values.len() != n {
+            return Err(format!("Adjustment LUT length mismatch"));
+        }
+        let mut luts = Vec::new();
+        for v in values {
+            let lut = crate::awb_gain_adjust::Lut {
+                sample: number(v, "/ctlData")?,
+                x: array(v, "/rgct_in_ds")?,
+                y: array(v, "/bgcri_in_ds")?,
+                mapped_x: array(v, "/rgct_lut_out")?,
+                mapped_y: array(v, "/bgcri_lut_out")?,
+            };
+            for axis in [&lut.x[..], &lut.y[..]] {
+                let descending = axis[axis.len() - 1] < axis[0];
+                if axis.windows(2).any(|p| {
+                    if descending {
+                        p[0] <= p[1]
+                    } else {
+                        p[0] >= p[1]
+                    }
+                }) {
+                    return Err(format!("Adjustment axis must be strictly monotone"));
+                }
+            }
+            luts.push(lut);
+        }
+        if luts.windows(2).any(|p| p[0].sample > p[1].sample) {
+            return Err(format!("Adjustment sample levels must not descend"));
+        }
+        let offsets = array(v, "/wbGainOffset/offset")?;
+        Ok(Self {
+            bounds_enabled: flag(v, "/wbGainClip/enable")?,
+            daylight_enabled: flag(v, "/wbGainDaylightClip/enable")?,
+            adjustment_enabled: flag(a, "/enable")?,
+            temperature_mode,
+            sample_from_luma,
+            luts,
+            offsets: if flag(v, "/wbGainOffset/enable")? {
+                Some(offsets)
+            } else {
+                None
+            },
+        })
+    }
+}
+/// One explicitly selected wb_v32 scene. File I/O and initial persistent state
+/// remain external; this owns the numerical settings rather than picking scenes.
+pub struct Scene {
+    pub lights: Lights,
+    pub single: SingleColor,
+    pub common: Common,
+    pub preprocessing: Preprocessing,
+    pub optional: OptionalProcessing,
+    pub site: crate::awb_site::Settings,
+    pub site_path: String,
+}
+impl Scene {
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        let ext = at(wb, "/autoExtPara")?;
+        let site = at(ext, "/avaSiteRec")?;
+        let path = at(site, "/fullFileName")?
+            .as_str()
+            .ok_or_else(|| format!("Expected saved-site path"))?;
+        if path.as_bytes().contains(&0) {
+            return Err(format!("Saved-site path contains NUL"));
+        }
+        Ok(Self {
+            lights: Lights::from_value(wb)?,
+            single: SingleColor::from_value(at(ext, "/singleColorProces")?)?,
+            common: Common::from_value(ext)?,
+            preprocessing: Preprocessing::from_value(ext)?,
+            optional: OptionalProcessing::from_value(ext)?,
+            site: crate::awb_site::Settings {
+                enabled: flag(site, "/enable")?,
+                frame_limit: integer(site, "/frameNum", 0, u32::MAX as i64)? as u32,
+                reuse_enabled: flag(site, "/avaEnable")?,
+                gain_threshold: number(site, "/wbgainTh")?,
+                sample_threshold: number(site, "/lvValueTh")?,
+            },
+            site_path: path.to_string(),
+        })
+    }
+    /// Build borrowed postprocessing settings inside their valid lifetime.
+    /// The wrapper supplies the current smart-run damping threshold and samples.
+    pub fn with_post_settings<R>(
+        &self,
+        brightness: u32,
+        luma_sample: f32,
+        iso: f32,
+        damping_threshold: f32,
+        run: impl FnOnce(&crate::awb_postprocess::Settings<'_>) -> R,
+    ) -> Result<R, crate::InvalidInput> {
+        let clip = crate::awb_gain_clip::Calibration {
+            first: self.common.lines[0],
+            second: self.common.lines[1],
+            daylight: self.optional.daylight_enabled,
+            daylight_threshold: self.common.probability_thresholds[3],
+            daylight_minimum_cct: self.common.daylight_cct_minimum,
+            bounds: if self.optional.bounds_enabled {
+                Some(crate::awb_gain_clip::Bounds {
+                    cct: &self.common.clip_tables[0],
+                    negative_tint: &self.common.clip_tables[1],
+                    positive_tint: &self.common.clip_tables[2],
+                })
+            } else {
+                None
+            },
+        };
+        let adjustment = crate::awb_gain_adjust::Settings {
+            temperature_mode: self.optional.temperature_mode,
+            sample: if self.optional.sample_from_luma {
+                luma_sample
+            } else {
+                iso
+            },
+            first: self.common.lines[0],
+            second: self.common.lines[1],
+        };
+        let post = crate::awb_postprocess::Settings {
+            history_target: self.common.history_weights.len() as i32,
+            tolerance: self.preprocessing.tolerance(brightness)?,
+            history_convergence: self.common.history_convergence,
+            damped_convergence: self.common.damped_convergence,
+            damping_threshold,
+            brightness,
+            clipping: if self.optional.daylight_enabled || self.optional.bounds_enabled {
+                Some(&clip)
+            } else {
+                None
+            },
+            adjustment: if self.optional.adjustment_enabled {
+                Some(crate::awb_postprocess::Adjustment {
+                    luts: &self.optional.luts,
+                    settings: &adjustment,
+                })
+            } else {
+                None
+            },
+            offsets: self.optional.offsets,
+            first: self.common.lines[0],
+            second: self.common.lines[1],
+        };
+        Ok(run(&post))
+    }
+}

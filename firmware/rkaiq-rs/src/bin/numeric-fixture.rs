@@ -260,6 +260,13 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-scene-parse" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                println!("{}",match shieldsigner_rkaiq::awb_calibration::Scene::from_value(&v){
+                    Ok(c)=>serde_json::json!({"lights":c.lights.entries.len(),"first":c.lights.first_frame,"candidates":c.single.candidates.len(),"mode":c.single.mode,"optional":[c.optional.bounds_enabled,c.optional.daylight_enabled,c.optional.adjustment_enabled,c.optional.offsets.is_some()],"temperature":c.optional.temperature_mode,"luma":c.optional.sample_from_luma,"luts":c.optional.luts.len(),"site":[c.site.enabled,c.site.reuse_enabled],"site_frames":c.site.frame_limit,"site_thresholds":[c.site.gain_threshold.to_bits(),c.site.sample_threshold.to_bits()],"site_path":c.site_path}),
+                    Err(e)=>serde_json::json!({"error":e}),
+                });
+            }
             "awb-iq-environment" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
                 let c=shieldsigner_rkaiq::awb_calibration::Common::from_value(&v["iq"]).unwrap();

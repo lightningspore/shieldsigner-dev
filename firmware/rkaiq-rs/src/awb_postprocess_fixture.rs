@@ -124,13 +124,33 @@ pub fn run(v: &Value) -> Value {
             probability: v["probability"].as_f64().unwrap() as f32,
         })
         .collect();
-    state
-        .finish(
-            awb_gain::normalize(array(&v["candidate"])).unwrap(),
-            &lights,
-            &settings,
-        )
-        .unwrap();
+    if let Some(wb) = v.get("scene_iq") {
+        let scene = crate::awb_calibration::Scene::from_value(wb).unwrap();
+        scene
+            .with_post_settings(
+                settings.brightness,
+                v["sample"].as_f64().unwrap() as f32,
+                v["iso"].as_f64().unwrap() as f32,
+                settings.damping_threshold,
+                |post| {
+                    state.finish(
+                        awb_gain::normalize(array(&v["candidate"])).unwrap(),
+                        &lights,
+                        post,
+                    )
+                },
+            )
+            .unwrap()
+            .unwrap();
+    } else {
+        state
+            .finish(
+                awb_gain::normalize(array(&v["candidate"])).unwrap(),
+                &lights,
+                &settings,
+            )
+            .unwrap();
+    }
     output(&state)
 }
 pub fn output(state: &State<32>) -> Value {

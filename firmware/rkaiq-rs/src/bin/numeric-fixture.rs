@@ -380,6 +380,41 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-environment" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let f = |k: &str| v[k].as_f64().unwrap() as f32;
+                let n = |k: &str| v[k].as_i64().unwrap();
+                let history = core::array::from_fn(|i| {
+                    let r = &v["history"][i];
+                    ae_environment::Record {
+                        error: r["error"].as_f64().unwrap() as f32,
+                        published_exposure: r["published"].as_f64().unwrap() as f32,
+                        queued: core::array::from_fn(|j| r["queued"][j].as_f64().unwrap() as f32),
+                    }
+                });
+                let mut state = ae_environment::State {
+                    priming: v["priming"].as_bool().unwrap(),
+                    queued_count: n("count") as u32,
+                    held_exposure: f("held"),
+                };
+                let out = ae_environment::adjust(
+                    &mut state,
+                    &history,
+                    n("index") as u32,
+                    n("frame") as i32,
+                    n("sync") as i32,
+                    f("current"),
+                    f("candidate"),
+                )
+                .unwrap();
+                println!(
+                    "{:08x},{:08x},{},{}",
+                    out.to_bits(),
+                    state.held_exposure.to_bits(),
+                    state.queued_count,
+                    state.priming as u8
+                );
+            }
             "ae-brightness" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let f = |k: &str| v[k].as_f64().unwrap() as f32;

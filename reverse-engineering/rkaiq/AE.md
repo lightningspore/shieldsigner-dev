@@ -544,3 +544,33 @@ correction, transition holding, route dispatch and sensor scheduling are not
 included in this prefix. The output must not yet be treated as a complete live
 AE command. The separately recovered dynamic damping and delay routines remain
 to be integrated with their native context/history population.
+
+
+## Environment-history exposure correction
+
+`ae_environment::adjust` reconstructs the complete linear branch of
+`AecClmExpChkForEnv` (ELF 0xa379c). It selects current/previous records from a
+five-entry ring. The frame offset is clamped to at least one; when it is below
+the queued-exposure count, that queued value from the previous record is the
+reference, otherwise the previously published exposure is used. Matching error
+directions constrain the candidate toward that reference; direction reversal
+leaves the candidate unchanged. The initial-history path clears priming and
+queued count and stores the current exposure as the held value.
+
+Six hundred native comparisons cover distinct ring slots/queued entries,
+positive/negative/zero errors, priming, zero through six queued exposures and
+frame offsets before/within/beyond the queue. Candidate float bits and all
+context changes match; unrelated bytes are checked for preservation. Host and
+ARM replay pass. [Equivalence report](ae-environment-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-environment.py --arm
+```
+
+The history records and queue count are explicit inputs. Their producer
+functions and association with actual sensor/ISP frames still need integration;
+this helper does not itself establish that association or schedule sensor
+writes. HDR is excluded, and the checked API rejects nonfinite history,
+queue counts above six and negative/out-of-range ring indices.

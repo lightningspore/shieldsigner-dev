@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 600,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "complete linear AecClmExpChkForEnv return path, candidate/state updates and unrelated context preservation",
+  "limitations": [
+    "Finite linear history, queue counts 0 through 6 and nonnegative bounded ring index; HDR excluded.",
+    "History population, queue-to-frame association and physical sensor delays are explicit inputs, not established by this helper.",
+    "Standard signed division/remainder is modeled; no live feedback writes are introduced."
+  ]
+}

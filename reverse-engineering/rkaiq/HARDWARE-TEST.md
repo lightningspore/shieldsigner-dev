@@ -202,3 +202,41 @@ Once a complete, reviewed `isp32_isp_params_cfg` record is available, use `camer
 ```
 
 It requires known vendor processes to be stopped and makes no persistent boot changes. The first JSON event indicates dequeue, not verified image-frame application. While the parameter stream is held open, a separate terminal can attempt image/statistics capture on the appropriate other nodes. Normal parameter stream-off disables/clears configuration, so finishing this command can affect capture still in progress. Preserve its final JSON report and actual frames/errors. [Exact behavior, ABI, first-buffer semantics and remaining limits](PARAMETERS.md).
+
+### Development first-frame parameter generator (0.0.29-dev)
+
+The development source now provides an offline command, separate from the frozen
+0.0.28 kit:
+
+```sh
+camera-probe make-initial-parameters sc3336_CMK-OT2119-PC1_30IRC-F16.json initial.bin > initial-report.json
+```
+
+It selects scene 0/0 explicitly and produces the full 11,145-byte kernel record.
+The checkpoint uses the profile's constant BLC tables, ISO derived from initial
+exposure gains, recovered demosaic selection/packing, normalized first-frame D50
+WB gains, gamma curve, and explicit profile CSM/CGC values. Other ordinary ISP
+modules and VSM are disabled; no mesh buffers or imported file descriptors are
+required by these selected blocks. Nonconstant BLC tables are rejected pending
+integration of their recovered selection path. The output file must not exist.
+
+This is an experimental fixed first-frame configuration, **not complete RKAIQ
+initialization or an automatic 3A controller**. The JSON reports the requested
+sensor exposure (3 ms and gain 1 for the pinned profile), but this command does
+not apply it. Queue ownership, sensor exposure programming and image startup
+must still be coordinated. Do not close the parameter queue before starting the
+image stream: STREAMOFF clears the driver's saved first configuration. No
+vendor-free frame has yet been demonstrated.
+
+Reproduce offline checks with the release host binaries built:
+
+```sh
+uv run --python 3.13 reverse-engineering/rkaiq/scripts/initial-parameters-check.py
+uv run --python 3.13 --with unicorn==2.1.4 --with pyelftools==0.32 python reverse-engineering/rkaiq/scripts/isp-color.py
+```
+
+The first check covers assembled masks, stage-1 black level, gamma values,
+malformed profile rejection and output collision protection. The second compares
+the selected gamma/CSM/CGC dispatcher branches against original ARM instructions,
+including all unrelated parameter bytes. Neither proves complete startup parity
+or image quality.

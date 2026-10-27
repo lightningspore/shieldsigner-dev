@@ -20,10 +20,13 @@ pub mod discovery;
 pub mod engine;
 pub mod exposure;
 pub mod gain;
+#[cfg(feature = "diagnostics")]
+pub mod initial_parameters;
 pub mod isp32;
 pub mod isp_ae_measurement;
 pub mod isp_awb_measurement;
 pub mod isp_black_level;
+pub mod isp_color;
 pub mod isp_demosaic;
 pub mod isp_pipeline;
 pub mod media;

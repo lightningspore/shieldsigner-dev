@@ -380,6 +380,39 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "isp-color" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut params = [0x5au8; isp32::PARAMETER_BYTES];
+                let mode = v["mode"].as_i64().unwrap() as i32;
+                match v["kind"].as_str().unwrap() {
+                    "gamma" => {
+                        let curve: [u16; 49] =
+                            core::array::from_fn(|i| v["curve"][i].as_u64().unwrap() as u16);
+                        isp_color::gamma(
+                            &mut params,
+                            mode != 0,
+                            v["segment"].as_u64().unwrap() as u8,
+                            v["dense"].as_bool().unwrap(),
+                            v["offset"].as_u64().unwrap() as u16,
+                            &curve,
+                        );
+                    }
+                    "csm" => {
+                        let coefficients =
+                            core::array::from_fn(|i| v["coefficients"][i].as_f64().unwrap() as f32);
+                        isp_color::csm(&mut params, mode, 1, 2, 3, &coefficients).unwrap();
+                    }
+                    "cgc" => isp_color::cgc(&mut params, mode, 1, 0),
+                    _ => panic!("kind"),
+                }
+                println!(
+                    "{}",
+                    params
+                        .iter()
+                        .map(|x| format!("{x:02x}"))
+                        .collect::<String>()
+                );
+            }
             "ae-measurement" => {
                 use shieldsigner_rkaiq::{isp32::PARAMETER_BYTES, isp_ae_measurement::*};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

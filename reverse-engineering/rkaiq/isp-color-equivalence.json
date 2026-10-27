@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 120,
+  "mismatches": 0,
+  "seed": "0x434f4c",
+  "scope": "Full 11145-byte output; selected gamma/CSM/CGC dispatcher branches; controlled valid typed casts",
+  "limitations": [
+    "Calibration selection and AgammaProcessing are not covered.",
+    "No live ISP application or image quality qualification.",
+    "Finite CSM coefficients are restricted by the Rust API to magnitude <=255; native out-of-domain conversions are outside this comparison."
+  ]
+}

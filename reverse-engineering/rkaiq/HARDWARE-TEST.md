@@ -1503,3 +1503,30 @@ qualification.
 116 statistics frames. Camera ownership exited successfully and the preview
 thread joined without an exception. The source and binary hashes identify this
 development checkpoint; the frozen test kit is not replaced.
+
+## Frozen development kit 0.0.32-dev
+
+Latest experimental archive: `dist/reverse-engineering/rkaiq-camera-test-0.0.32-dev.zip`
+(25,753,775 bytes), SHA-256
+`ea322a0f9c37e82f51abafa1d12a9a180db08744fabeb31a1ca965b2960b725f`.
+Source revision `77902e79b735d8a9d2b7aa63403c0a4474458e85`.
+The prior 0.0.31-dev archive is unchanged. Do not replace either frozen ZIP.
+
+The ZIP entry set matches its manifest. All 314 manifest files (81,248,213
+uncompressed bytes) pass host and actual-board hash checks, repeated after
+execution. The bundled static camera self-test and bundled real application
+integration check pass; all sixteen generated QR/rotation cases pass.
+The exact packaged binary produced 46 sampled previews, first in 0.866 s,
+with owner exit zero and 1.057 s stop in this run. Background SD/verification
+work overlapped some testing; these timings are observations, not guarantees.
+[Package evidence](kit-0.0.32-dev-hardware-validation.json) retains the precise
+source, archive hash and measured results. This was a warm-board test; it does
+not replace the separately identified clean-reboot evidence or prove a physical
+power cycle. The full original IQ, optical QR, physical lighting/color changes
+and complete LCD/button qualification remain outside this package result.
+
+The archive includes the development restart and scan-loop checks plus recent
+AWB replay, shutter/gain timing and startup-convergence evidence. Each report
+identifies its own binary/scope; packaging historical evidence does not retest
+every behavior with the newly packaged binary. Use the archive's own quickstart
+with version 0.0.32-dev and fresh configuration/results paths.

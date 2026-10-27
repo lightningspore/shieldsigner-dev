@@ -5,6 +5,8 @@ use std::io::{self, BufRead};
 mod ae_pipeline_fixture;
 #[path = "../ae_result_fixture.rs"]
 mod ae_result_fixture;
+#[path = "../ae_session_fixture.rs"]
+mod ae_session_fixture;
 #[path = "../awb_preparation_fixture.rs"]
 mod awb_preparation_fixture;
 #[path = "../awb_translation_fixture.rs"]
@@ -30,6 +32,10 @@ fn main() {
         let line = line.unwrap();
         let a: Vec<_> = line.split_whitespace().collect();
         match a[0] {
+            "ae-session" => println!(
+                "{}",
+                ae_session_fixture::run(&serde_json::from_str(a[1]).unwrap())
+            ),
             "ae-preparation" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let out = ae_startup::profile::linear(

@@ -1,0 +1,41 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "profileSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "runtimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "headerSha256": {
+    "aec_head.h": "06c18174d9cad642660ad867a3c21103c38b1dd329e2338e51bf5610941f93fa",
+    "sensorinfo_head.h": "aa04e304e4cf410a960b7b04dca3b268066bd4fc024cd57508e85a50de0ed0db",
+    "moduleinfo_head.h": "39e84f41614136a723bfacd498fbef71a52276e13966e05202f3dd14eb51bcec",
+    "rk_aiq_comm.h": "de9ed8fa5194f2883e9a32ea209e0599d1352afdcddf27e53bc8418e975a1327"
+  },
+  "processed": 109,
+  "skipped": 19,
+  "nativeCalls": {
+    "AePreProcess": 136,
+    "AecPreProcess": 128,
+    "AecGetPreResults": 128,
+    "AeProcessing": 136,
+    "AecGetEnvLgt": 128,
+    "AecRun": 136,
+    "AecGetProcResults": 136
+  },
+  "sequences": 8,
+  "frames": 128,
+  "nativeMath": [
+    "ceilf",
+    "floorf",
+    "log10f",
+    "pow",
+    "powf",
+    "roundf"
+  ],
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "Real initialization/preparation, initial publication, then complete native AePreProcess/AeProcessing wrappers on persistent contexts versus profile-bound Rust standard linear sessions.",
+  "limitations": [
+    "Fixed-rate ordinary auto SC3336 profile; backlight/overexposure/lux/automatic-flicker/HDR/iris/DCG modes remain excluded from the Rust session.",
+    "Allocation, module lookup, memory primitives, integer division and logs are modeled; native pinned uClibc math executes.",
+    "Only listed preprocessing/controller/publication/sample state, full exposure-info record, publication records, control history and route times are compared; unlisted context and other ISP/pre-result structures excluded.",
+    "Effective exposure for each frame is the previous native proposal, replayed as an explicit common input; this is not physical application latency or hardware association. No sensor/ISP writes."
+  ]
+}

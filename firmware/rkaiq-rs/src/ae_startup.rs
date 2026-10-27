@@ -30,6 +30,8 @@ impl History {
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Output {
+    /// PIris gain then step metadata; this does not enable iris control.
+    pub iris: [i32; 2],
     /// Retained before register conversion, including requested ISP gain.
     pub requested_aggregate: f32,
     pub held_aggregate: f32,
@@ -76,6 +78,7 @@ pub fn linear(
         };
     }
     Ok(Output {
+        iris,
         requested_aggregate: aggregate,
         held_aggregate: aggregate,
         current,
@@ -329,4 +332,105 @@ pub mod profile {
             register_policy: policy,
         })
     }
+}
+
+/// Reproduce the SDK's initial no-statistics processing/publication phase.
+/// Omitting this phase leaves the first controller history reference empty.
+pub fn publish_initial(
+    startup: Output,
+    timing: crate::ae_publication::Timing,
+    measurement: &[u8; crate::ae_geometry::RECORD_BYTES],
+) -> Result<crate::ae_pipeline::State, InvalidInput> {
+    use crate::{
+        ae_controller, ae_convergence, ae_delay, ae_environment, ae_frame, ae_pipeline,
+        ae_publication, ae_run,
+    };
+    let zero = ae_route::Point {
+        time: 0.,
+        gain: 0.,
+        isp_gain: 0.,
+    };
+    let mut raw = ae_publication::pack(
+        ae_route::Point {
+            time: startup.current.seconds,
+            gain: startup.current.gain,
+            isp_gain: startup.current.isp_gain,
+        },
+        startup.current.codes,
+        -1,
+        timing,
+    );
+    raw[196..200].copy_from_slice(&(startup.iris[1] as u32).to_le_bytes());
+    raw[200..204].copy_from_slice(&(startup.iris[0] as u32).to_le_bytes());
+    let mut records = [[0; 244]; 6];
+    records[..=startup.intermediate_count].fill(raw);
+    let mut previous = [0; 244];
+    previous[196..200].copy_from_slice(&u32::MAX.to_le_bytes());
+    let mut empty = [0; 244];
+    empty[..213].copy_from_slice(&measurement[420..633]);
+    let mut state = ae_pipeline::State {
+        iris: [startup.iris[1] as u32, startup.iris[0] as u32],
+        frame: ae_frame::State {
+            error_history: [0.; 10],
+            target: 0.,
+            current_error: 0.,
+            convergence: ae_convergence::State {
+                dynamic_enabled: 0,
+                gating_enabled: 0,
+            },
+        },
+        runtime: ae_run::State {
+            previous_q8: [0; 3],
+            previous_mean: 0.,
+            previous_hdr_means: [0.; 3],
+        },
+        controller: ae_controller::State {
+            history: [ae_environment::Record::default(); 5],
+            index: 0,
+            environment: ae_environment::State {
+                priming: false,
+                queued_count: 0,
+                held_exposure: startup.held_aggregate,
+            },
+            delay: ae_delay::State::default(),
+            cache: ae_route::Cache {
+                exposure: 0.,
+                relative_threshold: 0.003,
+                force: true,
+                point: zero,
+            },
+            previous_error: 0.,
+            reference_error: 0.,
+            saturated: false,
+        },
+        publication: ae_publication::State {
+            previous_final: previous,
+            empty_reference: empty,
+            published: [[0; 244]; 6],
+            published_count: 0,
+            synchronized_frame: 0,
+            last_result_frame: 0,
+        },
+        retained_records: records,
+        retained_count: startup.intermediate_count + 1,
+        last_aggregate: startup.requested_aggregate,
+    };
+    // AecRun(NULL stats) advances -1 to zero and records the pre-frame sample.
+    state.controller.history[0].frame = -1;
+    ae_publication::finish(
+        &mut state.publication,
+        &mut state.frame.convergence,
+        &mut state.controller.history,
+        0,
+        startup.requested_aggregate,
+        ae_convergence::Exposure {
+            time_code: 0,
+            gain_code: 0,
+            isp_gain: 0.,
+        },
+        &records[..state.retained_count],
+        -1,
+    )?;
+    state.controller.environment.queued_count = state.publication.published_count as u32;
+    Ok(state)
 }

@@ -26,6 +26,43 @@ pub fn linear(
     calibration: Calibration<'_>,
     policy: ae_register::Policy,
 ) -> Result<Output, InvalidInput> {
+    linear_with_iris(
+        state,
+        convergence,
+        history,
+        index,
+        proposed,
+        target_aggregate,
+        held_aggregate,
+        effective,
+        frame,
+        count,
+        route,
+        limits,
+        calibration,
+        policy,
+        [0, 0],
+    )
+}
+/// Retain PIris step/gain metadata on the final ordinary non-iris record.
+/// Intermediate direct-route records use zero iris gain and step.
+pub fn linear_with_iris(
+    state: &mut ae_publication::State,
+    convergence: &mut ae_convergence::State,
+    history: &mut [ae_environment::Record; 5],
+    index: u32,
+    proposed: ae_route::Point,
+    target_aggregate: f32,
+    held_aggregate: f32,
+    effective: ae_convergence::Exposure,
+    frame: i32,
+    count: usize,
+    route: &mut [ae_route::Point],
+    limits: ae_route::Limits,
+    calibration: Calibration<'_>,
+    policy: ae_register::Policy,
+    iris: [u32; 2],
+) -> Result<Output, InvalidInput> {
     if state.published_count > 6 {
         return Err(InvalidInput::Length);
     }
@@ -64,8 +101,8 @@ pub fn linear(
         line_length: calibration.line_length_pixels as u16,
         pixel_clock_mhz: calibration.pixel_clock_mhz,
     };
-    let pack = |c: ae_register::Output| {
-        ae_publication::pack(
+    let pack = |c: ae_register::Output, iris: [u32; 2]| {
+        let mut record = ae_publication::pack(
             ae_route::Point {
                 time: c.seconds,
                 gain: c.gain,
@@ -74,13 +111,16 @@ pub fn linear(
             c.codes,
             -1,
             timing,
-        )
+        );
+        record[196..200].copy_from_slice(&iris[0].to_le_bytes());
+        record[200..204].copy_from_slice(&iris[1].to_le_bytes());
+        record
     };
     let mut records = [[0; 244]; 6];
     for (i, entry) in conversion.intermediate.iter().enumerate().take(count) {
-        records[i] = pack(entry.ok_or(InvalidInput::Length)?.converted);
+        records[i] = pack(entry.ok_or(InvalidInput::Length)?.converted, [0, 0]);
     }
-    records[count] = pack(conversion.current);
+    records[count] = pack(conversion.current, iris);
     let publication = ae_publication::finish(
         state,
         convergence,

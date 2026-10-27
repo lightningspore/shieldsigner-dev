@@ -58,6 +58,7 @@ fn initialize(v: &serde_json::Value) -> (ae_pipeline::State, Vec<ae_route::Point
         }
     }
     let state = ae_pipeline::State {
+        iris: [0, 0],
         frame: ae_frame::State {
             error_history: core::array::from_fn(|i| {
                 v["damping_history"][i].as_f64().unwrap() as f32

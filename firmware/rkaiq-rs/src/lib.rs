@@ -289,3 +289,6 @@ pub mod ae_smoothing;
 pub mod ae_lifecycle;
 
 pub mod ae_startup;
+
+#[cfg(feature = "diagnostics")]
+pub mod ae_session;

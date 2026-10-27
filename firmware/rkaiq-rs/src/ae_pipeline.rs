@@ -6,6 +6,8 @@ use crate::{
 };
 #[derive(Clone, Copy, Debug)]
 pub struct State {
+    /// PIris step then gain metadata, including when iris control is disabled.
+    pub iris: [u32; 2],
     pub frame: ae_frame::State,
     pub runtime: ae_run::State,
     pub controller: ae_controller::State,
@@ -62,7 +64,7 @@ pub fn linear(
     state.publication.published_count = state.controller.environment.queued_count as usize;
     if let Some(control) = frame_output.control {
         state.last_aggregate = control.aggregate_exposure;
-        let result = ae_result::linear(
+        let result = ae_result::linear_with_iris(
             &mut state.publication,
             &mut state.frame.convergence,
             &mut state.controller.history,
@@ -77,6 +79,7 @@ pub fn linear(
             limits,
             calibration,
             register_policy,
+            state.iris,
         )?;
         state.retained_records = result.proposed_records;
         state.retained_count = result.proposed_count;

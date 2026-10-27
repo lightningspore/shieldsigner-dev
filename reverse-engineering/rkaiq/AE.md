@@ -1388,11 +1388,80 @@ startup smoothing history. Native execution also verifies running state 3,
 control index -1 and an empty publication queue after preparation.
 
 This establishes native construction through preparation and matching selected
-Rust startup outputs. It does not yet construct the full Rust engine state or
-connect the prepared state to first-frame preprocessing, control/publication,
-SOF scheduling and physical exposure association. Live AE/AWB and hardware
-writes remain disabled.
+Rust startup outputs. The session below now connects the tested ordinary subset
+to first-frame preprocessing and control/publication. Full private-context
+construction, SOF scheduling and physical exposure association remain separate.
+Live AE/AWB and hardware writes remain disabled.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-preparation.py --arm
+```
+
+## Profile-bound session through complete SDK frame wrappers
+
+`ae_session::Session` now creates the prepared ordinary linear state from the
+IQ profile and runtime timing, then accepts associated exposure records and
+translated statistics for successive frames. It composes the existing target,
+policy, damping, delay, histogram controller, routing, conversion and publication
+ports. No synthetic controller history or constant target is supplied by the
+new fixture: target curves, tolerances, alternate damping and smoothing derive
+from the actual profile and runtime state.
+
+The native SDK has an essential **initial publication phase** between preparation
+and image frames. `AePreProcess(init=true)` publishes the starting exposure;
+`AeProcessing(init=true)` calls `AecRun` without statistics, advances the control
+index from -1 to zero, records the pre-frame history and publishes the initial
+exposure queue. The first actual image frame then advances to index one. Calling
+`AecRun` on statistics immediately after preparation omits this history and can
+select minimum exposure even at a matching mean/target. `ae_startup::publish_initial`
+reproduces the actual initialization phase rather than setting a guessed priming
+flag. The native `rk_aiq_uapi_ae_setAOV` setter controls the separate 0x5994 flag;
+ordinary startup does not require enabling that optional path.
+
+The new oracle runs real `AePrepare`, the initial SDK wrapper calls, then full
+`AePreProcess` and `AeProcessing` for each frame on the same allocated native
+context. This includes normal returns from `AecPreProcess`, `AecGetPreResults`,
+`AecGetEnvLgt`, `AecRun` and `AecGetProcResults`; preprocessing is not stopped at
+the older current-error checkpoint. The standard preprocessing side effects now
+include the full effective-exposure record, Q8/auxiliary means, exposure-normalized
+brightness and proximity to minimum/maximum exposure. The recovered
+`AecGetEnvLgt` state also produces the previously explicit alternate-damping flag.
+It preserves the binary's multiplication order and float 5% change threshold.
+
+Joining real initialization revealed result-state details hidden by fresh
+synthetic contexts:
+
+- Final exposure records retain PIris step/gain metadata even with iris disabled.
+  Normal intermediate direct-route records use zero iris gain. This differs from
+  the initially seeded smoothing history, which retains the configured iris gain.
+- Native result buffers persist across frame calls. Only `max(count, 1)` records
+  are overwritten, so unused queue entries retain earlier values. The session
+  models this caller buffer separately from publication selection scratch data.
+- The native empty-queue reference overlaps measurement data and live convergence/
+  exposure-limit flags. Its defined bytes derive from the configured measurement
+  record and are kept consistent with the session's runtime flags.
+
+[Session comparison](ae-session-equivalence.json) passes **eight sessions and
+128 complete frames** on host and ARM: 109 controller runs and 19 skips, with
+zero mismatches. It records complete wrapper calls and native math functions. It compares initialized state
+and every subsequent frame: listed controller/queue/sample fields, target/error
+history, full exposure-info bytes, complete publication records and retained tails,
+all five environment-history records, route times and standard preprocessing state.
+The corpus changes scene brightness, initial exposure, smoothing enable/delays and
+geometry. Effective exposure is explicitly replayed from the previous native
+proposal as a common input; it is an idealized association, not measured sensor
+application latency.
+
+This session currently requires the profile's enabled automatic linear mode,
+translated raw-statistics mean, fixed FPS and zero algorithm run interval.
+Backlight/overexposure, lux estimation, automatic flicker estimation, HDR, active
+iris and DCG still need their remaining orchestration. Other ISP/pre-result
+structures and unlisted private context bytes are outside the new comparison.
+Allocation/module lookup, memory primitives, integer division and logs remain
+modeled boundaries; pinned native uClibc math executes as ARM instructions.
+Camera statistics association, sensor/ISP writes, AWB and application integration
+remain open. This is a software session, not a claim of a complete camera service.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-session.py --arm
 ```

@@ -44,16 +44,7 @@ pub fn linear(
     q8: [u16; 3],
     hdr_means: [f32; 3],
 ) -> Result<Output, InvalidInput> {
-    let run = ae_run_flag::select(
-        ae_run_flag::Policy {
-            enabled_4fb9: state.convergence.gating_enabled,
-            channel_mode_23cd: 0,
-            unchanged_23cf: [controller.delay.changed as u8, 0, 0],
-            overrides_3d3c: [controller.cache.force as u8, 0, 0],
-        },
-        &runtime.previous_q8[..1],
-        &q8[..1],
-    )? != 0;
+    let run = should_run(state, runtime, controller, q8)?;
     if run {
         input.measured = f32::from(q8[0]) / 256.;
         state.target = ae_target::select(
@@ -96,4 +87,22 @@ pub fn linear(
         preprocessing_error: state.current_error,
         control,
     })
+}
+/// Native run/skip predicate shared with the full standard preprocessing path.
+pub fn should_run(
+    state: &State,
+    runtime: &ae_run::State,
+    controller: &ae_controller::State,
+    q8: [u16; 3],
+) -> Result<bool, InvalidInput> {
+    Ok(ae_run_flag::select(
+        ae_run_flag::Policy {
+            enabled_4fb9: state.convergence.gating_enabled,
+            channel_mode_23cd: 0,
+            unchanged_23cf: [controller.delay.changed as u8, 0, 0],
+            overrides_3d3c: [controller.cache.force as u8, 0, 0],
+        },
+        &runtime.previous_q8[..1],
+        &q8[..1],
+    )? != 0)
 }

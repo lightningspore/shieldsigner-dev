@@ -172,3 +172,13 @@ linear **Gain1** position. This removes the purple black-level bias observed
 in earlier captures; [native and hardware evidence](AWB.md#initial-gain-application-position--corrected)
 records the correction. Automatic white balance and broader color accuracy
 remain unfinished.
+
+### Profile-bound ordinary AE session
+
+The Rust `ae_session::Session` now joins profile preparation, the SDK's initial
+publication phase and successive ordinary linear AE frames. Its comparison runs
+complete native `AePreProcess`/`AeProcessing` wrappers rather than stopping
+preprocessing at the earlier checkpoint. [Session evidence and boundaries](AE.md#profile-bound-session-through-complete-sdk-frame-wrappers)
+cover the retained controller/publication state and remaining optional modes.
+Exposure association is still an explicit input; no live sensor/ISP control or
+complete AE/AWB camera-service qualification is implied.

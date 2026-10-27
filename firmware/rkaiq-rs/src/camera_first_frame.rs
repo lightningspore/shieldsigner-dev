@@ -12,16 +12,32 @@ fn auto_frame_sc3336(args: &[String]) -> io::Result<()> {
     first_frame_sc3336_mode(args, None, true, None)
 }
 fn auto_awb_frame_sc3336(args: &[String]) -> io::Result<()> {
-    if args.len() != 7 {
-        return Err(error("auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE"));
+    if !matches!(args.len(), 6 | 8) {
+        return Err(error("auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE [--frames 33..96]"));
     }
-    let scale = args[6]
-        .parse::<u32>()
-        .map_err(|_| error("Invalid AWB sample scale"))?;
-    if scale == 0 || scale > i32::MAX as u32 {
-        return Err(error("Invalid AWB runtime inputs"));
-    }
-    first_frame_sc3336_with_gain(&args[..6], None, true, Some(scale), None, true)
+    let frames = if args.len() == 8 {
+        if args[6] != "--frames" {
+            return Err(error("Expected --frames"));
+        }
+        let n = args[7]
+            .parse::<u32>()
+            .map_err(|_| error("Invalid frame count"))?;
+        if !(33..=96).contains(&n) {
+            return Err(error("Live diagnostic requires 33..96 image frames"));
+        }
+        Some(n)
+    } else {
+        None
+    };
+    first_frame_sc3336_with_gain(
+        &args[..6],
+        None,
+        true,
+        Some(shieldsigner_rkaiq::awb_session::SINGLE_CAMERA_SAMPLE_SCALE),
+        None,
+        true,
+        frames,
+    )
 }
 fn awb_measurement_frame_sc3336(args: &[String]) -> io::Result<()> {
     if args.len() != 7 {
@@ -52,7 +68,15 @@ fn awb_gain_frame_sc3336(args: &[String]) -> io::Result<()> {
             return Err(error("Gain outside ISP Q8 range"));
         }
     }
-    first_frame_sc3336_with_gain(&args[..6], None, false, Some(scale), Some(gain), false)
+    first_frame_sc3336_with_gain(
+        &args[..6],
+        None,
+        false,
+        Some(scale),
+        Some(gain),
+        false,
+        None,
+    )
 }
 fn first_frame_sc3336_mode(
     args: &[String],
@@ -60,7 +84,15 @@ fn first_frame_sc3336_mode(
     automatic: bool,
     awb_sample_scale: Option<u32>,
 ) -> io::Result<()> {
-    first_frame_sc3336_with_gain(args, observer, automatic, awb_sample_scale, None, false)
+    first_frame_sc3336_with_gain(
+        args,
+        observer,
+        automatic,
+        awb_sample_scale,
+        None,
+        false,
+        None,
+    )
 }
 fn first_frame_sc3336_with_gain(
     args: &[String],
@@ -69,6 +101,7 @@ fn first_frame_sc3336_with_gain(
     awb_sample_scale: Option<u32>,
     gain_override: Option<[f32; 4]>,
     live_awb: bool,
+    image_frames: Option<u32>,
 ) -> io::Result<()> {
     use shieldsigner_rkaiq::{
         calibration::{RuntimeTiming, SensorCalibration},
@@ -387,7 +420,10 @@ fn first_frame_sc3336_with_gain(
                 command.extend(["--warmup".into(), (frame + 8).to_string()]);
             }
             if automatic {
-                command.extend(["--warmup".into(), "32".into()]);
+                command.extend([
+                    "--warmup".into(),
+                    (image_frames.unwrap_or(33) - 1).to_string(),
+                ]);
             } else if awb_sample_scale.is_some() {
                 command.extend(["--warmup".into(), "8".into()]);
             }

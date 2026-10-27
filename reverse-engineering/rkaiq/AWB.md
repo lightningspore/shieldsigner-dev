@@ -2360,3 +2360,56 @@ Source invariants and remaining limits are retained in the committed hardware
 validation. Sample-scale provenance, full variable reconfiguration policy,
 physical latency/color qualification, cold startup and continuous application
 integration remain work; this is not yet the completed replacement library.
+
+
+### Single-camera scale and longer live capture (2026-10-27)
+
+The sample-scale provenance is now resolved for this single-camera path.
+The original single-camera `create_context` (ELF 0xbd5f4, mapped 0xcd5f4) calls
+`AwbInitV32`, then writes **1** to context `+0x369c` and zero to `+0x3698`.
+The separate camera-group creator copies a configured value instead. Generic
+factory symbols are duplicated across algorithms, so the reference resolves
+the single-camera symbol by its pinned entry rather than by name alone.
+
+`awb_session::SINGLE_CAMERA_SAMPLE_SCALE` supplies that value automatically to
+the live command. `mise run camera:rust:awb-single-camera-scale` runs the actual
+single-camera factory through normal return, with module lookup and AwbInitV32
+as explicit successful storage/calibration boundaries. Four initial fill patterns
+verify the scale, single/group flag, returned pointer and preservation of all
+other context bytes. Host/ARM Rust agree. This does not claim complete native
+calibration initialization. The newly inspected single-camera processing
+wrapper (ELF 0xbcdb8) also corroborates the existing AE pre-result `+0x34` and
+linear analogue/digital/ISP gain bindings used by the live owner.
+
+Current live syntax has **no sample-scale or ISO argument**:
+
+```sh
+/tmp/shieldsigner-camera-probe-live-awb auto-awb-frame-sc3336 \
+  /tmp/shieldsigner-pipeline-sof.json /tmp/sc3336-awb-30ms-8x.private.json \
+  /dev/video20 /dev/video11 /tmp/ss-20261027-live-awb-07 /dev/video19 \
+  --frames 96
+```
+
+`--frames` is optional, defaults to 33 image dequeues, and accepts 33..96 for this
+bounded diagnostic. Old chronological examples describe the binaries that
+produced those older captures. Explicit scale inputs remain available for
+component/offline experiments and the older measurement-only commands.
+
+Physical capture 07 passed with 96 image dequeues (saved image sequence 95),
+64 AE/AWB statistics frames and 62 normal time-share frames across both groups.
+Final statistics were frame 94 / parameter ID 93; the final gain held at roughly
+`[1.441269, 1, 1, 1.826460]`. The image contains readable text. No vendor camera
+processes appeared in the before/after checks. The protocol checker passed,
+and all 7,680 translated bytes match original ARM using the effective normal
+SDK. Image sequence and statistics frame remain distinct; this does not prove
+physical per-frame exposure latency or color accuracy.
+
+The source build, 85 library tests, no-default-features build and simulated
+capture/queue checks pass. Captures 01/02 were SHA-256 compared with their local
+archives before removing only their temporary board copies to free `/tmp`.
+No capture evidence was lost, and no boot/kernel/service changes occurred.
+
+The remaining practical work includes sustained application streaming (current
+event/snapshot histories still have bounded diagnostic limits), variable
+measurement reconfiguration epochs and cold-start qualification. This longer
+run is a checkpoint, not a completed replacement-library claim.

@@ -298,6 +298,7 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-single-camera-scale" => println!("{}",awb_session::SINGLE_CAMERA_SAMPLE_SCALE),
             "awb-schedule-init" => {
                 let n:u8=a[1].parse().unwrap(); let capacity:u8=a[2].parse().unwrap();
                 match awb_measurement_schedule::initialize(n,capacity) {

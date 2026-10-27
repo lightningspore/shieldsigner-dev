@@ -1,0 +1,14 @@
+{
+  "kind": "single-camera-awb-scale-binding",
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 4,
+  "scale": 1,
+  "mismatches": 0,
+  "arm": true,
+  "elfEntry": "0xbd5f4",
+  "scope": "Original single-camera factory through normal return, preserving all context bytes except its scale and single/group-mode bindings",
+  "limitations": [
+    "Module lookup and native AwbInitV32 are controlled success boundaries; no full calibration/startup initialization equivalence.",
+    "Camera-group creator is separate and not used for this single-CIF route."
+  ]
+}

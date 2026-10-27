@@ -1,6 +1,6 @@
 {
   "kind": "experimental-live-ae-awb-hardware-check",
-  "cameraBinarySha256": "732f70267ab6956c42ad04d43f15b6a841ec51e47000924ad490d719903df345",
+  "cameraBinarySha256": "152e7b97ee6a4a948d5e9e2ea4319050ccaa226ff731a31acf384519fffa249d",
   "runs": [
     {
       "run": "01",
@@ -166,20 +166,56 @@
       "allObservedAwbIdsRegistered": true,
       "finalStatisticsTranslationMatchesSavedHeader": true,
       "nativeEffectiveTranslationMismatches": 0
+    },
+    {
+      "run": "07",
+      "cameraBinarySha256": "152e7b97ee6a4a948d5e9e2ea4319050ccaa226ff731a31acf384519fffa249d",
+      "success": true,
+      "imageFramesRequested": 96,
+      "savedImageSequence": 95,
+      "awbFrames": 64,
+      "aeFrames": 64,
+      "firstGain": [
+        1.4872161149978638,
+        1.0,
+        1.0,
+        1.826420783996582
+      ],
+      "lastGain": [
+        1.4412685632705688,
+        1.0,
+        1.0,
+        1.8264601230621338
+      ],
+      "lastFrame": 94,
+      "lastParametersId": 93,
+      "controllerFrames": 19,
+      "countdown": 0,
+      "savedImageBytes": 460800,
+      "normalFrames": 62,
+      "normalGroups": [
+        0,
+        1
+      ],
+      "maxActiveLights": 7,
+      "sampleScale": 1,
+      "sampleScaleSource": "Original single-camera factory literal; selected automatically",
+      "vendorProcessChecksBeforeAfterEmpty": true,
+      "nativeEffectiveTranslationMismatches": 0
     }
   ],
   "libraryTests": 85,
   "simulatedFirstFrameSequencePassed": true,
   "rollbackChecksOnHostAndLuckfox": 64,
   "limitations": [
-    "Runs 01-04 used fixed FAST; 05 is rejected; 06 transitions to normal zero-reserved groups. Full native outer reconfiguration policy and variable-limit/weight signature epochs remain separate.",
-    "Runs 01/02 use missing-exposure brightness fallback; 03 binds AE brightness with explicit ISO 400; 04 binds AE brightness and native-equivalent dynamic ISO. Sample scale 1 still lacks native provenance.",
+    "Runs 01-04 used fixed FAST; 05 is rejected; 06/07 transition to normal zero-reserved groups. Full native outer reconfiguration policy and variable-limit/weight signature epochs remain separate.",
+    "Runs 01/02 used brightness fallback; 03 bound brightness with explicit ISO; later runs bind brightness and native-equivalent ISO. Run 07 also selects the proven single-camera scale automatically.",
     "Physical per-frame gain/exposure latency, color accuracy and vendor-free cold startup remain unqualified.",
     "Short bounded diagnostic captures, not yet a continuous application camera service.",
     "Full joined original startup/controller equivalence remains unproven."
   ],
   "lastTranslationComparisons": {
-    "runs": 5,
+    "runs": 6,
     "bytesEach": 7680,
     "mismatches": 0,
     "snapshotAssociation": "Per-run registered effective SDK; capture 06 uses saved normal time-share SDK, not initial FAST SDK."
@@ -201,5 +237,12 @@
     "bytesEach": 164,
     "hostAndArmReplayPassed": true,
     "reservedLights": 0
+  },
+  "singleCameraScaleBinding": {
+    "elfEntry": "0xbd5f4",
+    "nativeFactoryReturnChecks": 4,
+    "scale": 1,
+    "hostAndArmReplayPassed": true,
+    "calibrationAndInitAreExplicitBoundaries": true
   }
 }

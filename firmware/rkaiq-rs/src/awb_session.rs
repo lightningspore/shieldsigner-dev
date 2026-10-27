@@ -13,6 +13,10 @@ use crate::{
 use alloc::{format, string::String, vec, vec::Vec};
 use serde_json::Value;
 
+/// The original single-camera create_context (ELF 0xbd5f4) writes 1 to
+/// context +0x369c; its camera-group creator uses a separate configured value.
+pub const SINGLE_CAMERA_SAMPLE_SCALE: u32 = 1;
+
 #[derive(Clone)]
 struct Header {
     update: bool,

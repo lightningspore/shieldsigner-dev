@@ -6,6 +6,7 @@
 pub mod ae;
 pub mod ae_brightness;
 pub mod ae_configuration;
+pub mod ae_controller;
 pub mod ae_damping;
 pub mod ae_decision;
 pub mod ae_delay;

@@ -380,6 +380,141 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-controller" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let f = |k: &str| v[k].as_f64().unwrap() as f32;
+                let b = |k: &str| v[k].as_bool().unwrap();
+                let point = ae_route::Point {
+                    time: 0.003,
+                    gain: 1.,
+                    isp_gain: 1.,
+                };
+                let mut state = ae_controller::State {
+                    history: core::array::from_fn(|i| ae_environment::Record {
+                        frame: i as i32,
+                        current_exposure: 0.003,
+                        published_exposure: 0.003,
+                        error: if i % 2 == 0 { 0.2 } else { -0.2 },
+                        queued: [0.003, 0.006, 0.009, 0.012, 0.015, 0.018],
+                        queued_count: 2,
+                    }),
+                    index: v["index"].as_u64().unwrap() as u32,
+                    environment: ae_environment::State {
+                        priming: b("priming"),
+                        queued_count: 2,
+                        held_exposure: 0.003,
+                    },
+                    delay: Default::default(),
+                    cache: ae_route::Cache {
+                        exposure: 0.003,
+                        relative_threshold: 0.01,
+                        force: b("force"),
+                        point,
+                    },
+                    previous_error: f("previous"),
+                    reference_error: f("reference"),
+                    saturated: b("saturated"),
+                };
+                let mut route = vec![
+                    (0., 1.),
+                    (0.01, 1.),
+                    (0.01, 4.),
+                    (0.02, 8.),
+                    (0.03, 15.5),
+                    (0.03, 512.),
+                ]
+                .into_iter()
+                .map(|(time, gain)| ae_route::Point {
+                    time,
+                    gain,
+                    isp_gain: 1.,
+                })
+                .collect::<Vec<_>>();
+                let h = v["histogram"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|x| x.as_u64().unwrap() as u32)
+                    .collect::<Vec<_>>();
+                let out = ae_controller::step(
+                    &mut state,
+                    &mut route,
+                    &h,
+                    ae_decision::Input {
+                        target: 45.,
+                        measured: f("measured"),
+                        current_exposure: f("exposure"),
+                        tolerance_percent: 10.,
+                        minimum_exposure: 0.00005,
+                        maximum_exposure: 15.36,
+                        saturated: false,
+                    },
+                    ae_controller::Policy {
+                        damping_under: 0.5,
+                        damping_over: 0.4,
+                        fps: f("fps"),
+                        delay_enabled: b("enabled"),
+                        same_mode: b("same_mode"),
+                        negative_delay: 3,
+                        positive_delay: 2,
+                    },
+                    ae_route::Limits {
+                        minimum_time: 0.00005,
+                        maximum_time: 0.03,
+                        minimum_gain: 1.,
+                        maximum_gain: 512.,
+                        time_quantum: 0.01,
+                        floor_tolerance_coefficient: 8.,
+                        line_length: 2800.,
+                        pixel_clock_mhz: 114.24,
+                    },
+                    v["frame"].as_i64().unwrap() as i32,
+                    v["sync"].as_i64().unwrap() as i32,
+                )
+                .unwrap();
+                let mut words = vec![
+                    out.aggregate_exposure.to_bits(),
+                    out.point.gain.to_bits(),
+                    out.point.isp_gain.to_bits(),
+                    out.point.time.to_bits(),
+                    out.relative_error.to_bits(),
+                    state.previous_error.to_bits(),
+                    state.reference_error.to_bits(),
+                    state.environment.held_exposure.to_bits(),
+                    state.environment.queued_count,
+                    state.environment.priming as u32,
+                    state.delay.negative_start as u32,
+                    state.delay.positive_start as u32,
+                    state.delay.negative_count as u32,
+                    state.delay.positive_count as u32,
+                    state.delay.changed as u32,
+                    state.cache.exposure.to_bits(),
+                    state.cache.point.gain.to_bits(),
+                    state.cache.point.isp_gain.to_bits(),
+                    state.cache.point.time.to_bits(),
+                    state.cache.force as u32,
+                    state.saturated as u32,
+                ];
+                for r in state.history {
+                    words.extend([
+                        r.frame as u32,
+                        r.current_exposure.to_bits(),
+                        r.published_exposure.to_bits(),
+                        r.error.to_bits(),
+                    ]);
+                    words.extend(r.queued.map(f32::to_bits));
+                    words.push(r.queued_count);
+                }
+                words.extend(route.iter().map(|p| p.time.to_bits()));
+                println!(
+                    "{}",
+                    words
+                        .iter()
+                        .map(|w| format!("{w:08x}"))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                );
+            }
             "ae-history" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let f = |k: &str| v[k].as_f64().unwrap() as f32;

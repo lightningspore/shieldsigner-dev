@@ -605,3 +605,44 @@ queue entries before changing history. HDR and iris remain excluded. These
 writers supply the record format required by the recovered correction, but
 ring advancement, queued exposures and association to real captured frames
 must still come from the surrounding controller; automatic writes remain off.
+
+
+## Connected standard linear control step
+
+`ae_controller::step` connects the reconstructed pieces in the order used by
+`AecClmExecute` (ELF 0xa40c8): histogram solve and fixed directional damping,
+current-history write, environment correction, transition-delay gate,
+error-direction/held-exposure handling, cached automatic route dispatch and
+publication of the resulting time/gain/ISP-gain aggregate. It carries the
+native error/cache/delay/history state between calls. Queue-history publication
+remains a separate call after the surrounding controller supplies its queue.
+
+The comparison now executes the **complete native brightness-control call
+through normal return**, including the original subordinate numerical/control
+routines. One hundred sixty cases compare resulting gain, ISP gain, shutter,
+aggregate exposure, relative/previous/reference errors, environment/hold state,
+delay counters, cache, all 220 history bytes and route-time mutation. Other
+native context bytes are checked for preservation. Cases exercise bright/dark
+measurements, deadband boundaries, priming, error reversal, holds, mode resets,
+cache/force and saturation/FPS effects. Host and ARM replay pass.
+[Connected-controller report](ae-controller-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-controller.py --arm
+```
+
+The checked branch uses standard linear histogram policy, fixed damping,
+a uniform supplied tolerance and non-iris successful route paths. Dynamic
+damping/alternate control modes and native error-path partial publication are
+excluded. The harness models integer division/remainder and imported rounding.
+This verifies the connected algorithm branch, not a running camera service.
+
+The caller must still supply the applied exposure corresponding to the
+statistics, calibrated/runtime limits and policies, frame/synchronization IDs,
+ring advancement and queued real exposures. Sensor conversion/control writes,
+ISP digital-gain publication, actual delay association and automatic white
+balance remain to be connected and tested. No live automatic writes are
+enabled by this addition; errors can leave intermediate algorithm state
+changed, so callers must not publish a failed step as a successful decision.

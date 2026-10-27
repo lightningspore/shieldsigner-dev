@@ -10,6 +10,7 @@ pub mod ae_histogram;
 pub mod awb_gain;
 pub mod awb_preparation;
 pub mod awb_probability;
+pub mod awb_translation;
 #[cfg(feature = "diagnostics")]
 pub mod calibration;
 #[cfg(feature = "diagnostics")]

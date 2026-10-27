@@ -3,6 +3,8 @@ use shieldsigner_rkaiq::*;
 use std::io::{self, BufRead};
 #[path = "../awb_preparation_fixture.rs"]
 mod awb_preparation_fixture;
+#[path = "../awb_translation_fixture.rs"]
+mod awb_translation_fixture;
 fn f(s: &str) -> f32 {
     f32::from_bits(u32::from_str_radix(s, 16).unwrap())
 }
@@ -24,6 +26,10 @@ fn main() {
         let line = line.unwrap();
         let a: Vec<_> = line.split_whitespace().collect();
         match a[0] {
+            "awb-translation" => println!(
+                "{}",
+                awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
+            ),
             "awb-preparation" => println!(
                 "{}",
                 awb_preparation_fixture::run(&serde_json::from_str(a[1]).unwrap())

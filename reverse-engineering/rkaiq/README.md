@@ -2,6 +2,8 @@
 
 **Status: partial numerical reconstruction and camera-test tools. This is not a replacement `librkaiq.so`, and the existing image is unchanged.** The active objective is a Rust implementation of the camera-processing path used by ShieldSigner. Real camera tests are deferred to the next hardware session.
 
+**Current priority: a runnable single-camera path.** Connect live graph/format setup, calibrated initial parameters and persistent queues before expanding optional algorithms or releasing more isolated routine kits. The next functional checkpoint is a usable SC3336 frame without vendor bootstrap, followed by the application's QR capture and required exposure/white-balance behavior. [Critical path and current blockers](ISP.md#current-implementation-priority).
+
 ## What is implemented
 
 - Ten recovered numerical routines in [`firmware/rkaiq-rs`](../../firmware/rkaiq-rs): scalar interpolation, saturation color-matrix interpolation, saturation-offset interpolation, 9×9×9 RGB LUT blending, defect-pixel calibration interpolation, the multiplicative gain-quantization branch, and the full linear/two-frame/three-frame gain-register conversion, ISO calibration selection, ISP32 white-balance gain serialization, and exposure digital-gain application.
@@ -56,7 +58,7 @@ Six AWB gain/temporal routines now match **6,000 native ARM cases**, including w
 
 AWB illumination probabilities and their weighted output gain now match **2,000 complete native sequences**: selected-region white-point filtering, gain distance, brightness, per-light curves, combined probabilities and channel accumulation/normalization. The preparation stage below supplies selected counts/gains from full SDK frames; calibrated input construction and the outer controller remain unfinished. See [AWB.md](AWB.md#illumination-probabilities-and-weighted-gain).
 
-Complete SDK AWB measurement preparation now matches **500 native sequences across 1,144 frames**, including the original stability gate, time-share completeness, per-light pregain adjustment, grid conversion, exclusion aggregation and histograms. **124 sequences include fast group −1**, preserving its native history/histogram behavior. Full kernel-to-SDK translation, calibration loading, outer AWB policy and live startup remain unfinished. See [AWB.md](AWB.md#measurement-preparation-and-time-share-state).
+Complete SDK AWB measurement preparation now matches **500 native sequences across 1,144 frames**, including the original stability gate, time-share completeness, per-light pregain adjustment, grid conversion, exclusion aggregation and histograms. **124 sequences include fast group −1**, preserving its native history/histogram behavior. Live frame/configuration association, calibration loading, outer AWB policy and startup remain unfinished. The [full translation added in development](AWB.md#driver-to-sdk-translation-in-development) follows kit 0.0.28 and is not a new camera release.
 
 ## Exact originals
 

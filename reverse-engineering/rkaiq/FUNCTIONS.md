@@ -94,3 +94,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## AWB measurement preparation
 
 `awb_preparation::prepare` reconstructs the numerical/cache behavior of complete `PrepareMeasureResult`, ELF `0xc3180`, including original `IsMeasureResultStable4`, ELF `0xc2f90`. `stability` also exposes that gate separately. [SDK frame ABI, persistent buffers, fast group −1 and 500 native sequences/1,144 frames](AWB.md#measurement-preparation-and-time-share-state). Outer `AwbPreProcV32` scheduling/strategy is not included in this API.
+
+## Complete single-ISP AWB translation
+
+`awb_translation::translate` reconstructs the full RV1106 single-ISP value path of `RkAiqResourceTranslatorV32::translateAwbStats`, ELF `0x8818c`, including metadata, global RGB sums, debug descriptor and conditional output flags. `Configuration::from_measurement` reads the selected 1,204-byte SDK measurement record. [1,000 native comparisons](awb-translation-equivalence.json). This development addition after kit 0.0.28 does not establish applied-configuration correlation, live startup, multi-ISP delegation or C++ object ownership.

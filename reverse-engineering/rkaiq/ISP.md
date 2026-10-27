@@ -2,6 +2,14 @@
 
 The Rust replacement continues to use the Luckfox SDK's Linux ISP/sensor drivers and physical ISP hardware. The proprietary userspace RKAIQ library chooses calibrated parameters, configures the graph/queues, and runs the automatic control algorithms. Replacing that library requires all of those responsibilities; a frame captured from an already initialized pipeline does not establish independent startup.
 
+## Current implementation priority
+
+The next deliverable is one runnable SC3336/RV1106 camera path, rather than another release containing isolated routines. The first hardware checkpoint is a usable frame after starting with the vendor camera/bootstrap services disabled. Then verify the application's QR capture and the exposure/white-balance behavior required to make it reliable. This is a staged checkpoint toward the Rust replacement, not a redefinition of completion as fixed controls or vendor-assisted capture.
+
+The immediate bottlenecks are the live media/format backend, a sufficient calibrated initial ISP parameter record, and persistent ownership/order of the parameter and capture queues. Connect those before extending optional algorithm modes or adding broader equivalence corpora. Reuse the recovered algorithms needed by the actual single-camera linear path. HDR, multiple cameras/ISPs, unused tuning branches and optional image-quality features are deferred unless the functional path demonstrates a dependency on them.
+
+Current evidence still shows that `isp_pipeline` has a recorded backend, the kit does not generate a complete initial parameter record, and capture may depend on earlier vendor initialization. The existing numerical results remain useful validation, but additional passing routine counts do not satisfy this hardware checkpoint. The AWB translation implemented after kit 0.0.28 bridges raw statistics to the SDK preparation frame; it is development work and does not constitute a new runnable-camera release.
+
 ## Recovered ISP pad setup
 
 `isp_pipeline::setup` reconstructs `CamHwIsp20::setupPipelineFmtIsp`, ELF `0x2319c` (Ghidra `0x3319c`). The hardware prepare method invokes the higher-level `setupPipelineFmt` before entering prepared state. This pad helper is one part of prepare, not the complete initialization procedure.

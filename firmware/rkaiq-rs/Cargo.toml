@@ -1,6 +1,6 @@
 [package]
 name = "shieldsigner-rkaiq"
-version = "0.0.28"
+version = "0.0.29-dev"
 edition = "2021"
 publish = false
 

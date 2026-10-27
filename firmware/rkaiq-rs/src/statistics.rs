@@ -70,6 +70,9 @@ pub struct Statistics<'a> {
     bytes: &'a [u8],
 }
 impl<'a> Statistics<'a> {
+    pub(crate) fn raw_bytes(&self) -> &[u8] {
+        self.bytes
+    }
     /// Accept one packed payload or the driver's one-ISP 16-byte-aligned buffer.
     /// Lite, united/multi-ISP and arbitrary/truncated buffers are unsupported.
     pub fn parse(bytes: &'a [u8]) -> Result<Self, Error> {

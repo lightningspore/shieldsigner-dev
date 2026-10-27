@@ -449,6 +449,11 @@ fn first_frame_sc3336_with_gain(
                 "--timeout-ms".into(),
                 "10000".into(),
             ]);
+            if CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed) {
+                // A fresh ISP defaults to native 2304x1296. The app expects VGA,
+                // and native-sized image buffers exhaust this board's 12 MiB CMA.
+                command.extend(["--width".into(), "640".into(), "--height".into(), "480".into()]);
+            }
             if let Some((frame, _)) = step_codes {
                 command.extend(["--warmup".into(), (frame + 8).to_string()]);
             }

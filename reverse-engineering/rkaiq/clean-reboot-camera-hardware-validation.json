@@ -1,0 +1,209 @@
+{
+  "passed": true,
+  "sessions": [
+    {
+      "directory": "/shieldsigner-camera-tests/cold-25-sessions/camera-m60c2rim",
+      "firstFrameSeconds": 0.8142898759999966,
+      "samples": 31,
+      "received": 79,
+      "first": 3,
+      "last": 247,
+      "stopSeconds": 0.29597954100000123,
+      "ownerExitCode": 0,
+      "ownerLogSha256": "0126a2625e09168f91f316a031cc6423bd8378f996694513273b7924ae66efd2",
+      "savedImageFormat": {
+        "bufferType": 9,
+        "fourcc": "NV12",
+        "fourccValue": 842094158,
+        "height": 480,
+        "planeCount": 1,
+        "planes": [
+          {
+            "bytesPerLine": 640,
+            "sizeImage": 460800
+          }
+        ],
+        "width": 640
+      }
+    },
+    {
+      "directory": "/shieldsigner-camera-tests/cold-25-sessions/camera-5jovsb13",
+      "firstFrameSeconds": 0.6872789589999968,
+      "samples": 31,
+      "received": 78,
+      "first": 3,
+      "last": 246,
+      "stopSeconds": 0.33248045799999204,
+      "ownerExitCode": 0,
+      "ownerLogSha256": "1ed6ed1dd8ff91c7c817d78830f70e041a15ca71c32981cbc894bfe6c59d5e14",
+      "savedImageFormat": {
+        "bufferType": 9,
+        "fourcc": "NV12",
+        "fourccValue": 842094158,
+        "height": 480,
+        "planeCount": 1,
+        "planes": [
+          {
+            "bytesPerLine": 640,
+            "sizeImage": 460800
+          }
+        ],
+        "width": 640
+      }
+    }
+  ],
+  "binarySha256": "756e4dee6dbf1ba53e311b1f9ca349d7051143b65d48b803ed4c5f7b3960f18a",
+  "adapterSha256": "b2d0456a8d9ba968aca09cb783b4fd0da236b6813d43de1dcef7fbc812b7af60",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "missingOutputDirectoryRejected": true,
+  "competingOwner": {
+    "rejectedBeforeReconfiguration": true,
+    "directory": "/shieldsigner-camera-tests/cold-25-sessions/camera-19fe3e5c",
+    "exitCode": 1,
+    "ownerLogSha256": "8ed08b9cb88a2fa0cb65e6b47dbeef58ed0ee7085bf1eae871fa7b2fe4b305aa"
+  },
+  "earlyStop": {
+    "directory": "/shieldsigner-camera-tests/cold-25-sessions/camera-n9cwf4ml",
+    "ownerExitCode": 0,
+    "seconds": 0.37056687599999805,
+    "ownerLogSha256": "bcf9cc839db21fa43e490b67a0ec58c233624f83a3a9ce1cfee53e784568f5cc",
+    "noFabricatedImageOrStatistics": true
+  },
+  "parentExit": {
+    "directory": "/shieldsigner-camera-tests/cold-25-sessions/camera-piguwsc4",
+    "ownerPid": 956,
+    "cleanCameraFinish": true,
+    "ownerLogSha256": "ab9f21cb16da992849d70f7eba3c372fb5a2e276d4382b1c5a4aab7483a64813"
+  },
+  "kind": "clean-reboot-managed-camera-hardware-check",
+  "version": "0.0.31-dev",
+  "controlChecks": [
+    {
+      "capture": {
+        "kind": "normal-timeshare-live-capture-check",
+        "passed": true,
+        "aeFrames": 173,
+        "awbFrames": 173,
+        "normalFrames": 171,
+        "normalGroups": [
+          0,
+          1
+        ],
+        "finalFrame": 258,
+        "finalParametersId": 256,
+        "maxActiveLights": 7,
+        "nativeTranslationChecked": true,
+        "parameterSubmissions": 172,
+        "maxParameterSnapshots": 2,
+        "retiredParameterSnapshots": 171,
+        "scope": "Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification"
+      },
+      "nativeTranslation": {
+        "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "statisticsSha256": "f75befc5de3ef34b08c7b8f3a0e8eeaa3fb8bb25df1ad12d6734e2b35f03bff3",
+        "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+        "translatedSha256": "5a072345a76ebc3f59f28ec1687a7c9b895d23721e64ec6b43dd01dab8c3789a",
+        "frameId": 258,
+        "parametersId": 256,
+        "bytesCompared": 7680,
+        "mismatches": 0,
+        "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+        "limitations": [
+          "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+          "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+        ]
+      }
+    },
+    {
+      "capture": {
+        "kind": "normal-timeshare-live-capture-check",
+        "passed": true,
+        "aeFrames": 172,
+        "awbFrames": 172,
+        "normalFrames": 170,
+        "normalGroups": [
+          0,
+          1
+        ],
+        "finalFrame": 256,
+        "finalParametersId": 255,
+        "maxActiveLights": 7,
+        "nativeTranslationChecked": true,
+        "parameterSubmissions": 171,
+        "maxParameterSnapshots": 2,
+        "retiredParameterSnapshots": 170,
+        "scope": "Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification"
+      },
+      "nativeTranslation": {
+        "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "statisticsSha256": "bed7e885b9ce8c9d31aa7c9c93aec71a39214018a65afa758ae77772f73d8fbd",
+        "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+        "translatedSha256": "cf525f1dafaa63f607159457fe6e4ce120d8d5438a661d0f18f4078ecf04e4ea",
+        "frameId": 256,
+        "parametersId": 255,
+        "bytesCompared": 7680,
+        "mismatches": 0,
+        "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+        "limitations": [
+          "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+          "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+        ]
+      }
+    }
+  ],
+  "hardwareCheckScriptSha256": "726dd14ddaa7d879833773b6bef3840274a5b6aad9db5f346550e8801974a2f2",
+  "limitations": [
+    "Installed Camera wrapper exercised through a process-local override; default application files and boot unchanged.",
+    "Controlled clean reboot, not a physical power cycle; no general boot-service replacement.",
+    "No UI/QR scan, color accuracy or physical frame-latency qualification.",
+    "Lock excludes other stream owners, not independent low-level diagnostic commands.",
+    "Full variable AWB configuration policy remains open."
+  ],
+  "cleanBoot": {
+    "kind": "controlled-clean-reboot-pre-capture-check",
+    "passed": true,
+    "previousBootId": "45073c3b-4b33-4e65-9a59-cec4a9fa8664",
+    "bootId": "2195adb4-b096-4038-8777-6783a1cae45d",
+    "services": {
+      "S21appinit": {
+        "bootId": "2195adb4-b096-4038-8777-6783a1cae45d",
+        "service": "S21appinit",
+        "skipped": true,
+        "restoredSha256": "61dcd3bdb6740771b296611ab83e3238f9bc45b2ca0ec5ae78b542085be592e5"
+      },
+      "S99seedsigner": {
+        "bootId": "2195adb4-b096-4038-8777-6783a1cae45d",
+        "service": "S99seedsigner",
+        "skipped": true,
+        "restoredSha256": "b0b93fc8486d7d54e5d9ac1c5ef439fa86087f52123607a93f48d8292a518573"
+      }
+    },
+    "vendorCameraPids": "",
+    "vendorLibraryMappings": "",
+    "rockitModuleAbsent": true,
+    "modulesBeforeManagedCapture": "",
+    "physicalPowerCycle": false,
+    "startupScriptsRestored": true,
+    "matchingTemporaryBackupsRemoved": true
+  },
+  "initialImageFormatObserved": {
+    "width": 2304,
+    "height": 1296,
+    "bytesPerLine": 2304,
+    "sizeImage": 4478976,
+    "fourcc": "NV12"
+  },
+  "bootHelperSha256": {
+    "prepare-cold-boot.py": "cd31618055d52541561bdedf541b8b950dd17f8ee4f9ed685bd6e96ba9b78928",
+    "verify-cold-boot.py": "187c469bdd4b7377d60648768113b359db0fa9cc70e68087093c24289f7d9ec3",
+    "cold-camera-modules.sh": "ad0a31fc9d78de9d8500315c565e15b9e178c3ed65f3a73c76d0f8d6a4db95de"
+  },
+  "postCapture": {
+    "bootId": "2195adb4-b096-4038-8777-6783a1cae45d",
+    "originalStartupScriptHashesMatch": true,
+    "vendorCameraPidsAbsent": true,
+    "vendorLibraryMappingsAbsent": true,
+    "rockitModuleAbsent": true,
+    "abruptParentOwnerGone": true
+  }
+}

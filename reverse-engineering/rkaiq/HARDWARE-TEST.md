@@ -1,6 +1,7 @@
 # First camera session
 
-Current **0.0.31-dev source** has passed bounded live AE + AWB captures, including FAST-to-normal time sharing, on
+Current **0.0.31-dev source** has also passed the [controlled clean-reboot application test](#controlled-clean-reboot-with-live-aeawb-and-the-application-adapter), with vendor startup skipped.
+It has passed bounded live AE + AWB captures, including FAST-to-normal time sharing, on
 the SC3336/Luckfox. The opt-in `auto-awb-frame-sc3336` command and its remaining
 runtime limitations are documented in [AWB.md](AWB.md#rolling-snapshot-ownership-beyond-short-captures-2026-10-27).
 Current bounded live syntax takes the six path arguments and optional `--frames 33..3600`.
@@ -1026,14 +1027,14 @@ Use the verified graph plan for **your device nodes**, a fresh output basename,
 and the matching full IQ file already on the board. For the tested SC3336 graph:
 
 ```sh
-mkdir -p /mnt/sdcard/shieldsigner-camera-tests
+mkdir -p /shieldsigner-camera-tests
 /tmp/shieldsigner-camera-probe-live-awb stream-sc3336 \
   /tmp/shieldsigner-pipeline-sof.json \
   /oem/usr/share/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json \
   /dev/video20 /dev/video11 \
-  /mnt/sdcard/shieldsigner-camera-tests/session-UNIQUE \
+  /shieldsigner-camera-tests/session-UNIQUE \
   /dev/video19 /tmp/shieldsigner-camera.sock \
-  > /mnt/sdcard/shieldsigner-camera-tests/session-UNIQUE.log 2>&1
+  > /shieldsigner-camera-tests/session-UNIQUE.log 2>&1
 ```
 
 A reader in another process uses the same `start/read/stop` interface as the
@@ -1060,7 +1061,7 @@ UI or changing settings.
 
 `python/stream_hardware_check.py` provides that reproducible test. Copy it beside
 the adapter, then run it with `--continuous --stall-reader --stop-signal INT`,
-`--app-root /mnt/sdcard/seedsigner`, a fresh `--output`, matching `--socket`, and
+`--app-root /seedsigner`, a fresh `--output`, matching `--socket`, and
 `--` followed by the complete `stream-sc3336` command above (without shell
 redirection). It runs two eight-second reader sessions, checks increasing frame
 sequences, tests a stalled consumer, stops the owner, and saves images after
@@ -1145,9 +1146,9 @@ python3 managed_hardware_check.py \
   --binary /tmp/shieldsigner-camera-probe-live-awb \
   --plan /tmp/shieldsigner-pipeline-sof.json \
   --iq /oem/usr/share/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json \
-  --output-directory /mnt/sdcard/shieldsigner-camera-tests \
-  --app-root /mnt/sdcard/seedsigner \
-  --report /mnt/sdcard/shieldsigner-camera-tests/managed-UNIQUE.json
+  --output-directory /shieldsigner-camera-tests \
+  --app-root /seedsigner \
+  --report /shieldsigner-camera-tests/managed-UNIQUE.json
 ```
 
 This exercises the installed Camera wrapper through two separately owned
@@ -1162,3 +1163,76 @@ original-ARM translation comparison, with 172/169 AE+AWB statistics frames,
 are observations on the current warm board, not a cold-boot or latency guarantee.
 Full scan/UI integration, preview performance and vendor-free cold startup
 remain open work.
+
+## Controlled clean reboot with live AE/AWB and the application adapter
+
+Run 25 passed the current managed Camera path after a new kernel boot with
+vendor camera/application startup skipped. Before loading camera drivers,
+`/proc/modules` was empty, neither `rkipc` nor `rkaiq_3A_server` was running,
+and no process mapped `librkaiq` or `librockit`. Both one-boot markers matched
+the new boot ID. The original S21appinit and S99seedsigner scripts were restored
+byte-for-byte, verified against saved hashes, and their matching temporary
+backups removed. Future ordinary boots retain their original behavior.
+
+Only `cold-camera-modules.sh` was then run: it loads the available kernel
+camera/ISP drivers and clears the image's unready-device flags. It does not run
+the OEM loader, load Rockit/its MCU firmware, or start vendor userspace. The
+verified device graph plan and original full SC3336 IQ data remain required.
+The current Rust owner is a standalone static executable, not an ABI-compatible
+replacement library; the Python Camera adapter is the application integration.
+
+The two real Camera-owned sessions passed, including active AE/AWB, both normal
+AWB groups, restart, duplicate-owner rejection, immediate stop and parent crash
+cleanup. They processed 173/172 AE+AWB frames with 172/171 parameter submissions
+and at most two retained snapshots. Original ARM translation independently
+matched all 7,680 final statistics bytes in both sessions. First frames arrived
+in 0.69–0.81 s and normal stop/reap took 0.30–0.33 s. No vendor process/library
+mapping or Rockit module was present afterward. Evidence and exact artifact
+hashes: `clean-reboot-camera-hardware-validation.json`.
+
+The reboot found two initialization bugs that warm testing concealed. The ISP
+image endpoint defaults to 2304×1296, so `stream-sc3336` now explicitly requests
+640×480 NV12. Merely changing dimensions retained a 2304-byte row stride and
+1,259,520-byte extent, exhausting the 12 MiB CMA pool. Explicit geometry changes
+now clear the old V4L2 stride/size fields before S_FMT, letting the driver return
+640-byte rows and 460,800-byte image buffers. The final test started from native
+2304×1296 defaults and required no manual v4l2-ctl format setup. Earlier failed
+run 23 is not successful capture evidence.
+
+On this board the previous `/mnt/sdcard` view exposed the root filesystem; it
+was absent after reboot. The data was intact at `/shieldsigner-camera-tests`,
+and the application at `/seedsigner`. Current examples use these canonical
+paths, on the SD-backed ext4 root, rather than depending on that alias.
+
+For reproducing this **pinned image's** controlled test:
+
+1. Put the current binary, adapter, `managed_hardware_check.py`, graph plan and
+   `cold-camera-modules.sh` in persistent storage under `/shieldsigner-camera-tests`.
+   `/tmp` is cleared at reboot. Save any needed temporary evidence first.
+2. Run `uv run --python 3.13 python reverse-engineering/rkaiq/scripts/prepare-cold-boot.py
+   --serial SERIAL --output LOCAL-PREPARATION.json` from this repository. It
+   refuses unexpected startup script hashes or pending backups. It installs
+   one-boot wrappers but **does not reboot**. Each wrapper restores its original
+   script, records a boot-specific skip marker and exits without running it.
+3. Run `adb -s SERIAL shell sync`, then `adb -s SERIAL reboot`. After ADB returns,
+   run `verify-cold-boot.py --serial SERIAL --preparation LOCAL-PREPARATION.json
+   --output LOCAL-BOOT-CHECK.json` using uv/Python as above. It verifies a new
+   boot, both markers, restored original and backup hashes, and absent vendor
+   processes/libraries/Rockit, then removes only matching temporary backups.
+4. Run the saved `cold-camera-modules.sh` through the board's `sh`. Then run
+   `managed_hardware_check.py` as described above, using `/seedsigner` and the
+   persistent canonical paths. Do not start the restored original vendor service
+   before completing the test.
+
+These helpers apply only to the two explicitly pinned startup scripts. If a
+preparation is abandoned before reboot, restore each original from its saved
+`.NAME.shieldsigner-coldtest-backup`, verify the saved SHA-256 and then remove
+that matching backup. Do not delete a backup whose restoration is unverified.
+
+This is controlled **reboot** evidence for the current SC3336 linear path,
+including application-owned automatic control. It is not a physical power-cycle
+test, default boot-service integration, complete RKAIQ ABI parity, UI/QR decode
+qualification or a color/physical-latency guarantee. Per-command
+`coldStartProven:false` stays conservative; the separate external boot report
+records the conditions of this particular test. Full IQ data and private scene
+images remain outside the repository.

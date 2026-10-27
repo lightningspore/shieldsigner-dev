@@ -911,6 +911,19 @@ mod linux {
             if let Some(p) = pixel {
                 put32(raw, 8, p);
             }
+            if width.is_some() || height.is_some() {
+                // G_FMT's stride/extent describe the old geometry. Reusing them
+                // keeps native-width padding even after requesting a VGA image.
+                if kind == MPLANE {
+                    for plane in 0..PLANES {
+                        put32(raw, 20 + plane * 20, 0);
+                        put32(raw, 24 + plane * 20, 0);
+                    }
+                } else {
+                    put32(raw, 16, 0);
+                    put32(raw, 20, 0);
+                }
+            }
             ioctl(fd, SETFMT, &mut fmt)?;
         }
         let live_stream = if statistics { None } else { CameraFrameStream::from_environment(&fmt)? };

@@ -5,5 +5,5 @@
   "parameters": "/dev/video20",
   "image": "/dev/video11",
   "statistics": "/dev/video19",
-  "output_directory": "/mnt/sdcard/shieldsigner-camera-tests"
+  "output_directory": "/shieldsigner-camera-tests"
 }

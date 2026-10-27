@@ -2533,3 +2533,24 @@ snapshots is two. First frames arrive in 0.74–0.76 s and owner stop/reap takes
 0.30–0.32 s. The 85 library tests, three Unix transport tests, ARM build,
 no-default-features build and six existing simulated adapter scenarios pass.
 See `managed-camera-hardware-validation.json`.
+
+## Live AWB without vendor application initialization after reboot
+
+Controlled clean-reboot run 25 now covers the managed AE/AWB application path,
+not only the earlier fixed-exposure capture. Both vendor and UI startup were
+skipped for that boot with self-restoring, checksum-verified wrappers; camera
+kernel drivers were loaded explicitly without Rockit/MCU or vendor userspace.
+Two normal application sessions, owner exclusion, early cancellation and parent
+exit pass. Both sessions retain at most two parameter snapshots and independently
+match all 7,680 original ARM statistics translation bytes. The separate
+`clean-reboot-camera-hardware-validation.json` records boot markers, hashes,
+normal-group/control checks and scope.
+
+A native-size default and stale V4L2 row stride initially exhausted CMA. The
+continuous command now requests VGA explicitly, and explicit geometry changes
+clear prior stride/extent fields before S_FMT. The successful final reboot test
+required no manually prepared image format. Original startup scripts were
+restored and backup hashes verified before capture; normal future boot behavior
+is unchanged. This advances vendor-free userspace initialization for the pinned
+linear SC3336 profile; physical power-cycle testing, default UI/scan integration,
+color/latency qualification and remaining configuration policy are separate work.

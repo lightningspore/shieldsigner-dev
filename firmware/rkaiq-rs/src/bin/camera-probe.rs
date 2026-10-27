@@ -730,6 +730,17 @@ mod linux {
         }
         value
     }
+    fn camera_monotonic_ns() -> io::Result<u64> {
+        let mut value: libc::timespec = unsafe { std::mem::zeroed() };
+        if unsafe { libc::clock_gettime(libc::CLOCK_MONOTONIC, &mut value) } != 0 {
+            return Err(io::Error::last_os_error());
+        }
+        let seconds = u64::try_from(value.tv_sec).map_err(|_| error("Negative monotonic seconds"))?;
+        let nanos = u64::try_from(value.tv_nsec).map_err(|_| error("Negative monotonic nanoseconds"))?;
+        if nanos >= 1_000_000_000 { return Err(error("Invalid monotonic nanoseconds")); }
+        seconds.checked_mul(1_000_000_000).and_then(|v| v.checked_add(nanos))
+            .ok_or_else(|| error("Monotonic timestamp overflow"))
+    }
     fn check_camera_cancel(cancel: Option<&std::sync::atomic::AtomicBool>) -> io::Result<()> {
         if cancel.is_some_and(|flag| flag.load(std::sync::atomic::Ordering::Acquire)) {
             return Err(io::Error::new(

@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "6fcf77d0a58ce4beb63dd0610523adb71aa71d6528a7ad1171b70517ce4148aa",
+  "testBinarySha256": "021bf43e3190dd41041bc7787a1a82a224b8de390e5eb65e7b4e7ac94f646ba2",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -38,12 +38,12 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 6,
+      "rawFrames": 5,
       "savedBytes": 4478976,
-      "sofEvents": 7,
+      "sofEvents": 6,
       "statisticsEnabled": true,
-      "statisticsEvents": 6,
-      "statisticsFrames": 6
+      "statisticsEvents": 5,
+      "statisticsFrames": 5
     },
     {
       "automaticAe": false,
@@ -52,9 +52,9 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
-      "sofEvents": 6,
+      "sofEvents": 7,
       "statisticsEnabled": false,
       "statisticsEvents": 0,
       "statisticsFrames": 0
@@ -66,12 +66,12 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 6,
+      "rawFrames": 5,
       "savedBytes": 4478976,
-      "sofEvents": 7,
+      "sofEvents": 6,
       "statisticsEnabled": true,
-      "statisticsEvents": 6,
-      "statisticsFrames": 6
+      "statisticsEvents": 5,
+      "statisticsFrames": 5
     },
     {
       "automaticAe": true,
@@ -100,8 +100,8 @@
         "retiredParameterSnapshots": 0,
         "sensorTraceLimit": 256,
         "success": true,
-        "sensorWriteCount": 54,
-        "sensorQueryCount": 126
+        "sensorWriteCount": 48,
+        "sensorQueryCount": 112
       }
     },
     {
@@ -131,8 +131,8 @@
         "retiredParameterSnapshots": 0,
         "sensorTraceLimit": 256,
         "success": true,
-        "sensorWriteCount": 48,
-        "sensorQueryCount": 112
+        "sensorWriteCount": 54,
+        "sensorQueryCount": 126
       }
     }
   ],

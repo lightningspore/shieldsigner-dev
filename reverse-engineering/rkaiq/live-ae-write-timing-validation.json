@@ -1,0 +1,32 @@
+{
+  "kind": "live-app-automatic-ae-write-timing",
+  "passed": true,
+  "sensorWrites": 22,
+  "sofToWriteStartUsRange": [
+    401.917,
+    1238.125
+  ],
+  "writeDurationUsRange": [
+    644.292,
+    1386.584
+  ],
+  "allSchedulerEffectiveFramesAreSofPlusTwo": true,
+  "physicalApplicationVerified": false,
+  "capture": {
+    "directory": "/shieldsigner-camera-tests/live-37-results/camera-72msm9hw",
+    "firstFrameSeconds": 0.5125423330000558,
+    "first": 7,
+    "last": 234,
+    "samples": 68,
+    "received": 72,
+    "stopSeconds": 0.3250490830000672,
+    "ownerExitCode": 0
+  },
+  "opticalScanQualified": false,
+  "ownerLogSha256": "7c7752719769aa29e8e1d9dcbc19e000b5c48c75052ee9ccaa5fd3b71e35eb98",
+  "integrationReportSha256": "58e4fa6a1e2f1c71a509d8a9c3c1d4e9d9c3309ad78daa51fa338802e39a3d0c",
+  "limitations": [
+    "Monotonic telemetry bounds userspace dispatch and ioctl time; it does not measure sensor gain application.",
+    "Real frames exercised the application Camera adapter; complete UI/button and optical target qualification remain open."
+  ]
+}

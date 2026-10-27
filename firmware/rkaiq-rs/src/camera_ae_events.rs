@@ -393,7 +393,14 @@ where
                 if self.last_sof.is_some_and(|old| frame < old) {
                     return Err(error("Regressing AE SOF frame"));
                 }
+                let write_start_ns = camera_monotonic_ns().ok();
                 let out = self.runtime.on_sof(frame, &mut self.sensor);
+                let write_end_ns = camera_monotonic_ns().ok();
+                if out.scheduled.written.is_some() {
+                    println!("{}",json!({"event":"automatic-ae-sof-write","sofFrameId":frame,"sofTimestampNs":timestamp_ns,
+                        "writeStartNs":write_start_ns,"writeEndNs":write_end_ns,"clock":"CLOCK_MONOTONIC",
+                        "schedulerEffectiveFrame":out.scheduled.effective_frame,"success":out.driver_error.is_none() && out.scheduled.status==0,"physicalApplicationVerified":false}));
+                }
                 if let Some(e) = out.driver_error {
                     return Err(error(format!("AE sensor writer: {e:?}")));
                 }

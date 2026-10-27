@@ -1997,3 +1997,32 @@ updates can be cancelled by parameter STREAMOFF after image capture ends; a
 successful QBUF or saved image is not proof that every final proposal appeared
 in that image. Hardware qualification and a reviewed updated test kit remain
 outstanding.
+
+### Physical shutter response: development 0.0.32
+
+Six SC3336 hardware captures on 2026-10-27 stepped integration time between
+3 ms and 24 ms at SOFs 18, 19 and 20, in both directions. Analogue gain stayed
+at unity and frame length stayed fixed; no ISP parameter changes occurred.
+Statistics omit some frames, so each run reports an inclusive effect-delay
+interval rather than filling gaps. The six intervals intersect at exactly
+**two frames**, consistent with the configured integration-time delay.
+SOF-to-write-start was 0.672–1.151 ms and the shutter write took 0.412–0.616 ms.
+
+[Machine-readable evidence](exposure-step-latency-validation.json) includes
+input hashes, measured transitions and capture hashes. Reproduce with
+`scripts/exposure-step-latency.py --help`; the bright initial IQ is a private
+copy of the installed profile with only linear InitTimeValue changed to 0.024.
+Full IQ files, images and raw statistics remain local, outside the repository.
+
+This qualifies fixed-gain shutter steps in this measured operating condition.
+It does not establish analogue/digital gain delay, frame-length changes,
+physical timing under every workload, or full camera-service qualification.
+The automatic owner now emits monotonic SOF/write timing separately; scheduler
+effective-frame labels remain explicitly unverified physical application.
+
+A subsequent real application-Camera run produced 68 sampled previews, first
+frame in 0.513 s and clean stop in 0.325 s. All 22 automatic exposure writes
+succeeded, started 0.402–1.239 ms after SOF and took 0.644–1.387 ms.
+All scheduled effective-frame labels were SOF+2.
+[Live timing evidence](live-ae-write-timing-validation.json) distinguishes these
+software timing measurements from physical shutter-response measurements above.

@@ -396,7 +396,9 @@ mod raw_bridge {
                                 }
                                 if !step.applied && pair.0 == step.frame {
                                     let mut control = [0x00980911u32, step.code as u32];
+                                    let write_start_ns = camera_monotonic_ns()?;
                                     ioctl(step.file.as_raw_fd(), 0xc008561c, &mut control)?;
+                                    let write_end_ns = camera_monotonic_ns()?;
                                     control[1] = 0;
                                     ioctl(step.file.as_raw_fd(), 0xc008561b, &mut control)?;
                                     if control[1] as i32 != step.code {
@@ -405,7 +407,7 @@ mod raw_bridge {
                                     step.applied = true;
                                     println!(
                                         "{}",
-                                        json!({"event":"exposure-step-applied","sofFrameId":pair.0,"sofTimestampNs":pair.1,"beforeCode":step.before,"requestedCode":step.code,"readbackCode":control[1],"gainChanged":false,"frameLengthChanged":false,"physicalApplicationVerified":false,"automaticExposure":false})
+                                        json!({"event":"exposure-step-applied","sofFrameId":pair.0,"sofTimestampNs":pair.1,"writeStartNs":write_start_ns,"writeEndNs":write_end_ns,"clock":"CLOCK_MONOTONIC","beforeCode":step.before,"requestedCode":step.code,"readbackCode":control[1],"gainChanged":false,"frameLengthChanged":false,"physicalApplicationVerified":false,"automaticExposure":false})
                                     );
                                 }
                             }

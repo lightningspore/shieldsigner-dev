@@ -1,0 +1,328 @@
+{
+  "kind": "physical-sc3336-shutter-step-response",
+  "passed": true,
+  "hashes": {
+    "binary": "b2beaecfffd52f039e142756c10e2af2e502f9861de0f78d2c8aa6f828e4bbf2",
+    "dimIq": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "brightIq": "6397cf4fac1779cc3b35a0b32f2bff4fb63d92255dca052bc232710f11cb00dd",
+    "plan": "197596aefdb513f6d4c03d3bf862502d08e853715d54d506140ecdc4cc9e5b7e"
+  },
+  "cases": [
+    {
+      "name": "exposure-latency-36-increase-18",
+      "stepSof": 18,
+      "initialSeconds": 0.003,
+      "targetSeconds": 0.024,
+      "shutterCodes": [
+        122,
+        979
+      ],
+      "writeStartAfterSofUs": 851.958,
+      "writeDurationUs": 525.583,
+      "baselineLuma": 4.45703125,
+      "settledLuma": 33.26171875,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        2,
+        3
+      ],
+      "observedFractions": [
+        [
+          18,
+          0.0
+        ],
+        [
+          19,
+          -0.000136
+        ],
+        [
+          21,
+          1.000271
+        ],
+        [
+          22,
+          1.000136
+        ],
+        [
+          24,
+          0.999593
+        ],
+        [
+          25,
+          1.0
+        ]
+      ],
+      "logSha256": "2624c277d875901ecdfbd78acc79f114b497ae7a676a2191b4b5b73887fb19c7",
+      "statisticsSummarySha256": "51413192fa885522f4c9b412dea4b8d934594dbab2bec2495c32caea79b8fe71"
+    },
+    {
+      "name": "exposure-latency-36-increase-19",
+      "stepSof": 19,
+      "initialSeconds": 0.003,
+      "targetSeconds": 0.024,
+      "shutterCodes": [
+        122,
+        979
+      ],
+      "writeStartAfterSofUs": 699.417,
+      "writeDurationUs": 417.083,
+      "baselineLuma": 4.45703125,
+      "settledLuma": 33.27734375,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        1,
+        2
+      ],
+      "observedFractions": [
+        [
+          18,
+          0.0
+        ],
+        [
+          19,
+          0.0
+        ],
+        [
+          21,
+          0.999864
+        ],
+        [
+          22,
+          0.999864
+        ],
+        [
+          24,
+          1.000271
+        ],
+        [
+          25,
+          1.0
+        ],
+        [
+          27,
+          0.999864
+        ]
+      ],
+      "logSha256": "48891e37c7c3aa5cbaa9d6d9c1c9b886ca6777166b16aaab47e2f93f89cc17d1",
+      "statisticsSummarySha256": "5dfda4eb863b360d5b36b040027cb0950a049adff1447ce20cd3277b1964e99c"
+    },
+    {
+      "name": "exposure-latency-36-increase-20",
+      "stepSof": 20,
+      "initialSeconds": 0.003,
+      "targetSeconds": 0.024,
+      "shutterCodes": [
+        122,
+        979
+      ],
+      "writeStartAfterSofUs": 672.0,
+      "writeDurationUs": 411.542,
+      "baselineLuma": 4.45703125,
+      "settledLuma": 33.283203125,
+      "lastUnchangedFrame": 21,
+      "firstChangedFrame": 22,
+      "effectDelayFrames": [
+        2,
+        2
+      ],
+      "observedFractions": [
+        [
+          19,
+          0.0
+        ],
+        [
+          21,
+          0.0
+        ],
+        [
+          22,
+          1.000339
+        ],
+        [
+          24,
+          0.999932
+        ],
+        [
+          25,
+          0.99939
+        ],
+        [
+          27,
+          1.000339
+        ],
+        [
+          28,
+          1.000068
+        ]
+      ],
+      "logSha256": "ac6aeeb400c9da91b10f6c5962bfe585e5273f5aa8bf8e756f0d920bb080c789",
+      "statisticsSummarySha256": "87e8187f6a7d7e68888125a4890d7f1ef61f4536d5d0fe97acc1dd072afcbff5"
+    },
+    {
+      "name": "exposure-latency-36-decrease-18",
+      "stepSof": 18,
+      "initialSeconds": 0.024,
+      "targetSeconds": 0.003,
+      "shutterCodes": [
+        979,
+        122
+      ],
+      "writeStartAfterSofUs": 738.791,
+      "writeDurationUs": 420.0,
+      "baselineLuma": 33.28515625,
+      "settledLuma": 4.45703125,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        2,
+        3
+      ],
+      "observedFractions": [
+        [
+          18,
+          -0.000271
+        ],
+        [
+          19,
+          -0.000542
+        ],
+        [
+          21,
+          1.0
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          0.999729
+        ],
+        [
+          25,
+          1.0
+        ]
+      ],
+      "logSha256": "be37a373028c6c2333bd7129c412c9f0785aac529ddbffd996c9e9f786d01fc6",
+      "statisticsSummarySha256": "66ba45c5195e66819df99d575fe3b2946d771a5dc22dcafd9760879009e4a2ff"
+    },
+    {
+      "name": "exposure-latency-36-decrease-19",
+      "stepSof": 19,
+      "initialSeconds": 0.024,
+      "targetSeconds": 0.003,
+      "shutterCodes": [
+        979,
+        122
+      ],
+      "writeStartAfterSofUs": 1149.167,
+      "writeDurationUs": 444.208,
+      "baselineLuma": 33.296875,
+      "settledLuma": 4.4609375,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        1,
+        2
+      ],
+      "observedFractions": [
+        [
+          18,
+          -0.0
+        ],
+        [
+          19,
+          0.000406
+        ],
+        [
+          21,
+          1.000135
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          25,
+          1.000135
+        ],
+        [
+          27,
+          1.0
+        ]
+      ],
+      "logSha256": "98f1bc90a73241a75369f54303c498a0cd0829567ed62ac0699c86b62013cf90",
+      "statisticsSummarySha256": "506b795b70394771faf91cf68981e767e7b5c2b14dafe941583746afc31b40b2"
+    },
+    {
+      "name": "exposure-latency-36-decrease-20",
+      "stepSof": 20,
+      "initialSeconds": 0.024,
+      "targetSeconds": 0.003,
+      "shutterCodes": [
+        979,
+        122
+      ],
+      "writeStartAfterSofUs": 1150.334,
+      "writeDurationUs": 616.0,
+      "baselineLuma": 33.294921875,
+      "settledLuma": 4.462890625,
+      "lastUnchangedFrame": 21,
+      "firstChangedFrame": 22,
+      "effectDelayFrames": [
+        2,
+        2
+      ],
+      "observedFractions": [
+        [
+          19,
+          6.8e-05
+        ],
+        [
+          21,
+          6.8e-05
+        ],
+        [
+          22,
+          1.000203
+        ],
+        [
+          24,
+          1.002371
+        ],
+        [
+          25,
+          0.999932
+        ],
+        [
+          27,
+          1.000068
+        ],
+        [
+          28,
+          0.999932
+        ]
+      ],
+      "logSha256": "739d866aa0ded0446139f886cf71b1c1fcc43543ff61ef9f301d6ded781f8d95",
+      "statisticsSummarySha256": "6c579a84e95448ce7767c2096fccd72fefd02171b4dfe256704b2c58c9475623"
+    }
+  ],
+  "commonDelayIntervalFrames": [
+    2,
+    2
+  ],
+  "configuredSchedulerTimeDelayFrames": 2,
+  "configuredTimeDelayConsistent": true,
+  "scope": "Large shutter-only steps at three SOF phases, two directions, same scene and fixed analogue gain/frame length",
+  "limitations": [
+    "Sparse statistics yield inclusive frame intervals; no missing sample is invented.",
+    "Gain, digital gain and frame-length changes are not qualified by this test.",
+    "This does not qualify every runtime scheduling/load condition or full physical frame/exposure association."
+  ]
+}

@@ -1740,3 +1740,34 @@ parameter-pool reuse and live ISP submission remain unfinished.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-publication.py --arm
 ```
+
+### Single-ISP effective metadata
+
+`isp_effective::copy_metadata` reconstructs the ordinary single-ISP copy path in
+`CamHwIsp32::updateEffParams` (ELF `0x39700`). An existing effective-map record
+receives the converter's 1,938-byte AE cache at `0xae2c`, 44-byte black-level
+cache at `0xb5be`, and **unscaled** 32-byte WB cache at `0xb5ea`. If a latest AWB
+measurement configuration exists, its 1,204-byte payload is copied to `0xb60c`;
+otherwise those destination bytes stay unchanged. The two bytes at `0xb60a`
+and all other fields are preserved.
+
+These are metadata caches, distinct from the optionally scaled register output
+in the queued ISP parameter buffer. The native routine obtains the frame from
+that buffer, looks up/creates an effective-map item, and makes these copies.
+The Rust helper takes an existing record explicitly; it does not yet implement
+map allocation, retention, lookup, or frame association. Native split-ISP mode
+also accumulates selected register snapshots using module-update masks and
+prior effective records; that separate branch is not represented by this helper.
+
+`isp-effective.py` executes the original routine with its single-ISP flag
+explicitly selected. Sixteen cases vary all four caches, presence of the AWB
+configuration, and frames 0/1/31/UINT32_MAX. Host and ARM Rust match the entire
+47,808-byte effective record, including every preserved byte. Adapters supply
+map slots, previous-record lookup failure, dynamic casts and locks; they do not
+replace the native copy instructions. No queued parameter buffer restoration
+occurs in this path, so it does not resolve the outstanding parameter-pool reuse
+question.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-effective.py --arm
+```

@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 16,
+  "host": true,
+  "arm": true,
+  "mismatches": 0,
+  "comparison": "Complete 47808-byte effective record including preserved unrelated bytes",
+  "limitations": [
+    "Explicit single-ISP flag; split-ISP merging excluded.",
+    "Map allocation, prior-frame lookup, locking and dynamic cast use explicit adapters; map lifetime policy is not recovered here."
+  ]
+}

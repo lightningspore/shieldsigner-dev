@@ -227,6 +227,33 @@ fn main() {
                     hex(&cache)
                 );
             }
+            "isp-effective" => {
+                use shieldsigner_rkaiq::isp_effective::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut record = [0x5a; RECORD_BYTES];
+                let ae = [v["ae"].as_u64().unwrap() as u8; AE_CACHE_BYTES];
+                let blc = [v["blc"].as_u64().unwrap() as u8; BLC_CACHE_BYTES];
+                let wb = [v["wb"].as_u64().unwrap() as u8; WB_CACHE_BYTES];
+                let cfg = [v["cfg"].as_u64().unwrap() as u8; AWB_CONFIGURATION_BYTES];
+                copy_metadata(
+                    &mut record,
+                    &ae,
+                    &blc,
+                    &wb,
+                    if v["present"].as_bool().unwrap() {
+                        Some(&cfg)
+                    } else {
+                        None
+                    },
+                );
+                println!(
+                    "{}",
+                    record
+                        .iter()
+                        .map(|v| format!("{v:02x}"))
+                        .collect::<String>()
+                );
+            }
             "awb-publication" => {
                 use shieldsigner_rkaiq::awb_publication::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

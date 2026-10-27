@@ -3405,6 +3405,12 @@ fn main() {
                 isp_ccm::apply(&mut parameters, &result).unwrap();
                 println!("{}",parameters.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "lsc-gradients" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let array=|key: &str|v[key].as_array().unwrap().iter().map(|v|u16::try_from(v.as_u64().unwrap()).unwrap()).collect::<Vec<_>>().try_into().unwrap();
+                let (x,y)=shieldsigner_rkaiq::lsc_geometry::gradients(&array("x"),&array("y")).unwrap();
+                println!("{}",x.iter().chain(y.iter()).flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>());
+            }
             "isp-lsc" => {
                 use shieldsigner_rkaiq::{isp_lsc,isp32::PARAMETER_BYTES};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

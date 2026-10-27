@@ -196,3 +196,7 @@ the native-published base IIR coefficient for exact-frame handoff.
 ISP32 dispatcher (ELF `0x304c4`), including retained entries, clamping,
 mask clearing and cached enable state.
 [SDK/kernel layout and complete native/physical CPU evidence](ISP.md#lsc-selected-result-serialization-0034-development).
+
+`lsc_geometry::gradients` reconstructs positive-sector inverse gradients from
+complete `AlscManualGrad` (ELF `0x119018`).
+[Precision, selected calibration and native/physical CPU evidence](ISP.md#lsc-sector-gradients-0034-development).

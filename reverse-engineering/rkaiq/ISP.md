@@ -1129,3 +1129,30 @@ not calibrated LSC selection, geometry, damping, OTP handling or `AlscConfig`.
 Physical CPU replay makes no ISP writes and loads no vendor library on the
 board. Live LSC remains disabled until the remaining input/controller path is
 verified; the existing live CCM binary and frozen 0.0.33 archive are unchanged.
+
+### LSC sector gradients (0.0.34 development)
+
+`lsc_geometry::gradients` reconstructs the positive-sector calculation in
+complete `AlscManualGrad` (ELF `0x119018`, Ghidra `0x129018`). For sixteen
+positive u16 lengths on each axis, native calculates `32768 / length + 0.5`
+in f64, then truncates to the u16 gradient. The numerator and precision were
+checked in the original instructions/data, rather than inferred from the
+register width. Rust rejects zero on either axis before producing output;
+it does not reproduce native partial writes on an invalid later sector.
+
+[Native/physical CPU evidence](lsc-gradients-equivalence.json) checks all 32
+output u16 values in 1,000 cases. One uses the selected profile's actual
+sixteen x/y sectors for its `2304x1296` calibration; the others vary positive
+u16 lengths, with explicit 1/2/3, powers/neighbors and 65535 values. Original
+entire `AlscManualGrad` executes with no algorithm/math substitutes, and every
+context byte outside the gradient arrays is checked unchanged. Host and
+physical Luckfox Rust replay agree. The 100 library/five Unix tests,
+no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:lsc-gradients -- --adb SERIAL --report LOCAL.json`
+after building host/ARM fixtures. This closes inverse-gradient math, not the
+automatic selection/copying of resolution geometry. The profile's sector sums
+are 2304×1296; the VGA image output must not be substituted without verifying
+which sensor/ISP input crop the LSC stage actually covers. Automatic table and
+resolution selection, temporal state and live LSC remain unfinished. CPU replay
+makes no ISP writes and the current camera path still has LSC disabled.

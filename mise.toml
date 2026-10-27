@@ -636,3 +636,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:isp-lsc"]
 description = "Compare LSC selected-result packing, masks and clamp behavior with full native dispatcher"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-lsc.py"
+
+[tasks."camera:rust:lsc-gradients"]
+description = "Compare positive LSC sector-gradient calculation with complete native AlscManualGrad"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/lsc-gradients.py"

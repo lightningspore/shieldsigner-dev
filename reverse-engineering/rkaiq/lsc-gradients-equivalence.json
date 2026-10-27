@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "bytesComparedPerCase": 64,
+  "mismatches": 0,
+  "seed": "0x4c534347",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "4fffddda28b4d4721e0a608d907ab4a077beff4d244099b7ec86cab63ef0eb35",
+  "physicalArmBinarySha256": "9bd2f38c7bc0118d1ce0efd4cba04e97fd295443c7f4262915f18a21f7d7b542",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Complete native AlscManualGrad, all 32 u16 gradient values and preservation of every other context byte. Actual selected-resolution sectors plus varied positive u16 lengths.",
+  "limitations": [
+    "Automatic resolution/sector selection and live LSC remain separate. Zero lengths rejected before Rust output; native partial-error writes are not replicated.",
+    "Physical ARM replay does not enable LSC on the camera or qualify image quality."
+  ],
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "selectedProfileCases": 1,
+  "resolutionName": "2304x1296"
+}

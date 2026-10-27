@@ -1636,3 +1636,27 @@ qualification remain unfinished. No hardware has been changed by this test.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-runtime.py --arm
 ```
+
+### ISP digital-gain converter boundary
+
+`isp32::apply_exposure_digital_gain` reconstructs the pinned
+`Isp32Params::convertAiqExpIspDgainToIsp32Params` (ELF `0x2d860`).
+The converter scales the three bank-0 AWB register groups from the immutable
+unscaled AWB cache; bank 1 stays untouched. The multiplication rounds to f32
+before promotion to f64, addition of 0.5, truncation and saturation at 65535.
+It sets only AWB's configuration-update bit, preserving both enable masks.
+
+Finite linear gains at or below unity leave the entire parameter buffer alone;
+HDR clamps each of its three gains to at least unity and leaves the buffer alone
+when all three are unity. Nonfinite inputs are rejected atomically by the Rust
+API. In particular, applying gain 1 to a reused, previously boosted buffer does
+**not** restore the unscaled gains. Caller buffer restoration and ordering with
+AWB updates must be recovered before connecting this converter to the runtime.
+
+The numeric differential corpus includes 1,000 native converter calls across
+linear and both nonzero working modes, signed virtual-base offsets -16/0/32,
+negative/subunity/unity/next-after-unity gains, full-range cached u16 gains and
+maximum finite f32 gains. It checks parameter preservation outside the gain
+words and configuration mask, and preservation of the complete converter
+context. Host and ARM Rust replay match the original instructions exactly.
+This is converter evidence, not yet proof of live ISP update timing.

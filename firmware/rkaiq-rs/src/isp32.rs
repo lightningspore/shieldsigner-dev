@@ -140,6 +140,9 @@ pub enum ExposureDigitalGain {
 /// Reconstruct convertAiqExpIspDgainToIsp32Params (ELF 0x2d860).
 /// Scale the cached AWB-bank-0 gains, leaving bank 1 and the cache unchanged.
 /// Only the AWB configuration-update mask is set, not either enable mask.
+/// Finite linear gains <= 1 are a no-op; HDR gains are clamped to >= 1.
+/// A unity request does not restore a previously scaled output buffer: callers
+/// must supply the appropriate unscaled parameter state when rebuilding it.
 pub fn apply_exposure_digital_gain(
     params: &mut [u8; PARAMETER_BYTES],
     cached: &[u8; AWB_GAIN_BYTES],
@@ -147,8 +150,8 @@ pub fn apply_exposure_digital_gain(
 ) -> Result<(), InvalidInput> {
     let gains = match gain {
         ExposureDigitalGain::Linear(value) => {
-            if !value.is_finite() || value < 0.0 {
-                return Err(InvalidInput::GainRange);
+            if !value.is_finite() {
+                return Err(InvalidInput::NonFinite);
             }
             if value <= 1.0 {
                 return Ok(());
@@ -156,8 +159,8 @@ pub fn apply_exposure_digital_gain(
             [value; 3]
         }
         ExposureDigitalGain::Hdr(values) => {
-            if values.iter().any(|v| !v.is_finite() || *v < 0.0) {
-                return Err(InvalidInput::GainRange);
+            if values.iter().any(|v| !v.is_finite()) {
+                return Err(InvalidInput::NonFinite);
             }
             let values = values.map(|v| v.max(1.0));
             if values.iter().all(|v| *v == 1.0) {

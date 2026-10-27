@@ -169,18 +169,21 @@ def main():
   seed=rng.randrange(0xffffffff);state=seed;data=bytearray()
   for _ in range(11145):state=(state*1664525+1013904223)&0xffffffff;data.append(state>>24)
   original=bytes(data);mode=i%3
-  gains=[f32(rng.choice([0.,.5,1.,1.0000001192092896,2.,256.,rng.uniform(0,256)])) for _ in range(3)]
+  gains=[f32(rng.choice([-100.,-0.5,0.,.5,1.,1.0000001192092896,2.,256.,3.4028234663852886e38,rng.uniform(0,256)])) for _ in range(3)]
   cached=[rng.randrange(65536) for _ in range(16)]
   context=HEAP+0x10000;params=HEAP+0x20000;vtable=HEAP+0x50000+12
   arm.uc.mem_write(context,bytes(0x2000));arm.uc.mem_write(vtable-12,struct.pack('<i',0));arm.uc.mem_write(context,struct.pack('<I',vtable))
-  arm.uc.mem_write(context+0x20,struct.pack('<i',mode));arm.uc.mem_write(context+0x827,struct.pack('<16H',*cached));arm.uc.mem_write(params,original)
+  relative=[-16,0,32][(i//3)%3]
+  arm.uc.mem_write(vtable-12,struct.pack('<i',relative))
+  arm.uc.mem_write(context+relative+0x20,struct.pack('<i',mode));arm.uc.mem_write(context+relative+0x827,struct.pack('<16H',*cached));arm.uc.mem_write(params,original)
+  original_context=bytes(arm.uc.mem_read(context-16,0x2020))
   # By-value ARM AAPCS aggregate begins in r2/r3, then continues on stack.
-  exposure=bytearray(512)
+  exposure=bytearray(244)
   for offset,value in zip([12,60,108,156],[gains[0],*gains]):struct.pack_into('<f',exposure,offset,value)
   arm.invoke('_ZN5RkCam11Isp32Params34convertAiqExpIspDgainToIsp32ParamsER20isp32_isp_params_cfg17RKAiqAecExpInfo_s',[context,params,0,0],stack=bytes(exposure[8:]))
   out=bytes(arm.uc.mem_read(params,11145))
   assert out[:16]==original[:16] and out[24:0x122d]==original[24:0x122d] and out[0x1245:]==original[0x1245:]
-  assert arm.uc.mem_read(context+0x827,32)==struct.pack('<16H',*cached),'Unexpected cache mutation'
+  assert bytes(arm.uc.mem_read(context-16,0x2020))==original_context,'Unexpected converter context mutation'
   want=out[:24].hex()+':'+out[0x1225:0x1245].hex()
   add('dgain',f'dgain {seed} {mode} '+','.join(map(fhex,gains))+' '+','.join(map(str,cached)),want)
  for i in range(max(12,args.cases//20)):

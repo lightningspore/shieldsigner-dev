@@ -380,6 +380,32 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-initial-target" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                println!(
+                    "{:08x}",
+                    ae_target::initial_from_scene(&v).unwrap().to_bits()
+                );
+            }
+            "ae-target" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let array = |name: &str| {
+                    v[name]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|v| v.as_f64().unwrap() as f32)
+                        .collect::<Vec<_>>()
+                };
+                let result = ae_target::select(
+                    &array("levels"),
+                    &array("points"),
+                    v["exposure"].as_f64().unwrap() as f32,
+                    v["bias"].as_f64().unwrap() as f32,
+                )
+                .unwrap();
+                println!("{:08x}", result.to_bits());
+            }
             "ae-linear-translation" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let decode = |s: &str| -> Vec<u8> {

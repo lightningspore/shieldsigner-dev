@@ -171,6 +171,10 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
                 node,
                 &format!("{}.stats.raw", args[4]),
                 &parameters,
+                initial["initialTargetLuma"]
+                    .as_f64()
+                    .ok_or_else(|| error("Missing calibrated initial AE target"))?
+                    as f32,
                 capture,
             ),
             None => capture(),

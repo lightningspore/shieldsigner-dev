@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "8d31f20af48385a7a98675ebf0aa5605e16b52d32b3fa08348158f1229e62226",
+  "testBinarySha256": "65ecb3c0ee23fec18f7ab23f2d8c94fd92a65ec615ef3eef09a155d6d4953126",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {

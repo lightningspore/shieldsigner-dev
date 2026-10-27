@@ -337,6 +337,7 @@ mod first_frame_driver {
                 Some((1 << 8) | (1 << 12))
             );
             assert_eq!(report["automaticExposure"], false);
+            assert_eq!(report["initialTargetLuma"], 45.0);
             assert_eq!(report["lastFrame"]["aeLinear"]["weightedMeanQ8"], 0);
             assert_eq!(
                 report["lastFrame"]["aeLinear"]["correctedHistogramCount"],

@@ -172,14 +172,14 @@ mod statistics_session {
             }
             self.allocated = false;
         }
-        fn save(&self, out: &str) -> io::Result<()> {
+        fn save(&self, out: &str, initial_target: f32) -> io::Result<()> {
             let bytes = self
                 .last
                 .as_ref()
                 .ok_or_else(|| error("Capture completed without any statistics frames"))?;
             let mut raw = OpenOptions::new().write(true).create_new(true).open(out)?;
             raw.write_all(bytes)?;
-            let report = json!({"kind":"persistent-isp32-statistics-session","framesReceived":self.frames,"lastFrame":self.history.last(),"recentFrames":self.history,"recentFrameLimit":256,"automaticExposure":false,"frameExposureAssociationVerified":false,"cleanupErrors":self.cleanup});
+            let report = json!({"kind":"persistent-isp32-statistics-session","initialTargetLuma":initial_target,"framesReceived":self.frames,"lastFrame":self.history.last(),"recentFrames":self.history,"recentFrameLimit":256,"automaticExposure":false,"frameExposureAssociationVerified":false,"cleanupErrors":self.cleanup});
             let mut sidecar = OpenOptions::new()
                 .write(true)
                 .create_new(true)
@@ -198,6 +198,7 @@ mod statistics_session {
         node: &str,
         out: &str,
         parameters: &[u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES],
+        initial_target: f32,
         work: F,
     ) -> io::Result<()> {
         let snapshot = *parameters;
@@ -215,7 +216,7 @@ mod statistics_session {
                 println!("{}",json!({"event":"statistics-ready","device":node,"automaticExposure":false}));
                 let _=ready_tx.send(Ok(()));
                 let result=session.receive(&flag,&snapshot);session.release();
-                let saved=if session.last.is_some(){session.save(out)}else{Err(error("No statistics frames captured"))};
+                let saved=if session.last.is_some(){session.save(out,initial_target)}else{Err(error("No statistics frames captured"))};
                 println!("{}",json!({"event":"statistics-finished","framesReceived":session.frames,"error":result.as_ref().err().map(|e|e.to_string()),"saveError":saved.as_ref().err().map(|e|e.to_string()),"cleanupErrors":session.cleanup,"automaticExposure":false}));
                 result.and(saved).and_then(|_|if session.cleanup.is_empty(){Ok(())}else{Err(error("Statistics cleanup failed"))})
             });

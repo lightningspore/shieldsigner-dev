@@ -265,3 +265,37 @@ histogram count from the **initial submitted snapshot**, with association still
 explicitly unverified. Invalid validity flags/configuration produce diagnostic
 status rather than exposure writes. This supplies measurement input, not the
 outer target selection, sensor-limit policy, delay scheduling or feedback loop.
+
+## Dynamic linear brightness target
+
+`ae_target::select` reconstructs the dynamic-setpoint branch in `AecPreProcess`
+(ELF 0xb33d0). It selects from `LinearAeCtrl.DySetpoint` using the native current
+exposure product (analogue gain × integration time × ISP digital gain), with
+inclusive interval tests and the original multiply/divide/add order. Values
+outside the curve clamp to its endpoints. Native `Evbias` uses a percentage
+factor `1 + abs(bias)/100`: negative bias divides the target and nonnegative bias
+multiplies it. Nonempty-curve targets clamp to 1–255. An empty curve follows the
+native early default zero branch; the single-point exact-knot behavior is also
+preserved instead of replaced with the shared interpolation helper.
+
+The original-ARM reference executes the actual preprocessing branch through its
+store at context +0x130, using the recovered by-value exposure-info ABI and an
+explicit run-flag boundary. It checks the resulting exposure product as well as
+target bits. Eighty-eight cases cover the pinned profile, interpolation/bias/
+clamp boundaries, empty/single-point curves, randomized finite curves and full
+profile binding. It deliberately stops at that store: the rest of preprocessing,
+flicker, backlight/overexposure policy and the full controller are outside this
+comparison. [Reference report](ae-target-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-target.py --arm
+```
+
+The measurement-enabled initial report and persistent statistics sidecar now
+include `initialTargetLuma` (45 for the pinned SC3336 initial settings). This is
+an initial configuration diagnostic, not a claim that target/exposure/frame
+association is verified. There are still no feedback exposure writes; the next
+required controller stages include state association, damping, exposure-route
+selection, limit/flicker rules and frame-delay scheduling.

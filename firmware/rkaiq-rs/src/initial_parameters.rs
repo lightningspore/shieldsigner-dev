@@ -233,6 +233,9 @@ pub fn assemble_with_ae(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), St
         .map_err(|e| format!("Histogram record: {e:?}"))?;
     apply_ae(&mut params, &mut [0; AE_BYTES], &ae);
     apply_histogram(&mut params, &mut [0; HISTOGRAM_BYTES], &hist);
+    report["initialTargetLuma"] = json!(crate::ae_target::initial_from_scene(
+        iq.pointer("/main_scene/0/sub_scene/0/scene_isp32").unwrap()
+    )?);
     report["aeMeasurementsConfigured"] = json!(true);
     report["automaticExposure"] = json!(false);
     report["aeGeometry"] = json!({"width":dimension("width")?,"height":dimension("height")?,"source":"sensor_calib.resolution","requiresMatchingActiveIspGeometry":true});

@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 88,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "linear AecPreProcess dynamic-target branch through target store at context +0x130, including profile interpolation, bias and clamping",
+  "limitations": [
+    "The run-flag boundary forces processing; native execution stops at the documented target store, not full AecPreProcess return.",
+    "Exposure-info by-value ARM ABI and resulting exposure product are checked with unity other gain factors; full sensor/frame association remains external.",
+    "Backlight/overexposure, HDR, iris and flicker paths are disabled; no complete AE controller equivalence is claimed."
+  ]
+}

@@ -464,3 +464,10 @@ unsupported configuration are recorded as diagnostic status. No automatic
 sensor writes are triggered by these fields. ARM integration tests verify the
 synthetic metadata/report path; real frames and exposure association still need
 hardware verification.
+
+The measurement-enabled initial report and statistics sidecar also record
+`initialTargetLuma`, currently 45 for the pinned SC3336 profile. Compare this
+with measured `weightedMeanLuma` when inspecting a hardware run, while retaining
+the unverified snapshot-association distinction. The target comes from the
+recovered dynamic curve/bias branch using initial exposure settings. It is not
+an automatic exposure decision and does not trigger sensor writes.

@@ -1395,3 +1395,100 @@ impl MeasurementWeighting {
         )
     }
 }
+
+pub struct MeasurementExclusion {
+    pub mode: u32,
+    pub domain: u32,
+    pub coordinates: [i32; 4],
+    pub knots: Vec<f32>,
+    pub weights: Vec<f32>,
+}
+pub struct MeasurementExclusions {
+    pub regions: [MeasurementExclusion; 7],
+}
+impl MeasurementExclusions {
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        let values = at(wb, "/autoPara/extraWpRange")?
+            .as_array()
+            .ok_or_else(|| format!("Expected extraWpRange array"))?;
+        if values.len() != 7 {
+            return Err(format!("Expected seven extra regions"));
+        }
+        let mut regions = Vec::new();
+        for v in values {
+            let domain = match at(v, "/domain")?.as_str() {
+                Some("CALIB_AWB_EXTRA_RANGE_DOMAIN_UV") => 0,
+                Some("CALIB_AWB_EXTRA_RANGE_DOMAIN_XY") => 1,
+                _ => return Err(format!("Unknown extra-region domain")),
+            };
+            let mode = match at(v, "/mode")?.as_str() {
+                Some("CALIB_AWB_EXCLUDE_WP_MODE") => 1,
+                Some("CALIB_AWB_ETR_LIGHT_SOUR_MODE") => 3,
+                _ => return Err(format!("Unknown extra-region mode")),
+            };
+            if at(v, "/region")?.as_array().map(Vec::len) != Some(4) {
+                return Err(format!("Expected four extra-region coordinates"));
+            }
+            let mut coordinates = [0; 4];
+            for (i, n) in coordinates.iter_mut().enumerate() {
+                *n = integer(v, &format!("/region/{i}"), i32::MIN as i64, i32::MAX as i64)? as i32;
+            }
+            let weight = at(v, "/weightInculde")?;
+            let count = integer(weight, "/lumaValue_len", 1, i32::MAX as i64)? as usize;
+            if integer(weight, "/weight_len", 1, i32::MAX as i64)? as usize != count
+                || at(weight, "/lumaValue")?.as_array().map(Vec::len) != Some(count)
+                || at(weight, "/weight")?.as_array().map(Vec::len) != Some(count)
+            {
+                return Err(format!("Extra-region weight lengths mismatch"));
+            }
+            let mut knots = Vec::new();
+            let mut weights = Vec::new();
+            for i in 0..count {
+                knots.push(number(weight, &format!("/lumaValue/{i}"))?);
+                weights.push(number(weight, &format!("/weight/{i}"))?);
+            }
+            if knots.windows(2).any(|p| p[0] >= p[1]) {
+                return Err(format!("Extra-region weight knots must increase"));
+            }
+            regions.push(MeasurementExclusion {
+                mode,
+                domain,
+                coordinates,
+                knots,
+                weights,
+            });
+        }
+        Ok(Self {
+            regions: regions
+                .try_into()
+                .map_err(|_| format!("Expected seven extra regions"))?,
+        })
+    }
+    fn borrowed(&self) -> [crate::awb_measurement_exclusions::Region<'_>; 7] {
+        core::array::from_fn(|i| {
+            let r = &self.regions[i];
+            crate::awb_measurement_exclusions::Region {
+                mode: r.mode,
+                domain: r.domain,
+                coordinates: r.coordinates,
+                weight: crate::awb_probability::Curve {
+                    knots: &r.knots,
+                    weights: &r.weights,
+                },
+            }
+        })
+    }
+    pub fn initialize(
+        &self,
+        record: &mut [u8; crate::isp_awb_measurement::INPUT_BYTES],
+    ) -> Result<(), crate::InvalidInput> {
+        crate::awb_measurement_exclusions::initialize(record, &self.borrowed())
+    }
+    pub fn apply_weights(
+        &self,
+        record: &mut [u8; crate::isp_awb_measurement::INPUT_BYTES],
+        brightness: f32,
+    ) -> Result<(), crate::InvalidInput> {
+        crate::awb_measurement_exclusions::apply_weights(record, &self.borrowed(), brightness)
+    }
+}

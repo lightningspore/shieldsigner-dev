@@ -1834,3 +1834,35 @@ include weights (`ConfigIncludeWei`) are a different function and remain open.
 Whole-record startup assembly, initial group/FAST setup and live AWB integration
 also remain unfinished. This closes the luma-weight calculation rather than
 claiming a live automatic-WB camera run.
+
+## Extra-region configuration and include weights
+
+`MeasurementExclusions` now loads all seven `extraWpRange` entries, including
+UV/XY domain, signed coordinates, source mode and weight curves. Its static
+initializer constructs the zero-based SDK region records with native exclusion
+flags and the first four physical measurement enables. Static region assembly
+still needs verification as part of the complete startup record.
+
+`awb_measurement_exclusions::apply_weights` reconstructs full `ConfigIncludeWei`
+(ELF 0xc1d78), including seven interpolated weights, ×64 conversion, double
+rounding and clamp to 63. A mode-3 entry reuses the preceding interpolated
+mode-1 value, matching native rather than evaluating its own curve. If the
+first entry is mode 3, native reads an uninitialized stack float; Rust rejects
+that configuration atomically. All seven entries in the pinned SC3336 scene
+are mode 1. This is distinct from the existing prepared-gain Exclusion-layout
+hazard documented earlier.
+
+`mise run camera:rust:awb-measurement-exclusions` compares the complete native
+function through return in 128 seeded cases plus one actual IQ-loader case,
+on host and ARM. Every SDK byte and unchanged calibration input is compared.
+Cases include inherited mode-3 values, curve interpolation/endpoints, negative
+weights and saturation. [Include-weight report](awb-measurement-exclusions-equivalence.json).
+The comparison verifies include weights, not static region initialization or
+whole startup composition.
+
+The assembly audit now accounts for calibrated light regions, transforms,
+geometry, input flags, limits, luma weights and extra-region data. Remaining
+startup work includes the FAST initial light selection enabled by the actual
+SC3336 scene, control/weight field composition and BLC/pre-gain metadata
+binding. The existing time-share scheduler is not a substitute for native FAST
+startup. Live AWB remains disabled while these pieces are connected.

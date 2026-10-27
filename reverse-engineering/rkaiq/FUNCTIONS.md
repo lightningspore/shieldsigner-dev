@@ -112,3 +112,7 @@ integer ISO, reconfiguration consumption and cached update publication.
 `Isp32Params::convert3aResultsToIspCfg`, ELF `0x304c4`. All 11,145 output bytes
 match original ARM for 1,000 cases, with physical Luckfox CPU replay.
 [Input window, native mask asymmetry and live integration boundary](ISP.md#dpcc-selected-result-serializer-0034-development).
+
+`dpcc_selection::select` reconstructs automatic expert DPCC ISO row selection
+(ELF `0x11b6e0`) and its 103-byte configuration copy (`0x11b3c4`).
+[Original/physical ARM comparisons and profile-loading boundary](ISP.md#dpcc-automatic-expert-iso-selection-0034-development).

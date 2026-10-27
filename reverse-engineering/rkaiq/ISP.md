@@ -416,3 +416,37 @@ submission still need to be connected. The existing scalar interpolation and
 this serializer are components, not a completed DPCC implementation. DPCC
 remains explicitly disabled in the runnable 0.0.33 frozen kit and current live
 path. That archive and its hardware qualification remain unchanged.
+
+### DPCC automatic expert ISO selection (0.0.34 development)
+
+`dpcc_selection::select` reconstructs `Expert_mode_select_basic_params_by_ISO`
+(ELF `0x11b6e0`) and its full basic-configuration copy helper (`0x11b3c4`).
+The 13-row input table has 108-byte rows: signed ISO, 103 consumed configuration
+bytes and one trailing padding byte. Select the lower row in each half-open
+ISO interval, clamp below/above the grid, and copy exactly 103 bytes into the
+selected result. There is no interpolation in this branch. All later result
+bytes, including basic padding/BPT/PDAF fields, remain untouched. Rust rejects
+non-increasing grids before output mutation; a unit case verifies atomicity.
+
+The pinned SC3336 profile has `Fast_mode_en=0`, so automatic processing uses
+this expert branch. Its grid includes the close points 1500/1507/1510. PDAF and
+sensor-side automatic DPCC are disabled in that profile; their disabled result
+field initialization still requires explicit verification rather than assumed
+values. No Fast/HDR/manual implementation is claimed by this explicit-ISO API.
+
+[Native comparison](dpcc-selection-equivalence.json) checks 1,000 full 192-byte
+outputs, unchanged input tables, padding and unrelated result preservation.
+Nine hundred cases use varied strictly increasing signed grids, while one
+hundred use the actual profile ISO grid with synthetic configuration values.
+Samples cover exact knots, ±1 neighbors and i32 extremes. Original selector and
+copy instructions execute directly with no helper stubs. The same Rust cases
+run identically on the physical Luckfox CPU. The 86 library/five Unix tests,
+no-default-features build and static ARM build pass.
+
+Build host numeric-fixture and ARM binaries with mise, then run
+`mise run camera:rust:dpcc-selection -- --adb SERIAL --report LOCAL.json`.
+The physical replay uses the development 0.0.34 numeric binary and persistent
+temporary reference input, removed afterward. It makes no camera/ISP writes.
+Full JSON→expert-table initialization, BPT/PDAF assembly, processing/frame
+lifecycle and successful live enqueue remain next work; the runnable camera
+continues to leave DPCC disabled. The 0.0.33 frozen kit is unchanged.

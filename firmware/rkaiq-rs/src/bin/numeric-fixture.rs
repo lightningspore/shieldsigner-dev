@@ -3217,6 +3217,18 @@ fn main() {
                     hex(&cached)
                 );
             }
+            "dpcc-select" => {
+                use shieldsigner_rkaiq::dpcc_selection;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let decode = |key: &str| {
+                    let s = v[key].as_str().unwrap();
+                    (0..s.len()).step_by(2).map(|i| u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>()
+                };
+                let table = decode("table").try_into().unwrap();
+                let mut result = decode("result").try_into().unwrap();
+                dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
+                println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
+            }
             "isp-dpcc" => {
                 use shieldsigner_rkaiq::{isp_dpcc, isp32::PARAMETER_BYTES};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "bytesComparedPerCase": 192,
+  "profileIsoGridCases": 100,
+  "profileSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "a8e890f1611bf3f1bddc23bc23024fdae8245eb3da55fe3f083fc684f17ec4b3",
+  "physicalArmBinarySha256": "79e4b3c2a3a577c3dafb7d38668b024b88e106a5597216f678004c853be32c95",
+  "hostMatchesPhysicalArm": true,
+  "coverage": [
+    "Exact knots and +/-1 neighbors",
+    "Below/above entire table including i32 endpoints",
+    "Arbitrary selected values, source padding and prior result bytes",
+    "Native preserves all bytes after the 103-byte basic configuration"
+  ],
+  "scope": "Complete automatic expert selector and copy helper; ISO supplied through linear exposure slot.",
+  "limitations": [
+    "Calibration table initialization/JSON loading, Fast/manual modes, BPT/PDAF selection and live ISP submission remain separate.",
+    "Malformed knot order is rejected by Rust before output mutation; native degenerate tables are outside the comparison.",
+    "Profile-derived cases use its ISO grid with synthetic configuration bytes, not full profile initialization.",
+    "Physical ARM replay does not enable DPCC on the camera."
+  ]
+}

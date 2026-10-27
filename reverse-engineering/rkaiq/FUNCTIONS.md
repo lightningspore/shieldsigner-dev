@@ -138,3 +138,7 @@ integer ISO, reconfiguration and cached-result publication.
 (`0xfd278`), matrix interpolation (`0xfd2e6`) and offset interpolation
 (`0xfd32e`), preserving native fused rounding.
 [Indices, clamp status, profile cases and native/physical CPU evidence](ISP.md#ccm-saturation-selection-and-interpolation-0034-development).
+
+`ccm_illuminant::estimate` reconstructs complete nearest CCM illuminant
+selection (`illuminant_index_estimation_ccm`, ELF `0xfd394`).
+[Distance arithmetic, tie/no-match behavior and evidence](ISP.md#nearest-ccm-illuminant-0034-development).

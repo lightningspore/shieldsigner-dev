@@ -3256,6 +3256,13 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-illuminant" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let pair = |p: &serde_json::Value| [p[0].as_f64().unwrap() as f32,p[1].as_f64().unwrap() as f32];
+                let candidates=v["candidates"].as_array().unwrap().iter().map(pair).collect::<Vec<_>>();
+                let out=shieldsigner_rkaiq::ccm_illuminant::estimate(&candidates,pair(&v["gains"])).unwrap();
+                println!("{}",serde_json::json!({"index":out.index,"matched":out.matched}));
+            }
             "ccm-selection" => {
                 use shieldsigner_rkaiq::ccm_selection::{Profile,select};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

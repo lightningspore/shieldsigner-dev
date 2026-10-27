@@ -584,3 +584,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:ccm-selection"]
 description = "Compare CCM saturation profile selection/interpolation with native ARM"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ccm-selection.py"
+
+[tasks."camera:rust:ccm-illuminant"]
+description = "Compare nearest CCM illuminant selection with native and physical ARM"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ccm-illuminant.py"

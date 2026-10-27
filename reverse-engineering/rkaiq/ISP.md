@@ -639,3 +639,32 @@ is not committed. This step does not yet select the illuminant, derive saturatio
 from calibrated gain, apply damping or drive the live CCM controller. The actual
 profile has illuminant blending disabled; its nearest-illuminant path remains
 next. Physical CPU replay makes no ISP writes.
+
+### Nearest CCM illuminant (0.0.34 development)
+
+`ccm_illuminant::estimate` reconstructs complete
+`illuminant_index_estimation_ccm` (ELF `0xfd394`, Ghidra `0x10d394`), the
+selected profile's non-blended illuminant path. It compares current R/B gains
+to each calibration's R/B pair with unweighted squared distance. Native first
+rounds the blue squared difference, then executes `vfma.f32` for red squared
+plus blue squared; Rust preserves that with `libm::fmaf`. A strict less-than
+comparison preserves the earliest candidate on ties.
+
+The initial best distance is exactly 9,999,999, not infinity. Native initializes
+the output index to zero and returns −1 if no candidate beats that threshold
+(including empty input); Rust exposes `matched: false` and index zero. Callers
+must not mistake that index for a successful selection. Non-finite input is
+explicitly rejected instead of inheriting unordered native comparisons.
+
+[Native/physical CPU evidence](ccm-illuminant-equivalence.json) checks 1,013
+cases: 1,000 varied inputs including empty, very distant, duplicate and tied
+candidates, plus all seven selected-profile calibrations and six neighboring
+midpoints. The actual complete native selector executes; only its diagnostic
+logging call is suppressed. All chosen indices and match/no-match status agree.
+The 90 library/five Unix tests, no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:ccm-illuminant -- --adb SERIAL --report LOCAL.json`
+after building host and ARM fixtures. Full IQ remains a local prerequisite.
+This does not yet implement gain-to-saturation mapping, the persistent
+`selectCCM` update policy, damping or live CCM submission. No ISP writes occur
+in CPU replay and live CCM remains disabled.

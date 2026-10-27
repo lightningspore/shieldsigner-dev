@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "cases": 1013,
+  "selectedProfileCases": 13,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "33f56d9811c31af00a5b5cc7f9494b25ec414908318fe4ffe3a60332716677f9",
+  "physicalArmBinarySha256": "11239c7d5d5a65678e75f0ce8095ff5ff378d0217fc584be326075e862e232b6",
+  "hostMatchesPhysicalArm": true,
+  "seed": "0x43434d49",
+  "scope": "Complete native illuminant_index_estimation_ccm; selected index and success/no-match status. Diagnostic logging is the sole modeled dependency.",
+  "limitations": [
+    "Finite calibrated/current gain pairs; nonfinite Rust inputs rejected.",
+    "Gain-to-saturation calibration, temporal state and live CCM remain separate.",
+    "Physical CPU replay does not write ISP registers."
+  ]
+}

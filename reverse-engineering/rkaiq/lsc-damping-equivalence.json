@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "sequences": 16,
+  "frames": 512,
+  "convergedFrames": 251,
+  "gridBytesComparedPerFrame": 2312,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "c9c684d6b3e27971446d1578188235c590e8543a5350a62765b96c085b95a992",
+  "physicalArmBinarySha256": "cf81868e672fbc2a6b4da431acf6ae56149cf1856648d00a8e688f08e0468709",
+  "hostMatchesPhysicalArm": true,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "scope": "Complete native AlscAutoConfig, forced fresh target, no OTP. Compare all four damped planes and convergence. Persistent previous grids, target changes, frame 0/1 gating, enable gate, factors 0..1, strict .015 endpoint boundary, zero/zero endpoints and full u16 extremes.",
+  "boundaries": [
+    "Constructed SDK calibration pointers and supplied prior grid; persistent controller cache/constructor and callback remain separate.",
+    "Same allocation, string, logging and original sqrt runtime boundaries as lsc-tables oracle; no algorithm substitutes.",
+    "Physical CPU replay only; no ISP writes or live image-quality qualification."
+  ]
+}

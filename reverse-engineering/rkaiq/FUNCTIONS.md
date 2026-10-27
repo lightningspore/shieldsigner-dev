@@ -210,3 +210,7 @@ complete `AlscManualGrad` (ELF `0x119018`).
 and four-plane Q16 target blending, checked through complete native
 `OrderLscProfilesByVignetting` and `AlscAutoConfig`.
 [Native/physical CPU evidence and boundaries](ISP.md#lsc-target-table-selection-0034-development).
+
+`lsc_damping::process` reconstructs no-OTP Q16 temporal grid updates and the
+native first/last-sample convergence rule through full `AlscAutoConfig`.
+[Native/physical CPU evidence and boundaries](ISP.md#lsc-no-otp-damping-0034-development).

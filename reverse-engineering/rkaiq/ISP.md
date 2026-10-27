@@ -1217,3 +1217,34 @@ and temporal damping are separate. Modeled allocation/free, string operations
 and suppressed logging form the boundaries; native selection, interpolation
 and grid loops execute without algorithm substitutes. Live LSC stays disabled;
 physical CPU replay makes no ISP writes.
+
+### LSC no-OTP damping (0.0.34 development)
+
+`lsc_damping::process` reconstructs the no-OTP temporal update inside complete
+`AlscAutoConfig`. It truncates the previous-grid coefficient times 65536,
+uses its integer complement for the new target, and rounds every weighted
+u16 sum with `+32768` before shifting. The coefficient is zero when calibration
+damping is disabled or native frame count is below two. Supported coefficients
+are finite values in `[0,1]`.
+
+Native convergence observes only the first and last samples across the four
+planes: both `abs((previous - target)/(previous + target))` must be strictly
+below f32 `0.015`. When they are, the entire output snaps to the target,
+including middle samples that might still differ greatly. Zero/zero yields
+NaN and does not count as convergence. Rust preserves this observed behavior.
+
+[Native/physical CPU evidence](lsc-damping-equivalence.json) compares all
+2,312 output grid bytes and the convergence flag for 16 sequences / 512
+frames. Previous native output feeds the next input. Cases include actual
+calibration grids, target changes, factors 0/0.25/0.5/0.9/0.99/1, startup-frame
+and enable gates, strict-threshold neighbors, mismatched middle samples,
+zero endpoints and u16 extremes. There are 251 converged and 261 unconverged
+results, with no mismatches on host or physical Luckfox. All 101 library/five
+Unix tests, no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:lsc-damping -- --adb SERIAL --report LOCAL.json`
+after host/ARM fixture builds. The oracle executes full native automatic
+configuration with a constructed one-profile calibration, forced fresh target
+and supplied previous grid. Persistent target-cache decisions, constructor,
+processing callback and OTP handling remain separate. CPU replay makes no
+ISP writes; live LSC is still disabled.

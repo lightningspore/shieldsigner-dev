@@ -92,8 +92,19 @@ class OriginalTables(illum.OriginalIlluminant):
         self.uc.mem_write(
             ctx + 0xD794, b"\x01"
         )  # Force fresh target, frame zero => no damping.
+        if "damping" in value:
+            damping = value["damping"]
+            self.uc.mem_write(root + 12, bytes([damping["enabled"]]))
+            self.uc.mem_write(ctx + 0x88, struct.pack("<f", damping["factor"]))
+            self.uc.mem_write(ctx + 0x1CAC, struct.pack("<I", damping["frame"]))
+            self.uc.mem_write(ctx + 0x1320, struct.pack("<1156H", *damping["previous"]))
         self.invoke("AlscAutoConfig", [ctx], instructions=300000)
         target = bytes(self.uc.mem_read(ctx + 0x110, 2312))
+        if "damping" in value:
+            return dict(
+                samples=self.uc.mem_read(ctx + 0x1320, 2312).hex(),
+                converged=bool(self.uc.mem_read(ctx + 0xD7A5, 1)[0]),
+            )
         # Native automatic no-OTP output also equals target with frame-zero damping.
         assert bytes(self.uc.mem_read(ctx + 0x1320, 2312)) == target
         return dict(

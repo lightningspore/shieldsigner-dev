@@ -3405,6 +3405,14 @@ fn main() {
                 isp_ccm::apply(&mut parameters, &result).unwrap();
                 println!("{}",parameters.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "lsc-damping" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                let array=|key:&str|v[key].as_array().unwrap().iter().map(|v|u16::try_from(v.as_u64().unwrap()).unwrap()).collect::<Vec<_>>().try_into().unwrap();
+                let mut previous=array("previous");let target=array("target");
+                let converged=shieldsigner_rkaiq::lsc_damping::process(&mut previous,&target,v["factor"].as_f64().unwrap() as f32,v["enabled"].as_bool().unwrap(),v["frame"].as_u64().unwrap() as u32).unwrap();
+                let samples=previous.iter().flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>();
+                println!("{}",serde_json::json!({"samples":samples,"converged":converged}));
+            }
             "lsc-tables" => {
                 use shieldsigner_rkaiq::{lsc_tables,interpolate};
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();

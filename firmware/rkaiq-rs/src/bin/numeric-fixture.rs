@@ -254,6 +254,29 @@ fn main() {
                         .collect::<String>()
                 );
             }
+            "awb-stability" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let mut state = awb_stability::State {
+                    matched: 0xa5,
+                    update: v["update"].as_bool().unwrap(),
+                    history: core::array::from_fn(|i| {
+                        core::array::from_fn(|j| v["history"][i][j].as_f64().unwrap() as f32)
+                    }),
+                };
+                let sums = core::array::from_fn(|i| v["sums"][i].as_i64().unwrap());
+                state
+                    .measure(
+                        sums,
+                        v["count"].as_u64().unwrap() as usize,
+                        v["slot"].as_i64().unwrap() as i32,
+                        v["threshold"].as_f64().unwrap() as f32,
+                    )
+                    .unwrap();
+                println!(
+                    "{}",
+                    serde_json::json!({"matched":state.matched,"update":state.update,"history":state.history.map(|a|a.map(f32::to_bits))})
+                );
+            }
             "awb-publication" => {
                 use shieldsigner_rkaiq::awb_publication::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

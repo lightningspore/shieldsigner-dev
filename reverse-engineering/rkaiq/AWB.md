@@ -184,3 +184,42 @@ measurement-enabled parameter SHA-256 is
 `2ffab69fcf67ac36ea58c446352acbcc6fcdb51079ae0afdf0377adce29cdebc`.
 Frozen prior kits retain their original parameters and limitations. Automatic
 AWB, illuminated-scene color testing and complete result policy remain open.
+
+## Standard measurement-history stability gate
+
+`awb_stability::State::measure` reconstructs `IsMeasureResultStable4` (ELF
+`0xc2f90`), called by standard `AwbPreProcV32` through `PrepareMeasureResult`.
+This is separate from the exported `awbProcessing` at ELF `0x10f848`, whose
+context and calls are the surround-view implementation; that symbol must not
+be assumed to be the ordinary single-camera controller entry point.
+
+The gate consumes signed 64-bit block red/green/blue sums. If red and blue are
+both positive, it forms `[green/red, 1, 1, green/blue]`, rounding each i64 to f32
+before division. Otherwise it uses four zeros. For each selected history entry,
+red and blue differences must both be at most the configured threshold to set
+its bit in the match mask. Green history fields do not participate in comparison.
+The match mask is reset each call. Any mismatch sets the update request, while
+all matches **retain** the incoming request rather than clearing it. An active
+request stores the new four-channel ratios in the metadata-selected slot;
+slot -1 aliases zero. An inactive request leaves all history records untouched.
+
+The typed Rust boundary provides eight storage slots, accepts comparison count
+0..8 and slot -1..7, and rejects nonfinite thresholds/history and out-of-storage
+requests before mutation. These are checked storage bounds, not a claim that
+every calibration time-share mode is supported. The outer preprocessor seeds
+the incoming request from its own context flags and policies; the gate alone
+does not decide whether the full AWB algorithm runs or gains are published.
+
+`mise run camera:rust:awb-stability` checks 1,024 cases on host and ARM Rust
+against original ARM instructions. Cases vary all counts/slots, incoming request,
+exact and changed history, threshold equality/negative thresholds, zero/negative
+sums and integer rounding boundaries through signed i64 maxima. It compares the
+complete eight-entry history as exact f32 bits, the mask and update flag, and
+checks preservation of all unrelated context bytes. The original libgcc
+`__aeabi_l2f` instructions execute for integer conversion (1,935 calls), and
+logging is an explicit intercepted boundary. [Reference report](awb-stability-equivalence.json).
+
+Development is now `0.0.31-dev`; the previously delivered `0.0.30-dev` hardware
+kit remains frozen. The ordinary AWB controller still needs calibrated region
+selection, history/variance policy, classification and publication integration.
+The automatic capture command continues to use fixed calibrated white balance.

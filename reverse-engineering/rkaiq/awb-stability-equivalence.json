@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 1024,
+  "mismatches": 0,
+  "arm": true,
+  "nativeRuntimeCalls": 1935,
+  "scope": "Exact history f32 bits, matched mask, retained/forced update flag and unrelated context preservation",
+  "limitations": [
+    "Finite history/threshold; checked count 0..8 and slot -1..7 storage boundary.",
+    "Outer preprocessor seeds the update flag; this gate does not reconstruct the full AWB controller."
+  ]
+}

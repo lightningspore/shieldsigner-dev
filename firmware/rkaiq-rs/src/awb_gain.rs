@@ -4,6 +4,20 @@ use crate::InvalidInput;
 
 /// Channel order throughout this module is R, Gr, Gb, B.
 pub type Gains = [f32; 4];
+
+/// AwbGainOffset (ELF 0xca658). Apply all channel offsets only when every
+/// resulting channel is nonnegative; otherwise preserve the complete gain.
+pub fn offset(gain: Gains, offsets: Gains) -> Result<Gains, InvalidInput> {
+    finite(&gain)?;
+    finite(&offsets)?;
+    let output = core::array::from_fn(|i| gain[i] + offsets[i]);
+    finite(&output)?;
+    Ok(if output.iter().all(|&v| v >= 0.) {
+        output
+    } else {
+        gain
+    })
+}
 fn finite(values: &[f32]) -> Result<(), InvalidInput> {
     if values.iter().all(|v| v.is_finite()) {
         Ok(())

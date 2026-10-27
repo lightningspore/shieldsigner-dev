@@ -31,6 +31,7 @@ pub mod awb_high_gain;
 pub mod awb_low_gain;
 pub mod awb_low_single_color;
 pub mod awb_luma_history;
+pub mod awb_postprocess;
 pub mod awb_preparation;
 pub mod awb_preprocess;
 pub mod awb_probability;

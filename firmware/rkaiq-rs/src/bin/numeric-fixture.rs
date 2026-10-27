@@ -13,6 +13,8 @@ mod ae_session_fixture;
 mod awb_gain_adjust_fixture;
 #[path = "../awb_low_single_color_fixture.rs"]
 mod awb_low_single_color_fixture;
+#[path = "../awb_postprocess_fixture.rs"]
+mod awb_postprocess_fixture;
 #[path = "../awb_preparation_fixture.rs"]
 mod awb_preparation_fixture;
 #[path = "../awb_translation_fixture.rs"]
@@ -132,6 +134,10 @@ fn main() {
             "awb-translation" => println!(
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
+            ),
+            "awb-postprocess" => println!(
+                "{}",
+                awb_postprocess_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
             "awb-gain-adjust" => println!(
                 "{}",

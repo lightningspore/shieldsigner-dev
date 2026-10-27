@@ -1,0 +1,15 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 256,
+  "mismatches": 0,
+  "arm": true,
+  "elfEntry": "0xc72b8",
+  "scope": "Original gain-mode function using incomplete-measurement fallback followed by full common history/clip/adjust/offset/damping/convergence/metadata tail, through normal return",
+  "limitations": [
+    "Strategy result is explicit and normalized by the original incomplete-measurement prefix; complete-measurement high/low strategy composition is separate.",
+    "Finite checked inputs, 4-255 metadata lights, bounded histories. Native fewer-than-four metadata indexing is excluded.",
+    "Standard allocation/memory/logging are adapters; all policy/numerical/sort/CCT bodies execute.",
+    "Undefined adjustment validity cache words are excluded, with defined coordinate values compared.",
+    "Calibration initialization, full outer lifecycle and live AWB integration remain unfinished."
+  ]
+}

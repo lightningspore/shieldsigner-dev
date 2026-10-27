@@ -822,6 +822,53 @@ The pinned IQ currently disables `wbGainAdjust`; this recovers its optional
 enable path without changing that profile. Full caller composition, remaining
 postprocessing, calibration loading and live AWB integration remain unfinished.
 
+## Common gain processing through final metadata
+
+`awb_postprocess::State::finish` joins the common tail of `AwbCalGainByWbMode`
+(ELF `0xc72b8`) after strategy gain selection. It records the raw proposal,
+applies the history update/freeze gate, calculates history convergence, and runs
+optional clipping, adjustment and gain offsets in native order. Disabled stages
+preserve their caches. `awb_gain::offset` applies all four offsets only when all
+resulting channels are nonnegative; one rejected channel preserves the whole
+gain, while the caller still copies that gain into its offset-result cache.
+
+The tail damps the processed proposal against the prior-frame gain and preserves
+the recovered coefficient reset/effective-coefficient rules. It then compares
+damped versus undamped channels. History convergence is cleared if any delta is
+greater than or equal to the configured convergence threshold. A second native
+flag at context `0x3346`, represented as `damping_stable`, starts true and is
+cleared by its separate threshold at config `0x4ac`. The API names the measured
+condition without claiming the flag's full outer publication policy.
+
+Finally, the tail updates a separate output-gain history, computes current
+CCT/CCRI, stably sorts illumination indices by descending probability and emits
+four ranked illumination CCT/CCRI records. Equal probabilities retain input
+order. Native code always indexes four ranked entries; the checked API requires
+4–255 metadata lights. The previous-frame gain stays unchanged here because
+`AwbCalAwbGain` advances it later. All caches, histories, flags and metadata
+commit together only on success. A late-invalid-probability unit test confirms
+that even completed damping/history work cannot partially publish state.
+
+`mise run camera:rust:awb-postprocess` compares **256 full original gain-mode
+calls** on host and ARM, including all eight clipping/adjustment/offset enable
+combinations, frozen/updated gain history, target 0/singleton/rotation, zero
+previous gains, coefficient and threshold boundaries, invalid CCT lines,
+probability ties and up to 255 lights. Native calls enter the incomplete-
+measurement fallback, which normalizes the explicit proposal, then run the
+entire common processing tail through normal return. No numerical/policy helper
+is replaced. Standard allocation, memory copy and logging are adapters.
+
+The comparison covers exact gain/cache/coordinate/coefficient bits, both linked
+histories, stability flags, current and four ranked temperature records,
+metadata padding, allocation balance and unrelated-memory preservation. As in
+the adjustment suite, undefined temporary adjustment validity cache words are
+excluded while their defined coordinate values are compared.
+[Reference report](awb-postprocess-equivalence.json).
+
+This does not yet join the complete-measurement region/probability/high/low
+strategy prefix to the tail. That composition, calibration initialization,
+wrapper frame lifecycle and live AWB integration remain unfinished.
+
 ## Gain clipping and inverse color-temperature conversion
 
 `awb_single_color::gain_from_color_temperature` reconstructs

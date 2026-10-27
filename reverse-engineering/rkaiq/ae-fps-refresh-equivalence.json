@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 108,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "all four cached baseline timing fields plus selected FPS/frame fields after complete native configuration return across six update masks",
+  "limitations": [
+    "Explicit initialized timing/configuration and previous cache; full zero-mask initialization is not qualified.",
+    "Refresh predicate is ported at the native timing stage; complete outer update-mask dispatch is external.",
+    "Inherited harness models allocation/comparison/division/rounding and diagnostics; unrelated private context and sensor writes excluded."
+  ]
+}

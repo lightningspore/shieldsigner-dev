@@ -1216,3 +1216,32 @@ application latency.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-fps.py --arm
 ```
+
+## Cached FPS baseline refresh
+
+`ae_fps::refresh_baseline` ports the timing-stage write predicate and all four
+cached fields: frame length, pixel clock, line length and derived FPS. At that
+native stage a refresh occurs when `(updateMask & 0xfbff) == 0`; the test is not
+simply whether bit `0x400` is present. It returns a replacement baseline when
+the native stage writes one, or `None` when existing cache values must remain.
+The caller then uses its cached frame/FPS for the previously recovered selection.
+
+108 comparisons execute complete native configuration through normal return
+across masks `0x80`, `0x400`, `0x480`, `0x10400`, `0x100400` and `0x40080`.
+They compare all baseline fields and the resulting active frame/FPS, variable
+frame limit and selected rates. This checks refresh versus preservation,
+high-bit behavior, different timing, fixed/variable modes and request handling.
+[Baseline refresh comparison](ae-fps-refresh-equivalence.json).
+
+This helper represents the predicate **once configuration reaches the timing
+stage**, not complete outer update-mask dispatch. Full zero-mask initialization
+remains unqualified: a probe with the current synthetic configuration returned
+a native configuration error without establishing a refreshed baseline. That error is not treated
+as a successful initialization or approximated by refreshing the cache anyway.
+A complete descriptor/configuration initializer is still required. The oracle
+uses explicit prior cache and valid timing; unrelated context and hardware
+VBLANK writes remain outside this comparison.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-fps-refresh.py --arm
+```

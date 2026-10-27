@@ -384,7 +384,7 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
-            "ae-fps" => {
+            "ae-fps" | "ae-fps-refresh" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let f = |k: &str| v[k].as_f64().unwrap() as f32;
                 let mut state = ae_fps::State {
@@ -394,6 +394,26 @@ fn main() {
                     fixed_rate: 7.,
                     variable_rate: 8.,
                 };
+                let mut baseline = ae_fps::Baseline {
+                    frame: state.baseline_frame,
+                    clock_mhz: 114.24,
+                    line: 2800.,
+                    fps: state.baseline_fps,
+                };
+                if a[0] == "ae-fps-refresh" {
+                    if let Some(new) = ae_fps::refresh_baseline(
+                        v["mask"].as_u64().unwrap() as u32,
+                        f("frame"),
+                        f("line"),
+                        f("clock"),
+                    )
+                    .unwrap()
+                    {
+                        baseline = new;
+                        state.baseline_frame = new.frame;
+                        state.baseline_fps = new.fps;
+                    }
+                }
                 let out = ae_fps::Calibration::from_scene(&v["scene"])
                     .unwrap()
                     .select(
@@ -404,13 +424,23 @@ fn main() {
                         f("minimum_fps"),
                     )
                     .unwrap();
-                emit(&[
+                let mut values = Vec::new();
+                if a[0] == "ae-fps-refresh" {
+                    values.extend([
+                        baseline.frame,
+                        baseline.clock_mhz,
+                        baseline.line,
+                        baseline.fps,
+                    ]);
+                }
+                values.extend([
                     out.frame,
                     out.fps,
                     state.variable_frame,
                     state.fixed_rate,
                     state.variable_rate,
                 ]);
+                emit(&values);
             }
             "ae-delay-calibration" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

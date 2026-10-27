@@ -106,3 +106,39 @@ impl Calibration {
 }
 #[cfg(feature = "diagnostics")]
 extern crate alloc;
+
+#[derive(Clone, Copy, Debug)]
+pub struct Baseline {
+    pub frame: f32,
+    pub clock_mhz: f32,
+    pub line: f32,
+    pub fps: f32,
+}
+/// Baseline-write condition once native configuration reaches its timing stage.
+/// Full update-mask dispatch and zero-mask initialization remain caller work.
+pub fn refresh_baseline(
+    mask: u32,
+    frame: f32,
+    line: f32,
+    clock_mhz: f32,
+) -> Result<Option<Baseline>, InvalidInput> {
+    if mask & 0xfbff != 0 {
+        return Ok(None);
+    }
+    if [frame, line, clock_mhz].iter().any(|x| !x.is_finite()) {
+        return Err(InvalidInput::NonFinite);
+    }
+    if frame <= 0. || line <= 0. || clock_mhz <= 0. {
+        return Err(InvalidInput::Exposure);
+    }
+    let fps = ((clock_mhz * 1_000_000.) / frame) / line;
+    if !fps.is_finite() || fps <= 0. {
+        return Err(InvalidInput::Exposure);
+    }
+    Ok(Some(Baseline {
+        frame,
+        clock_mhz,
+        line,
+        fps,
+    }))
+}

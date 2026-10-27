@@ -723,6 +723,71 @@ mod first_frame_driver {
             .unwrap();
         assert_eq!(owner.parameters.len(), 4);
         assert_eq!(owner.parameters[3].0, 3);
+        let sensor = SensorDevice {
+            file: open("/dev/null", true).unwrap(),
+            queries: vec![],
+            bus: None,
+            writes: vec![],
+        };
+        let mut live_owner = CameraAeOwner::new(make_runtime(1.), sensor, 0, initial_parameters);
+        let (sender, receiver) = std::sync::mpsc::sync_channel(64);
+        live_owner
+            .during_capture(&mut backend, &mut queue, &receiver, move |_| {
+                for frame in 1..9 {
+                    sender
+                        .send(CameraAeEvent::Sof {
+                            frame,
+                            timestamp_ns: frame as u64 * 1_000_000,
+                        })
+                        .unwrap();
+                    if frame <= 2 {
+                        sender
+                            .send(CameraAeEvent::Statistics {
+                                bytes: raw(frame, 0),
+                            })
+                            .unwrap();
+                    }
+                }
+                Ok(())
+            })
+            .unwrap();
+        assert_eq!(live_owner.processed, 2);
+        assert!(!live_owner.sensor.writes.is_empty());
+        let (sender, receiver) = std::sync::mpsc::sync_channel(4);
+        let cancelled = std::sync::atomic::AtomicBool::new(false);
+        let seen = &cancelled;
+        assert!(live_owner
+            .during_capture(&mut backend, &mut queue, &receiver, move |cancel| {
+                sender
+                    .send(CameraAeEvent::Sof {
+                        frame: 7,
+                        timestamp_ns: 7_000_000,
+                    })
+                    .unwrap();
+                while !cancel.load(std::sync::atomic::Ordering::Acquire) {
+                    std::thread::yield_now();
+                }
+                seen.store(true, std::sync::atomic::Ordering::Release);
+                Ok(())
+            })
+            .is_err());
+        assert!(cancelled.load(std::sync::atomic::Ordering::Acquire));
+        let (_sender, receiver) = std::sync::mpsc::sync_channel(4);
+        assert!(live_owner
+            .during_capture(&mut backend, &mut queue, &receiver, |_| Err(error(
+                "injected capture failure"
+            )))
+            .is_err());
+        let (sender, receiver) = std::sync::mpsc::sync_channel(4);
+        assert!(live_owner
+            .during_capture(&mut backend, &mut queue, &receiver, move |_| {
+                sender
+                    .send(CameraAeEvent::Statistics { bytes: raw(9, 0) })
+                    .unwrap();
+                Ok(())
+            })
+            .is_err());
+        assert_eq!(live_owner.pending.len(), 1);
         let allocated = backend.allocated;
         queue.stop(&mut backend, allocated);
         assert!(backend.cleanup_errors.is_empty());

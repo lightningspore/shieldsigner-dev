@@ -1897,3 +1897,36 @@ All four startup scenarios continue to pass. This accumulation rule covers
 only the existing gain/WB module update; other ISP module changes and native
 map retention are not implemented by it. The continuous capture entry point
 and coordinated shutdown are still pending.
+
+### Scoped capture/AE orchestration
+
+`CameraAeOwner::during_capture` runs a bounded capture callback in a scoped
+worker while the caller's thread retains the controller, sensor and parameter
+backend/queue. It receives owned events, applies SOF/statistics processing,
+submits gain batches for processed statistics, and drains parameter completions
+while waiting for events. Capture completion triggers a final queued-event
+drain (at most 64 events) and pending-statistics check; producers that fail to
+quiesce cause an error. Producer EOF also initiates shutdown rather
+than racing the worker's completion flag into a false disconnect error.
+
+All exit paths signal an atomic cancellation flag and join the capture task.
+The callback must honor cancellation or retain its own finite device deadlines;
+the orchestrator cannot forcibly interrupt an arbitrary blocking callback.
+Controller/driver errors end control processing; capture errors propagate after
+joining. Ten seconds without events is an error while capture remains active.
+Unmatched future statistics at shutdown remain an error rather than being
+processed against a guessed exposure map.
+
+The parameter startup helper now also has a backend-aware callback form, invoked
+while its live queue and MMAP pool remain open. Existing fixed startup uses its
+original wrapper, so this refactor preserves its behavior and cleanup path.
+This provides the ownership boundary needed to host the orchestrator during
+capture without moving raw mapping pointers across threads.
+
+ARM integration checks run a scoped producer through two AE statistics frames
+and later Linux sensor writes, verify cancellation is observed after a
+regressing SOF error, propagate a capture-task error, and reject shutdown with
+statistics still waiting for SOF. The four full fixed-startup scenarios also
+pass. These tests use simulated device boundaries. The observed capture CLI
+still needs to invoke this orchestrator, and its image/raw/statistics loops
+need coordinated cancellation before automatic capture is exposed.

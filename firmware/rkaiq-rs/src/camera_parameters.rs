@@ -462,6 +462,14 @@ fn submit_parameters_then<F: FnOnce() -> io::Result<()>>(
     args: &[String],
     after_ready: F,
 ) -> io::Result<()> {
+    submit_parameters_then_with_backend(args, |_, _| after_ready())
+}
+fn submit_parameters_then_with_backend<
+    F: FnOnce(&mut ParameterBackend, &mut parameter::Queue) -> io::Result<()>,
+>(
+    args: &[String],
+    after_ready: F,
+) -> io::Result<()> {
     use std::io::Read;
     if std::mem::size_of::<usize>() != 4 {
         return Err(error(
@@ -569,7 +577,7 @@ fn submit_parameters_then<F: FnOnce() -> io::Result<()>>(
             json!({"event":"parameters-dequeued","frameApplicationVerified":false,"holdMs":hold,"completion":completed})
         );
         io::stdout().flush()?;
-        after_ready()?;
+        after_ready(&mut backend, &mut queue)?;
         if hold != 0 {
             std::thread::sleep(Duration::from_millis(hold));
         }

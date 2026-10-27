@@ -191,3 +191,83 @@ where
         Ok(())
     }
 }
+
+impl<B: shieldsigner_rkaiq::sensor::Backend> CameraAeOwner<B>
+where
+    B::Error: std::fmt::Debug,
+{
+    /// Keep all controller/device/parameter ownership on this thread while a
+    /// bounded capture task emits events. Capture must honor cancellation or
+    /// its own finite deadlines; no worker is detached on any failure.
+    fn during_capture<F>(
+        &mut self,
+        backend: &mut ParameterBackend,
+        queue: &mut parameter::Queue,
+        events: &std::sync::mpsc::Receiver<CameraAeEvent>,
+        capture: F,
+    ) -> io::Result<()>
+    where
+        F: FnOnce(&std::sync::atomic::AtomicBool) -> io::Result<()> + Send,
+    {
+        use std::sync::{
+            atomic::{AtomicBool, Ordering},
+            mpsc::{RecvTimeoutError, TryRecvError},
+        };
+        let cancel = AtomicBool::new(false);
+        std::thread::scope(|scope| {
+            let worker = scope.spawn(|| capture(&cancel));
+            let mut progress = Instant::now();
+            let mut shutdown_events = 0;
+            let control = (|| {
+                loop {
+                    let event = if worker.is_finished() {
+                        match events.try_recv() {
+                            Ok(event) => {
+                                shutdown_events += 1;
+                                if shutdown_events > 64 {
+                                    return Err(error(
+                                        "AE producers did not quiesce after capture completion",
+                                    ));
+                                }
+                                Some(event)
+                            }
+                            Err(TryRecvError::Empty | TryRecvError::Disconnected) => break,
+                        }
+                    } else {
+                        match events.recv_timeout(Duration::from_millis(10)) {
+                            Ok(event) => Some(event),
+                            Err(RecvTimeoutError::Timeout) => None,
+                            // Last sender can disappear just before the scoped
+                            // task becomes is_finished(). Treat producer EOF as
+                            // shutdown, then cancel/join capture and check pending
+                            // statistics; do not race it into a spurious failure.
+                            Err(RecvTimeoutError::Disconnected) => break,
+                        }
+                    };
+                    if let Some(event) = event {
+                        let processed = self.handle(event)?;
+                        for output in processed {
+                            self.submit_gain(backend, queue, output.frame, None)?;
+                        }
+                        progress = Instant::now();
+                    } else {
+                        for _ in 0..8 {
+                            if backend.try_complete(queue)?.is_none() {
+                                break;
+                            }
+                        }
+                        if progress.elapsed() > Duration::from_secs(10) {
+                            return Err(error("AE capture received no events for 10 seconds"));
+                        }
+                    }
+                }
+                self.finish()
+            })();
+            cancel.store(true, Ordering::Release);
+            let captured = worker
+                .join()
+                .map_err(|_| error("AE capture task panicked"))?;
+            control.and(captured)
+        })
+    }
+}

@@ -30,6 +30,7 @@ pub mod awb_gain_controller;
 pub mod awb_site;
 pub mod awb_wrapper;
 pub mod awb_dispatch;
+pub mod awb_gain_frame;
 pub mod awb_gain_history;
 pub mod awb_high_gain;
 pub mod awb_low_gain;

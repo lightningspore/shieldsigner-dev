@@ -147,7 +147,9 @@ class Original(OriginalAwb):
         self.arena, self.live = HEAP + 0x50000, set()
         self.invoke(
             (
-                "_Z13AwbCalAwbGainP12awb_contex_s"
+                "gain-frame-continuation"
+                if "dispatch" in v.get("controller", {})
+                else "_Z13AwbCalAwbGainP12awb_contex_s"
                 if "outer" in v.get("controller", {})
                 else "_Z18AwbCalGainByWbModeP12awb_contex_s"
             ),
@@ -238,6 +240,9 @@ class Original(OriginalAwb):
             actual = bytes(self.uc.mem_read(HEAP + offset, len(data)))
             if offset == 0x20000 and "controller" in v:
                 actual = self.read_controller_lights(actual, data, output)
+            if offset == 0x8000 and "dispatch" in v.get("controller", {}):
+                actual = bytearray(actual)
+                actual[0x4B4:0x4B8] = data[0x4B4:0x4B8]
             assert actual == data
         return output
 

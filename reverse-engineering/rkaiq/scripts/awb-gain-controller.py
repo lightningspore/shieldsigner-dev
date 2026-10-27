@@ -8,7 +8,7 @@ import random
 import struct
 import subprocess
 import sys
-from differential import BINARY, HEAP, ROOT, f32
+from differential import BINARY, HEAP, ROOT, RETURN, f32, regs
 from awb_reference import RUNTIME
 
 spec = importlib.util.spec_from_file_location(
@@ -29,8 +29,23 @@ class Original(post.Original, color.OriginalColor):
     def __init__(self):
         super().__init__()
         self.stdlib = True
+        self.symbols["gain-frame-continuation"] = 0xD4AE1
 
     def hook(self, uc, address, size, user):
+        if getattr(self, "dispatch_active", False):
+            if address in (0xD4260, 0xD4890):
+                self.reconfigured = address == 0xD4260
+                uc.reg_write(regs.UC_ARM_REG_PC, RETURN)
+                return
+            if address == 0xD12B0:
+                uc.reg_write(regs.UC_ARM_REG_PC, uc.reg_read(regs.UC_ARM_REG_LR))
+                return
+            if address == 0xD803C:
+                self.wrapper_calls += 1
+            if address == 0xD4B06:
+                self.before_scale_gain = list(
+                    struct.unpack("<4I", uc.mem_read(HEAP + 0x353C, 16))
+                )
         if address == (self.symbols.get("_Z13runAvaSiteRecP12awb_contex_s", 0) & ~1):
             self.before_site_gain = list(
                 struct.unpack("<4I", uc.mem_read(HEAP + 0x353C, 16))
@@ -210,6 +225,16 @@ class Original(post.Original, color.OriginalColor):
         struct.pack_into("<3f", cfg, 0xBC, 0.01, 0.1, 0.2)
         struct.pack_into("<3f", cfg, 0x14C, o["step"], 0.0, 0.9)
         struct.pack_into("<f", cfg, 0x15C, 0.5)
+        if "dispatch" in v["controller"]:
+            d = v["controller"]["dispatch"]
+            ctx[0x334A] = d["update"]
+            ctx[0x34A0] = ctx[0x3694] = ctx[0x3346] = 0
+            ctx[0x3658:0x3694] = bytes(60)
+            struct.pack_into("<i", cfg, 0x4B4, d["countdown"])
+            ctx[0x36A0] = d["scale"] is not None
+            if d["scale"] is not None:
+                struct.pack_into("<f", ctx, 0x3588, d["scale"][0])
+                struct.pack_into("<f", ctx, 0x3594, d["scale"][1])
 
     def setup_single(self, v, ctx, cal):
         s = v["controller"]["single"]
@@ -310,6 +335,16 @@ class Original(post.Original, color.OriginalColor):
             count += len(values)
             result[key] = values
         output["controller"] = result
+        if "dispatch" in v["controller"]:
+            output["dispatch"] = dict(
+                frame=struct.unpack_from("<I", after, 0x33AC)[0],
+                countdown=struct.unpack(
+                    "<i", self.uc.mem_read(HEAP + 0x8000 + 0x4B4, 4)
+                )[0],
+                calculated=bool(self.wrapper_calls),
+                reconfigure=self.reconfigured,
+            )
+            after[0x33AC:0x33B0] = self.before_controller[0x33AC:0x33B0]
         if "single" in v["controller"] or "outer" in v["controller"]:
             base = 0x35B8
             result["single"] = dict(
@@ -381,7 +416,7 @@ class Original(post.Original, color.OriginalColor):
                 i * 0xA0 + 0x64 : i * 0xA0 + 0xA0
             ]
         output["controller"]["lights"] = lights
-        if self.outer_active:
+        if self.outer_active and (not self.dispatch_active or self.wrapper_calls):
             for i in range(len(before) // 0xA0):
                 # Empty synthetic reference labels; wrapper clears remaining bytes.
                 assert actual[i * 0xA0 : i * 0xA0 + 0x64] == bytes(0x64)
@@ -392,8 +427,19 @@ class Original(post.Original, color.OriginalColor):
         if name in (
             "_Z18AwbCalGainByWbModeP12awb_contex_s",
             "_Z13AwbCalAwbGainP12awb_contex_s",
+            "gain-frame-continuation",
         ):
-            self.outer_active = name == "_Z13AwbCalAwbGainP12awb_contex_s"
+            self.dispatch_active = name == "gain-frame-continuation"
+            self.outer_active = name in (
+                "_Z13AwbCalAwbGainP12awb_contex_s",
+                "gain-frame-continuation",
+            )
+            self.wrapper_calls = 0
+            self.reconfigured = False
+            if self.dispatch_active:
+                self.uc.reg_write(regs.UC_ARM_REG_R4, HEAP)
+                self.uc.reg_write(regs.UC_ARM_REG_R5, 0x334A)
+                self.uc.reg_write(regs.UC_ARM_REG_R8, HEAP + 0x6F000)
             self.single_calls = 0
             self.selected_gain_calls = 0
             self.before_controller = bytes(self.uc.mem_read(HEAP, 0x4000))
@@ -410,7 +456,8 @@ def main():
     assert runtime_sha == manifest["gccRuntime"]["memberSha256"]
     math_sha = hashlib.sha256(color.MATH.read_bytes()).hexdigest()
     assert math_sha == manifest["uclibcRuntime"]["memberSha256"]
-    outer = "--outer" in sys.argv
+    dispatch = "--dispatch" in sys.argv
+    outer = "--outer" in sys.argv or dispatch
     prepared = "--prepared" in sys.argv or outer
     single = "--single" in sys.argv
     initial_exclusion = "--initial-exclusion" in sys.argv
@@ -614,6 +661,12 @@ def main():
                 reference_sample=s["prior_sample"],
                 step=0.05,
             )
+        if dispatch:
+            s["dispatch"] = dict(
+                update=bool(i % 4),
+                countdown=[-1, 0, 1, 3][i // 4 % 4],
+                scale=None if i % 3 else [0.5, 2.0],
+            )
         s["prepared"] = prepared
         v["controller"] = s
         cases.append(v)
@@ -621,8 +674,9 @@ def main():
         if initial_exclusion:
             assert expected[-1]["controller"]["selected"] == 3
             assert arm.selected_gain_calls == 0 and arm.single_calls == 0
-        if outer:
-            site_overrides += expected[-1]["current"] != arm.before_site_gain
+        if outer and (not dispatch or arm.wrapper_calls):
+            observed = arm.before_scale_gain if dispatch else expected[-1]["current"]
+            site_overrides += observed != arm.before_site_gain
         classifier_calls += arm.single_calls
         if arm.single_calls:
             observed = expected[-1]["controller"]
@@ -663,6 +717,8 @@ def main():
             )
             for light in s["lights"]:
                 light["counts"][0:2] = [0, 0]
+            if dispatch:
+                s["dispatch"]["update"] = True
             cases.append(v)
             expected.append(dict(error="UnsupportedRegion", unchanged=True))
     if outer:
@@ -684,6 +740,37 @@ def main():
             reference_valid=True,
             reference_gain=[2.0, 0.0, 1.0, 3.0],
             reference_sample=s["prior_sample"],
+        )
+        if dispatch:
+            s["complete"] = True
+            s["dispatch"]["update"] = True
+        cases.append(v)
+        expected.append(dict(error="NonFinite", unchanged=True))
+    if dispatch:
+        v = json.loads(json.dumps(cases[0]))
+        s = v["controller"]
+        s.update(
+            mode=0,
+            complete=True,
+            frame=0,
+            exclusion_count=5,
+            stabilization=False,
+            xy_target=0,
+            expect_prepared_error=True,
+            late_scale_error=True,
+        )
+        for light in s["lights"]:
+            light["counts"][0:2] = [0, 0]
+        s["dispatch"].update(update=True, scale=[3.4028234663852886e38, 1.0])
+        s["outer"].update(
+            enabled=True,
+            frame_limit=3,
+            frames=0,
+            reuse_enabled=False,
+            reference_valid=True,
+            reference_gain=[2.0, 1.0, 1.0, 3.0],
+            application_flag=False,
+            application_mode=1,
         )
         cases.append(v)
         expected.append(dict(error="NonFinite", unchanged=True))
@@ -737,14 +824,34 @@ def main():
         nativeCases=native_cases,
         preparedAdapter=prepared,
         outerWrapper=outer,
+        dispatchJoined=dispatch,
         siteOverrides=site_overrides,
-        atomicRejectionCases=(3 if outer else 2) if prepared else 0,
+        dispatchCoverage={
+            key: sum(
+                1
+                for v in cases[:native_cases]
+                if str(v["controller"]["dispatch"]["update"])
+                + ":"
+                + str(v["controller"]["complete"])
+                == key
+            )
+            for key in ["False:False", "False:True", "True:False", "True:True"]
+        }
+        if dispatch
+        else {},
+        atomicRejectionCases=(4 if dispatch else (3 if outer else 2))
+        if prepared
+        else 0,
         mismatches=0,
         arm=replay,
         coverage=coverage,
-        elfEntry="0xc803c" if outer else "0xc72b8",
+        elfEntry="0xc4ae0 continuation"
+        if dispatch
+        else ("0xc803c" if outer else "0xc72b8"),
         scope=(
-            "Whole original gain wrapper: resets, damping/tolerance, gain-mode call tree, saved-site reuse and gain carry-forward"
+            "Original preprocessor continuation through real gain wrapper and output scaling, stopping at reconfiguration entry"
+            if dispatch
+            else "Whole original gain wrapper: resets, damping/tolerance, gain-mode call tree, saved-site reuse and gain carry-forward"
             if outer
             else "Whole original gain-mode function: XY/probabilities/high/low/mix/retention plus common processing through ranked metadata"
         ),
@@ -764,6 +871,12 @@ def main():
         ROOT
         / (
             (
+                "reverse-engineering/rkaiq/awb-gain-frame-single-color-equivalence.json"
+                if single
+                else "reverse-engineering/rkaiq/awb-gain-frame-equivalence.json"
+            )
+            if dispatch
+            else (
                 "reverse-engineering/rkaiq/awb-wrapper-single-color-equivalence.json"
                 if single
                 else "reverse-engineering/rkaiq/awb-wrapper-equivalence.json"

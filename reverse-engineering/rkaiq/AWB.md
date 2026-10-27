@@ -1214,3 +1214,46 @@ after the callback produces gain. A regression verifies invalid input cannot
 invoke the callback or change dispatch state. Complete IQ initialization,
 shared session construction, hardware reconfiguration/publication and live AWB
 qualification remain outstanding.
+
+## Joined gain-frame continuation
+
+`awb_gain_frame::State` owns dispatch counters, the gain controller and saved-site
+state. Its `process` method connects post-preparation dispatch to the **real Rust
+gain wrapper** and commits the whole transition together. The dispatch frame
+counter supplies the wrapper's shared frame number. Current output receives
+post-wrapper red/blue scaling; previous gain retains the unscaled wrapper result.
+No-update and incomplete-measurement paths preserve controller/site/per-light
+state, while pending incomplete updates still decrement a positive countdown
+and request reconfiguration. Skipped paths do not inspect unused measurement or
+calibration arrays.
+
+A cloned session and staged per-light output address the callback ownership gap
+in the lower-level dispatch API: a failure after the wrapper has calculated gain,
+including finite-scale overflow, discards histories, saved-site updates, gain,
+per-light output and counters together. This is checked behavior for the Rust
+API, not a claim that the unchecked original library rolls back its writes.
+
+`mise run camera:rust:awb-gain-frame` compares 192 ordinary and 64 enabled
+single-color branch cases on host and ARM. The oracle starts at the original
+post-preparation continuation and follows its original **gain-wrapper body and
+all numerical/policy callees**, then output scaling and frame increment. It
+stops at hardware-reconfiguration entry or the no-update epilogue; only logging,
+allocation/memory/string adapters and pinned runtime imports are intercepted.
+Gain calculation is no longer supplied by the dispatcher test's callback stub.
+
+Across both corpora, 178 cases actually execute the wrapper; the remainder
+exercise no-update/incomplete branches. There are 20 classifier executions and
+eight genuine saved-site gain replacements, counted before output scaling.
+Comparisons include current/previous gains, all represented controller caches,
+metadata, per-light results, histories, saved-site state, tolerance, countdown,
+frame counter and reconfiguration decisions. Eight checked-error cases verify
+complete rollback: mode-1/2 Exclusion, late saved-reference arithmetic failure,
+and overflow in final red scaling after a successful wrapper transition.
+[Ordinary joined report](awb-gain-frame-equivalence.json),
+[enabled classifier joined report](awb-gain-frame-single-color-equivalence.json).
+
+This closes dispatch-to-wrapper composition. Inputs are still prepared fixture
+records and explicit calibration. Raw preprocessing/IQ initialization, actual
+hardware measurement reconfiguration, outer publication/lifecycle, saved-site
+persistence, unsafe native Exclusion resolution and live qualification remain
+unfinished. Passing this stage does not establish a complete frame pipeline.

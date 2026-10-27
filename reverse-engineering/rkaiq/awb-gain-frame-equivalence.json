@@ -1,0 +1,54 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": null,
+  "initialExclusionAudit": false,
+  "enumHeaderSha256": null,
+  "runtimeSha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+  "mathRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "nativeMathCalls": {},
+  "classifierCalls": 0,
+  "singleColorCoverage": {},
+  "nativeRuntimeFunctions": [
+    "__aeabi_l2f"
+  ],
+  "modeledStringCalls": {
+    "strcpy": 793,
+    "strcmp": 488
+  },
+  "cases": 196,
+  "nativeCases": 192,
+  "preparedAdapter": true,
+  "outerWrapper": true,
+  "dispatchJoined": true,
+  "siteOverrides": 6,
+  "dispatchCoverage": {
+    "False:False": 4,
+    "False:True": 44,
+    "True:False": 11,
+    "True:True": 133
+  },
+  "atomicRejectionCases": 4,
+  "mismatches": 0,
+  "arm": true,
+  "coverage": {
+    "False:0:3": 5,
+    "True:1:1": 38,
+    "True:2:0": 30,
+    "True:0:0": 31,
+    "True:1:0": 21,
+    "True:2:1": 29,
+    "True:0:3": 10,
+    "False:1:3": 5,
+    "True:0:1": 18,
+    "False:2:3": 5
+  },
+  "elfEntry": "0xc4ae0 continuation",
+  "scope": "Original preprocessor continuation through real gain wrapper and output scaling, stopping at reconfiguration entry",
+  "limitations": [
+    "This joined corpus disables single-color; its enabled suite is separate.",
+    "Optional clipping/adjustment are disabled; their full native suites remain separate.",
+    "Ordinary joined XY regions are Normal/Big; Exclusion is exercised through mode-0 direct aggregate fallback.",
+    "Finite explicit calibration and prepared measurements, 4-8 lights and bounded histories; calibration initialization and live frame lifecycle remain unfinished.",
+    "Standard allocation, memory, strings and logging are explicit adapters; original numerical and policy bodies execute."
+  ]
+}

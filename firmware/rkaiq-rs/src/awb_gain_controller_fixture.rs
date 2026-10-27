@@ -278,6 +278,18 @@ pub fn run(v: &Value) -> Value {
             .map(|o| o["frames"].as_u64().unwrap() as u32)
             .unwrap_or(0),
     };
+    let dispatch = s.get("dispatch");
+    let mut dispatch_state = crate::awb_dispatch::State {
+        countdown: dispatch
+            .map(|d| d["countdown"].as_i64().unwrap() as i32)
+            .unwrap_or(0),
+        frame: settings.probability.frame,
+    };
+    let before_dispatch = dispatch_state;
+    let mut action = crate::awb_dispatch::Action {
+        calculated: false,
+        reconfigure: false,
+    };
     let before_site = site.clone();
     let before = state.clone();
     let before_results = results.clone();
@@ -334,16 +346,44 @@ pub fn run(v: &Value) -> Value {
                 site: &site_settings,
                 site_input: &site_input,
             };
-            crate::awb_wrapper::process(
-                &mut state,
-                &mut site,
-                &frame,
-                &records,
-                &calibration,
-                &mut results,
-                &settings,
-                &controls,
-            )
+            if let Some(d) = dispatch {
+                let mut joined = crate::awb_gain_frame::State {
+                    dispatch: dispatch_state,
+                    controller: state.clone(),
+                    site: site.clone(),
+                };
+                let scale = d["scale"]
+                    .as_array()
+                    .map(|v| [v[0].as_f64().unwrap() as f32, v[1].as_f64().unwrap() as f32]);
+                let result = joined.process(
+                    d["update"].as_bool().unwrap(),
+                    &frame,
+                    &records,
+                    &calibration,
+                    &mut results,
+                    &settings,
+                    &controls,
+                    scale,
+                );
+                if let Ok(value) = result {
+                    action = value;
+                }
+                dispatch_state = joined.dispatch;
+                state = joined.controller;
+                site = joined.site;
+                result.map(|_| ())
+            } else {
+                crate::awb_wrapper::process(
+                    &mut state,
+                    &mut site,
+                    &frame,
+                    &records,
+                    &calibration,
+                    &mut results,
+                    &settings,
+                    &controls,
+                )
+            }
         } else {
             state.process_prepared(&frame, &records, &calibration, &mut results, &settings)
         }
@@ -351,12 +391,15 @@ pub fn run(v: &Value) -> Value {
         state.process(&frame, &lights, &mut results, &settings)
     };
     if s["expect_prepared_error"].as_bool().unwrap_or(false) {
-        let error = if s["late_site_error"].as_bool().unwrap_or(false) {
+        let error = if s["late_site_error"].as_bool().unwrap_or(false)
+            || s["late_scale_error"].as_bool().unwrap_or(false)
+        {
             crate::InvalidInput::NonFinite
         } else {
             crate::InvalidInput::UnsupportedRegion
         };
         assert_eq!(result, Err(error));
+        assert_eq!(dispatch_state, before_dispatch);
         assert_eq!(site, before_site);
         assert_eq!(state, before);
         assert_eq!(results, before_results);
@@ -372,8 +415,11 @@ pub fn run(v: &Value) -> Value {
         .collect();
     let mut output = awb_postprocess_fixture::output(&state.post);
     output["controller"] = json!({"selected":state.region.selected as u8,"retained":state.region.retained,"kind":state.region.kind,"density":state.density.to_bits(),"high_gain":state.high_gain.map(f32::to_bits),"high_low_weight":state.high_low_weight.to_bits(),"temporal_weight":state.temporal_weight.to_bits(),"estimated":state.estimated_gain.map(f32::to_bits),"low_result":state.low.low.low_result.map(f32::to_bits),"temporal_result":state.low.low.temporal_result.map(f32::to_bits),"spatial_result":state.low.low.spatial_result.map(f32::to_bits),"temporal_source":state.low.low.temporal_source.map(f32::to_bits),"spatial_weight":state.low.low.spatial_weight.to_bits(),"used_previous":state.low.low.used_previous,"single_weight":state.low.single_weight.to_bits(),"selection_status":state.selection_status,"strategy_flag":state.strategy_flag,"xy_history":state.region.history.values(),"color_history":state.low.low.color_history.values(),"high_history":high,"lights":lights});
+    if dispatch.is_some() {
+        output["dispatch"] = json!({"frame":dispatch_state.frame,"countdown":dispatch_state.countdown,"calculated":action.calculated,"reconfigure":action.reconfigure});
+    }
     if outer.is_some() {
-        output["outer"] = json!({"matched":site.matched,"frames":site.frames,"tolerance":crate::interpolate(&[0.,100.,1000.], &[0.01,0.1,0.2], settings.probability.brightness as f32).unwrap().to_bits()});
+        output["outer"] = json!({"matched":site.matched,"frames":site.frames,"tolerance":if dispatch.is_some() && !action.calculated { post.tolerance.to_bits() } else { crate::interpolate(&[0.,100.,1000.], &[0.01,0.1,0.2], settings.probability.brightness as f32).unwrap().to_bits() }});
     }
     if s.get("single").is_some() || outer.is_some() {
         let r = &state.low.detection;

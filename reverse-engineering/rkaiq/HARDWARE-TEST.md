@@ -391,3 +391,31 @@ binary and coverage. Saved pixels are zero-filled simulated memory. This is
 userspace integration evidence, not sensor output, QR decoding, driver fidelity
 or cold-start hardware evidence. Production builds contain none of these
 simulated boundaries. Frozen kit 0.0.29 is unchanged.
+
+### Optional AE measurement configuration (0.0.30-dev)
+
+```sh
+camera-probe make-initial-parameters SC3336_FULL_IQ.json initial-ae.bin --ae-measurements > initial-ae-report.json
+```
+
+This offline option adds the recovered AE and histogram selected configuration
+to the full initial ISP record. It derives windows from `sensor_calib.resolution`
+and the explicit first scene's AE calibration, applies the native full-range
+coefficients and weighted histogram 1/3 grids, and uses the verified selected
+record→kernel serializers. Active ISP geometry must match the profile. The
+report identifies enabled measurements and keeps `automaticExposure:false`.
+The checked profile subset requires enabled auto/Y-mode/full-range AE, nonzero
+weights and windows not requiring native calibration correction.
+
+The native comparison now runs `AecUpdateConfig` under update mask 0x80 through
+normal return for the selected-measurement cases. Later histogram-3 publication
+is included, not merely the earlier histogram-1 checkpoint. This does not prove
+full private AE-state equivalence or subsequent frame-control behavior.
+
+Host assembly checks verify module masks, histogram grid routing and preservation
+of every nonmeasurement block. Actual ARM generation must match the host blob
+byte-for-byte. This option does not open a statistics queue, choose exposure,
+schedule sensor updates or alter `first-frame-sc3336` defaults. Persistent
+statistics capture with image/raw/parameter streams and feedback integration are
+still required before automatic exposure is available. Frozen kit 0.0.29 does
+not include this development option.

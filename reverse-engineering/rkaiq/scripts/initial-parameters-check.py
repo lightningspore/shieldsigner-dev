@@ -23,6 +23,15 @@ def main():
   assert data[0x130a:0x130c]==bytes([0,1])
   assert struct.unpack_from('<49H',data,0x130e)==tuple(iq['main_scene'][0]['sub_scene'][0]['scene_isp32']['agamma_calib_v11']['GammaTuningPara']['Gamma_curve'])
   assert report['iso']==50 and report['sensorExposureApplied'] is False
+  ae_out=d/'initial-ae.bin'
+  ae_run=subprocess.run([str(binary),'make-initial-parameters',str(iq_path),str(ae_out),'--ae-measurements'],text=True,capture_output=True,check=True)
+  ae_report=json.loads(ae_run.stdout);ae_data=ae_out.read_bytes();assert ae_report['aeMeasurementsConfigured'] and not ae_report['automaticExposure']
+  measurement_mask=0x003c4000|0x07800008
+  for offset in [0,8,16]:assert struct.unpack_from('<Q',ae_data,offset)[0]==struct.unpack_from('<Q',data,offset)[0]|measurement_mask
+  assert ae_data[24:0x41b]==data[24:0x41b] and ae_data[0x7ae:]==data[0x7ae:]
+  weights=bytes(iq['main_scene'][0]['sub_scene'][0]['scene_isp32']['ae_calib']['CommCtrl']['AecGridWeight'])
+  for offset in [58,300,542]:assert ae_data[0x4af+offset:0x4af+offset+225]==weights
+  assert ae_data[0x4af+16:0x4af+41]==bytes([1])*25
   before=out.read_bytes()
   assert subprocess.run([str(binary),'make-initial-parameters',str(iq_path),str(out)],capture_output=True).returncode!=0
   assert out.read_bytes()==before
@@ -33,5 +42,5 @@ def main():
    node[parts[-1]]=value; path=d/f'bad{n}.json';path.write_text(json.dumps(bad));dest=d/f'bad{n}.bin'
    assert subprocess.run([str(binary),'make-initial-parameters',str(path),str(dest)],capture_output=True).returncode!=0
    assert not dest.exists()
-  print(json.dumps(dict(profileBytes=len(data),parameterSha256=hashlib.sha256(data).hexdigest(),rejectedMalformedProfiles=len(mutations),overwriteRejected=True,scope='Offline assembly invariants; no live frame or complete native startup equivalence')))
+  print(json.dumps(dict(measurementParameterSha256=hashlib.sha256(ae_data).hexdigest(),profileBytes=len(data),parameterSha256=hashlib.sha256(data).hexdigest(),rejectedMalformedProfiles=len(mutations),overwriteRejected=True,scope='Offline assembly invariants; no live frame or complete native startup equivalence')))
 if __name__=='__main__':main()

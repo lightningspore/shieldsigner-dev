@@ -208,3 +208,35 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
         json!({"kind":"experimental-linear-first-frame-parameters","scene":"/main_scene/0/sub_scene/0/scene_isp32","bytes":PARAMETER_BYTES,"iso":iso,"requestedExposureSeconds":seconds,"requestedGain":gain,"sensorExposureApplied":false,"whiteBalanceLight":light,"whiteBalanceSeed":g,"limitations":["Fixed first-frame checkpoint; no automatic exposure/white balance controller.","Constant BLC tables only; selected CSM/CGC profile values are explicit inputs, not recovered automatic selection.","No hardware qualification or usable-frame claim; other ISP modules explicitly disabled."]}),
     ))
 }
+
+/// Experimental measurement-enabled initial record. Configures AE/histogram
+/// collection only; no statistics queue, exposure decision or sensor update.
+pub fn assemble_with_ae(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
+    use crate::isp_ae_measurement::*;
+    let (mut params, mut report) = assemble(iq)?;
+    let dimension = |name: &str| -> Result<u32, String> {
+        u32::try_from(
+            iq["sensor_calib"]["resolution"][name]
+                .as_u64()
+                .ok_or("Missing sensor dimensions for AE geometry")?,
+        )
+        .map_err(|_| "Invalid AE dimensions".into())
+    };
+    let comm = iq
+        .pointer("/main_scene/0/sub_scene/0/scene_isp32/ae_calib/CommCtrl")
+        .ok_or("Missing AE common calibration")?;
+    let (selected, policy) =
+        crate::ae_configuration::from_comm(comm, dimension("width")?, dimension("height")?)?;
+    let ae = AeMeasurement::from_record(selected[..104].try_into().unwrap())
+        .map_err(|e| format!("AE record: {e:?}"))?;
+    let hist = HistogramMeasurement::from_record(selected[104..].try_into().unwrap())
+        .map_err(|e| format!("Histogram record: {e:?}"))?;
+    apply_ae(&mut params, &mut [0; AE_BYTES], &ae);
+    apply_histogram(&mut params, &mut [0; HISTOGRAM_BYTES], &hist);
+    report["aeMeasurementsConfigured"] = json!(true);
+    report["automaticExposure"] = json!(false);
+    report["aeGeometry"] = json!({"width":dimension("width")?,"height":dimension("height")?,"source":"sensor_calib.resolution","requiresMatchingActiveIspGeometry":true});
+    report["aePolicy"] = json!({"histogramMode":policy.histogram_mode,"rawMode":policy.raw_mode,"yRange":policy.y_range,"channelMask":policy.channel_mask});
+    report["limitations"][2]=json!("Measurement configuration only; active ISP dimensions must match the profile. No live feedback or image-quality qualification; unselected modules remain disabled.");
+    Ok((params, report))
+}

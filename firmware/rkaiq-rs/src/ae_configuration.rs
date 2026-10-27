@@ -1,5 +1,5 @@
-//! Linear selected-measurement prefix of AecUpdateConfig, ending after initial
-//! weight publication. This is not the full configuration/exposure controller.
+//! Linear selected-measurement subset at AecUpdateConfig normal return.
+//! This is not the full configuration/exposure controller.
 extern crate alloc;
 use crate::{
     ae_geometry::{self, Geometry, RECORD_BYTES},
@@ -67,6 +67,8 @@ pub fn linear(
     }
     // Linear source 1 publishes the full software grid into histogram 1.
     record[166..391].copy_from_slice(weights);
+    // Later in AecUpdateConfig the selected grid is also published to histogram 3.
+    record[408..633].copy_from_slice(weights);
     Ok((
         record,
         Policy {

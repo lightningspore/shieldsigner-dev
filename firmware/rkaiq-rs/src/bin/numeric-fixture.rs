@@ -9,6 +9,8 @@ mod ae_result_fixture;
 mod ae_runtime_fixture;
 #[path = "../ae_session_fixture.rs"]
 mod ae_session_fixture;
+#[path = "../awb_gain_adjust_fixture.rs"]
+mod awb_gain_adjust_fixture;
 #[path = "../awb_low_single_color_fixture.rs"]
 mod awb_low_single_color_fixture;
 #[path = "../awb_preparation_fixture.rs"]
@@ -130,6 +132,10 @@ fn main() {
             "awb-translation" => println!(
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
+            ),
+            "awb-gain-adjust" => println!(
+                "{}",
+                awb_gain_adjust_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
             "awb-gain-clip" => {
                 use shieldsigner_rkaiq::{

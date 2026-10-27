@@ -1,0 +1,21 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 2048,
+  "casesPerFunction": 1024,
+  "exactFiniteCases": 1945,
+  "rejectedNativeNonfiniteCases": 103,
+  "mismatches": 0,
+  "arm": true,
+  "elfEntries": {
+    "shift": "0xca340",
+    "adjust": "0xcad70"
+  },
+  "scope": "Complete original 9x11 lookup and gain-adjustment call trees; exact gain/cache coordinate bits and unrelated-memory preservation",
+  "limitations": [
+    "Exact bits are compared for finite native results. Native endpoint 0/0 NaN cases must be rejected by the checked API and are counted separately.",
+    "Finite checked values, strict monotonic LUT axes and nondecreasing level samples. Remaining native endpoint zero-weight out-of-array reads are replaced by bounded endpoint cells.",
+    "Undefined temporary validity/padding cache words are excluded; defined coordinate values are compared.",
+    "Standard memory copy/logging are adapters; original LUT/index/interpolation/CCT/normalization bodies execute.",
+    "Complete outer AWB composition, calibration loading and live integration remain unfinished."
+  ]
+}

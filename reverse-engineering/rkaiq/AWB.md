@@ -777,6 +777,51 @@ are explicit adapters. [Reference report](awb-gain-history-equivalence.json).
 Clipping/adjustment, caller high/low composition, post-damping convergence,
 calibration loading and live AWB integration remain unfinished.
 
+## Gain adjustment lookup tables
+
+`awb_gain_adjust::shift` reconstructs `AwbCtShift3` (ELF `0xca340`): two
+row-major 9×11 output tables share ascending or descending coordinate axes.
+Lookup computes four weights with the native subtractions/divisions and the
+original rounded-product/FMA order. For inputs outside either axis, it looks up
+the edge and restores that input's offset beyond the edge to its output
+coordinate. This preserves the recovered translation outside the table.
+
+`awb_gain_adjust::State::adjust` joins the complete `AwbGainAdjust3`
+(`0xcad70`) call tree. Temperature mode uses the forward CCT/CCRI conversion,
+table adjustment and inverse gain conversion. Other modes use R/Gr and B/Gb
+coordinates and write `[adjusted R, 1, 1, adjusted B]` without normalization;
+insufficient green denominators leave all state unchanged. A caller-selected
+sample chooses one table or interpolates between two sample levels. A sample
+span below the double 1e-5 threshold selects the lower output. Temperature mode
+updates before/after coordinate caches; ratio mode preserves them. State commits
+only on success.
+
+The original endpoint index can point at the last axis element while its
+bilinear expression still reads an adjacent element. This crosses from the X
+axis into Y, or from Y into the first mapped table. Equal cross-boundary values
+produce a zero denominator and NaN even for otherwise strict monotonic axes.
+Rust detects that domain and returns `DegenerateRange`, preserving gain/caches.
+For finite endpoint results it uses the last bounded cell, avoiding the native
+zero-weight out-of-array reads. Temporary validity/padding words copied into
+native diagnostic caches can be uninitialized on a two-table interpolation;
+the value API represents their defined coordinate floats only.
+
+`mise run camera:rust:awb-gain-adjust` runs **2,048 cases** on host and ARM:
+**1,945 finite native results match exactly**, and **103 native NaN cases are
+rejected explicitly**. The complete original table/index/interpolation/CCT and
+normalization bodies execute; standard memory copy and logging are adapters.
+Coverage includes both axis directions, endpoints/interior/outside values,
+temperature/ratio modes, sample selectors, 1–4 levels, repeated level samples,
+tiny spans, invalid lines and green-denominator boundaries. It compares gain
+and defined cache coordinate bits, output padding and unrelated memory. The
+native undefined validity/padding cache words are excluded explicitly. A unit
+test checks endpoint rejection leaves gain and caches intact.
+[Reference report](awb-gain-adjust-equivalence.json).
+
+The pinned IQ currently disables `wbGainAdjust`; this recovers its optional
+enable path without changing that profile. Full caller composition, remaining
+postprocessing, calibration loading and live AWB integration remain unfinished.
+
 ## Gain clipping and inverse color-temperature conversion
 
 `awb_single_color::gain_from_color_temperature` reconstructs

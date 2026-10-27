@@ -283,3 +283,5 @@ pub mod ae_delay_calibration;
 pub mod ae_dynamic_calibration;
 
 pub mod ae_fps;
+
+pub mod ae_smoothing;

@@ -1018,11 +1018,11 @@ frame corpus seeds this region to zero, matching its native initialized context.
 Six additional publication-state cases check both matching and differing explicit
 reference keys with an empty saved queue.
 
-144 host/ARM comparisons execute native preprocessing to its current-error
+192 host/ARM comparisons execute native preprocessing to its current-error
 checkpoint, then complete native `AecRun` **with real DCG-disabled selection,
 register conversion and intermediate queue generation**, then complete native
-result publication, all on the same context. The corpus has 120 processed and
-24 skipped frames across intermediate counts zero/two/five, fixed/dynamic damping,
+result publication, all on the same context. The corpus has 160 processed and
+32 skipped frames across intermediate counts zero/two/four/five, fixed/dynamic damping,
 priming, held transitions, saturation and route forcing. It compares listed
 controller/cache/delay/convergence/history/sample state, converted final codes
 and real point, requested aggregate, route knots, complete selected/saved queues
@@ -1234,14 +1234,64 @@ high-bit behavior, different timing, fixed/variable modes and request handling.
 [Baseline refresh comparison](ae-fps-refresh-equivalence.json).
 
 This helper represents the predicate **once configuration reaches the timing
-stage**, not complete outer update-mask dispatch. Full zero-mask initialization
-remains unqualified: a probe with the current synthetic configuration returned
-a native configuration error without establishing a refreshed baseline. That error is not treated
-as a successful initialization or approximated by refreshing the cache anyway.
-A complete descriptor/configuration initializer is still required. The oracle
+stage**, not complete outer update-mask dispatch. The original incomplete synthetic zero-mask probe returned a configuration
+error without establishing a refreshed baseline. The complete profile-record
+comparison below now qualifies successful zero-mask configuration. Full
+`AecInit`/`AecCalibConfig` integration remains separate. The oracle
 uses explicit prior cache and valid timing; unrelated context and hardware
 VBLANK writes remain outside this comparison.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-fps-refresh.py --arm
+```
+
+
+## Complete profile records and successful zero-mask configuration
+
+The earlier zero-mask error came from missing linear dynamic-setpoint array
+lengths. `scripts/ae_profile_layout.py` now builds the complete AE and sensor
+records from the pinned SDK headers and profile. It uses explicit 32-bit
+emulated pointers, checks dynamic lengths, requires known fields/declarations,
+and zero-fills unused fixed-table storage. It supplies 41 pointed arrays.
+The AE record is 0x1c20 bytes and the sensor record 0x10c bytes; together they
+end at configuration offset 0x1d2c, before the measurement seed/runtime records.
+
+The tool generates C from the literal pinned headers and verifies 347 structure
+size/field-offset assertions with the ARM compiler through mise/Zig. This checks
+the Python packet layout against the target compiler rather than relying on
+host pointer sizes. Generated C/object files stay in ignored `dist` storage.
+
+32 complete native `AecUpdateConfig(mask=0)` calls now **return success** using
+these records. Their selected FPS/baseline, tolerance/damping, transition delays,
+smoothing counts, initial exposure, dynamic configuration, gating reset, control
+index reset and all five cleared control-history records match the composed
+Rust bindings on host and ARM. Control history and gating/index fields are
+seeded with nondefault values before the call to verify their reset behavior.
+The corpus varies smoothing, sensor time/gain delays, frame lengths and initial
+shutter values. [Zero-mask configuration comparison](ae-zero-config-equivalence.json).
+
+`ae_smoothing` recovers the intermediate-count producer: disabled smoothing
+sets both counts to zero; enabled smoothing selects the maximum time/gain update
+delay plus two, with native byte conversion and a maximum of five. The checked
+profile loader accepts the SDK's zero-through-ten sensor-delay range. For this
+profile the resulting linear count is **four**, not an arbitrary test setting.
+The separate HDR count is compared as configuration data; HDR operation is not
+qualified by this test.
+
+Native initialization/reset uses signed `-1` for the control-history index.
+`ae_run::linear` now permits that initial sentinel to wrap to zero on the first
+active frame, while retaining the checked domain for ordinary indices. The
+joined frame corpus includes sentinel-start cases and intermediate count four.
+A fresh native configuration clears processing gating, so its first frame is
+processed rather than attempting publication with an unadvanced sentinel index.
+
+This is successful complete **configuration execution with selected binding
+comparisons**, not complete Rust engine initialization or full private-context
+equivalence. The native JSON parser is not executed. Runtime geometry and the
+measurement-record seed remain explicit, and `AecInit`/`AecCalibConfig` integration,
+remaining runtime state construction, AWB and physical exposure association
+still require work. No hardware writes are enabled.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-zero-config.py --arm
 ```

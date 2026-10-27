@@ -29,7 +29,7 @@ class Original(Base):
  def setup(self,v):
   c=bytearray(0x6000)
   for o,x in [(0x130,45.),(0x114,v['measured']),(0xd0,v['exposure']),(0x10,10.),(0x14,10.),(0xf4,.00005),(0xf8,15.36),(0x2404,.4),(0x2408,.5),(0x5988,v['fps']),(0xfc,.00005),(0x100,.03),(0x104,1.),(0x108,512.),(0x3cc4,.01),(0x680,8.),(0x3d18,114.24),(0x3d1c,2800.),(0x124,v['previous']),(0x128,v['reference']),(0xd8,.003),(0x3ccc,.003),(0x3cc8,.01),(0x3cdc,1.),(0x3d00,1.),(0x3cec,.003)]:struct.pack_into('<f',c,o,x)
-  for o,x in [(0x22dc,3),(0x2300,v['frame']),(0x22fc,v['sync']),(0x3d40,v['index']),(0x5574,2),(0x22e4,1),(0x22e8,1 if v['same_mode'] else 2),(0x3c84,6)]:struct.pack_into('<i',c,o,x)
+  for o,x in [(0x22dc,3),(0x2300,v['frame']),(0x22fc,v['sync']),(0x3d40,v['index']),(0x5574,2),(0x22e4,1),(0x22e8,1 if v['same_mode'] else 2),(0x3c84,6)]:struct.pack_into('<i',c,o,x if x<0x80000000 else x-0x100000000)
   for o,x in [(0x4fb9,v['enabled']),(0x5994,v['priming']),(0x5995,v['saturated']),(0x3d3c,v['force']),(0x40d0,3),(0x40d1,2)]:c[o]=x
   c[0x23f4]=v.get('dynamic',False);c[0x4fb8]=v.get('dynamic_enabled',False)
   struct.pack_into('<Iff',c,0x23f8,2 if v.get('custom',False) else 0,10.,.95)

@@ -384,6 +384,81 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-zero-config" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let scene = &v["profile"]["main_scene"][0]["sub_scene"][0]["scene_isp32"];
+                let sensor = &v["profile"]["sensor_calib"];
+                let f = |k: &str| v[k].as_f64().unwrap() as f32;
+                let baseline = ae_fps::refresh_baseline(0, f("frame"), f("line"), f("clock"))
+                    .unwrap()
+                    .unwrap();
+                let mut fps_state = ae_fps::State {
+                    baseline_frame: baseline.frame,
+                    baseline_fps: baseline.fps,
+                    variable_frame: 2222.,
+                    fixed_rate: 7.,
+                    variable_rate: 8.,
+                };
+                let fps = ae_fps::Calibration::from_scene(scene)
+                    .unwrap()
+                    .select(
+                        &mut fps_state,
+                        f("frame"),
+                        f("line"),
+                        f("clock"),
+                        sensor["CISMinFps"].as_f64().unwrap() as f32,
+                    )
+                    .unwrap();
+                let policy = ae_policy::Calibration::from_scene(scene).unwrap();
+                let delay = ae_delay_calibration::Calibration::from_scene(scene)
+                    .unwrap()
+                    .counts(fps.frame, f("line"), f("clock"))
+                    .unwrap();
+                let smooth = ae_smoothing::from_profile(scene, sensor).unwrap();
+                let dynamic = ae_dynamic_calibration::Calibration::from_scene(scene).unwrap();
+                let init = &scene["ae_calib"]["LinearAeCtrl"]["InitExp"];
+                let t = init["InitTimeValue"].as_f64().unwrap() as f32;
+                let g = init["InitGainValue"].as_f64().unwrap() as f32;
+                let isp = init["InitIspDGainValue"].as_f64().unwrap() as f32;
+                let mut words = vec![
+                    baseline.frame.to_bits(),
+                    baseline.clock_mhz.to_bits(),
+                    baseline.line.to_bits(),
+                    baseline.fps.to_bits(),
+                    fps.frame.to_bits(),
+                    fps.fps.to_bits(),
+                    policy.tolerance_in.to_bits(),
+                    policy.tolerance_out.to_bits(),
+                    policy.damp_over.to_bits(),
+                    policy.damp_under.to_bits(),
+                    policy.damp_dark_to_bright.to_bits(),
+                    policy.damp_bright_to_dark.to_bits(),
+                    delay[0] as u32,
+                    delay[1] as u32,
+                    smooth.linear as u32,
+                    smooth.hdr as u32,
+                    g.to_bits(),
+                    isp.to_bits(),
+                    t.to_bits(),
+                    ((g * t) * isp).to_bits(),
+                    u32::MAX,
+                    0,
+                    dynamic.call_enabled as u32,
+                    match dynamic.mode {
+                        ae_damping::Mode::Default => 1,
+                        _ => 2,
+                    },
+                ];
+                words.extend([0u32; 55]);
+                println!(
+                    "{}",
+                    words
+                        .iter()
+                        .map(|w| format!("{w:08x}"))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                );
+            }
             "ae-fps" | "ae-fps-refresh" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let f = |k: &str| v[k].as_f64().unwrap() as f32;

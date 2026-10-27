@@ -37,10 +37,12 @@ pub fn linear(
     }
     // Restrict the successful numerical domain to that accepted by the
     // subordinate ring helpers rather than emulate signed index overflow.
-    if controller.index >= i32::MAX as u32 - 4 {
+    // Native initialization uses signed -1; its first active run advances to 0.
+    let next = controller.index.wrapping_add(1);
+    if next > i32::MAX as u32 - 4 {
         return Err(InvalidInput::Length);
     }
-    controller.index += 1;
+    controller.index = next;
     let output = ae_controller::step(
         controller,
         route,

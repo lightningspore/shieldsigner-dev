@@ -1,9 +1,9 @@
 {
   "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
   "runtimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
-  "cases": 144,
-  "processed": 120,
-  "skipped": 24,
+  "cases": 192,
+  "processed": 160,
+  "skipped": 32,
   "mismatches": 0,
   "armReplayPassed": true,
   "scope": "native preprocessing current-error checkpoint, complete automatic AecRun with real conversion, then complete result publication on one context",

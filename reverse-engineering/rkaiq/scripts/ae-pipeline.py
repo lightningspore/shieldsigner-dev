@@ -47,9 +47,9 @@ def main():
  runtime=ROOT/'.tools/reverse-engineering/uclibc-runtime/libuClibc-1.0.31.so';runtime_sha=hashlib.sha256(runtime.read_bytes()).hexdigest();assert runtime_sha==json.loads((ROOT/'reverse-engineering/rkaiq/artifacts.json').read_text())['uclibcRuntime']['memberSha256']
  cases=[]
  for k in range(48):
-  for count in [0,2,5]:
+  for count in [0,2,4,5]:
    h=[0]*256;h[[3,120,254,255][k%4]]=1000
-   cases.append(dict(profile=dict(sensor_calib=json.loads(raw)['sensor_calib']),histogram=h,measured=[0.,.390625,3.,45.,120.,240.][k%6],exposure=[.003,.02,.1][k%3],previous=[-.5,0.,.5][k%3],reference=[-.5,0.,.5][(k//3)%3],fps=[2.,30.][k%2],enabled=bool(k%2),same_mode=k%5!=0,priming=k%7==0,saturated=bool(k%2),force=k%3==0,index=k%20,frame=30+k,sync=28+k,dynamic=bool(k%2),dynamic_enabled=bool((k//2)%2),custom=False,damping_history=[((i+k)%7-3)*.01 for i in range(10)],run_wrapper=True,run=True,count=count))
+   cases.append(dict(profile=dict(sensor_calib=json.loads(raw)['sensor_calib']),histogram=h,measured=[0.,.390625,3.,45.,120.,240.][k%6],exposure=[.003,.02,.1][k%3],previous=[-.5,0.,.5][k%3],reference=[-.5,0.,.5][(k//3)%3],fps=[2.,30.][k%2],enabled=bool(k%2),same_mode=k%5!=0,priming=k%7==0,saturated=bool(k%2),force=k%3==0,index=0xffffffff if k==0 else k%20,frame=30+k,sync=28+k,dynamic=bool(k%2),dynamic_enabled=bool((k//2)%2),custom=False,damping_history=[((i+k)%7-3)*.01 for i in range(10)],run_wrapper=True,run=True,count=count))
  native=Original();expected=[];processed=0
  for v in cases:expected.append(native.run(v));processed+=int(native.last_run)
  inputs=''.join('ae-pipeline '+json.dumps(v,separators=(',',':'))+'\n' for v in cases)

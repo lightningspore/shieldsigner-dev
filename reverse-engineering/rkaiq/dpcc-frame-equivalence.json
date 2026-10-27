@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "frames": 256,
+  "updates": 86,
+  "noOpFrames": 170,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "8327792b56448922a0209ee7acf3678572c6ad8905617aeba6b040c3991eb0fd",
+  "physicalArmBinarySha256": "1f6982db65ef5657d463777a739bc45a2a58e3ceb066297ff798cde2e4c2bf7e",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Full persistent native linear color DPCC callback, ISO/reconfiguration gate, supported auto-expert processing and all 192 result bytes.",
+  "limitations": [
+    "Allocator, explicit SDK calibration lookup and diagnostic logging retain the documented native-init oracle boundaries.",
+    "No HDR/manual/enabled-PDAF/sensor-side DPCC coverage.",
+    "Physical replay does not exercise the live ISP queue."
+  ]
+}

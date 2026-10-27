@@ -1654,3 +1654,25 @@ This qualifies software-reboot startup without vendor camera bootstrap; it is
 not a physical power-cycle, optical QR, physical scene/color-change or complete
 LCD/button result. Original installed application and startup scripts remain
 unchanged after testing.
+
+## Development 0.0.34: live DPCC
+
+[DPCC evidence](dpcc-live-validation.json) records the startup and runtime
+integration on the driver-only boot used above. The ordinary-start test completed
+600 image frames, 400 AE/AWB statistics frames and 399 accepted batches. All
+fifteen DPCC updates (ISO 50–143) match the original full callback and ISP32
+converter. A deliberately bright initialization completed another 192 image
+frames, 128 statistics frames and 127 batches; all thirteen updates (ISO 162–304,
+including falling ISO) match. Both runs retain at most two parameter snapshots,
+run both AWB groups and match all 7,680 bytes of final native AWB translation.
+Final AE means are approximately 42.6 and 46.1, both within the profile's
+45 ±10% acceptance band. The changed initial exposure is a private test input;
+its full IQ file and captured scene images remain ignored.
+
+The preceding attempt failed with an exhausted parameter pool around image
+frame 150. Its log hash and outcome are retained, together with the bounded
+slot-wait fix and simulated EAGAIN/completion/cancellation tests. Neither passing
+live run entered that wait, so live recovery from pool pressure remains open.
+After both passing runs, CmaAllocated is zero and MemAvailable is about 34 MB.
+This does not qualify optical QR, defect-removal efficacy, color accuracy or
+physical register timing. The frozen 0.0.33 ZIP is unchanged.

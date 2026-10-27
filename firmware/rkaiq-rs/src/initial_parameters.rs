@@ -112,6 +112,11 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
     let hardware =
         isp_demosaic::quantize(&mut previous, selected).map_err(|e| format!("demosaic: {e:?}"))?;
     isp_demosaic::apply(&mut params, &hardware);
+    let dpcc = crate::dpcc_calibration::Automatic::from_value(&scene["adpcc_calib"]["DpccTuningPara"])?;
+    let mut dpcc_result = [0; crate::isp_dpcc::RESULT_BYTES];
+    dpcc.process(iso, &mut dpcc_result).map_err(|e| format!("DPCC: {e:?}"))?;
+    crate::isp_dpcc::apply(&mut params, &dpcc_result);
+
     let wb = &scene["wb_v32"];
     let light = wb["autoExtPara"]["lightSourceForFirstFrame"]
         .as_str()

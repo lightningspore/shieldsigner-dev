@@ -192,8 +192,10 @@ real hardware evidence. These do not imply that every optional IQ section or
 vendor algorithm is implemented.
 
 The [selected-profile audit](profile-module-audit.json) also identifies enabled
-profile blocks that our startup explicitly disables: CCM, LSC, DPCC, spatial
-and temporal Bayer noise reduction, YNR, CNR and sharpening. These remain
+profile blocks that frozen 0.0.33 startup explicitly disables: CCM, LSC, DPCC,
+spatial and temporal Bayer noise reduction, YNR, CNR and sharpening. Current
+0.0.34 development enables DPCC with native comparison and live capture evidence
+([details](ISP.md#persistent-dpcc-and-live-submission-0034-development)). The other seven blocks remain
 implementation gaps for full profile parity, separate from the physical tests
 below. A working QR subset is not complete vendor image-quality equivalence.
 

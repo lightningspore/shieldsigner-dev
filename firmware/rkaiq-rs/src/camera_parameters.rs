@@ -105,6 +105,26 @@ impl ParameterBackend {
         self.buffers = buffers;
         result
     }
+    /// Production event-owner backpressure. Do not retry QBUF/driver errors:
+    /// wait only while all validated slots remain owned by the driver.
+    fn wait_runtime_slot(&mut self, queue: &mut parameter::Queue, stopped: impl Fn() -> bool) -> io::Result<bool> {
+        let started = Instant::now();
+        let mut waited = false;
+        while !self.buffers.iter().any(|buffer| !buffer.queued) {
+            if self.buffers.is_empty() || queue.queued_count == 0 {
+                return Err(error("Parameter pool has no available or in-flight slot"));
+            }
+            if stopped() { return Ok(false); }
+            waited = true;
+            if self.try_complete(queue)?.is_some() { continue; }
+            if started.elapsed() >= Duration::from_millis(250) {
+                return Err(io::Error::new(io::ErrorKind::TimedOut,"ISP parameter pool remained full for 250 ms"));
+            }
+            std::thread::sleep(Duration::from_millis(1));
+        }
+        if waited { println!("{}",json!({"event":"parameter-pool-backpressure","waitUs":started.elapsed().as_micros()})); }
+        Ok(true)
+    }
     /// Build and submit an ordinary linear gain batch from the runtime's actual
     /// effective map. This is an event-owner API, not an automatic capture loop.
     /// Commit the WB cache only after QBUF succeeds. Driver failures still

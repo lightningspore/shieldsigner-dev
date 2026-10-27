@@ -3217,6 +3217,20 @@ fn main() {
                     hex(&cached)
                 );
             }
+            "dpcc-frames" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let calibration = shieldsigner_rkaiq::dpcc_calibration::Automatic::from_value(&v["calibration"]).unwrap();
+                let mut state = shieldsigner_rkaiq::dpcc_runtime::State::default();
+                let mut result = [0u8;192];
+                let mut outputs = Vec::new();
+                for frame in v["frames"].as_array().unwrap() {
+                    state.reconfigure |= frame["reconfigure"].as_bool().unwrap();
+                    let gains = frame["gains"].as_array().map(|g| core::array::from_fn(|i| g[i].as_f64().unwrap() as f32));
+                    let update = state.process(&calibration,gains,&mut result).unwrap();
+                    outputs.push(serde_json::json!({"iso":state.iso,"reconfigure":state.reconfigure,"updated":update,"result":result.iter().map(|v|format!("{v:02x}")).collect::<String>()}));
+                }
+                println!("{}",serde_json::to_string(&outputs).unwrap());
+            }
             "dpcc-auto" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let calibration = shieldsigner_rkaiq::dpcc_calibration::Automatic::from_value(&v["calibration"]).unwrap();

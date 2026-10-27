@@ -1,0 +1,200 @@
+{
+  "passed": true,
+  "updates": 15,
+  "isoRange": [
+    50,
+    143
+  ],
+  "frames": [
+    1,
+    6,
+    7,
+    9,
+    10,
+    12,
+    13,
+    15,
+    16,
+    18,
+    19,
+    21,
+    22,
+    24,
+    25
+  ],
+  "isos": [
+    50,
+    57,
+    78,
+    91,
+    98,
+    109,
+    116,
+    123,
+    127,
+    132,
+    135,
+    139,
+    141,
+    142,
+    143
+  ],
+  "resultBytesComparedPerUpdate": 192,
+  "packedBytesComparedPerUpdate": 186,
+  "startupDpccEnabled": true,
+  "startupMatchesFirstRuntimeResult": true,
+  "processedStatistics": 400,
+  "parameterSubmissions": 399,
+  "maxParameterSnapshots": 2,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "ownerLogSha256": "e15b2a72064a6495931830fccf1d118ba01755f22752c347c262ce4a62e22c60",
+  "initialParametersSha256": "618e90d0e7b3c2909d821a8bfa748037e7cf4a0330e3c35eefec89715c7d1748",
+  "limitations": [
+    "Native init retains allocator/IQ-module-lookup/log boundaries, and the dispatcher uses a controlled typed C++ cast.",
+    "The callback time input is an unused placeholder in this expert/sensor-auto-disabled path; actual logged gains drive ISO.",
+    "Successful QBUF is submission proof, not independent physical register/pixel application proof.",
+    "Optical QR and image-quality qualification remain open."
+  ],
+  "imageFrames": 600,
+  "controlValidation": {
+    "kind": "normal-timeshare-live-capture-check",
+    "passed": true,
+    "aeFrames": 400,
+    "awbFrames": 400,
+    "normalFrames": 398,
+    "normalGroups": [
+      0,
+      1
+    ],
+    "finalFrame": 598,
+    "finalParametersId": 597,
+    "maxActiveLights": 7,
+    "nativeTranslationChecked": true,
+    "sceneImageSaved": true,
+    "parameterSubmissions": 399,
+    "maxParameterSnapshots": 2,
+    "retiredParameterSnapshots": 398,
+    "scope": "Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification"
+  },
+  "awbNativeTranslation": {
+    "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "statisticsSha256": "ccecd1cb2f66582d446dfb1134fa14483bba790f94f20660695f574f2e5e34d3",
+    "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "translatedSha256": "07fbc0eb007ba83de04f82ff1831be0ba017774717e707aba6d8681b200e864e",
+    "frameId": 598,
+    "parametersId": 597,
+    "bytesCompared": 7680,
+    "mismatches": 0,
+    "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+    "limitations": [
+      "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+      "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+    ]
+  },
+  "parameterPoolWaitEvents": 0,
+  "brightInitializationRun": {
+    "imageFrames": 192,
+    "controlValidation": {
+      "kind": "normal-timeshare-live-capture-check",
+      "passed": true,
+      "aeFrames": 128,
+      "awbFrames": 128,
+      "normalFrames": 126,
+      "normalGroups": [
+        0,
+        1
+      ],
+      "finalFrame": 190,
+      "finalParametersId": 189,
+      "maxActiveLights": 7,
+      "nativeTranslationChecked": true,
+      "sceneImageSaved": true,
+      "parameterSubmissions": 127,
+      "maxParameterSnapshots": 2,
+      "retiredParameterSnapshots": 126,
+      "scope": "Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification"
+    },
+    "awbNativeTranslation": {
+      "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+      "statisticsSha256": "40c4db6d9964f2cf8d677b0bfd9414b2d09b8ea5dc70fe20c944e757e087804f",
+      "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+      "translatedSha256": "bdb3e0f69d937bcfb8bf996135f91494054883617642f5631d791cffbc20b8ba",
+      "frameId": 190,
+      "parametersId": 189,
+      "bytesCompared": 7680,
+      "mismatches": 0,
+      "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+      "limitations": [
+        "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+        "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+      ]
+    },
+    "parameterPoolWaitEvents": 0,
+    "passed": true,
+    "updates": 13,
+    "isoRange": [
+      162,
+      304
+    ],
+    "frames": [
+      1,
+      4,
+      6,
+      7,
+      9,
+      10,
+      12,
+      13,
+      15,
+      16,
+      18,
+      19,
+      21
+    ],
+    "isos": [
+      200,
+      208,
+      304,
+      278,
+      238,
+      220,
+      196,
+      184,
+      174,
+      169,
+      164,
+      163,
+      162
+    ],
+    "resultBytesComparedPerUpdate": 192,
+    "packedBytesComparedPerUpdate": 186,
+    "startupDpccEnabled": true,
+    "startupMatchesFirstRuntimeResult": true,
+    "processedStatistics": 128,
+    "parameterSubmissions": 127,
+    "maxParameterSnapshots": 2,
+    "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "ownerLogSha256": "2b094fad6e68d73fa2e6147d93b2bdce455a772736ae7049d9ee6aec331882b1",
+    "initialParametersSha256": "37c94b577d22a127111a2e3eecd7abd14d674da35a6e8304694c537948e9e6df",
+    "limitations": [
+      "Native init retains allocator/IQ-module-lookup/log boundaries, and the dispatcher uses a controlled typed C++ cast.",
+      "The callback time input is an unused placeholder in this expert/sensor-auto-disabled path; actual logged gains drive ISO.",
+      "Successful QBUF is submission proof, not independent physical register/pixel application proof.",
+      "Optical QR and image-quality qualification remain open."
+    ]
+  },
+  "priorFailure": {
+    "ownerLogSha256": "c2459e315c3050a26be34d93aeae83a9238a3363b22c1590ea031884ff31df5a",
+    "outcome": "Parameter pool exhausted around image frame 150; capture aborted and queues cleaned.",
+    "fix": "Bounded runtime-slot wait before submission; no QBUF retries.",
+    "coverage": "Simulated EAGAIN then valid completion and cancelled capture. Later live runs passed without entering the wait; physical backpressure recovery remains unproven."
+  },
+  "cameraProbeSha256": "b392d59b18390c519b7ca317c5d316df281abe4298ddd0f8e871a62de77c9887",
+  "bootId": "ec6df777-e23d-4629-99c9-90dd07104e38",
+  "deviceSerial": "0a523b8b23110ffc",
+  "postCaptureMemory": {
+    "memAvailableKiB": 34820,
+    "cmaAllocatedKiB": 0,
+    "cmaReleasedKiB": 12288
+  }
+}

@@ -398,6 +398,13 @@ fn first_frame_sc3336_with_gain(
                     hardware: [0; shieldsigner_rkaiq::isp_demosaic::HARDWARE_BYTES],
                 },
             ));
+            owner.dpcc = Some(CameraDpcc {
+                calibration: shieldsigner_rkaiq::dpcc_calibration::Automatic::from_value(
+                    &iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["adpcc_calib"]["DpccTuningPara"]
+                ).map_err(error)?,
+                state: shieldsigner_rkaiq::dpcc_runtime::State::default(),
+                result: [0; shieldsigner_rkaiq::isp_dpcc::RESULT_BYTES],
+            });
             if live_awb {
                 owner.awb = Some(CameraAwb {
                     session: shieldsigner_rkaiq::awb_session::Session::new(

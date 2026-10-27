@@ -74,6 +74,8 @@ pub mod isp_dpcc;
 pub mod dpcc_selection;
 #[cfg(feature = "diagnostics")]
 pub mod dpcc_calibration;
+#[cfg(feature = "diagnostics")]
+pub mod dpcc_runtime;
 pub mod isp_effective;
 pub mod isp_pipeline;
 pub mod media;

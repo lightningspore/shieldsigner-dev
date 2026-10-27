@@ -572,3 +572,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:dpcc-automatic"]
 description = "Compare full profile-bound automatic DPCC initialization and processing with ARM"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/dpcc-automatic.py"
+
+[tasks."camera:rust:dpcc-frames"]
+description = "Compare persistent automatic DPCC frame gating with original ARM callback"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/dpcc-frames.py"

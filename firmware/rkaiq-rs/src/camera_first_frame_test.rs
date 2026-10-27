@@ -598,6 +598,9 @@ mod first_frame_driver {
         assert!(backend
             .enqueue_runtime_gain(&mut queue, &boosted, 2, &mut cache, None)
             .is_err());
+        let queued_before_cancel = queue.queued_count;
+        assert!(!backend.wait_runtime_slot(&mut queue, || true).unwrap());
+        assert_eq!(queue.queued_count, queued_before_cancel);
         let cache_before_failure = cache;
         assert!(backend
             .enqueue_runtime_gain(
@@ -630,8 +633,9 @@ mod first_frame_driver {
         assert!(backend.try_complete(&mut queue).unwrap().is_none());
         assert_eq!(backend.buffers, before_buffers);
         assert_eq!(queue.queued_count, 2);
-        let completed = backend.try_complete(&mut queue).unwrap().unwrap();
-        assert_eq!(completed["bufferIndex"], 0);
+        DRIVER.lock().unwrap().as_mut().unwrap().parameter_would_block = true;
+        assert!(backend.wait_runtime_slot(&mut queue, || false).unwrap());
+        assert_eq!(parameter::word(backend.last_dequeue.as_ref().unwrap(), 0), 0);
         assert_eq!(queue.queued_count, 1);
         assert!(!backend.buffers[0].queued);
         let wb = isp32::WhiteBalanceGain {
@@ -767,6 +771,15 @@ mod first_frame_driver {
             ).unwrap(),
             shieldsigner_rkaiq::demosaic_runtime::State { iso: 0, reconfigure: true, hardware: [0; 112] },
         ));
+        owner.dpcc = Some(CameraDpcc {
+            calibration: shieldsigner_rkaiq::dpcc_calibration::Automatic::from_value(
+                &iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["adpcc_calib"]["DpccTuningPara"]
+            ).unwrap(),
+            state: shieldsigner_rkaiq::dpcc_runtime::State { iso: 0, reconfigure: true },
+            result: [0xa5; 192],
+        });
+        let dpcc_before = owner.dpcc.as_ref().unwrap().state;
+        let dpcc_result_before = owner.dpcc.as_ref().unwrap().result;
         let demosaic_before = owner.demosaic.as_ref().unwrap().1;
         let snapshots = owner.parameters.clone();
         DRIVER
@@ -783,6 +796,10 @@ mod first_frame_driver {
         assert_eq!(demosaic_after.iso, demosaic_before.iso);
         assert_eq!(demosaic_after.reconfigure, demosaic_before.reconfigure);
         assert_eq!(demosaic_after.hardware, demosaic_before.hardware);
+        assert_eq!(owner.dpcc.as_ref().unwrap().state.iso, dpcc_before.iso);
+        assert_eq!(owner.dpcc.as_ref().unwrap().state.reconfigure, dpcc_before.reconfigure);
+        assert_eq!(owner.dpcc.as_ref().unwrap().result, dpcc_result_before);
+
         assert!(owner
             .submit_gain(&mut backend, &mut queue, 2, Some(wb))
             .is_err());
@@ -791,6 +808,10 @@ mod first_frame_driver {
         assert_eq!(demosaic_after.iso, demosaic_before.iso);
         assert_eq!(demosaic_after.reconfigure, demosaic_before.reconfigure);
         assert_eq!(demosaic_after.hardware, demosaic_before.hardware);
+        assert_eq!(owner.dpcc.as_ref().unwrap().state.iso, dpcc_before.iso);
+        assert_eq!(owner.dpcc.as_ref().unwrap().state.reconfigure, dpcc_before.reconfigure);
+        assert_eq!(owner.dpcc.as_ref().unwrap().result, dpcc_result_before);
+
         owner
             .submit_gain(&mut backend, &mut queue, 3, Some(wb))
             .unwrap()
@@ -799,6 +820,13 @@ mod first_frame_driver {
         assert!(!owner.demosaic.as_ref().unwrap().1.reconfigure);
         assert!(owner.demosaic.as_ref().unwrap().1.iso >= 50);
         assert_eq!(owner.demosaic.as_ref().unwrap().1.hardware[0], 0);
+        assert!(!owner.dpcc.as_ref().unwrap().state.reconfigure);
+        assert!(owner.dpcc.as_ref().unwrap().state.iso >= 50);
+        let mut dpcc_snapshot = [0u8; isp32::PARAMETER_BYTES];
+        shieldsigner_rkaiq::isp_dpcc::apply(&mut dpcc_snapshot, &owner.dpcc.as_ref().unwrap().result);
+        use shieldsigner_rkaiq::isp_dpcc::{OFFSET as DPCC_OFFSET, BYTES as DPCC_BYTES};
+        assert_eq!(&owner.parameters.last().unwrap().1[DPCC_OFFSET..DPCC_OFFSET+DPCC_BYTES], &dpcc_snapshot[DPCC_OFFSET..DPCC_OFFSET+DPCC_BYTES]);
+
 
         assert_eq!(
             owner

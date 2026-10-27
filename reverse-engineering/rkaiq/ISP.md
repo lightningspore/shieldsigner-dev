@@ -533,3 +533,43 @@ Outer per-frame update/reconfiguration policy and transactional live enqueue
 remain next. DPCC is still disabled in the live path and frozen 0.0.33 kit;
 this result is complete supported-mode output assembly, not live defect-pixel
 correction or optical quality qualification.
+
+### Persistent DPCC and live submission (0.0.34 development)
+
+`dpcc_runtime::State::process` reconstructs the automatic linear color-frame
+callback gate at ELF `0x11a67c` (Ghidra `0x12a67c`). ISO uses native f32
+`(analogue * (sensorDigital * ispDigital)) * 50`, truncated to i32. Missing
+exposure means ISO 50. A fresh context starts at ISO zero; changed integer ISO
+or a reconfiguration flag triggers processing. Unchanged ISO leaves every
+cached result byte untouched. The supported mode excludes HDR, monochrome,
+Fast mode, enabled PDAF and sensor-side automatic DPCC.
+
+[Persistent native/physical CPU comparison](dpcc-frame-equivalence.json) checks
+256 frames: 86 updates and 170 no-ops, including reconfiguration, repeated ISO,
+sub-unity gains and missing exposure. All 192 result bytes, ISO and flag match
+the actual original callback. Run `mise run camera:rust:dpcc-frames` after
+building the fixture tools; `--adb SERIAL` adds physical CPU replay.
+
+The startup builder now enables DPCC from the selected profile. Runtime uses
+the same effective exposure association as demosaic/gain and includes DPCC in
+their transactional parameter batch. Result/cache/ISO/snapshot state commits
+only after successful QBUF. Simulated acquisition/QBUF failures verify unchanged
+DPCC state and a successful retry. No independent physical gain timing is
+inferred from the effective-map label.
+
+The first live attempt exhausted the parameter pool after about 150 image
+frames. The production owner now waits at most 250 ms for a validated DQBUF
+completion when every slot is in flight, preserving EAGAIN ownership and
+stopping the wait if capture has ended. It does not retry arbitrary driver or
+QBUF failures. Simulated EAGAIN/completion and cancellation tests cover that
+path. A subsequent 600-image run passed without needing this wait; live
+recovery under queue pressure is therefore not yet proven.
+
+[Live comparison](dpcc-live-validation.json) checks all fifteen submitted
+192-byte results and 186-byte packed blocks against the original full callback
+and ISP32 converter. Startup DPCC is enabled and matches the first runtime
+result. The run processed 400 AE/AWB statistics frames and accepted 399 batches,
+retaining at most two snapshots. Final AWB translation matches all 7,680 bytes.
+This is accepted-submission and functional capture evidence, not optical
+quality, defect-removal efficacy or per-frame register readback. The frozen
+0.0.33 kit remains unchanged and has DPCC disabled.

@@ -1,3 +1,8 @@
+struct CameraDpcc {
+    calibration: shieldsigner_rkaiq::dpcc_calibration::Automatic,
+    state: shieldsigner_rkaiq::dpcc_runtime::State,
+    result: [u8; shieldsigner_rkaiq::isp_dpcc::RESULT_BYTES],
+}
 // Included in camera-probe's Linux module. Owned events cross worker boundaries;
 // the event consumer below owns the AE runtime and sensor together.
 #[derive(Debug)]
@@ -237,6 +242,7 @@ struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
     pending: std::collections::VecDeque<Vec<u8>>,
     processed: u64,
     awb: Option<CameraAwb>,
+    dpcc: Option<CameraDpcc>,
     demosaic: Option<(shieldsigner_rkaiq::demosaic_selection::Calibration, shieldsigner_rkaiq::demosaic_runtime::State)>,
 }
 impl<B: shieldsigner_rkaiq::sensor::Backend> CameraAeOwner<B>
@@ -263,6 +269,7 @@ where
             pending: std::collections::VecDeque::new(),
             processed: 0,
             awb: None,
+            dpcc: None,
             demosaic: None,
         }
     }
@@ -346,6 +353,16 @@ where
             }
             Some((next, hardware, exposure.frame, exact, gains))
         } else { None };
+        let dpcc_staged = if let Some(dpcc) = &self.dpcc {
+            let (exposure, exact) = self.runtime.effective_exposure(frame).map_err(error)?;
+            let gains = core::array::from_fn(|i| f32::from_le_bytes(exposure.exposure[4+i*4..8+i*4].try_into().unwrap()));
+            let mut next = dpcc.state;
+            let mut result = dpcc.result;
+            let changed = next.process(&dpcc.calibration, Some(gains), &mut result)
+                .map_err(|e| error(format!("Live DPCC processing: {e:?}")))?;
+            if changed { shieldsigner_rkaiq::isp_dpcc::apply(&mut planned, &result); }
+            Some((next, result, changed, exposure.frame, exact, gains))
+        } else { None };
         let measurement = self.awb.as_ref().and_then(|awb| awb.measurement_for(frame));
         if let Some(record) = measurement {
             shieldsigner_rkaiq::isp_awb_measurement::Measurement(record).apply(&mut planned, true);
@@ -359,7 +376,7 @@ where
         if self.parameters.len() == 128 || self.parameters.last().is_some_and(|p| p.0 >= frame) {
             return Err(error("Gain batch requires a new increasing parameter ID"));
         }
-        let index = if self.awb.is_some() || self.demosaic.is_some() {
+        let index = if self.awb.is_some() || self.demosaic.is_some() || self.dpcc.is_some() {
             mark_runtime_parameter_frame(&mut planned, frame);
             let index = backend.enqueue_payload(queue, &planned)?;
             cache = planned_cache;
@@ -395,6 +412,17 @@ where
                 snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);
                 let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
                 println!("{}",json!({"event":"automatic-demosaic-submitted","frame":frame,"iso":next.iso,"gains":gains,"exposureFrame":exposure_frame,"exactExposureLookup":exact,"hardware":hex(&hardware),"packed":hex(&planned[OFFSET..OFFSET+BYTES]),"physicalApplicationVerified":false}));
+            }
+        }
+        if let Some((next, result, changed, exposure_frame, exact, gains)) = dpcc_staged {
+            let dpcc = self.dpcc.as_mut().unwrap();
+            dpcc.state = next;
+            dpcc.result = result;
+            if changed {
+                use shieldsigner_rkaiq::isp_dpcc::{OFFSET, BYTES};
+                snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);
+                let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
+                println!("{}",json!({"event":"automatic-dpcc-submitted","frame":frame,"iso":next.iso,"gains":gains,"exposureFrame":exposure_frame,"exactExposureLookup":exact,"result":hex(&result),"packed":hex(&planned[OFFSET..OFFSET+BYTES]),"physicalApplicationVerified":false}));
             }
         }
         self.parameters.push((frame, snapshot));
@@ -590,7 +618,9 @@ where
                                     Some(awb) => Some(awb.gain_for(output.frame)?),
                                     None => fixed_wb,
                                 };
-                                self.submit_gain(backend, queue, output.frame, wb)?;
+                                if backend.wait_runtime_slot(queue, || worker.is_finished() || camera_stream_cancelled())? {
+                                    self.submit_gain(backend, queue, output.frame, wb)?;
+                                }
                             }
                         }
                         progress = Instant::now();

@@ -380,6 +380,44 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-publication" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let record = |value: &serde_json::Value| -> ae_publication::Record {
+                    let text = value.as_str().unwrap();
+                    core::array::from_fn(|i| {
+                        u8::from_str_radix(&text[2 * i..2 * i + 2], 16).unwrap()
+                    })
+                };
+                let proposed: Vec<_> = v["proposed"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(record)
+                    .collect();
+                let published: Vec<_> = v["published"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(record)
+                    .collect();
+                let out = ae_publication::select(
+                    &proposed,
+                    &record(&v["previous"]),
+                    &published,
+                    v["frame"].as_i64().unwrap() as i32,
+                    v["sync"].as_i64().unwrap() as i32,
+                )
+                .unwrap();
+                let hex =
+                    |bytes: &[u8]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
+                println!(
+                    "{}:{}:{}:{}",
+                    out.count,
+                    out.synchronized_frame,
+                    hex(&out.records.concat()),
+                    hex(&out.final_record)
+                );
+            }
             "ae-conversion-queue" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let profile = calibration::SensorCalibration::from_value(&v["profile"]).unwrap();

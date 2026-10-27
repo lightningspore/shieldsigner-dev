@@ -269,3 +269,5 @@ pub mod ae_frame;
 pub mod ae_register;
 
 pub mod ae_conversion_queue;
+
+pub mod ae_publication;

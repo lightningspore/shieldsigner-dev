@@ -887,3 +887,46 @@ enable live automatic sensor writes.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-conversion-queue.py --arm
 ```
+
+## Linear exposure publication selection
+
+`ae_publication::select` recovers the linear queue-selection part of
+`AecGetProcResults` (ELF 0xb1e70). Input records retain the native 244-byte
+layout. Equality uses the first **48 bytes**, so floating-point bit patterns,
+DCG and register-code fields all participate; this is not approximate numeric
+equality. `pack` provides the ordinary non-iris fixed-timing record layout.
+
+If the final proposed key matches the previous final key, frame-length and
+iris metadata are checked separately to decide whether a one-record update is
+needed. Otherwise the prior queue reference uses the clamped frame difference
+minus one (different from the conversion queue's starting-point index), initial
+matching proposals are skipped, and subsequent adjacent duplicate keys are
+removed. A remaining transition updates the synchronized frame and the last
+record's iris-change byte.
+
+The native scratch-copy operation retains the first 48 bytes, auxiliary bytes
+192 through 227, and frame length at bytes 232 through 235. It leaves line
+length and pixel clock zero in those selected scratch records. The port
+preserves that behavior rather than filling metadata the binary did not copy.
+Zero-count results also have distinct native branches: an unchanged final
+record retains the previous-final fallback, while a transition whose every
+proposal matches the selected old-queue key returns zeroed scratch/final records.
+
+540 comparisons execute native result processing through normal return,
+including its CIS feature and environment-history publication calls. They
+compare the complete six-record output area, count, synchronized frame and
+final record, covering one through six proposals, short/full prior queues,
+frame differences, duplicate patterns, same-final metadata changes, and the
+all-matching transition branch. The comparison does **not** claim equivalence
+for the other result fields or context side effects.
+[Publication selection comparison](ae-publication-equivalence.json).
+
+Fixed frame-length mode and explicit prior/proposed records are used. Iris
+metadata differences test selection policy, not iris hardware support. `memcmp`
+and integer division are modeled boundaries. Binding converted records to
+this selector and publishing its history/state updates remain integration
+work; no live sensor writes are enabled.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-publication.py --arm
+```

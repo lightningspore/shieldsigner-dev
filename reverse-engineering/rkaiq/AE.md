@@ -1678,8 +1678,8 @@ appended exposure scaling. The merge function itself does not restore a base
 AWB record before conversion.
 
 The native AWB result publisher (ELF `0x5ce20`) uses update/synchronization flags
-and can copy the last WB result into a new parameter item. Whether every such
-item reaches the hardware result list still needs tracing; this does not prove
+and can copy the last WB result into a new parameter item. The manager gating described below
+shows that an item is not unconditionally forwarded; this does not prove
 that WB restoration happens every frame. We retain the converter's literal
 unity no-op behavior rather than invent a restoration policy.
 
@@ -1693,4 +1693,50 @@ need for an explicit WB result to reset a previously boosted output.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-gain-results.py --arm
+```
+
+### AWB publication and manager inclusion
+
+`awb_publication::publish` recovers `RkAiqAwbHandleInt::genIspResult` (ELF
+`0x5ce20`) for the ordinary pair of allocated gain/configuration items. It owns
+20-byte WB-gain and 1,204-byte measurement-configuration payloads, their frame,
+synchronization and update fields, independent latest-result caches, and the
+two publisher synchronization IDs. It does not calculate AWB gains.
+
+A fresh controller result assigns the current frame as the item's and
+publisher's synchronization ID, marks the item updated, stores it as latest,
+and clears the controller change flag. Without a fresh result, the publisher
+either clears the item's update flag when synchronization matches or copies
+the latest payload into an older item and marks it updated. If the latest item
+is absent, it still assigns the synchronization ID but clears the update flag.
+Initial publication gives items frame 0 while retaining the input frame for
+synchronization. Bypass skips the complete operation only for algorithm ID 0.
+
+One unusual native detail is preserved and tested: gain freshness compares the
+publisher's gain synchronization ID against the **configuration item's** sync
+field, rather than the gain item's field. The gain and configuration IDs can
+therefore differ. The Rust implementation does not silently correct that
+cross-item comparison.
+
+Ghidra's `RkAiqManager::applyAnalyzerResult` (ELF `0x8e108`) shows the subsequent
+manager gate: gain (FullParams offset `0x40`, result type 4) and configuration
+(offset `0x38`, type 3) are included only when their item is present and either
+its update flag is set or publication is forced. Equality between the full
+parameter frame ID and the manager's field at `0x9c` also forces publication.
+When included, the manager assigns the full-parameter frame to the proxy and
+clears the payload's update flag. Thus an unchanged WB gain is not an automatic
+per-frame restoration operation. This manager behavior is currently static
+binary evidence; its list dispatch is not part of the publisher oracle.
+
+`awb-publication.py` executes the original complete publisher in 256 cases,
+covering both change flags, independent missing/present latest caches, equal
+and unequal sync IDs, mismatched gain-item IDs, initial mode, bypass with
+algorithm IDs 0/1, and frames 0/12/UINT32_MAX. It compares complete payloads,
+latest payloads and all typed output fields against host and ARM Rust.
+Smart-pointer assignment is adapted to explicit pointer-pair copying; logging
+is intercepted. The numerical AWB controller, reference-count lifetime behavior,
+parameter-pool reuse and live ISP submission remain unfinished.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-publication.py --arm
 ```

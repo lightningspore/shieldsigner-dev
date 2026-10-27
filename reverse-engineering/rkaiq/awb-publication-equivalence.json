@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 256,
+  "host": true,
+  "arm": true,
+  "mismatches": 0,
+  "comparison": "Publisher sync/frame/update fields, consumed controller flags, complete gain/configuration payloads and latest payloads",
+  "limitations": [
+    "C++ smart-pointer assignment uses an explicit pointer-pair adapter; refcounts and logging are not reconstructed.",
+    "AWB numerical controller, manager list ownership and physical ISP submission remain separate."
+  ]
+}

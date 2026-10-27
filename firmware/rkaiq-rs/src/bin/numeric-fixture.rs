@@ -227,6 +227,59 @@ fn main() {
                     hex(&cache)
                 );
             }
+            "awb-publication" => {
+                use shieldsigner_rkaiq::awb_publication::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let word = |key: &str| v[key].as_u64().unwrap() as u32;
+                let make_gain = |fill: u8| Gain {
+                    frame: 99,
+                    sync: word("item_sync"),
+                    updated: true,
+                    data: [fill; 20],
+                };
+                let make_config = |fill: u8| Configuration {
+                    frame: 99,
+                    sync: word("item_sync"),
+                    updated: true,
+                    data: [fill; 1204],
+                };
+                let mut state = State {
+                    gain_sync: word("gain_sync"),
+                    configuration_sync: word("config_sync"),
+                    latest_gain: if v["latest_gain"].as_bool().unwrap() {
+                        Some(make_gain(0x33))
+                    } else {
+                        None
+                    },
+                    latest_configuration: if v["latest_config"].as_bool().unwrap() {
+                        Some(make_config(0x44))
+                    } else {
+                        None
+                    },
+                };
+                let mut gain = make_gain(0x11);
+                gain.sync = word("gain_item_sync");
+                let mut configuration = make_config(0x22);
+                let flags = publish(
+                    &mut state,
+                    &mut gain,
+                    &mut configuration,
+                    Input {
+                        frame: word("frame"),
+                        initial: v["initial"].as_bool().unwrap(),
+                        bypass: v["bypass"].as_bool().unwrap(),
+                        algorithm_id: v["algorithm_id"].as_i64().unwrap() as i32,
+                        gain_changed: v["gain_changed"].as_bool().unwrap(),
+                        configuration_changed: v["config_changed"].as_bool().unwrap(),
+                    },
+                );
+                let hex =
+                    |bytes: &[u8]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
+                println!(
+                    "{}",
+                    serde_json::json!({"gain_sync":state.gain_sync,"config_sync":state.configuration_sync,"gain_frame":gain.frame,"config_frame":configuration.frame,"gain_item_sync":gain.sync,"config_item_sync":configuration.sync,"gain_updated":gain.updated,"config_updated":configuration.updated,"gain_data":hex(&gain.data),"config_data":hex(&configuration.data),"gain_changed":flags.0,"config_changed":flags.1,"latest_gain":state.latest_gain.map(|v| hex(&v.data)),"latest_config":state.latest_configuration.map(|v| hex(&v.data))})
+                );
+            }
             "gain-results" => {
                 use shieldsigner_rkaiq::isp32::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

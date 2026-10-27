@@ -240,3 +240,35 @@ malformed profile rejection and output collision protection. The second compares
 the selected gamma/CSM/CGC dispatcher branches against original ARM instructions,
 including all unrelated parameter bytes. Neither proves complete startup parity
 or image quality.
+
+### Development combined parameter/image capture
+
+After configuring the media pipeline and applying the intended sensor exposure,
+the development command keeps the parameter queue alive through image capture:
+
+```sh
+camera-probe capture-with-parameters /dev/videoPARAM initial.bin -- /dev/videoIMAGE frame.raw --fourcc NV12 --warmup 2 --timeout-ms 10000 > capture-events.jsonl
+```
+
+Replace both device placeholders using actual inventory. Parameter and image
+nodes must be distinct character devices. The command refuses known vendor
+camera processes and existing image/metadata outputs. It submits one full
+parameter record, waits for its completion, then calls the image-capture path
+with the parameter FD, mappings and STREAMON still held. Image buffers default
+to four for this command. Image capture returns and closes its resources before
+the parameter queue is stopped. Capture errors also pass through parameter
+cleanup; stdout records parameter and image lifecycle events, including cleanup
+errors. Keep stdout, stderr, `frame.raw.json`, raw bytes and kernel logs.
+
+A parameter completion is not proof that pixels used those settings. Some
+hardware paths may require a different startup order or raw TX/RX streaming;
+this combined positive path has not yet run on the actual board. It does not
+configure the graph, program exposure, stream raw readback endpoints, run
+statistics/automatic 3A or prove cold startup. Those are still required work.
+The frozen 0.0.28 kit does not contain this command.
+
+Run the static ARM CLI rejection checks with:
+
+```sh
+uv run --python 3.13 reverse-engineering/rkaiq/scripts/combined-capture-check.py
+```

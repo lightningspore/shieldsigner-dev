@@ -210,7 +210,63 @@ fn wait_parameter(fd: RawFd, deadline: Instant) -> io::Result<()> {
         }
     }
 }
+fn capture_with_parameters(args: &[String]) -> io::Result<()> {
+    use std::os::unix::fs::{FileTypeExt, MetadataExt};
+    let separator = args.iter().position(|v| v == "--").ok_or_else(|| {
+        error("capture-with-parameters PARAM_NODE PARAM.bin -- IMAGE_NODE OUT [capture options]")
+    })?;
+    if separator != 2 || args.len() < 5 {
+        return Err(error(
+            "Expected two parameter arguments, --, then image node and output",
+        ));
+    }
+    let image = &args[3..];
+    for path in [&image[1], &format!("{}.json", image[1])] {
+        if std::path::Path::new(path).exists() {
+            return Err(error("Capture output or metadata exists"));
+        }
+    }
+    let metadata = fs::metadata(&args[0])?;
+    let image_metadata = fs::metadata(&image[0])?;
+    if !metadata.file_type().is_char_device()
+        || !image_metadata.file_type().is_char_device()
+        || metadata.rdev() == image_metadata.rdev()
+    {
+        return Err(error(
+            "Parameter and image nodes must be distinct character devices",
+        ));
+    }
+    let mut capture_args = image.to_vec();
+    capture_args.push("--require-no-rkaiq".into());
+    // Four image buffers for first-frame bring-up; explicit caller overrides remain supported.
+    if !capture_args.iter().any(|v| v == "--buffers") {
+        capture_args.extend(["--buffers".into(), "4".into()]);
+    }
+    let mut parameter_args = args[..2].to_vec();
+    parameter_args.extend(["--hold-ms".into(), "0".into()]);
+    submit_parameters_then(&parameter_args, || {
+        println!(
+            "{}",
+            json!({"event":"image-capture-starting","parameterQueueHeldOpen":true,"device":image[0],"output":image[1],"coldStartProven":false})
+        );
+        io::stdout().flush()?;
+        let outcome = capture(&capture_args, false);
+        println!(
+            "{}",
+            json!({"event":"image-capture-finished","success":outcome.is_ok(),"error":outcome.as_ref().err().map(|e|e.to_string()),"parameterQueueHeldOpen":true,"coldStartProven":false})
+        );
+        outcome
+    })
+}
 fn submit_parameters(args: &[String]) -> io::Result<()> {
+    submit_parameters_then(args, || Ok(()))
+}
+// The callback executes while backend/queue/mappings are still alive and before
+// STREAMOFF. Its error joins the ordinary cleanup path; no detached process.
+fn submit_parameters_then<F: FnOnce() -> io::Result<()>>(
+    args: &[String],
+    after_ready: F,
+) -> io::Result<()> {
     use std::io::Read;
     if std::mem::size_of::<usize>() != 4 {
         return Err(error(
@@ -357,7 +413,10 @@ fn submit_parameters(args: &[String]) -> io::Result<()> {
             json!({"event":"parameters-dequeued","frameApplicationVerified":false,"holdMs":hold,"completion":completed})
         );
         io::stdout().flush()?;
-        std::thread::sleep(Duration::from_millis(hold));
+        after_ready()?;
+        if hold != 0 {
+            std::thread::sleep(Duration::from_millis(hold));
+        }
         Ok(())
     })();
     let allocated = backend.allocated;

@@ -1350,3 +1350,49 @@ preprocessing/controller settings, line derivation, runtime extra-range policy,
 raw preprocessing-to-session composition, hardware reconfiguration/publication
 and live qualification remain unfinished. The native IQ parser and complete
 `AwbInitV32` have not been replayed by this test.
+
+## Shared common-strategy initialization
+
+`awb_calibration::Common::from_value` loads the selected `autoExtPara` fields
+used by `JsonPara2SwParaCom` (ELF `0xc8450`), recovered with Ghidra. It owns
+night gain, the two calibrated lines, clipping tables/daylight limit, remosaic
+flags/sensor gain, night-history weights, brightness knots, probability
+thresholds, damping/history/convergence controls, region stability controls and
+initial smart-run/countdown constants. `Common::high` borrows/copies these into
+the existing high-gain settings without inventing a second calibration table.
+
+The native helper directly copies `lineRgBg` and `lineRgProjCCT` and sets both
+valid flags to true. These writes replace the earlier `CalCCTLine` fitted output
+in the full update path. The JSON coefficients therefore do not need a new fit
+or normalization for this configuration stage; later numerical helpers still
+apply their verified denominator/validity guards. Probability distance fields
+are copied in low/high order, and its four brightness-threshold words initialize
+to `[0, 0, outdoorLow, outdoorHigh]`. The history convergence field receives
+`varThforUnDamp`; damped convergence receives `varThforDamp`.
+
+Native startup smart-run values are exact f32 0.001/0.005/0.05 and countdown 20.
+They are initial values, before per-frame smart-run interpolation. The helper
+also initializes three strategy flags to zero, stores the opaque CCM reference,
+and sets the environment interval count to 16. The numerical environment adapter
+still needs reconciliation with this exact native record layout before full
+session construction. The sixteen night percentages are copied by the enclosing
+`UpdateAwbCalibV2Para`, **not** by this common helper. The owned loader reads them
+from IQ; the oracle pre-seeds them as that caller does and checks preservation.
+
+`mise run camera:rust:awb-iq-common` executes the **complete original common
+initializer** for the pinned SC3336 object and 127 finite variations, comparing
+all represented scalar/array/line/remosaic outputs on host and ARM. It checks
+four successful native allocations and their returned contents, untouched
+calibration inputs, remosaic padding and unrelated strategy bytes. Only bounded
+successful allocation and standard memory are adapted. Eight malformed JSON
+objects verify missing/nonempty/matching counts, byte limits, line shape,
+finite damping, knot ordering and flags. [Common initialization report](awb-iq-common-equivalence.json).
+
+The checked loader rejects empty adjustment-LUT declarations, as the native
+helper requires a nonzero LUT count even when adjustment is disabled. It also
+requires matching nonempty clipping tables and bounded nonempty history weights;
+it does not reproduce native allocation failure/partial-write behavior. Loading
+these common fields does not load dynamic preprocessing curves, adjustment LUT
+contents or enable flags, full saved-site initialization, or complete IQ/session
+lifecycle. Raw preprocessing composition, hardware reconfiguration/publication,
+unsafe Exclusion resolution and live AWB qualification remain outstanding.

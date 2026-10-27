@@ -350,3 +350,167 @@ impl Illumination {
         })
     }
 }
+
+/// Shared strategy settings copied by JsonPara2SwParaCom (ELF 0xc8450).
+/// Dynamic preprocessor curves, clipping/adjustment enable flags and saved-site
+/// initialization are separate parts of the full calibration update.
+pub struct Common {
+    pub night_gain: [f32; 4],
+    pub lines: [Line; 2],
+    pub daylight_cct_minimum: f32,
+    pub clip_tables: [Vec<f32>; 3],
+    pub remosaic_enabled: bool,
+    pub remosaic_inverse: bool,
+    pub sensor_gain: [f32; 4],
+    pub history_weights: Vec<u8>,
+    pub brightness_knots: [u32; 16],
+    /// Copied by the enclosing calibration update before the common helper.
+    pub night_percentages: [u8; 16],
+    pub environment_thresholds: [u32; 4],
+    pub distance_thresholds: [f32; 2],
+    pub probability_thresholds: [u32; 4],
+    pub relative_count_threshold: f32,
+    pub damping: crate::awb_gain::DampingParameters,
+    pub luma_history_target: i32,
+    pub history_convergence: f32,
+    pub damped_convergence: f32,
+    pub stabilization: bool,
+    pub region_history_target: i32,
+    pub region_variance_threshold: f32,
+    pub initial_smart: [f32; 3],
+    pub initial_countdown: i32,
+}
+impl Common {
+    /// Input is the explicit autoExtPara object, not an implicitly chosen scene.
+    pub fn from_value(v: &Value) -> Result<Self, String> {
+        // Native requires a nonempty adjustment LUT even when adjustment is off.
+        let lut_count = integer(v, "/wbGainAdjust/lutAll_len", 1, i32::MAX as i64)? as usize;
+        if at(v, "/wbGainAdjust/lutAll")?.as_array().map(|a| a.len()) != Some(lut_count) {
+            return Err(format!("Adjustment LUT count mismatch"));
+        }
+        let clip = at(v, "/wbGainClip")?;
+        let n = integer(clip, "/cct_len", 1, i32::MAX as i64)? as usize;
+        let mut tables = [Vec::new(), Vec::new(), Vec::new()];
+        for (key, table) in ["cct", "cri_bound_up", "cri_bound_low"]
+            .iter()
+            .zip(&mut tables)
+        {
+            if integer(clip, &format!("/{key}_len"), 1, i32::MAX as i64)? as usize != n
+                || at(clip, &format!("/{key}"))?.as_array().map(|a| a.len()) != Some(n)
+            {
+                return Err(format!("Clip table count mismatch"));
+            }
+            for i in 0..n {
+                table.push(number(clip, &format!("/{key}/{i}"))?);
+            }
+        }
+        ordered(&tables[0], "wbGainClip/cct")?;
+        let n = integer(v, "/weightForNightGainCalc_len", 1, 255)? as usize;
+        if at(v, "/weightForNightGainCalc")?
+            .as_array()
+            .map(|a| a.len())
+            != Some(n)
+        {
+            return Err(format!("History weight count mismatch"));
+        }
+        let mut history_weights = Vec::new();
+        for i in 0..n {
+            history_weights
+                .push(integer(v, &format!("/weightForNightGainCalc/{i}"), 0, 255)? as u8);
+        }
+        let mut brightness_knots = [0; 16];
+        let mut night_percentages = [0; 16];
+        for key in ["lumaValueMatrix", "defaultNightGainWeight"] {
+            if at(v, &format!("/{key}"))?.as_array().map(|a| a.len()) != Some(16) {
+                return Err(format!("Expected 16 {key} values"));
+            }
+        }
+        for i in 0..16 {
+            brightness_knots[i] =
+                integer(v, &format!("/lumaValueMatrix/{i}"), 0, u32::MAX as i64)? as u32;
+            night_percentages[i] =
+                integer(v, &format!("/defaultNightGainWeight/{i}"), 0, 255)? as u8;
+        }
+        if brightness_knots.windows(2).any(|x| x[0] >= x[1]) {
+            return Err(format!("Brightness knots must increase"));
+        }
+        let line = |key: &str| -> Result<Line, String> {
+            let a: [f32; 3] = array(v, &format!("/{key}"))?;
+            Ok(Line {
+                a: a[0],
+                b: a[1],
+                c: a[2],
+                valid: true,
+            })
+        };
+        let mut environment_thresholds = [0; 4];
+        for (i, key) in [
+            "lumaValThLow",
+            "lumaValThLow2",
+            "lumaValThHigh",
+            "lumaValThHigh2",
+        ]
+        .iter()
+        .enumerate()
+        {
+            environment_thresholds[i] =
+                integer(v, &format!("/division/{key}"), 0, u32::MAX as i64)? as u32;
+        }
+        Ok(Self {
+            night_gain: array(v, "/defaultNightGain")?,
+            lines: [line("lineRgBg")?, line("lineRgProjCCT")?],
+            daylight_cct_minimum: number(v, "/wbGainDaylightClip/outdoor_cct_min")?,
+            clip_tables: tables,
+            remosaic_enabled: flag(v, "/remosaicCfg/enable")?,
+            remosaic_inverse: flag(v, "/remosaicCfg/applyInvWbGainEnable")?,
+            sensor_gain: array(v, "/remosaicCfg/sensorWbGain")?,
+            history_weights,
+            brightness_knots,
+            night_percentages,
+            environment_thresholds,
+            distance_thresholds: [
+                number(v, "/probCalcDis/proDis_THL")?,
+                number(v, "/probCalcDis/proDis_THH")?,
+            ],
+            probability_thresholds: [
+                0,
+                0,
+                integer(v, "/probCalcLv/outdoorLumaValThLow", 0, u32::MAX as i64)? as u32,
+                integer(v, "/probCalcLv/outdoorLumaValThHigh", 0, u32::MAX as i64)? as u32,
+            ],
+            relative_count_threshold: number(v, "/probCalcWp/wpNumPercTh2")?,
+            damping: crate::awb_gain::DampingParameters {
+                step: number(v, "/dampFactor/dFStep")?,
+                minimum: number(v, "/dampFactor/dFMin")?,
+                maximum: number(v, "/dampFactor/dFMax")?,
+                variance_threshold: number(v, "/dampFactor/lvVarTh")?,
+            },
+            luma_history_target: integer(v, "/dampFactor/lvIIRsize", 0, i32::MAX as i64)? as i32,
+            history_convergence: number(v, "/converged/varThforUnDamp")?,
+            damped_convergence: number(v, "/converged/varThforDamp")?,
+            stabilization: flag(v, "/xyRegionStableSelection/enable")?,
+            region_history_target: integer(
+                v,
+                "/xyRegionStableSelection/xyTypeListSize",
+                0,
+                i32::MAX as i64,
+            )? as i32,
+            region_variance_threshold: number(v, "/xyRegionStableSelection/varianceLumaTh")?,
+            initial_smart: [
+                f32::from_bits(0x3a83126f),
+                f32::from_bits(0x3ba3d70a),
+                f32::from_bits(0x3d4ccccd),
+            ],
+            initial_countdown: 20,
+        })
+    }
+    pub fn high(&self, fast: bool, brightness: u32) -> crate::awb_high_gain::Settings {
+        crate::awb_high_gain::Settings {
+            fast,
+            brightness,
+            temporal_default: self.night_gain,
+            temporal_knots: self.brightness_knots,
+            temporal_percentages: self.night_percentages,
+        }
+    }
+}

@@ -460,3 +460,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:awb-iq-lights"]
 description = "Load SC3336 seven-light calibration and verify native probability/spatial gain paths"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-iq-lights.py --arm"]
+
+[tasks."camera:rust:awb-iq-common"]
+description = "Verify JSON-loaded common AWB initialization against the complete original helper"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-iq-common.py --arm"]

@@ -17,6 +17,8 @@ mod awb_gain_controller_fixture;
 mod awb_site_fixture;
 #[path = "../awb_dispatch_fixture.rs"]
 mod awb_dispatch_fixture;
+#[path = "../awb_common_fixture.rs"]
+mod awb_common_fixture;
 #[path = "../awb_low_single_color_fixture.rs"]
 mod awb_low_single_color_fixture;
 #[path = "../awb_postprocess_fixture.rs"]
@@ -258,6 +260,7 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-common-iq" => println!("{}",awb_common_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-lights-parse" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
                 println!("{}",match shieldsigner_rkaiq::awb_calibration::Lights::from_value(&v){

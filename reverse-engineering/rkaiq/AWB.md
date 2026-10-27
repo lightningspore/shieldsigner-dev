@@ -2068,3 +2068,63 @@ This closes fresh measurement-cache initialization and captured-data preparation
 not the remaining numerical session setup or live gain publication. No hardware
 settings were changed by these offline replays. All 85 library tests and the
 no-default-features build pass after this change.
+
+
+### Joined first-frame gain calculation and physical gain step (2026-10-27)
+
+`awb-captured-gain.py` now runs the existing production numerical preprocessing,
+metadata/history classification, fresh measurement preparation and complete
+scene-configured gain wrapper together on one captured FAST frame. It requires
+explicit input dimensions, sample scale and ISO. The current replay follows the
+native missing-exposure-metadata branch (calibrated brightness fallback 2048),
+with an absent saved-site reference and no software pre-gain override. These
+are diagnostic runtime conditions, not a completed live metadata binding.
+
+A new physical measurement capture 06 was replayed on the actual Luckfox ARM
+CPU and on the host; their complete diagnostic JSON matched. The computed
+first-frame gain was `[1.4864674, 1, 1, 1.7921165]`, compared with calibrated
+startup `[1.52182, 1, 1, 1.71481]`. The replay used explicit sample scale 1 and
+ISO 400; scale provenance and real exposure metadata still need binding for
+continuous operation. The joined full replay has not yet been compared with a
+single complete native startup/controller execution; component equivalence
+checks and host/board agreement establish narrower evidence.
+
+`camera-probe awb-gain-frame-sc3336` accepts an explicit four-channel diagnostic
+gain, applies the verified ISP serializer to the otherwise unchanged initial
+parameters, and captures measurements/image. Gain values must be finite,
+positive and within the ISP Q8 range. Existing measurement-only/fixed/AE entry
+points retain their behavior. On the real board, submitting capture 06's gain
+produced `ss-20261027-awb-gain-step-01`: successful NV12 image and statistics,
+no cleanup errors, readable text on visual inspection. Only initial parameter
+bytes 4649 and 4651 changed relative to measurement capture 06 (the red/blue
+gain words). Both captures' full 7,680-byte translations match original ARM
+instructions with zero differences.
+
+Reproduce the calculation (push the ARM numeric-fixture under the given name
+first; the optional ADB comparison opens no camera devices):
+
+```sh
+uv run --python 3.13 python reverse-engineering/rkaiq/scripts/awb-captured-gain.py \
+  .tools/reverse-engineering/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json \
+  dist/reverse-engineering/hardware-2026-10-27/ss-20261027-awb-measurement-06.awb-translated.bin \
+  --sample-scale 1 --iso 400 --width 2304 --height 1296 \
+  --adb 0a523b8b23110ffc
+```
+
+The physical submission command on the board was:
+
+```sh
+/tmp/shieldsigner-camera-probe-awb-gain-step awb-gain-frame-sc3336 \
+  /tmp/shieldsigner-pipeline-sof.json /tmp/sc3336-awb-30ms-8x.private.json \
+  /dev/video20 /dev/video11 /tmp/ss-20261027-awb-gain-step-01 /dev/video19 \
+  1 1.4864673614501953 1 1 1.7921165227890015
+```
+
+Use a new output basename for another capture. These steps prove a bounded
+capture → Rust calculation on board → explicit ISP gain submission → capture
+path. They do not enable persistent automatic WB. Continuous state ownership,
+frame/parameter association during updates, exposure metadata and live gain
+publication remain the next work. The image is an inspection aid, not a color
+accuracy qualification. Hardware stayed at the requested 30 ms / 8x exposure;
+no boot/kernel/service changes occurred. The 85 library tests and simulated
+first-frame sequence checks also pass.

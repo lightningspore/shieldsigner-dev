@@ -31,6 +31,8 @@ mod awb_preparation_fixture;
 mod awb_translation_fixture;
 #[path = "../sensor_submission_fixture.rs"]
 mod sensor_submission_fixture;
+#[path = "../awb_capture_replay_fixture.rs"]
+mod awb_capture_replay_fixture;
 fn f(s: &str) -> f32 {
     f32::from_bits(u32::from_str_radix(s, 16).unwrap())
 }
@@ -295,6 +297,10 @@ fn main() {
                     output.push(serde_json::json!({"gain":selected.map(f32::to_bits),"updated":updated,"converged":converged,"history":values}));
                 }
                 println!("{}", serde_json::json!(output));
+            }
+            "awb-captured-gain" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                println!("{}", match awb_capture_replay_fixture::run(&v) { Ok(value)=>value, Err(error)=>serde_json::json!({"error":error}) });
             }
             "awb-fresh-preparation" => {
                 use awb_preparation::*;

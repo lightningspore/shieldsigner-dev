@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "c9ba15f669e9b5f8ae2e43cca51c8d90571d63d4ea4e05612c5cafbfb8428450",
+  "testBinarySha256": "09832ce241164026624c2b217d939ed58cf0d80d29f4dd707ea4f2c16bf6e6bb",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -9,9 +9,9 @@
     "imageContent": "anonymous zero-filled simulated memory",
     "imageFrames": 3,
     "multiPlaneTx": false,
-    "rawFrames": 5,
+    "rawFrames": 6,
     "savedBytes": 4478976,
-    "sofEvents": 6,
+    "sofEvents": 7,
     "statisticsEnabled": false,
     "statisticsEvents": 0,
     "statisticsFrames": 0
@@ -24,9 +24,9 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
-      "sofEvents": 6,
+      "sofEvents": 7,
       "statisticsEnabled": false,
       "statisticsEvents": 0,
       "statisticsFrames": 0
@@ -38,12 +38,12 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 6,
+      "rawFrames": 5,
       "savedBytes": 4478976,
-      "sofEvents": 7,
+      "sofEvents": 6,
       "statisticsEnabled": true,
-      "statisticsEvents": 6,
-      "statisticsFrames": 6
+      "statisticsEvents": 5,
+      "statisticsFrames": 5
     },
     {
       "automaticAe": false,
@@ -52,9 +52,9 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 4,
+      "rawFrames": 5,
       "savedBytes": 4478976,
-      "sofEvents": 5,
+      "sofEvents": 6,
       "statisticsEnabled": false,
       "statisticsEvents": 0,
       "statisticsFrames": 0
@@ -96,8 +96,8 @@
         "physicalApplicationVerified": false,
         "processedStatistics": 36,
         "success": true,
-        "sensorWriteCount": 54,
-        "sensorQueryCount": 126
+        "sensorWriteCount": 48,
+        "sensorQueryCount": 112
       }
     },
     {
@@ -123,8 +123,8 @@
         "physicalApplicationVerified": false,
         "processedStatistics": 36,
         "success": true,
-        "sensorWriteCount": 51,
-        "sensorQueryCount": 119
+        "sensorWriteCount": 48,
+        "sensorQueryCount": 112
       }
     }
   ],

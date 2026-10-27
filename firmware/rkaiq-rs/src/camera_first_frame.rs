@@ -23,11 +23,39 @@ fn awb_measurement_frame_sc3336(args: &[String]) -> io::Result<()> {
     }
     first_frame_sc3336_mode(&args[..6], None, false, Some(scale))
 }
+fn awb_gain_frame_sc3336(args: &[String]) -> io::Result<()> {
+    if args.len() != 11 {
+        return Err(error("awb-gain-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE R GR GB B"));
+    }
+    let scale = args[6]
+        .parse::<u32>()
+        .map_err(|_| error("Invalid sample scale"))?;
+    if scale == 0 {
+        return Err(error("Sample scale must be positive"));
+    }
+    let mut gain = [0.; 4];
+    for (out, value) in gain.iter_mut().zip(&args[7..]) {
+        *out = value.parse::<f32>().map_err(|_| error("Invalid gain"))?;
+        if !out.is_finite() || *out <= 0. || *out > 2047. / 256. {
+            return Err(error("Gain outside ISP Q8 range"));
+        }
+    }
+    first_frame_sc3336_with_gain(&args[..6], None, false, Some(scale), Some(gain))
+}
 fn first_frame_sc3336_mode(
     args: &[String],
     observer: Option<CameraAeSender>,
     automatic: bool,
     awb_sample_scale: Option<u32>,
+) -> io::Result<()> {
+    first_frame_sc3336_with_gain(args, observer, automatic, awb_sample_scale, None)
+}
+fn first_frame_sc3336_with_gain(
+    args: &[String],
+    observer: Option<CameraAeSender>,
+    automatic: bool,
+    awb_sample_scale: Option<u32>,
+    gain_override: Option<[f32; 4]>,
 ) -> io::Result<()> {
     use shieldsigner_rkaiq::{
         calibration::{RuntimeTiming, SensorCalibration},
@@ -100,7 +128,7 @@ fn first_frame_sc3336_mode(
             }
         }
     }
-    let (parameters, initial, sdk) = if let Some(scale) = awb_sample_scale {
+    let (mut parameters, mut initial, sdk) = if let Some(scale) = awb_sample_scale {
         if automatic || statistics.is_none() || step.is_some() {
             return Err(error(
                 "AWB measurement capture requires fixed startup and a statistics node",
@@ -117,6 +145,24 @@ fn first_frame_sc3336_mode(
         };
         (parameters, initial, None)
     };
+    if let Some(g) = gain_override {
+        use shieldsigner_rkaiq::isp32::{apply_awb_gain, awb_prepare_position, WhiteBalanceGain};
+        apply_awb_gain(
+            &mut parameters,
+            &mut [0; 32],
+            WhiteBalanceGain {
+                red: g[0],
+                green_red: g[1],
+                green_blue: g[2],
+                blue: g[3],
+                position: awb_prepare_position(0),
+            },
+            true,
+        )
+        .map_err(|e| error(format!("WB gain override: {e:?}")))?;
+        initial["diagnosticWhiteBalanceOverride"] = json!(g);
+        initial["automaticWhiteBalance"] = json!(false);
+    }
     let sdk_path = format!("{}.awb-sdk.bin", args[4]);
     if sdk.is_some() && std::path::Path::new(&sdk_path).exists() {
         return Err(error("AWB SDK output already exists"));

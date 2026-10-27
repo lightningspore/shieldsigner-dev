@@ -29,6 +29,7 @@ mod pipeline_configuration {
     struct Plan {
         sensor: String,
         isp: String,
+        sof: Option<String>,
         route: InputRoute,
         tx: Vec<String>,
         rx: Vec<String>,
@@ -80,7 +81,7 @@ mod pipeline_configuration {
         keys(
             v,
             &[
-                "sensor", "isp", "route", "raw_tx", "raw_rx", "bridges", "links",
+                "sensor", "isp", "sof", "route", "raw_tx", "raw_rx", "bridges", "links",
             ],
         )?;
         let sensor = path(&v["sensor"])?;
@@ -163,6 +164,7 @@ mod pipeline_configuration {
         Ok(Plan {
             sensor,
             isp,
+            sof: v.get("sof").map(path).transpose()?,
             route,
             tx,
             rx,
@@ -664,7 +666,9 @@ mod pipeline_configuration {
             pad_view(&get_pad(adapter.trace, &adapter.isp, &plan.isp, 2)?);
         Ok(summary)
     }
-    pub(super) fn linear_cif_nodes(value: &Value) -> io::Result<(String, String, String, String)> {
+    pub(super) fn linear_cif_nodes(
+        value: &Value,
+    ) -> io::Result<(String, String, String, String, Option<String>)> {
         let plan = parse(value)?;
         if plan.route != InputRoute::Cif || plan.tx.len() != 1 || plan.rx.len() != 1 {
             return Err(error(
@@ -676,6 +680,7 @@ mod pipeline_configuration {
             plan.isp,
             plan.tx[0].clone(),
             plan.rx[0].clone(),
+            plan.sof,
         ))
     }
     pub fn run(args: &[String]) -> io::Result<()> {

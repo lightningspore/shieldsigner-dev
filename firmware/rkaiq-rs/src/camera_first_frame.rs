@@ -20,7 +20,7 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
     };
     let plan: Value =
         serde_json::from_slice(&read(&args[0], 65536)?).map_err(|e| error(e.to_string()))?;
-    let (sensor_path, isp, tx, rx) = pipeline_configuration::linear_cif_nodes(&plan)?;
+    let (sensor_path, isp, tx, rx, sof) = pipeline_configuration::linear_cif_nodes(&plan)?;
     let iq: Value = serde_json::from_slice(&read(&args[1], 8 * 1024 * 1024)?)
         .map_err(|e| error(e.to_string()))?;
     let profile = SensorCalibration::from_value(&iq).map_err(error)?;
@@ -151,12 +151,11 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
             "-1".into(),
         ])?;
         let capture = || {
-            capture_cif_with_parameters(&[
-                args[2].clone(),
-                parameter_path.clone(),
-                tx,
-                rx,
-                isp,
+            let mut command = vec![args[2].clone(), parameter_path.clone(), tx, rx, isp];
+            if let Some(node) = sof {
+                command.extend(["--sof-node".into(), node]);
+            }
+            command.extend([
                 "--".into(),
                 args[3].clone(),
                 args[4].clone(),
@@ -164,7 +163,8 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
                 "NV12".into(),
                 "--timeout-ms".into(),
                 "10000".into(),
-            ])
+            ]);
+            capture_cif_with_parameters(&command)
         };
         match statistics {
             Some(node) => statistics_session::during(

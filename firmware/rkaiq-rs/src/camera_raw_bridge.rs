@@ -118,6 +118,7 @@ mod raw_bridge {
         exports: Vec<OwnedFd>,
         tx: Endpoint,
         isp: File,
+        sof_device: Option<File>,
         lengths: Vec<u32>,
         inflight: Vec<bool>,
         first: bool,
@@ -127,7 +128,12 @@ mod raw_bridge {
         sof_missing: u64,
     }
     impl Bridge {
-        pub fn prepare(tx_path: &str, rx_path: &str, isp_path: &str) -> io::Result<Self> {
+        pub fn prepare(
+            tx_path: &str,
+            rx_path: &str,
+            isp_path: &str,
+            sof_path: Option<&str>,
+        ) -> io::Result<Self> {
             use std::os::unix::fs::{FileTypeExt, MetadataExt};
             if std::mem::size_of::<usize>() != 4 {
                 return Err(error("Raw bridge requires ARM32 Linux"));
@@ -149,6 +155,19 @@ mod raw_bridge {
             let tx_file = open(tx_path, true)?;
             let rx_file = open(rx_path, true)?;
             let isp = open(isp_path, true)?;
+            let sof_device = match sof_path {
+                Some(path) if path != isp_path => {
+                    let metadata = fs::metadata(path)?;
+                    if !metadata.file_type().is_char_device() || devices.contains(&metadata.rdev())
+                    {
+                        return Err(error(
+                            "Separate SOF endpoint must be a distinct character device",
+                        ));
+                    }
+                    Some(open(path, true)?)
+                }
+                _ => None,
+            };
             let (_, tx_caps) = capability(&tx_file)?;
             let (_, rx_caps) = capability(&rx_file)?;
             let kind = |caps: u32,
@@ -239,6 +258,7 @@ mod raw_bridge {
                     streaming: false,
                 },
                 isp,
+                sof_device,
                 lengths: vec![],
                 inflight: vec![],
                 first: true,
@@ -249,7 +269,15 @@ mod raw_bridge {
             };
             let mut subscription = [0u32; 8];
             subscription[0] = 4;
-            ioctl(bridge.isp.as_raw_fd(), 0x4020565a, &mut subscription)?;
+            ioctl(
+                bridge
+                    .sof_device
+                    .as_ref()
+                    .unwrap_or(&bridge.isp)
+                    .as_raw_fd(),
+                0x4020565a,
+                &mut subscription,
+            )?;
             let count = bridge.tx.allocate(4)?;
             let count = count.min(bridge.rx.allocate(count)?);
             for index in 0..count {
@@ -287,7 +315,11 @@ mod raw_bridge {
             // Bounded drain/cache prevents a noisy event source from starving raw I/O.
             for _ in 0..64 {
                 let mut event = [0u8; 128];
-                match ioctl(self.isp.as_raw_fd(), 0x80805659, &mut event) {
+                match ioctl(
+                    self.sof_device.as_ref().unwrap_or(&self.isp).as_raw_fd(),
+                    0x80805659,
+                    &mut event,
+                ) {
                     Ok(()) => {
                         if let Some(pair) = shieldsigner_rkaiq::raw_readback::frame_sync(&event)
                             .map_err(|_| error("Invalid SOF timestamp"))?
@@ -663,7 +695,7 @@ mod raw_bridge_driver_test {
             mode: 5,
             ..Driver::default()
         });
-        let outcome = raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full");
+        let outcome = raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full", None);
         assert!(outcome.is_err());
         let driver = DRIVER.lock().unwrap().take().unwrap();
         assert!(driver.trace.is_empty());
@@ -678,7 +710,8 @@ mod raw_bridge_driver_test {
                     ..Driver::default()
                 });
                 let bridge =
-                    raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full").unwrap();
+                    raw_bridge::Bridge::prepare("/dev/null", "/dev/zero", "/dev/full", None)
+                        .unwrap();
                 let outcome = bridge.during(|| {
                     let deadline = Instant::now() + Duration::from_secs(2);
                     while !DRIVER.lock().unwrap().as_ref().unwrap().finished {

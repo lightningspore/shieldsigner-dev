@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "990699fad1fdc42f16aa0fab7a9764a59aaaa67032a8dfca8245bb8fcf120ba6",
+  "testBinarySha256": "57d13ae34cfeb4b68a5b296d3951e2ead15d918f161ac072ca3a16f59900242a",
   "platform": "linux/arm/v7",
   "storageMismatchRejectedBeforeAllocation": true,
   "endpointApiCombinations": 4,

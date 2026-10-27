@@ -658,3 +658,39 @@ directory. `isp-clean-upright.png` is the original luma preview rotated for
 viewing; `isp-clean-contrast.png` additionally applies display-only autocontrast.
 The command's conservative `coldStartProven:false` is unchanged; the separate
 report records the controlled reboot evidence for this particular session.
+
+
+### Capture-side SOF timestamps
+
+A follow-up physical test selected the CIF CSI subdevice `/dev/v4l-subdev0`
+as the FRAME_SYNC event source, independently from the ISP trigger subdevice
+`/dev/v4l-subdev3`. The pinned kernel's
+[`rkcif_csi2_event_inc_sof`](https://github.com/LuckfoxTECH/luckfox-pico/blob/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/cif/mipi-csi2.c#L551)
+queues capture-side frame IDs there. Ghidra's `CamHwIsp20::prepare` also selects
+between CIF and ISP subdevice pointers for `RKSofEventStream`; using the ISP
+node unconditionally was insufficient for this CIF path.
+
+The combined command accepts an optional event source before its separator:
+
+```sh
+camera-probe capture-cif-with-parameters /dev/video20 initial.bin /dev/video0 /dev/video18 /dev/v4l-subdev3 --sof-node /dev/v4l-subdev0 -- /dev/video11 frame.raw --width 640 --height 480 --fourcc NV12 --buffers 2 --warmup 3 --timeout-ms 10000
+```
+
+The strict pipeline plan also accepts `"sof": "/dev/v4l-subdev0"`.
+`first-frame-sc3336` forwards it; omitting it retains the old ISP-event-source
+behavior. A separate source must be a character device distinct from raw,
+image and parameter endpoints. It is opened before subscription/streaming and
+held for the bridge lifetime; readback triggers still target the ISP node.
+
+The explicit combined hardware test completed four frames with four SOF
+matches and zero misses. The one-command startup then succeeded with three
+completed transfers, four matches, zero misses and two statistics frames.
+One additional input can be queued during image shutdown, so matches count
+queued triggers rather than completed transfers. These prove timestamp lookup
+on this board, not complete statistics/parameter/exposure delay association.
+
+Color follow-up: the grayscale previews intentionally use NV12 luma only.
+An NV12-to-RGB conversion showed color data with a pronounced purple cast;
+color processing/white balance still need work. Display-only autocontrast is
+not an ISP correction. Scene lighting may change during later tests because
+the user plans to turn off the room light.

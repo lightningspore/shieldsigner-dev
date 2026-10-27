@@ -216,20 +216,35 @@ fn wait_parameter(fd: RawFd, deadline: Instant) -> io::Result<()> {
 }
 fn capture_cif_with_parameters(args: &[String]) -> io::Result<()> {
     use std::os::unix::fs::MetadataExt;
-    if args.len() < 8 || args[5] != "--" {
-        return Err(error("capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE -- IMAGE_NODE OUT [capture options]"));
+    let separator = args.iter().position(|s| s == "--");
+    let sof = match separator {
+        Some(5) => None,
+        Some(7) if args[5] == "--sof-node" => Some(args[6].as_str()),
+        _ => return Err(error("capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE [--sof-node NODE] -- IMAGE_NODE OUT [capture options]")),
+    };
+    let separator = separator.unwrap();
+    if args.len() < separator + 3 {
+        return Err(error("Missing image endpoint/output"));
     }
     let mut devices = Vec::new();
-    for index in [0, 2, 3, 4, 6] {
+    for index in [0, 2, 3, 4, separator + 1] {
         let id = fs::metadata(&args[index])?.rdev();
         if devices.contains(&id) {
             return Err(error("All five camera endpoints must be distinct"));
         }
         devices.push(id);
     }
-    let bridge = raw_bridge::Bridge::prepare(&args[2], &args[3], &args[4])?;
+    if let Some(path) = sof {
+        let id = fs::metadata(path)?.rdev();
+        if devices.contains(&id) && id != fs::metadata(&args[4])?.rdev() {
+            return Err(error(
+                "SOF endpoint cannot alias image, parameter or raw endpoints",
+            ));
+        }
+    }
+    let bridge = raw_bridge::Bridge::prepare(&args[2], &args[3], &args[4], sof)?;
     let mut combined = args[..2].to_vec();
-    combined.extend_from_slice(&args[5..]);
+    combined.extend_from_slice(&args[separator..]);
     capture_with_parameters_using(&combined, Some(bridge))
 }
 fn capture_with_parameters(args: &[String]) -> io::Result<()> {

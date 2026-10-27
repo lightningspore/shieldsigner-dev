@@ -31,5 +31,23 @@
     "SOF association and statistics/exposure association remain unverified.",
     "Existing command coldStartProven fields remain false; this report records external boot evidence.",
     "Private scene images and detailed device logs remain local and are not published."
-  ]
+  ],
+  "captureSideSofFollowup": {
+    "eventSource": "CIF CSI subdevice",
+    "combinedCapture": {
+      "completedFrames": 4,
+      "sofMatches": 4,
+      "sofMissing": 0,
+      "success": true
+    },
+    "oneCommandStartup": {
+      "completedFrames": 3,
+      "sofMatches": 4,
+      "sofMissing": 0,
+      "statisticsFrames": 2,
+      "success": true
+    },
+    "frameExposureAssociationVerified": false
+  },
+  "colorPreviewObservation": "NV12 color is present, with pronounced purple cast; color processing and white balance remain unfinished."
 }

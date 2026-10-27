@@ -380,6 +380,56 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-profile" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let (record, p) = ae_configuration::from_comm(
+                    &v["comm"],
+                    v["width"].as_u64().unwrap() as u32,
+                    v["height"].as_u64().unwrap() as u32,
+                )
+                .unwrap();
+                println!(
+                    "{}:{}:{}:{}:{}",
+                    p.histogram_mode,
+                    p.raw_mode,
+                    p.y_range,
+                    p.channel_mask,
+                    record
+                        .iter()
+                        .map(|b| format!("{b:02x}"))
+                        .collect::<String>()
+                );
+            }
+            "ae-configuration" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let geometry = ae_geometry::Geometry {
+                    width: v["width"].as_u64().unwrap() as u32,
+                    height: v["height"].as_u64().unwrap() as u32,
+                    input: core::array::from_fn(|i| v["input"][i].as_f64().unwrap() as f32),
+                    tone_mapped: core::array::from_fn(|i| v["tone"][i].as_f64().unwrap() as f32),
+                };
+                let weights = core::array::from_fn(|i| v["weights"][i].as_u64().unwrap() as u8);
+                let (record, p) = ae_configuration::linear(
+                    geometry,
+                    &weights,
+                    v["hist"].as_i64().unwrap() as i32,
+                    v["raw"].as_i64().unwrap() as i32,
+                    v["range"].as_i64().unwrap() as i32,
+                    v["mask"].as_u64().unwrap() as u8,
+                )
+                .unwrap();
+                println!(
+                    "{}:{}:{}:{}:{}",
+                    p.histogram_mode,
+                    p.raw_mode,
+                    p.y_range,
+                    p.channel_mask,
+                    record
+                        .iter()
+                        .map(|b| format!("{b:02x}"))
+                        .collect::<String>()
+                );
+            }
             "ae-weights" => {
                 let source: [u8; 225] = core::array::from_fn(|i| {
                     u8::from_str_radix(&a[2][i * 2..i * 2 + 2], 16).unwrap()

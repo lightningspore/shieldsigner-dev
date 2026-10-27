@@ -1,0 +1,13 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 41,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "linear AecUpdateConfig prefix under update mask 0x80, ending immediately after histogram-1 initial weight publication; all 633 selected bytes and normalized modes/channel mask",
+  "limitations": [
+    "Native execution is deliberately stopped at this documented intermediate publication point; no claim of full AecUpdateConfig equivalence.",
+    "Nonzero grids only; built-in zero-grid fallback, overrides, subsequent frame processing and publication are unfinished.",
+    "Allocation/memory comparisons and imported integer division use explicit harness boundaries.",
+    "Full-profile JSON binding verifies the SC3336 Y-mode checked subset; no live measurement configuration or automatic exposure is enabled."
+  ]
+}

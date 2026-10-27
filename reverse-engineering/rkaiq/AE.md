@@ -185,3 +185,36 @@ is still passed through by this helper: the outer `AecUpdateConfig` detects that
 case and chooses its own built-in fallback before calling this function. That
 fallback, overrides, histogram-mode policy and live statistics/AE integration
 remain unfinished. The first-frame command still does not enable automatic 3A.
+
+### Profile binding and initial measurement configuration prefix
+
+`ae_configuration` composes the recovered defaults and geometry with the linear
+measurement prefix of `AecUpdateConfig` (ELF 0xa9068), under update mask 0x80.
+It normalizes histogram/raw/Y-range modes, derives the channel mask from the
+calibration-side seed, writes the native range offset and RGB coefficients,
+and publishes the nonzero 225-cell software grid into histogram 1 for linear
+source selection 1. The profile loader consumes the SC3336 enabled-auto,
+Y-histogram/Y-raw/full-range subset of `ae_calib.CommCtrl` explicitly. It rejects
+unsupported profile modes, all-zero grids and windows needing calibration
+correction rather than substituting a guessed policy.
+
+The original-ARM reference executes `AecHwConfig` and then `AecUpdateConfig`
+through the first histogram-1 weight publication, stopping **immediately after
+that documented intermediate memcpy**. Forty selector/range/mask patterns plus
+one full-profile JSON binding compare all 633 selected bytes and normalized
+policy values. The channel-mask seed comes from calibration bytes copied into
+the context, not a previous engine mask. The reference uses explicit allocation,
+comparison and imported integer-division boundaries.
+
+```sh
+mise exec rust@1.93.1 -- cargo build --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-configuration.py --arm
+```
+
+[Prefix equivalence report](ae-configuration-equivalence.json). This is not a
+claim that the remainder of `AecUpdateConfig` or subsequent AE processing has
+been reconstructed. The returned selected records are a checkpoint, not yet
+published by the first-frame command. Full measurement publication, statistics
+association, exposure route/limit selection, delay scheduling and live feedback
+remain required work. Automatic exposure is still disabled in capture.

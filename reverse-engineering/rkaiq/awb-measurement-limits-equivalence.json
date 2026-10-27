@@ -1,0 +1,16 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "cases": 257,
+  "iqLoaderCases": 1,
+  "unchangedCases": 52,
+  "mismatches": 0,
+  "arm": true,
+  "nativeCheckpoint": "ELF 0xc43c4 through 0xc45f8",
+  "scope": "Eight original interpolation calls, complete SDK record preservation and native change flag",
+  "limitations": [
+    "Group/update gate and input selector checks precede this checkpoint; luma weighting and scheduling follow it.",
+    "Explicit seeded register/stack/calibration ownership; stops before ConfigIncludeWei, not full hardware reconfiguration return.",
+    "Finite, strictly ascending calibration tables only."
+  ]
+}

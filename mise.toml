@@ -480,3 +480,31 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:awb-iq-scene-gain"]
 description = "Verify scene-configured complete gain-frame processing against original ARM"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-gain-controller.py --scene --arm"]
+
+[tasks."camera:rust:awb-iq-prepared-gain"]
+description = "Verify raw SDK measurement preparation joined to scene gain processing"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-gain-controller.py --raw-scene --arm"]
+
+[tasks."camera:rust:awb-measurement-schedule"]
+description = "Verify AWB time-share physical-light measurement scheduling against original ARM"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-measurement-schedule.py --arm"]
+
+[tasks."camera:rust:awb-measurement-regions"]
+description = "Verify calibrated AWB XY and rotated-YUV region conversion and IQ loading"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-measurement-regions.py --arm"]
+
+[tasks."camera:rust:awb-measurement-uv"]
+description = "Verify native inline UV polygon calibration conversion and IQ loading"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-measurement-uv.py --arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-measurement-regions.py --arm"]
+
+[tasks."camera:rust:awb-measurement-transforms"]
+description = "Verify AWB calibrated RGB-to-XY and rotated-YUV transform conversion"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-measurement-transforms.py --arm"]
+
+[tasks."camera:rust:awb-measurement-geometry"]
+description = "Verify AWB window, downsampling and count geometry against original prepare"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-measurement-geometry.py --arm"]
+
+[tasks."camera:rust:awb-measurement-limits"]
+description = "Verify calibrated AWB channel limit selection and change detection"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-measurement-limits.py --arm"]

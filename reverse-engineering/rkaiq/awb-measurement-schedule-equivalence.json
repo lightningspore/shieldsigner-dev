@@ -1,0 +1,13 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 360,
+  "mismatches": 0,
+  "arm": true,
+  "elfEntry": "0xc9240",
+  "scope": "Full 1204-byte time-share output record and unchanged calibration/strategy",
+  "limitations": [
+    "Calibrated regions and time-share groups are explicit inputs; IQ loading and initial complete measurement configuration remain separate.",
+    "Logging level zero; strcpy/memset are explicit standard-library adapters.",
+    "No live AWB measurement enable or physical configuration association is claimed."
+  ]
+}

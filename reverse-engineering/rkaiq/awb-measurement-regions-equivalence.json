@@ -1,0 +1,14 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "cases": 263,
+  "realIqLights": 7,
+  "iqLoaderCases": 1,
+  "mismatches": 0,
+  "arm": true,
+  "scope": "Complete 48-byte XY and 32-byte rotated-YUV records including preserved fields",
+  "limitations": [
+    "UV polygon conversion and initial complete measurement assembly remain separate.",
+    "Finite inputs only; native nonfinite conversion behavior is rejected."
+  ]
+}

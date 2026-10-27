@@ -13,6 +13,8 @@ mod ae_session_fixture;
 mod awb_gain_adjust_fixture;
 #[path = "../awb_gain_controller_fixture.rs"]
 mod awb_gain_controller_fixture;
+#[path = "../awb_prepared_gain_fixture.rs"]
+mod awb_prepared_gain_fixture;
 #[path = "../awb_site_fixture.rs"]
 mod awb_site_fixture;
 #[path = "../awb_dispatch_fixture.rs"]
@@ -45,6 +47,16 @@ fn emit(values: &[f32]) {
             .join(",")
     );
 }
+#[path = "../awb_measurement_schedule_fixture.rs"]
+mod awb_measurement_schedule_fixture;
+#[path = "../awb_measurement_regions_fixture.rs"]
+mod awb_measurement_regions_fixture;
+#[path = "../awb_measurement_transforms_fixture.rs"]
+mod awb_measurement_transforms_fixture;
+#[path = "../awb_measurement_geometry_fixture.rs"]
+mod awb_measurement_geometry_fixture;
+#[path = "../awb_measurement_limits_fixture.rs"]
+mod awb_measurement_limits_fixture;
 fn main() {
     for line in io::stdin().lock().lines() {
         let line = line.unwrap();
@@ -139,6 +151,15 @@ fn main() {
                 }
                 println!("{}", output.join(","));
             }
+            "awb-measurement-limits" => println!("{}", awb_measurement_limits_fixture::run(&serde_json::from_str(a[1]).unwrap())),
+            "awb-measurement-geometry" => println!("{}", awb_measurement_geometry_fixture::run(&serde_json::from_str(a[1]).unwrap())),
+            "awb-measurement-transforms" => println!("{}", awb_measurement_transforms_fixture::run(&serde_json::from_str(a[1]).unwrap())),
+            "awb-measurement-iq-transforms" => println!("{}", awb_measurement_transforms_fixture::iq(&serde_json::from_str(a[1]).unwrap())),
+            "awb-measurement-uv" => println!("{}", awb_measurement_regions_fixture::uv(&serde_json::from_str(a[1]).unwrap())),
+            "awb-measurement-iq-uv" => println!("{}", awb_measurement_regions_fixture::iq_uv(&serde_json::from_str(a[1]).unwrap())),
+            "awb-measurement-iq-regions" => println!("{}", awb_measurement_regions_fixture::iq(&serde_json::from_str(a[1]).unwrap())),
+            "awb-measurement-regions" => println!("{}", awb_measurement_regions_fixture::run(&serde_json::from_str(a[1]).unwrap())),
+            "awb-measurement-schedule" => println!("{}", awb_measurement_schedule_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-translation" => println!(
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())

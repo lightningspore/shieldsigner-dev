@@ -1,0 +1,14 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "nativeCases": 407,
+  "iqLoaderCases": 1,
+  "mismatches": 0,
+  "arm": true,
+  "nativeCheckpoint": "ELF 0xc240e through 0xc24d2",
+  "scope": "Complete original inline UV loop including Q4 coordinates, polygon closure and inverse slopes",
+  "limitations": [
+    "Register/stack/calibration ownership is explicitly seeded; execution stops before adjacent XY conversion, not full UpdateAwbCalibV2Para return.",
+    "Finite inputs; complete startup assembly and live measurement enable remain separate."
+  ]
+}

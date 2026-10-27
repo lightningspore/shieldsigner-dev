@@ -62,6 +62,7 @@ class Original(post.Original, color.OriginalColor):
     def setup_controller(self, v, ctx, cfg, cal, results):
         s = v["controller"]
         n = len(s["lights"])
+        self.prepared_active = n
 
         def word(data, o, value):
             struct.pack_into("<I", data, o, value & 0xFFFFFFFF)
@@ -331,6 +332,161 @@ class Original(post.Original, color.OriginalColor):
             f(curves, i * 0x100, *prior["lumaValue"])
             f(curves, i * 0x100 + 0x40, *prior["weight"])
 
+    def setup_measurement(self, v, ctx, cfg, cal, extra):
+        s = v["controller"]
+        m = s["measurement"]
+        n = 7
+        raw = bytes.fromhex(m["raw"])
+        w = lambda b, o, x: struct.pack_into("<I", b, o, x)
+        f = lambda b, o, *x: struct.pack_into("<" + "f" * len(x), b, o, *x)
+        for o, offset in [
+            (0x138, 0x73000),
+            (0x240, 0x75000),
+            (0x244, 0x74000),
+            (0x2DEC, 0x70000 + 0x1D70),
+        ]:
+            w(ctx, o, HEAP + offset)
+        ctx[0x84] = 0
+        ctx[0x3348] = 0
+        ctx[0x1A08] = ctx[0x2BA0] = 0
+        f(ctx, 0x334C, *([1.0] * 16))
+        f(
+            ctx,
+            0x3588,
+            *(
+                [s["dispatch"]["scale"][0], 1.0, 1.0, s["dispatch"]["scale"][1]]
+                if s["dispatch"]["scale"] is not None
+                else [1.0] * 4
+            ),
+        )
+        text = b"old" if m["rename"] else raw[0x1D70 + 28 : 0x1D70 + 92].split(b"\0")[0]
+        name = text + b"\0" * (64 - len(text))
+        for i in range(4):
+            ctx[0x13D + i * 64 : 0x13D + (i + 1) * 64] = name
+        for o, size in [(0x2BA4, 364), (0x2D10, 52), (0x2D44, 32), (0x2D64, 128)]:
+            ctx[o : o + size] = bytes(size)
+        cfg[0x139] = n
+        w(cfg, 4, 4)
+        w(cfg, 0x398, 1)
+        f(cfg, 0x4B0, 0.05)
+        struct.pack_into("<4i", cfg, 0x480, *m["kinds"])
+        records = dict(extra)[0x61000]
+        records[:] = bytes(n * 0xAC)
+        for i in range(n):
+            for region in range(2):
+                struct.pack_into(
+                    "<I4f",
+                    records,
+                    i * 0xAC + region * 0x34,
+                    m["cache_count"],
+                    2.0,
+                    1.0,
+                    1.0,
+                    3.0,
+                )
+            f(records, i * 0xAC + 0x9C, 1.0, 1.0, 1.0, 1.0)
+        curves = bytearray(0x400)
+        for i in range(4):
+            struct.pack_into(
+                "<III",
+                cal,
+                0x150 + i * 0x28,
+                HEAP + 0x72000 + i * 0x100,
+                3,
+                HEAP + 0x72040 + i * 0x100,
+            )
+            f(curves, i * 0x100, 0.0, 1000.0, 10000.0)
+            f(curves, i * 0x100 + 0x40, 0.5, 0.5, 0.5)
+        return [
+            (0x70000, raw),
+            (0x72000, curves),
+            (0x73000, bytes([int(m["seen"])]) * n),
+            (0x74000, bytes(n * 4)),
+            (0x75000, bytes(n * 4)),
+        ]
+
+    def prepare_gain(self, v, blocks):
+        self.dispatch_active = False
+        self.invoke(
+            "_Z20PrepareMeasureResultPK25rk_aiq_awb_stat_res_v32_sP12awb_contex_s",
+            [HEAP + 0x70000, HEAP],
+            instructions=3000000,
+        )
+        ctx = bytes(self.uc.mem_read(HEAP, 0x4000))
+        cfg = bytes(self.uc.mem_read(HEAP + 0x8000, 0x800))
+        n = 7
+        self.prepared_active = cfg[0x138]
+        dump = (
+            bytearray(
+                [
+                    ctx[0x334A],
+                    ctx[0x3348],
+                    cfg[0x138],
+                    ctx[0x13C],
+                    ctx[0xF79],
+                    ctx[0x1A08],
+                    ctx[0x2BA0],
+                ]
+            )
+            + ctx[0x334C:0x338C]
+            + ctx[0x13D:0x23D]
+        )
+        for offset, size in [
+            (0x73000, n),
+            (0x61000, n * 0xAC),
+            (0x74000, n * 4),
+            (0x75000, n * 4),
+        ]:
+            dump.extend(self.uc.mem_read(HEAP + offset, size))
+        for start, end in [
+            (0x3588, 0x3598),
+            (0xF7C, 0x1A08),
+            (0x2BA4, 0x2D10),
+            (0x2D10, 0x2D44),
+            (0x2D64, 0x2DE4),
+            (0x2D44, 0x2D64),
+        ]:
+            dump.extend(ctx[start:end])
+        self.prepared_output = dict(
+            update=bool(ctx[0x334A]),
+            complete=bool(ctx[0x13C]),
+            active=cfg[0x138],
+            cache=dump.hex(),
+        )
+        before = dict(blocks)
+        checked = bytearray(ctx)
+        for o, size in [
+            (0x3348, 1),
+            (0x334A, 1),
+            (0x334C, 64),
+            (0x13D, 256),
+            (0x13C, 1),
+            (0xF79, 1),
+            (0x1A08, 1),
+            (0xF7C, 2700),
+            (0x2BA0, 1),
+            (0x2BA4, 364),
+            (0x2D10, 52),
+            (0x3588, 16),
+            (0x2D44, 32),
+            (0x2D64, 128),
+        ]:
+            checked[o : o + size] = before[0][o : o + size]
+        assert checked == before[0], "Unexpected preparation context mutation"
+        checked = bytearray(cfg)
+        checked[0x138] = before[0x8000][0x138]
+        assert checked == before[0x8000]
+        # Snapshot preparation's output as the starting state for gain-stage
+        # unrelated-byte checks; the full cache is compared separately above.
+        for i, (offset, data) in enumerate(blocks):
+            now = bytes(self.uc.mem_read(HEAP + offset, len(data)))
+            if offset not in (0, 0x8000, 0x61000, 0x73000, 0x74000, 0x75000):
+                assert now == data
+            if isinstance(data, bytearray):
+                data[:] = now
+            else:
+                blocks[i] = (offset, now)
+
     def setup_single(self, v, ctx, cal):
         s = v["controller"]["single"]
         ctx[0xF79] = s["grid_valid"]
@@ -430,6 +586,8 @@ class Original(post.Original, color.OriginalColor):
             count += len(values)
             result[key] = values
         output["controller"] = result
+        if "measurement" in v["controller"]:
+            output["prepared"] = self.prepared_output
         if "dispatch" in v["controller"]:
             output["dispatch"] = dict(
                 frame=struct.unpack_from("<I", after, 0x33AC)[0],
@@ -514,7 +672,12 @@ class Original(post.Original, color.OriginalColor):
         if self.outer_active and (not self.dispatch_active or self.wrapper_calls):
             for i in range(len(before) // 0xA0):
                 # Empty synthetic reference labels; wrapper clears remaining bytes.
-                assert actual[i * 0xA0 : i * 0xA0 + 0x64] == bytes(0x64)
+                expected_label = (
+                    bytes(0x64)
+                    if i < getattr(self, "prepared_active", len(before) // 0xA0)
+                    else before[i * 0xA0 : i * 0xA0 + 0x64]
+                )
+                assert actual[i * 0xA0 : i * 0xA0 + 0x64] == expected_label
             return before
         return bytes(after)
 
@@ -541,6 +704,44 @@ class Original(post.Original, color.OriginalColor):
         return super().invoke(name, *args, **kwargs)
 
 
+def measurement(s, i, force=False, overflow=False):
+    b = bytearray(0x1E00)
+    at = 0x1D70
+    struct.pack_into("<I", b, at, i % 3)
+    b[at + 4] = 4
+    struct.pack_into("<i", b, at + 8, 0)
+    struct.pack_into("<4I", b, at + 12, 0, 1, 2, 3)
+    text = b"FASTAWBACT" if s["fast"] else b"NORMAL"
+    b[at + 28 : at + 28 + len(text)] = text
+    struct.pack_into(
+        "<4f", b, at + 92, 3.4028234663852886e38 if overflow else 1.25, 1.0, 1.0, 1.125
+    )
+    count = 0 if force else [1, 32, 128][i % 3]
+    for local in range(4):
+        for region in range(2):
+            wc = count * 1024
+            struct.pack_into("<3q", b, local * 48 + region * 24, wc, wc * 2, wc * 3)
+    for pixel in range(225):
+        # Empty-color cases must overwrite every cell: a zero-count cell
+        # retains its prior cache and could accidentally classify that color.
+        empty_color = bool((i // 12) % 2)
+        n = 5 if empty_color else (0 if pixel % 13 == 0 else 5)
+        struct.pack_into("<i", b, 0xD0 + pixel * 32, n)
+        rgb = (0, 0, 0) if empty_color else (384, 256, 128)
+        struct.pack_into("<3q", b, 0xD0 + pixel * 32 + 8, *rgb)
+    kinds = [3, 0, 0, 0] if force or i % 5 == 0 else [0] * 4
+    struct.pack_into("<3q", b, 0x1CF0, 5, 5 * 256 * 2, 5 * 256 * 3)
+    struct.pack_into("<8I", b, 0x1D50, *[i + j for j in range(8)])
+    struct.pack_into("<3q", b, 0x1DE8, 100, 100 if i % 4 == 0 else 200, 100)
+    return dict(
+        raw=b.hex(),
+        kinds=kinds,
+        cache_count=count,
+        seen=True if force else bool(i % 3 != 1),
+        rename=False if force else bool(i % 7 == 0),
+    )
+
+
 def main():
     manifest = json.loads(
         (ROOT / "reverse-engineering/rkaiq/artifacts.json").read_text()
@@ -551,7 +752,8 @@ def main():
     assert runtime_sha == manifest["gccRuntime"]["memberSha256"]
     math_sha = hashlib.sha256(color.MATH.read_bytes()).hexdigest()
     assert math_sha == manifest["uclibcRuntime"]["memberSha256"]
-    scene_mode = "--scene" in sys.argv
+    raw_scene = "--raw-scene" in sys.argv
+    scene_mode = "--scene" in sys.argv or raw_scene
     dispatch = "--dispatch" in sys.argv or scene_mode
     outer = "--outer" in sys.argv or dispatch
     prepared = "--prepared" in sys.argv or outer
@@ -618,7 +820,7 @@ def main():
             1.0,
             f32(rng.uniform(0.5, 4.0)),
         ]
-        n = (4 if i % 5 == 0 else 7) if scene_mode else 4 + i % 5
+        n = 7 if raw_scene else (4 if i % 5 == 0 else 7) if scene_mode else 4 + i % 5
         v = dict(
             candidate=gain(),
             previous=[0.0] * 4 if i % 11 == 0 else gain(),
@@ -821,6 +1023,8 @@ def main():
             )
             s["color_target"] = c["illuEstListSize"]
             v["raw_history"] = [] if i % 4 < 2 else [[1.0] * 4] * 2
+        if raw_scene:
+            s["measurement"] = measurement(s, i)
         s["prepared"] = prepared
         v["controller"] = s
         cases.append(v)
@@ -842,7 +1046,12 @@ def main():
                 file=sys.stderr,
                 flush=True,
             )
-        key = f"{s['complete']}:{s['mode']}:{expected[-1]['controller']['selected']}"
+        measured_complete = (
+            expected[-1]["prepared"]["complete"] if raw_scene else s["complete"]
+        )
+        key = (
+            f"{measured_complete}:{s['mode']}:{expected[-1]['controller']['selected']}"
+        )
         coverage[key] = coverage.get(key, 0) + 1
     assert (
         set(arm.calls) <= {"memcpy", "memset"}
@@ -859,11 +1068,12 @@ def main():
     native_cases = len(cases)
     if scene_mode:
         assert classifier_calls > 0
-        assert set(
-            v["controller"]["environment"]
-            for v in cases
-            if v["controller"]["dispatch"]["update"] and v["controller"]["complete"]
-        ) == set(range(16))
+        if not raw_scene:
+            assert set(
+                v["controller"]["environment"]
+                for v in cases
+                if v["controller"]["dispatch"]["update"] and v["controller"]["complete"]
+            ) == set(range(16))
         assert any(len(x["controller"]["xy_history"]) == 50 for x in expected)
         assert any(":validTrue:" in k for k in single_coverage)
         assert any(":validFalse:" in k for k in single_coverage)
@@ -887,6 +1097,8 @@ def main():
                 s["scene_iq"]["autoExtPara"]["singleColorProces"]["mode"] = (
                     "AWB_SGC_CALL_AUTO" if mode == 1 else "AWB_SGC_CALL_ALWAYS"
                 )
+            if raw_scene:
+                s["measurement"] = measurement(s, 0, force=True)
             cases.append(v)
             expected.append(dict(error="UnsupportedRegion", unchanged=True))
     if outer:
@@ -912,6 +1124,8 @@ def main():
         if dispatch:
             s["complete"] = True
             s["dispatch"]["update"] = True
+        if raw_scene:
+            s["measurement"] = measurement(s, 0, force=True)
         cases.append(v)
         expected.append(dict(error="NonFinite", unchanged=True))
     if dispatch:
@@ -940,6 +1154,8 @@ def main():
             application_flag=False,
             application_mode=1,
         )
+        if raw_scene:
+            s["measurement"] = measurement(s, 0, force=True, overflow=True)
         cases.append(v)
         expected.append(dict(error="NonFinite", unchanged=True))
     inputs = "".join(
@@ -976,6 +1192,18 @@ def main():
                 "/bincheck/numeric-fixture",
             ]
         )
+
+    def flag(j, v, key):
+        return (
+            expected[j]["prepared"][key]
+            if raw_scene
+            else (
+                v["controller"]["dispatch"]["update"]
+                if key == "update"
+                else v["controller"]["complete"]
+            )
+        )
+
     report = dict(
         binarySha256=sha,
         iqSha256=iq_sha,
@@ -994,12 +1222,13 @@ def main():
         outerWrapper=outer,
         dispatchJoined=dispatch,
         sceneCalibration=scene_mode,
+        rawPreparationJoined=raw_scene,
         sceneEnvironmentCoverage={
             str(n): sum(
                 v["controller"]["environment"] == n
-                and v["controller"]["dispatch"]["update"]
-                and v["controller"]["complete"]
-                for v in cases[:native_cases]
+                and flag(j, v, "update")
+                and flag(j, v, "complete")
+                for j, v in enumerate(cases[:native_cases])
             )
             for n in range(16)
         }
@@ -1007,7 +1236,13 @@ def main():
         else {},
         sceneActiveLightCoverage={
             str(n): sum(
-                len(v["controller"]["lights"]) == n for v in cases[:native_cases]
+                (
+                    expected[j]["prepared"]["active"]
+                    if raw_scene
+                    else len(v["controller"]["lights"])
+                )
+                == n
+                for j, v in enumerate(cases[:native_cases])
             )
             for n in [4, 7]
         }
@@ -1021,12 +1256,8 @@ def main():
         siteOverrides=site_overrides,
         dispatchCoverage={
             key: sum(
-                1
-                for v in cases[:native_cases]
-                if str(v["controller"]["dispatch"]["update"])
-                + ":"
-                + str(v["controller"]["complete"])
-                == key
+                str(flag(j, v, "update")) + ":" + str(flag(j, v, "complete")) == key
+                for j, v in enumerate(cases[:native_cases])
             )
             for key in ["False:False", "False:True", "True:False", "True:True"]
         }
@@ -1042,7 +1273,9 @@ def main():
         if dispatch
         else ("0xc803c" if outer else "0xc72b8"),
         scope=(
-            "Original preprocessor continuation through real gain wrapper and output scaling, stopping at reconfiguration entry"
+            "Complete original SDK-measurement preparation followed by real scene-configured gain wrapper and output scaling; full preparation cache and gain state compared"
+            if raw_scene
+            else "Original preprocessor continuation through real gain wrapper and output scaling, stopping at reconfiguration entry"
             if dispatch
             else "Whole original gain wrapper: resets, damping/tolerance, gain-mode call tree, saved-site reuse and gain carry-forward"
             if outer
@@ -1058,7 +1291,9 @@ def main():
             else "This joined corpus disables single-color; its enabled suite is separate.",
             "Optional clipping/adjustment are disabled; their full native suites remain separate.",
             "Ordinary joined XY regions are Normal/Big; Exclusion is exercised through mode-0 direct aggregate fallback.",
-            "Pinned seven-light scene, explicit prepared measurements/runtime geometry and seeded state; full initialization/raw preprocessing/live lifecycle are not replayed."
+            "SDK-format raw measurements, seeded seven-light caches and one preparation group; numerical preprocessing/translation/initialization/hardware reconfiguration remain separate."
+            if raw_scene
+            else "Pinned seven-light scene, explicit prepared measurements/runtime geometry and seeded state; full initialization/raw preprocessing/live lifecycle are not replayed."
             if scene_mode
             else "Finite explicit calibration and prepared measurements, 4-8 lights and bounded histories; calibration initialization and live frame lifecycle remain unfinished.",
             "Standard allocation, memory, strings and logging are explicit adapters; original numerical and policy bodies execute.",
@@ -1067,7 +1302,9 @@ def main():
     (
         ROOT
         / (
-            "reverse-engineering/rkaiq/awb-iq-scene-gain-equivalence.json"
+            "reverse-engineering/rkaiq/awb-iq-prepared-gain-equivalence.json"
+            if raw_scene
+            else "reverse-engineering/rkaiq/awb-iq-scene-gain-equivalence.json"
             if scene_mode
             else (
                 "reverse-engineering/rkaiq/awb-gain-frame-single-color-equivalence.json"

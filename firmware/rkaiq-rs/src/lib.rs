@@ -322,3 +322,9 @@ pub mod sensor_submission;
 
 #[cfg(feature = "diagnostics")]
 pub mod ae_runtime;
+
+pub mod awb_measurement_schedule;
+pub mod awb_measurement_regions;
+pub mod awb_measurement_transforms;
+pub mod awb_measurement_geometry;
+pub mod awb_measurement_limits;

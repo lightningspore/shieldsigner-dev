@@ -56,6 +56,9 @@ impl ModeName {
 }
 pub struct Frame<'a>(pub &'a [u8; FRAME_BYTES]);
 impl Frame<'_> {
+    pub fn fast(&self) -> Result<bool, InvalidInput> {
+        Ok(self.effect().name.name()? == b"FASTAWBACT")
+    }
     fn weighted(&self, offset: usize) -> Result<(Gains, u32), InvalidInput> {
         let (gain, count) = awb_gain::statistics_gain(
             i64_at(self.0, offset),
@@ -94,6 +97,7 @@ impl LightRecord {
         (region < 3).then(|| gains_at(&self.0, region * REGION_BYTES + 4))
     }
 }
+#[derive(Clone, Copy)]
 pub struct Settings<'a> {
     pub groups: usize,
     pub fast_light_count: u32,
@@ -359,4 +363,17 @@ pub fn prepare(
         }
     }
     Ok(())
+}
+
+impl State<'_> {
+    /// Shared context fields consumed by the gain wrapper after preparation.
+    pub fn gain_frame(&self, divisors: [u32; 2]) -> crate::awb_gain_controller::Frame {
+        crate::awb_gain_controller::Frame {
+            complete: self.complete,
+            fallback: self.history[0],
+            exclusion_count: u32_at(&self.exclusion_aggregate, 0),
+            exclusion_gain: gains_at(&self.exclusion_aggregate, 4),
+            divisors,
+        }
+    }
 }

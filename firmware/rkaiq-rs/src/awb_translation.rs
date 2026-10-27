@@ -150,3 +150,97 @@ pub fn translate(
     destination.proxy_sequence = stats.frame_id();
     Outcome::Translated
 }
+
+/// Effective AWB measurement configuration registered by the parameter owner.
+/// IDs must be those reported by the driver, not inferred from capture order.
+pub struct Snapshot<'a> {
+    pub id: u32,
+    pub measurement: &'a [u8; INPUT_BYTES],
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum AssociationError {
+    MissingConfiguration(u32),
+    DuplicateConfiguration(u32),
+    InvalidConfiguration(InvalidInput),
+}
+/// Translate using the exact effective configuration ID in the driver payload.
+/// Association/validation failures leave every destination field unchanged.
+/// Retention and registration of effective snapshots belong to the event owner.
+pub fn translate_associated(
+    stats: &Statistics<'_>,
+    snapshots: &[Snapshot<'_>],
+    destination: &mut Destination<'_>,
+) -> Result<Outcome, AssociationError> {
+    let id = stats.parameters_id();
+    let mut matching = snapshots.iter().filter(|s| s.id == id);
+    let selected = matching
+        .next()
+        .ok_or(AssociationError::MissingConfiguration(id))?;
+    if matching.next().is_some() {
+        return Err(AssociationError::DuplicateConfiguration(id));
+    }
+    let configuration = Configuration::from_measurement(selected.measurement)
+        .map_err(AssociationError::InvalidConfiguration)?;
+    Ok(translate(Some(stats), &configuration, destination))
+}
+
+#[cfg(test)]
+mod association_tests {
+    use super::*;
+    #[test]
+    fn exact_parameter_id_selects_configuration_and_errors_preserve_destination() {
+        let mut raw = [0u8; crate::statistics::BUFFER_BYTES];
+        put32(&mut raw, 0x32e0, 0x20);
+        put32(&mut raw, 0x32e4, 19);
+        put32(&mut raw, 0x32e8, 7);
+        let stats = Statistics::parse(&raw).unwrap();
+        let mut first = [0u8; INPUT_BYTES];
+        put32(&mut first, 0x38, 11);
+        let mut second = first;
+        put32(&mut second, 0x38, 22);
+        let mut frame = [0xa5; FRAME_BYTES];
+        let mut destination = Destination {
+            frame: &mut frame,
+            valid: false,
+            frame_info_valid: false,
+            frame_id: 99,
+            proxy_sequence: 98,
+        };
+        let missing = [Snapshot {
+            id: 6,
+            measurement: &first,
+        }];
+        let duplicate = [
+            Snapshot {
+                id: 7,
+                measurement: &first,
+            },
+            Snapshot {
+                id: 7,
+                measurement: &second,
+            },
+        ];
+        for snapshots in [&missing[..], &duplicate[..]] {
+            assert!(translate_associated(&stats, snapshots, &mut destination).is_err());
+            assert_eq!(*destination.frame, [0xa5; FRAME_BYTES]);
+            assert!(!destination.valid && !destination.frame_info_valid);
+            assert_eq!((destination.frame_id, destination.proxy_sequence), (99, 98));
+        }
+        let snapshots = [
+            Snapshot {
+                id: 6,
+                measurement: &first,
+            },
+            Snapshot {
+                id: 7,
+                measurement: &second,
+            },
+        ];
+        assert_eq!(
+            translate_associated(&stats, &snapshots, &mut destination),
+            Ok(Outcome::Translated)
+        );
+        assert_eq!(word(destination.frame, 0x1d70), 22);
+        assert_eq!((destination.frame_id, destination.proxy_sequence), (19, 19));
+    }
+}

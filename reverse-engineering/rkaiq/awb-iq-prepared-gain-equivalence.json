@@ -1,0 +1,82 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "initialExclusionAudit": false,
+  "enumHeaderSha256": null,
+  "runtimeSha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+  "mathRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "nativeMathCalls": {
+    "powf": 10125,
+    "sqrtf": 2700,
+    "atan2f": 2700
+  },
+  "classifierCalls": 4,
+  "singleColorCoverage": {
+    "mode0:historyFalse:validTrue:weight00000000": 3,
+    "mode0:historyFalse:validFalse:weight00000000": 1
+  },
+  "nativeRuntimeFunctions": [
+    "__aeabi_l2f"
+  ],
+  "modeledStringCalls": {
+    "strcmp": 221,
+    "strcpy": 215
+  },
+  "cases": 68,
+  "nativeCases": 64,
+  "preparedAdapter": true,
+  "outerWrapper": true,
+  "dispatchJoined": true,
+  "sceneCalibration": true,
+  "rawPreparationJoined": true,
+  "sceneEnvironmentCoverage": {
+    "0": 1,
+    "1": 2,
+    "2": 3,
+    "3": 3,
+    "4": 1,
+    "5": 2,
+    "6": 3,
+    "7": 1,
+    "8": 3,
+    "9": 3,
+    "10": 1,
+    "11": 3,
+    "12": 2,
+    "13": 1,
+    "14": 3,
+    "15": 3
+  },
+  "sceneActiveLightCoverage": {
+    "4": 26,
+    "7": 38
+  },
+  "sceneFullRegionHistoryCases": 3,
+  "siteOverrides": 2,
+  "dispatchCoverage": {
+    "False:False": 2,
+    "False:True": 14,
+    "True:False": 13,
+    "True:True": 35
+  },
+  "atomicRejectionCases": 4,
+  "mismatches": 0,
+  "arm": true,
+  "coverage": {
+    "False:0:3": 4,
+    "False:0:1": 10,
+    "True:0:0": 34,
+    "True:0:1": 12,
+    "False:0:0": 1,
+    "True:0:3": 3
+  },
+  "elfEntry": "0xc4ae0 continuation",
+  "scope": "Complete original SDK-measurement preparation followed by real scene-configured gain wrapper and output scaling; full preparation cache and gain state compared",
+  "limitations": [
+    "Single-color uses the pinned scene settings, including the enabled INITIAL-mode classifier.",
+    "Optional clipping/adjustment are disabled; their full native suites remain separate.",
+    "Ordinary joined XY regions are Normal/Big; Exclusion is exercised through mode-0 direct aggregate fallback.",
+    "SDK-format raw measurements, seeded seven-light caches and one preparation group; numerical preprocessing/translation/initialization/hardware reconfiguration remain separate.",
+    "Standard allocation, memory, strings and logging are explicit adapters; original numerical and policy bodies execute."
+  ]
+}

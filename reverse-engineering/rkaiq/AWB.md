@@ -1565,3 +1565,208 @@ This closes scene-to-gain configuration, not persistent-session bootstrap,
 raw preprocessing/measurement-to-gain composition, active-light scheduling,
 saved-site persistence, hardware reconfiguration/publication or live automatic-WB
 qualification. Those remain unfinished.
+
+## Raw measurement preparation joined to scene gain processing
+
+`Scene::prepare_gain_frame` now runs SDK-format measurement preparation and the
+scene-configured gain frame as one transition. It stages every measurement
+cache and commits it only after gain processing and output scaling succeed.
+The active light prefix, complete flag, FAST mode, grid and pre-gain scale come
+from the prepared frame/cache rather than duplicate caller values. Fresh
+numeric preprocessing supplies the update flag, luma and stability threshold.
+
+`mise run camera:rust:awb-iq-prepared-gain` compares 64 original ARM calls with
+host and ARM Rust output, plus four atomic rejection cases. The native oracle
+runs complete `PrepareMeasureResult` before the gain continuation; comparisons
+include the full prepared cache, gain histories and output state. Cases cover
+four/seven active lights, update/complete branches, Normal/Big and INITIAL-mode
+aggregate Exclusion, saved-site replacement and valid/empty classifier results.
+Empty-color inputs overwrite every grid cell so stale zero-count cells cannot
+accidentally supply a valid color. The pinned INITIAL classifier has zero
+single-color weight in this corpus; accepted weighted results remain covered
+by the separate scene-gain suite rather than claimed here.
+[Joined preparation report](awb-iq-prepared-gain-equivalence.json).
+
+The input is SDK-format translated data with seeded session caches, not a live
+ISP statistics payload. Numeric preprocessing, persistent initialization,
+active-light scheduling, hardware reconfiguration/publication and live AWB
+qualification remain unfinished. AUTO/ALWAYS Exclusion retains the documented
+native cross-record-layout hazard and is rejected atomically. This connection
+does not enable automatic white balance in the camera command.
+
+### Driver parameter association for AWB translation
+
+`awb_translation::translate_associated` now selects an effective measurement
+snapshot by the driver's statistics parameter ID before invoking the existing
+single-ISP translator. It rejects missing or duplicate matching IDs and invalid
+measurement configurations before changing any destination field. It does not
+fall back to a recent configuration or substitute the capture sequence number.
+The event owner must still register and retain the effective measurement
+snapshots; this API does not infer them from partial ISP parameter buffers.
+A library test checks selection with differing configuration metadata and full
+destination preservation on missing/duplicate associations. This is a software
+association guarantee, not proof of physical sensor/ISP application timing.
+
+## Physical-light measurement scheduling
+
+`awb_measurement_schedule::configure` reconstructs `ConfigHwParaTimeShare`
+(ELF 0xc9240). It advances/wraps the configured group, publishes physical light
+indices and the mode signature, resets rotated-YUV slots, and copies selected calibrated
+UV/XY/YUV regions into the 1204-byte SDK measurement record. Sentinel 15 leaves
+its physical slot represented without copying a light. Detection overrides,
+startup selector defaults and untouched trailing name/configuration bytes match
+the native writes. Checked invalid groups, names and referenced regions are
+rejected before the staged record is committed.
+
+`mise run camera:rust:awb-measurement-schedule` compares all output bytes for
+360 cases against the original ARM function, then replays host and ARM Rust.
+It checks unchanged calibration/strategy input, one to four groups, zero to four
+physical lights and region capacities, sentinels, rotated-YUV selection, startup/wrap and
+all three detection-override states. A library regression checks a late invalid
+light cannot leave a partially modified configuration.
+[Measurement scheduling report](awb-measurement-schedule-equivalence.json).
+
+Startup currently configures AE/histogram measurements only; AWB measurement
+collection remains disabled. This scheduling port takes explicit calibrated
+region records. IQ-to-region conversion, initial complete AWB measurement
+assembly, early FAST configuration and the outer reconfiguration decision must
+be connected before enabling live AWB. The existing fixed-WB camera command is
+unchanged. This explains why a working gain algorithm alone cannot yet consume
+live AWB statistics.
+
+
+## Calibrated XY and rotated-YUV measurement regions
+
+`awb_measurement_regions` reconstructs `JsonXyParaFixed3` (ELF 0xc8254)
+and `JsonRtYuvParaFixed2` (ELF 0xc90d4). XY uses native signed Q10 rounding,
+16-bit narrowing/sign extension, and preserves the two small-region ranges.
+Rotated-YUV retains the original positive Q4 conversion, narrow wrapping line
+vector subtraction, direct distance byte and preserved final padding byte.
+Nonfinite/overflowing intermediate inputs are rejected before either output
+record is changed.
+
+`awb_calibration::MeasurementRegions::from_value` loads each selected scene
+light's XY normal/big rectangles and rotated-YUV thresholds/line/distance into
+these records. Missing or incorrectly sized arrays and inconsistent light
+counts fail explicitly. The table layouts are rotated-YUV **32 bytes**, UV
+polygon **36 bytes**, and XY **48 bytes**; scheduling API names now reflect
+these SDK types. The previous byte-level scheduler tests already checked the
+correct offsets, but its initial field names did not describe those types
+correctly.
+
+`mise run camera:rust:awb-measurement-regions` compares the complete records
+with the original functions for all seven pinned SC3336 lights and 256 seeded
+cases, including signed rounding boundaries, narrowing, negative inputs and
+preserved fields. An additional case passes the actual selected IQ object
+through the loader and compares all seven output pairs. Host and ARM replay
+are required. [Region conversion report](awb-measurement-regions-equivalence.json).
+
+UV polygon construction, full measurement startup assembly, early FAST
+configuration and the outer update policy remain open. No live AWB enable or
+color-accuracy claim follows from this conversion checkpoint.
+
+## UV polygon calibration conversion
+
+`awb_measurement_regions::uv` reconstructs the inline polygon loop in
+`UpdateAwbCalibV2Para` (ELF 0xc240e–0xc24d2). Four Q4 U/V vertices become five
+by repeating the first vertex. Each edge stores a signed Q10 inverse slope;
+horizontal edges use the original `0x3ffff` sentinel. The instructions promote
+the coordinate rounding and final slope rounding to double precision; the
+Rust implementation preserves those promotions and native narrowing. Invalid
+nonfinite/overflowing intermediate inputs leave the destination unchanged.
+
+`MeasurementRegions::from_value` now loads UV polygons as well as XY and
+rotated-YUV regions for every calibrated light. This supersedes the preceding
+checkpoint's separate-UV limitation. `mise run camera:rust:awb-measurement-uv`
+compares all 36 bytes for seven pinned SC3336 lights and 400 seeded cases,
+including horizontal/closing edges, negative coordinates, narrowing and
+rounding boundaries; it also checks all seven polygons through the IQ loader.
+The task replays host and ARM Rust and reruns the XY/rotated-YUV loader suite.
+[UV polygon report](awb-measurement-uv-equivalence.json).
+
+The oracle executes the original instruction slice with explicitly seeded
+registers, stack and calibration pointers, stopping before adjacent XY
+conversion. It checks that calibration/source records remain unchanged; this
+is not a full calibration-update initializer comparison. All three region
+tables are now available, but complete measurement-record assembly (geometry,
+selectors, transforms, thresholds, weights and initial group/FAST policy) and
+live AWB statistics enable remain unfinished.
+
+## Measurement color transforms
+
+`awb_measurement_transforms` reconstructs `JsonXyParaFixed1` (ELF 0xc8210)
+and `JsonRtYuvParaFixed1` (ELF 0xc9050), including their original fixed-point
+helper behavior. RGB-to-XY uses unsigned Q12 weights masked to twelve bits and
+signed Q12 rotation coefficients. Thus the native weight conversion maps 1.0
+to zero rather than saturating to 4095; Rust preserves this behavior. The
+rotated-YUV 3×4 transform uses signed Q9 coefficients and Q4 offsets; the last
+row of the supplied 4×4 matrix is not consumed by the numerical converter.
+Both converters stage output and reject nonfinite/overflowing intermediates.
+
+`MeasurementTransforms::from_value` loads the selected scene's complete matrix
+arrays and validates their shape. `mise run camera:rust:awb-measurement-transforms`
+compares both 24-byte records for the pinned IQ scene and 256 seeded cases,
+then checks the same scene through the IQ loader, on host and ARM. Original
+native fixed-point helper bodies execute in the oracle. Signed half-step
+rounding, wrapping and endpoint weight behavior are covered.
+[Measurement transform report](awb-measurement-transforms-equivalence.json).
+The full startup record still requires window/downsampling, threshold selection,
+flags/weights and the initial group/FAST policy. This does not enable live AWB.
+
+## Measurement window, downsampling and count geometry
+
+`awb_measurement_geometry::derive` reconstructs the geometry portion of
+`AwbPrepareV32`: full-frame/fixed fractional window selection and validation,
+4×4/8×8 sampling, the native width-greater-than-2336 override to 8×8, optional
+four-window conversion, sampled dimensions and both derived count thresholds.
+The probability count threshold uses the native integer division/multiplication
+order before conversion to float. The luma-weight enable threshold uses the
+separate float geometry expression; these are distinct quantities.
+
+`MeasurementGeometry::from_value` reads main-window mode, downscale mode,
+`probCalcWp.wpNumPercTh` and
+`wpDiffLumaWeight.wpDiffWeiEnableTh.wpDiffWeiNoTh`. Active ISP dimensions and
+sample scale stay explicit runtime inputs. Additional windows remain explicit;
+the v32 calibration scene does not contain the older `multiWindow` object.
+`Geometry::apply` writes the SDK window/downscale fields and only writes extra
+window fields when supplied, preserving all unrelated bytes.
+
+`mise run camera:rust:awb-measurement-geometry` compares 256 geometry cases plus
+one actual SC3336 IQ-loader case with native prepare through normal return.
+It covers width-boundary behavior, cropped/rejected windows, downsample modes,
+extra windows and count factors on host and ARM. Calibration update is an
+explicit success boundary and preconfigured context bypasses preceding input
+selector/bit-depth setup. Logging and integer division are explicit adapters;
+this is not complete prepare initialization. Positive u16 dimensions and
+nonoverflowing signed count arithmetic define the checked input domain.
+[Geometry report](awb-measurement-geometry-equivalence.json).
+
+Window/downsampling and count geometry now join the available region and
+transform setup. Threshold-table interpolation, flags/weights, input selection,
+initial group/FAST policy and whole-record assembly remain unfinished; live AWB
+is still disabled.
+
+## Brightness-dependent channel limits
+
+`awb_measurement_limits::Limits::apply` reconstructs the eight channel-limit
+interpolations and change detection inside `ReconfigHwParaV32` (ELF
+0xc43c4–0xc45f8). Native order is R max/min, G max/min, B max/min and Y max/min.
+The IQ loader scales every limit table by 16 before interpolation, validates
+shared lengths/strictly increasing knots, and retains brightness as an explicit
+runtime u32. Interpolated values are promoted to double for +0.5 rounding,
+converted to unsigned and narrowed to 16 bits. Unrelated SDK bytes remain
+unchanged; any checked error preserves the complete record.
+
+`mise run camera:rust:awb-measurement-limits` compares 256 seeded cases and one
+actual SC3336 IQ-loader case against the original instruction slice, including
+eight original interpolation calls. Whole-record preservation and the native
+unchanged/changed flag are checked; 52 cases retain identical thresholds.
+Endpoint/interior samples, one-to-five-point tables, negative and narrowing
+values are included. Host and ARM replay are required.
+[Channel limit report](awb-measurement-limits-equivalence.json).
+
+The oracle starts after the group/update gate and input-selector checks and
+stops before luma-weight configuration. This closes limit selection, not the
+outer update policy or complete hardware reconfiguration. Luma/block weighting,
+input selection, initial group/FAST setup and whole-record assembly remain
+unfinished; automatic WB is still disabled in the live camera command.

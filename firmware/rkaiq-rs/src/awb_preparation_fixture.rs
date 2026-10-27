@@ -114,7 +114,7 @@ fn frame(v: &Value, step: usize) -> [u8; FRAME_BYTES] {
     put64(&mut b, 0x1df8, blue);
     b
 }
-fn render(s: &State<'_>) -> String {
+pub fn render(s: &State<'_>) -> String {
     let mut out = vec![
         s.update as u8,
         s.stability_mask,

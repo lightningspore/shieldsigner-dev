@@ -791,6 +791,7 @@ impl Scene {
 }
 
 /// Values produced by preprocessing or held in the live session, not IQ tuning.
+#[derive(Clone, Copy)]
 pub struct GainRuntime<'a> {
     pub active_lights: usize,
     pub numeric: &'a crate::awb_preprocess::State,
@@ -931,5 +932,314 @@ impl Scene {
                 )
             },
         )?
+    }
+}
+
+impl Scene {
+    /// Prepare raw SDK measurements and process their caches as one transition.
+    /// Borrowed buffers are copied into staging, including inactive cache data;
+    /// any preparation/gain/scaling error discards all changes.
+    pub fn prepare_gain_frame<const CAP: usize>(
+        &self,
+        state: &mut crate::awb_gain_frame::State<CAP>,
+        measurements: &mut crate::awb_preparation::State<'_>,
+        raw: &crate::awb_preparation::Frame<'_>,
+        preparation: &crate::awb_preparation::Settings<'_>,
+        divisors: [u32; 2],
+        output: &mut [crate::awb_gain_controller::LightResult],
+        runtime: &GainRuntime<'_>,
+    ) -> Result<crate::awb_dispatch::Action, crate::InvalidInput> {
+        if measurements.lights.len() != self.lights.entries.len() {
+            return Err(crate::InvalidInput::Length);
+        }
+        let mut seen = measurements.seen.to_vec();
+        let mut lights = measurements.lights.to_vec();
+        let mut second = measurements.second_counts.to_vec();
+        let mut totals = measurements.total_counts.to_vec();
+        let mut grid = *measurements.grid;
+        let mut staged = crate::awb_preparation::State {
+            update: measurements.update,
+            stability_mask: measurements.stability_mask,
+            history: measurements.history,
+            mode_names: measurements.mode_names,
+            seen: &mut seen,
+            active_lights: measurements.active_lights,
+            complete: measurements.complete,
+            lights: &mut lights,
+            second_counts: &mut second,
+            total_counts: &mut totals,
+            previous_pre_gain: measurements.previous_pre_gain,
+            grid_valid: measurements.grid_valid,
+            second_grid_valid: measurements.second_grid_valid,
+            grid: &mut grid,
+            exclusions_valid: measurements.exclusions_valid,
+            exclusions: measurements.exclusions,
+            exclusion_aggregate: measurements.exclusion_aggregate,
+            histogram_cache: measurements.histogram_cache,
+            histogram_aggregate: measurements.histogram_aggregate,
+        };
+        staged.update = runtime.numeric.update;
+        let preparation = crate::awb_preparation::Settings {
+            stability_threshold: runtime.numeric.smart[2],
+            prior_sample: runtime.numeric.luma,
+            ..*preparation
+        };
+        crate::awb_preparation::prepare(&mut staged, raw, &preparation)?;
+        let active = staged.active_lights as usize;
+        let frame = staged.gain_frame(divisors);
+        let effective = GainRuntime {
+            active_lights: active,
+            fast: raw.fast()?,
+            grid_valid: staged.grid_valid,
+            grid: &*staged.grid,
+            scale: runtime
+                .scale
+                .map(|_| [staged.previous_pre_gain[0], staged.previous_pre_gain[3]]),
+            ..*runtime
+        };
+        let active_output = output
+            .get_mut(..active)
+            .ok_or(crate::InvalidInput::Length)?;
+        let action = self.process_gain_frame(
+            state,
+            staged.update,
+            &frame,
+            staged.lights,
+            active_output,
+            &effective,
+        )?;
+        measurements.update = staged.update;
+        measurements.stability_mask = staged.stability_mask;
+        measurements.history = staged.history;
+        measurements.mode_names = staged.mode_names;
+        measurements.active_lights = staged.active_lights;
+        measurements.complete = staged.complete;
+        measurements.seen.copy_from_slice(staged.seen);
+        measurements.lights.copy_from_slice(staged.lights);
+        measurements
+            .second_counts
+            .copy_from_slice(staged.second_counts);
+        measurements
+            .total_counts
+            .copy_from_slice(staged.total_counts);
+        measurements.previous_pre_gain = staged.previous_pre_gain;
+        measurements.grid_valid = staged.grid_valid;
+        measurements.second_grid_valid = staged.second_grid_valid;
+        measurements.grid.copy_from_slice(staged.grid);
+        measurements.exclusions_valid = staged.exclusions_valid;
+        measurements.exclusions = staged.exclusions;
+        measurements.exclusion_aggregate = staged.exclusion_aggregate;
+        measurements.histogram_cache = staged.histogram_cache;
+        measurements.histogram_aggregate = staged.histogram_aggregate;
+        Ok(action)
+    }
+}
+
+/// Calibrated UV, XY and rotated-YUV detection records for each scene light.
+/// Complete hardware-record assembly remains separate initialization.
+pub struct MeasurementRegions {
+    pub uv: Vec<[u8; 36]>,
+    pub xy: Vec<[u8; 48]>,
+    pub rotated_yuv: Vec<[u8; 32]>,
+}
+impl MeasurementRegions {
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        let lights = at(wb, "/autoPara/lightSources")?
+            .as_array()
+            .ok_or_else(|| format!("Expected lightSources array"))?;
+        if integer(wb, "/autoPara/lightSources_len", 1, 255)? as usize != lights.len() {
+            return Err(format!("Light count mismatch"));
+        }
+        let array = |v: &Value, path: &str, count: usize| -> Result<Vec<f32>, String> {
+            if at(v, path)?.as_array().map(Vec::len) != Some(count) {
+                return Err(format!("Invalid detection region array {path}"));
+            }
+            (0..count)
+                .map(|i| number(v, &format!("{path}/{i}")))
+                .collect()
+        };
+        let mut xy = Vec::new();
+        let mut rotated_yuv = Vec::new();
+        let mut uv = Vec::new();
+        for light in lights {
+            let mut polygon = [0; 36];
+            crate::awb_measurement_regions::uv(
+                &array(light, "/uvRegion/u", 4)?.try_into().unwrap(),
+                &array(light, "/uvRegion/v", 4)?.try_into().unwrap(),
+                &mut polygon,
+            )
+            .map_err(|e| format!("UV detection region: {e:?}"))?;
+            uv.push(polygon);
+            let mut values = array(light, "/xyRegion/normal", 4)?;
+            values.extend(array(light, "/xyRegion/big", 4)?);
+            let mut record = [0; 48];
+            crate::awb_measurement_regions::xy(&values.try_into().unwrap(), &mut record)
+                .map_err(|e| format!("XY detection region: {e:?}"))?;
+            xy.push(record);
+            let input = crate::awb_measurement_regions::RotatedYuv {
+                u: array(light, "/rtYuvRegion/thcurve_u", 6)?
+                    .try_into()
+                    .unwrap(),
+                threshold: array(light, "/rtYuvRegion/thcure_th", 6)?
+                    .try_into()
+                    .unwrap(),
+                line: array(light, "/rtYuvRegion/lineVector", 6)?
+                    .try_into()
+                    .unwrap(),
+                distance: integer(light, "/rtYuvRegion/disP1P2", 0, 255)? as u8,
+            };
+            let mut record = [0; 32];
+            crate::awb_measurement_regions::rotated_yuv(&input, &mut record)
+                .map_err(|e| format!("Rotated-YUV detection region: {e:?}"))?;
+            rotated_yuv.push(record);
+        }
+        Ok(Self {
+            uv,
+            xy,
+            rotated_yuv,
+        })
+    }
+}
+
+pub struct MeasurementTransforms {
+    pub xy: [u8; 24],
+    pub rotated_yuv: [u8; 24],
+}
+impl MeasurementTransforms {
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        let array = |path: &str, count: usize| -> Result<Vec<f32>, String> {
+            if at(wb, path)?.as_array().map(Vec::len) != Some(count) {
+                return Err(format!("Invalid measurement transform {path}"));
+            }
+            (0..count)
+                .map(|i| number(wb, &format!("{path}/{i}")))
+                .collect()
+        };
+        let weights = array("/autoPara/rgb2TcsPara/pseudoLuminanceWeight", 3)?;
+        let rotation = array("/autoPara/rgb2TcsPara/rotationMat", 9)?;
+        let matrix = array("/autoPara/rgb2RotationYuvMat", 16)?;
+        let mut xy = [0; 24];
+        let mut rotated_yuv = [0; 24];
+        crate::awb_measurement_transforms::xy(
+            &weights.try_into().unwrap(),
+            &rotation.try_into().unwrap(),
+            &mut xy,
+        )
+        .map_err(|e| format!("XY transform: {e:?}"))?;
+        crate::awb_measurement_transforms::rotated_yuv(
+            &matrix.try_into().unwrap(),
+            &mut rotated_yuv,
+        )
+        .map_err(|e| format!("Rotated-YUV transform: {e:?}"))?;
+        Ok(Self { xy, rotated_yuv })
+    }
+}
+
+pub struct MeasurementGeometry {
+    pub manual_window: Option<[f32; 4]>,
+    pub downsample: u32,
+    pub count_fraction: f32,
+    pub luma_weight_fraction: f32,
+}
+impl MeasurementGeometry {
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        let main = at(wb, "/autoPara/mainWindow")?;
+        let manual_window = match at(main, "/mode")?.as_str() {
+            Some("CALIB_AWB_WINDOW_CFG_AUTO") => None,
+            Some("CALIB_AWB_WINDOW_CFG_FIXED") => {
+                if at(main, "/window")?.as_array().map(Vec::len) != Some(4) {
+                    return Err(format!("Expected four window coordinates"));
+                }
+                let mut window = [0.; 4];
+                for (i, out) in window.iter_mut().enumerate() {
+                    *out = number(main, &format!("/window/{i}"))?;
+                }
+                Some(window)
+            }
+            _ => return Err(format!("Unknown AWB window mode")),
+        };
+        let downsample = match at(wb, "/autoPara/downScaleMode")?.as_str() {
+            Some("CALIB_AWB_DS_4X4") => 0,
+            Some("CALIB_AWB_DS_8X8") => 1,
+            _ => return Err(format!("Unknown AWB downscale mode")),
+        };
+        Ok(Self {
+            manual_window,
+            downsample,
+            count_fraction: number(wb, "/autoExtPara/probCalcWp/wpNumPercTh")?,
+            luma_weight_fraction: number(
+                wb,
+                "/autoPara/wpDiffLumaWeight/wpDiffWeiEnableTh/wpDiffWeiNoTh",
+            )?,
+        })
+    }
+    /// Multiwindow inputs remain explicit; the v32 scene has no multiWindow field.
+    pub fn derive(
+        &self,
+        dimensions: [u32; 2],
+        sample_scale: u32,
+        multiwindow: Option<[[f32; 4]; 4]>,
+    ) -> Result<crate::awb_measurement_geometry::Geometry, crate::InvalidInput> {
+        crate::awb_measurement_geometry::derive(&crate::awb_measurement_geometry::Input {
+            dimensions,
+            sample_scale,
+            multiwindow,
+            manual_window: self.manual_window,
+            downsample: self.downsample,
+            count_fraction: self.count_fraction,
+            luma_weight_fraction: self.luma_weight_fraction,
+        })
+    }
+}
+
+pub struct MeasurementLimits {
+    pub knots: Vec<f32>,
+    pub values: [Vec<f32>; 8],
+}
+impl MeasurementLimits {
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        let v = at(wb, "/autoPara/limitRange")?;
+        let count = integer(v, "/lumaValue_len", 1, i32::MAX as i64)? as usize;
+        let read = |name: &str| -> Result<Vec<f32>, String> {
+            if integer(v, &format!("/{name}_len"), 1, i32::MAX as i64)? as usize != count
+                || at(v, &format!("/{name}"))?.as_array().map(Vec::len) != Some(count)
+            {
+                return Err(format!("Limit table length mismatch: {name}"));
+            }
+            (0..count)
+                .map(|i| number(v, &format!("/{name}/{i}")))
+                .collect()
+        };
+        let knots = read("lumaValue")?;
+        if knots.windows(2).any(|p| p[0] >= p[1]) {
+            return Err(format!("Limit knots must increase"));
+        }
+        let mut values: [Vec<f32>; 8] = core::array::from_fn(|_| Vec::new());
+        for (i, key) in [
+            "maxR", "minR", "maxG", "minG", "maxB", "minB", "maxY", "minY",
+        ]
+        .iter()
+        .enumerate()
+        {
+            values[i] = read(key)?;
+            for n in &mut values[i] {
+                *n *= 16.;
+                if !n.is_finite() {
+                    return Err(format!("Limit Q4 conversion overflow"));
+                }
+            }
+        }
+        Ok(Self { knots, values })
+    }
+    pub fn apply(
+        &self,
+        brightness: u32,
+        record: &mut [u8; crate::isp_awb_measurement::INPUT_BYTES],
+    ) -> Result<bool, crate::InvalidInput> {
+        crate::awb_measurement_limits::Limits {
+            knots: &self.knots,
+            values: core::array::from_fn(|i| &self.values[i][..]),
+        }
+        .apply(brightness, record)
     }
 }

@@ -286,6 +286,7 @@ pub fn run(v: &Value) -> Value {
         frame: settings.probability.frame,
     };
     let before_dispatch = dispatch_state;
+    let mut prepared_output = Value::Null;
     let mut action = crate::awb_dispatch::Action {
         calculated: false,
         reconfigure: false,
@@ -376,27 +377,55 @@ pub fn run(v: &Value) -> Value {
                     };
                     let extra: Vec<_> =
                         lights.iter().map(|l| l.calibration.extra_enabled).collect();
-                    scene.process_gain_frame(
-                        &mut joined,
-                        numeric.update,
-                        &frame,
-                        &records,
-                        &mut results,
-                        &crate::awb_calibration::GainRuntime {
-                            active_lights: lights.len(),
-                            numeric: &numeric,
-                            variance: region.variance,
-                            environment: s["environment"].as_u64().unwrap() as usize,
-                            fast: probability.fast,
-                            absolute_count_threshold: region.absolute,
-                            extra_enabled: &extra,
-                            grid_valid: s["single"]["grid_valid"].as_bool().unwrap(),
-                            grid: &grid,
-                            site_input: &site_input,
-                            iso: 100.,
-                            scale,
-                        },
-                    )
+                    let runtime = crate::awb_calibration::GainRuntime {
+                        active_lights: lights.len(),
+                        numeric: &numeric,
+                        variance: region.variance,
+                        environment: s["environment"].as_u64().unwrap() as usize,
+                        fast: probability.fast,
+                        absolute_count_threshold: region.absolute,
+                        extra_enabled: &extra,
+                        grid_valid: s["single"]["grid_valid"].as_bool().unwrap(),
+                        grid: &grid,
+                        site_input: &site_input,
+                        iso: 100.,
+                        scale,
+                    };
+                    if s.get("measurement").is_some() {
+                        crate::awb_prepared_gain_fixture::run(
+                            v,
+                            &scene,
+                            &mut joined,
+                            &mut results,
+                            &runtime,
+                        )
+                        .map(|(action, prepared)| {
+                            prepared_output = prepared;
+                            action
+                        })
+                    } else {
+                        scene.process_gain_frame(
+                            &mut joined,
+                            numeric.update,
+                            &frame,
+                            &records,
+                            &mut results,
+                            &crate::awb_calibration::GainRuntime {
+                                active_lights: lights.len(),
+                                numeric: &numeric,
+                                variance: region.variance,
+                                environment: s["environment"].as_u64().unwrap() as usize,
+                                fast: probability.fast,
+                                absolute_count_threshold: region.absolute,
+                                extra_enabled: &extra,
+                                grid_valid: s["single"]["grid_valid"].as_bool().unwrap(),
+                                grid: &grid,
+                                site_input: &site_input,
+                                iso: 100.,
+                                scale,
+                            },
+                        )
+                    }
                 } else {
                     joined.process(
                         d["update"].as_bool().unwrap(),
@@ -458,6 +487,9 @@ pub fn run(v: &Value) -> Value {
         .map(|v| v.map(f32::to_bits))
         .collect();
     let mut output = awb_postprocess_fixture::output(&state.post);
+    if !prepared_output.is_null() {
+        output["prepared"] = prepared_output;
+    }
     output["controller"] = json!({"selected":state.region.selected as u8,"retained":state.region.retained,"kind":state.region.kind,"density":state.density.to_bits(),"high_gain":state.high_gain.map(f32::to_bits),"high_low_weight":state.high_low_weight.to_bits(),"temporal_weight":state.temporal_weight.to_bits(),"estimated":state.estimated_gain.map(f32::to_bits),"low_result":state.low.low.low_result.map(f32::to_bits),"temporal_result":state.low.low.temporal_result.map(f32::to_bits),"spatial_result":state.low.low.spatial_result.map(f32::to_bits),"temporal_source":state.low.low.temporal_source.map(f32::to_bits),"spatial_weight":state.low.low.spatial_weight.to_bits(),"used_previous":state.low.low.used_previous,"single_weight":state.low.single_weight.to_bits(),"selection_status":state.selection_status,"strategy_flag":state.strategy_flag,"xy_history":state.region.history.values(),"color_history":state.low.low.color_history.values(),"high_history":high,"lights":lights});
     if dispatch.is_some() {
         output["dispatch"] = json!({"frame":dispatch_state.frame,"countdown":dispatch_state.countdown,"calculated":action.calculated,"reconfigure":action.reconfigure});

@@ -150,6 +150,8 @@ class Original(OriginalAwb):
             self.setup_outer(v, context, config)
         if "scene_iq" in v.get("controller", {}):
             self.setup_scene(v, context, config, calibration, extra)
+        if "measurement" in v.get("controller", {}):
+            extra += self.setup_measurement(v, context, config, calibration, extra)
         blocks = [
             (0, context),
             (0x8000, config),
@@ -161,6 +163,8 @@ class Original(OriginalAwb):
         for offset, data in blocks:
             self.uc.mem_write(HEAP + offset, bytes(data))
         self.arena, self.live = HEAP + 0x50000, set()
+        if "measurement" in v.get("controller", {}):
+            self.prepare_gain(v, blocks)
         self.invoke(
             (
                 "gain-frame-continuation"

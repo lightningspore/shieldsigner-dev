@@ -1396,3 +1396,41 @@ these common fields does not load dynamic preprocessing curves, adjustment LUT
 contents or enable flags, full saved-site initialization, or complete IQ/session
 lifecycle. Raw preprocessing composition, hardware reconfiguration/publication,
 unsafe Exclusion resolution and live AWB qualification remain outstanding.
+
+## Loading dynamic preprocessing curves
+
+`awb_calibration::Preprocessing::from_value` owns the selected `autoExtPara`
+smart-run, run-interval, tolerance, white-point count and region-selection
+curves. Each group keeps its own knot vector and declared lengths; the groups
+are not required to share a grid. It exposes a borrowed
+`awb_preprocess::Calibration` and a checked tolerance lookup at unsigned
+brightness converted to f32. The parsed smart-run enable flag supplies the
+fixture/runtime input rather than a duplicate manual value.
+
+The white-point group is deliberately exposed in **high, low** strategy order:
+JSON's `high` pointer is raw +0x590 and feeds strategy +0x1b8, while `low` at
++0x588 feeds +0x1bc. Region outputs remain Big then Extra. Smart outputs remain
+luma variance, algorithm gain difference and hardware gain difference. Input
+arrays must be finite, nonempty, strictly increasing in knots and consistent
+with every declared length. Inline run-interval/tolerance tables are bounded to
+eight entries; missing fields receive no fallback defaults.
+
+`mise run camera:rust:awb-iq-preprocess` verifies **192 native preprocessing
+cases and 192 native tolerance interpolations** on host and ARM. The first 24
+cases use the actual SC3336 curve objects; later cases independently vary each
+group's grid, lengths and values. Manual fixture curves are zeroed, so equality
+requires the loaded data. Mode bypass, interval skip and ready paths are all
+represented. Ninety-six cases configure the existing environment/history
+continuation, which executes only when preprocessing reaches its ready branch.
+Checks include exact derived smart values, rounded/scaled count thresholds,
+region thresholds, luma, interval/frame decisions, metadata history/classification
+and preservation of curve input memory. Eight malformed inputs check dynamic
+lengths, missing tables, knot order, float overflow, enable flags and inline
+capacity. [Loaded preprocessing report](awb-iq-preprocess-equivalence.json).
+
+The oracle executes the standard preprocessor until its metadata exit or entry
+to `PrepareMeasureResult`; the measurement preparation body is covered by the
+separate prepared-frame suite. This test does not yet execute a single complete
+raw-statistics-to-gain session or hardware reconfiguration. Shared runtime state
+construction, remaining optional IQ blocks/initialization, environment-layout
+reconciliation, publication and live automatic-WB qualification remain unfinished.

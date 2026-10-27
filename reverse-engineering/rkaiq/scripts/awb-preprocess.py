@@ -18,6 +18,19 @@ class Original(OriginalAwb):
    for r in [regs.UC_ARM_REG_R0,regs.UC_ARM_REG_R1]:uc.reg_write(r,self.runtime.uc.reg_read(r))
    uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
   super().hook(uc,address,size,user)
+ def configure_curves(self,cfg,cal,curves):
+  self.curve_blocks=[]
+  def word(data,o,n):struct.pack_into('<I',data,o,n)
+  def put(slot,values):
+   pointer=HEAP+0x80000+slot*0x100
+   data=struct.pack('<'+'f'*len(values),*values)
+   self.uc.mem_write(pointer,data);self.curve_blocks.append((pointer,data));return pointer
+  for slot,(name,base,keys) in enumerate([('smart',0x4e4,['lvVarTh','wbgainAlgDiffTh','wbgainHwDiffTh']),('points',0x580,['low','high']),('regions',0x61c,['forBigType','forExtraType'])]):
+   group=curves[name];word(cal,base,put(slot*4,group['lumaValue']));word(cal,base+4,len(group['lumaValue']))
+   for i,key in enumerate(keys):word(cal,base+8+i*8,put(slot*4+i+1,group[key]));word(cal,base+12+i*8,len(group[key]))
+  interval=curves['interval'];word(cfg,0xdc,len(interval['lumaValue']))
+  for o,key in [(0xe0,'lumaValue'),(0x100,'intervalValue')]:struct.pack_into('<'+'f'*len(interval[key]),cfg,o,*interval[key])
+  cfg[0x4a4]=curves['enabled']
  def run(self,v):
   c=bytearray([0x5a]*0x4000);cfg=bytearray(0x600);cal=bytearray(0x700);configuration=HEAP+0x10000;calibration=HEAP+0x20000;arrays=HEAP+0x30000;source=HEAP+0x40000
   def word(data,o,x):struct.pack_into('<I',data,o,x&0xffffffff)
@@ -41,6 +54,8 @@ class Original(OriginalAwb):
    head=HEAP+0x3478;nodes=[HEAP+0x60000+i*16 for i in range(len(metadata['history']))];self.arena=HEAP+0x60000+len(nodes)*16
    word(c,0x3478,nodes[0] if nodes else head);word(c,0x347c,nodes[-1] if nodes else head)
    for i,(node,value) in enumerate(zip(nodes,metadata['history'])):self.uc.mem_write(node,struct.pack('<3I',nodes[i+1] if i+1<len(nodes) else head,nodes[i-1] if i else head,value))
+  self.curve_blocks=[]
+  if "curves" in v:self.configure_curves(cfg,cal,v["curves"])
   self.uc.mem_write(HEAP,bytes(c));self.uc.mem_write(configuration,bytes(cfg));self.uc.mem_write(calibration,bytes(cal));self.uc.mem_write(source,struct.pack('<2f',*(v['source'] or [0.,0.])))
   self.invoke(SYMBOL,[0,HEAP]);after=bytearray(self.uc.mem_read(HEAP,len(c)));newcfg=bytearray(self.uc.mem_read(configuration,len(cfg)))
   w=lambda data,o:struct.unpack_from('<I',data,o)[0]
@@ -58,6 +73,7 @@ class Original(OriginalAwb):
   for o,n in [(0x28,4),(0x334a,1),(0x33d8,8),(0x33b0,4),(0x33ac,4)]:after[o:o+n]=c[o:o+n]
   for o,n in [(0x4a8,12),(0x1b8,8),(0x38c,8)]:newcfg[o:o+n]=cfg[o:o+n]
   assert after==c and newcfg==cfg and bytes(self.uc.mem_read(calibration,len(cal)))==bytes(cal),'Unexpected prefix mutation'
+  for pointer,data in self.curve_blocks:assert bytes(self.uc.mem_read(pointer,len(data)))==data
   return out
 def main():
  manifest=json.loads((ROOT/'reverse-engineering/rkaiq/artifacts.json').read_text());sha=hashlib.sha256(BINARY.read_bytes()).hexdigest();assert sha==manifest['binaries'][0]['sha256'];assert hashlib.sha256(RUNTIME.read_bytes()).hexdigest()==manifest['gccRuntime']['memberSha256']

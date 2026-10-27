@@ -514,3 +514,86 @@ impl Common {
         }
     }
 }
+
+pub struct Curves<const N: usize> {
+    pub knots: Vec<f32>,
+    pub values: [Vec<f32>; N],
+}
+impl<const N: usize> Curves<N> {
+    fn parse(v: &Value, keys: [&str; N]) -> Result<Self, String> {
+        let n = integer(v, "/lumaValue_len", 1, i32::MAX as i64)? as usize;
+        let read = |key: &str| -> Result<Vec<f32>, String> {
+            if integer(v, &format!("/{key}_len"), 1, i32::MAX as i64)? as usize != n
+                || at(v, &format!("/{key}"))?.as_array().map(|a| a.len()) != Some(n)
+            {
+                return Err(format!("Curve length mismatch at {key}"));
+            }
+            (0..n).map(|i| number(v, &format!("/{key}/{i}"))).collect()
+        };
+        let knots = read("lumaValue")?;
+        if knots.windows(2).any(|x| x[0] >= x[1]) {
+            return Err(format!("Curve knots must increase"));
+        }
+        let mut values = core::array::from_fn(|_| Vec::new());
+        for (out, key) in values.iter_mut().zip(keys) {
+            *out = read(key)?;
+        }
+        Ok(Self { knots, values })
+    }
+}
+pub struct Preprocessing {
+    pub smart_enabled: bool,
+    pub smart: Curves<3>,
+    pub interval: Curves<1>,
+    pub tolerance: Curves<1>,
+    /// Native strategy order high then low, not JSON field declaration order.
+    pub points: Curves<2>,
+    pub regions: Curves<2>,
+}
+impl Preprocessing {
+    pub fn from_value(v: &Value) -> Result<Self, String> {
+        let smart = at(v, "/smartRun")?;
+        let interval = Curves::parse(at(v, "/runInterval")?, ["intervalValue"])?;
+        let tolerance = Curves::parse(at(v, "/tolerance")?, ["toleranceValue"])?;
+        if interval.knots.len() > 8 || tolerance.knots.len() > 8 {
+            return Err(format!(
+                "Inline interval/tolerance tables exceed eight entries"
+            ));
+        }
+        Ok(Self {
+            smart_enabled: flag(smart, "/enable")?,
+            smart: Curves::parse(
+                at(smart, "/cfg")?,
+                ["lvVarTh", "wbgainAlgDiffTh", "wbgainHwDiffTh"],
+            )?,
+            interval,
+            tolerance,
+            points: Curves::parse(at(v, "/division/wpNumTh")?, ["high", "low"])?,
+            regions: Curves::parse(
+                at(v, "/xyRegionStableSelection/wpNumTh")?,
+                ["forBigType", "forExtraType"],
+            )?,
+        })
+    }
+    pub fn calibration(&self) -> crate::awb_preprocess::Calibration<'_> {
+        crate::awb_preprocess::Calibration {
+            smart_knots: &self.smart.knots,
+            smart: core::array::from_fn(|i| &self.smart.values[i][..]),
+            interval: crate::awb_preprocess::Curve {
+                knots: &self.interval.knots,
+                values: &self.interval.values[0],
+            },
+            point_knots: &self.points.knots,
+            points: core::array::from_fn(|i| &self.points.values[i][..]),
+            region_knots: &self.regions.knots,
+            regions: core::array::from_fn(|i| &self.regions.values[i][..]),
+        }
+    }
+    pub fn tolerance(&self, brightness: u32) -> Result<f32, crate::InvalidInput> {
+        crate::interpolate(
+            &self.tolerance.knots,
+            &self.tolerance.values[0],
+            brightness as f32,
+        )
+    }
+}

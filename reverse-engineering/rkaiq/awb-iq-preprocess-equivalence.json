@@ -1,0 +1,22 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "runtimeSha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+  "preprocessCases": 192,
+  "toleranceCases": 192,
+  "metadataConfiguredCases": 96,
+  "decisions": {
+    "2": 96,
+    "0": 64,
+    "1": 32
+  },
+  "malformedRejections": 8,
+  "mismatches": 0,
+  "arm": true,
+  "scope": "Owned independent IQ curves through native numerical preprocessor prefix and optional environment/history continuation, plus native tolerance interpolation.",
+  "limitations": [
+    "Stops at metadata exit or PrepareMeasureResult entry; complete measurement preparation and gain/hardware continuation are not executed here.",
+    "First 24 cases use unmodified IQ curves; later cases vary independent knot grids/lengths to exercise interpolation and ordering.",
+    "Explicit geometry/exposure/history inputs; full IQ/session initialization and live AWB remain unfinished."
+  ]
+}

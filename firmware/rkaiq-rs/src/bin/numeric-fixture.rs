@@ -260,6 +260,13 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-preprocess-parse" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                println!("{}", match shieldsigner_rkaiq::awb_calibration::Preprocessing::from_value(&v["iq"]) {
+                    Ok(c)=>serde_json::json!({"enabled":c.smart_enabled,"lengths":[c.smart.knots.len(),c.interval.knots.len(),c.points.knots.len(),c.regions.knots.len(),c.tolerance.knots.len()],"tolerance":c.tolerance(v["brightness"].as_u64().unwrap() as u32).unwrap().to_bits()}),
+                    Err(e)=>serde_json::json!({"error":e}),
+                });
+            }
             "awb-common-iq" => println!("{}",awb_common_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-lights-parse" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
@@ -884,10 +891,12 @@ fn main() {
                     region_knots: &knots,
                     regions: [&regions[0], &regions[1]],
                 };
+                let loaded=v.get("preprocess_iq").map(shieldsigner_rkaiq::awb_calibration::Preprocessing::from_value).transpose().unwrap();
+                let calibration=loaded.as_ref().map(|c|c.calibration()).unwrap_or(calibration);
                 let input = Input {
                     requested_mode: v["mode"].as_i64().unwrap() as i32,
                     previous_update: v["update"].as_bool().unwrap(),
-                    smart_enabled: v["enabled"].as_bool().unwrap(),
+                    smart_enabled: loaded.as_ref().map(|c|c.smart_enabled).unwrap_or(v["enabled"].as_bool().unwrap()),
                     countdown: v["countdown"].as_i64().unwrap() as i32,
                     exposure_luma: if v["source"].is_null() {
                         None

@@ -51,6 +51,8 @@ pub mod calibration;
 #[cfg(feature = "diagnostics")]
 pub mod awb_calibration;
 #[cfg(feature = "diagnostics")]
+pub mod awb_session;
+#[cfg(feature = "diagnostics")]
 pub mod demosaic_calibration;
 pub mod demosaic_selection;
 pub mod discovery;

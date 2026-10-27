@@ -2128,3 +2128,71 @@ publication remain the next work. The image is an inspection aid, not a color
 accuracy qualification. Hardware stayed at the requested 30 ms / 8x exposure;
 no boot/kernel/service changes occurred. The 85 library tests and simulated
 first-frame sequence checks also pass.
+
+
+### Persistent session and first live AE + AWB runs (2026-10-27)
+
+`awb_session::Session` now owns the numerical state, brightness metadata/history,
+measurement caches, gain-controller histories and per-light results across
+frames. `process` stages the entire mutable state and commits only on success.
+Runtime ISO, exposure metadata, update requests and optional saved-site reference
+remain explicit inputs. The numerical and gain dispatch counters share one
+logical counter across ready/interval-skip transitions. The supported session
+currently consumes four-window FAST linear translated records.
+
+The replay fixture now calls this production session. Its first result exactly
+matches the previous independently exercised first-frame replay. Sixty-four
+updates of a captured frame match between the host and actual Luckfox CPU and
+settle to a stable gain. A second 64-update replay injects a nonfinite pre-gain
+after numerical preprocessing with a deliberately different exposure input;
+every rejection leaves subsequent results identical to a clean reference
+session on both machines. These are repeated-input state/rollback tests, not
+64 distinct physical captures. Run with `awb-captured-gain.py --repeat 64
+--check-rollback` plus the explicit runtime/file arguments from the previous
+section.
+
+`camera-probe auto-awb-frame-sc3336` now connects this session to the existing
+single AE/sensor/parameter owner. The owner translates AWB with the exact
+statistics parameter ID, registers the unchanged measurement SDK for every
+successfully submitted gain-only parameter ID, and retains AWB gains by their
+statistics frame. When several pending frames are released together, each
+submission therefore receives its own frame's gain rather than the newest
+calculation. AE digital gain and WB gain use the existing ordered serializer
+and persistent parameter queue. Saved final translated data comes from the
+owner's last processed AWB frame, not an initial-ID assumption.
+
+Two physical live runs (`ss-20261027-live-awb-01` and `-02`) succeeded. Each
+processed 22 AE/AWB frames, retained 22 registered parameter IDs, reached AWB
+countdown zero and saved a 460,800-byte 640x480 NV12 image. Every observed AWB
+parameter ID was registered. Final statistics and saved translation both name
+frame 31 / parameter ID 30. Both full 7,680-byte translations match original
+ARM instructions with zero differences. The final gains were approximately
+`[1.42712, 1, 1, 1.90399]` and `[1.42723, 1, 1, 1.90639]`. Both previews show
+readable text; this does not qualify color accuracy. See the committed
+`awb-live-hardware-validation.json` for bounded evidence and limitations.
+Private images, statistics, profiles and detailed logs remain ignored locally.
+
+The actual command was:
+
+```sh
+/tmp/shieldsigner-camera-probe-live-awb auto-awb-frame-sc3336 \
+  /tmp/shieldsigner-pipeline-sof.json /tmp/sc3336-awb-30ms-8x.private.json \
+  /dev/video20 /dev/video11 /tmp/ss-20261027-live-awb-02 /dev/video19 1 400
+```
+
+Choose a fresh output basename for another run. The command starts with the
+profile exposure, then enables the reconstructed AE and AWB gain loops for a
+bounded capture. It makes no boot/kernel/service changes. An old-build archive
+was copied back and SHA-256 verified before removing obsolete temporary board
+binaries to free its 22.5 MB `/tmp`; all camera captures remain preserved.
+
+**Remaining work:** AWB currently uses the recovered calibrated missing-exposure
+fallback (brightness 2048), explicit ISO 400 and sample scale 1. Native exposure
+metadata and sample-scale provenance still require binding. The measurement
+configuration remains fixed FAST startup; normal scheduling and adaptive
+measurement reconfiguration are not connected. Physical frame latency,
+vendor-free cold startup, full joined native controller equivalence and a
+continuous application camera service remain unqualified. This is a functioning
+live diagnostic iteration, not the completed replacement library. The 85
+library tests, no-default-features build, ARM build and existing simulated
+first-frame/AE queue checks pass.

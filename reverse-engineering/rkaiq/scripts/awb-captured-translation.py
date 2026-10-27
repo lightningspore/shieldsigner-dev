@@ -50,7 +50,7 @@ def main():
         parametersId=parameters,
         bytesCompared=len(actual),
         mismatches=0,
-        scope="Real captured ISP32 statistics plus exact initial SDK snapshot, full original single-ISP translation",
+        scope="Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
         limitations=[
             "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
             "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup.",

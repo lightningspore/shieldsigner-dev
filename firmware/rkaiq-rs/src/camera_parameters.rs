@@ -473,6 +473,7 @@ fn capture_with_parameters_controlled(
                 blue: gain(4),
                 position: isp32::ApplyPosition::Gain1,
             };
+            let awb_output = control.statistics_output.clone();
             let observer = Some(control.sender);
             let result = control.owner.during_capture_with_wb(
                 backend,
@@ -497,9 +498,13 @@ fn capture_with_parameters_controlled(
                     )
                 },
             );
+            let result = result.and_then(|()| match control.owner.awb.as_ref() {
+                Some(awb) => awb.save(&awb_output),
+                None => Ok(()),
+            });
             println!(
                 "{}",
-                json!({"event":"automatic-ae-finished","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string()),"processedStatistics":control.owner.processed,"parameterSnapshots":control.owner.parameters.len(),"lastSof":control.owner.last_sof,"lastSofTimestampNs":control.owner.last_sof_timestamp_ns,"sensorWrites":control.owner.sensor.writes,"sensorQueries":control.owner.sensor.queries,"automaticWhiteBalance":false,"physicalApplicationVerified":false})
+                json!({"event":"automatic-ae-finished","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string()),"processedStatistics":control.owner.processed,"parameterSnapshots":control.owner.parameters.len(),"lastSof":control.owner.last_sof,"lastSofTimestampNs":control.owner.last_sof_timestamp_ns,"sensorWrites":control.owner.sensor.writes,"sensorQueries":control.owner.sensor.queries,"automaticWhiteBalance":control.owner.awb.is_some(),"physicalApplicationVerified":false})
             );
             result
         } else {

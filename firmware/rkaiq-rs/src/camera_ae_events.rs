@@ -18,6 +18,112 @@ fn emit_camera_ae_event(sender: &Option<CameraAeSender>, event: CameraAeEvent) -
     Ok(())
 }
 
+/// Experimental persistent AWB beside the AE owner. Measurement configuration
+/// remains the initial FAST record; only gain batches change during this run.
+struct CameraAwb {
+    session: shieldsigner_rkaiq::awb_session::Session,
+    sdk: [u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES],
+    iso: f32,
+    gains: Vec<(u32, shieldsigner_rkaiq::isp32::WhiteBalanceGain)>,
+    processed: u64,
+    last: Option<(u32, u32, Vec<u8>)>,
+}
+impl CameraAwb {
+    fn step(
+        &mut self,
+        bytes: &[u8],
+        parameters: &[(u32, [u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES])],
+    ) -> io::Result<()> {
+        use shieldsigner_rkaiq::{
+            awb_preparation::FRAME_BYTES, awb_translation::*, isp32, statistics::Statistics,
+        };
+        let stats = Statistics::parse(bytes).map_err(|_| error("Invalid live AWB statistics"))?;
+        // Every successful gain-only submission preserves the SDK measurement
+        // record. Register that unchanged record under its actual submitted ID.
+        let snapshots: Vec<_> = parameters
+            .iter()
+            .map(|(id, _)| Snapshot {
+                id: *id,
+                measurement: &self.sdk,
+            })
+            .collect();
+        let mut frame = [0; FRAME_BYTES];
+        let mut destination = Destination {
+            frame: &mut frame,
+            valid: false,
+            frame_info_valid: false,
+            frame_id: 0,
+            proxy_sequence: 0,
+        };
+        let outcome = translate_associated(&stats, &snapshots, &mut destination)
+            .map_err(|e| error(format!("Live AWB association: {e:?}")))?;
+        if outcome == Outcome::Translated {
+            let result = self
+                .session
+                .process(
+                    &frame,
+                    &shieldsigner_rkaiq::awb_session::Input {
+                        requested_update: self.processed == 0,
+                        exposure_luma: None,
+                        iso: self.iso,
+                        site_reference: None,
+                    },
+                )
+                .map_err(|e| error(format!("Live AWB session: {e:?}")))?;
+            self.processed += 1;
+            self.last = Some((stats.frame_id(), stats.parameters_id(), frame.to_vec()));
+            println!(
+                "{}",
+                json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"exposureMetadata":"calibrated-missing-metadata-fallback","measurementConfiguration":"fixed-FAST-startup"})
+            );
+        }
+        let g = self.session.gain();
+        if self.gains.len() == 128 {
+            return Err(error("Live AWB gain history limit reached"));
+        }
+        self.gains.push((
+            stats.frame_id(),
+            isp32::WhiteBalanceGain {
+                red: g[0],
+                green_red: g[1],
+                green_blue: g[2],
+                blue: g[3],
+                position: isp32::ApplyPosition::Gain1,
+            },
+        ));
+        Ok(())
+    }
+    fn gain_for(&self, frame: u32) -> io::Result<shieldsigner_rkaiq::isp32::WhiteBalanceGain> {
+        self.gains
+            .iter()
+            .find(|(id, _)| *id == frame)
+            .map(|(_, g)| *g)
+            .ok_or_else(|| error("Missing exact-frame AWB gain"))
+    }
+    fn save(&self, statistics_output: &str) -> io::Result<()> {
+        let (frame, id, bytes) = self
+            .last
+            .as_ref()
+            .ok_or_else(|| error("No valid live AWB measurements"))?;
+        let base = statistics_output
+            .strip_suffix(".stats.raw")
+            .ok_or_else(|| error("Invalid AWB output basename"))?;
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(format!("{base}.awb-translated.bin"))?;
+        file.write_all(bytes)?;
+        let report = json!({"event":"automatic-awb-finished","processedStatistics":self.processed,"frameId":frame,"parametersId":id,"association":"exact-registered-gain-only-snapshot","gain":self.session.gain(),"automaticWhiteBalance":true,"measurementConfiguration":"fixed-FAST-startup","exposureMetadata":"calibrated-missing-metadata-fallback","isoInput":self.iso,"coldStartProven":false});
+        let mut sidecar = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(format!("{base}.awb-translated.json"))?;
+        serde_json::to_writer_pretty(&mut sidecar, &report).map_err(|e| error(e.to_string()))?;
+        println!("{report}");
+        Ok(())
+    }
+}
+
 /// Single-threaded event consumer. The caller retains parameter queue ownership
 /// and submits ISP batches for the returned processed-statistics outputs.
 struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
@@ -29,6 +135,7 @@ struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
     last_statistics: Option<u32>,
     pending: std::collections::VecDeque<Vec<u8>>,
     processed: u64,
+    awb: Option<CameraAwb>,
 }
 impl<B: shieldsigner_rkaiq::sensor::Backend> CameraAeOwner<B>
 where
@@ -49,6 +156,7 @@ where
             last_statistics: None,
             pending: std::collections::VecDeque::new(),
             processed: 0,
+            awb: None,
         }
     }
     /// Snapshots must represent complete effective translator state. This is an
@@ -182,6 +290,9 @@ where
                 .step_statistics(&bytes, &parameters)
                 .map_err(error)?
             {
+                if let Some(awb) = self.awb.as_mut() {
+                    awb.step(&bytes, &self.parameters)?;
+                }
                 self.processed += 1;
                 // Report the owner's snapshot-associated metric, rather than
                 // the statistics worker's initial-snapshot diagnostic metric.
@@ -190,12 +301,15 @@ where
                         "ispGain":c.point.isp_gain,"relativeError":c.relative_error,
                         "held":c.held})
                 });
-                println!("{}", json!({"event":"automatic-ae-statistics",
+                println!(
+                    "{}",
+                    json!({"event":"automatic-ae-statistics",
                     "frame":out.frame,"parametersId":out.parameters,
                     "exposureFrame":out.exposure_frame,"exactExposureLookup":out.exact_exposure,
                     "meanQ8":out.mean_q8,"run":out.control.frame.run,
                     "preprocessingError":out.control.frame.preprocessing_error,
-                    "decision":decision,"physicalApplicationVerified":false}));
+                    "decision":decision,"physicalApplicationVerified":false})
+                );
                 results.push(out);
             }
         }
@@ -280,7 +394,11 @@ where
                         for output in processed {
                             // Frame zero already has the initial parameter ID.
                             if output.frame != 0 {
-                                self.submit_gain(backend, queue, output.frame, fixed_wb)?;
+                                let wb = match self.awb.as_ref() {
+                                    Some(awb) => Some(awb.gain_for(output.frame)?),
+                                    None => fixed_wb,
+                                };
+                                self.submit_gain(backend, queue, output.frame, wb)?;
                             }
                         }
                         progress = Instant::now();

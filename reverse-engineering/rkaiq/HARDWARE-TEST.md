@@ -1,5 +1,12 @@
 # First camera session
 
+Current **0.0.31-dev source** has passed two bounded live AE + AWB captures on
+the SC3336/Luckfox. The opt-in `auto-awb-frame-sc3336` command and its remaining
+runtime limitations are documented in [AWB.md](AWB.md#persistent-session-and-first-live-ae--awb-runs-2026-10-27).
+The frozen **0.0.30-dev ZIP described below is unchanged** and does not contain
+this new command. Build current source with `mise run camera:rust:arm` to use it.
+
+
 Kit **0.0.30-dev** adds the bounded `auto-frame-sc3336` automatic-exposure command with fixed calibrated white balance. Its six ARM adapter scenarios pass with simulated devices; the new automatic command is not yet qualified on the camera. The matching full IQ profile and actual device inventory remain required.
 
 This kit is an **experimental partial reconstruction**. It supplies recovered Rust numerical/control components and a camera diagnostic. It does not replace `librkaiq.so` or the existing image's startup/service scripts. No firmware flash is needed for these tests.

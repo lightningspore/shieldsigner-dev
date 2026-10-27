@@ -1,0 +1,74 @@
+{
+  "kind": "experimental-live-ae-awb-hardware-check",
+  "cameraBinarySha256": "5920cb2cb3464f9f7559c4f84af3fe7151dafde1e909bc6fd7b26af29eb7d8b1",
+  "runs": [
+    {
+      "run": "01",
+      "success": true,
+      "awbFrames": 22,
+      "aeFrames": 22,
+      "registeredParameterIds": 22,
+      "firstGain": [
+        1.484085202217102,
+        1.0,
+        1.0,
+        1.8279534578323364
+      ],
+      "lastGain": [
+        1.4271236658096313,
+        1.0,
+        1.0,
+        1.9039913415908813
+      ],
+      "lastFrame": 31,
+      "lastParametersId": 30,
+      "controllerFrames": 22,
+      "countdown": 0,
+      "savedImageBytes": 460800,
+      "allObservedAwbIdsRegistered": true,
+      "finalStatisticsTranslationMatchesSavedHeader": true
+    },
+    {
+      "run": "02",
+      "success": true,
+      "awbFrames": 22,
+      "aeFrames": 22,
+      "registeredParameterIds": 22,
+      "firstGain": [
+        1.4841045141220093,
+        1.0,
+        1.0,
+        1.8272546529769897
+      ],
+      "lastGain": [
+        1.4272304773330688,
+        1.0,
+        1.0,
+        1.9063916206359863
+      ],
+      "lastFrame": 31,
+      "lastParametersId": 30,
+      "controllerFrames": 22,
+      "countdown": 0,
+      "savedImageBytes": 460800,
+      "allObservedAwbIdsRegistered": true,
+      "finalStatisticsTranslationMatchesSavedHeader": true
+    }
+  ],
+  "libraryTests": 85,
+  "simulatedFirstFrameSequencePassed": true,
+  "rollbackChecksOnHostAndLuckfox": 64,
+  "limitations": [
+    "Fixed four-window FAST startup measurement configuration; normal scheduling and adaptive measurement reconfiguration not connected.",
+    "AWB uses calibrated missing-exposure metadata fallback, explicit ISO 400 and sample scale 1; native exposure metadata and sample-scale provenance remain work.",
+    "Physical per-frame gain/exposure latency, color accuracy and vendor-free cold startup remain unqualified.",
+    "Short bounded diagnostic captures, not yet a continuous application camera service.",
+    "Full joined original startup/controller equivalence remains unproven."
+  ],
+  "lastTranslationComparisons": {
+    "runs": 2,
+    "bytesEach": 7680,
+    "mismatches": 0,
+    "snapshotAssociation": "Registered gain-only ID 30; measurement SDK unchanged"
+  }
+}

@@ -28,6 +28,8 @@ def main():
     ap.add_argument("--adb", help="Serial of board on which to compare Rust execution")
     ap.add_argument("--board-binary", default="/tmp/shieldsigner-numeric-awb-replay")
     ap.add_argument("--report", type=Path)
+    ap.add_argument("--repeat", type=int, default=1)
+    ap.add_argument("--check-rollback", action="store_true")
     args = ap.parse_args()
     iq = json.loads(args.iq.read_text())
     wb = iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["wb_v32"]
@@ -37,6 +39,8 @@ def main():
         dimensions=[args.width, args.height],
         sample_scale=args.sample_scale,
         iso=args.iso,
+        repeat=args.repeat,
+        check_rollback=args.check_rollback,
     )
     line = "awb-captured-gain " + json.dumps(payload, separators=(",", ":")) + "\n"
     result = subprocess.run(

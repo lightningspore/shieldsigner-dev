@@ -165,6 +165,51 @@ pub fn split(route: &mut [Point], exposure: f32, limits: Limits) -> Result<Point
     Ok(out)
 }
 
+/// Non-iris successful-path EcmExecute (ELF 0xb65cc) cache state.
+#[derive(Clone, Copy, Debug)]
+pub struct Cache {
+    pub exposure: f32,
+    pub relative_threshold: f32,
+    pub force: bool,
+    pub point: Point,
+}
+/// Run automatic route splitting only when the native relative-change test or
+/// force flag requires it. Manual/iris modes and native error-state publication
+/// are outside this checked successful-path API.
+pub fn split_cached(
+    route: &mut [Point],
+    exposure: f32,
+    limits: Limits,
+    cache: &mut Cache,
+) -> Result<Point, InvalidInput> {
+    if !exposure.is_finite()
+        || !cache.exposure.is_finite()
+        || !cache.relative_threshold.is_finite()
+        || [cache.point.time, cache.point.gain, cache.point.isp_gain]
+            .iter()
+            .any(|v| !v.is_finite())
+    {
+        return Err(InvalidInput::NonFinite);
+    }
+    if exposure < 0. || cache.exposure < 0. || cache.relative_threshold < 0. {
+        return Err(InvalidInput::Exposure);
+    }
+    let difference = if exposure < cache.exposure {
+        cache.exposure - exposure
+    } else {
+        exposure - cache.exposure
+    };
+    // Native unordered comparison also recomputes: zero/zero must not take
+    // the cache-hit path. Keep the negated strict comparison.
+    if !(difference / cache.exposure < cache.relative_threshold) || cache.force {
+        let point = split(route, exposure, limits)?;
+        cache.exposure = exposure;
+        cache.point = point;
+        cache.force = false;
+    }
+    Ok(cache.point)
+}
+
 #[cfg(feature = "diagnostics")]
 pub fn from_profile(
     value: &serde_json::Value,

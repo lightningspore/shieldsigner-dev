@@ -490,7 +490,7 @@ fn main() {
                     result.alternate.to_bits()
                 );
             }
-            "ae-route" | "ae-route-profile" => {
+            "ae-route" | "ae-route-profile" | "ae-route-cached" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let n = |key: &str| v[key].as_f64().unwrap() as f32;
                 let mut route = if a[0] == "ae-route-profile" {
@@ -507,21 +507,42 @@ fn main() {
                         })
                         .collect::<Vec<_>>()
                 };
-                let result = ae_route::split(
-                    &mut route,
-                    n("exposure"),
-                    ae_route::Limits {
-                        minimum_time: n("tmin"),
-                        maximum_time: n("tmax"),
-                        minimum_gain: n("gmin"),
-                        maximum_gain: n("gmax"),
-                        time_quantum: n("quantum"),
-                        floor_tolerance_coefficient: n("coefficient"),
-                        line_length: n("line"),
-                        pixel_clock_mhz: n("clock"),
+                let limits = ae_route::Limits {
+                    minimum_time: n("tmin"),
+                    maximum_time: n("tmax"),
+                    minimum_gain: n("gmin"),
+                    maximum_gain: n("gmax"),
+                    time_quantum: n("quantum"),
+                    floor_tolerance_coefficient: n("coefficient"),
+                    line_length: n("line"),
+                    pixel_clock_mhz: n("clock"),
+                };
+                let mut cache = ae_route::Cache {
+                    exposure: v["prior"].as_f64().unwrap_or(0.) as f32,
+                    relative_threshold: v["threshold"].as_f64().unwrap_or(0.) as f32,
+                    force: v["force"].as_bool().unwrap_or(false),
+                    point: ae_route::Point {
+                        time: 0.004,
+                        gain: 2.,
+                        isp_gain: 1.5,
                     },
-                )
+                };
+                let result = if a[0] == "ae-route-cached" {
+                    ae_route::split_cached(&mut route, n("exposure"), limits, &mut cache)
+                } else {
+                    ae_route::split(&mut route, n("exposure"), limits)
+                }
                 .unwrap();
+                if a[0] == "ae-route-cached" {
+                    emit(
+                        &[result.gain, result.isp_gain, result.time]
+                            .into_iter()
+                            .chain(route.iter().map(|p| p.time))
+                            .chain([cache.exposure, if cache.force { 1. } else { 0. }])
+                            .collect::<Vec<_>>(),
+                    );
+                    continue;
+                }
                 println!(
                     "{}",
                     [result.gain, result.isp_gain, result.time]

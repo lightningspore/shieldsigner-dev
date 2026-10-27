@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 96,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "normal-return EcmExecute, EcmExecuteDirect and automatic route bodies, outputs, route mutation and selected cache state",
+  "limitations": [
+    "Linear automatic non-iris success paths only; native manual and direct-error cache publication are excluded.",
+    "Context limits, route and previous cache state are explicit inputs; imported math is modeled.",
+    "No live exposure feedback or frame-delay scheduling is added."
+  ]
+}

@@ -443,3 +443,37 @@ fallbacks, DCG/HDR, iris and complete private configuration state are outside
 its scope. It does not enable feedback sensor writes or establish exposure
 frame scheduling. Together with the recovered shutter bounds, it supplies
 another input needed by the native route splitter.
+
+
+## Cached automatic route dispatch
+
+`ae_route::split_cached` reconstructs the successful non-iris automatic branch
+of `EcmExecute` (ELF 0xb65cc), calling the existing recovered route splitter.
+It compares the relative change from the last dispatched aggregate exposure
+with the runtime threshold. A force flag bypasses the cache. Recalculation
+updates cached gain, ISP gain, time and aggregate exposure, then clears force;
+a cache hit preserves both route knots and cached state.
+
+The native unordered floating-point comparison matters: zero previous exposure
+and zero request produce 0/0, and native code **recomputes**. The implementation
+uses a negated strict comparison to preserve that behavior; replacing it with
+an ordinary `>=` or `<=` comparison would change the first dispatch.
+
+Ninety-six cases execute native `EcmExecute`, `EcmExecuteDirect` and the actual
+automatic route/interpolation bodies through normal return. They compare
+outputs, route-time mutation, cached aggregate exposure, force clearing and
+preservation of all other context bytes. Cases cover zero previous exposure,
+zero requests, threshold boundaries, cache hits and forced updates.
+[Equivalence report](ae-route-cache-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-route-cache.py --arm
+```
+
+Manual/iris modes and native publication of partial results after a direct
+error remain excluded. The Rust checked API returns its route error without
+updating the cache. Runtime threshold/configuration selection, outer brightness
+control, damping application and delayed sensor writes remain separate work;
+this does not enable automatic exposure on hardware.

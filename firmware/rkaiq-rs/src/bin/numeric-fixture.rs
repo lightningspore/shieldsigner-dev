@@ -380,6 +380,36 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-linear-translation" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let decode = |s: &str| -> Vec<u8> {
+                    (0..s.len())
+                        .step_by(2)
+                        .map(|i| u8::from_str_radix(&s[i..i + 2], 16).unwrap())
+                        .collect()
+                };
+                let raw = decode(v["raw"].as_str().unwrap());
+                let params = decode(v["parameters"].as_str().unwrap());
+                match ae_translation::measure_linear(&raw, params.as_slice().try_into().unwrap())
+                    .unwrap()
+                {
+                    None => println!("invalid"),
+                    Some(m) => println!(
+                        "{}:{}:{}",
+                        m.mean,
+                        m.grid
+                            .bytes()
+                            .iter()
+                            .map(|b| format!("{b:02x}"))
+                            .collect::<String>(),
+                        m.histogram
+                            .iter()
+                            .flat_map(|v| v.to_le_bytes())
+                            .map(|b| format!("{b:02x}"))
+                            .collect::<String>()
+                    ),
+                }
+            }
             "ae-profile" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let (record, p) = ae_configuration::from_comm(

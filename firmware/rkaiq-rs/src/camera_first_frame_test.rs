@@ -337,6 +337,15 @@ mod first_frame_driver {
                 Some((1 << 8) | (1 << 12))
             );
             assert_eq!(report["automaticExposure"], false);
+            assert_eq!(report["lastFrame"]["aeLinear"]["weightedMeanQ8"], 0);
+            assert_eq!(
+                report["lastFrame"]["aeLinear"]["correctedHistogramCount"],
+                0
+            );
+            assert_eq!(
+                report["lastFrame"]["aeLinear"]["initialSnapshotAssociationVerified"],
+                false
+            );
             assert_eq!(report["frameExposureAssociationVerified"], false);
         }
         println!(

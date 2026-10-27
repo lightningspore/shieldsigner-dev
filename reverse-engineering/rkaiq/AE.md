@@ -231,3 +231,37 @@ See [the command and limitations](HARDWARE-TEST.md#persistent-statistics-with-fi
 The ARM userspace simulator exercises both variants and checks the lifecycle.
 Actual measurements and exposure/frame association remain unverified. No AE
 solver, limit/delay policy or feedback sensor writes have been enabled yet.
+
+## Primary linear statistics translation
+
+`ae_translation::measure_linear` now connects full driver statistics and an
+explicit ISP parameter snapshot to the primary linear/source-1/full-range AE
+input: the corrected 225-cell grid/subwindow sums, Q8 weighted mean and 256-bin
+histogram. It requires both AE1 and histogram1 validity bits. Unsupported source,
+histogram mode or range-coefficient configurations are rejected. It reconstructs
+native BLS1/predgain correction, optical-black offsets, first-position WB-gain
+clamping and signed rounding before invoking the recovered grid/histogram code.
+
+The original reference executes `translateAecStatsV32` (ELF 0x86e54) through
+normal return, including the actual native grid and histogram bodies. Thirty-two
+cases compare the entire 1,928-byte primary grid record, weighted mean and
+histogram, plus invalid-mask bypass. Cases use the SC3336 startup parameters and
+bounded variations of BLS1, OB offsets/predgain and WB gains. Object access,
+single-ISP selection and the run-flag result are controlled boundaries; integer
+division and imported `roundf` are explicitly modeled. The output starts zeroed.
+Cached output reuse, HDR, other source swaps, AF/iris and complete SDK/context
+state are outside this minimum path.
+
+```sh
+mise exec rust@1.93.1 -- cargo build --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-linear-translation.py --arm
+```
+
+[Translation report](ae-linear-translation-equivalence.json). Independent ARM
+kernel-header assertions verify AE1 grid, subwindow-sum and histogram offsets.
+The persistent statistics report now includes corrected mean brightness and
+histogram count from the **initial submitted snapshot**, with association still
+explicitly unverified. Invalid validity flags/configuration produce diagnostic
+status rather than exposure writes. This supplies measurement input, not the
+outer target selection, sensor-limit policy, delay scheduling or feedback loop.

@@ -1,0 +1,13 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 32,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "native translateAecStats normal return: primary source-1 linear/full-range corrected 1928-byte grid, weighted mean and 256-bin histogram, invalid validity-mask bypass",
+  "limitations": [
+    "Single-ISP predicate, stats-object access and run-flag result are controlled boundaries; source/config snapshots are explicit.",
+    "Imported integer division and roundf are modeled; core native translator/grid/histogram ARM bodies execute.",
+    "No HDR, source swap 0, AF stats, iris, cached-frame reuse or full SDK output/context equivalence is claimed.",
+    "SDK output is initially zero; arbitrary prior output preservation and frame/configuration association are outside coverage. Live automatic exposure remains unfinished."
+  ]
+}

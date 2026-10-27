@@ -167,9 +167,12 @@ fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
             ])
         };
         match statistics {
-            Some(node) => {
-                statistics_session::during(node, &format!("{}.stats.raw", args[4]), capture)
-            }
+            Some(node) => statistics_session::during(
+                node,
+                &format!("{}.stats.raw", args[4]),
+                &parameters,
+                capture,
+            ),
             None => capture(),
         }
     })();

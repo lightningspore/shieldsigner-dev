@@ -453,3 +453,14 @@ userspace simulation now covers both five-argument capture and this statistics
 variant, verifying readiness/teardown order and saved artifact sizes. Its device
 responses, pixels and metadata are synthetic. Real metadata delivery, validity,
 frame correlation, restart and image quality remain hardware checks.
+
+The development statistics sidecar's `recentFrames[].aeLinear` now contains
+`weightedMeanQ8` (divide by 256 for luma), `weightedMeanLuma` and
+`correctedHistogramCount` when the primary AE1/histogram1 pair is valid. These
+values use the recovered native correction path and the initial submitted
+parameter snapshot. `initialSnapshotAssociationVerified` remains false; a zero
+histogram count is not usable exposure feedback. Invalid measurement flags or an
+unsupported configuration are recorded as diagnostic status. No automatic
+sensor writes are triggered by these fields. ARM integration tests verify the
+synthetic metadata/report path; real frames and exposure association still need
+hardware verification.

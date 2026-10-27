@@ -85,7 +85,11 @@ mod statistics_session {
         fn fd(&self) -> RawFd {
             self.file.as_ref().unwrap().as_raw_fd()
         }
-        fn receive(&mut self, stop: &AtomicBool) -> io::Result<()> {
+        fn receive(
+            &mut self,
+            stop: &AtomicBool,
+            parameters: &[u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES],
+        ) -> io::Result<()> {
             let mut progress = Instant::now();
             while !stop.load(Ordering::Acquire) {
                 let mut planes = [zero(); PLANES];
@@ -121,7 +125,18 @@ mod statistics_session {
                 .to_vec();
                 let stats = shieldsigner_rkaiq::statistics::Statistics::parse(&bytes)
                     .map_err(|_| error("Invalid statistics payload"))?;
-                let header = json!({"frameId":stats.frame_id(),"parametersId":stats.parameters_id(),"measurements":stats.measurements(),"bufferSequence":b.sequence});
+                let translated = match shieldsigner_rkaiq::ae_translation::measure_linear(
+                    &bytes, parameters,
+                ) {
+                    Ok(Some(m)) => {
+                        json!({"valid":true,"weightedMeanQ8":m.mean,"weightedMeanLuma":m.mean as f32/256.,"correctedHistogramCount":m.histogram.iter().map(|v|*v as u64).sum::<u64>(),"initialSnapshotAssociationVerified":false})
+                    }
+                    Ok(None) => {
+                        json!({"valid":false,"reason":"AE1 and histogram1 validity bits are both required"})
+                    }
+                    Err(e) => json!({"valid":false,"error":format!("{e:?}")}),
+                };
+                let header = json!({"frameId":stats.frame_id(),"parametersId":stats.parameters_id(),"measurements":stats.measurements(),"bufferSequence":b.sequence,"aeLinear":translated});
                 if self.history.len() == 256 {
                     self.history.remove(0);
                 }
@@ -179,7 +194,13 @@ mod statistics_session {
             self.release();
         }
     }
-    pub fn during<F: FnOnce() -> io::Result<()>>(node: &str, out: &str, work: F) -> io::Result<()> {
+    pub fn during<F: FnOnce() -> io::Result<()>>(
+        node: &str,
+        out: &str,
+        parameters: &[u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES],
+        work: F,
+    ) -> io::Result<()> {
+        let snapshot = *parameters;
         for path in [out, &format!("{out}.json")] {
             if std::path::Path::new(path).exists() {
                 return Err(error("Statistics output already exists"));
@@ -193,7 +214,7 @@ mod statistics_session {
                 let mut session=match Session::prepare(node){Ok(s)=>s,Err(e)=>{let _=ready_tx.send(Err(e.to_string()));return Err(e);}};
                 println!("{}",json!({"event":"statistics-ready","device":node,"automaticExposure":false}));
                 let _=ready_tx.send(Ok(()));
-                let result=session.receive(&flag);session.release();
+                let result=session.receive(&flag,&snapshot);session.release();
                 let saved=if session.last.is_some(){session.save(out)}else{Err(error("No statistics frames captured"))};
                 println!("{}",json!({"event":"statistics-finished","framesReceived":session.frames,"error":result.as_ref().err().map(|e|e.to_string()),"saveError":saved.as_ref().err().map(|e|e.to_string()),"cleanupErrors":session.cleanup,"automaticExposure":false}));
                 result.and(saved).and_then(|_|if session.cleanup.is_empty(){Ok(())}else{Err(error("Statistics cleanup failed"))})

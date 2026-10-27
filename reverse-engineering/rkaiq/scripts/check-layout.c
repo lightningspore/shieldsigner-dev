@@ -177,3 +177,8 @@ _Static_assert(offsetof(struct v4l2_event,timestamp)==80,"SOF old-time timestamp
 _Static_assert(offsetof(struct v4l2_event,sequence)==76,"event sequence differs from frame ID");
 _Static_assert(sizeof(struct v4l2_event)==128,"SOF event bytes");
 _Static_assert(VIDIOC_SUBSCRIBE_EVENT==0x4020565a && VIDIOC_DQEVENT==0x80805659,"SOF ioctls");
+_Static_assert(offsetof(struct isp32_stat,rawae1_0)==0x390,"linear AE1 packed grid");
+_Static_assert(offsetof(struct isp32_stat,rawae1_1)==0xb98,"linear AE1 subwindow sums");
+_Static_assert(offsetof(struct isp32_stat,rawhist1)==0x1400,"linear AE1 histogram");
+_Static_assert(sizeof(struct isp32_rawaebig_stat1)==48,"AE RGB sums record");
+_Static_assert(offsetof(struct isp32_rawaebig_stat1,sumg)==16 && offsetof(struct isp32_rawaebig_stat1,sumb)==32,"AE green/blue sum arrays");

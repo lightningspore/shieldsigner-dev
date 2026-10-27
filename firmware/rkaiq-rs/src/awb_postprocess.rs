@@ -11,10 +11,12 @@ pub struct Light {
     pub gain: Gains,
     pub probability: f32,
 }
+#[derive(Clone, Copy)]
 pub struct Adjustment<'a> {
     pub luts: &'a [awb_gain_adjust::Lut],
     pub settings: &'a awb_gain_adjust::Settings,
 }
+#[derive(Clone, Copy)]
 pub struct Settings<'a> {
     pub history_target: i32,
     pub tolerance: f32,

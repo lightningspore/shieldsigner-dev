@@ -27,6 +27,7 @@ pub struct Frame {
     pub exclusion_gain: Gains,
     pub divisors: [u32; 2],
 }
+#[derive(Clone, Copy)]
 pub struct Settings<'a> {
     pub mode: i32,
     pub region: &'a awb_xy_selection::Settings,

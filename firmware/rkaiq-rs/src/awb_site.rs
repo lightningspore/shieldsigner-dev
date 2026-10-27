@@ -8,6 +8,7 @@ pub struct Settings {
     pub gain_threshold: f32,
     pub sample_threshold: f32,
 }
+#[derive(Clone, Copy)]
 pub struct Input {
     pub frame: u32,
     /// Context +4; its application-level meaning is not yet established.

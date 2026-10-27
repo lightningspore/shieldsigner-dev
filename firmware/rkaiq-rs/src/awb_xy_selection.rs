@@ -56,6 +56,7 @@ pub fn white_point_kind(retained: u32, thresholds: [u32; 2]) -> u32 {
         3
     }
 }
+#[derive(Clone, Copy)]
 pub struct Settings {
     pub absolute: f32,
     pub relative: f32,

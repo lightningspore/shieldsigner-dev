@@ -269,6 +269,16 @@ pub fn run(v: &Value) -> Value {
         exclusion_gain: [2., 1., 1., 3.],
         divisors: [10, 20],
     };
+    let outer = s.get("outer");
+    let mut site = crate::awb_site::State {
+        matched: outer
+            .map(|o| o["matched"].as_bool().unwrap())
+            .unwrap_or(false),
+        frames: outer
+            .map(|o| o["frames"].as_u64().unwrap() as u32)
+            .unwrap_or(0),
+    };
+    let before_site = site.clone();
     let before = state.clone();
     let before_results = results.clone();
     let result = if s["prepared"].as_bool().unwrap_or(false) {
@@ -294,15 +304,63 @@ pub fn run(v: &Value) -> Value {
             light.counts = [u32::MAX; 4];
             light.gains = [[f32::NAN; 4]; 4];
         }
-        state.process_prepared(&frame, &records, &calibration, &mut results, &settings)
+        if let Some(o) = outer {
+            let site_settings = crate::awb_site::Settings {
+                enabled: o["enabled"].as_bool().unwrap(),
+                frame_limit: o["frame_limit"].as_u64().unwrap() as u32,
+                reuse_enabled: o["reuse_enabled"].as_bool().unwrap(),
+                gain_threshold: scalar(&o["gain_threshold"]),
+                sample_threshold: scalar(&o["sample_threshold"]),
+            };
+            let site_input = crate::awb_site::Input {
+                frame: settings.probability.frame,
+                application_flag: o["application_flag"].as_bool().unwrap(),
+                application_mode: o["application_mode"].as_i64().unwrap() as i32,
+                reference_valid: o["reference_valid"].as_bool().unwrap(),
+                reference_gain: array(&o["reference_gain"]),
+                reference_sample: scalar(&o["reference_sample"]),
+                sample: settings.probability.prior_sample,
+            };
+            let controls = crate::awb_wrapper::Controls {
+                damping: crate::awb_gain::DampingParameters {
+                    variance_threshold: 0.5,
+                    step: scalar(&o["step"]),
+                    minimum: 0.,
+                    maximum: 0.9,
+                },
+                variance: region.variance,
+                tolerance_knots: &[0., 100., 1000.],
+                tolerance_values: &[0.01, 0.1, 0.2],
+                site: &site_settings,
+                site_input: &site_input,
+            };
+            crate::awb_wrapper::process(
+                &mut state,
+                &mut site,
+                &frame,
+                &records,
+                &calibration,
+                &mut results,
+                &settings,
+                &controls,
+            )
+        } else {
+            state.process_prepared(&frame, &records, &calibration, &mut results, &settings)
+        }
     } else {
         state.process(&frame, &lights, &mut results, &settings)
     };
     if s["expect_prepared_error"].as_bool().unwrap_or(false) {
-        assert_eq!(result, Err(crate::InvalidInput::UnsupportedRegion));
+        let error = if s["late_site_error"].as_bool().unwrap_or(false) {
+            crate::InvalidInput::NonFinite
+        } else {
+            crate::InvalidInput::UnsupportedRegion
+        };
+        assert_eq!(result, Err(error));
+        assert_eq!(site, before_site);
         assert_eq!(state, before);
         assert_eq!(results, before_results);
-        return json!({"error":"UnsupportedRegion", "unchanged":true});
+        return json!({"error":format!("{:?}", error), "unchanged":true});
     }
     result.unwrap();
     let lights:Vec<_>=results.iter().map(|v|json!({"probability":([v.probability.total,v.probability.distance,v.probability.luma,v.probability.prior,v.probability.white_points].map(f32::to_bits)),"statistic":v.gain.statistic.map(f32::to_bits),"spatial":v.gain.spatial.map(f32::to_bits),"spatial_weight":v.gain.spatial_weight.to_bits(),"extra_weight":v.gain.extra_weight.to_bits()})).collect();
@@ -314,7 +372,10 @@ pub fn run(v: &Value) -> Value {
         .collect();
     let mut output = awb_postprocess_fixture::output(&state.post);
     output["controller"] = json!({"selected":state.region.selected as u8,"retained":state.region.retained,"kind":state.region.kind,"density":state.density.to_bits(),"high_gain":state.high_gain.map(f32::to_bits),"high_low_weight":state.high_low_weight.to_bits(),"temporal_weight":state.temporal_weight.to_bits(),"estimated":state.estimated_gain.map(f32::to_bits),"low_result":state.low.low.low_result.map(f32::to_bits),"temporal_result":state.low.low.temporal_result.map(f32::to_bits),"spatial_result":state.low.low.spatial_result.map(f32::to_bits),"temporal_source":state.low.low.temporal_source.map(f32::to_bits),"spatial_weight":state.low.low.spatial_weight.to_bits(),"used_previous":state.low.low.used_previous,"single_weight":state.low.single_weight.to_bits(),"selection_status":state.selection_status,"strategy_flag":state.strategy_flag,"xy_history":state.region.history.values(),"color_history":state.low.low.color_history.values(),"high_history":high,"lights":lights});
-    if s.get("single").is_some() {
+    if outer.is_some() {
+        output["outer"] = json!({"matched":site.matched,"frames":site.frames,"tolerance":crate::interpolate(&[0.,100.,1000.], &[0.01,0.1,0.2], settings.probability.brightness as f32).unwrap().to_bits()});
+    }
+    if s.get("single").is_some() || outer.is_some() {
         let r = &state.low.detection;
         output["controller"]["single"] = json!({"selected":r.selected,"color":r.color,"candidate_counts":r.candidate_counts,"color_counts":r.color_counts,"valid":r.valid,"disagreements":r.disagreements,"votes":r.votes,"mean":r.mean_distance.to_bits(),"gain":r.gain.map(f32::to_bits)});
     }

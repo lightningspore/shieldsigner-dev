@@ -1126,3 +1126,52 @@ The outer wrapper's per-frame reset literal at ELF `0xc8200` is **-1.0**,
 verified from its bytes `00 00 80 bf`; its diagnostic weights must not be reset
 to zero or unity during subsequent composition. Full reset/damping/tolerance
 composition, saved-reference initialization and live AWB remain unfinished.
+
+## Joined outer gain wrapper
+
+`awb_wrapper::process` reconstructs the represented state transition of
+`AwbCalAwbGain` (ELF `0xc803c`) with prepared light records. It stages controller
+state, per-light results and saved-site state together, then:
+
+1. Clears the classifier result and gain buffers, per-light numerical results,
+   strategy diagnostics and optional-processing caches. Diagnostic weights reset
+   to native **-1.0**, not zero. Histories, estimated gain, current/previous gain
+   and adaptive coefficient retain their previous values at entry.
+2. Adapts the damping coefficient with the shared variance and evaluates the
+   tolerance curve at unsigned brightness converted to f32.
+3. Runs the prepared-record controller through its complete strategy/common tail.
+4. Applies saved-site startup reuse, then copies the resulting current gain to
+   previous gain for the next frame.
+
+The wrapper derives region stabilization variance, classifier brightness sample
+and saved-site frame/sample from shared inputs, preventing contradictory copies
+of those native context fields. Saved-site reuse happens after CCT/ranked-light
+metadata calculation; it does not retroactively recompute that metadata or the
+undamped/damped caches. The API preserves this original ordering. Diagnostic
+strings and context fields outside the represented Rust state are not exposed.
+
+`mise run camera:rust:awb-wrapper` executes the original outer function and all
+its numerical/controller/site callees to return. The ordinary 192-case corpus
+and enabled-single-color 64-case corpus compare exact represented state,
+per-light results, histories, adaptive coefficient, tolerance, site state and
+final/previous gains on host and ARM. Native entry tracing also counts real
+saved-site gain replacements. Synthetic reference labels are empty; the oracle
+checks that native clears the remaining label/unused bytes. Numerical bodies
+are not replaced with a modeled controller. Memory, allocation, strings and
+logging use the existing explicit adapters; classifier math runs pinned uClibc
+ARM code.
+
+Each corpus also verifies three checked failures leave controller state,
+per-light output **and saved-site state** unchanged: unresolved mode-1/2
+Exclusion plus a nonfinite saved-reference ratio discovered only after gain
+calculation. Those checked failures do not claim native equivalence for unsafe
+or nonfinite behavior. Optional clipping/adjustment remain verified in separate
+suites, not enabled in these joined corpora. Records and calibration are still
+fixture-built rather than produced by the full native preprocessor/IQ loader.
+Reports: [ordinary wrapper](awb-wrapper-equivalence.json),
+[enabled classifier wrapper](awb-wrapper-single-color-equivalence.json).
+
+Remaining work includes full IQ/state initialization, preprocessor-to-wrapper
+composition, outer processing/publication lifecycle, saved-reference persistence,
+resolution of AUTO/ALWAYS Exclusion, and live automatic-WB qualification. This
+wrapper is a joined stage, not a complete vendor-free camera claim.

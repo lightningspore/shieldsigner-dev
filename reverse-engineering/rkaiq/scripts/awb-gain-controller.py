@@ -31,6 +31,10 @@ class Original(post.Original, color.OriginalColor):
         self.stdlib = True
 
     def hook(self, uc, address, size, user):
+        if address == (self.symbols.get("_Z13runAvaSiteRecP12awb_contex_s", 0) & ~1):
+            self.before_site_gain = list(
+                struct.unpack("<4I", uc.mem_read(HEAP + 0x353C, 16))
+            )
         if address == (self.symbols.get(PROCESS, 0) & ~1):
             self.single_calls += 1
         if address == (
@@ -178,6 +182,35 @@ class Original(post.Original, color.OriginalColor):
             extra += self.setup_single(v, ctx, cal)
         return extra
 
+    def setup_outer(self, v, ctx, cfg):
+        o = v["controller"]["outer"]
+        for offset, name in [
+            (4, "application_flag"),
+            (0x90, "reference_valid"),
+            (0xA8, "matched"),
+            (0xB0, "enabled"),
+            (0x11C, "reuse_enabled"),
+        ]:
+            ctx[offset] = o[name]
+        for offset, name in [
+            (8, "application_mode"),
+            (0xAC, "frames"),
+            (0xB4, "frame_limit"),
+        ]:
+            struct.pack_into("<I", ctx, offset, o[name] & 0xFFFFFFFF)
+        for offset, name in [
+            (0xA4, "reference_sample"),
+            (0x120, "gain_threshold"),
+            (0x124, "sample_threshold"),
+        ]:
+            struct.pack_into("<f", ctx, offset, o[name])
+        struct.pack_into("<4f", ctx, 0x94, *o["reference_gain"])
+        struct.pack_into("<I", cfg, 0x98, 3)
+        struct.pack_into("<3f", cfg, 0x9C, 0.0, 100.0, 1000.0)
+        struct.pack_into("<3f", cfg, 0xBC, 0.01, 0.1, 0.2)
+        struct.pack_into("<3f", cfg, 0x14C, o["step"], 0.0, 0.9)
+        struct.pack_into("<f", cfg, 0x15C, 0.5)
+
     def setup_single(self, v, ctx, cal):
         s = v["controller"]["single"]
         ctx[0xF79] = s["grid_valid"]
@@ -277,7 +310,7 @@ class Original(post.Original, color.OriginalColor):
             count += len(values)
             result[key] = values
         output["controller"] = result
-        if "single" in v["controller"]:
+        if "single" in v["controller"] or "outer" in v["controller"]:
             base = 0x35B8
             result["single"] = dict(
                 selected=struct.unpack_from("<i", after, base + 4)[0],
@@ -292,6 +325,22 @@ class Original(post.Original, color.OriginalColor):
             )
             before = self.before_controller
             for o, size in [(0x3450, 20), (0x35BC, 0x88)]:
+                after[o : o + size] = before[o : o + size]
+        if "outer" in v["controller"]:
+            output["outer"] = dict(
+                matched=bool(after[0xA8]),
+                frames=struct.unpack_from("<I", after, 0xAC)[0],
+                tolerance=struct.unpack_from("<I", after, 0x33B4)[0],
+            )
+            before = self.before_controller
+            for o, size in [
+                (0xA8, 1),
+                (0xAC, 4),
+                (0x33B4, 4),
+                (0x33FD, 1),
+                (0x3400, 20),
+                (0x352C, 16),
+            ]:
                 after[o : o + size] = before[o : o + size]
         # Remove represented controller writes before the shared unrelated-byte check.
         before = self.before_controller
@@ -332,10 +381,19 @@ class Original(post.Original, color.OriginalColor):
                 i * 0xA0 + 0x64 : i * 0xA0 + 0xA0
             ]
         output["controller"]["lights"] = lights
+        if self.outer_active:
+            for i in range(len(before) // 0xA0):
+                # Empty synthetic reference labels; wrapper clears remaining bytes.
+                assert actual[i * 0xA0 : i * 0xA0 + 0x64] == bytes(0x64)
+            return before
         return bytes(after)
 
     def invoke(self, name, *args, **kwargs):
-        if name == "_Z18AwbCalGainByWbModeP12awb_contex_s":
+        if name in (
+            "_Z18AwbCalGainByWbModeP12awb_contex_s",
+            "_Z13AwbCalAwbGainP12awb_contex_s",
+        ):
+            self.outer_active = name == "_Z13AwbCalAwbGainP12awb_contex_s"
             self.single_calls = 0
             self.selected_gain_calls = 0
             self.before_controller = bytes(self.uc.mem_read(HEAP, 0x4000))
@@ -352,7 +410,8 @@ def main():
     assert runtime_sha == manifest["gccRuntime"]["memberSha256"]
     math_sha = hashlib.sha256(color.MATH.read_bytes()).hexdigest()
     assert math_sha == manifest["uclibcRuntime"]["memberSha256"]
-    prepared = "--prepared" in sys.argv
+    outer = "--outer" in sys.argv
+    prepared = "--prepared" in sys.argv or outer
     single = "--single" in sys.argv
     initial_exclusion = "--initial-exclusion" in sys.argv
     assert not (single and initial_exclusion)
@@ -397,6 +456,7 @@ def main():
     cases = []
     expected = []
     coverage = {}
+    site_overrides = 0
     classifier_calls = 0
     single_coverage = {}
     for i in range(64 if single else 192):
@@ -538,6 +598,22 @@ def main():
                 light["counts"][0:2] = [0, 0]
         if prepared and not s["complete"]:
             s["previous_region"] = 3
+        if outer:
+            s["outer"] = dict(
+                enabled=bool(i % 5),
+                frame_limit=[0, 1, 3, 8][i % 4],
+                reuse_enabled=bool(i % 3),
+                gain_threshold=[0.2, 10.0, 11.0][i % 3],
+                sample_threshold=2.0,
+                matched=bool(i % 2),
+                frames=i % 4,
+                application_flag=bool(i // 4 % 2),
+                application_mode=1 if i % 3 else 0,
+                reference_valid=bool(i // 3 % 2),
+                reference_gain=[2.0, 1.0, 1.0, 3.0],
+                reference_sample=s["prior_sample"],
+                step=0.05,
+            )
         s["prepared"] = prepared
         v["controller"] = s
         cases.append(v)
@@ -545,6 +621,8 @@ def main():
         if initial_exclusion:
             assert expected[-1]["controller"]["selected"] == 3
             assert arm.selected_gain_calls == 0 and arm.single_calls == 0
+        if outer:
+            site_overrides += expected[-1]["current"] != arm.before_site_gain
         classifier_calls += arm.single_calls
         if arm.single_calls:
             observed = expected[-1]["controller"]
@@ -568,6 +646,8 @@ def main():
         assert any(k.startswith("mode2:") for k in single_coverage)
         assert any(":validFalse:" in k for k in single_coverage)
         assert any(":validTrue:" in k for k in single_coverage)
+    if outer:
+        assert site_overrides > 0
     native_cases = len(cases)
     if prepared:
         for mode in (1, 2):
@@ -585,6 +665,28 @@ def main():
                 light["counts"][0:2] = [0, 0]
             cases.append(v)
             expected.append(dict(error="UnsupportedRegion", unchanged=True))
+    if outer:
+        v = json.loads(json.dumps(cases[0]))
+        s = v["controller"]
+        s.update(
+            mode=0,
+            complete=False,
+            frame=0,
+            expect_prepared_error=True,
+            late_site_error=True,
+        )
+        s["outer"].update(
+            enabled=True,
+            frame_limit=3,
+            frames=0,
+            reuse_enabled=True,
+            matched=False,
+            reference_valid=True,
+            reference_gain=[2.0, 0.0, 1.0, 3.0],
+            reference_sample=s["prior_sample"],
+        )
+        cases.append(v)
+        expected.append(dict(error="NonFinite", unchanged=True))
     inputs = "".join(
         "awb-gain-controller " + json.dumps(v, separators=(",", ":")) + "\n"
         for v in cases
@@ -634,12 +736,18 @@ def main():
         cases=len(cases),
         nativeCases=native_cases,
         preparedAdapter=prepared,
-        atomicRejectionCases=2 if prepared else 0,
+        outerWrapper=outer,
+        siteOverrides=site_overrides,
+        atomicRejectionCases=(3 if outer else 2) if prepared else 0,
         mismatches=0,
         arm=replay,
         coverage=coverage,
-        elfEntry="0xc72b8",
-        scope="Whole original gain-mode function: XY/probabilities/high/low/mix/retention plus common processing through ranked metadata",
+        elfEntry="0xc803c" if outer else "0xc72b8",
+        scope=(
+            "Whole original gain wrapper: resets, damping/tolerance, gain-mode call tree, saved-site reuse and gain carry-forward"
+            if outer
+            else "Whole original gain-mode function: XY/probabilities/high/low/mix/retention plus common processing through ranked metadata"
+        ),
         limitations=[
             "Directed INITIAL-mode Exclusion: stability disabled, sparse counts, no full IQ initialization."
             if initial_exclusion
@@ -656,6 +764,12 @@ def main():
         ROOT
         / (
             (
+                "reverse-engineering/rkaiq/awb-wrapper-single-color-equivalence.json"
+                if single
+                else "reverse-engineering/rkaiq/awb-wrapper-equivalence.json"
+            )
+            if outer
+            else (
                 "reverse-engineering/rkaiq/awb-prepared-controller-initial-equivalence.json"
                 if initial_exclusion
                 else (

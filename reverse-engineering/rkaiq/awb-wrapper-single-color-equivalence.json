@@ -1,0 +1,64 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": null,
+  "initialExclusionAudit": false,
+  "enumHeaderSha256": null,
+  "runtimeSha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+  "mathRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "nativeMathCalls": {
+    "powf": 84375,
+    "sqrtf": 16875,
+    "atan2f": 16875
+  },
+  "classifierCalls": 24,
+  "singleColorCoverage": {
+    "mode1:historyFalse:validTrue:weight00000000": 1,
+    "mode2:historyFalse:validTrue:weight3f800000": 1,
+    "mode1:historyTrue:validTrue:weight3f800000": 1,
+    "mode2:historyFalse:validFalse:weight00000000": 2,
+    "mode1:historyFalse:validFalse:weight00000000": 2,
+    "mode2:historyTrue:validTrue:weight00000000": 4,
+    "mode1:historyFalse:validTrue:weight3f800000": 3,
+    "mode2:historyFalse:validTrue:weight00000000": 4,
+    "mode1:historyTrue:validTrue:weight00000000": 1,
+    "mode2:historyTrue:validFalse:weight00000000": 1,
+    "mode2:historyTrue:validTrue:weight3f800000": 3,
+    "mode1:historyTrue:validTrue:weight3e800000": 1
+  },
+  "nativeRuntimeFunctions": [
+    "__aeabi_l2f"
+  ],
+  "modeledStringCalls": {
+    "strcpy": 382,
+    "strcmp": 180
+  },
+  "cases": 67,
+  "nativeCases": 64,
+  "preparedAdapter": true,
+  "outerWrapper": true,
+  "siteOverrides": 2,
+  "atomicRejectionCases": 3,
+  "mismatches": 0,
+  "arm": true,
+  "coverage": {
+    "False:0:3": 2,
+    "True:1:1": 17,
+    "True:2:1": 17,
+    "True:0:3": 13,
+    "True:0:1": 2,
+    "True:2:0": 3,
+    "False:1:3": 2,
+    "True:0:0": 5,
+    "True:1:0": 2,
+    "False:2:3": 1
+  },
+  "elfEntry": "0xc803c",
+  "scope": "Whole original gain wrapper: resets, damping/tolerance, gain-mode call tree, saved-site reuse and gain carry-forward",
+  "limitations": [
+    "Single-color is enabled in this corpus.",
+    "Optional clipping/adjustment are disabled; their full native suites remain separate.",
+    "Ordinary joined XY regions are Normal/Big; Exclusion is exercised through mode-0 direct aggregate fallback.",
+    "Finite explicit calibration and prepared measurements, 4-8 lights and bounded histories; calibration initialization and live frame lifecycle remain unfinished.",
+    "Standard allocation, memory, strings and logging are explicit adapters; original numerical and policy bodies execute."
+  ]
+}

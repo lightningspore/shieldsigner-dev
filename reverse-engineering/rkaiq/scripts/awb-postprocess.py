@@ -132,6 +132,8 @@ class Original(OriginalAwb):
             if "controller" in v
             else []
         )
+        if "outer" in v.get("controller", {}):
+            self.setup_outer(v, context, config)
         blocks = [
             (0, context),
             (0x8000, config),
@@ -144,7 +146,13 @@ class Original(OriginalAwb):
             self.uc.mem_write(HEAP + offset, bytes(data))
         self.arena, self.live = HEAP + 0x50000, set()
         self.invoke(
-            "_Z18AwbCalGainByWbModeP12awb_contex_s", [HEAP], instructions=3000000
+            (
+                "_Z13AwbCalAwbGainP12awb_contex_s"
+                if "outer" in v.get("controller", {})
+                else "_Z18AwbCalGainByWbModeP12awb_contex_s"
+            ),
+            [HEAP],
+            instructions=3000000,
         )
         after = bytearray(self.uc.mem_read(HEAP, len(context)))
         output = {

@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """Execute the complete native numerical prefix, using its missing-metadata exit."""
 import hashlib,json,random,struct,subprocess,sys
-from differential import ROOT,BINARY,HEAP,regs,f32
+from differential import ROOT,BINARY,HEAP,RETURN,regs,f32
 from awb_reference import OriginalAwb,RUNTIME
 SYMBOL='_Z13AwbPreProcV32PK25rk_aiq_awb_stat_res_v32_sP12awb_contex_s'
 class Original(OriginalAwb):
  def hook(self,uc,address,size,user):
+  if getattr(self,'stop_at_measurements',False) and address==(self.symbols['_Z20PrepareMeasureResultPK25rk_aiq_awb_stat_res_v32_sP12awb_contex_s']&~1):
+   self.stopped=True;uc.reg_write(regs.UC_ARM_REG_PC,RETURN);return
+  if self.stubs.get(address)=='malloc' and getattr(self,'stop_at_measurements',False):
+   assert uc.reg_read(regs.UC_ARM_REG_R0)==12
+   pointer=self.arena;self.arena+=16;uc.mem_write(pointer,bytes(12));uc.reg_write(regs.UC_ARM_REG_R0,pointer);uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
   if address==(self.symbols.get('xcam_print_log',0)&~1):
    uc.reg_write(regs.UC_ARM_REG_R0,0);uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
   if self.stubs.get(address)=='__aeabi_uidivmod':
@@ -27,10 +32,29 @@ class Original(OriginalAwb):
   for offset,key in [(0x4e4,'knots'),(0x4ec,'smart0'),(0x4f4,'smart1'),(0x4fc,'smart2'),(0x580,'knots'),(0x590,'points0'),(0x588,'points1'),(0x61c,'knots'),(0x624,'regions0'),(0x62c,'regions1')]:word(cal,offset,pointer[key])
   for o in [0x4e8,0x584,0x620]:word(cal,o,3)
   word(cfg,0xdc,3);floats(cfg,0xe0,*v['knots']);floats(cfg,0x100,*v['intervals'])
+  metadata=v.get('metadata');self.stop_at_measurements=metadata is not None;self.stopped=False
+  if metadata is not None:
+   word(c,0x2dec,HEAP+0x50000);word(c,0x33d4,9);word(c,0x33e0,-7);floats(c,0x3480,.5);c[0x3345]=1;c[0x3346:0x3348]=bytes(metadata['convergence'])
+   word(cfg,0x158,metadata['target']);word(cfg,0x164,max(0,len(metadata['boundaries'])-1))
+   for i,n in enumerate(metadata['boundaries']):word(cfg,0x168+i*4,n)
+   for i,n in enumerate(metadata['thresholds']):word(cfg,0x1a8+i*4,n)
+   head=HEAP+0x3478;nodes=[HEAP+0x60000+i*16 for i in range(len(metadata['history']))];self.arena=HEAP+0x60000+len(nodes)*16
+   word(c,0x3478,nodes[0] if nodes else head);word(c,0x347c,nodes[-1] if nodes else head)
+   for i,(node,value) in enumerate(zip(nodes,metadata['history'])):self.uc.mem_write(node,struct.pack('<3I',nodes[i+1] if i+1<len(nodes) else head,nodes[i-1] if i else head,value))
   self.uc.mem_write(HEAP,bytes(c));self.uc.mem_write(configuration,bytes(cfg));self.uc.mem_write(calibration,bytes(cal));self.uc.mem_write(source,struct.pack('<2f',*(v['source'] or [0.,0.])))
   self.invoke(SYMBOL,[0,HEAP]);after=bytearray(self.uc.mem_read(HEAP,len(c)));newcfg=bytearray(self.uc.mem_read(configuration,len(cfg)))
   w=lambda data,o:struct.unpack_from('<I',data,o)[0]
   out=dict(mode=struct.unpack_from('<i',after,0x28)[0],update=bool(after[0x334a]),integer=w(after,0x33d8),luma=w(after,0x33dc),smart=list(struct.unpack_from('<3I',newcfg,0x4a8)),interval=w(after,0x33b0),points=list(struct.unpack_from('<2I',newcfg,0x1b8)),regions=list(struct.unpack_from('<2I',newcfg,0x38c)),frame=w(after,0x33ac),decision=0 if v['mode']==1 else (1 if w(after,0x33ac)!=v['frame'] else 2))
+  if metadata is not None:
+   assert self.stopped==(out['decision']==2)
+   word_at=lambda a:struct.unpack('<I',self.uc.mem_read(a,4))[0]
+   values=[];head=HEAP+0x3478;previous=head;node=word_at(head)
+   while node!=head:
+    assert len(values)<32 and word_at(node+4)==previous
+    values.append(word_at(node+8));previous=node;node=word_at(node)
+   assert word_at(head+4)==previous
+   out['metadata']=dict(history=values,level=w(after,0x33d4),environment=struct.unpack_from('<i',after,0x33e0)[0],variance=w(after,0x3480),stable=bool(after[0x3345]))
+   for o,n in [(0x3345,1),(0x33d4,4),(0x33e0,4),(0x3478,12)]:after[o:o+n]=c[o:o+n]
   for o,n in [(0x28,4),(0x334a,1),(0x33d8,8),(0x33b0,4),(0x33ac,4)]:after[o:o+n]=c[o:o+n]
   for o,n in [(0x4a8,12),(0x1b8,8),(0x38c,8)]:newcfg[o:o+n]=cfg[o:o+n]
   assert after==c and newcfg==cfg and bytes(self.uc.mem_read(calibration,len(cal)))==bytes(cal),'Unexpected prefix mutation'

@@ -187,5 +187,75 @@ mod tests {
             Err(InvalidInput::Length)
         );
         assert_eq!(state, before);
+        input.block = [15, 15];
+        let mut metadata = Metadata {
+            history: crate::awb_luma_history::History::<4>::from_values(&[42]).unwrap(),
+            level: 9,
+            environment: -7,
+            variance: 0.5,
+            brightness_stable: true,
+        };
+        let environment = crate::awb_environment::Calibration {
+            boundaries: &[0, 1000],
+            thresholds: [110, 200, 65536, 65600],
+        };
+        assert_eq!(
+            state.derive_measurements(
+                &input,
+                &calibration,
+                &mut metadata,
+                &environment,
+                [true, true],
+                1
+            ),
+            Err(InvalidInput::Length)
+        );
+        assert_eq!(state, before);
+        assert_eq!(metadata.history.values(), &[42]);
+        assert_eq!(metadata.environment, -7);
+        assert_eq!(metadata.variance, 0.5);
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct Metadata<const CAP: usize> {
+    pub history: crate::awb_luma_history::History<CAP>,
+    pub level: u32,
+    pub environment: i32,
+    pub variance: f32,
+    pub brightness_stable: bool,
+}
+impl State {
+    /// Join numerical preprocessing to the environment/history update that
+    /// precedes PrepareMeasureResult. Measurement classification remains external.
+    pub fn derive_measurements<const CAP: usize>(
+        &mut self,
+        input: &Input,
+        calibration: &Calibration<'_>,
+        metadata: &mut Metadata<CAP>,
+        environment: &crate::awb_environment::Calibration<'_>,
+        convergence: [bool; 2],
+        history_target: i32,
+    ) -> Result<Continuation, InvalidInput> {
+        let mut next = self.clone();
+        let mut meta = metadata.clone();
+        let decision = next.derive(input, calibration)?;
+        if decision == Continuation::Ready {
+            let classified =
+                crate::awb_environment::classify(next.luma_integer, environment, meta.environment);
+            meta.level = classified.level;
+            meta.environment = classified.environment;
+            meta.history
+                .update(next.luma_integer as i32, history_target)?;
+            meta.variance = meta.history.variance();
+            // Native computes !(variance > threshold): unordered NaN is
+            // therefore reported stable, unlike a Rust <= comparison.
+            meta.brightness_stable =
+                meta.variance.partial_cmp(&next.smart[0]) != Some(core::cmp::Ordering::Greater);
+            next.update |= next.smart[0] < meta.variance || !(convergence[0] && convergence[1]);
+        }
+        *self = next;
+        *metadata = meta;
+        Ok(decision)
     }
 }

@@ -310,3 +310,46 @@ interpolation and counter/rounding boundaries. [Reference report](awb-preprocess
 The ordinary non-null metadata continuation still needs to join environment
 classification, brightness history, measurement history and calibrated gain
 selection. This verified prefix does not enable automatic WB in capture.
+
+## Joined preprocessing through measurement entry
+
+`awb_environment::classify` recovers `AwbCalLV` (ELF `0xc9f68`). Its two outputs
+are independent: a five-level category uses strict comparisons against four
+thresholds, while an environment index scans consecutive interval boundaries.
+If no interval matches, the last interval index remains selected, even for a
+value below the first boundary. With no intervals, the incoming index is
+preserved. The API retains the numeric categories rather than inventing semantic
+names for unconfirmed enum values.
+
+`awb_preprocess::State::derive_measurements` now joins numerical derivation,
+environment classification, rolling brightness history and relative variance.
+On a continuing frame it updates those fields, derives brightness stability,
+and combines the existing update request with variance and two convergence
+flags. Mode/interval bypasses leave metadata/history untouched. Checked failures
+commit neither numerical state nor metadata/history.
+
+The native stability flag here is **not** an ordinary `variance <= threshold`
+comparison. ARM instructions implement `!(variance > threshold)`, so unordered
+NaN variance is marked stable. The separate update request uses the ordered
+`variance > threshold` result, the negation of both convergence flags being set,
+and the previous request. Rust preserves these distinct conditions, including
+the NaN produced by nonempty all-zero brightness history. This differs from
+the earlier measurement-ratio history gate; both feed the remaining classifier.
+
+`mise run camera:rust:awb-preprocess-history` runs 512 joined comparisons,
+including 261 native continuations reaching `PrepareMeasureResult`. The
+original preprocessor, interpolation, environment classification, list update
+and FMA variance bodies execute together. Execution stops at the **first
+instruction** of `PrepareMeasureResult`, before classification or gain work;
+it does not substitute a classifier and claim full controller equivalence.
+The oracle compares all derived numeric bits, complete list values, category
+outputs, stability/update flags and preservation outside the known state fields.
+Host and ARM match exactly. Cases include empty/zero history, changing history
+lengths, threshold equality, out-of-range environment lookup and convergence
+flag combinations. The 768-case numerical-prefix regression also still passes.
+[Joined reference report](awb-preprocess-history-equivalence.json).
+
+Native node allocation and logging remain explicit boundaries. Calibration
+curves and starting histories are synthetic and supplied explicitly; full IQ
+initialization, the measurement classifier and later gain/publishing stages
+remain unfinished. The frozen camera kit continues using fixed calibrated WB.

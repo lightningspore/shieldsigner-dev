@@ -319,11 +319,56 @@ fn main() {
                     regions: [9., 10.],
                     frame_counter: v["frame"].as_u64().unwrap() as u32,
                 };
-                let decision = state.derive(&input, &calibration).unwrap();
-                println!(
-                    "{}",
-                    serde_json::json!({"mode":state.mode,"update":state.update,"integer":state.luma_integer,"luma":state.luma.to_bits(),"smart":state.smart.map(f32::to_bits),"interval":state.interval,"points":state.points,"regions":state.regions.map(f32::to_bits),"frame":state.frame_counter,"decision":match decision {Continuation::ModeBypass=>0,Continuation::IntervalSkip=>1,Continuation::Ready=>2}})
-                );
+                let mut extra = serde_json::Value::Null;
+                let decision = if let Some(m) = v.get("metadata") {
+                    let values = m["history"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|v| v.as_u64().unwrap() as u32)
+                        .collect::<Vec<_>>();
+                    let mut metadata = Metadata {
+                        history: awb_luma_history::History::<32>::from_values(&values).unwrap(),
+                        level: 9,
+                        environment: -7,
+                        variance: 0.5,
+                        brightness_stable: true,
+                    };
+                    let boundaries = m["boundaries"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|v| v.as_u64().unwrap() as u32)
+                        .collect::<Vec<_>>();
+                    let environment = awb_environment::Calibration {
+                        boundaries: &boundaries,
+                        thresholds: core::array::from_fn(|i| {
+                            m["thresholds"][i].as_u64().unwrap() as u32
+                        }),
+                    };
+                    let decision = state
+                        .derive_measurements(
+                            &input,
+                            &calibration,
+                            &mut metadata,
+                            &environment,
+                            [
+                                m["convergence"][0].as_bool().unwrap(),
+                                m["convergence"][1].as_bool().unwrap(),
+                            ],
+                            m["target"].as_i64().unwrap() as i32,
+                        )
+                        .unwrap();
+                    extra = serde_json::json!({"history":metadata.history.values(),"level":metadata.level,"environment":metadata.environment,"variance":metadata.variance.to_bits(),"stable":metadata.brightness_stable});
+                    decision
+                } else {
+                    state.derive(&input, &calibration).unwrap()
+                };
+                let mut output = serde_json::json!({"mode":state.mode,"update":state.update,"integer":state.luma_integer,"luma":state.luma.to_bits(),"smart":state.smart.map(f32::to_bits),"interval":state.interval,"points":state.points,"regions":state.regions.map(f32::to_bits),"frame":state.frame_counter,"decision":match decision {Continuation::ModeBypass=>0,Continuation::IntervalSkip=>1,Continuation::Ready=>2}});
+                if !extra.is_null() {
+                    output["metadata"] = extra;
+                }
+                println!("{}", output);
             }
             "awb-luma-history" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

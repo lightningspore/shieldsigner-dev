@@ -1552,3 +1552,56 @@ after host/ARM fixture builds. Native constructor/default strength policy,
 mode/SNR changes, persistent callback state and live integration remain to be
 joined and verified. Physical CPU replay makes no ISP writes; live BAYNR
 remains disabled.
+
+### Persistent BAYNR controller (0.0.34 development)
+
+`baynr_frame::State` joins setting preparation, ISO selection and quantization
+into the normal-exposure automatic callback. Its prepared defaults match native
+`Abayer2dnr_Init_V23`: HSNR/normal calibration, prior SNR one, zero prior
+exposure/selected storage, enabled unit strength and a forced first calculation.
+`seeded` stages the first result for eventual camera startup; it makes no
+hardware submission itself.
+
+The callback normalizes analogue, sensor-digital, ISP-digital and ISO's BLC
+gain to a minimum of one. Native multiplication order is
+`(((analogue * sensorDigital) * clampedBlcPredgain) * 50) * ispDigital`, then
+integer truncation. The unclamped BLC value remains in the exposure record and
+participates in the recalculation gate. Gray, BAY3D enable, BLC changes or force
+trigger processing; otherwise ISO must differ from the last processed exposure
+by at least eleven. Ten counts hold prior results. Time-only or SNR-only changes
+can hold the prior exposure record. A pending SNR change is applied only when
+another condition triggers processing, at which point native reloads the
+corresponding calibration. Gray changes also change parameter mode/reload the
+SNR table. Rust preserves these observed gates rather than forcing SNR changes
+immediately.
+
+[Full constructor/callback/physical CPU evidence](baynr-frames-equivalence.json)
+covers 24 sequences / 1,152 frames: 196 updates and 956 holds. Complete native
+constructor, descriptor-confirmed prepare/processing callbacks
+(`g_RkIspAlgoDescAbayer2dnrV23`, processing ELF `0xe3f78`), native module lookup
+at SDK offset `0x5974`, calibration merge, process, selection and quantization
+execute with original uClibc `expf`. Every prepared-table, selected-tuning,
+exposure, strength and fixed-result byte is checked on every frame, plus gray,
+parameter-mode and recalculation state. Calibration input is unchanged. Tests
+include explicit delta-ten/eleven and held-SNR transitions, forced refresh,
+disabled calibration, gray/BAY3D and BLC changes. Host and physical Luckfox
+match exactly. A failed later calibration change preserves all Rust state and
+result bytes. All 106 library/five Unix tests, no-default-features and static
+ARM builds pass; the refactored calibration oracle's 100 cases also pass.
+
+Run `mise run camera:rust:baynr-frames -- --adb SERIAL --report LOCAL.json`
+after host/ARM fixture builds. The oracle constructs raw SDK calibration and
+present normal AE/BLC input records; the original general JSON parser and
+C++ scheduling framework are not executed. Allocation, libc strings and
+diagnostics are explicit boundaries, with no algorithm/math substitutes.
+HDR callback assembly, absent-exposure fallback, manual/UAPI strength policy
+and live capture remain separate. Physical CPU replay makes no ISP writes;
+live BAYNR is still disabled.
+
+The next integration gate is the AE sensor-feature/SNR handoff. Read-only
+hardware `sensor-info` confirms optional NR-switch and conversion-gain-ratio
+ioctls return `ENOTTY` on the connected SC3336. Native `AecCISFeature` /
+`AeCISFeature` use signed DCG `>0` when optional noise switching is absent.
+Existing Rust exposure records explicitly leave CIS feature publication
+external, so their currently zero byte must not be treated as independent
+proof of correct SNR metadata. This field will be verified before live BAYNR.

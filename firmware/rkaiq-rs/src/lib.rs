@@ -372,3 +372,5 @@ pub mod baynr_selection;
 pub mod baynr_quantize;
 #[cfg(feature = "diagnostics")]
 pub mod baynr_calibration;
+#[cfg(feature = "diagnostics")]
+pub mod baynr_frame;

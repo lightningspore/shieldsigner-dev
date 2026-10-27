@@ -246,3 +246,8 @@ and retained slots/padding.
 `baynr_calibration::prepare` reconstructs independent SNR prefix/fallback lookup
 and complete calibration/tuning table merge with retained rows/padding.
 [Actual-profile and varied native/physical CPU evidence](ISP.md#baynr-calibration-preparation-0034-development).
+
+`baynr_frame::State` joins the normal-exposure constructor defaults, SNR/mode
+reloads, strict ISO gate and fixed-result publication. It stages all changes
+for a future accepted hardware batch.
+[Full native constructor/callback and physical CPU evidence](ISP.md#persistent-baynr-controller-0034-development).

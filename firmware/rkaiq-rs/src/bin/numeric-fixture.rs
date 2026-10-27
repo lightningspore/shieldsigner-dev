@@ -3455,6 +3455,17 @@ fn main() {
                 let (x,y)=shieldsigner_rkaiq::lsc_geometry::gradients(&array("x"),&array("y")).unwrap();
                 println!("{}",x.iter().chain(y.iter()).flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "baynr-frames" => {
+                use shieldsigner_rkaiq::baynr_frame;
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();let mut state=baynr_frame::State::new(&v["calibration"]).unwrap();let mut result=[0xa5;152];let mut frames=Vec::new();
+                let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+                for f in v["frames"].as_array().unwrap(){
+                    let info=baynr_frame::Information{seconds:f["seconds"].as_f64().unwrap() as f32,gains:core::array::from_fn(|i|f["gains"][i].as_f64().unwrap() as f32),blc_predgain:f["blc"].as_f64().unwrap() as f32,snr_mode:f["snr"].as_u64().unwrap() as u8,gray:f["gray"].as_bool().unwrap(),bay3d_enabled:f["bay3d"].as_bool().unwrap(),force:f["force"].as_bool().unwrap()};
+                    let updated=state.process(&v["calibration"],info,&mut result).unwrap();
+                    frames.push(serde_json::json!({"updated":updated,"result":hex(&result),"table":hex(&state.table),"selected":hex(&state.selected),"exposure":hex(&state.exposure),"strength":hex(&state.strength),"gray":state.gray,"parameterMode":state.parameter_mode,"recalculate":state.recalculate}));
+                }
+                println!("{}",serde_json::json!(frames));
+            }
             "baynr-prepare" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();let s=v["table"].as_str().unwrap();
                 let mut table=(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>().try_into().unwrap();

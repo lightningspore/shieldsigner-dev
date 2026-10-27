@@ -38,8 +38,7 @@ class OriginalCalibration(OriginalArm):
             return
         super().hook(uc, address, size, user)
 
-    def run(self, value):
-        cal = value["calibration"]
+    def sdk_graph(self, cal):
         self.uc.mem_write(HEAP, bytes(0x31000))
         root, calsets, tunesets, table, noise, parammode, ci, ti = [
             HEAP + x
@@ -120,6 +119,13 @@ class OriginalCalibration(OriginalArm):
                                 *row["gain_adj"]["gain_adj"],
                             ),
                         )
+        return root
+
+    def run(self, value):
+        root = self.sdk_graph(value["calibration"])
+        table, noise, parammode, ci, ti = [
+            HEAP + x for x in (0x40000, 0x30000, 0x30080, 0x30100, 0x30104)
+        ]
         self.uc.mem_write(table, bytes.fromhex(value["table"]))
         self.uc.mem_write(noise, value["noise"].encode() + b"\0")
         self.uc.mem_write(parammode, b"normal\0")

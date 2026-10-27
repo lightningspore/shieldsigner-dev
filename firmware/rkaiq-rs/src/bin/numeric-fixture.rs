@@ -3256,6 +3256,16 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-luma" => {
+                use shieldsigner_rkaiq::ccm_luma::{Row,symmetric};
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let array=|p: &serde_json::Value| p.as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>();
+                let rows=v["rows"].as_array().unwrap().iter().map(|r|Row{iso:r["iso"].as_f64().unwrap() as f32,curve:array(&r["curve"]).try_into().unwrap()}).collect::<Vec<_>>();
+                let mut curve=array(&v["curve"]).try_into().unwrap();
+                let updated=symmetric(&rows,v["iso"].as_f64().unwrap() as f32,v["previousWeight"].as_f64().unwrap() as f32,v["previousUpper"].as_u64().unwrap() as usize,v["force"].as_bool().unwrap(),&mut curve).unwrap();
+                let hex=curve.iter().flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>();
+                println!("{}",serde_json::json!({"updated":updated,"curve":hex}));
+            }
             "ccm-saturation" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let mut matrix=v["matrix"].as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>().try_into().unwrap();

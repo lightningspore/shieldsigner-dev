@@ -774,3 +774,42 @@ after building host/ARM fixtures. Physical CPU replay makes no ISP writes and
 does not load the vendor library. Calibrated alpha/saturation ownership,
 luma-curve generation, outer scheduling and live CCM submission remain
 separate; live capture continues to leave CCM disabled.
+
+### Symmetric CCM luma curve (0.0.34 development)
+
+`ccm_luma::symmetric` reconstructs complete `YAlpSymAutoCfg` (ELF `0xfe250`,
+Ghidra `0x10e250`), the selected profile's symmetric mode. Each calibration row
+is an ISO plus seventeen f32 alpha values. ARM instructions establish two
+floating arguments (previous interpolation weight in s0, current ISO in s1),
+plus count/table/previous-upper-index/force in r0–r3 and output/flag on the stack.
+Ghidra's inferred signature obscures those float arguments.
+
+Below the first ISO, native uses upper index one with weight zero; above the
+last ISO, it uses the last index and weight one. Interior samples use the first
+strictly greater ISO (last index at the final knot). The selected interval must
+have span at least double-precision `1e-5`. Recalculation occurs when weight
+changes by more than double-precision `0.01`, the upper index changes, or force
+is set. The caller owns the prior index/weight; the routine does not advance
+those arguments itself.
+
+Each alpha is `floorf(fma(upper, weight, lower * (1 − weight)) + 0.5)`, with
+native f32 rounding at every indicated stage. Native sums absolute f32 changes
+across all seventeen values and copies the entire curve only if that sum exceeds
+one. An exact change of one is suppressed. Rust preserves both gates and returns
+whether publication happened, leaving prior curve bytes intact otherwise.
+Malformed/non-finite input is explicitly rejected before modification.
+
+[Native/physical CPU evidence](ccm-luma-equivalence.json) compares 1,003 cases,
+including 100 using the selected profile's actual thirteen-row calibration,
+endpoint/interior samples, caller cache/force combinations and explicit summed
+changes of zero/one/two. All 68 output bytes and update flags match. The original
+whole routine executes and its 16,711 floor calls execute the pinned ARM uClibc
+`floorf` body in an isolated reference runtime; host math is not substituted.
+The 94 library/five Unix tests, no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:ccm-luma -- --adb SERIAL --report LOCAL.json` after
+building host/ARM fixtures. Physical replay does not load the vendor library
+or write ISP registers. Asymmetric curves, calibration loading/ABI assertions,
+outer flag/weight ownership and joined live CCM remain separate. The selected
+profile sets asymmetric mode off; live CCM still remains disabled pending the
+remaining integration and validation.

@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "cases": 1003,
+  "selectedProfileCases": 100,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "66967073d0c7bb2cec3a1ec5ab8767a6af9dfd022519e1bf937b207195acbdb8",
+  "physicalArmBinarySha256": "2246416c93c49101b3362fad5fdd4303ed1aff10ce513c7d4788a2a38473bde0",
+  "hostMatchesPhysicalArm": true,
+  "seed": "0x43434d4c",
+  "scope": "Complete native YAlpSymAutoCfg and pinned uClibc floorf; all 68 curve bytes and update flag.",
+  "limitations": [
+    "Finite ordered tables of at least two rows; malformed Rust inputs rejected.",
+    "Asymmetric curves, caller-owned prior bracket/weight and live CCM remain separate.",
+    "Physical CPU replay does not write ISP registers."
+  ],
+  "floorCalls": 16711,
+  "uclibcRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "updatedCases": 981
+}

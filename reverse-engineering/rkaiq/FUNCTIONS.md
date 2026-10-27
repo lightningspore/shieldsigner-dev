@@ -155,3 +155,7 @@ profile names, cached publication and early exits.
 `ccm_saturation::apply` reconstructs complete `Saturationadjust`
 (ELF `0xfd7e0`), preserving mixed-precision fused color transforms.
 [Arithmetic, domain and native/physical CPU evidence](ISP.md#ccm-saturation-adjustment-0034-development).
+
+`ccm_luma::symmetric` reconstructs complete `YAlpSymAutoCfg`
+(ELF `0xfe250`), including interpolation/cache gates and whole-curve publication.
+[Verified ARM calling convention and native uClibc/physical CPU evidence](ISP.md#symmetric-ccm-luma-curve-0034-development).

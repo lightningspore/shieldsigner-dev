@@ -1050,7 +1050,7 @@ between frame calls. Every frame still runs the native preprocessing checkpoint,
 complete automatic caller/conversion, and complete result publisher.
 
 36 sequences of 32 frames compare 1,152 frame results, including 1,052 processed
-and 100 skipped frames. Twelve bind actual profile damping/tolerances. Intermediate counts zero/two/five, dynamic damping on/off
+and 100 skipped frames. Twelve bind actual profile damping/tolerances, frame delays and dynamic mode. Intermediate counts zero/two/five, dynamic damping on/off
 and priming on/off are covered. The comparisons include all the outputs and
 listed state from the single-frame corpus on **every** step, crossing the
 five-record control-history and ten-entry error-history ring boundaries.
@@ -1145,4 +1145,37 @@ pipeline corpus currently exercises the profile's frame mode only.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-delay-calibration.py --arm
+```
+
+## Profile dynamic-damping binding
+
+`ae_dynamic_calibration::Calibration` binds `CommCtrl.AecSpeed.DyDamp` to the
+recovered controller. `DyDampEn` decides whether the dynamic routine is called;
+the separate runtime convergence byte decides whether the routine changes its
+input coefficient. Those enables are intentionally independent.
+
+The pinned SDK `rk_aiq_comm.h` defines AUTO as 1 and MANUAL as 2; its hash is
+now included in `artifacts.json`. Native mode 2 replaces the default scale and
+middle coefficient with profile `SlowRange` and `SlowDamp`. AUTO uses the
+recovered default rule. The checked loader accepts those two named modes and
+validates enable/value fields; manual scale zero is rejected because the
+recovered numerical path requires a positive scale.
+
+256 comparisons execute complete native brightness control and compare its
+outputs, full controller/history/cache/delay state and damping diagnostics.
+They cover profile call-enable on/off, runtime enable on/off, AUTO/MANUAL,
+and distinct manual scales/middle values. Sixty-four cases retain the actual
+profile's enabled/AUTO parameters; other cases deliberately exercise variants.
+[Dynamic calibration comparison](ae-dynamic-calibration-equivalence.json).
+
+The twelve persistent profile-policy sequences now bind the actual profile's
+enabled/AUTO dynamic configuration as well as tolerances, damping coefficients
+and frame delays. The runtime enable still evolves through recovered publication
+convergence, not a calibration constant. Native context slots are supplied from
+the profile in the oracle, so full native calibration-loader equivalence is
+not claimed. FPS selection, initialization and physical frame association
+remain separate work.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-dynamic-calibration.py --arm
 ```

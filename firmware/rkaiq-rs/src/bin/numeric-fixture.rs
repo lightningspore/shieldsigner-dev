@@ -1055,7 +1055,16 @@ fn main() {
                         saturated: false,
                     },
                     ae_controller::Policy {
-                        dynamic: if v["dynamic"].as_bool().unwrap_or(false) {
+                        dynamic: if v["bind_dynamic"].as_bool().unwrap_or(false) {
+                            ae_dynamic_calibration::Calibration::from_scene(&v["policy_scene"])
+                                .unwrap()
+                                .dynamic(
+                                    b("dynamic_enabled"),
+                                    core::array::from_fn(|i| {
+                                        v["damping_history"][i].as_f64().unwrap() as f32
+                                    }),
+                                )
+                        } else if v["dynamic"].as_bool().unwrap_or(false) {
                             Some(ae_brightness::Dynamic {
                                 enabled: b("dynamic_enabled"),
                                 mode: if b("custom") {

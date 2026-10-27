@@ -208,7 +208,11 @@ fn step(
             saturated: false,
         },
         ae_controller::Policy {
-            dynamic: if b("dynamic") {
+            dynamic: if v["bind_dynamic"].as_bool().unwrap_or(false) {
+                ae_dynamic_calibration::Calibration::from_scene(&v["policy_scene"])
+                    .unwrap()
+                    .dynamic(b("dynamic_enabled"), initial_error_history)
+            } else if b("dynamic") {
                 Some(ae_brightness::Dynamic {
                     enabled: b("dynamic_enabled"),
                     mode: ae_damping::Mode::Default,

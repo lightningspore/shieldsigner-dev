@@ -11,7 +11,7 @@
   "scope": "persistent native/Rust standard pipeline state over 32-frame sequences with per-frame outputs and listed state compared",
   "limitations": [
     "Synthetic statistics with two effective-input strategies: explicit scalar/zero codes, or prior converted point and codes supplied on the next frame. This is not a physical exposure-delay model.",
-    "Fixed target45; twelve sequences bind profile damping/tolerances/frame-delay counts, other policy remains explicit. Linear non-iris/DCG-disabled path; preprocessing stops at current-error checkpoint.",
+    "Fixed target45; twelve sequences bind profile damping/tolerances/frame-delay counts/dynamic mode, other policy remains explicit. Linear non-iris/DCG-disabled path; preprocessing stops at current-error checkpoint.",
     "Other ISP results/CIS flags/unlisted context excluded; no hardware writes or real latency qualification."
   ]
 }

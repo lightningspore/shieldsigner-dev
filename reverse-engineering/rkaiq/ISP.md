@@ -993,3 +993,51 @@ unconsumed state are not represented by the Rust controller. Symmetric,
 non-blended profiles and default user adjustments remain the supported path.
 Callback ownership and live transactional submission remain next. Physical CPU
 replay loads no vendor library and makes no ISP writes.
+
+### Complete CCM callback and publication (0.0.34 development)
+
+`ccm_frame::State::process` reconstructs the supported complete CCM `processing`
+callback at ELF `0xfd126` (Ghidra `0x10d126`). Its identity is verified through
+`g_RkIspAlgoDescAccm` at ELF `0x1a7fdc`: descriptor offset 36 points to Thumb
+`0xfd127`. Other same-named callbacks exist; `0xff59c` is gamma and is not this
+CCM routine. Public SDK ARM C assertions now independently verify the 32-byte
+`accm_sw_info_t` and its damping/gray/AWB-convergence/prepare/CCM-convergence offsets.
+The typed API excludes arbitrary padding and unused metadata, not native ABI
+compatibility.
+
+Native marks publication on software-gray/current-gray transitions, writes
+current gray and *pre-process* CCM convergence back to input software information,
+then calls `AccmConfig`. It copies the complete 156-byte result only when an
+update is requested, preserving output bytes otherwise, and always clears the
+internal publication flag afterward. The Rust wrapper retains constructor
+reconfiguration for the first call and owns attribute/reconfiguration flag
+consumption. All typed state/input changes are staged until supported processing
+succeeds; output is copied only on publication.
+
+The callback comparison uncovered a controller gap that earlier direct tests
+did not expose: with publication already pending, unchanged names/saturation
+can bypass the selector's ordinary early exit, return a clamped pair without
+publishing a matrix, and retain native status −21. Native `AccmAutoConfig` stops
+that pass, even though its outer callback may still publish the old result.
+Rust previously discarded selector status and continued alpha/damping work.
+`ccm_runtime` now returns native status and `ccm_automatic` preserves this early
+exit. A focused unit regression and explicit native-status comparisons were
+added; the existing 2,800-frame selection replay now includes eighteen −21 cases.
+
+[Whole-callback evidence](ccm-frame-equivalence.json) executes the real descriptor
+callback after complete native `AccmInit`, including actual ISP32 module lookup.
+Across 32 sequences/768 frames, all output/result bytes, input gray/convergence
+mutations, selected caches, current/baseline inputs and controller state match.
+There are 550 publications and 218 no-update cases, with publication cleared
+after every call. Sequence seven/frame eight retains the discovered gray-return
+regression. Original uClibc `floorf` executes; only one context allocation and
+ordinary libc string/memory boundaries are modeled. Host and physical Luckfox
+CPU replay agree. The 99 library/five Unix tests, no-default-features/static ARM
+builds and expanded SDK layouts pass.
+
+Run `mise run camera:rust:ccm-frames -- --adb SERIAL --report LOCAL.json` after
+building host/ARM fixtures. The supported path remains symmetric/non-blended
+with default user adjustments. Native JSON parsing, arbitrary raw SDK ABI,
+manual/HDR/multicamera modes and live camera submission are not qualified by this
+result. CPU replay makes no ISP writes. Transactional integration and real
+capture verification are next; live CCM remains disabled until then.

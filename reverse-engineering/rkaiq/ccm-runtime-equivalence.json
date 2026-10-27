@@ -6,14 +6,19 @@
   "selectedProfileCases": 10,
   "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
   "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
-  "hostBinarySha256": "c845d9a0526a4659e7f502dd3c0a0219a15af3e6c2ae4fa35e33f197ea0df7fd",
-  "physicalArmBinarySha256": "994189f27dae250c0c34382d2644b1d0831618cc20918ccddce85ae2bdd33dc3",
+  "hostBinarySha256": "8a34c99847c6d8d72cd237c9d0e447d3f64dc2add10f0cdc284c2e8f14788abc",
+  "physicalArmBinarySha256": "27624fbc583d3f51ea8f02afdf80b1b11bc504343bb4774c66a876ea8437fd1f",
   "hostMatchesPhysicalArm": true,
   "seed": "0x43434d52",
-  "scope": "Complete native selectCCM call tree across persistent 28-frame sequences; all cached matrix/offset bits, saturation bits, names, illuminant and update flag. Only libc string/memory boundaries are modeled.",
+  "scope": "Complete native selectCCM call tree across persistent 28-frame sequences; all cached matrix/offset bits, saturation bits, names, illuminant, update flag and native return status. Only libc string/memory boundaries are modeled.",
   "limitations": [
     "Finite calibrated/current gain pairs; nonfinite Rust inputs rejected.",
     "Constructor/JSON loading, outer flags, damping and live CCM remain separate.",
     "Physical CPU replay does not write ISP registers."
-  ]
+  ],
+  "nativeStatusCounts": {
+    "0": 2782,
+    "-1": 0,
+    "-21": 18
+  }
 }

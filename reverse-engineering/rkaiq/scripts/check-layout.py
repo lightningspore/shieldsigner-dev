@@ -251,8 +251,15 @@ print('PASS: SDK DPCC expert=1204, row=108, basic=103, result=192 bytes; IQ/BPT/
 # Complete CCM IQ and hardware result declarations, compiled verbatim for ARM32.
 ccm_iq=dpcc_header('ccm_head.h').replace('#include "rk_aiq_comm.h"','')
 ccm_hw=dpcc_header('rk_aiq_types_accm_hw.h').replace('#include "rk_aiq_comm.h"','')
+ccm_sw=dpcc_record('accm_sw_info_s',dpcc_header('rk_aiq_types_accm_algo_int.h'))
 source=cache/'ccm-sdk-layout.c'
-source.write_text('#include <stdbool.h>\n#include <stdint.h>\n#include <stddef.h>\n#define RKAIQ_BEGIN_DECLARE\n#define RKAIQ_END_DECLARE\n'+ccm_iq+'\n'+ccm_hw+'''
+source.write_text('#include <stdbool.h>\n#include <stdint.h>\n#include <stddef.h>\n#define RKAIQ_BEGIN_DECLARE\n#define RKAIQ_END_DECLARE\n'+ccm_iq+'\n'+ccm_hw+'\n'+ccm_sw+'''
+_Static_assert(sizeof(accm_sw_info_t)==32,"CCM software info size");
+_Static_assert(offsetof(accm_sw_info_t,awbIIRDampCoef)==12,"CCM input damping");
+_Static_assert(offsetof(accm_sw_info_t,grayMode)==20,"CCM input gray");
+_Static_assert(offsetof(accm_sw_info_t,awbConverged)==21,"CCM input AWB convergence");
+_Static_assert(offsetof(accm_sw_info_t,prepare_type)==24,"CCM prepare word");
+_Static_assert(offsetof(accm_sw_info_t,ccmConverged)==28,"CCM input/output convergence");
 _Static_assert(sizeof(rk_aiq_ccm_cfg_v2_t)==156,"CCM result size");
 _Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,matrix)==8,"CCM matrix");
 _Static_assert(offsetof(rk_aiq_ccm_cfg_v2_t,offs)==44,"CCM offsets");

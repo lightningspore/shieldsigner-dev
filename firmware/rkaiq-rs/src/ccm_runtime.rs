@@ -23,6 +23,8 @@ pub struct State {
 impl State {
     /// Preserve the caller's update flag on native early exits. `force` and
     /// `pending` are the explicit native context bytes at 0x55f and 0x560.
+    /// Return native status, including -21 for an unpublished clamped pair;
+    /// callers must preserve its automatic-controller early-exit behavior.
     pub fn process(
         &mut self,
         calibration: &[Illuminant<'_>],
@@ -31,7 +33,7 @@ impl State {
         force: bool,
         pending: bool,
         updated: &mut bool,
-    ) -> Result<(), InvalidInput> {
+    ) -> Result<i32, InvalidInput> {
         if calibration.len() > 9 {
             return Err(InvalidInput::Length);
         }
@@ -41,7 +43,7 @@ impl State {
         }
         let estimate = ccm_illuminant::estimate(&pairs[..calibration.len()], gains)?;
         if !estimate.matched {
-            return Ok(());
+            return Ok(-1);
         }
         let cal = &calibration[estimate.index];
         if cal.profiles.is_empty()
@@ -53,7 +55,7 @@ impl State {
         let saturation = interpolate(&cal.sensor_gains, &cal.saturations, sensor_gain)?;
         let delta = (saturation - self.saturation).abs();
         if !pending && !force && self.illuminant == estimate.index && (delta as f64) <= 0.00001 {
-            return Ok(());
+            return Ok(0);
         }
         let mut profiles = [ccm_selection::Profile {
             saturation: 0.,
@@ -90,7 +92,11 @@ impl State {
             self.offsets = selection.offsets;
         }
         *updated = publish;
-        Ok(())
+        Ok(if !publish && selection.clamped {
+            -21
+        } else {
+            0
+        })
     }
 }
 
@@ -125,5 +131,50 @@ mod tests {
         assert_eq!(state.matrix, original.matrix);
         assert_eq!(state.offsets, original.offsets);
         assert!(updated);
+    }
+}
+
+#[cfg(test)]
+mod status_tests {
+    use super::*;
+    #[test]
+    fn pending_unchanged_clamp_preserves_native_minus_21_status() {
+        let mut name = [0; 25];
+        name[0] = b'p';
+        let profiles = [NamedProfile {
+            name,
+            profile: ccm_selection::Profile {
+                saturation: 100.,
+                matrix: [1.; 9],
+                offsets: [0.; 3],
+            },
+        }];
+        let calibration = [Illuminant {
+            gains: [1., 1.],
+            sensor_gains: [1., 2., 4., 8.],
+            saturations: [100.; 4],
+            profiles: &profiles,
+        }];
+        let mut state = State {
+            illuminant: 0,
+            saturation: 0.,
+            high_name: [0; 25],
+            low_name: [0; 25],
+            matrix: [0.; 9],
+            offsets: [0.; 3],
+        };
+        let mut updated = false;
+        assert_eq!(
+            state.process(&calibration, 2., [1., 1.], true, false, &mut updated),
+            Ok(0)
+        );
+        assert!(updated);
+        let before = state;
+        assert_eq!(
+            state.process(&calibration, 1., [1., 1.], false, true, &mut updated),
+            Ok(-21)
+        );
+        assert!(!updated);
+        assert_eq!(state, before);
     }
 }

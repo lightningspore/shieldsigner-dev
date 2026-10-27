@@ -180,3 +180,9 @@ and `AccmAutoConfig` (`0xfed30`) numerical/cache behavior.
 `ccm_automatic::State::new` now has comparison against full original
 `AccmInit` (ELF `0xff36c`), including its real ISP32 calibration-module lookup.
 [Construction boundaries, initial state and subsequent-frame evidence](ISP.md#native-ccm-constructor-proof-0034-development).
+
+`ccm_frame::State::process` reconstructs the complete supported CCM descriptor
+`processing` callback (ELF `0xfd126`), including input mutations, output-copy
+ownership and flag clearing. The full callback comparison also closes the
+native −21 selector-status early exit in joined automatic configuration.
+[Descriptor identity, regression and native/physical CPU evidence](ISP.md#complete-ccm-callback-and-publication-0034-development).

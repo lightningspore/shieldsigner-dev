@@ -115,7 +115,7 @@ impl State {
         let mut selected = false;
         let mut curve_changed = false;
         if self.inputs_changed {
-            self.selection.process(
+            let status = self.selection.process(
                 &cal.views(),
                 gain,
                 [self.current[1], self.current[2]],
@@ -123,6 +123,9 @@ impl State {
                 self.published,
                 &mut selected,
             )?;
+            if status != 0 {
+                return Ok(());
+            }
         }
         if self.inputs_changed || attributes_changed {
             let alpha = interpolate(&cal.alpha_gains, &cal.alpha_scales, gain)?;

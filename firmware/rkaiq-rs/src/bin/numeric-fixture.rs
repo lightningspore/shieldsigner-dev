@@ -3256,6 +3256,26 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-frames" => {
+                use shieldsigner_rkaiq::{ccm_frame,isp_ccm::RESULT_BYTES};
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let cal=shieldsigner_rkaiq::ccm_calibration::Automatic::from_value(&v["calibration"]).unwrap();
+                let mut state=ccm_frame::State::new(&cal);let mut output=Vec::new();
+                let hex=|b: &[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+                let mut result=[0xa5;RESULT_BYTES];
+                for frame in v["frames"].as_array().unwrap() {
+                    state.active=frame["active"].as_bool().unwrap();state.attributes_changed=frame["attributes"].as_bool().unwrap();
+                    state.reconfigure|=frame["reconfigure"].as_bool().unwrap();
+                    let current=frame["current"].as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>().try_into().unwrap();
+                    let mut info=ccm_frame::Information{current,damping:frame["damping"].as_f64().unwrap() as f32,gray:frame["gray"].as_bool().unwrap(),software_gray:frame["softwareGray"].as_bool().unwrap(),converged:false};
+                    let updated=state.process(&cal,&mut info,&mut result).unwrap();
+                    let auto=&state.automatic;
+                    let mut selection=auto.selection.saturation.to_le_bytes().to_vec();selection.extend((auto.selection.illuminant as u32).to_le_bytes());selection.extend(auto.selection.high_name);selection.extend(auto.selection.low_name);selection.extend(auto.selection.matrix.iter().chain(auto.selection.offsets.iter()).flat_map(|v|v.to_le_bytes()));
+                    let inputs=auto.baseline.iter().chain(auto.current.iter()).flat_map(|v|v.to_le_bytes()).collect::<Vec<_>>();
+                    output.push(serde_json::json!({"updated":updated,"output":hex(&result),"softwareGray":info.software_gray,"informationConverged":info.converged,"result":hex(&auto.result),"selection":hex(&selection),"inputs":hex(&inputs),"alpha":auto.alpha.to_bits(),"saturation":auto.saturation.to_bits(),"converged":auto.converged,"frames":auto.frames,"inputsChanged":auto.inputs_changed,"published":auto.published}));
+                }
+                println!("{}",serde_json::json!(output));
+            }
             "ccm-automatic" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let cal=shieldsigner_rkaiq::ccm_calibration::Automatic::from_value(&v["calibration"]).unwrap();
@@ -3350,10 +3370,10 @@ fn main() {
                 let mut output=Vec::new();
                 for frame in v["frames"].as_array().unwrap() {
                     let mut updated=frame["updated"].as_bool().unwrap();
-                    state.process(&calibration,frame["sensorGain"].as_f64().unwrap() as f32,floats(&frame["gains"]).try_into().unwrap(),frame["force"].as_bool().unwrap(),frame["pending"].as_bool().unwrap(),&mut updated).unwrap();
+                    let status=state.process(&calibration,frame["sensorGain"].as_f64().unwrap() as f32,floats(&frame["gains"]).try_into().unwrap(),frame["force"].as_bool().unwrap(),frame["pending"].as_bool().unwrap(),&mut updated).unwrap();
                     let hex=|b: &[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
                     let bytes=state.matrix.iter().chain(state.offsets.iter()).flat_map(|v|v.to_le_bytes()).collect::<Vec<_>>();
-                    output.push(serde_json::json!({"illuminant":state.illuminant,"saturation":state.saturation.to_bits(),"high":hex(&state.high_name),"low":hex(&state.low_name),"result":hex(&bytes),"updated":updated}));
+                    output.push(serde_json::json!({"status":status,"illuminant":state.illuminant,"saturation":state.saturation.to_bits(),"high":hex(&state.high_name),"low":hex(&state.low_name),"result":hex(&bytes),"updated":updated}));
                 }
                 println!("{}",serde_json::json!(output));
             }

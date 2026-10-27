@@ -82,13 +82,14 @@ class OriginalRuntime(OriginalArm):
                 context + 0x55F, bytes([frame["force"], frame["pending"]])
             )
             self.uc.mem_write(updated, bytes([frame["updated"]]))
-            self.invoke(
+            status = self.invoke(
                 "selectCCM",
                 [source, len(value["calibration"]), context, updated],
                 [0.0],
             )
             output.append(
                 dict(
+                    status=status if status < 0x80000000 else status - 0x100000000,
                     illuminant=struct.unpack(
                         "<I", self.uc.mem_read(context + 0x260, 4)
                     )[0],
@@ -260,13 +261,19 @@ def main():
         physicalArmBinarySha256=board_sha,
         hostMatchesPhysicalArm=board_sha is not None,
         seed="0x43434d52",
-        scope="Complete native selectCCM call tree across persistent 28-frame sequences; all cached matrix/offset bits, saturation bits, names, illuminant and update flag. Only libc string/memory boundaries are modeled.",
+        scope="Complete native selectCCM call tree across persistent 28-frame sequences; all cached matrix/offset bits, saturation bits, names, illuminant, update flag and native return status. Only libc string/memory boundaries are modeled.",
         limitations=[
             "Finite calibrated/current gain pairs; nonfinite Rust inputs rejected.",
             "Constructor/JSON loading, outer flags, damping and live CCM remain separate.",
             "Physical CPU replay does not write ISP registers.",
         ],
     )
+    report["nativeStatusCounts"] = {
+        str(code): sum(
+            frame["status"] == code for sequence in expected for frame in sequence
+        )
+        for code in [0, -1, -21]
+    }
     args.report.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report))
 

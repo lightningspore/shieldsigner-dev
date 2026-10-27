@@ -356,3 +356,5 @@ pub mod ccm_calibration;
 pub mod ccm_input;
 #[cfg(feature = "diagnostics")]
 pub mod ccm_automatic;
+#[cfg(feature = "diagnostics")]
+pub mod ccm_frame;

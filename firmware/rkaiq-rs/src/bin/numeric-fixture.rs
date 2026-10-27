@@ -254,6 +254,77 @@ fn main() {
                         .collect::<String>()
                 );
             }
+            "awb-preprocess" => {
+                use shieldsigner_rkaiq::awb_preprocess::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let array = |key: &str| {
+                    v[key]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|v| v.as_f64().unwrap() as f32)
+                        .collect::<Vec<_>>()
+                };
+                let knots = array("knots");
+                let smart = [array("smart0"), array("smart1"), array("smart2")];
+                let intervals = array("intervals");
+                let points = [array("points0"), array("points1")];
+                let regions = [array("regions0"), array("regions1")];
+                let calibration = Calibration {
+                    smart_knots: &knots,
+                    smart: [&smart[0], &smart[1], &smart[2]],
+                    interval: Curve {
+                        knots: &knots,
+                        values: &intervals,
+                    },
+                    point_knots: &knots,
+                    points: [&points[0], &points[1]],
+                    region_knots: &knots,
+                    regions: [&regions[0], &regions[1]],
+                };
+                let input = Input {
+                    requested_mode: v["mode"].as_i64().unwrap() as i32,
+                    previous_update: v["update"].as_bool().unwrap(),
+                    smart_enabled: v["enabled"].as_bool().unwrap(),
+                    countdown: v["countdown"].as_i64().unwrap() as i32,
+                    exposure_luma: if v["source"].is_null() {
+                        None
+                    } else {
+                        Some([
+                            v["source"][0].as_f64().unwrap() as f32,
+                            v["source"][1].as_f64().unwrap() as f32,
+                        ])
+                    },
+                    frame_choice: v["choice"].as_u64().unwrap() as u8,
+                    working_mode: v["working"].as_i64().unwrap() as i32,
+                    fallback: v["fallback"].as_u64().unwrap() as u32,
+                    override_enabled: v["override_enabled"].as_bool().unwrap(),
+                    override_valid: v["override_valid"].as_bool().unwrap(),
+                    override_luma: v["override"].as_f64().unwrap() as f32,
+                    geometry: [2304, 1296],
+                    block: [
+                        v["block"][0].as_u64().unwrap() as u8,
+                        v["block"][1].as_u64().unwrap() as u8,
+                    ],
+                    sample_scale: v["scale"].as_i64().unwrap() as i32,
+                };
+                let mut state = State {
+                    mode: 7,
+                    update: false,
+                    luma_integer: 123,
+                    luma: 2.,
+                    smart: [3., 4., 5.],
+                    interval: 6,
+                    points: [7, 8],
+                    regions: [9., 10.],
+                    frame_counter: v["frame"].as_u64().unwrap() as u32,
+                };
+                let decision = state.derive(&input, &calibration).unwrap();
+                println!(
+                    "{}",
+                    serde_json::json!({"mode":state.mode,"update":state.update,"integer":state.luma_integer,"luma":state.luma.to_bits(),"smart":state.smart.map(f32::to_bits),"interval":state.interval,"points":state.points,"regions":state.regions.map(f32::to_bits),"frame":state.frame_counter,"decision":match decision {Continuation::ModeBypass=>0,Continuation::IntervalSkip=>1,Continuation::Ready=>2}})
+                );
+            }
             "awb-luma-history" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let initial = v["initial"]

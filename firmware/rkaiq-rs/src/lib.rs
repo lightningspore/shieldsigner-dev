@@ -24,6 +24,7 @@ pub mod ae_weights;
 pub mod awb_gain;
 pub mod awb_luma_history;
 pub mod awb_preparation;
+pub mod awb_preprocess;
 pub mod awb_probability;
 pub mod awb_publication;
 pub mod awb_stability;

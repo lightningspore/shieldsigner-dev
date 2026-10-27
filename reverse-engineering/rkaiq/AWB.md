@@ -263,3 +263,50 @@ variance instructions execute unchanged. [Reference report](awb-luma-history-equ
 This supplies the estimator needed by AWB preprocessing and existing damping,
 not the complete brightness interpolation, calibrated classification or AWB
 controller. The automatic capture command still holds calibrated WB fixed.
+
+## Standard preprocessor brightness, thresholds and cadence
+
+`awb_preprocess::State::derive` recovers the numerical prefix of standard
+`AwbPreProcV32` (ELF `0xc4698`), returning a continuation decision before
+metadata/history/classification processing. It synchronizes requested mode,
+seeds the update request from the previous flag, and forces update when smart
+running is disabled or its countdown is positive. Native mode 1 bypasses these
+numerics and clears the request without reading exposure/calibration inputs.
+
+Brightness uses the selected AE value multiplied by **1000 in f32**, then
+promoted to f64 for `+0.5` before unsigned conversion; the unrounded scaled f32
+is retained separately. Missing AE input uses the configured u32 fallback.
+Choices 0/1 select those channels; choices >=2 select channel 0 in working mode
+0 and channel 1 otherwise. An enabled, valid override replaces both brightness
+forms. The prefix interpolates three smart-run thresholds at unrounded
+brightness and the run interval at the rounded integer brightness.
+
+The effective sample area follows the native operation order:
+`((sample_scale * width) / block_width) * height / block_height`, each stage in
+f32. Two brightness-dependent point thresholds multiply that area and divide
+by **100000 in f32**, then use promoted-f64 half rounding for their u32 outputs.
+Two additional region thresholds use the same scaling without integer rounding.
+The Rust API accepts explicit curve data; JSON-to-SDK calibration loading is
+still separate. Zero block dimensions, invalid curves and UINT32_MAX intervals
+are rejected before committing the derived state.
+
+The cadence gate continues when the frame counter is at most the interval or
+is divisible by `interval+1`. Otherwise it increments the counter with u32
+wrapping and skips. A continuing prefix does not increment the counter here;
+that occurs later in the native metadata/gain path. The Rust decision names
+`Ready`, `IntervalSkip` and `ModeBypass` describe this boundary, not a completed
+AWB processing result.
+
+`mise run camera:rust:awb-preprocess` compares 768 cases against the original
+complete preprocessor using its null-metadata exit: 256 mode bypasses, 131
+interval skips and 381 continuations that reach the missing-metadata branch.
+Host and ARM Rust match all exact f32/rounded output words, mode/update flags,
+counter behavior and unrelated context/configuration preservation. Native
+interpolation executes unchanged; 322 unsigned divide/modulo calls execute
+isolated pinned libgcc instructions. Logging is intercepted. Cases cover
+fallback, channel/working-mode selection, overrides, signed scales, threshold
+interpolation and counter/rounding boundaries. [Reference report](awb-preprocess-equivalence.json).
+
+The ordinary non-null metadata continuation still needs to join environment
+classification, brightness history, measurement history and calibrated gain
+selection. This verified prefix does not enable automatic WB in capture.

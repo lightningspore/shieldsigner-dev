@@ -1,0 +1,18 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 768,
+  "mismatches": 0,
+  "arm": true,
+  "decisions": {
+    "0": 256,
+    "1": 131,
+    "2": 381
+  },
+  "nativeDivisionCalls": 322,
+  "scope": "Standard AWB preprocessor numerical prefix, exact f32/rounded words, mode/update/interval decisions and context preservation",
+  "limitations": [
+    "Native metadata pointer is null: ordinary metadata/history/classification continuation intentionally not executed.",
+    "Finite valid interpolation arrays, nonzero block dimensions and interval below UINT32_MAX.",
+    "Logging is intercepted; native interpolation and isolated libgcc unsigned divide/mod instructions execute."
+  ]
+}

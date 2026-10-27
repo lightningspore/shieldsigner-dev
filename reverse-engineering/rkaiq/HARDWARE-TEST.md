@@ -477,3 +477,39 @@ includes `routeTimeQuantumSeconds` (approximately 0.01 s). This describes the
 recovered route timing quantum; `minimumShutterTimeDerived:false` makes clear
 that it is not a computed minimum exposure. The current 3 ms first-frame setting
 is retained. No flicker detector or automatic timing updates are enabled.
+
+
+## SC3336 hardware observation — 2026-10-26
+
+The ARM `0.0.30-dev` diagnostic ran on a Luckfox Pico (Linux 5.10.160).
+The SC3336 sensor descriptor read successfully at 2304×1296, BG10, minimum
+frame length 1360, line length 2800 and reported pixel clock 114.24 MHz.
+A direct `/dev/video0` capture succeeded with no detected vendor camera
+process before or after capture. This is **not cold-start proof**: vendor
+`rkipc` had run earlier during boot.
+
+The captured plane was 3,981,312 bytes with stride 3072. Although its FourCC
+was BG10, it contained Rockchip compact contiguous little-endian 10-bit samples,
+not unpacked 16-bit samples or MIPI RAW10 groups. A recognizable grayscale
+preview was obtained; it was bright/clipped, with no QR qualification.
+Use the explicit override for a capture known to use this memory layout:
+
+```sh
+frame-preview sensor.raw sensor.raw.json sensor.pgm --rockchip-compact-raw10
+```
+
+The override is never inferred from stride or FourCC. It accepts RAW10 Bayer
+FourCCs only, preserves row padding and does 2×2 grayscale binning. Its tests
+cover bit extraction across byte boundaries, padding and truncated input.
+
+The combined Rust first-frame command did not reach streaming: querying DPHY
+source-pad format returned EINVAL (use its supported sink pad), then switching
+from the CIF online link to raw readback returned EBUSY. A subsequent attempt
+to set CIF word-low-aligned memory mode stalled; new ADB shells stopped
+responding although USB discovery still listed the device. Do not repeat that
+mode change on an active pipeline. Hardware recovery and idle pipeline/link
+ownership need checking before continuing ISP capture. No firmware was flashed
+and no boot configuration was changed.
+
+Private scene captures and logs remain under ignored
+`dist/reverse-engineering/hardware-2026-10-26/`; they are not checked into Git.

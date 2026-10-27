@@ -17,6 +17,14 @@ fn pixel(data: &[u8], stride: usize, x: usize, y: usize, kind: &str) -> Result<u
         "NV12" | "NV21" | "NM12" | "NM21" | "YU12" | "YV12" | "GREY" => at(x),
         "YUYV" | "YVYU" => at(x * 2),
         "UYVY" | "VYUY" => at(x * 2 + 1),
+        // Rockchip CSI compact memory mode: little-endian contiguous 10-bit
+        // samples, with row padding retained. This is not MIPI RAW10 packing.
+        "RK10" => {
+            let bit = x * 10;
+            let byte = bit / 8;
+            let word = u16::from_le_bytes([at(byte)?, at(byte + 1)?]);
+            Ok((((word >> (bit % 8)) & 1023) >> 2) as u8)
+        }
         "BG10" | "GB10" | "BA10" | "RG10" => {
             Ok((u16::from_le_bytes([at(x * 2)?, at(x * 2 + 1)?]) >> 2).min(255) as u8)
         }
@@ -38,7 +46,8 @@ fn pixel(data: &[u8], stride: usize, x: usize, y: usize, kind: &str) -> Result<u
 fn bayer(kind: &str) -> bool {
     matches!(
         kind,
-        "BG10"
+        "RK10"
+            | "BG10"
             | "GB10"
             | "BA10"
             | "RG10"
@@ -74,6 +83,7 @@ fn convert(
         "YUYV" | "YVYU" | "UYVY" | "VYUY" => width * 2,
         "BG10" | "GB10" | "BA10" | "RG10" | "BG12" | "GB12" | "BA12" | "RG12" | "BG16" | "GB16"
         | "GR16" | "RG16" => width * 2,
+        "RK10" => (width * 10).div_ceil(8),
         "pBAA" | "pGAA" | "pgAA" | "pRAA" => width.div_ceil(4) * 5,
         "pBCC" | "pGCC" | "pgCC" | "pRCC" => width.div_ceil(2) * 3,
         _ => width,
@@ -111,8 +121,8 @@ fn convert(
 }
 fn run() -> Result<(), String> {
     let args: Vec<_> = env::args().skip(1).collect();
-    if args.len() != 3 {
-        return Err("Usage: frame-preview RAW RAW.json OUT.pgm; supports luma/YUV and common Bayer RAW10/12/16. Bayer is 2×2 binned; output is uncalibrated.".into());
+    if args.len() != 3 && !(args.len() == 4 && args[3] == "--rockchip-compact-raw10") {
+        return Err("Usage: frame-preview RAW RAW.json OUT.pgm [--rockchip-compact-raw10]; supports luma/YUV and common Bayer RAW10/12/16. Bayer is 2×2 binned; output is uncalibrated.".into());
     }
     let raw = fs::read(&args[0]).map_err(|e| e.to_string())?;
     let metadata: Value = serde_json::from_slice(&fs::read(&args[1]).map_err(|e| e.to_string())?)
@@ -133,6 +143,14 @@ fn run() -> Result<(), String> {
     let kind = metadata["format"]["fourcc"]
         .as_str()
         .ok_or("Missing FourCC")?;
+    let kind = if args.len() == 4 {
+        if !matches!(kind, "BG10" | "GB10" | "BA10" | "RG10") {
+            return Err("Compact RAW10 override requires a RAW10 Bayer FourCC".into());
+        }
+        "RK10"
+    } else {
+        kind
+    };
     let (w, h, pixels) = convert(plane, width, height, stride, kind)?;
     let mut out = OpenOptions::new()
         .write(true)
@@ -146,7 +164,7 @@ fn run() -> Result<(), String> {
     let mean = pixels.iter().map(|&x| x as u64).sum::<u64>() as f64 / pixels.len() as f64;
     println!(
         "{}",
-        serde_json::json!({"output":args[2],"width":w,"height":h,"minimum":min,"maximum":max,"mean":mean,"bayerBinning":bayer(kind),"calibrated":false})
+        serde_json::json!({"output":args[2],"width":w,"height":h,"minimum":min,"maximum":max,"mean":mean,"bayerBinning":bayer(kind),"calibrated":false,"rockchipCompactRaw10":kind == "RK10"})
     );
     Ok(())
 }
@@ -158,6 +176,21 @@ fn main() {
 }
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn rockchip_compact_bits_and_row_padding() {
+        // Four 10-bit samples [0, 1, 512, 1023], followed by row padding.
+        let row = [0, 4, 0, 224, 255, 123, 123, 123];
+        for (x, expected) in [0, 0, 128, 255].into_iter().enumerate() {
+            assert_eq!(super::pixel(&row, 8, x, 0, "RK10").unwrap(), expected);
+        }
+        let data = [row, row].concat();
+        assert_eq!(
+            super::convert(&data, 4, 2, 8, "RK10").unwrap(),
+            (2, 1, vec![0, 191])
+        );
+        assert!(super::convert(&data[..10], 4, 2, 8, "RK10").is_err());
+    }
+
     use super::*;
     #[test]
     fn respects_y_plane_stride() {

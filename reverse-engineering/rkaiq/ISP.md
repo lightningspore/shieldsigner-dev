@@ -1840,3 +1840,48 @@ regression and installed scan loop (ten decoder inputs/27 headless renders).
 All five existing live IQ modules and final AWB translation match native on
 both captures. The report pins that executable separately from CPU fixtures;
 this does not claim CNR was enabled during the regression.
+
+
+### Persistent CNR controller (0.0.34 development)
+
+`cnr_frame::State` joins calibration, ISO selection and fixed conversion with
+the complete normal-exposure processing callback. Native construction allocates
+0xba0 bytes, seeds HSNR/normal tuning, prior SNR one, zero cached exposure,
+enabled unit strength and a forced first calculation. The actual descriptor
+`g_RkIspAlgoDescAcnrV30` (ELF `0x1a6e94`) resolves prepare to `0xe059c` and
+processing to `0xe0258`; the oracle checks both relocated function pointers.
+It executes native module lookup (CNR SDK scene offset `0x59c8`), allocation
+initialization, prepare/start, processing, calibration, selection and result
+quantization with original uClibc double log.
+
+The callback clamps each gain and BLC predgain to at least one, computes ISO in
+native multiplication order `(((A*D)*BLC)*50)*ISP`, and truncates it to signed
+integer. Gray change, caller-forced recalculation, raw BLC comparison or an
+absolute ISO change of at least eleven requests a result. A time/SNR-only change
+can hold prior state. On recalculation, SNR or normal/gray parameter-mode changes
+reload tuning. Cached BLC is clamped although its trigger compares the raw input,
+so a raw value below one can keep requesting recalculation. Raw width/height from
+prepare are retained in the published 88-byte exposure record.
+
+Rust stages controller and output together and commits only on successful
+processing; callers must defer publication until driver submission succeeds.
+`Information::from_record` uses the associated AE record and reconstructed
+no-NR-switch CIS/DCG fallback, matching the existing fixed-sensor handoff policy.
+The raw geometry API accepts nonzero dimensions up to 65,535. This stage does
+not enable CNR in the live camera.
+
+[Full native and physical ARM CPU evidence](cnr-frames-equivalence.json)
+checks 24 sequences/1,152 frames (505 updates, 647 holds), comparing complete
+2,396-byte tables, 180-byte selections, 88-byte cached exposure, 16-byte strength,
+66-byte fixed results and gray/mode/recalculate state after every frame. It
+covers three geometries, below-one gains/BLC, gray/SNR switches, exact ISO gates,
+forced updates, held results and both enabled/disabled calibration. The SDK graph
+is checked unchanged. Typed SDK input, allocation, strings and diagnostics are
+explicit boundaries; no algorithm/math substitutes execute.
+
+Run `mise run camera:rust:cnr-frames -- --adb SERIAL --report LOCAL.json` after
+building/deploying the exact fixture. All 111 library/five Unix tests,
+no-default-features and static ARM builds pass; failed recalculation preserves
+all Rust state and result bytes. CPU replay makes no ISP writes or vendor
+library loads. HDR callback assembly, absent AE, manual/UAPI policy and live
+camera/application CNR handoff remain outside this checkpoint.

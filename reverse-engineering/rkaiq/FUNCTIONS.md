@@ -283,3 +283,8 @@ chroma NR table preparation, preserving untouched rows and SDK padding.
 conversion, including signed double rounding, logarithmic recursive scale,
 clipping, reversed coefficients and preserved padding.
 [Full native/original-log and physical CPU evidence](ISP.md#cnr-fixed-register-quantization-0034-development).
+
+
+`cnr_frame::State` joins prepared normal-exposure CNR construction, ISO/gray/BLC
+update gates, SNR reloads and result publication with transactional Rust state.
+[Full native constructor/callback and physical ARM CPU evidence](ISP.md#persistent-cnr-controller-0034-development).

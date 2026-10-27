@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "sequences": 24,
+  "frames": 1152,
+  "updatedFrames": 505,
+  "sdkModuleOffset": "0x59c8",
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "logRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "hostBinarySha256": "a11edd2a1551592fb7ab52b0fa52d0248ac2ae1db1933bbfd687a95bf63ed7cb",
+  "physicalArmBinarySha256": "3d960a7224c71e04cad15504508f8eb8d1e9d360a093e5703874524ca7e9a0dc",
+  "hostMatchesPhysicalArm": true,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "scope": "Complete native Acnr_Init_V30, descriptor prepare and processing callbacks, native calibration lookup/merge, process, ISO selection and fixed quantization with original double log. Compare all prepared table/selected/exposure/strength/result bytes plus gray/parameter-mode/recalculate state each frame; calibration graph unchanged.",
+  "boundaries": [
+    "Constructed raw SDK calibration, present normal AE exposure and BLC result records; native general JSON parser and C++ scheduling framework not executed.",
+    "Allocation, libc strings, diagnostics are controlled boundaries; no algorithm/math stubs. Default auto/unit-strength mode, forced updates, strict ISO delta, held SNR, gray/raw-vs-clamped BLC changes covered.",
+    "No HDR callback input assembly, absent-exposure fallback, manual/UAPI strength policy or live CNR qualification.",
+    "Physical CPU replay makes no ISP writes and loads no vendor library."
+  ]
+}

@@ -716,3 +716,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:cnr-quantize"]
 description = "Compare complete chroma NR fixed quantization with original ARM and uClibc double log"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/cnr-quantize.py"
+
+[tasks."camera:rust:cnr-frames"]
+description = "Compare full native CNR constructor, prepare and persistent normal-frame processing"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/cnr-frames.py"

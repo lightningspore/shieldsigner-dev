@@ -564,3 +564,42 @@ float-collapsed brightness thresholds, and append/rotate/no-op list updates.
 The enabled single-color processing/manager branch is the next missing part of
 this low-count strategy. Complete high/low orchestration, postprocessing,
 calibration loading, frame lifecycle and live integration remain unfinished.
+
+## Single-color confidence manager and color temperature
+
+`awb_single_color::color_temperature` reconstructs `AwbCalCCTandCCRIByGain`
+(ELF `0xca840`). It uses the two calibrated lines and R/Gr, B/Gb ratios to
+calculate CCT and CCRI with the original rounded products and FMAs. Invalid lines,
+Gr/Gb below the double-precision 1e-5 threshold, or a second-line B coefficient
+whose magnitude is below that threshold produce the native invalid/zero result.
+Line validity is checked before reading inactive numerical inputs.
+
+`awb_single_color::confidence` reconstructs the complete
+`AwbSingleColorManager` (ELF `0xcbaf0`), including its original CCT helper:
+brightness and white-point-density curves supply two weights; the result's mean
+color distance selects three distance weights; calculated CCT blends those into
+a third factor; the signed neighborhood-disagreement count supplies the fourth.
+The final weight multiplies those factors in native f32 order without clamping.
+
+The manager constructs its three CCT values in reverse calibration memory order:
+tables at offsets 0xa4, 0x8c, 0x74 correspond to ascending CCT knots at 0x68.
+The Rust calibration type documents its memory-order arrays. Native interpolation
+also accepts repeated endpoints: the pinned IQ's density curve repeats its final
+knot. This module checks nondecreasing curves and preserves native endpoint and
+interval selection, rather than passing them through the general strict-knot
+interpolation API or rewriting the calibration.
+
+`mise run camera:rust:awb-single-color` compares **2,048 cases**, 1,024 per
+function, on host and ARM. Both original functions return normally with all
+numerical/interpolation helper bodies intact; logging is the only adapter.
+Checks include exact CCT/CCRI/confidence bits, native validity/return codes,
+preserved output padding and unchanged gains/configuration/statistics. Cases
+cover invalid lines, green/line denominator boundaries, signed full-width
+disagreement counts, interpolation endpoints, repeated/all-equal knots, and
+unclamped negative/greater-than-one weights.
+[Reference report](awb-single-color-equivalence.json).
+
+The manager consumes explicit result statistics. The preceding 15×15 grid color
+classifier, its candidate/history construction, and enabled low-count
+orchestration remain unfinished and required by the pinned IQ. This manager
+alone does not enable live single-color AWB or change the frozen camera kit.

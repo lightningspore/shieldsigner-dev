@@ -129,6 +129,69 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-single-color" => {
+                use shieldsigner_rkaiq::awb_single_color::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let line = |key: &str| Line {
+                    a: v[key][0].as_f64().unwrap() as f32,
+                    b: v[key][1].as_f64().unwrap() as f32,
+                    c: v[key][2].as_f64().unwrap() as f32,
+                    valid: v[key][3].as_bool().unwrap(),
+                };
+                let gain = core::array::from_fn(|i| v["gain"][i].as_f64().unwrap() as f32);
+                if v["kind"].as_str().unwrap() == "temperature" {
+                    let r = color_temperature(gain, line("first"), line("second")).unwrap();
+                    println!(
+                        "{}",
+                        serde_json::json!({"valid":r.valid,"cct":r.cct.to_bits(),"ccri":r.ccri.to_bits()})
+                    );
+                } else {
+                    let c = &v["calibration"];
+                    let cal = Calibration {
+                        brightness_knots: core::array::from_fn(|i| {
+                            c["brightness_knots"][i].as_f64().unwrap() as f32
+                        }),
+                        brightness_weights: core::array::from_fn(|i| {
+                            c["brightness_weights"][i].as_f64().unwrap() as f32
+                        }),
+                        density_knots: core::array::from_fn(|i| {
+                            c["density_knots"][i].as_f64().unwrap() as f32
+                        }),
+                        density_weights: core::array::from_fn(|i| {
+                            c["density_weights"][i].as_f64().unwrap() as f32
+                        }),
+                        distance_knots: core::array::from_fn(|i| {
+                            c["distance_knots"][i].as_f64().unwrap() as f32
+                        }),
+                        cct_knots: core::array::from_fn(|i| {
+                            c["cct_knots"][i].as_f64().unwrap() as f32
+                        }),
+                        distance_weights: core::array::from_fn(|j| {
+                            core::array::from_fn(|i| {
+                                c["distance_weights"][j][i].as_f64().unwrap() as f32
+                            })
+                        }),
+                        disagreement_knots: core::array::from_fn(|i| {
+                            c["disagreement_knots"][i].as_f64().unwrap() as f32
+                        }),
+                        disagreement_weights: core::array::from_fn(|i| {
+                            c["disagreement_weights"][i].as_f64().unwrap() as f32
+                        }),
+                    };
+                    let r = confidence(
+                        &cal,
+                        v["brightness"].as_f64().unwrap() as f32,
+                        v["density"].as_f64().unwrap() as f32,
+                        v["distance"].as_f64().unwrap() as f32,
+                        v["disagreements"].as_i64().unwrap() as i32,
+                        gain,
+                        line("first"),
+                        line("second"),
+                    )
+                    .unwrap();
+                    println!("{}", serde_json::json!({"weight":r.to_bits()}));
+                }
+            }
             "awb-low-gain" => {
                 use shieldsigner_rkaiq::{
                     awb_high_gain::{Light, LightResult},

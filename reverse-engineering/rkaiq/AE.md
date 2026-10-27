@@ -386,10 +386,13 @@ the route floor-tolerance coefficient: **8**, not the time-conversion factor 1.
 Runtime frame length, line length and pixel clock must come from the active
 sensor. Driver exposure-control bounds still gate sensor writes separately.
 
-Thirty-four cases compare all four float results bit-for-bit with the original
+Thirty-six cases compare all four float results bit-for-bit with the original
 configuration function through normal return, then replay on the ARM Rust
 binary. Cases cover two frame lengths, route bounds, enabled/disabled flicker,
-explicit-minimum mode, conflicting overrides and alternate coefficients.
+explicit-minimum mode, conflicting overrides and alternate coefficients. Two
+cases bind the complete pinned SC3336 IQ profile through `SensorCalibration`,
+`RuntimeTiming` and the parsed route using `ae_shutter::from_calibration`; this
+binding leaves flicker and override policy explicit.
 The harness supplies runtime state and models allocation, math and diagnostic
 output; this is not complete private-context equivalence.
 [Equivalence report](ae-shutter-equivalence.json).

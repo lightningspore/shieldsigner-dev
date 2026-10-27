@@ -383,29 +383,50 @@ fn main() {
             "ae-shutter" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let n = |s: &str| v[s].as_f64().unwrap() as f32;
-                let b = ae_shutter::fixed_frame(ae_shutter::Input {
-                    frame_length: n("frame"),
-                    line_length: n("line"),
-                    pixel_clock_mhz: n("clock"),
-                    factors: core::array::from_fn(|i| v["factors"][i].as_f64().unwrap() as f32),
-                    minimum_register: v["minimum"].as_u64().unwrap() as u16,
-                    maximum_register_factors: core::array::from_fn(|i| {
-                        v["maxfactors"][i].as_f64().unwrap() as f32
-                    }),
-                    route_minimum: n("route_min"),
-                    route_maximum: n("route_max"),
-                    overrides: if v["override"].as_bool().unwrap() {
-                        Some([n("override_min"), n("override_max")])
-                    } else {
-                        None
-                    },
-                    flicker: if v["enabled"].as_bool().unwrap() {
-                        Some((0.01, v["mode"].as_i64().unwrap() == 1))
-                    } else {
-                        None
-                    },
-                })
-                .unwrap();
+                let b = if let Some(iq) = v.get("profile") {
+                    let sensor = calibration::SensorCalibration::from_value(iq).unwrap();
+                    let route = ae_route::from_profile(
+                        &iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["ae_calib"]
+                            ["LinearAeCtrl"]["Route"],
+                    )
+                    .unwrap();
+                    ae_shutter::from_calibration(
+                        &sensor,
+                        calibration::RuntimeTiming {
+                            frame_length: n("frame") as u32,
+                            line_length_pixels: n("line") as u32,
+                            pixel_clock_mhz: n("clock"),
+                        },
+                        &route,
+                        None,
+                        Some((0.01, false)),
+                    )
+                    .unwrap()
+                } else {
+                    ae_shutter::fixed_frame(ae_shutter::Input {
+                        frame_length: n("frame"),
+                        line_length: n("line"),
+                        pixel_clock_mhz: n("clock"),
+                        factors: core::array::from_fn(|i| v["factors"][i].as_f64().unwrap() as f32),
+                        minimum_register: v["minimum"].as_u64().unwrap() as u16,
+                        maximum_register_factors: core::array::from_fn(|i| {
+                            v["maxfactors"][i].as_f64().unwrap() as f32
+                        }),
+                        route_minimum: n("route_min"),
+                        route_maximum: n("route_max"),
+                        overrides: if v["override"].as_bool().unwrap() {
+                            Some([n("override_min"), n("override_max")])
+                        } else {
+                            None
+                        },
+                        flicker: if v["enabled"].as_bool().unwrap() {
+                            Some((0.01, v["mode"].as_i64().unwrap() == 1))
+                        } else {
+                            None
+                        },
+                    })
+                    .unwrap()
+                };
                 println!(
                     "{}",
                     [b.physical_minimum, b.physical_maximum, b.minimum, b.maximum]

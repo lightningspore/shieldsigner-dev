@@ -37,6 +37,10 @@ def main():
   for enabled in [False,True]:cases.append(dict(frame=1320.,line=2500.,clock=72.,factors=[0.,0.,1.,.5],minimum=2,maxfactors=[1.,8.],route_min=.001,route_max=.03,override=True,override_min=low,override_max=high,enabled=enabled,mode=0))
  for factors in [[.1,.2,2.,.5],[0.,1.,.5,0.]]:
   cases.append(dict(frame=1320.,line=2500.,clock=99.,factors=factors,minimum=2,maxfactors=[1.,8.],route_min=0.,route_max=.0199,override=False,override_min=0.,override_max=0.,enabled=True,mode=0))
+ profile=json.loads((ROOT/'.tools/reverse-engineering/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json').read_text())
+ sensor=profile['sensor_calib'];route=profile['main_scene'][0]['sub_scene'][0]['scene_isp32']['ae_calib']['LinearAeCtrl']['Route']
+ for frame,clock in [(1320.,99.),(1500.,72.)]:
+  cases.append(dict(frame=frame,line=2500.,clock=clock,factors=sensor['Time2Reg']['fCoeff'],minimum=sensor['CISTimeSet']['Linear']['CISTimeRegMin'],maxfactors=sensor['CISTimeSet']['Linear']['CISLinTimeRegMaxFac']['fCoeff'],route_min=route['TimeDot'][0],route_max=route['TimeDot'][-1],override=False,override_min=0.,override_max=0.,enabled=True,mode=0,profile=profile))
  expected=[arm.bounds(v,init.defaults) for v in cases];inputs=''.join('ae-shutter '+json.dumps(v,separators=(',',':'))+'\n' for v in cases)
  def compare(command):
   actual=subprocess.run(command,input=inputs,text=True,capture_output=True,check=True).stdout.splitlines();assert len(actual)==len(expected)

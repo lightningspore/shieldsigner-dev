@@ -110,6 +110,38 @@ pub fn fixed_frame(input: Input) -> Result<Bounds, InvalidInput> {
         physical_maximum,
     })
 }
+/// Bind sensor calibration and active timing without choosing flicker/override policy.
+/// Route endpoints must be taken before the route splitter mutates time knots.
+#[cfg(feature = "diagnostics")]
+pub fn from_calibration(
+    sensor: &crate::calibration::SensorCalibration,
+    timing: crate::calibration::RuntimeTiming,
+    route: &[crate::ae_route::Point],
+    overrides: Option<[f32; 2]>,
+    flicker: Option<(f32, bool)>,
+) -> Result<Bounds, InvalidInput> {
+    if route.is_empty() {
+        return Err(InvalidInput::Length);
+    }
+    if route.iter().any(|p| !p.time.is_finite()) {
+        return Err(InvalidInput::NonFinite);
+    }
+    if route.windows(2).any(|p| p[0].time > p[1].time) {
+        return Err(InvalidInput::NonIncreasing);
+    }
+    fixed_frame(Input {
+        frame_length: timing.frame_length as f32,
+        line_length: timing.line_length_pixels as f32,
+        pixel_clock_mhz: timing.pixel_clock_mhz,
+        factors: sensor.factors,
+        minimum_register: sensor.linear.minimum,
+        maximum_register_factors: sensor.linear_max_factors,
+        route_minimum: route[0].time,
+        route_maximum: route[route.len() - 1].time,
+        overrides,
+        flicker,
+    })
+}
 #[cfg(test)]
 mod tests {
     use super::*;

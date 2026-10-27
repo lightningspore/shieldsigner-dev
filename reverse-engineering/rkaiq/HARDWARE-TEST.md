@@ -1479,3 +1479,27 @@ preview and at most 0.200 s stop. The prior twenty-cycle run also passed owner
 and socket cleanup; its available-memory readings varied by 112 KiB, but its
 CMA-free-only comparison is deliberately not presented as allocation proof.
 No installed application file or boot service was modified by these tests.
+
+### Installed scan-loop composition on real camera frames
+
+Development `python/scan_loop_hardware_check.py` runs the installed
+`ScanScreen._run` and `ScanScreen.LivePreviewThread` concurrently against the
+Rust-owned real camera and the actual application QR decoder. Copy it alongside
+the two development adapter modules, then run it with the same `--app-root`,
+`--config` and unique `--report` arguments as the restart checker. It cancels
+after six seconds, verifies at least ten decode/preview iterations, joins the
+preview thread, checks owner exit/socket cleanup and requires a successful
+automatic AE/AWB shutdown summary. Decoder contents are never saved.
+
+The renderer is a bounded 240×240 memory sink and the cancellation input is
+software. No display pins are initialized and no installed screen code is
+edited. This exercises real scan/preview composition and camera shutdown, while
+physical LCD operation, physical buttons and successful optical target decoding
+remain separate requirements. It must not be described as complete UI hardware
+qualification.
+
+[Scan-loop evidence](scan-loop-hardware-validation.json): the final run processed
+12 real decoder inputs and 28 rendered previews while automatic AE/AWB processed
+116 statistics frames. Camera ownership exited successfully and the preview
+thread joined without an exception. The source and binary hashes identify this
+development checkpoint; the frozen test kit is not replaced.

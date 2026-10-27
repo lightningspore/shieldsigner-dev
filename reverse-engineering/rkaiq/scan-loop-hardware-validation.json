@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "opticalScanQualified": false,
+  "physicalDisplayQualified": false,
+  "physicalButtonsQualified": false,
+  "scanSourceSha256": "1955c6bd8733cb4238ec8880c5b6239abd2761f7de5ceb0e14fd64234df0dbaa",
+  "binarySha256": "a8c4c7b688d07a1bf5abfcfdb25e1020a5b25f912024056327908775f88a41da",
+  "helperSha256": "662c09fe7d36159363661146f44f83fe33ff94f789fecd7d95544304b5e3c6e8",
+  "controlSummary": {
+    "automaticWhiteBalance": true,
+    "error": null,
+    "event": "automatic-ae-finished",
+    "lastSof": 175,
+    "maxParameterSnapshots": 2,
+    "parameterSubmissions": 115,
+    "physicalApplicationVerified": false,
+    "processedStatistics": 116,
+    "retiredParameterSnapshots": 114,
+    "success": true
+  },
+  "seconds": 7.045186461000412,
+  "decodedFrames": 12,
+  "renderedFrames": 28,
+  "ownerExitCode": 0,
+  "previewJoined": true,
+  "sessionDirectory": "/shieldsigner-camera-tests/live-37-results/camera-qbrq3yoh",
+  "limitations": [
+    "Actual installed scan/preview code and QR decoder receive real frames.",
+    "Display sink and cancellation inputs are software substitutes.",
+    "No decoded contents are recorded and no successful optical target is claimed."
+  ],
+  "threadErrors": [],
+  "reportSha256": "8fe097bfa118b1e19547872d378b417f1de0fea367236b5284dfd5a4c6b3ccaa"
+}

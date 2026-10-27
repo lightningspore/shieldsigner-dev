@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe configure-pipeline PLAN.json [--dry-run]\n  camera-probe apply-linear /dev/v4l-subdevN FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]\n  camera-probe make-initial-parameters IQ.json OUT.bin\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE -- IMAGE_NODE OUT [capture options]\n  camera-probe capture-with-parameters PARAM_NODE PARAM.bin -- IMAGE_NODE OUT [capture options]\n  camera-probe submit-parameters /dev/videoN FULL_PARAMETERS.bin [--timeout-ms 3000] [--hold-ms 30000]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe configure-pipeline PLAN.json [--dry-run]\n  camera-probe apply-linear /dev/v4l-subdevN FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]\n  camera-probe make-initial-parameters IQ.json OUT.bin\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE -- IMAGE_NODE OUT [capture options]\n  camera-probe capture-with-parameters PARAM_NODE PARAM.bin -- IMAGE_NODE OUT [capture options]\n  camera-probe submit-parameters /dev/videoN FULL_PARAMETERS.bin [--timeout-ms 3000] [--hold-ms 30000]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -1253,6 +1253,7 @@ mod linux {
     include!("../camera_raw_bridge.rs");
     include!("../camera_parameters.rs");
     include!("../camera_pipeline.rs");
+    include!("../camera_first_frame.rs");
     pub fn run(args: &[String]) -> io::Result<()> {
         match args.first().map(String::as_str) {
             Some("list") if args.len() == 1 => list(),
@@ -1265,6 +1266,7 @@ mod linux {
             Some("capture-with-parameters") => capture_with_parameters(&args[1..]),
             Some("capture-cif-with-parameters") => capture_cif_with_parameters(&args[1..]),
             Some("configure-pipeline") => pipeline_configuration::run(&args[1..]),
+            Some("first-frame-sc3336") => first_frame_sc3336(&args[1..]),
             _ => Err(error("Unknown command; see --help")),
         }
     }

@@ -179,3 +179,11 @@ fields/rules with a bounded 64-entry cache and reports hits/misses. Independent
 ARM header assertions verify event size, every consumed offset and ioctls.
 Live delivery order, misses and SOF timing still require hardware measurement;
 this does not establish full native ordered-map/controller equivalence.
+
+Development `first-frame-sc3336` now connects graph preflight/configuration,
+profile startup parameters, active-descriptor exposure conversion, driver-range
+checks, sensor writes and combined CIF/image capture in one command. See
+[the first-frame invocation](HARDWARE-TEST.md#one-command-fixed-first-frame-startup-development).
+It retains explicit device inventory and rejects existing outputs. This is a
+fixed first-frame checkpoint; full positive startup, QR image quality and the
+automatic controller remain unverified/unfinished.

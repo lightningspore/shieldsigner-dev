@@ -334,3 +334,41 @@ checks, but it does not simulate the real kernel's internal buffer handling or
 prove the selected startup order on hardware. It also does not exercise the
 surrounding metadata/image capture paths or compare the complete native C++
 queue controller. Keep those distinctions when assessing readiness.
+
+### One-command fixed first-frame startup (development)
+
+After filling the explicit linear CIF pipeline plan from actual device inventory:
+
+```sh
+camera-probe first-frame-sc3336 pipeline.json sc3336_CMK-OT2119-PC1_30IRC-F16.json /dev/videoPARAM /dev/videoIMAGE frame.raw > startup-events.txt 2> startup-errors.txt
+```
+
+The command combines read-only graph preflight, calibrated parameter generation,
+actual graph/format configuration, active sensor timing queries, initial exposure
+conversion, driver control-range checks, sensor programming, parameter submission,
+raw bridging and image capture. It supports the SC3336 2304×1296 profile with DCG
+disabled and one explicit CIF TX/RX pair. It sets the requested image format to
+NV12 and uses the combined path's four image buffers, two discarded warmup frames
+and 10 s per-frame timeout. It does not enable automatic exposure/white balance.
+
+It leaves `frame.raw.initial.bin` and `frame.raw.initial.json` for inspection,
+then writes `frame.raw` and its `.json` capture metadata on successful capture.
+Existing outputs are rejected. Read-only graph preflight failure produces no
+startup artifacts. A later failure can leave the initial artifacts and already
+accepted graph/sensor settings; there is no automatic settings rollback. Logs
+contain structured records, some formatted over multiple lines, so treat stdout
+as a text log rather than a strict JSONL stream.
+
+The initial exposure is derived from the profile and freshly queried sensor
+line/frame timing. Both shutter and combined gain codes must fit active driver
+control ranges/steps. Digital control code zero skips SC3336's unsupported
+separate digital-gain control, and DCG -1 skips conversion-gain programming.
+After programming, queue/capture startup uses the commands documented above.
+A driver acceptance/readback still does not prove the requested exposure reached
+the saved frame; verify that on the camera.
+
+`uv run --python 3.13 python reverse-engineering/rkaiq/scripts/first-frame-check.py`
+executes five static ARM preflight rejection cases, including a real nonsensor
+ioctl failure. The full positive startup sequence has not yet run on hardware
+or a complete simulated driver. The goal remains usable independent frames,
+QR validation and the required automatic controller, not a passing preflight.

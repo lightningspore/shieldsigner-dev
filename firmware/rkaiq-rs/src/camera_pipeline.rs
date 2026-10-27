@@ -664,6 +664,20 @@ mod pipeline_configuration {
             pad_view(&get_pad(adapter.trace, &adapter.isp, &plan.isp, 2)?);
         Ok(summary)
     }
+    pub(super) fn linear_cif_nodes(value: &Value) -> io::Result<(String, String, String, String)> {
+        let plan = parse(value)?;
+        if plan.route != InputRoute::Cif || plan.tx.len() != 1 || plan.rx.len() != 1 {
+            return Err(error(
+                "First-frame startup requires one explicit CIF raw TX/RX pair",
+            ));
+        }
+        Ok((
+            plan.sensor,
+            plan.isp,
+            plan.tx[0].clone(),
+            plan.rx[0].clone(),
+        ))
+    }
     pub fn run(args: &[String]) -> io::Result<()> {
         if args.is_empty() || args.len() > 2 || (args.len() == 2 && args[1] != "--dry-run") {
             return Err(error("configure-pipeline requires PLAN.json [--dry-run]"));

@@ -131,6 +131,38 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-gain-history" => {
+                use shieldsigner_rkaiq::awb_gain_history::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let gain = |v: &serde_json::Value| -> [f32; 4] {
+                    core::array::from_fn(|i| v[i].as_f64().unwrap() as f32)
+                };
+                let initial: Vec<_> = v["history"].as_array().unwrap().iter().map(gain).collect();
+                let mut history = History::<32>::from_values(&initial).unwrap();
+                let mut output = Vec::new();
+                for step in v["steps"].as_array().unwrap() {
+                    let (selected, updated) = history
+                        .select(
+                            gain(&step["gain"]),
+                            step["target"].as_i64().unwrap() as i32,
+                            step["tolerance"].as_f64().unwrap() as f32,
+                        )
+                        .unwrap();
+                    let converged = converged(
+                        history.values(),
+                        None,
+                        (step["convergence"].as_f64().unwrap() as f32) * 2.,
+                    )
+                    .unwrap();
+                    let values: Vec<_> = history
+                        .values()
+                        .iter()
+                        .map(|g| g.map(f32::to_bits))
+                        .collect();
+                    output.push(serde_json::json!({"gain":selected.map(f32::to_bits),"updated":updated,"converged":converged,"history":values}));
+                }
+                println!("{}", serde_json::json!(output));
+            }
             "awb-single-color-grid" => {
                 use shieldsigner_rkaiq::{
                     awb_luma_history::History, awb_single_color::Line, awb_single_color_grid::*,

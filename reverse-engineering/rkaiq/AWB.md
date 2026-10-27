@@ -737,3 +737,42 @@ This joins the previously missing enabled low-count branch required by the
 pinned IQ. It still needs calibration initialization, integration with the
 caller’s high/low interpolation and gain postprocessing, complete frame
 lifecycle and live AWB submission. The frozen camera kit remains fixed-WB.
+
+## Gain history, freeze gate and convergence
+
+`awb_gain_history` reconstructs `UpdateWbGainList` (ELF `0xc9c2e`),
+`IsWbGainConverged` (`0xc9cb0`) and `IsUpdateWbGain` (`0xc9e24`). Owned bounded
+gain storage replaces native intrusive nodes. Updating appends while below the
+target, otherwise replaces the oldest gain and moves it to the tail. Reducing a
+target does not shrink history, and target 0 is a no-op. Unlike the scalar-luma
+helper, the native gain helper explicitly avoids relinking a singleton and
+supports target-1 replacement; Rust preserves that behavior.
+
+Convergence requires at least three samples, counting the optional proposed
+gain. It averages channel gains in list order, then accumulates absolute
+deviations for **existing history entries only**, divided by that same sample
+count. The proposal affects the mean and denominator but contributes no direct
+deviation term. Any channel whose deviation is greater than or equal to the
+threshold makes the result unconverged. This asymmetry is recovered behavior,
+not a rewritten statistical estimator.
+
+The update gate accepts gains while history is shorter than the requested
+target. Otherwise it tests convergence including the proposal and updates only
+if unconverged. `History::select` joins that gate with native list behavior: an
+accepted gain updates history; a frozen proposal uses the existing tail gain.
+The later caller convergence check uses no proposal and twice its configured
+threshold. The Rust API rejects negative/out-of-capacity update targets and
+nonfinite active numerical inputs without changing history.
+
+`mise run camera:rust:awb-gain-history` compares **64 persistent sequences /
+1,024 events** on host and ARM: 788 updates, 236 frozen proposals and 299
+post-update convergence results. Each event executes the original gate,
+conditional original list update and original convergence helper. It checks
+exact selected gain/list bits, list links, allocation counts, input padding and
+immutable gate/convergence memory. Cases cover empty/short/full histories,
+target 0, singleton replacement, reduced targets, stable/changing gains, zero
+thresholds and a directed proposal-only deviation case. Allocation and logging
+are explicit adapters. [Reference report](awb-gain-history-equivalence.json).
+
+Clipping/adjustment, caller high/low composition, post-damping convergence,
+calibration loading and live AWB integration remain unfinished.

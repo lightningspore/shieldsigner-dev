@@ -1,0 +1,21 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "sequences": 64,
+  "events": 1024,
+  "mismatches": 0,
+  "arm": true,
+  "updated": 788,
+  "frozen": 236,
+  "converged": 299,
+  "elfEntries": {
+    "update": "0xc9c2e",
+    "converged": "0xc9cb0",
+    "gate": "0xc9e24"
+  },
+  "scope": "Persistent original IsUpdateWbGain -> conditional UpdateWbGainList -> IsWbGainConverged, exact gain/list bits and immutable gate/convergence memory",
+  "limitations": [
+    "Bounded successful allocation and logging adapters; original list/gate/convergence bodies execute.",
+    "Finite gains/thresholds and bounded nonnegative targets. Native negative-target unsafe domains are rejected.",
+    "Clipping, adjustment, full caller composition and live frame integration remain unfinished."
+  ]
+}

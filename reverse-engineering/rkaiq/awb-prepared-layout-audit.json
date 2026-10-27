@@ -1,0 +1,101 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": [
+    {
+      "lights": 1,
+      "region": 0,
+      "exact": true
+    },
+    {
+      "lights": 1,
+      "region": 1,
+      "exact": true
+    },
+    {
+      "lights": 1,
+      "region": 2,
+      "exact": true
+    },
+    {
+      "lights": 1,
+      "region": 3,
+      "exact": true
+    },
+    {
+      "lights": 4,
+      "region": 0,
+      "exact": true
+    },
+    {
+      "lights": 4,
+      "region": 1,
+      "exact": true
+    },
+    {
+      "lights": 4,
+      "region": 2,
+      "exact": true
+    },
+    {
+      "lights": 4,
+      "region": 3,
+      "exact": true
+    },
+    {
+      "lights": 8,
+      "region": 0,
+      "exact": true
+    },
+    {
+      "lights": 8,
+      "region": 1,
+      "exact": true
+    },
+    {
+      "lights": 8,
+      "region": 2,
+      "exact": true
+    },
+    {
+      "lights": 8,
+      "region": 3,
+      "exact": true
+    },
+    {
+      "lights": 255,
+      "region": 0,
+      "exact": true
+    },
+    {
+      "lights": 255,
+      "region": 1,
+      "exact": true
+    },
+    {
+      "lights": 255,
+      "region": 2,
+      "exact": true
+    },
+    {
+      "lights": 255,
+      "region": 3,
+      "exact": true
+    }
+  ],
+  "mismatchCount": 0,
+  "scope": "Original ARM selected-gain copies with extra mixing disabled; contiguous prepared records and explicit final guard word.",
+  "region3": {
+    "countOffset": "0x9c (pre-gain red bits)",
+    "gainOffsets": [
+      "0xa0 (pre-gain Gr)",
+      "0xa4 (pre-gain Gb)",
+      "0xa8 (pre-gain blue)",
+      "0xac (next light Normal count bits)"
+    ],
+    "lastBlue": "Reads beyond final 0xac-byte record; explicit guard word 0x12345678 observed bit-for-bit."
+  },
+  "limitations": [
+    "Does not establish reachability with production IQ/state, allocation boundary contents, or intended vendor semantics.",
+    "Does not validate a complete mode-1/2 Exclusion controller call or define a safe replacement policy."
+  ]
+}

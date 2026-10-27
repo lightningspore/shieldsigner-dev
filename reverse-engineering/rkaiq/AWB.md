@@ -991,3 +991,31 @@ curves. [Reference report](awb-gain-clip-equivalence.json).
 
 Gain adjustment LUTs, caller high/low composition, remaining postprocessing,
 calibration loading and live AWB integration remain unfinished.
+
+## Prepared-record boundary audit
+
+`mise run camera:rust:awb-prepared-layout` executes the original
+`AwbCalGainForDiffIllumination` (ELF `0xc5e10`) against contiguous prepared
+records, with extra-region mixing disabled. All **16 cases** match exact copied
+bits and preserve unrelated memory: regions 0–3 with 1, 4, 8 and 255 lights.
+The library hash is verified before execution.
+[Native layout evidence](awb-prepared-layout-audit.json).
+
+Each prepared light occupies `0xac` bytes. Regions 0, 1 and 2 have count/gain
+blocks at `region * 0x34`; the separate preparation gain occupies `0x9c..0xac`.
+Passing region 3 to the native helper interprets the preparation gain's red bits
+as a count. Its gain copy starts at `0xa0`, yielding preparation Gr, Gb, blue,
+then **the next light's Normal count interpreted as float bits**. For the final
+light, the fourth gain word lies beyond the final prepared record. The audit
+sets that external word to `0x12345678` and observes it in the native output.
+This is a read across a record boundary, not a fourth independent XY region.
+
+`awb_preparation::LightRecord` correctly exposes only regions 0–2. The gain
+controller's explicit fourth value slot must not be populated with an invented
+per-light Exclusion measurement. Its prior isolated high-gain corpus seeded
+selected gains directly, so that corpus alone did not validate a prepared-data
+adapter. The joined controller corpus still covers Exclusion through the mode-0
+aggregate bypass only. Native mode-1/2 Exclusion reachability with real IQ/state,
+allocation trailing contents, and a deliberate safe replacement policy remain
+to be established before connecting this branch. No production mapping or
+fallback policy changed in this audit.

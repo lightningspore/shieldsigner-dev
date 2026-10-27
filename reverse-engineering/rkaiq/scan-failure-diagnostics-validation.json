@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "normalHardwareRun": {
+    "passed": true,
+    "binarySha256": "232691e61ce761d6558b04455a089ea9d1d6734d10278bfe3112cfe878c30521",
+    "helperSha256": "453099bc6ce451e2c988107d4bed0e87858e81765041dd7944c846a5bcbe13c2",
+    "scanSourceSha256": "1955c6bd8733cb4238ec8880c5b6239abd2761f7de5ceb0e14fd64234df0dbaa",
+    "seconds": 7.4033974620015215,
+    "decodedFrames": 10,
+    "renderedFrames": 27,
+    "ownerExitCode": 0,
+    "previewJoined": true,
+    "threadErrors": []
+  },
+  "forcedFailureHardwareRun": {
+    "passed": false,
+    "binarySha256": "232691e61ce761d6558b04455a089ea9d1d6734d10278bfe3112cfe878c30521",
+    "helperSha256": "702ec0f1dd83f2737bb0476cb2c2714eb5837234652e49f413aef2977661c0cd",
+    "scanSourceSha256": "1955c6bd8733cb4238ec8880c5b6239abd2761f7de5ceb0e14fd64234df0dbaa",
+    "seconds": 6.804281461998471,
+    "decodedFrames": 10,
+    "renderedFrames": 27,
+    "ownerExitCode": 0,
+    "previewJoined": true,
+    "threadErrors": [],
+    "error": "Scan frame minimum missed: decoder=10, renderer=27; both require 10000",
+    "errorType": "AssertionError"
+  },
+  "forcedFailureThreshold": 10000,
+  "productionMinimumUnchanged": 10,
+  "productionCancelSecondsUnchanged": 6,
+  "helperSourceSha256": "453099bc6ce451e2c988107d4bed0e87858e81765041dd7944c846a5bcbe13c2",
+  "scope": "Actual installed scan/preview with real camera. Failure branch deliberately exercised using private helper copy with 10000-frame gate; no production threshold/timing changes. Diagnostics survive failed gate. Not optical decode/display/buttons qualification."
+}

@@ -1803,3 +1803,21 @@ rollback/retry and native oracle scope are documented in
 [ISP details](ISP.md#live-baynr-startup-and-transactional-capture-0034-development).
 Remaining profile blocks are BAY3D, YNR, CNR and SHARP. Exact-binary cold boot
 and a new frozen kit remain pending; frozen 0.0.33 remains immutable.
+
+
+## Scan failure diagnostics (0.0.34 development)
+
+The development scan helper now records elapsed time, decoder/render counts,
+owner exit, joined-preview status and session path before its count gates can
+raise. Failures include exception type and a clear count error. The ten-frame
+minimum and six-second software cancellation policy are unchanged. Frozen kits
+and their helpers remain immutable.
+
+[Physical validation](scan-failure-diagnostics-validation.json) covers a normal
+passing scan and a deliberately failing private helper copy with an impossible
+10,000-frame minimum. Both use real camera and installed app loops. The latter
+retains ten decoder inputs/27 renders, clean owner exit, joined preview and
+explicit AssertionError in its failing report. This verifies diagnostics, not
+optical decoding or a fix for the earlier short-duration count miss. Use the
+report's `passed` field as authoritative; a successful transport command alone
+does not imply the application test passed.

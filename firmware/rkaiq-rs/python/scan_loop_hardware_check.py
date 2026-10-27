@@ -92,8 +92,21 @@ def main():
         screen._run()
         preview.stop()
         preview.join(timeout=3)
+        # Preserve diagnostics before any gate can raise. A timed scan can
+        # miss its threshold while the owner still processes/stops correctly.
+        report.update(
+            seconds=time.monotonic() - started,
+            decodedFrames=screen.decoder.frames,
+            renderedFrames=sink.frames,
+            ownerExitCode=reader.owner_exit_code,
+            previewJoined=not preview.is_alive(),
+            sessionDirectory=reader.session_directory,
+        )
         assert not preview.is_alive() and not errors
-        assert screen.decoder.frames >= 10 and sink.frames >= 10
+        assert screen.decoder.frames >= 10 and sink.frames >= 10, (
+            f"Scan frame minimum missed: decoder={screen.decoder.frames}, "
+            f"renderer={sink.frames}; both require 10"
+        )
         assert reader.owner_exit_code == 0 and camera._video_stream is None
         assert not Path(reader.socket_path).exists()
         events = []
@@ -131,6 +144,7 @@ def main():
         )
     except Exception as exc:
         report["error"] = str(exc)
+        report["errorType"] = type(exc).__name__
         raise
     finally:
         if preview is not None:

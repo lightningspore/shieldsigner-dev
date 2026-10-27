@@ -260,6 +260,12 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-iq-environment" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                let c=shieldsigner_rkaiq::awb_calibration::Common::from_value(&v["iq"]).unwrap();
+                let r=shieldsigner_rkaiq::awb_environment::classify(v["luma"].as_u64().unwrap() as u32,&c.environment(),v["previous"].as_i64().unwrap() as i32);
+                println!("{}",serde_json::json!({"level":r.level,"environment":r.environment,"boundaries":c.environment_boundaries}));
+            }
             "awb-preprocess-parse" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
                 println!("{}", match shieldsigner_rkaiq::awb_calibration::Preprocessing::from_value(&v["iq"]) {
@@ -893,6 +899,7 @@ fn main() {
                 };
                 let loaded=v.get("preprocess_iq").map(shieldsigner_rkaiq::awb_calibration::Preprocessing::from_value).transpose().unwrap();
                 let calibration=loaded.as_ref().map(|c|c.calibration()).unwrap_or(calibration);
+                let common=v.get("common_iq").map(shieldsigner_rkaiq::awb_calibration::Common::from_value).transpose().unwrap();
                 let input = Input {
                     requested_mode: v["mode"].as_i64().unwrap() as i32,
                     previous_update: v["update"].as_bool().unwrap(),
@@ -908,7 +915,7 @@ fn main() {
                     },
                     frame_choice: v["choice"].as_u64().unwrap() as u8,
                     working_mode: v["working"].as_i64().unwrap() as i32,
-                    fallback: v["fallback"].as_u64().unwrap() as u32,
+                    fallback: common.as_ref().map(|c|c.fallback_brightness()).unwrap_or(v["fallback"].as_u64().unwrap() as u32),
                     override_enabled: v["override_enabled"].as_bool().unwrap(),
                     override_valid: v["override_valid"].as_bool().unwrap(),
                     override_luma: v["override"].as_f64().unwrap() as f32,
@@ -951,12 +958,13 @@ fn main() {
                         .iter()
                         .map(|v| v.as_u64().unwrap() as u32)
                         .collect::<Vec<_>>();
-                    let environment = awb_environment::Calibration {
+                    let manual_environment = awb_environment::Calibration {
                         boundaries: &boundaries,
                         thresholds: core::array::from_fn(|i| {
                             m["thresholds"][i].as_u64().unwrap() as u32
                         }),
                     };
+                    let environment=common.as_ref().map(|c|c.environment()).unwrap_or(manual_environment);
                     let decision = state
                         .derive_measurements(
                             &input,

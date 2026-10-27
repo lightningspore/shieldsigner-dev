@@ -367,6 +367,9 @@ pub struct Common {
     /// Copied by the enclosing calibration update before the common helper.
     pub night_percentages: [u8; 16],
     pub environment_thresholds: [u32; 4],
+    /// Native declares 16 intervals over its 16 knots and the adjacent first
+    /// division-threshold word. Keep that final boundary explicit and bounded.
+    pub environment_boundaries: [u32; 17],
     pub distance_thresholds: [f32; 2],
     pub probability_thresholds: [u32; 4],
     pub relative_count_threshold: f32,
@@ -467,6 +470,13 @@ impl Common {
             history_weights,
             brightness_knots,
             night_percentages,
+            environment_boundaries: core::array::from_fn(|i| {
+                if i < 16 {
+                    brightness_knots[i]
+                } else {
+                    environment_thresholds[0]
+                }
+            }),
             environment_thresholds,
             distance_thresholds: [
                 number(v, "/probCalcDis/proDis_THL")?,
@@ -503,6 +513,16 @@ impl Common {
             ],
             initial_countdown: 20,
         })
+    }
+    /// Native missing-exposure fallback reads strategy +0x188, knot index 8.
+    pub fn fallback_brightness(&self) -> u32 {
+        self.brightness_knots[8]
+    }
+    pub fn environment(&self) -> crate::awb_environment::Calibration<'_> {
+        crate::awb_environment::Calibration {
+            boundaries: &self.environment_boundaries,
+            thresholds: self.environment_thresholds,
+        }
     }
     pub fn high(&self, fast: bool, brightness: u32) -> crate::awb_high_gain::Settings {
         crate::awb_high_gain::Settings {

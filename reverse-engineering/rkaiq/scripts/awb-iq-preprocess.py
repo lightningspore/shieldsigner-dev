@@ -109,6 +109,7 @@ def main():
                 convergence=[bool(i % 4), True],
             )
             metadata_cases += 1
+        v["common_iq"] = e
         out = arm.run(v)
         expected.append(out)
         key = str(out["decision"])
@@ -210,6 +211,7 @@ def main():
         preprocessCases=192,
         toleranceCases=192,
         metadataConfiguredCases=metadata_cases,
+        commonEnvironmentLayout=True,
         decisions=decisions,
         malformedRejections=8,
         mismatches=0,

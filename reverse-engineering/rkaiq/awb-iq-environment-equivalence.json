@@ -1,0 +1,35 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "initializations": 32,
+  "classifications": 1024,
+  "mismatches": 0,
+  "arm": true,
+  "environmentCoverage": {
+    "0": 219,
+    "1": 32,
+    "2": 32,
+    "3": 35,
+    "4": 35,
+    "5": 63,
+    "6": 94,
+    "7": 32,
+    "8": 32,
+    "9": 32,
+    "10": 32,
+    "11": 63,
+    "12": 95,
+    "13": 37,
+    "14": 64,
+    "15": 127
+  },
+  "elfEntries": {
+    "initializer": "0xc8450",
+    "classifier": "0xc9f68"
+  },
+  "scope": "Complete original common initializer followed by original brightness classification over its real contiguous strategy table, including all sixteen environment buckets.",
+  "limitations": [
+    "Pinned calibration plus finite monotonic synthetic brightness matrices and thresholds; full AWB initialization/session processing remains separate.",
+    "Other preprocessing/history, hardware reconfiguration and live AWB are not executed by this comparison."
+  ]
+}

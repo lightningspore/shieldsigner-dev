@@ -1373,9 +1373,8 @@ to `[0, 0, outdoorLow, outdoorHigh]`. The history convergence field receives
 Native startup smart-run values are exact f32 0.001/0.005/0.05 and countdown 20.
 They are initial values, before per-frame smart-run interpolation. The helper
 also initializes three strategy flags to zero, stores the opaque CCM reference,
-and sets the environment interval count to 16. The numerical environment adapter
-still needs reconciliation with this exact native record layout before full
-session construction. The sixteen night percentages are copied by the enclosing
+and sets the environment interval count to 16. The bounded environment adapter described below now reconstructs this exact
+native record layout before shared-session construction. The sixteen night percentages are copied by the enclosing
 `UpdateAwbCalibV2Para`, **not** by this common helper. The owned loader reads them
 from IQ; the oracle pre-seeds them as that caller does and checks preservation.
 
@@ -1432,5 +1431,41 @@ The oracle executes the standard preprocessor until its metadata exit or entry
 to `PrepareMeasureResult`; the measurement preparation body is covered by the
 separate prepared-frame suite. This test does not yet execute a single complete
 raw-statistics-to-gain session or hardware reconfiguration. Shared runtime state
-construction, remaining optional IQ blocks/initialization, environment-layout
-reconciliation, publication and live automatic-WB qualification remain unfinished.
+construction, remaining optional IQ blocks/initialization, publication and live automatic-WB qualification remain unfinished.
+
+## Initialized environment layout and missing-exposure fallback
+
+`Common::environment` now supplies the exact bounded table expected by the
+native brightness classifier. Common initialization sets strategy +0x164 to
+16 intervals and stores sixteen brightness knots at +0x168. The classifier's
+last pair also reads +0x1a8, the adjacent first division threshold. The owned
+`environment_boundaries` array represents all **17 words** explicitly, including
+that adjacent value, without an out-of-bounds read. Its final pair may descend;
+this is intentional record layout rather than an ordered interpolation curve.
+The classifier still assigns bucket 15 when no earlier interval matches. Passing
+only the sixteen JSON knots to the existing slice API would incorrectly stop
+at bucket 14 for high/unmatched brightness.
+
+`Common::fallback_brightness` returns knot index 8. Native preprocessing reads
+strategy +0x188 when exposure metadata is absent; that address is the element
+at zero-based index 8 in the same matrix. A separately supplied fallback can agree
+with isolated prefix tests yet disagree once common initialization populates the
+record. The loaded preprocessing fixture now derives both its environment table
+and missing-exposure fallback from `Common`, preserving their shared native
+layout. Its deliberately different manual fallback is ignored in that path.
+
+`mise run camera:rust:awb-iq-environment` executes 32 complete original common
+initializations followed by **1,024 original brightness classifications** using
+the initialized strategy memory directly. It covers every environment index
+0–15, each brightness knot, all five-level threshold equalities/neighbors,
+values below the first knot, the final bucket and `u32::MAX`. Exact levels,
+environments, all 17 boundary words, output padding and unchanged configuration
+are compared on host and ARM. [Initialized environment report](awb-iq-environment-equivalence.json).
+
+The task also reruns the loaded preprocessing comparison using the corrected
+common environment layout and fallback: 192 preprocessing/history branch cases
+and 192 tolerance interpolations. This connects common settings to the loaded
+prefix rather than checking the two settings blocks only in isolation.
+It still stops before complete measurement preparation/gain processing;
+full shared-session composition, remaining initialization blocks, hardware
+reconfiguration/publication and live automatic-WB qualification remain unfinished.

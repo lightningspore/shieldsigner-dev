@@ -56,6 +56,9 @@ class Original(OriginalAwb):
    for i,(node,value) in enumerate(zip(nodes,metadata['history'])):self.uc.mem_write(node,struct.pack('<3I',nodes[i+1] if i+1<len(nodes) else head,nodes[i-1] if i else head,value))
   self.curve_blocks=[]
   if "curves" in v:self.configure_curves(cfg,cal,v["curves"])
+  if "common_iq" in v:
+   common=v["common_iq"];word(cfg,0x164,16);struct.pack_into('<16I',cfg,0x168,*common['lumaValueMatrix'])
+   struct.pack_into('<4I',cfg,0x1a8,*[common['division'][key] for key in ['lumaValThLow','lumaValThLow2','lumaValThHigh','lumaValThHigh2']])
   self.uc.mem_write(HEAP,bytes(c));self.uc.mem_write(configuration,bytes(cfg));self.uc.mem_write(calibration,bytes(cal));self.uc.mem_write(source,struct.pack('<2f',*(v['source'] or [0.,0.])))
   self.invoke(SYMBOL,[0,HEAP]);after=bytearray(self.uc.mem_read(HEAP,len(c)));newcfg=bytearray(self.uc.mem_read(configuration,len(cfg)))
   w=lambda data,o:struct.unpack_from('<I',data,o)[0]

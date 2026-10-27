@@ -19,5 +19,7 @@ def main():
    result=run(*args)
    assert result.returncode!=0 and expected.lower() in (result.stdout+result.stderr).lower(),(args,result.stdout,result.stderr)
    assert not list(d.glob('out*')),'preflight wrote startup artifacts'
- print(json.dumps(dict(armPreflightCases=len(cases),passed=True,scope='Argument/profile/plan/output rejection and real nonsensor ioctl failure before startup artifacts; no positive hardware startup.')))
+  generated=subprocess.run(['docker','run','--rm','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={binary.parent},dst=/bincheck,readonly','--mount',f'type=bind,src={d},dst=/plans,readonly',image,'sh','-c','set -e\n/bincheck/camera-probe make-initial-parameters /plans/iq.json /tmp/initial.bin > /tmp/initial.json\nsha256sum /tmp/initial.bin'],text=True,capture_output=True,check=True)
+  assert generated.stdout.split()[0]=='3f76c0104aa1ceeb37b331e78f686e2ceca5c2b2d80ad335a660e4c5ce0603e9',generated.stdout
+ print(json.dumps(dict(armProfileAssemblyMatchesHost=True,armPreflightCases=len(cases),passed=True,scope='Argument/profile/plan/output rejection and real nonsensor ioctl failure before startup artifacts; no positive hardware startup.')))
 if __name__=='__main__':main()

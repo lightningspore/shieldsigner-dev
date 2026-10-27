@@ -1,5 +1,7 @@
 # First camera session
 
+Kit **0.0.29** includes the one-command fixed startup checkpoint documented at the end of this guide. The full matching IQ profile and actual device inventory are required; no vendor-free hardware frame has been verified.
+
 This kit is an **experimental partial reconstruction**. It supplies recovered Rust numerical/control components and a camera diagnostic. It does not replace `librkaiq.so` or the existing image's startup/service scripts. No firmware flash is needed for these tests.
 
 ## Kit contents
@@ -192,7 +194,7 @@ Preserve stdout JSON and stderr on failure. The JSON lists attempted writes, acc
 
 ## Parameter submission transport (requires a complete record)
 
-This is a separate experimental step. **The kit does not yet generate or ship a complete initial ISP configuration.** Do not use per-module fixtures, the functional demosaic JSON subset or an arbitrary zeroed buffer as the input record. The baseline capture/descriptor tests above remain the useful first hardware session.
+This is a separate experimental step. **The kit does not ship a fully qualified initial ISP configuration.** Version 0.0.29 can generate the experimental fixed first-frame configuration documented below. Do not use per-module fixtures, the functional demosaic JSON subset or an arbitrary zeroed buffer as the input record. The baseline capture/descriptor tests above remain the useful first hardware session.
 
 Once a complete, reviewed `isp32_isp_params_cfg` record is available, use `camera-probe list` to identify the RK1P metadata-output node and run, for example:
 
@@ -203,10 +205,9 @@ Once a complete, reviewed `isp32_isp_params_cfg` record is available, use `camer
 
 It requires known vendor processes to be stopped and makes no persistent boot changes. The first JSON event indicates dequeue, not verified image-frame application. While the parameter stream is held open, a separate terminal can attempt image/statistics capture on the appropriate other nodes. Normal parameter stream-off disables/clears configuration, so finishing this command can affect capture still in progress. Preserve its final JSON report and actual frames/errors. [Exact behavior, ABI, first-buffer semantics and remaining limits](PARAMETERS.md).
 
-### Development first-frame parameter generator (0.0.29-dev)
+### First-frame parameter generator (0.0.29)
 
-The development source now provides an offline command, separate from the frozen
-0.0.28 kit:
+Kit 0.0.29 provides an offline command requiring the full matching IQ profile:
 
 ```sh
 camera-probe make-initial-parameters sc3336_CMK-OT2119-PC1_30IRC-F16.json initial.bin > initial-report.json
@@ -265,7 +266,7 @@ hardware paths may require a different startup order or raw TX/RX streaming;
 this combined positive path has not yet run on the actual board. It does not
 configure the graph, program exposure, stream raw readback endpoints, run
 statistics/automatic 3A or prove cold startup. Those are still required work.
-The frozen 0.0.28 kit does not contain this command.
+This command first appears in kit 0.0.29.
 
 Run the static ARM CLI rejection checks with:
 
@@ -335,7 +336,7 @@ prove the selected startup order on hardware. It also does not exercise the
 surrounding metadata/image capture paths or compare the complete native C++
 queue controller. Keep those distinctions when assessing readiness.
 
-### One-command fixed first-frame startup (development)
+### One-command fixed first-frame startup (0.0.29)
 
 After filling the explicit linear CIF pipeline plan from actual device inventory:
 

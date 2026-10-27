@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "00a04c920908a3bf55107c94ea4802dc92ed33eeb9a1d4770606f9be2e776fb3",
+  "testBinarySha256": "72ab4face34e333b9074a28d928ec92eb0de8107f118e4eb8ffba15ccc44d9bb",
   "platform": "linux/arm/v7",
   "cases": [
     "successful frame with matched SOF",

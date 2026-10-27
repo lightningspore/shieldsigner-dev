@@ -61,9 +61,9 @@
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "13a6374b19de1f468b74604f67e7fd2aab35b7382866fc21b8ba3b36b798d92e",
-    "numeric-fixture": "84d4c62498525ec851b66f7792da59eefeb7b1ebbd6da6a36952e631a6728b2b",
-    "frame-preview": "8efad4a76ba6d985f6df99d61328ff4dce3bd9b99c2163c139b89e86d667aed7"
+    "camera-probe": "bfea88dd170c54e728305497bcb319587673eaed03a93b18e71ce8d33a54f212",
+    "numeric-fixture": "fd75c3c5709db86ca0f4a3f97e9303eafb58cd01a2e2255daeeaea6309ccb404",
+    "frame-preview": "86c0c4bfc705cf94d28bb524252223f7947341134fdf672663e8eb533c878b3c"
   },
   "limitations": [
     "ARM/Linux userspace execution is verified; real camera capture and end-to-end ISP behavior are not tested."

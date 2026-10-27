@@ -21,6 +21,9 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
 for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','AWB.md','ISP.md','PARAMETERS.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','isp-black-level-equivalence.json','isp-demosaic-equivalence.json','demosaic-selection-equivalence.json','parameter-queue-equivalence.json','ae-measurement-equivalence.json','awb-measurement-equivalence.json','awb-gain-equivalence.json','awb-probability-equivalence.json','awb-preparation-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
+for name in ['isp-color-equivalence.json','awb-translation-equivalence.json','raw-bridge-validation.json']:
+ copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
+copy(ROOT/'reverse-engineering/rkaiq/examples/pipeline-linear.template.json','examples/pipeline-linear.template.json')
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'statistics-fixtures'/name,'statistics-fixtures/'+name)
@@ -82,7 +85,8 @@ readme='''Experimental RKAIQ Rust camera test kit 0.0.1
 START WITH HARDWARE-TEST.md.
 
 This is a partial numerical reconstruction plus diagnostic tools, not a complete
-RKAIQ/ISP replacement. No image or boot configuration is modified. The kit does
+RKAIQ/ISP replacement. No firmware installation or boot-service changes are made.
+Explicit startup commands change graph, sensor and ISP state. The kit does
 not include or link the original vendor RKAIQ binaries. A real camera is required
 to test frame capture; the completed numerical/ARM-emulation tests do not prove it.
 
@@ -91,6 +95,14 @@ host/frame-preview-macos-arm64 can convert captured raw frames for inspection.
 The PGM preview is uncalibrated; Bayer frames use 2x2 binning.
 
 Run ./run-numeric-test.sh RESULTS_DIRECTORY on the Luckfox, then follow the guide.
+This version includes first-frame-sc3336: explicit graph plan + full existing
+SC3336 IQ JSON + parameter/image nodes + output basename. It connects fixed
+startup exposure, ISP parameters, raw DMA-BUF bridging and image capture.
+The full original IQ profile is NOT bundled: use the matching file already on
+your device or retrieve the SHA-pinned source from research/artifacts.json.
+Fill examples/pipeline-linear.template.json from actual inventory; placeholders
+are not runnable. No successful vendor-free hardware frame is claimed.
+Automatic exposure/white balance and full native startup fidelity are unfinished.
 manifest.json records SHA-256 for each kit file. Source and dependency license
 texts are included. Full investigation and reproducible mise tasks:
 https://github.com/lightningspore/shieldsigner-dev/tree/main/reverse-engineering/rkaiq
@@ -287,7 +299,7 @@ for path in [zigroot/'lib/libc/musl/COPYRIGHT',zigroot/'lib/libc/musl/COPYRIGHT.
  if path.exists():copy(path,'licenses/musl/'+path.name)
 (kit/'licenses/dependencies.json').write_text(json.dumps(licenses,indent=2)+'\n');items.append('licenses/dependencies.json')
 manifest={'version':version,'target':'armv7-unknown-linux-musleabihf','status':'Partial reconstruction; hardware camera validation pending',
- 'numericCases':proof['totalCases'],'fullIspReplacement':False,'linksVendorRkaiq':False,'files':[]}
+ 'numericCases':proof['totalCases'],'fullIspReplacement':False,'linksVendorRkaiq':False,'fixedFirstFrameCommand':'first-frame-sc3336','automatic3A':False,'vendorFreeHardwareFrameVerified':False,'fullIqBundled':False,'files':[]}
 for name in sorted(items):
  path=kit/name;manifest['files'].append({'name':name,'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
 (kit/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

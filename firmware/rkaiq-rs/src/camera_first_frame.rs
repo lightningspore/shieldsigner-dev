@@ -6,15 +6,28 @@ fn first_frame_sc3336_observed(
     args: &[String],
     observer: Option<CameraAeSender>,
 ) -> io::Result<()> {
-    first_frame_sc3336_mode(args, observer, false)
+    first_frame_sc3336_mode(args, observer, false, None)
 }
 fn auto_frame_sc3336(args: &[String]) -> io::Result<()> {
-    first_frame_sc3336_mode(args, None, true)
+    first_frame_sc3336_mode(args, None, true, None)
+}
+fn awb_measurement_frame_sc3336(args: &[String]) -> io::Result<()> {
+    if args.len() != 7 {
+        return Err(error("awb-measurement-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE"));
+    }
+    let scale = args[6]
+        .parse::<u32>()
+        .map_err(|_| error("Invalid sample scale"))?;
+    if scale == 0 {
+        return Err(error("Sample scale must be positive"));
+    }
+    first_frame_sc3336_mode(&args[..6], None, false, Some(scale))
 }
 fn first_frame_sc3336_mode(
     args: &[String],
     observer: Option<CameraAeSender>,
     automatic: bool,
+    awb_sample_scale: Option<u32>,
 ) -> io::Result<()> {
     use shieldsigner_rkaiq::{
         calibration::{RuntimeTiming, SensorCalibration},
@@ -87,11 +100,27 @@ fn first_frame_sc3336_mode(
             }
         }
     }
-    let (parameters, initial) = if statistics.is_some() {
-        shieldsigner_rkaiq::initial_parameters::assemble_with_ae(&iq).map_err(error)?
+    let (parameters, initial, sdk) = if let Some(scale) = awb_sample_scale {
+        if automatic || statistics.is_none() || step.is_some() {
+            return Err(error(
+                "AWB measurement capture requires fixed startup and a statistics node",
+            ));
+        }
+        let (parameters, initial, sdk) =
+            shieldsigner_rkaiq::initial_parameters::assemble_with_awb(&iq, scale).map_err(error)?;
+        (parameters, initial, Some(sdk))
     } else {
-        shieldsigner_rkaiq::initial_parameters::assemble(&iq).map_err(error)?
+        let (parameters, initial) = if statistics.is_some() {
+            shieldsigner_rkaiq::initial_parameters::assemble_with_ae(&iq).map_err(error)?
+        } else {
+            shieldsigner_rkaiq::initial_parameters::assemble(&iq).map_err(error)?
+        };
+        (parameters, initial, None)
     };
+    let sdk_path = format!("{}.awb-sdk.bin", args[4]);
+    if sdk.is_some() && std::path::Path::new(&sdk_path).exists() {
+        return Err(error("AWB SDK output already exists"));
+    }
     let parameter_path = format!("{}.initial.bin", args[4]);
     let report_path = format!("{}.initial.json", args[4]);
     for path in [
@@ -106,6 +135,13 @@ fn first_frame_sc3336_mode(
             ));
         }
     }
+    if sdk.is_some() {
+        for suffix in [".awb-translated.bin", ".awb-translated.json"] {
+            if std::path::Path::new(&format!("{}{suffix}", args[4])).exists() {
+                return Err(error("AWB translation output already exists"));
+            }
+        }
+    }
     // Read-only graph preflight before any settings or sensor controls change.
     pipeline_configuration::run(&[args[0].clone(), "--dry-run".into()])?;
     let mut params = OpenOptions::new()
@@ -114,6 +150,14 @@ fn first_frame_sc3336_mode(
         .open(&parameter_path)?;
     params.write_all(&parameters)?;
     params.sync_all()?;
+    if let Some(sdk) = sdk {
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&sdk_path)?;
+        file.write_all(&sdk)?;
+        file.sync_all()?;
+    }
     let mut report = OpenOptions::new()
         .write(true)
         .create_new(true)
@@ -122,7 +166,7 @@ fn first_frame_sc3336_mode(
     report.sync_all()?;
     println!(
         "{}",
-        json!({"event":"first-frame-starting","sensor":sensor_path,"parameters":parameter_path,"initialReport":report_path,"automatic3A":false,"automaticExposure":automatic,"automaticWhiteBalance":false,"coldStartProven":false})
+        json!({"event":"first-frame-starting","sensor":sensor_path,"parameters":parameter_path,"initialReport":report_path,"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":false,"coldStartProven":false})
     );
     let outcome = (|| -> io::Result<()> {
         pipeline_configuration::run(&[args[0].clone()])?;
@@ -264,6 +308,8 @@ fn first_frame_sc3336_mode(
             }
             if automatic {
                 command.extend(["--warmup".into(), "32".into()]);
+            } else if awb_sample_scale.is_some() {
+                command.extend(["--warmup".into(), "8".into()]);
             }
             capture_cif_with_parameters_controlled(&command, capture_observer, control)
         };
@@ -285,9 +331,80 @@ fn first_frame_sc3336_mode(
             None => capture(),
         }
     })();
+    let outcome = outcome.and_then(|()| {
+        if let Some(sdk) = sdk {
+            save_awb_capture_translation(
+                &format!("{}.stats.raw", args[4]),
+                &sdk,
+                u32::from_le_bytes(parameters[24..28].try_into().unwrap()),
+                &format!("{}.awb-translated", args[4]),
+            )?;
+        }
+        Ok(())
+    });
     println!(
         "{}",
-        json!({"event":"first-frame-finished","success":outcome.is_ok(),"error":outcome.as_ref().err().map(|e|e.to_string()),"automatic3A":false,"automaticExposure":automatic,"automaticWhiteBalance":false,"coldStartProven":false,"partialSettingsMayRemain":true})
+        json!({"event":"first-frame-finished","success":outcome.is_ok(),"error":outcome.as_ref().err().map(|e|e.to_string()),"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":false,"coldStartProven":false,"partialSettingsMayRemain":true})
     );
     outcome
+}
+
+/// Translate only against the actual single initial parameter snapshot. Never
+/// substitute the image sequence or a guessed/latest configuration ID.
+fn save_awb_capture_translation(
+    raw_path: &str,
+    sdk: &[u8; 1204],
+    parameter_id: u32,
+    output: &str,
+) -> io::Result<()> {
+    use shieldsigner_rkaiq::{
+        awb_preparation::FRAME_BYTES, awb_translation::*, statistics::Statistics,
+    };
+    use std::io::Read;
+    let mut raw = Vec::new();
+    File::open(raw_path)?.take(13041).read_to_end(&mut raw)?;
+    let stats = Statistics::parse(&raw).map_err(|_| error("Unsupported AWB statistics size"))?;
+    let mut frame = [0; FRAME_BYTES];
+    let mut destination = Destination {
+        frame: &mut frame,
+        valid: false,
+        frame_info_valid: false,
+        frame_id: 0,
+        proxy_sequence: 0,
+    };
+    let outcome = translate_associated(
+        &stats,
+        &[Snapshot {
+            id: parameter_id,
+            measurement: sdk,
+        }],
+        &mut destination,
+    )
+    .map_err(|e| error(format!("AWB configuration association: {e:?}")))?;
+    if outcome != Outcome::Translated {
+        return Err(error("Capture returned no valid AWB measurement"));
+    }
+    let frame_id = destination.frame_id;
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(format!("{output}.bin"))?;
+    file.write_all(&frame)?;
+    file.sync_all()?;
+    let groups=(0..sdk[0x48] as usize).map(|i|{
+        let regions=(0..2).map(|r|{
+            let at=i*48+r*24;let values:[i64;3]=core::array::from_fn(|j|i64::from_le_bytes(frame[at+j*8..at+j*8+8].try_into().unwrap()));
+            let gain=if values[0]==0 {None}else{shieldsigner_rkaiq::awb_gain::statistics_gain(values[0],values[1],values[2]).ok()};
+            json!({"region":r,"weightedCount":values[0],"normalizedCount":gain.map(|(_,n)|n),"normalizedGain":gain.map(|(g,_)|g)})
+        }).collect::<Vec<_>>();json!({"physicalLight":i,"regions":regions})
+    }).collect::<Vec<_>>();
+    let report = json!({"event":"awb-statistics-translated","frameId":frame_id,"parametersId":stats.parameters_id(),"configurationId":parameter_id,"association":"exact-single-initial-snapshot","bytes":FRAME_BYTES,"physicalLights":sdk[0x48],"groups":groups,"automaticWhiteBalance":false,"limitations":["Translation and per-region diagnostic gains only; persistent AWB feedback/publication are not enabled.","Statistics frame is distinct from the saved image sequence; physical frame timing and cold startup remain unproven."]});
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(format!("{output}.json"))?;
+    serde_json::to_writer_pretty(&mut file, &report).map_err(|e| error(e.to_string()))?;
+    file.sync_all()?;
+    println!("{report}");
+    Ok(())
 }

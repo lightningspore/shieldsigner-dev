@@ -20,9 +20,10 @@ class OriginalTranslation(OriginalArm):
    if name!='xcam_print_log':uc.reg_write(regs.UC_ARM_REG_R0,result)
    uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
   super().hook(uc,address,size,user)
- def run(self,raw,configuration,seed):
+ def run(self,raw,configuration,seed,zero_destination=False):
   context=HEAP;source=HEAP+0x20000;out=HEAP+0x40000;smart=HEAP+0x50000;proxy=HEAP+0x60000;control=HEAP+0x70000
   ctx=data(seed^0x10,0xc000);ctx[0xb618:0xbacc]=configuration;original=data(seed^0x21,OBJECT_BYTES);original[0x22f0]=bool(seed&1);original[0x22f1]=bool(seed&2)
+  if zero_destination:original[8:0x1e08]=bytes(0x1e00)
   proxy_before=data(seed^0x22,0x100);struct.pack_into('<II',proxy_before,0x6c,out,control);control_before=bytearray([0x55])*0x100;struct.pack_into('<II',control_before,0,0,100)
   self.raw_pointer=0 if raw is None else source
   self.uc.mem_write(context,bytes(ctx));self.uc.mem_write(out,bytes(original));self.uc.mem_write(proxy,bytes(proxy_before));self.uc.mem_write(smart,struct.pack('<II',proxy,0));self.uc.mem_write(control,bytes(control_before))

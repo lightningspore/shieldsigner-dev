@@ -888,13 +888,13 @@ used the preceding effective-map entry (`exactExposureLookup:false`), which
 remains visible in the log rather than being labeled exact association.
 The local log is `ss-20261027-ae-telemetry.log` in the same ignored directory.
 
-## AWB measurement candidate — offline only
+## Offline AWB generation and explicit measurement capture
 
 The current development build can generate a separate measurement-enabled
 candidate using `make-initial-parameters IQ.json OUT.bin --awb-measurements
 SDK.bin SAMPLE_SCALE`. It includes AE measurements and retains the existing
-fixed white balance. This is an offline opt-in; the established first-frame and
-automatic-exposure commands do not submit it yet.
+fixed white balance. The established first-frame and automatic-exposure commands retain their
+AE-only setup. The separate bounded command below submits the AWB candidate.
 
 See [AWB assembly scope](AWB.md#post-assembly-binding-and-first-complete-measurement-candidate)
 for component comparisons and outstanding integration. Preserve the full SDK
@@ -902,3 +902,101 @@ snapshot with any future capture, since AWB translation needs its actual
 parameter-ID association. Do not call a measurement-enabled capture automatic
 white balance: persistent preprocessing/gain feedback/publication still needs
 connection and hardware testing.
+
+
+```sh
+camera-probe awb-measurement-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE
+```
+
+Use verified endpoint paths and a new output basename. This command captures
+nine image frames (discards eight), holds the initial parameter queue open,
+collects statistics through teardown, and saves the SDK snapshot as
+`OUT.awb-sdk.bin`. It translates the last statistics payload against that exact
+initial parameter ID and saves `OUT.awb-translated.bin` plus a diagnostic JSON.
+Missing/mismatched IDs or absent AWB measurements fail explicitly. The translated
+statistics frame is not asserted to be the same frame as the saved image.
+Fixed calibrated WB and fixed startup exposure are used; automatic WB/AE remain
+off for this command. Sensor settings can remain applied after capture.
+
+### Physical AWB checkpoint — 2026-10-27, 0.0.31-dev
+
+The assembled payload captured successfully on SC3336/Luckfox with no RKAIQ
+process running. The default 3 ms/1× startup returned six statistics buffers,
+valid AWB flags and a 225-cell grid, but sparse white-pixel counts. A private
+IQ variant changed only AE startup exposure/gain to 30 ms/8×; no source IQ or
+boot files were changed. That capture produced nonzero Normal/Big measurements
+in all four FAST windows, including approximately 14–15 thousand normalized
+weighted counts in two windows. These counts are decoded Q10-normalized AWB
+statistics, not a count of distinct image pixels. The image was recognizable;
+a subsequent requested capture included readable, upside-down text.
+
+For the default translated capture and the brighter capture, all **7680 bytes**
+of the SDK frame matched the original ARM single-ISP translator on the actual
+captured payload and saved SDK snapshot. Statistics frame 7 referenced initial
+parameter ID 0; the checker verified that association instead of inventing one.
+The original numerical translation executes locally under the reference harness;
+no vendor camera process was launched on the board.
+
+Local artifacts and previews are in ignored
+`dist/reverse-engineering/hardware-2026-10-27/`, basenames
+`ss-20261027-awb-measurement-01` through `-04`. Runs 02/03 preserve native
+comparison reports; run 04 is the requested text scene. The exposure-only IQ
+variant is private and uncommitted. To compare another captured translation:
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-captured-translation.py OUT.stats.raw OUT.awb-sdk.bin OUT.awb-translated.bin --configuration-id 0 --report OUT.native-comparison.json
+```
+
+Replace ID 0 with the actual initial parameter ID if using another payload.
+This proves physical measurement collection and captured-data translation for
+this checkpoint. It does not prove automatic-WB convergence, persistent
+controller initialization, color accuracy, exposure-to-frame latency or
+vendor-free cold startup. Gain feedback/publication is still unfinished.
+
+## Physical AWB statistics capture — 2026-10-27
+
+The separate bounded command now submits the assembled AWB candidate while
+keeping fixed calibrated white balance:
+
+```sh
+camera-probe awb-measurement-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE
+```
+
+Use verified endpoints and a new output basename. It discards eight image
+frames, saves the ninth, holds the initial parameter queue open, and collects
+statistics through teardown. New outputs include `OUT.awb-sdk.bin` and
+`OUT.awb-translated.bin/json`. Translation requires the last statistics payload
+parameter ID to match the actual initial snapshot; it never substitutes an
+image sequence or a guessed configuration. The statistics frame and saved image
+are not asserted to be the same frame. Sample scale remains an explicit input;
+these diagnostic captures used 1 and did not run the AWB controller.
+
+The real SC3336 returned valid AWB measurements and 225 grid entries without a
+vendor camera process. Default 3 ms/1× startup gave sparse counts. A private IQ
+variant changed only startup exposure/gain to 30 ms/8×, yielding nonzero Normal/
+Big measurements in all four FAST windows, including approximately 14–15
+thousand Q10-normalized weighted counts in two windows. These are weighted
+statistics, not a count of distinct image pixels. A subsequent requested image
+included readable upside-down text. Sensor exposure/gain remain at the last
+capture's programmed settings; no boot files or services were changed.
+
+The default and brighter captures' full **7680-byte** translated SDK frames
+matched the original ARM translator exactly, using actual captured bytes and
+the saved SDK snapshot. Both statistics frames referenced initial parameter
+ID 0 at frame 7. The original code executed locally under the reference harness;
+no RKAIQ process ran on the board.
+
+Artifacts and previews remain private in ignored
+`dist/reverse-engineering/hardware-2026-10-27/`, basenames
+`ss-20261027-awb-measurement-01` through `-04`. Runs 02/03 include native comparison
+reports; run 04 contains the requested text scene. To check another capture:
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-captured-translation.py OUT.stats.raw OUT.awb-sdk.bin OUT.awb-translated.bin --configuration-id 0 --report OUT.native-comparison.json
+```
+
+Use the actual initial parameter ID if it differs from 0. This supersedes the
+preceding offline-only checkpoint for measurement collection and translation.
+It does not prove automatic-WB convergence, persistent controller initialization,
+color accuracy, exposure-to-frame latency or vendor-free cold startup. Automatic
+WB gain feedback/publication remains unfinished.

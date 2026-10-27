@@ -1955,3 +1955,51 @@ Local generated files are under ignored
 `dist/reverse-engineering/awb-assembly-2026-10-27/`. No IQ source or binary
 calibration payload is committed. Normal time-share/HDR/OTP composition and
 persistent AWB/live gain publication still remain outside this candidate.
+
+
+## First physical AWB measurement/translation checkpoint
+
+The separate `awb-measurement-frame-sc3336` command now submits the assembled
+FAST/linear candidate while retaining fixed calibrated white balance. It saves
+the actual SDK snapshot and performs exact initial-ID association before
+translating the last received statistics frame. It never substitutes the image
+sequence or most-recent configuration when an ID is missing. The saved SDK
+frame and JSON are diagnostics; normalized per-region gain ratios are not a
+persistent automatic-WB result.
+
+On the real SC3336, valid AWB statistics and all 225 grid cells were received
+without a vendor camera process. A controlled 30 ms/8× exposure-only variant
+produced nonzero measurements in all four FAST windows. The full 7680-byte
+translation of captured statistics matched the original ARM translator exactly
+at frame 7 / initial parameter ID 0. The new captured-data comparison script
+uses the original object-access harness with an explicitly zeroed destination
+frame; existing synthetic-reference behavior is unchanged by default.
+See [hardware procedure and evidence](HARDWARE-TEST.md#physical-awb-checkpoint--2026-10-27-0031-dev).
+
+This supersedes the preceding candidate's hardware-pending status for physical
+measurement collection and translation only. Whole original startup-composition
+comparison, persistent controller initialization/preprocessing, gain publication,
+convergence/color qualification and vendor-free cold startup remain open.
+Private scenes, complete statistics, SDK payloads and IQ variants remain local.
+
+## Captured-data measurement checkpoint
+
+`awb-measurement-frame-sc3336` now exercises the composed measurement payload
+on the real camera with fixed white balance, preserving the exact SDK snapshot.
+It translates received statistics only after matching the driver's parameter ID
+to the single initial snapshot. Diagnostic per-region normalized gain ratios
+are not a persistent AWB result or a hardware gain update.
+
+Valid AWB flags, a 225-cell grid and nonzero measurements from all four FAST
+windows were observed on SC3336 with the controlled 30 ms/8× startup variant.
+All 7680 bytes of the resulting SDK statistics frame matched original ARM
+translation of the actual captured payload/snapshot. The zero-destination option
+in the reference harness is explicit; existing synthetic comparisons retain
+their prior seeded destinations by default.
+[Physical procedure, artifacts and limits](HARDWARE-TEST.md#physical-awb-statistics-capture--2026-10-27).
+
+This establishes measurement collection and translation for this checkpoint.
+Whole native startup composition, persistent preprocessing/controller state,
+live gain publication, convergence/color qualification and vendor-free cold
+startup remain open. Private images, statistics, SDK payloads and the exposure
+IQ variant are not committed.

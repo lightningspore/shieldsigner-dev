@@ -1,0 +1,231 @@
+use crate::{
+    awb_gain_controller::*, awb_gain_history, awb_high_gain, awb_low_gain, awb_low_single_color,
+    awb_luma_history, awb_postprocess, awb_postprocess_fixture, awb_probability,
+    awb_single_color::Line, awb_single_color_grid, awb_xy_selection,
+};
+use serde_json::{json, Value};
+fn array<const N: usize>(v: &Value) -> [f32; N] {
+    core::array::from_fn(|i| v[i].as_f64().unwrap() as f32)
+}
+fn scalar(v: &Value) -> f32 {
+    v.as_f64().unwrap() as f32
+}
+pub fn run(v: &Value) -> Value {
+    let s = &v["controller"];
+    let u32s = |key: &str| {
+        s[key]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|v| v.as_u64().unwrap() as u32)
+            .collect::<Vec<_>>()
+    };
+    let xy = u32s("xy_history");
+    let colors = u32s("color_history");
+    let high_history: Vec<_> = s["high_history"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(array)
+        .collect();
+    let initial_post = awb_postprocess_fixture::initial(v);
+    let low = awb_low_gain::State {
+        current: initial_post.current,
+        low_result: [8.; 4],
+        temporal_result: [9.; 4],
+        spatial_result: [10.; 4],
+        temporal_source: [11.; 4],
+        spatial_weight: 0.25,
+        used_previous: s["used_previous"].as_bool().unwrap(),
+        color_history: awb_luma_history::History::from_values(&colors).unwrap(),
+    };
+    let detection = awb_single_color_grid::Detection {
+        selected: 0x5a5a5a5a,
+        color: 0x5a5a5a5a,
+        candidate_counts: [0x5a5a5a5a; 14],
+        color_counts: [0x5a5a5a5a; 14],
+        valid: true,
+        disagreements: 0x5a5a5a5a,
+        votes: 0x5a5a5a5a,
+        mean_distance: f32::from_bits(0x5a5a5a5a),
+        gain: [12.; 4],
+    };
+    let mut state = State::<32> {
+        region: awb_xy_selection::State {
+            history: awb_luma_history::History::from_values(&xy).unwrap(),
+            selected: if s["previous_region"].as_u64().unwrap() == 3 {
+                awb_xy_selection::Region::Exclusion
+            } else if s["previous_region"].as_u64().unwrap() == 1 {
+                awb_xy_selection::Region::Big
+            } else {
+                awb_xy_selection::Region::Normal
+            },
+            retained: 42,
+            kind: 2,
+        },
+        low: awb_low_single_color::State {
+            low,
+            detection,
+            single_weight: 0.75,
+        },
+        post: initial_post,
+        high_history: awb_gain_history::History::from_values(&high_history).unwrap(),
+        estimated_gain: array(&s["estimated"]),
+        high_gain: [13.; 4],
+        high_low_weight: 0.5,
+        temporal_weight: 0.75,
+        density: 0.25,
+        selection_status: 255,
+        strategy_flag: true,
+    };
+    let line = |key: &str| Line {
+        a: scalar(&v[key][0]),
+        b: scalar(&v[key][1]),
+        c: scalar(&v[key][2]),
+        valid: v[key][3].as_bool().unwrap(),
+    };
+    let post = awb_postprocess::Settings {
+        history_target: v["target"].as_i64().unwrap() as i32,
+        tolerance: scalar(&v["tolerance"]),
+        history_convergence: scalar(&v["history_convergence"]),
+        damped_convergence: scalar(&v["damped_convergence"]),
+        damping_threshold: scalar(&v["damping_threshold"]),
+        brightness: v["brightness"].as_u64().unwrap() as u32,
+        clipping: None,
+        adjustment: None,
+        offsets: if v["offset_enabled"].as_bool().unwrap() {
+            Some(array(&v["offsets"]))
+        } else {
+            None
+        },
+        first: line("first"),
+        second: line("second"),
+    };
+    let region = awb_xy_selection::Settings {
+        absolute: scalar(&s["absolute"]),
+        relative: scalar(&s["relative"]),
+        region_thresholds: array(&s["region_thresholds"]),
+        count_thresholds: core::array::from_fn(|i| {
+            s["count_thresholds"][i].as_u64().unwrap() as u32
+        }),
+        stabilization: s["stabilization"].as_bool().unwrap(),
+        target: s["xy_target"].as_i64().unwrap() as i32,
+        variance: scalar(&s["variance"]),
+        variance_threshold: 0.5,
+    };
+    let probability = awb_probability::Settings {
+        gain: state.post.current,
+        frame: s["frame"].as_u64().unwrap() as u32,
+        fast: s["fast"].as_bool().unwrap(),
+        near_distance_squared: 0.01,
+        far_distance_squared: 2.,
+        brightness: v["brightness"].as_u64().unwrap() as u32,
+        brightness_thresholds: [100, 200, 400, 800],
+        prior_sample: scalar(&s["prior_sample"]),
+        absolute_count_threshold: region.absolute,
+        relative_count_threshold: region.relative,
+    };
+    let high = awb_high_gain::Settings {
+        fast: probability.fast,
+        brightness: probability.brightness,
+        temporal_default: [2., 1., 1., 3.],
+        temporal_knots: core::array::from_fn(|i| 100 * i as u32),
+        temporal_percentages: core::array::from_fn(|i| ((i % 6) * 20) as u8),
+    };
+    let low = awb_low_gain::Settings {
+        retained: 0,
+        count_threshold: region.count_thresholds[0],
+        brightness: probability.brightness,
+        low_brightness: 100,
+        high_brightness: 200,
+        temporal_default: high.temporal_default,
+        color_history_value: 2,
+        color_history_target: s["color_target"].as_u64().unwrap() as u16,
+    };
+    let settings = Settings {
+        mode: s["mode"].as_i64().unwrap() as i32,
+        region: &region,
+        probability,
+        high: &high,
+        low: &low,
+        single: None,
+        post: &post,
+        high_history_threshold: scalar(&s["high_threshold"]),
+        estimated_density_threshold: scalar(&s["estimated_threshold"]),
+        estimated_single_threshold: 0.5,
+    };
+    let source = s["lights"].as_array().unwrap();
+    let prior_knots = [0., 1., 2., 3.];
+    let priors: Vec<[f32; 4]> = source.iter().map(|v| array(&v["prior"])).collect();
+    let lights: Vec<_> = source
+        .iter()
+        .enumerate()
+        .map(|(i, l)| Light {
+            counts: core::array::from_fn(|j| l["counts"][j].as_u64().unwrap() as u32),
+            gains: core::array::from_fn(|j| array(&l["gains"][j])),
+            probability: awb_probability::Light {
+                reference_gain: array(&l["reference"]),
+                statistic_gain: [0.; 4],
+                kind: l["kind"].as_i64().unwrap() as i32,
+                white_points: 0,
+                prior: awb_probability::Curve {
+                    knots: &prior_knots,
+                    weights: &priors[i],
+                },
+            },
+            calibration: awb_high_gain::Light {
+                selected_gain: [0.; 4],
+                selected_count: 0,
+                extra_gain: [0.; 4],
+                extra_count: 0,
+                extra_enabled: l["extra"].as_bool().unwrap(),
+                low_threshold: 100,
+                high_threshold: 200,
+                low_gain: [2., 1., 1., 4.],
+                high_gain: [3., 1., 1., 2.],
+                spatial_percentage: l["percentage"].as_u64().unwrap() as u8,
+                probability: 0.,
+            },
+        })
+        .collect();
+    let mut results: Vec<_> = v["lights"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|v| LightResult {
+            probability: awb_probability::Probability {
+                total: scalar(&v["probability"]),
+                distance: 0.5,
+                luma: 0.75,
+                prior: 1.,
+                white_points: 1.25,
+            },
+            gain: awb_high_gain::LightResult {
+                statistic: array(&v["gain"]),
+                spatial: [14.; 4],
+                spatial_weight: 0.25,
+                extra_weight: 0.75,
+            },
+        })
+        .collect();
+    let frame = Frame {
+        complete: s["complete"].as_bool().unwrap(),
+        fallback: array(&v["candidate"]),
+        exclusion_count: s["exclusion_count"].as_u64().unwrap() as u32,
+        exclusion_gain: [2., 1., 1., 3.],
+        divisors: [10, 20],
+    };
+    state
+        .process(&frame, &lights, &mut results, &settings)
+        .unwrap();
+    let lights:Vec<_>=results.iter().map(|v|json!({"probability":([v.probability.total,v.probability.distance,v.probability.luma,v.probability.prior,v.probability.white_points].map(f32::to_bits)),"statistic":v.gain.statistic.map(f32::to_bits),"spatial":v.gain.spatial.map(f32::to_bits),"spatial_weight":v.gain.spatial_weight.to_bits(),"extra_weight":v.gain.extra_weight.to_bits()})).collect();
+    let high: Vec<_> = state
+        .high_history
+        .values()
+        .iter()
+        .map(|v| v.map(f32::to_bits))
+        .collect();
+    let mut output = awb_postprocess_fixture::output(&state.post);
+    output["controller"] = json!({"selected":state.region.selected as u8,"retained":state.region.retained,"kind":state.region.kind,"density":state.density.to_bits(),"high_gain":state.high_gain.map(f32::to_bits),"high_low_weight":state.high_low_weight.to_bits(),"temporal_weight":state.temporal_weight.to_bits(),"estimated":state.estimated_gain.map(f32::to_bits),"low_result":state.low.low.low_result.map(f32::to_bits),"temporal_result":state.low.low.temporal_result.map(f32::to_bits),"spatial_result":state.low.low.spatial_result.map(f32::to_bits),"temporal_source":state.low.low.temporal_source.map(f32::to_bits),"spatial_weight":state.low.low.spatial_weight.to_bits(),"used_previous":state.low.low.used_previous,"single_weight":state.low.single_weight.to_bits(),"selection_status":state.selection_status,"strategy_flag":state.strategy_flag,"xy_history":state.region.history.values(),"color_history":state.low.low.color_history.values(),"high_history":high,"lights":lights});
+    output
+}

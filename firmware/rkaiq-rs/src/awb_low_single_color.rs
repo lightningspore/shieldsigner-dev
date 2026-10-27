@@ -11,6 +11,7 @@ pub struct State<const CAP: usize> {
     pub detection: awb_single_color_grid::Detection,
     pub single_weight: f32,
 }
+#[derive(Clone, Copy)]
 pub struct Input<'a> {
     pub mode: i32,
     pub grid_valid: bool,

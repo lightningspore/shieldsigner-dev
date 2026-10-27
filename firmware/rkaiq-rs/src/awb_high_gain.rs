@@ -5,6 +5,7 @@ use crate::{
     awb_probability, InvalidInput,
 };
 
+#[derive(Clone, Copy)]
 pub struct Light {
     pub selected_gain: Gains,
     pub selected_count: u32,
@@ -29,6 +30,7 @@ pub struct LightResult {
     pub extra_weight: f32,
 }
 
+#[derive(Clone, Copy)]
 pub struct Settings {
     pub fast: bool,
     pub brightness: u32,

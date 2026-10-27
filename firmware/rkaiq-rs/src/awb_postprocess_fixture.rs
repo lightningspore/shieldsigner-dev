@@ -11,13 +11,7 @@ fn array<const N: usize>(v: &Value) -> [f32; N] {
 fn temperature(t: ColorTemperature) -> Value {
     json!({"valid":t.valid,"cct":t.cct.to_bits(),"ccri":t.ccri.to_bits()})
 }
-pub fn run(v: &Value) -> Value {
-    let line = |key: &str| Line {
-        a: v[key][0].as_f64().unwrap() as f32,
-        b: v[key][1].as_f64().unwrap() as f32,
-        c: v[key][2].as_f64().unwrap() as f32,
-        valid: v[key][3].as_bool().unwrap(),
-    };
+pub fn initial(v: &Value) -> State<32> {
     let values = |key: &str| {
         v[key]
             .as_array()
@@ -33,7 +27,7 @@ pub fn run(v: &Value) -> Value {
         cct: 0.,
         ccri: 0.,
     };
-    let mut state = State::<32> {
+    State::<32> {
         raw_history: History::from_values(&raw).unwrap(),
         output_history: History::from_values(&out).unwrap(),
         previous: array(&v["previous"]),
@@ -54,7 +48,16 @@ pub fn run(v: &Value) -> Value {
         damping_stable: false,
         temperature: zero,
         top: [zero; 4],
+    }
+}
+pub fn run(v: &Value) -> Value {
+    let line = |key: &str| Line {
+        a: v[key][0].as_f64().unwrap() as f32,
+        b: v[key][1].as_f64().unwrap() as f32,
+        c: v[key][2].as_f64().unwrap() as f32,
+        valid: v[key][3].as_bool().unwrap(),
     };
+    let mut state = initial(v);
     let clip_knots = [2000., 5000., 8000.];
     let lower = [0.2; 3];
     let upper = [0.2; 3];
@@ -128,6 +131,9 @@ pub fn run(v: &Value) -> Value {
             &settings,
         )
         .unwrap();
+    output(&state)
+}
+pub fn output(state: &State<32>) -> Value {
     let raw: Vec<_> = state
         .raw_history
         .values()

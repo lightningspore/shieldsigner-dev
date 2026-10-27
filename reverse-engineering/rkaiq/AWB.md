@@ -869,6 +869,58 @@ This does not yet join the complete-measurement region/probability/high/low
 strategy prefix to the tail. That composition, calibration initialization,
 wrapper frame lifecycle and live AWB integration remain unfinished.
 
+## Composed gain-mode controller
+
+`awb_gain_controller::State::process` now connects region selection, total
+probabilities, high/low strategies, their caller policy and common processing.
+Its input is prepared per-light measurements and explicit calibration. A
+separate `awb_probability::total_probabilities` entry preserves the white-point
+distribution chosen by the region controller instead of filtering counts again.
+The original combined count/probability API retains its existing behavior.
+
+The controller computes white-point density in native f32 order as retained
+count divided by the two supplied measurement divisors, multiplied by 100000.
+It handles incomplete-measurement normalized fallback and mode-0 direct
+Exclusion aggregate gains. The latter preserves the prior white-point kind
+because native code skips classification there. Other complete-measurement
+branches reset spatial weights, compute total probabilities, and run high/low
+strategies against the same represented state.
+
+High/low mixing uses the retained count and two count thresholds, or weight 0
+in mode 2. It uses the native product/FMA without adding normalization. The
+high-result history updates only when density is strictly above its threshold.
+Mode 1 retains either the high gain when density exceeds its threshold, or the
+mixed gain when single-color weight exceeds its separate threshold; otherwise
+the estimated gain stays unchanged. Low-strategy history references the raw
+gain list before the common tail updates it. Candidate history and estimated
+gain likewise reach single-color classification before caller retention changes.
+The enabled single-color route is wired to its existing checked API.
+
+The common tail consumes final per-light gains/probabilities for ranked
+metadata. Its current gain is synchronized back to the low-state representation
+only after completion. Region, scalar/gain histories, probability/result arrays,
+strategy caches, retained gains, diagnostic flags and common-tail state publish
+together on success. These remain value-level representations, not a recovered
+complete calibration loader or outer frame/session lifecycle.
+
+`mise run camera:rust:awb-gain-controller` compares **192 calls** through the
+entire original `AwbCalGainByWbMode` (ELF `0xc72b8`) on host and ARM. It covers
+complete/incomplete measurements, modes 0–2, ordinary Normal/Big regions, mode-0
+direct Exclusion fallback, rolling selection, normal/FASTAWBACT probabilities,
+high/low gain/history policy, offsets, final processing and ranked metadata.
+All numerical/policy bodies execute natively; standard allocation, memory,
+strings and logging are explicit adapters. Every represented per-light value,
+gain/cache/coefficient/flag, both common histories, selection/color/high-result
+histories and unrelated bytes are compared. The existing 2,000-case probability
+and 256-case postprocessing suites remain regressions after sharing their APIs.
+[Reference report](awb-gain-controller-equivalence.json).
+
+This initial joined corpus disables single-color and optional clipping/adjustment,
+which have their own complete native comparisons. Enabled single-color still
+needs a whole-controller comparison, and ordinary mode-1/2 Exclusion prepared-data
+mapping needs a joined audit. Complete calibration initialization, preprocessing-
+to-controller composition, wrapper lifecycle and live integration remain unfinished.
+
 ## Gain clipping and inverse color-temperature conversion
 
 `awb_single_color::gain_from_color_temperature` reconstructs

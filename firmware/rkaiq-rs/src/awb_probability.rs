@@ -91,6 +91,25 @@ pub fn calculate(
     output: &mut [Probability],
     settings: Settings,
 ) -> Result<u32, InvalidInput> {
+    calculate_impl(lights, output, settings, true)
+}
+
+/// AwbCalTotalProbablity alone, preserving count probabilities selected by
+/// the region controller. Does not repeat AwbCalWpNoProbablity.
+pub fn total_probabilities(
+    lights: &[Light<'_>],
+    output: &mut [Probability],
+    settings: Settings,
+) -> Result<(), InvalidInput> {
+    calculate_impl(lights, output, settings, false).map(|_| ())
+}
+
+fn calculate_impl(
+    lights: &[Light<'_>],
+    output: &mut [Probability],
+    settings: Settings,
+    filter_counts: bool,
+) -> Result<u32, InvalidInput> {
     let n = lights.len();
     if n == 0 || n > 255 || output.len() != n {
         return Err(InvalidInput::Length);
@@ -100,12 +119,19 @@ pub fn calculate(
         settings.near_distance_squared,
         settings.far_distance_squared,
         settings.prior_sample,
-        settings.absolute_count_threshold,
-        settings.relative_count_threshold,
     ])?;
+    if filter_counts {
+        finite(&[
+            settings.absolute_count_threshold,
+            settings.relative_count_threshold,
+        ])?;
+    }
     for (light, probability) in lights.iter().zip(output.iter()) {
         finite(&light.reference_gain)?;
         finite(&[probability.luma])?;
+        if !filter_counts {
+            finite(&[probability.white_points])?;
+        }
         // Validate all tables before changing outputs. The scalar interpolation
         // helper independently checks length, monotonic knots and finite values.
         crate::interpolate(
@@ -118,12 +144,16 @@ pub fn calculate(
         }
     }
     let uniform = 1. / n as f32;
-    let retained_count = count_probabilities(
-        lights.iter().map(|l| l.white_points),
-        output,
-        settings.absolute_count_threshold,
-        settings.relative_count_threshold,
-    )?;
+    let retained_count = if filter_counts {
+        count_probabilities(
+            lights.iter().map(|l| l.white_points),
+            output,
+            settings.absolute_count_threshold,
+            settings.relative_count_threshold,
+        )?
+    } else {
+        0
+    };
     let mut sum;
 
     let [red, green_red, green_blue, blue] = settings.gain;

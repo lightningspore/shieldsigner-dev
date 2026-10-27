@@ -1,0 +1,37 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "runtimeSha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+  "nativeRuntimeFunctions": [
+    "__aeabi_l2f"
+  ],
+  "modeledStringCalls": {
+    "strcmp": 652
+  },
+  "cases": 192,
+  "mismatches": 0,
+  "arm": true,
+  "coverage": {
+    "False:0:3": 1,
+    "True:1:1": 46,
+    "True:2:0": 21,
+    "True:0:0": 23,
+    "True:2:1": 38,
+    "True:0:3": 10,
+    "True:0:1": 26,
+    "False:1:1": 3,
+    "True:1:0": 13,
+    "False:2:0": 3,
+    "False:0:1": 2,
+    "False:1:0": 2,
+    "False:2:1": 2,
+    "False:0:0": 2
+  },
+  "elfEntry": "0xc72b8",
+  "scope": "Whole original gain-mode function: XY/probabilities/high/low/mix/retention plus common processing through ranked metadata",
+  "limitations": [
+    "This joined corpus disables single-color and optional clipping/adjustment; their full native suites remain separate.",
+    "Ordinary joined XY regions are Normal/Big; Exclusion is exercised through mode-0 direct aggregate fallback.",
+    "Finite explicit calibration and prepared measurements, 4-8 lights and bounded histories; calibration initialization and live frame lifecycle remain unfinished.",
+    "Standard allocation, memory, strings and logging are explicit adapters; original numerical and policy bodies execute."
+  ]
+}

@@ -232,3 +232,19 @@ statistics still match all 7,680 original ARM translation bytes. A changed CSM
 profile is rejected on ARM before acquisition. See
 `rgb-colorimetry-hardware-validation.json`. Private previews stay local. These
 checks validate range handling, not physical color calibration or optical QR.
+
+## Application scan/preview handoff
+
+The opt-in launcher now installs the pinned application's Camera module with
+only the Rust adapter import and complete-canvas preview rotation changed in
+memory. Raw decoder input remains the original unrotated 640×480 RGB image;
+ScanScreen independently asks for its rotated display preview. Expanding that
+preview avoids lost edges/black borders and enables Pillow's fast right-angle
+transpose. Four rotations of a real camera frame preserve every source pixel.
+
+Hardware integration run 29 also passes the installed DecodeQR with 16 generated
+edge/rotation fixtures and rejects a changed Camera source. These are synthetic
+QR pixels through actual application methods, not optical QR evidence. The
+real captured scene contained text and yielded no QR. The launcher imports the
+real main.py and passes `--help`, but full UI rendering/buttons remain untested.
+See HARDWARE-TEST.md and `application-integration-hardware-validation.json`.

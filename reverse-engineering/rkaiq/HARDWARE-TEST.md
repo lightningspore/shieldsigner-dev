@@ -1255,3 +1255,65 @@ See [ISP.md](ISP.md#rgb-preview-quantization-matches-isp-output) and
 `rgb-colorimetry-hardware-validation.json`. The existing Camera wrapper's
 90-degree rotation retains its original canvas and introduces black borders;
 that application integration issue is separate from the native range fix.
+
+## Opt-in application launcher and complete preview rotation
+
+`python/shieldsigner_integration.py` now wires the actual installed application
+to the Rust adapter without editing its Camera source. It verifies the installed
+camera.py SHA-256, applies exactly two substitutions in memory, and installs that
+module before main.py imports Controller. Unknown camera source is rejected for
+review, not patched by approximate matching. The changes select the Rust
+PiVideoStream import and add `expand=True` to preview rotation. The latter
+preserves the complete frame and lets Pillow use its fast 90-degree transpose
+path instead of cropping a rectangular image into its original canvas.
+
+Review the exact patch on the current board:
+
+```sh
+cd /shieldsigner-camera-tests/cold-23-kit
+python3 shieldsigner_integration.py --app-root /seedsigner --print-patch
+```
+
+The opt-in full application invocation on the current staged board is:
+
+```sh
+python3 /shieldsigner-camera-tests/cold-23-kit/shieldsigner_integration.py \
+  --app-root /seedsigner \
+  --config /shieldsigner-camera-tests/camera-config.json
+```
+
+Run it only with the original UI/vendor camera processes stopped and the camera
+kernel drivers available. The launcher does not stop those processes or change
+boot services. Its JSON requires the same seven absolute owner paths documented
+above. The launcher restores its working directory/arguments on exit and stops
+an active singleton Camera; abrupt Python exit still uses the native
+parent-death cleanup. Append `-- --help` to test the real main.py import/argument
+path without starting the UI; that command exited zero on the board. Default
+UI rendering/buttons have **not** been qualified by this launcher test.
+
+The raw scan path remains unrotated PIL RGB at 640×480. The existing ScanScreen
+passes that image to DecodeQR; only its preview thread requests rotated images.
+With settings 0/180 the new preview is 480×640; settings 90/270 retain 640×480.
+The screen's existing resize-to-fill handles display fitting separately. All
+pixels of a real retained camera frame match the corresponding complete
+transpose for all four settings. The installed Camera file remains byte-for-byte
+unchanged, and the patch is confined to the launched process.
+
+`integration_hardware_check.py --app-root /seedsigner --config CONFIG.json
+--report UNIQUE.json` reproduces the headless integration test on the board.
+Run 29 passed actual managed capture with 164 AE/AWB statistics frames, 163
+submissions, both normal AWB groups and at most two retained snapshots. Its
+final statistics match all 7,680 original ARM translation bytes. The preview
+loop observed 68 distinct images over its eight-second window; a five-iteration
+retained-frame benchmark measured 51 ms for the old cropped rotation versus
+13 ms with expansion. These are local observations, not timing guarantees.
+
+The same test generates a **public address QR fixture** and passes known pixels
+through the actual Camera preview method and installed DecodeQR. All 16 cases
+(four edge positions × four rotations) decode the expected public address.
+The generated `UNIQUE.json.public-qr.png` can be used as a later optical target.
+These are software fixtures, **not an optical camera scan**: the live scene
+returned DecodeQRStatus.FALSE because no known QR target was present. Optical
+scanning through sensor/ISP, complete UI interaction and physical power-cycle
+qualification remain separate gates. Evidence/hashes:
+`application-integration-hardware-validation.json`.

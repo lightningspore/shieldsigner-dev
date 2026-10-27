@@ -652,3 +652,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:lsc-damping"]
 description = "Compare no-OTP LSC temporal damping with full native automatic configuration"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/lsc-damping.py"
+
+[tasks."camera:rust:lsc-frames"]
+description = "Compare persistent LSC processing callback and result publication with native ARM"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/lsc-frames.py"

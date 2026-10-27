@@ -363,3 +363,7 @@ pub mod lsc_geometry;
 pub mod lsc_illuminant;
 pub mod lsc_tables;
 pub mod lsc_damping;
+#[cfg(feature = "diagnostics")]
+pub mod lsc_calibration;
+#[cfg(feature = "diagnostics")]
+pub mod lsc_frame;

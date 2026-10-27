@@ -214,3 +214,9 @@ and four-plane Q16 target blending, checked through complete native
 `lsc_damping::process` reconstructs no-OTP Q16 temporal grid updates and the
 native first/last-sample convergence rule through full `AlscAutoConfig`.
 [Native/physical CPU evidence and boundaries](ISP.md#lsc-no-otp-damping-0034-development).
+
+`lsc_calibration::Automatic` owns the selected normal-case/single-resolution IQ
+and serializes verified geometry. `lsc_frame::State` joins deadband, target
+cache, temporal state and result publication through the full descriptor-confirmed
+LSC processing callback.
+[Full native/physical CPU evidence and remaining initialization boundary](ISP.md#persistent-lsc-processing-0034-development).

@@ -3405,6 +3405,20 @@ fn main() {
                 isp_ccm::apply(&mut parameters, &result).unwrap();
                 println!("{}",parameters.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "lsc-frames" => {
+                use shieldsigner_rkaiq::{lsc_frame,lsc_calibration::Automatic,isp_lsc::RESULT_BYTES};
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();let cal=Automatic::from_value(&v["calibration"]).unwrap();
+                let mut state=lsc_frame::State::default();let mut output=[0xa5;RESULT_BYTES];let mut frames=Vec::new();
+                for f in v["frames"].as_array().unwrap(){
+                    if let Some(n)=f["seedFrameCount"].as_u64(){state.frame_count=n as u32;}
+                    let current=core::array::from_fn(|i|f["current"][i].as_f64().unwrap() as f32);
+                    let updated=state.process(&cal,lsc_frame::Information{current,damping:f["damping"].as_f64().unwrap() as f32,force:f["force"].as_bool().unwrap(),bypass:f["bypass"].as_bool().unwrap()},&mut output).unwrap();
+                    let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+                    let name=|b:&[u8]|String::from_utf8(b.iter().take_while(|b|**b!=0).copied().collect()).unwrap();
+                    frames.push(serde_json::json!({"updated":updated,"result":hex(&output),"target":state.target.iter().flat_map(|n|n.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>(),"converged":state.converged,"inputChanged":state.input_changed,"frameCount":state.frame_count,"vignetting":format!("{:08x}",state.vignetting.to_bits()),"illuminant":state.illuminant,"high":name(&state.high),"low":name(&state.low),"last":core::iter::once(state.last_gain).chain(state.last_wb).map(|f|format!("{:08x}",f.to_bits())).collect::<Vec<_>>(),"history":&state.history.history[..state.history.len]}));
+                }
+                println!("{}",serde_json::json!(frames));
+            }
             "lsc-damping" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
                 let array=|key:&str|v[key].as_array().unwrap().iter().map(|v|u16::try_from(v.as_u64().unwrap()).unwrap()).collect::<Vec<_>>().try_into().unwrap();

@@ -1248,3 +1248,54 @@ configuration with a constructed one-profile calibration, forced fresh target
 and supplied previous grid. Persistent target-cache decisions, constructor,
 processing callback and OTP handling remain separate. CPU replay makes no
 ISP writes; live LSC is still disabled.
+
+### Persistent LSC processing (0.0.34 development)
+
+`lsc_calibration::Automatic::from_value` owns the selected normal-case,
+single-resolution LSC calibration. It checks explicit array counts, finite
+curves, increasing gain knots, bounded ASCII names, table metadata, unique
+resolution/name lookup and all four 289-entry planes. Each `tableUsed` suffix
+is resolved as `resolutionName_suffix`. Unsupported gray-case calibration or
+multiple resolutions is rejected explicitly. Geometry uses the recovered
+inverse-gradient calculation and serializes the SDK's 2,442-byte result in its
+verified plane/gradient/sector/enable order. This parser does not claim native
+constructor or full SDK parser equivalence yet.
+
+`lsc_frame::State` joins the verified history, target selection and no-OTP
+damping into persistent automatic processing. Its defaults reflect the native
+constructor constants: gain threshold 0.2, WB-distance threshold 0.05, previous
+accepted gain/WB −1, initial force and frame zero. `JudgeAutoRun` updates the
+accepted gain only above its strict threshold. WB compares squared distance
+against squared threshold and holds the previous accepted pair below it.
+Current sensor gain still drives interpolation when an unconverged LSC runs;
+the gain deadband does not replace it with cached gain. Automatic processing
+runs on changed input, unconverged output or force. The target cache retains
+native's f64 `1e-5` comparison applied after an f32 vignetting difference,
+profile-name checks and retained target behavior. Converged, unchanged frames
+preserve caller output bytes. Native frame count rolls from 65535 to two.
+
+The owner stages all state and only changes the caller's output on publication.
+An invalid proposal preserves both state and result. The eventual camera owner
+must retain this proposal only after hardware submission succeeds; this stage
+does not yet add an LSC submission to the camera event loop.
+
+[Full callback/physical CPU evidence](lsc-frames-equivalence.json) checks 24
+persistent sequences / 1,152 frames through the descriptor-confirmed original
+`processing` callback (ELF `0x1181c8`, descriptor `g_RkIspAlgoDescAlsc`),
+`AlscConfig`, `JudgeAutoRun`, `AlscAutoConfig` and their native history/table
+routines. It compares every published/retained SDK result byte, target grid,
+selected illuminant, profile names, vignetting bits, accepted input bits,
+ordered history, convergence, change flag and frame count on every frame.
+Cases include held inputs, small drifts, illumination/gain changes, damping
+on/off, forced refreshes, bypass transitions, disabled calibration and counter
+rollover. Host and physical Luckfox replay match exactly. All 102 library/five
+Unix tests, no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:lsc-frames -- --adb SERIAL --report LOCAL.json` after
+host/ARM fixture builds. The oracle builds SDK pointer graphs directly and
+seeds documented constructor defaults/geometry. Complete constructor,
+`AlscPrepare` name lookup and live geometry/input handoff remain to verify.
+Manual/attribute cloning, OTP, gray/HDR and multicamera paths are separate.
+Original callback/algorithm code executes; only allocation, string operations,
+logging and original `sqrtf` runtime linkage form the controlled boundaries.
+Physical CPU replay makes no ISP writes. Live LSC stays disabled.

@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "sequences": 24,
+  "frames": 1152,
+  "publishedFrames": 492,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "b68bd68427753c011e9c3d1a88d284ecd7926be8cebc42be8dc15878cf39148f",
+  "physicalArmBinarySha256": "d1c491ba410c1026eeab092d4899ef14e67c8e4b9d64b9c0a7a08b89e7834af8",
+  "hostMatchesPhysicalArm": true,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "scope": "Complete descriptor-confirmed LSC processing callback, AlscConfig, JudgeAutoRun, AlscAutoConfig and native history/table/math loops. All 2442 published/retained result bytes, target grids, history, cached selection/vignetting/names, deadband state, convergence and frame count checked each frame.",
+  "boundaries": [
+    "SDK graph constructed from selected one-resolution normal-case IQ; constructor/prepare/name lookup parser are not executed.",
+    "No OTP, manual mode, attributes cloning, gray/HDR/multicamera; supplied force and bypass exercise automatic selected path.",
+    "Allocation/string/logging boundaries and original sqrt runtime match lsc-tables oracle.",
+    "CPU replay only; no ISP writes or image quality qualification."
+  ]
+}

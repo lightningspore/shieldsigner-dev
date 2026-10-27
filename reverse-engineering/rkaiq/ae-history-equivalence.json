@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 140,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "complete linear current-history writer and non-iris queued-exposure publisher, all 220 history bytes and unrelated context preservation",
+  "limitations": [
+    "Linear non-iris, zero through six explicit queued real exposure records.",
+    "Ring advancement and queue association with physical frames remain caller obligations.",
+    "Signed division/remainder modeled; no live AE scheduler is introduced."
+  ]
+}

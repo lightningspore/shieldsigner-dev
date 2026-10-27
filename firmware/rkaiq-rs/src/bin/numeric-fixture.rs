@@ -380,6 +380,63 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-history" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let f = |k: &str| v[k].as_f64().unwrap() as f32;
+                let mut history: [ae_environment::Record; 5] = core::array::from_fn(|i| {
+                    let r = &v["history"][i];
+                    ae_environment::Record {
+                        frame: r["frame"].as_i64().unwrap() as i32,
+                        current_exposure: r["current"].as_f64().unwrap() as f32,
+                        error: r["error"].as_f64().unwrap() as f32,
+                        published_exposure: r["published"].as_f64().unwrap() as f32,
+                        queued: core::array::from_fn(|j| r["queued"][j].as_f64().unwrap() as f32),
+                        queued_count: r["count"].as_u64().unwrap() as u32,
+                    }
+                });
+                let queue = v["queue"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|p| ae_route::Point {
+                        time: p[0].as_f64().unwrap() as f32,
+                        gain: p[1].as_f64().unwrap() as f32,
+                        isp_gain: p[2].as_f64().unwrap() as f32,
+                    })
+                    .collect::<Vec<_>>();
+                let index = v["index"].as_u64().unwrap() as u32;
+                ae_environment::record_current(
+                    &mut history,
+                    index,
+                    v["frame"].as_i64().unwrap() as i32,
+                    f("current"),
+                    f("error"),
+                )
+                .unwrap();
+                ae_environment::publish(&mut history, index, f("published"), &queue).unwrap();
+                let words = history
+                    .iter()
+                    .flat_map(|r| {
+                        [
+                            r.frame as u32,
+                            r.current_exposure.to_bits(),
+                            r.published_exposure.to_bits(),
+                            r.error.to_bits(),
+                        ]
+                        .into_iter()
+                        .chain(r.queued.iter().map(|v| v.to_bits()))
+                        .chain([r.queued_count])
+                    })
+                    .collect::<Vec<_>>();
+                println!(
+                    "{}",
+                    words
+                        .iter()
+                        .map(|w| format!("{w:08x}"))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                );
+            }
             "ae-environment" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let f = |k: &str| v[k].as_f64().unwrap() as f32;
@@ -390,6 +447,7 @@ fn main() {
                         error: r["error"].as_f64().unwrap() as f32,
                         published_exposure: r["published"].as_f64().unwrap() as f32,
                         queued: core::array::from_fn(|j| r["queued"][j].as_f64().unwrap() as f32),
+                        ..Default::default()
                     }
                 });
                 let mut state = ae_environment::State {

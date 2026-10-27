@@ -574,3 +574,34 @@ functions and association with actual sensor/ISP frames still need integration;
 this helper does not itself establish that association or schedule sensor
 writes. HDR is excluded, and the checked API rejects nonfinite history,
 queue counts above six and negative/out-of-range ring indices.
+
+
+## Producing the environment history
+
+The same module now reconstructs both linear history writers:
+`record_current` follows `AecCurInfoSetForEnv` (ELF 0xa0f2c), writing frame ID,
+current aggregate exposure and signed brightness error to `index % 5`.
+`publish` follows non-iris `AecClmExpSetForEnv` (ELF 0xae428), writing the
+selected aggregate exposure, queue count and up to six queued real exposure
+products in the native order `(gain * time) * ispGain`. The sensor's
+separate digital field is not multiplied here, matching this native routine.
+Unused queue slots retain their old values. Neither routine advances the ring.
+
+One hundred forty comparisons execute both original routines through normal
+return for 20 ring indices and queue lengths zero through six. They compare
+all 220 bytes of the five native records, including untouched fields/tail
+entries, and verify preservation of the rest of the native context. Host and
+ARM replay pass. The existing 600 correction cases also pass with the expanded
+record type. [Writer equivalence report](ae-history-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-history.py --arm
+```
+
+The checked publisher rejects nonfinite/overflowed products and more than six
+queue entries before changing history. HDR and iris remain excluded. These
+writers supply the record format required by the recovered correction, but
+ring advancement, queued exposures and association to real captured frames
+must still come from the surrounding controller; automatic writes remain off.

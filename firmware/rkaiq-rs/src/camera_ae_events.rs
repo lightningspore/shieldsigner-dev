@@ -271,3 +271,11 @@ where
         })
     }
 }
+
+/// Signal worker shutdown even when a scoped capture callback unwinds.
+struct CameraStopGuard<'a>(&'a std::sync::atomic::AtomicBool);
+impl Drop for CameraStopGuard<'_> {
+    fn drop(&mut self) {
+        self.0.store(true, std::sync::atomic::Ordering::Release);
+    }
+}

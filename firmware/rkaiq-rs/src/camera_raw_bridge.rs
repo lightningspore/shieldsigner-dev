@@ -433,9 +433,10 @@ mod raw_bridge {
             }
             Ok(())
         }
-        fn pump(&mut self, stop: &AtomicBool) -> io::Result<()> {
+        fn pump(&mut self, stop: &AtomicBool, cancel: Option<&AtomicBool>) -> io::Result<()> {
             let mut last = Instant::now();
             while !stop.load(Ordering::Acquire) {
+                check_camera_cancel(cancel)?;
                 self.drain_sof()?;
                 // Complete RX before admitting more TX. A TX buffer remains held
                 // until the corresponding imported RX index has been dequeued.
@@ -543,17 +544,28 @@ mod raw_bridge {
             }
             Ok(())
         }
-        pub fn during<F: FnOnce() -> io::Result<()>>(mut self, work: F) -> io::Result<()> {
+        pub fn during<F: FnOnce() -> io::Result<()>>(self, work: F) -> io::Result<()> {
+            self.during_cancelable(work, None)
+        }
+        pub fn during_cancelable<F: FnOnce() -> io::Result<()>>(
+            mut self,
+            work: F,
+            cancel: Option<&AtomicBool>,
+        ) -> io::Result<()> {
             let stop = Arc::new(AtomicBool::new(false));
             let flag = stop.clone();
             let (ready_tx, ready_rx) = std::sync::mpsc::sync_channel(1);
             std::thread::scope(|scope| {
+                let _stop_guard = CameraStopGuard(&stop);
                 let worker=scope.spawn(move || {
                     // Startup must finish before image capture begins.
-                    let started=self.tx.start().and_then(|_|self.rx.start());
+                    let started=check_camera_cancel(cancel).and_then(|_|self.tx.start()).and_then(|_|self.rx.start());
                     let _=ready_tx.send(started.as_ref().map(|_|()).map_err(|e|e.to_string()));
-                    let outcome=started.and_then(|_|self.pump(&flag));
+                    let outcome=started.and_then(|_|self.pump(&flag,cancel));
                     let outcome=outcome.and_then(|_|if self.exposure_step.as_ref().is_some_and(|s|!s.applied){Err(error("Exposure-step SOF not observed"))}else{Ok(())});
+                    // Keep imported/exported buffers alive until image work
+                    // has unwound, including cancellation and callback panic.
+                    while !flag.load(Ordering::Acquire) {std::thread::sleep(Duration::from_millis(1));}
                     let mut cleanup=Vec::new();
                     if let Err(e)=self.rx.release(){cleanup.push(e.to_string());}
                     self.exports.clear();

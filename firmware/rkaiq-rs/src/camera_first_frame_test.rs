@@ -16,6 +16,7 @@ mod first_frame_driver {
         triggered: bool,
         raw_frames: u32,
         image_frames: u32,
+        cancel_image: usize,
         statistics_frames: u32,
         statistics_required: bool,
         multi_tx: bool,
@@ -316,6 +317,10 @@ mod first_frame_driver {
                         return again();
                     }
                     d.image_frames += 1;
+                    if d.cancel_image != 0 {
+                        unsafe { &*(d.cancel_image as *const std::sync::atomic::AtomicBool) }
+                            .store(true, std::sync::atomic::Ordering::Release);
+                    }
                     put32(b, 0, 0);
                     put32(b, 8, 4478976);
                     put32(b, 44, d.image_frames);
@@ -788,6 +793,109 @@ mod first_frame_driver {
             })
             .is_err());
         assert_eq!(live_owner.pending.len(), 1);
+        let folder = format!("/tmp/shieldsigner-cancel-{}", std::process::id());
+        fs::create_dir(&folder).unwrap();
+        let image_output = format!("{folder}/image.raw");
+        let cancel = std::sync::atomic::AtomicBool::new(true);
+        assert_eq!(
+            capture_cancelable(
+                &["/dev/ptmx".into(), image_output.clone()],
+                false,
+                Some(&cancel)
+            )
+            .unwrap_err()
+            .kind(),
+            io::ErrorKind::Interrupted
+        );
+        cancel.store(false, std::sync::atomic::Ordering::Release);
+        {
+            let mut lock = DRIVER.lock().unwrap();
+            let d = lock.as_mut().unwrap();
+            d.raw_frames = 100;
+            d.cancel_image = &cancel as *const _ as usize;
+        }
+        let image_bridge =
+            raw_bridge::Bridge::prepare("/dev/full", "/dev/random", "/dev/urandom", None, None)
+                .unwrap();
+        assert_eq!(
+            image_bridge
+                .during_cancelable(
+                    || capture_cancelable(
+                        &[
+                            "/dev/ptmx".into(),
+                            image_output.clone(),
+                            "--warmup".into(),
+                            "3".into()
+                        ],
+                        false,
+                        Some(&cancel)
+                    ),
+                    Some(&cancel)
+                )
+                .unwrap_err()
+                .kind(),
+            io::ErrorKind::Interrupted
+        );
+        assert!(!std::path::Path::new(&image_output).exists());
+        {
+            let mut lock = DRIVER.lock().unwrap();
+            let d = lock.as_mut().unwrap();
+            d.cancel_image = 0;
+            assert!(d.trace.iter().any(|s| s == "image:off"));
+        }
+        cancel.store(false, std::sync::atomic::Ordering::Release);
+        let bridge =
+            raw_bridge::Bridge::prepare("/dev/full", "/dev/random", "/dev/urandom", None, None)
+                .unwrap();
+        assert!(bridge
+            .during_cancelable(
+                || {
+                    cancel.store(true, std::sync::atomic::Ordering::Release);
+                    Err(io::Error::new(io::ErrorKind::Interrupted, "test cancelled"))
+                },
+                Some(&cancel)
+            )
+            .is_err());
+        {
+            let lock = DRIVER.lock().unwrap();
+            let d = lock.as_ref().unwrap();
+            assert!(d.trace.iter().any(|s| s == "rx:off"));
+            assert!(d.trace.iter().any(|s| s == "tx:off"));
+        }
+        let statistics_output = format!("{folder}/statistics.raw");
+        assert!(statistics_session::during_observed_cancelable(
+            "/dev/tty",
+            &statistics_output,
+            &initial_parameters,
+            45.,
+            None,
+            Some(&cancel),
+            || panic!("cancelled statistics must not start work")
+        )
+        .is_err());
+        cancel.store(false, std::sync::atomic::Ordering::Release);
+        assert!(statistics_session::during_observed_cancelable(
+            "/dev/tty",
+            &statistics_output,
+            &initial_parameters,
+            45.,
+            None,
+            Some(&cancel),
+            || {
+                cancel.store(true, std::sync::atomic::Ordering::Release);
+                Err(io::Error::new(io::ErrorKind::Interrupted, "test cancelled"))
+            }
+        )
+        .is_err());
+        assert!(DRIVER
+            .lock()
+            .unwrap()
+            .as_ref()
+            .unwrap()
+            .trace
+            .iter()
+            .any(|s| s == "statistics:off"));
+        fs::remove_dir_all(folder).unwrap();
         let allocated = backend.allocated;
         queue.stop(&mut backend, allocated);
         assert!(backend.cleanup_errors.is_empty());

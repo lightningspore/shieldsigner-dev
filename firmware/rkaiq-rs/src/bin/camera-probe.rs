@@ -717,12 +717,30 @@ mod linux {
         }
         value
     }
+    fn check_camera_cancel(cancel: Option<&std::sync::atomic::AtomicBool>) -> io::Result<()> {
+        if cancel.is_some_and(|flag| flag.load(std::sync::atomic::Ordering::Acquire)) {
+            return Err(io::Error::new(
+                io::ErrorKind::Interrupted,
+                "Camera capture cancelled",
+            ));
+        }
+        Ok(())
+    }
     fn wait(fd: RawFd, deadline: Instant) -> io::Result<()> {
+        wait_cancelable(fd, deadline, None)
+    }
+    fn wait_cancelable(
+        fd: RawFd,
+        deadline: Instant,
+        cancel: Option<&std::sync::atomic::AtomicBool>,
+    ) -> io::Result<()> {
+        check_camera_cancel(cancel)?;
         #[cfg(test)]
         if first_frame_driver::active() {
             return Ok(());
         }
         loop {
+            check_camera_cancel(cancel)?;
             let left = deadline.saturating_duration_since(Instant::now());
             if left.is_zero() {
                 return Err(error("Capture timeout: no completed frame; check media graph, sensor and memory allocation"));
@@ -736,7 +754,11 @@ mod linux {
                 libc::poll(
                     &mut poll,
                     1,
-                    left.as_millis().max(1).min(i32::MAX as u128) as i32,
+                    left.as_millis().max(1).min(if cancel.is_some() {
+                        100
+                    } else {
+                        i32::MAX as u128
+                    }) as i32,
                 )
             };
             if result > 0 {
@@ -757,6 +779,14 @@ mod linux {
         }
     }
     fn capture(args: &[String], statistics: bool) -> io::Result<()> {
+        capture_cancelable(args, statistics, None)
+    }
+    fn capture_cancelable(
+        args: &[String],
+        statistics: bool,
+        cancel: Option<&std::sync::atomic::AtomicBool>,
+    ) -> io::Result<()> {
+        check_camera_cancel(cancel)?;
         if args.len() < 2 {
             return Err(error("capture needs DEVICE and OUT; see --help"));
         }
@@ -891,6 +921,7 @@ mod linux {
         }
         let mut mapped = Vec::new();
         for index in 0..request.count {
+            check_camera_cancel(cancel)?;
             let mut planes: [Plane; PLANES] = zero();
             let mut b = buffer(index, kind, &mut planes);
             ioctl(fd, QUERYBUF, &mut b)?;
@@ -911,15 +942,17 @@ mod linux {
             ioctl(fd, QUEUE, &mut b)?;
         }
         let mut stream_kind = kind;
+        check_camera_cancel(cancel)?;
         ioctl(fd, STREAMON, &mut stream_kind)?;
         let stream = Stream { fd, kind };
         let mut saved = None;
         for frame in 0..=warmup {
+            check_camera_cancel(cancel)?;
             let deadline = Instant::now() + Duration::from_millis(timeout);
             let mut planes: [Plane; PLANES] = zero();
             let mut b = buffer(0, kind, &mut planes);
             loop {
-                wait(fd, deadline)?;
+                wait_cancelable(fd, deadline, cancel)?;
                 match ioctl(fd, DEQUEUE, &mut b) {
                     Ok(()) => break,
                     Err(e) if e.kind() == io::ErrorKind::WouldBlock => continue,
@@ -984,6 +1017,7 @@ mod linux {
         } else {
             None
         };
+        check_camera_cancel(cancel)?;
         let mut out = OpenOptions::new()
             .write(true)
             .create_new(true)

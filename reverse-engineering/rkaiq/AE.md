@@ -1930,3 +1930,31 @@ statistics still waiting for SOF. The four full fixed-startup scenarios also
 pass. These tests use simulated device boundaries. The observed capture CLI
 still needs to invoke this orchestrator, and its image/raw/statistics loops
 need coordinated cancellation before automatic capture is exposed.
+
+### Cancellation-aware device loops
+
+The image capture, raw bridge and persistent statistics APIs now accept an
+optional shared atomic cancellation flag. Their existing entry points pass no
+flag and retain fixed-capture behavior. Image capture checks cancellation before
+opening/configuring devices, during pool allocation, before STREAMON, between
+frames, in readiness waits, and before writing the saved output. Cancellable
+poll waits use at most 100 ms per poll iteration; this bounds poll observation,
+not the execution time of a kernel ioctl. Raw and statistics loops check the
+flag at their nonblocking loop boundaries and during startup.
+
+Cancellation returns an interrupted/error result and runs ordinary cleanup.
+The raw worker keeps imported RX/exported TX resources alive until image work
+returns, and the statistics worker likewise defers release until its capture
+callback returns. Scope-local stop guards signal shutdown on callback unwind,
+preventing a worker from waiting indefinitely for a normal return that never
+happens. This preserves resource ownership through cancellation without moving
+MMAP pointers or detaching workers.
+
+ARM integration checks cover a pre-cancelled image request, cancellation after
+a real image-loop dequeue with no output artifact, raw worker cancellation and
+RX/TX STREAMOFF, and both pre-start and running statistics cancellation with
+STREAMOFF. All four fixed startup scenarios pass. The three existing raw bridge
+regression tests also pass, including the success/failure matrix across its
+four API/storage cases and five driver outcomes. Syscalls/mappings remain
+simulated; physical cancellation latency and driver cleanup require hardware
+qualification. Automatic capture still needs its public command wiring.

@@ -90,9 +90,11 @@ mod statistics_session {
             stop: &AtomicBool,
             parameters: &[u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES],
             observer: &Option<CameraAeSender>,
+            cancel: Option<&AtomicBool>,
         ) -> io::Result<()> {
             let mut progress = Instant::now();
             while !stop.load(Ordering::Acquire) {
+                check_camera_cancel(cancel)?;
                 let mut planes = [zero(); PLANES];
                 let mut b = buffer(0, META_CAPTURE, &mut planes);
                 match ioctl(self.fd(), DEQUEUE, &mut b) {
@@ -216,6 +218,17 @@ mod statistics_session {
         observer: Option<CameraAeSender>,
         work: F,
     ) -> io::Result<()> {
+        during_observed_cancelable(node,out,parameters,initial_target,observer,None,work)
+    }
+    pub fn during_observed_cancelable<F: FnOnce() -> io::Result<()>>(
+        node: &str,
+        out: &str,
+        parameters: &[u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES],
+        initial_target: f32,
+        observer: Option<CameraAeSender>,
+        cancel: Option<&AtomicBool>,
+        work: F,
+    ) -> io::Result<()> {
         let snapshot = *parameters;
         for path in [out, &format!("{out}.json")] {
             if std::path::Path::new(path).exists() {
@@ -226,11 +239,14 @@ mod statistics_session {
         let flag = stop.clone();
         let (ready_tx, ready_rx) = std::sync::mpsc::sync_channel(1);
         std::thread::scope(|scope| {
+            let _stop_guard = CameraStopGuard(&stop);
             let worker=scope.spawn(move || ->io::Result<()>{
-                let mut session=match Session::prepare(node){Ok(s)=>s,Err(e)=>{let _=ready_tx.send(Err(e.to_string()));return Err(e);}};
+                let mut session=match check_camera_cancel(cancel).and_then(|_|Session::prepare(node)){Ok(s)=>s,Err(e)=>{let _=ready_tx.send(Err(e.to_string()));return Err(e);}};
                 println!("{}",json!({"event":"statistics-ready","device":node,"automaticExposure":false}));
                 let _=ready_tx.send(Ok(()));
-                let result=session.receive(&flag,&snapshot,&observer);session.release();
+                let result=session.receive(&flag,&snapshot,&observer,cancel);
+                while !flag.load(Ordering::Acquire) {std::thread::sleep(Duration::from_millis(1));}
+                session.release();
                 let saved=if session.last.is_some(){session.save(out,initial_target)}else{Err(error("No statistics frames captured"))};
                 println!("{}",json!({"event":"statistics-finished","framesReceived":session.frames,"error":result.as_ref().err().map(|e|e.to_string()),"saveError":saved.as_ref().err().map(|e|e.to_string()),"cleanupErrors":session.cleanup,"automaticExposure":false}));
                 result.and(saved).and_then(|_|if session.cleanup.is_empty(){Ok(())}else{Err(error("Statistics cleanup failed"))})

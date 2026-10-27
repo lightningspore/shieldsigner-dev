@@ -63,6 +63,8 @@ mod awb_input_selection_fixture;
 mod awb_measurement_weights_fixture;
 #[path = "../awb_measurement_exclusions_fixture.rs"]
 mod awb_measurement_exclusions_fixture;
+#[path = "../awb_fast_configuration_fixture.rs"]
+mod awb_fast_configuration_fixture;
 fn main() {
     for line in io::stdin().lock().lines() {
         let line = line.unwrap();
@@ -157,6 +159,7 @@ fn main() {
                 }
                 println!("{}", output.join(","));
             }
+            "awb-fast-configuration" => println!("{}", awb_fast_configuration_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-measurement-exclusions" => println!("{}", awb_measurement_exclusions_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-measurement-weights" => println!("{}", awb_measurement_weights_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-input-selection" => println!("{}", awb_input_selection_fixture::run(&serde_json::from_str(a[1]).unwrap())),

@@ -1866,3 +1866,39 @@ startup work includes the FAST initial light selection enabled by the actual
 SC3336 scene, control/weight field composition and BLC/pre-gain metadata
 binding. The existing time-share scheduler is not a substitute for native FAST
 startup. Live AWB remains disabled while these pieces are connected.
+
+## FAST startup light configuration
+
+`awb_fast_configuration::configure` reconstructs full `ConfigHwParaFstFF`
+(ELF 0xc94a4), including the original stable descending sort, adjacent-gap
+selection, balanced/paired-gap grouping, calibrated normal/big bounding-window
+merge and physical-slot compaction. It preserves native integer division and
+three-entry group layout. FAST clears the rotated-YUV slots, publishes the
+`FASTAWBACT` signature and physical indices, and leaves other metadata alone.
+Manual mode copies the four integer normal/big windows while preserving their
+small-region tail; automatic mode clears all four full XY records first.
+Checked errors stage the record rather than partially modifying it.
+
+`FastStart::from_value` loads `earlierAwbAct`; `apply` consumes the scene's
+already converted XY records and explicit calibrated valid-light count. Disabled
+FAST returns an explicit checked error so the caller must choose the normal
+scheduler instead. The actual SC3336 scene enables automatic FAST. Its native
+calibrated-light groups are `[4,3]`, `[2]`, `[6,1]`, `[0,5]`, producing four
+physical measurement windows. These are group memberships, not GPIO/pin IDs.
+
+`mise run camera:rust:awb-fast-configuration` compares full native function
+returns and all 1204 SDK bytes in 258 host/ARM cases. A hook reads the original
+group array before merge so matching overlapping bounds cannot hide incorrect
+grouping. Coverage includes 163 balanced, 57 paired-gap and 38 manual calls,
+valid-light-prefix compaction and preservation of unrelated input/calibration
+bytes. Two cases join real SC3336 region conversion and scene loading (actual
+automatic mode, plus an explicit manual variant).
+[FAST configuration report](awb-fast-configuration-equivalence.json).
+
+The automatic checked input domain is four to seven calibrated lights; memory,
+strings, allocation, division and logging are explicit oracle adapters while
+native sorting/grouping/merging bodies execute. This closes FAST selection,
+not complete initialization. Next is binding these verified pieces into the
+whole measurement record, including controls, weights and BLC/pre-gain metadata,
+then connecting the live statistics and gain-publication path. Live automatic WB
+remains disabled until that integration is tested.

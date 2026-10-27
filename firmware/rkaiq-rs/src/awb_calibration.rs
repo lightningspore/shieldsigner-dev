@@ -1492,3 +1492,59 @@ impl MeasurementExclusions {
         crate::awb_measurement_exclusions::apply_weights(record, &self.borrowed(), brightness)
     }
 }
+
+pub struct FastStart {
+    pub enabled: bool,
+    pub manual: Option<[[i32; 8]; 4]>,
+}
+impl FastStart {
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        let v = at(wb, "/autoPara/earlierAwbAct")?;
+        let manual = match at(v, "/mode")?.as_str() {
+            Some("CALIB_AWB_EARLACT_XYREG_AUTO") => None,
+            Some("CALIB_AWB_EARLACT_XYREG_FIXED") => {
+                if at(v, "/xyRegion")?.as_array().map(Vec::len) != Some(4) {
+                    return Err(format!("Expected four manual FAST regions"));
+                }
+                let mut records = [[0; 8]; 4];
+                for (i, out) in records.iter_mut().enumerate() {
+                    for (r, name) in ["normal", "big"].iter().enumerate() {
+                        let path = format!("/xyRegion/{i}/{name}");
+                        if at(v, &path)?.as_array().map(Vec::len) != Some(4) {
+                            return Err(format!("Expected four FAST region coordinates"));
+                        }
+                        for j in 0..4 {
+                            out[r * 4 + j] = integer(
+                                v,
+                                &format!("{path}/{j}"),
+                                i32::MIN as i64,
+                                i32::MAX as i64,
+                            )? as i32;
+                        }
+                    }
+                }
+                Some(records)
+            }
+            _ => return Err(format!("Unknown FAST startup mode")),
+        };
+        Ok(Self {
+            enabled: flag(v, "/enable")?,
+            manual,
+        })
+    }
+    pub fn apply(
+        &self,
+        record: &mut [u8; crate::isp_awb_measurement::INPUT_BYTES],
+        regions: &MeasurementRegions,
+        valid_lights: usize,
+    ) -> Result<crate::awb_fast_configuration::Selection, crate::InvalidInput> {
+        if !self.enabled {
+            return Err(crate::InvalidInput::UnsupportedRegion);
+        }
+        let mode = match &self.manual {
+            Some(values) => crate::awb_fast_configuration::Mode::Manual(values),
+            None => crate::awb_fast_configuration::Mode::Automatic,
+        };
+        crate::awb_fast_configuration::configure(record, &regions.xy, valid_lights, mode)
+    }
+}

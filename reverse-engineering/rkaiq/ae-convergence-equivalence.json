@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 894,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "linear AecGetProcResults convergence flag store checkpoint, sensor-code equality and ISP-gain tolerance",
+  "limitations": [
+    "Native execution stops after the flag store, not full result publication.",
+    "Effective/proposed/prior-published exposure records are seeded explicitly; their stream association remains external.",
+    "Nonnegative finite gain domain, linear mode only; unrelated context bytes checked for preservation."
+  ]
+}

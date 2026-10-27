@@ -380,6 +380,26 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-convergence" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let exposure = |key: &str| ae_convergence::Exposure {
+                    time_code: v[key][0].as_u64().unwrap() as u32,
+                    gain_code: v[key][1].as_u64().unwrap() as u32,
+                    isp_gain: v[key][2].as_f64().unwrap() as f32,
+                };
+                let mut state = ae_convergence::State {
+                    dynamic_enabled: v["dynamic"].as_u64().unwrap() as u8,
+                    gating_enabled: v["gating"].as_u64().unwrap() as u8,
+                };
+                ae_convergence::linear(
+                    &mut state,
+                    exposure("effective"),
+                    exposure("proposed"),
+                    exposure("published"),
+                )
+                .unwrap();
+                println!("{},{}", state.dynamic_enabled, state.gating_enabled);
+            }
             "ae-run-flag" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let previous: Vec<u16> = v["previous"]

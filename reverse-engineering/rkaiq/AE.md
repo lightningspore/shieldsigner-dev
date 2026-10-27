@@ -757,7 +757,7 @@ state lifecycle rules previously left to the caller:
 The process decision's unchanged-sample flag at `+0x23cf` is the already
 recovered delay state's `changed` flag. Its override at `+0x3d3c` is the
 route-cache `force` flag. These identities follow the actual writer addresses;
-maintaining the gating-enable flag at `+0x4fb9` remains separate work.
+the gating-enable writer at `+0x4fb9` is recovered in the next section.
 
 Six hundred forty comparisons execute native `AecRun` through normal return,
 including the real `AecClmExecute` and subordinate numerical routines, and
@@ -778,4 +778,35 @@ overflow is outside the accepted Rust numerical domain.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-run.py --arm
+```
+
+## Linear convergence flags
+
+`ae_convergence::linear` recovers the flag-publication branch of
+`AecGetProcResults` (ELF 0xb1e70). It compares the effective preprocessing
+exposure against both the newly proposed output and the prior published
+exposure. Time and gain **register codes** must agree exactly. Each ISP gain
+comparison subtracts in float, then compares the promoted absolute difference
+against the reference gain times the double literal `0.001`.
+
+Agreement writes one to both `+0x4fb8` (dynamic damping enable) and `+0x4fb9`
+(process gating enable). Disagreement clears only `+0x4fb9`; dynamic damping
+enable retains its previous byte. This sticky behavior is intentional and
+matters after the first converged frame. The Rust helper preserves raw flag
+bytes on branches where the original does not overwrite them.
+
+The native oracle executes result processing through that flag store and
+compares both bytes across 894 cases, including sensor-code mismatches, zero
+gain, exact/near tolerance boundaries, random gains and preexisting raw flag
+values. All unrelated context bytes are checked for preservation. This is a
+checkpoint comparison, not a claim that all result packaging has been ported.
+[Convergence comparison](ae-convergence-equivalence.json).
+
+Effective, proposed and prior-published records remain explicit inputs. Their
+publication and real frame association must be established before this helper
+can safely close the hardware feedback loop. The accepted domain is finite,
+nonnegative ISP gains in linear mode.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-convergence.py --arm
 ```

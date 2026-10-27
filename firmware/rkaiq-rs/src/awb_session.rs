@@ -153,6 +153,9 @@ pub struct Output {
     pub probabilities: Vec<f32>,
     pub controller_frame: u32,
     pub countdown: i32,
+    pub preparation_requested: bool,
+    pub stability_mask: u8,
+    pub measurement_history: [[f32; 4]; 4],
 }
 pub struct Session {
     scene: Scene,
@@ -322,6 +325,7 @@ impl Session {
             calculated: false,
             reconfigure: false,
         };
+        let preparation_requested = next.numeric.update;
         if continuation == awb_preprocess::Continuation::Ready {
             let settings = awb_preparation::Settings {
                 groups: self.schedule.count,
@@ -400,6 +404,9 @@ impl Session {
                 .collect(),
             controller_frame: next.gain.dispatch.frame,
             countdown: next.gain.dispatch.countdown,
+            preparation_requested,
+            stability_mask: next.cache.header.stability_mask,
+            measurement_history: next.cache.header.history,
         };
         self.state = next;
         Ok(output)

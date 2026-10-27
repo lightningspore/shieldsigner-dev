@@ -1,0 +1,175 @@
+{
+  "kind": "controlled-captured-statistics-awb-scene-change-replay",
+  "passed": true,
+  "frames": 280,
+  "hostMatchesPhysicalArm": true,
+  "version": "0.0.32-dev",
+  "rustHostSha256": "720dfdc154f0015622e3261593fdaadbb71a56bc2ce459df61e388d395f20e42",
+  "rustArmSha256": "3070c184b1fc247bdf790da73e9e568151ebf90ab36f81380d635eedc8e53e39",
+  "nativeStabilityMismatches": 0,
+  "nativeStabilityCalls": 280,
+  "nativeBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "captureHashes": [
+    "718ef887f8a9a7c5d97ba718b4f8ca8f7809dc93c02764f788885e77df385677",
+    "a7a8132c756d1388524d22764199cdfe19e7b17b3a60dbf4417b4b638a6aee2a"
+  ],
+  "stages": [
+    {
+      "name": "baseline",
+      "frames": 80,
+      "calculations": 19,
+      "tailCalculations": 0,
+      "firstGain": [
+        1.5218199491500854,
+        1.0,
+        1.0,
+        1.7148100137710571
+      ],
+      "lastGain": [
+        1.4399139881134033,
+        1.0,
+        1.0,
+        1.8177911043167114
+      ]
+    },
+    {
+      "name": "color-step",
+      "frames": 80,
+      "calculations": 14,
+      "tailCalculations": 0,
+      "firstGain": [
+        1.4879111051559448,
+        1.0,
+        1.0,
+        1.781435251235962
+      ],
+      "lastGain": [
+        1.915241003036499,
+        1.0,
+        1.0,
+        1.4562667608261108
+      ]
+    },
+    {
+      "name": "restore",
+      "frames": 80,
+      "calculations": 14,
+      "tailCalculations": 0,
+      "firstGain": [
+        1.8677130937576294,
+        1.0,
+        1.0,
+        1.4922102689743042
+      ],
+      "lastGain": [
+        1.4438024759292603,
+        1.0,
+        1.0,
+        1.8147190809249878
+      ]
+    },
+    {
+      "name": "brightness-step",
+      "frames": 40,
+      "calculations": 3,
+      "tailCalculations": 0,
+      "firstGain": [
+        1.4399142265319824,
+        1.0,
+        1.0,
+        1.8177794218063354
+      ],
+      "lastGain": [
+        1.4399139881134033,
+        1.0,
+        1.0,
+        1.8177911043167114
+      ]
+    }
+  ],
+  "hardwareWrites": false,
+  "forcedStageUpdates": false,
+  "limitations": [
+    "Measured input pairs were explicitly transformed; no physical scene/color change is claimed.",
+    "Original ARM equivalence covers the persistent stability gate, not the entire joined native controller.",
+    "Brightness and ISO are fixed controlled replay inputs except the declared brightness step."
+  ],
+  "liveCapture": {
+    "run": "33",
+    "imageFrames": 192,
+    "cameraBinarySha256": "12a83c1ae3d090f9e0985cc9fd2b25290628b7ae7d3973e5f02feeced68ab98a",
+    "controlCheck": {
+      "kind": "normal-timeshare-live-capture-check",
+      "passed": true,
+      "aeFrames": 128,
+      "awbFrames": 128,
+      "normalFrames": 126,
+      "normalGroups": [
+        0,
+        1
+      ],
+      "finalFrame": 190,
+      "finalParametersId": 189,
+      "maxActiveLights": 7,
+      "nativeTranslationChecked": true,
+      "parameterSubmissions": 127,
+      "maxParameterSnapshots": 2,
+      "retiredParameterSnapshots": 126,
+      "scope": "Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification"
+    }
+  },
+  "sampleAssociation": [
+    {
+      "metadata": {
+        "association": "exact-registered-snapshot",
+        "frameId": 24,
+        "group": 0,
+        "iso": 169.140625,
+        "normalizedBrightness": 1.2541570663452148,
+        "parametersId": 22,
+        "processedBeforeCapture": 16
+      },
+      "nativeTranslation": {
+        "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "statisticsSha256": "e0005b84bd760ee8ab0a7c3517f6759ed902474df0ba2a61eccf5083633778f9",
+        "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+        "translatedSha256": "718ef887f8a9a7c5d97ba718b4f8ca8f7809dc93c02764f788885e77df385677",
+        "frameId": 24,
+        "parametersId": 22,
+        "bytesCompared": 7680,
+        "mismatches": 0,
+        "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+        "limitations": [
+          "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+          "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+        ]
+      }
+    },
+    {
+      "metadata": {
+        "association": "exact-registered-snapshot",
+        "frameId": 25,
+        "group": 1,
+        "iso": 170.3125,
+        "normalizedBrightness": 1.2527523040771484,
+        "parametersId": 24,
+        "processedBeforeCapture": 17
+      },
+      "nativeTranslation": {
+        "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "statisticsSha256": "466d9d052ea0911c30fee4942d22b0fe950ef89d8a15265a05c04dc203f92e19",
+        "snapshotSha256": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+        "translatedSha256": "a7a8132c756d1388524d22764199cdfe19e7b17b3a60dbf4417b4b638a6aee2a",
+        "frameId": 25,
+        "parametersId": 24,
+        "bytesCompared": 7680,
+        "mismatches": 0,
+        "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+        "limitations": [
+          "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+          "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+        ]
+      }
+    }
+  ]
+}

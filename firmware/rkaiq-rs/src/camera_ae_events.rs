@@ -31,6 +31,8 @@ struct CameraAwb {
     session: shieldsigner_rkaiq::awb_session::Session,
     sdk: [u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES],
     last_iso: Option<f32>,
+    sample_directory: Option<std::path::PathBuf>,
+    sampled_groups: u8,
     gains: Vec<(
         u32,
         shieldsigner_rkaiq::isp32::WhiteBalanceGain,
@@ -89,6 +91,25 @@ impl CameraAwb {
                 real_gain(12),
             ])
             .map_err(|e| error(format!("Live AWB ISO: {e:?}")))?;
+            // Opt-in diagnostic samples retain exact native association, once
+            // per normal group near the end of startup countdown. These private files are not a
+            // synthetic scene change or a published calibration dataset.
+            let group = i32::from_le_bytes(frame[0x1d78..0x1d7c].try_into().unwrap());
+            if self.processed >= 16 && (0..2).contains(&group) && self.sampled_groups & (1 << group) == 0 {
+                if let Some(directory) = &self.sample_directory {
+                    fs::create_dir_all(directory)?;
+                    let sdk = self.measurements.iter().find(|(id,_)| *id == stats.parameters_id())
+                        .ok_or_else(|| error("Missing sampled AWB configuration"))?;
+                    for (suffix,data) in [("stats.raw",bytes),("sdk.bin",sdk.1.as_slice()),("translated.bin",frame.as_slice())] {
+                        let mut file=OpenOptions::new().write(true).create_new(true).open(directory.join(format!("group-{group}.{suffix}")))?;
+                        file.write_all(data)?;
+                    }
+                    let report=json!({"frameId":stats.frame_id(),"parametersId":stats.parameters_id(),"group":group,"iso":iso,"normalizedBrightness":ae_pre.normalized_brightness,"association":"exact-registered-snapshot","processedBeforeCapture":self.processed});
+                    let mut file=OpenOptions::new().write(true).create_new(true).open(directory.join(format!("group-{group}.json")))?;
+                    serde_json::to_writer_pretty(&mut file,&report).map_err(|e|error(e.to_string()))?;
+                    self.sampled_groups |= 1 << group;
+                }
+            }
             let result = self
                 .session
                 .process(

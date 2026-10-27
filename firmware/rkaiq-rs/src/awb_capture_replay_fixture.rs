@@ -103,3 +103,84 @@ pub fn run(v: &Value) -> Result<Value, String> {
         )
     }
 }
+
+/// Controlled multi-frame replay through one production Session. Input records
+/// may be captured or deliberately transformed; no hardware writes occur.
+pub fn run_sequence(v: &Value) -> Result<Value, String> {
+    let width = u32::try_from(v["dimensions"][0].as_u64().ok_or("width")?).map_err(|_| "width")?;
+    let height =
+        u32::try_from(v["dimensions"][1].as_u64().ok_or("height")?).map_err(|_| "height")?;
+    let scale = u32::try_from(v["sample_scale"].as_u64().ok_or("sample_scale")?)
+        .map_err(|_| "sample_scale")?;
+    let stages = v["stages"].as_array().ok_or("stages")?;
+    if stages.is_empty() || stages.len() > 16 {
+        return Err("stages must be 1..16".into());
+    }
+    let mut session = Session::new(&v["iq"], [width, height], scale)?;
+    let mut results = Vec::new();
+    for (stage_index, stage) in stages.iter().enumerate() {
+        let records = stage["raw"].as_array().ok_or("stage raw records")?;
+        let cycles = stage["cycles"].as_u64().ok_or("cycles")?;
+        if records.is_empty()
+            || records.len() > 4
+            || !(1..=128).contains(&cycles)
+            || results.len() + cycles as usize * records.len() > 512
+        {
+            return Err("sequence exceeds bounded size".into());
+        }
+        let iso = stage
+            .get("iso")
+            .unwrap_or(&v["iso"])
+            .as_f64()
+            .ok_or("iso")? as f32;
+        let luma = stage
+            .get("normalized_brightness")
+            .or_else(|| v.get("normalized_brightness"))
+            .map(|value| value.as_f64().ok_or("normalized brightness"))
+            .transpose()?
+            .map(|x| [x as f32, 0.]);
+        let mut frames = Vec::new();
+        for record in records {
+            let text = record.as_str().ok_or("translated frame hex")?;
+            if text.len() != FRAME_BYTES * 2 {
+                return Err("translated frame length".into());
+            }
+            let bytes = text
+                .as_bytes()
+                .chunks_exact(2)
+                .map(|pair| {
+                    let text = core::str::from_utf8(pair)
+                        .map_err(|_| "non-ASCII frame hex".to_string())?;
+                    u8::from_str_radix(text, 16).map_err(|_| "invalid frame hex".to_string())
+                })
+                .collect::<Result<Vec<_>, String>>()?;
+            frames.push(<[u8; FRAME_BYTES]>::try_from(bytes).map_err(|_| "frame length")?);
+        }
+        for cycle in 0..cycles {
+            for (record, raw) in frames.iter().enumerate() {
+                let output = session
+                    .process(
+                        raw,
+                        &Input {
+                            requested_update: results.is_empty(),
+                            exposure_luma: luma,
+                            iso,
+                            site_reference: None,
+                        },
+                    )
+                    .map_err(|e| format!("session stage {stage_index} cycle {cycle}: {e:?}"))?;
+                results.push(json!({"stage":stage_index,"cycle":cycle,"record":record,
+                "calculated":output.action.calculated,"reconfigure":output.action.reconfigure,
+                "gain":output.current_gain,"controllerFrame":output.controller_frame,"countdown":output.countdown,
+                "complete":output.complete,"activeLights":output.active_lights,"continuation":format!("{:?}",output.continuation),
+                "preparationRequested":output.preparation_requested,"updateAfterGate":output.numeric.update,
+                "stabilityThreshold":output.numeric.smart[2],"stabilityMask":output.stability_mask,
+                "historyBits":output.measurement_history.map(|row|row.map(f32::to_bits))}));
+            }
+        }
+    }
+    Ok(
+        json!({"kind":"controlled-awb-session-sequence-replay","hardwareWrites":false,
+        "forcedStageUpdates":false,"frames":results}),
+    )
+}

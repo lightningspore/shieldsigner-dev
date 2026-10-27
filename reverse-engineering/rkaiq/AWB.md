@@ -2554,3 +2554,67 @@ restored and backup hashes verified before capture; normal future boot behavior
 is unchanged. This advances vendor-free userspace initialization for the pinned
 linear SC3336 profile; physical power-cycle testing, default UI/scan integration,
 color/latency qualification and remaining configuration policy are separate work.
+
+## Post-convergence scene-change replay (0.0.32-dev)
+
+A controlled 280-frame replay now exercises the production owned Session after
+its startup countdown expires. The application request flag is set only for the
+first frame. Stable measurements settle; changed aggregate color ratios wake
+the measurement gate, gains move in the expected correction direction, restored
+input recovers toward baseline, and a brightness metadata step wakes processing
+again. Every stage finishes with 16 frames of held gains. No gain-policy change
+was needed for this behavior.
+
+| Controlled stage | Frames | Gain calculations | Final R gain | Final B gain |
+| --- | ---: | ---: | ---: | ---: |
+| Baseline | 80 | 19 | 1.439914 | 1.817791 |
+| R sums ×0.75 / B sums ×1.25 | 80 | 14 | 1.915241 | 1.456267 |
+| Restore baseline records | 80 | 14 | 1.443802 | 1.814719 |
+| Normalized brightness ×0.35 | 40 | 3 | 1.439914 | 1.817791 |
+
+The color step scales accumulated white-point correction-gain sums inversely,
+preserving their counts and configuration identity. These are deliberately
+transformed statistics, with controlled brightness/ISO inputs. They establish
+session response under those inputs; no physical room-lighting change or
+optical scene response is claimed.
+
+Host and the actual Luckfox ARM executable produce identical replay output.
+The original ARM IsMeasureResultStable4 executes all 280 persistent gate
+transitions independently: matched bits, update flag and f32 history bits have
+zero mismatches. The native gate receives the preprocessing request flag from
+the production Rust transition. This comparison covers the gate, not complete
+joined-native-controller equivalence. Its source prefix reads the separate
+configuration/request flag at context +0x3349 into output +0x334a; it does not
+require carrying a previously calculated output flag forever.
+
+The input pair came from live capture 33. Opt-in
+`SHIELDSIGNER_AWB_SAMPLE_DIR` retains one raw-statistics / registered-SDK /
+translated-frame trio per normal group, near the end of startup countdown.
+A stable controller parks on one group, so collecting only after convergence
+would miss its other cohort. Every saved SDK is selected by the statistics'
+exact registered parameter ID. Both trios independently match all 7,680 original
+ARM translation bytes. The 192-image live run also passes 128 AE/AWB statistics
+frames, 127 submissions and at most two retained snapshots; its final statistics
+translation matches as well. Private records remain ignored locally.
+
+The new line-protocol command `awb-captured-sequence` supports bounded stages,
+up to four records/stage, 1–128 cycles and at most 512 processed frames. It uses
+the same production Session and exposes gate history/request metadata for the
+oracle. Stage boundaries do not request a fresh update. Existing repeated-frame
+replay remains supported.
+
+Build host numeric-fixture with mise/Rust, cross-build with
+`mise run camera:rust:arm`, then run `mise run camera:rust:awb-scene-sequence --
+LOCAL-SAMPLES --adb SERIAL --board-binary ABSOLUTE-BOARD-NUMERIC-FIXTURE
+--report LOCAL-REPLAY.json`. The script requires the pinned original binary,
+GCC runtime and full IQ profile already used by the research environment.
+Independent translation checks use `awb-captured-translation.py` with each
+trio and its sidecar parametersId. The tracked
+`awb-scene-sequence-validation.json` combines replay results with those sample
+association checks and the separate live-capture validation.
+
+The 85 library tests, five Unix transport tests, no-default-features build,
+ARM build and six simulated adapter scenarios pass. The frozen 0.0.31-dev
+kit remains unchanged; this is development source and diagnostic evidence.
+Full hardware scene-change/gain-application timing and the remaining optical/UI
+qualification are still open work.

@@ -1,5 +1,8 @@
 # First camera session
 
+Development source is now **0.0.32-dev**; the recommended frozen kit is **0.0.31-dev**.
+The latest diagnostic work is [paired AWB sampling and controlled scene replay](#development-0032-paired-awb-samples-and-scene-change-diagnostics).
+
 Current **0.0.31-dev source** has also passed the [controlled clean-reboot application test](#controlled-clean-reboot-with-live-aeawb-and-the-application-adapter), with vendor startup skipped.
 It has passed bounded live AE + AWB captures, including FAST-to-normal time sharing, on
 the SC3336/Luckfox. The opt-in `auto-awb-frame-sc3336` command and its remaining
@@ -1409,3 +1412,39 @@ Physical power-cycle, successful optical target decoding, complete UI/button
 interaction, broader scene-change qualification and remaining controller policy
 are still open. The kit is an experimental runnable checkpoint toward the full
 migration, not a completion claim.
+
+## Development 0.0.32: paired AWB samples and scene-change diagnostics
+
+The recommended frozen test kit remains 0.0.31-dev. Development 0.0.32 adds an
+opt-in private measurement-pair export and a controlled replay test. These do
+not alter the default gain policy. The native stability gate can resume updates
+after startup convergence; see [AWB.md](AWB.md#post-convergence-scene-change-replay-0032-dev)
+for exact measured results and comparison scope.
+
+To capture the two normal groups, choose a fresh persistent directory and run
+the development camera binary with `SHIELDSIGNER_AWB_SAMPLE_DIR` set, e.g.:
+
+```sh
+SHIELDSIGNER_AWB_SAMPLE_DIR=/shieldsigner-camera-tests/samples-UNIQUE \
+  /shieldsigner-camera-tests/dev-0.0.32/bin/camera-probe auto-awb-frame-sc3336 \
+  /shieldsigner-camera-tests/rkaiq-camera-test-0.0.31-dev/examples/pipeline-luckfox-sc3336-observed.json \
+  /oem/usr/share/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json \
+  /dev/video20 /dev/video11 /shieldsigner-camera-tests/capture-UNIQUE \
+  /dev/video19 --frames 192
+```
+
+The diagnostic saves each group once after 16 processed statistics frames,
+while normal group cycling is still active. Existing filenames are rejected;
+use a unique directory. Each group has `stats.raw`, `sdk.bin`, `translated.bin`
+and a JSON sidecar with frame/configuration IDs and associated AE brightness/ISO.
+The directory contains private scene/calibration data and stays outside git.
+Without this environment variable no extra sample files are written.
+
+Live run 33 passes real capture/control checks and independent native translation
+of both samples and the final statistics. The subsequent 280-frame controlled
+replay matches host/Luckfox execution and the original ARM stability gate,
+including resumption, correction, restoration and settling. It transforms
+captured statistics and makes no ISP/sensor writes. Physical lighting/color
+changes remain a separate hardware test. See
+`awb-scene-sequence-validation.json` for hashes, original-ARM comparison limits
+and the live capture association evidence.

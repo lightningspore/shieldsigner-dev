@@ -324,6 +324,10 @@ fn main() {
                     Ok(iso)=>emit(&[iso]), Err(error)=>println!("error:{error:?}"),
                 }
             }
+            "awb-captured-sequence" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                println!("{}", match awb_capture_replay_fixture::run_sequence(&v) { Ok(value)=>value, Err(error)=>serde_json::json!({"error":error}) });
+            }
             "awb-captured-gain" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 println!("{}", match awb_capture_replay_fixture::run(&v) { Ok(value)=>value, Err(error)=>serde_json::json!({"error":error}) });

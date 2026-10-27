@@ -921,6 +921,38 @@ needs a whole-controller comparison, and ordinary mode-1/2 Exclusion prepared-da
 mapping needs a joined audit. Complete calibration initialization, preprocessing-
 to-controller composition, wrapper lifecycle and live integration remain unfinished.
 
+## Single-color inside the whole gain controller
+
+`mise run camera:rust:awb-gain-controller-single-color` now verifies the enabled
+single-color route inside a complete original `AwbCalGainByWbMode` call. The
+same reference harness supports `--single` and retains the original disabled
+192-case regression. Rust fixture calibration parsing is shared with the
+standalone enabled low-count suite.
+
+**64 complete controller calls match on host and ARM**, including **24 actual
+classifier executions** (19 valid and 5 empty detections). Directed sparse-count
+cases reach modes 1 and 2 with both empty and existing raw gain history.
+Coverage includes accepted/rejected confidence, estimated-gain mixtures,
+missing grids, sufficient-count skips, optional high-history candidates,
+history updates, gain mixing/retention and final processing. The check includes
+the complete classifier record and its gain buffer, including preservation when
+classification is skipped. Final single-color weights 0, 0.25 and 1 are
+represented in the coverage report.
+
+The original classifier/manager/color call trees execute within the original
+controller. Their math imports run the pinned uClibc ARM bodies in an isolated
+emulator; integer conversions run the pinned GCC runtime. Both runtime hashes
+are verified. The corpus executes 84,375 native `powf`, 16,875 `sqrtf` and 16,875
+`atan2f` calls. Native scratch allocations retained by classification are
+accounted for separately from the three strategy histories and two common gain
+histories. [Enabled controller report](awb-gain-controller-single-color-equivalence.json).
+
+This closes the enabled single-color whole-controller comparison gap without a
+production numerical change. Optional clipping/adjustment still have separate
+complete comparisons, and ordinary mode-1/2 Exclusion prepared-data mapping
+still needs a joined audit. Calibration initialization, preprocessing/controller
+composition, wrapper lifecycle and live AWB integration remain unfinished.
+
 ## Gain clipping and inverse color-temperature conversion
 
 `awb_single_color::gain_from_color_temperature` reconstructs

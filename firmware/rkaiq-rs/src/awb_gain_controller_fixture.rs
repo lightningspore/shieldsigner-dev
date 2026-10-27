@@ -142,13 +142,67 @@ pub fn run(v: &Value) -> Value {
         color_history_value: 2,
         color_history_target: s["color_target"].as_u64().unwrap() as u16,
     };
+    let single = s.get("single");
+    let candidates: Vec<_> = single
+        .map(|s| {
+            s["candidates"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|v| awb_single_color_grid::Candidate {
+                    red: scalar(&v[0]),
+                    blue: scalar(&v[1]),
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    let colors: Vec<_> = single
+        .map(|s| {
+            s["colors"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|v| awb_single_color_grid::Color {
+                    chroma: scalar(&v["chroma"]),
+                    hue: scalar(&v["hue"]),
+                    cct_knots: array(&v["knots"]),
+                    distance_thresholds: array(&v["thresholds"]),
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    let grid: [[f32; 3]; 225] = single
+        .map(|s| core::array::from_fn(|i| array(&s["grid"][i])))
+        .unwrap_or([[0.; 3]; 225]);
+    let confidence =
+        single.map(|s| crate::awb_low_single_color_fixture::confidence(&s["confidence"]));
+    let classifier = awb_single_color_grid::Calibration {
+        candidates: &candidates,
+        colors: &colors,
+        alpha: single.map(|s| scalar(&s["alpha"])).unwrap_or(0.),
+        history_target: low.color_history_target,
+        first: line("first"),
+        second: line("second"),
+    };
+    let single = single.map(|s| awb_low_single_color::Input {
+        mode: 0,
+        grid_valid: s["grid_valid"].as_bool().unwrap(),
+        grid: &grid,
+        classifier: &classifier,
+        confidence: confidence.as_ref().unwrap(),
+        brightness_sample: probability.prior_sample,
+        density: 0.,
+        acceptance_threshold: scalar(&s["threshold"]),
+        estimated_gain: [0.; 4],
+        high_history: &[],
+    });
     let settings = Settings {
         mode: s["mode"].as_i64().unwrap() as i32,
         region: &region,
         probability,
         high: &high,
         low: &low,
-        single: None,
+        single,
         post: &post,
         high_history_threshold: scalar(&s["high_threshold"]),
         estimated_density_threshold: scalar(&s["estimated_threshold"]),
@@ -227,5 +281,9 @@ pub fn run(v: &Value) -> Value {
         .collect();
     let mut output = awb_postprocess_fixture::output(&state.post);
     output["controller"] = json!({"selected":state.region.selected as u8,"retained":state.region.retained,"kind":state.region.kind,"density":state.density.to_bits(),"high_gain":state.high_gain.map(f32::to_bits),"high_low_weight":state.high_low_weight.to_bits(),"temporal_weight":state.temporal_weight.to_bits(),"estimated":state.estimated_gain.map(f32::to_bits),"low_result":state.low.low.low_result.map(f32::to_bits),"temporal_result":state.low.low.temporal_result.map(f32::to_bits),"spatial_result":state.low.low.spatial_result.map(f32::to_bits),"temporal_source":state.low.low.temporal_source.map(f32::to_bits),"spatial_weight":state.low.low.spatial_weight.to_bits(),"used_previous":state.low.low.used_previous,"single_weight":state.low.single_weight.to_bits(),"selection_status":state.selection_status,"strategy_flag":state.strategy_flag,"xy_history":state.region.history.values(),"color_history":state.low.low.color_history.values(),"high_history":high,"lights":lights});
+    if s.get("single").is_some() {
+        let r = &state.low.detection;
+        output["controller"]["single"] = json!({"selected":r.selected,"color":r.color,"candidate_counts":r.candidate_counts,"color_counts":r.color_counts,"valid":r.valid,"disagreements":r.disagreements,"votes":r.votes,"mean":r.mean_distance.to_bits(),"gain":r.gain.map(f32::to_bits)});
+    }
     output
 }

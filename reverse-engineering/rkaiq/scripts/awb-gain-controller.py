@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Complete native gain-mode composition; enabled single-color suite is separate."""
+"""Complete native gain-mode composition, optionally with joined single-color."""
 
 import hashlib
 import importlib.util
@@ -17,12 +17,23 @@ spec = importlib.util.spec_from_file_location(
 )
 post = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(post)
+spec_color = importlib.util.spec_from_file_location(
+    "awb_color_reference", __file__.replace("awb-gain-controller.py", "awb-color.py")
+)
+color = importlib.util.module_from_spec(spec_color)
+spec_color.loader.exec_module(color)
+PROCESS = "_Z22AwbSingleColorProcess226rk_aiq_awb_stat_res_full_sP19CalibDbV2_Awb_Sgc_s6line_sS2_P12sgc_result_sP9list_headPfS7_"
 
 
-class Original(post.Original):
+class Original(post.Original, color.OriginalColor):
     def __init__(self):
         super().__init__()
         self.stdlib = True
+
+    def hook(self, uc, address, size, user):
+        if address == (self.symbols.get(PROCESS, 0) & ~1):
+            self.single_calls += 1
+        super().hook(uc, address, size, user)
 
     def setup_controller(self, v, ctx, cfg, cal, results):
         s = v["controller"]
@@ -151,13 +162,66 @@ class Original(post.Original):
                     if gain
                     else struct.pack("<III", *links, value),
                 )
-        return [
+        extra = [
             (0x60000, reference),
             (0x61000, stats),
             (0x62000, priors),
             (0x64000, curves),
             (0x66000, mode),
         ]
+        if "single" in s:
+            extra += self.setup_single(v, ctx, cal)
+        return extra
+
+    def setup_single(self, v, ctx, cal):
+        s = v["controller"]["single"]
+        ctx[0xF79] = s["grid_valid"]
+        struct.pack_into("<675f", ctx, 0xF7C, *(x for rgb in s["grid"] for x in rgb))
+        base = 0x644
+        cal[base] = 1
+        struct.pack_into(
+            "<IIIIH",
+            cal,
+            base + 8,
+            HEAP + 0x68000,
+            len(s["colors"]),
+            HEAP + 0x69000,
+            len(s["candidates"]),
+            v["controller"]["color_target"],
+        )
+        struct.pack_into("<f", cal, base + 0x1C, s["alpha"])
+        struct.pack_into("<i", cal, base + 0x12C, -1)
+        struct.pack_into("<f", cal, 0x774, s["threshold"])
+        c = s["confidence"]
+        for key, o in [
+            ("brightness_knots", 0xBC),
+            ("brightness_weights", 0xDC),
+            ("density_knots", 0xFC),
+            ("density_weights", 0x114),
+            ("distance_knots", 0x50),
+            ("cct_knots", 0x68),
+            ("disagreement_knots", 0x20),
+            ("disagreement_weights", 0x38),
+        ]:
+            struct.pack_into("<" + "f" * len(c[key]), cal, base + o, *c[key])
+        for i, values in enumerate(c["distance_weights"]):
+            struct.pack_into("<6f", cal, base + 0x74 + 24 * i, *values)
+        colors = bytearray(36 * len(s["colors"]))
+        for i, v in enumerate(s["colors"]):
+            struct.pack_into(
+                "<I8f",
+                colors,
+                i * 36,
+                i,
+                v["chroma"],
+                v["hue"],
+                *v["knots"],
+                *v["thresholds"],
+            )
+        candidates = bytearray(28 * len(s["candidates"]))
+        for i, values in enumerate(s["candidates"]):
+            struct.pack_into("<2f", candidates, i * 28 + 20, *values)
+        return [(0x68000, colors), (0x69000, candidates)]
 
     def read_controller(self, v, after, output):
         result = dict(
@@ -208,6 +272,22 @@ class Original(post.Original):
             count += len(values)
             result[key] = values
         output["controller"] = result
+        if "single" in v["controller"]:
+            base = 0x35B8
+            result["single"] = dict(
+                selected=struct.unpack_from("<i", after, base + 4)[0],
+                color=struct.unpack_from("<i", after, base + 8)[0],
+                candidate_counts=list(struct.unpack_from("<14i", after, base + 0xC)),
+                color_counts=list(struct.unpack_from("<14i", after, base + 0x44)),
+                valid=bool(struct.unpack_from("<I", after, base + 0x7C)[0]),
+                disagreements=struct.unpack_from("<i", after, base + 0x80)[0],
+                votes=struct.unpack_from("<i", after, base + 0x84)[0],
+                mean=struct.unpack_from("<I", after, base + 0x88)[0],
+                gain=list(struct.unpack_from("<4I", after, 0x3450)),
+            )
+            before = self.before_controller
+            for o, size in [(0x3450, 20), (0x35BC, 0x88)]:
+                after[o : o + size] = before[o : o + size]
         # Remove represented controller writes before the shared unrelated-byte check.
         before = self.before_controller
         for o, size in [
@@ -225,7 +305,7 @@ class Original(post.Original):
             (0x35A8, 16),
         ]:
             after[o : o + size] = before[o : o + size]
-        return count - self.initial_extra
+        return count - self.initial_extra + 2 * self.single_calls
 
     def read_controller_lights(self, actual, before, output):
         after = bytearray(actual)
@@ -251,6 +331,7 @@ class Original(post.Original):
 
     def invoke(self, name, *args, **kwargs):
         if name == "_Z18AwbCalGainByWbModeP12awb_contex_s":
+            self.single_calls = 0
             self.before_controller = bytes(self.uc.mem_read(HEAP, 0x4000))
         return super().invoke(name, *args, **kwargs)
 
@@ -263,12 +344,17 @@ def main():
     runtime_sha = hashlib.sha256(RUNTIME.read_bytes()).hexdigest()
     assert sha == manifest["binaries"][0]["sha256"]
     assert runtime_sha == manifest["gccRuntime"]["memberSha256"]
+    math_sha = hashlib.sha256(color.MATH.read_bytes()).hexdigest()
+    assert math_sha == manifest["uclibcRuntime"]["memberSha256"]
+    single = "--single" in sys.argv
     arm = Original()
     rng = random.Random(0x434F4E54)
     cases = []
     expected = []
     coverage = {}
-    for i in range(192):
+    classifier_calls = 0
+    single_coverage = {}
+    for i in range(64 if single else 192):
         gain = lambda: [
             f32(rng.uniform(0.5, 4.0)),
             1.0,
@@ -352,12 +438,71 @@ def main():
                     percentage=[0, 50, 100, 255][j % 4],
                 )
             )
+        if single:
+            v["raw_history"] = [] if i % 4 < 2 else [[1.0] * 4] * 2
+            if i % 8 in (1, 2, 3, 4):
+                v["brightness"] = 150
+                v["raw_history"] = [] if i % 8 in (1, 2) else [[1.0] * 4] * 2
+                for light in s["lights"]:
+                    light["counts"] = [1, 1, 0, 0]
+            if i % 8 == 4 or i % 16 == 3:
+                s["estimated"][0] = 0.0
+            s["color_history"] = [rng.randrange(3) for _ in range(i % 4)]
+            c = dict(
+                brightness_knots=[float(j) for j in range(8)],
+                brightness_weights=[0.25 if i % 2 else 0.75] * 8,
+                density_knots=[float(j) for j in range(6)],
+                density_weights=[1.0] * 6,
+                distance_knots=[float(j) for j in range(6)],
+                distance_weights=[[1.0] * 6 for _ in range(3)],
+                cct_knots=[1000.0, 5000.0, 9000.0],
+                disagreement_knots=[float(j) for j in range(6)],
+                disagreement_weights=[1.0] * 6,
+            )
+            s["single"] = dict(
+                grid_valid=i % 7 != 0,
+                grid=[
+                    [0.2, 0.4, 0.6] if i % 3 else [0.6, 0.4, 0.2] for _ in range(225)
+                ],
+                candidates=[[1.0, 1.0], [2.0, 1.5], [1.5, 2.5]],
+                colors=[
+                    dict(
+                        chroma=30.0,
+                        hue=60.0,
+                        knots=[1000.0, 5000.0, 9000.0],
+                        thresholds=[-1.0 if i % 5 == 0 else 1000000.0] * 3,
+                    )
+                ],
+                alpha=0.5,
+                threshold=0.5,
+                confidence=c,
+            )
         v["controller"] = s
         cases.append(v)
         expected.append(arm.run(v))
+        classifier_calls += arm.single_calls
+        if arm.single_calls:
+            observed = expected[-1]["controller"]
+            detail = f"mode{mode}:history{bool(v['raw_history'])}:valid{observed['single']['valid']}:weight{observed['single_weight']:08x}"
+            single_coverage[detail] = single_coverage.get(detail, 0) + 1
+        if single and (i + 1) % 8 == 0:
+            print(
+                f"Native joined single-color reference: {i + 1}/64",
+                file=sys.stderr,
+                flush=True,
+            )
         key = f"{s['complete']}:{mode}:{expected[-1]['controller']['selected']}"
         coverage[key] = coverage.get(key, 0) + 1
-    assert set(arm.calls) <= {"memcpy"} and not arm.runtime.calls
+    assert (
+        set(arm.calls) <= {"memcpy", "memset"}
+        and not arm.runtime.calls
+        and not arm.math.calls
+    )
+    if single:
+        assert any(k.startswith("mode1:") for k in single_coverage)
+        assert any(k.startswith("mode2:") for k in single_coverage)
+        assert any(":validFalse:" in k for k in single_coverage)
+        assert any(":validTrue:" in k for k in single_coverage)
     inputs = "".join(
         "awb-gain-controller " + json.dumps(v, separators=(",", ":")) + "\n"
         for v in cases
@@ -395,6 +540,10 @@ def main():
     report = dict(
         binarySha256=sha,
         runtimeSha256=runtime_sha,
+        mathRuntimeSha256=math_sha,
+        nativeMathCalls=arm.math_calls,
+        classifierCalls=classifier_calls,
+        singleColorCoverage=single_coverage,
         nativeRuntimeFunctions=sorted(arm.runtime_functions),
         modeledStringCalls=arm.standard_calls,
         cases=len(cases),
@@ -404,14 +553,22 @@ def main():
         elfEntry="0xc72b8",
         scope="Whole original gain-mode function: XY/probabilities/high/low/mix/retention plus common processing through ranked metadata",
         limitations=[
-            "This joined corpus disables single-color and optional clipping/adjustment; their full native suites remain separate.",
+            "Single-color is enabled in this corpus."
+            if single
+            else "This joined corpus disables single-color; its enabled suite is separate.",
+            "Optional clipping/adjustment are disabled; their full native suites remain separate.",
             "Ordinary joined XY regions are Normal/Big; Exclusion is exercised through mode-0 direct aggregate fallback.",
             "Finite explicit calibration and prepared measurements, 4-8 lights and bounded histories; calibration initialization and live frame lifecycle remain unfinished.",
             "Standard allocation, memory, strings and logging are explicit adapters; original numerical and policy bodies execute.",
         ],
     )
     (
-        ROOT / "reverse-engineering/rkaiq/awb-gain-controller-equivalence.json"
+        ROOT
+        / (
+            "reverse-engineering/rkaiq/awb-gain-controller-single-color-equivalence.json"
+            if single
+            else "reverse-engineering/rkaiq/awb-gain-controller-equivalence.json"
+        )
     ).write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 

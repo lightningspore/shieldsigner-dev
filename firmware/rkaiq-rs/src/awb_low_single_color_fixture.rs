@@ -16,6 +16,19 @@ fn line(v: &Value) -> Line {
         valid: v[3].as_bool().unwrap(),
     }
 }
+pub fn confidence(c: &Value) -> awb_single_color::Calibration {
+    awb_single_color::Calibration {
+        brightness_knots: array(&c["brightness_knots"]),
+        brightness_weights: array(&c["brightness_weights"]),
+        density_knots: array(&c["density_knots"]),
+        density_weights: array(&c["density_weights"]),
+        distance_knots: array(&c["distance_knots"]),
+        cct_knots: array(&c["cct_knots"]),
+        distance_weights: core::array::from_fn(|i| array(&c["distance_weights"][i])),
+        disagreement_knots: array(&c["disagreement_knots"]),
+        disagreement_weights: array(&c["disagreement_weights"]),
+    }
+}
 pub fn run(
     low: awb_low_gain::State<32>,
     lights: &[Light],
@@ -53,18 +66,7 @@ pub fn run(
         first: line(&s["first"]),
         second: line(&s["second"]),
     };
-    let c = &s["confidence"];
-    let confidence = awb_single_color::Calibration {
-        brightness_knots: array(&c["brightness_knots"]),
-        brightness_weights: array(&c["brightness_weights"]),
-        density_knots: array(&c["density_knots"]),
-        density_weights: array(&c["density_weights"]),
-        distance_knots: array(&c["distance_knots"]),
-        cct_knots: array(&c["cct_knots"]),
-        distance_weights: core::array::from_fn(|i| array(&c["distance_weights"][i])),
-        disagreement_knots: array(&c["disagreement_knots"]),
-        disagreement_weights: array(&c["disagreement_weights"]),
-    };
+    let confidence = confidence(&s["confidence"]);
     let grid = core::array::from_fn(|i| array(&s["grid"][i]));
     let high: Vec<_> = s["high_history"]
         .as_array()

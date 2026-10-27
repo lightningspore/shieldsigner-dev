@@ -3256,6 +3256,18 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-damping" => {
+                use shieldsigner_rkaiq::ccm_damping::State;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let state=|p: &serde_json::Value| { let x=p.as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>();State{matrix:x[..9].try_into().unwrap(),offsets:x[9..].try_into().unwrap()} };
+                let mut cache=state(&v["initial"]);let mut output=Vec::new();
+                for frame in v["frames"].as_array().unwrap() {
+                    let converged=cache.process(&state(&frame["target"]),frame["damping"].as_f64().unwrap() as f32).unwrap();
+                    let hex=cache.matrix.iter().chain(cache.offsets.iter()).flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>();
+                    output.push(serde_json::json!({"result":hex,"converged":converged}));
+                }
+                println!("{}",serde_json::json!(output));
+            }
             "ccm-runtime" => {
                 use shieldsigner_rkaiq::{ccm_runtime::*,ccm_selection::Profile};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

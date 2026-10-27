@@ -147,3 +147,7 @@ selection (`illuminant_index_estimation_ccm`, ELF `0xfd394`).
 `selectCCM` call tree (ELF `0xfe000`), including gain-to-saturation mapping,
 profile names, cached publication and early exits.
 [State boundaries and full native sequence comparison](ISP.md#persistent-non-blended-ccm-selection-0034-development).
+
+`ccm_damping::State::process` reconstructs the CCM `Damping` routine
+(ELF `0xfd6f8`), including fused temporal blending and convergence.
+[Exact routine identification and persistent native/physical CPU comparison](ISP.md#ccm-temporal-damping-and-convergence-0034-development).

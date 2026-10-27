@@ -709,3 +709,35 @@ after building host/ARM numeric fixtures. This is persistent selection, not
 native constructor/JSON loading, outer-frame flag ownership, temporal damping
 or live CCM integration. Physical CPU replay makes no ISP writes; the live
 camera still leaves CCM disabled until the remaining stages are verified.
+
+### CCM temporal damping and convergence (0.0.34 development)
+
+`ccm_damping::State::process` reconstructs the complete CCM `Damping` routine
+(ELF `0xfd6f8`, Ghidra `0x10d6f8`). The library contains another function with
+the same name for LUT3D; the reference resolves the exact CCM address explicitly.
+For each of nine matrix values and three offsets, native first rounds
+`target * (1 − damping)`, then performs fused `previous * damping + product`.
+Rust preserves this operation order with `libm::fmaf`.
+
+Native reports convergence only when every blended value differs from its
+corresponding target by at most double-precision `1e-5`, after an f32 subtraction
+and absolute value. Matrix and offset differences both count. The cache retains
+the actual blended values even when converged; no snap-to-target is introduced.
+All twelve values are updated even if an earlier coefficient already proves
+non-convergence. Rust rejects non-finite input and damping outside [0,1] before
+modifying the cache; these explicit safe API limits are not claims about native
+handling of malformed arguments.
+
+[Whole-native/physical CPU evidence](ccm-damping-equivalence.json) compares 100
+persistent 32-frame sequences, 3,200 frames total. It includes zero/full damping,
+intermediate factors, target changes and small positive/negative perturbations
+near the convergence threshold. Every output float bit and convergence flag
+matches the original entire routine, with no numerical or external-call stubs.
+The 92 library/five Unix tests, no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:ccm-damping -- --adb SERIAL --report LOCAL.json`
+after building host and ARM fixtures. Physical replay does not load the vendor
+library or write ISP registers. The surrounding `AccmAutoConfig` chooses the
+factor based on frame count, calibration, existing convergence and incoming
+AWB damping. That ownership, additional saturation/luma transforms and live CCM
+submission remain separate; current live capture still leaves CCM disabled.

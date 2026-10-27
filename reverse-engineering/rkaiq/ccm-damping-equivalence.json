@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "cases": 100,
+  "frames": 3200,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "75c904404bfed215806a60689a00c68b631d403a4d964f56ebbef831ed11fcf0",
+  "physicalArmBinarySha256": "bbc6b7cefc6a6ec726bc25017749d0f94de0606143249ca8beb57fbb09dd23c2",
+  "hostMatchesPhysicalArm": true,
+  "seed": "0x43434d44",
+  "scope": "Complete native CCM Damping routine across persistent 32-frame sequences; all 48 matrix/offset bytes and convergence flag. No numerical or external-call stubs.",
+  "limitations": [
+    "Finite matrix/offset inputs and damping in [0,1]; invalid Rust inputs rejected atomically.",
+    "Outer-frame scheduling, damping-factor ownership and live CCM remain separate.",
+    "Physical CPU replay does not write ISP registers."
+  ]
+}

@@ -20,7 +20,7 @@ def main():
     cases.append(dict(initial=initial,frames=frames))
  cases += [dict(v,frames=[dict(f,effective_from_previous=True) for f in v['frames']]) for v in cases]
  scene=json.loads(raw)['main_scene'][0]['sub_scene'][0]['scene_isp32']
- cases += [dict(v,initial=dict(v['initial'],policy_scene=scene,alternate=False,bind_delay=True,bind_dynamic=True)) for v in cases[-12:]]
+ cases += [dict(v,initial=dict(v['initial'],policy_scene=scene,alternate=False,bind_delay=True,bind_dynamic=True,bind_fps=True)) for v in cases[-12:]]
  expected=[];processed=0;steps=0
  native=Original()
  for case in cases:
@@ -42,6 +42,6 @@ def main():
  compare([str(ROOT/'firmware/rkaiq-rs/target/release/numeric-fixture')])
  if '--arm' in sys.argv:
   b=ROOT/'firmware/rkaiq-rs/target/armv7-unknown-linux-musleabihf/release/numeric-fixture';compare(['docker','run','--rm','-i','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={b.parent},dst=/bincheck,readonly','alpine@sha256:ee16d92f96db08d9d2d07da48555a27f3a69d8f0759021dbc601195ed0d2b5bd','/bincheck/numeric-fixture'])
- report=dict(binarySha256=digest,runtimeSha256=runtime_sha,sequences=len(cases),profilePolicySequences=12,frames=steps,processed=processed,skipped=steps-processed,mismatches=0,armReplayPassed='--arm' in sys.argv,scope='persistent native/Rust standard pipeline state over 32-frame sequences with per-frame outputs and listed state compared',limitations=['Synthetic statistics with two effective-input strategies: explicit scalar/zero codes, or prior converted point and codes supplied on the next frame. This is not a physical exposure-delay model.','Fixed target45; twelve sequences bind profile damping/tolerances/frame-delay counts/dynamic mode, other policy remains explicit. Linear non-iris/DCG-disabled path; preprocessing stops at current-error checkpoint.','Other ISP results/CIS flags/unlisted context excluded; no hardware writes or real latency qualification.'])
+ report=dict(binarySha256=digest,runtimeSha256=runtime_sha,sequences=len(cases),profilePolicySequences=12,frames=steps,processed=processed,skipped=steps-processed,mismatches=0,armReplayPassed='--arm' in sys.argv,scope='persistent native/Rust standard pipeline state over 32-frame sequences with per-frame outputs and listed state compared',limitations=['Synthetic statistics with two effective-input strategies: explicit scalar/zero codes, or prior converted point and codes supplied on the next frame. This is not a physical exposure-delay model.','Fixed target45; twelve sequences bind profile damping/tolerances/frame-delay counts/dynamic mode/fixed FPS, other policy remains explicit. Linear non-iris/DCG-disabled path; preprocessing stops at current-error checkpoint.','Other ISP results/CIS flags/unlisted context excluded; no hardware writes or real latency qualification.'])
  (ROOT/'reverse-engineering/rkaiq/ae-pipeline-sequence-equivalence.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

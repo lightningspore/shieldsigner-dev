@@ -384,6 +384,34 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-fps" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let f = |k: &str| v[k].as_f64().unwrap() as f32;
+                let mut state = ae_fps::State {
+                    baseline_frame: f("baseline_frame"),
+                    baseline_fps: f("baseline_fps"),
+                    variable_frame: 2222.,
+                    fixed_rate: 7.,
+                    variable_rate: 8.,
+                };
+                let out = ae_fps::Calibration::from_scene(&v["scene"])
+                    .unwrap()
+                    .select(
+                        &mut state,
+                        f("frame"),
+                        f("line"),
+                        f("clock"),
+                        f("minimum_fps"),
+                    )
+                    .unwrap();
+                emit(&[
+                    out.frame,
+                    out.fps,
+                    state.variable_frame,
+                    state.fixed_rate,
+                    state.variable_rate,
+                ]);
+            }
             "ae-delay-calibration" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let c = ae_delay_calibration::Calibration::from_scene(&v["scene"]).unwrap();

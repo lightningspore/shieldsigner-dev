@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 90,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "selected frame length, effective FPS, variable-frame limit and fixed/variable selected rates after complete native AecUpdateConfig return",
+  "limitations": [
+    "Cached baseline frame/FPS and runtime timing/minimum FPS are explicit; baseline refresh ownership is external.",
+    "Positive finite valid domain, fixed and variable configuration selection only; actual sensor VBLANK writes and dynamic VTS evolution excluded.",
+    "Inherited configuration harness models allocation/comparison/division/rounding and diagnostics; complete context equivalence is not claimed."
+  ]
+}

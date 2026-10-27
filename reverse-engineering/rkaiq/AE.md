@@ -1050,7 +1050,7 @@ between frame calls. Every frame still runs the native preprocessing checkpoint,
 complete automatic caller/conversion, and complete result publisher.
 
 36 sequences of 32 frames compare 1,152 frame results, including 1,052 processed
-and 100 skipped frames. Twelve bind actual profile damping/tolerances, frame delays and dynamic mode. Intermediate counts zero/two/five, dynamic damping on/off
+and 100 skipped frames. Twelve bind actual profile damping/tolerances, frame delays, dynamic mode and fixed FPS. Intermediate counts zero/two/five, dynamic damping on/off
 and priming on/off are covered. The comparisons include all the outputs and
 listed state from the single-frame corpus on **every** step, crossing the
 five-record control-history and ten-entry error-history ring boundaries.
@@ -1178,4 +1178,41 @@ remain separate work.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-dynamic-calibration.py --arm
+```
+
+## FPS configuration selection
+
+`ae_fps::Calibration` binds `CommCtrl.AecFrameRateMode` to the recovered
+`AecUpdateConfig` selection. Cached baseline frame length/FPS, current timing
+and minimum FPS are explicit inputs; the baseline-refresh owner is not inferred.
+Fixed mode updates the active frame length. Variable mode updates its separate
+frame-limit field while preserving the current active frame length during
+configuration. The effective controller FPS is recomputed from active timing as
+`((pixelClockMHz * 1_000_000) / frameLength) / lineLength`.
+
+A zero request selects the cached baseline frame length; the selected-request
+field remains zero. A request above the cached maximum uses the baseline.
+A supported nonzero request is raised to the configured minimum FPS and its
+frame length is rounded using the native operation order. The opposite mode's
+selected-request field remains unchanged. No extra re-clamp is inserted when
+minimum FPS exceeds the cached maximum; the native branch behavior is retained.
+
+90 comparisons execute complete native configuration through normal return,
+comparing active frame length, effective FPS, variable frame limit and both
+selected-request fields. They cover fixed/variable modes, zero/low/high requests,
+minimum-FPS clamping and different current timing geometries, while confirming
+the supplied baseline remains unchanged.
+[FPS selection comparison](ae-fps-equivalence.json).
+
+The pinned profile uses fixed mode with `FpsValue: 0`; with the fixture's cached
+baseline 1360 lines, 2800 pixels/line and 114.24 MHz, this yields 30 FPS. The twelve
+profile-policy pipeline sequences now bind that FPS selection too. Their native
+pipeline context uses the configuration-tested baseline rate; the separate
+configuration comparison exercises the full selection branches. Actual runtime
+baseline initialization/refresh and variable-VTS evolution remain external.
+This helper performs no sensor VBLANK writes and does not qualify exposure
+application latency.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-fps.py --arm
 ```

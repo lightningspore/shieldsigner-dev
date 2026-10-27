@@ -193,6 +193,27 @@ fn step(
     } else {
         [3, 2]
     };
+    let fps = if v["bind_fps"].as_bool().unwrap_or(false) {
+        ae_fps::Calibration::from_scene(&v["policy_scene"])
+            .unwrap()
+            .select(
+                &mut ae_fps::State {
+                    baseline_frame: 1360.,
+                    baseline_fps: 30.,
+                    variable_frame: 1360.,
+                    fixed_rate: 0.,
+                    variable_rate: 0.,
+                },
+                1360.,
+                2800.,
+                114.24,
+                1.,
+            )
+            .unwrap()
+            .fps
+    } else {
+        f("fps")
+    };
     let initial_error_history = state.frame.error_history;
     let out = ae_pipeline::linear(
         &mut state,
@@ -223,7 +244,7 @@ fn step(
             },
             damping_under: selected.damping_under,
             damping_over: selected.damping_over,
-            fps: f("fps"),
+            fps,
             delay_enabled: b("enabled"),
             same_mode: b("same_mode"),
             negative_delay: delays[0],

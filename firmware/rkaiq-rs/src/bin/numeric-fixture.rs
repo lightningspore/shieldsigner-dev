@@ -258,6 +258,13 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-sgc-parse" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                println!("{}", match shieldsigner_rkaiq::awb_calibration::SingleColor::from_value(&v) {
+                    Ok(c)=>serde_json::json!({"enabled":c.enabled,"mode":c.mode,"colors":c.colors.len(),"candidates":c.candidates.len(),"names":c.candidate_names,"indices":c.color_indices,"target":c.history_target,"alpha":c.alpha.to_bits(),"diagnostic":c.diagnostic_candidate,"thresholds":([c.acceptance_threshold,c.estimated_density_threshold,c.estimated_single_threshold,c.high_history_threshold].map(f32::to_bits))}),
+                    Err(e)=>serde_json::json!({"error":e}),
+                });
+            }
             "awb-single-color-grid" => {
                 use shieldsigner_rkaiq::{
                     awb_luma_history::History, awb_single_color::Line, awb_single_color_grid::*,
@@ -321,17 +328,13 @@ fn main() {
                         v["prior"][i].as_f64().unwrap() as f32
                     }))
                 };
+                let loaded = v.get("sgc").map(shieldsigner_rkaiq::awb_calibration::SingleColor::from_value).transpose().unwrap();
+                let manual = Calibration { candidates:&candidates,colors:&colors,alpha:v["alpha"].as_f64().unwrap() as f32,history_target:v["target"].as_u64().unwrap() as u16,first:line("first"),second:line("second") };
+                let calibration=loaded.as_ref().map(|c|c.classifier(line("first"),line("second"))).unwrap_or(manual);
                 state
                     .process(
                         &grid,
-                        &Calibration {
-                            candidates: &candidates,
-                            colors: &colors,
-                            alpha: v["alpha"].as_f64().unwrap() as f32,
-                            history_target: v["target"].as_u64().unwrap() as u16,
-                            first: line("first"),
-                            second: line("second"),
-                        },
+                        &calibration,
                         prior,
                     )
                     .unwrap();
@@ -417,8 +420,10 @@ fn main() {
                             c["disagreement_weights"][i].as_f64().unwrap() as f32
                         }),
                     };
+                    let loaded = v.get("sgc").map(shieldsigner_rkaiq::awb_calibration::SingleColor::from_value).transpose().unwrap();
+                    let calibration = loaded.as_ref().map(|c| &c.confidence).unwrap_or(&cal);
                     let r = confidence(
-                        &cal,
+                        calibration,
                         v["brightness"].as_f64().unwrap() as f32,
                         v["density"].as_f64().unwrap() as f32,
                         v["distance"].as_f64().unwrap() as f32,

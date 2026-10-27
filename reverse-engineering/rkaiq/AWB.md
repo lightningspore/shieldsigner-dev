@@ -1257,3 +1257,47 @@ records and explicit calibration. Raw preprocessing/IQ initialization, actual
 hardware measurement reconfiguration, outer publication/lifecycle, saved-site
 persistence, unsafe native Exclusion resolution and live qualification remain
 unfinished. Passing this stage does not establish a complete frame pipeline.
+
+## Loading single-color settings from SC3336 IQ
+
+`awb_calibration::SingleColor::from_value` now owns the explicitly selected
+`autoExtPara.singleColorProces` object. This diagnostics-feature loader uses
+`serde_json` and allocated vectors; the numerical classifier/manager remain
+allocation-free and available without diagnostics. It does not choose a scene
+or silently supply missing calibration values.
+
+The loader reads enable/mode, candidate names and red/blue gains, color labels
+and LCh/temperature-distance tables, history size, alpha, diagnostic candidate,
+acceptance/estimate/history thresholds, and every confidence-manager table.
+INITIAL/AUTO/ALWAYS map to the SDK enum values 0/1/2. Native confidence memory
+order is high/medium/low CCT tables; the existing manager retains its verified
+reverse-order CCT interpolation behavior. Color result indices refer to table
+positions; original external color labels are separately preserved as metadata.
+
+Declared dynamic lengths must match arrays and the bounded numerical API's
+1–14 candidate/color limits. Fixed arrays have exact lengths, numbers must fit
+finite f32, integer/flag fields are checked, names must fit the native 20-byte
+candidate name storage including termination, and confidence/color CCT knots
+must be nondecreasing. Repeated density endpoints are accepted, as required by
+the actual IQ. Singleton-history native hazards remain subject to the existing
+checked runtime policy; loading a history target does not erase that boundary.
+Calibrated line construction/validity remains external to this loader.
+
+`mise run camera:rust:awb-iq-single-color` verifies the pinned IQ/binary/GCC/math
+runtime hashes and uses the loaded object in **24 complete grid classifications
+(5,400 cells) and 256 confidence-manager comparisons** on host and ARM. Nine
+classifications are valid and 15 empty. The native reference uses the same IQ's
+original color labels and numerical arrays; Rust's manual fixture calibration
+is poisoned so a successful comparison must use the parser's owned data.
+The suite also independently checks scalar flags/mode/metadata/threshold bits
+and rejects ten malformed objects, including missing/unknown mode, inconsistent
+lengths, fixed-array mismatch, descending knots, overflow, fractional history
+size, invalid flag/name and alpha out of range.
+[IQ-loaded comparison report](awb-iq-single-color-equivalence.json).
+
+This loads the single-color subset only. Full seven-light calibration, remaining
+preprocessor/wrapper settings, calibrated line construction, full initialization
+and the raw-frame/session composition still need implementation. It does not
+claim to replay the original IQ database parser or `AwbInitV32` in full, nor to
+qualify live automatic white balance. The generic 2,048-case confidence/CCT
+regression remains required after extending the fixture to use loaded settings.

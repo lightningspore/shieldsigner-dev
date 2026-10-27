@@ -1,0 +1,25 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "runtimeSha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "jsonPointer": "/main_scene/0/sub_scene/0/scene_isp32/wb_v32/autoExtPara/singleColorProces",
+  "classifierCases": 24,
+  "cells": 5400,
+  "validClassifications": 9,
+  "confidenceCases": 256,
+  "parseSummaryChecks": 1,
+  "malformedRejections": 10,
+  "mismatches": 0,
+  "arm": true,
+  "mathCalls": {
+    "powf": 94500,
+    "sqrtf": 18900,
+    "atan2f": 18900
+  },
+  "scope": "Owned JSON single-color calibration used by complete classifier and confidence-manager comparisons; manual fixture calibration is poisoned.",
+  "limitations": [
+    "Explicit scene selection; this loads the singleColorProces subset, not all AWB calibration or initialization.",
+    "Caller-supplied line-valid flags are true; native calibrated-line construction is not tested.",
+    "Synthetic grids/history/samples; no live sensor or complete IQ-initialized frame lifecycle."
+  ]
+}

@@ -49,6 +49,8 @@ pub mod awb_xy_selection;
 #[cfg(feature = "diagnostics")]
 pub mod calibration;
 #[cfg(feature = "diagnostics")]
+pub mod awb_calibration;
+#[cfg(feature = "diagnostics")]
 pub mod demosaic_calibration;
 pub mod demosaic_selection;
 pub mod discovery;

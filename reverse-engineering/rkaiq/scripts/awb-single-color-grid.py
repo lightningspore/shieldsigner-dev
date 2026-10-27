@@ -51,7 +51,7 @@ class Original(color_reference.OriginalColor):
         struct.pack_into('<i', config, 0x12c, -1)
         colors = bytearray(36 * len(v['colors']))
         for i, color in enumerate(v['colors']):
-            struct.pack_into('<I8f', colors, i * 36, i, color['chroma'], color['hue'], *color['knots'], *color['thresholds'])
+            struct.pack_into('<I8f', colors, i * 36, color.get('index', i), color['chroma'], color['hue'], *color['knots'], *color['thresholds'])
         candidates = bytearray(28 * len(v['candidates']))
         for i, gain in enumerate(v['candidates']):
             struct.pack_into('<2f', candidates, i * 28 + 20, *gain)

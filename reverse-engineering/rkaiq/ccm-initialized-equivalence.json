@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "sequences": 32,
+  "frames": 768,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "uclibcRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "hostBinarySha256": "67acd83da8f80fbe44f9340cbd53018a6564628525e74c7951ca9f26a23bc65f",
+  "physicalArmBinarySha256": "0d17d61b5e94c8cf6957707506526ae59007fb4616c2554e3d82abb0a2bd2e5c",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Whole native AccmInit (including actual ISP32 module lookup), AccmConfig and AccmAutoConfig; initial state and complete frame result/cache/control state.",
+  "limitations": [
+    "SDK scene input and hardware-version global are controlled; native module table/lookup and full constructor execute. One allocator is modeled; native JSON parser is not executed.",
+    "Symmetric, non-blended profile and default user inhibition/saturation only.",
+    "Libc string/memory boundaries modeled; original uClibc floorf executes. No live ISP writes."
+  ],
+  "constructorCalls": 32,
+  "initialStateComparisons": 32,
+  "publishedFrames": 593,
+  "nonconvergedFrames": 503,
+  "heldInputFrames": 386,
+  "resultBytesComparedPerFrame": 156,
+  "stateKeysCompared": [
+    "result",
+    "selection",
+    "inputs",
+    "alpha",
+    "saturation",
+    "converged",
+    "frames",
+    "inputsChanged",
+    "published"
+  ]
+}

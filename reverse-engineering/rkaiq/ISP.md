@@ -963,3 +963,33 @@ explicit initialization/control boundaries, not outer callback integration,
 physical ISP writes, image quality or a full RKAIQ replacement. Native full
 constructor defaults/callback ownership and transactional camera submission
 remain to be closed before enabling live CCM.
+
+### Native CCM constructor proof (0.0.34 development)
+
+[Full-constructor evidence](ccm-initialized-equivalence.json) replaces the
+previous manually seeded initialization boundary with actual complete `AccmInit`
+execution (ELF `0xff36c`). The reference selects ISP32 in the native hardware
+version global and supplies a scene-root pointer whose native module-table
+entry resolves to the independently packed CCM SDK object. The original lookup,
+name comparisons, context memset, calibration/name-table initialization and
+constructor default writes all execute. No module-lookup or initializer function
+is replaced. Only one controlled allocation of the native 0x564-byte context
+and ordinary libc string/memory helpers are modeled.
+
+All selected initial result/cache/control fields match Rust `State::new` for
+32 profile variations, before any frame runs. They then remain exact through
+768 automatic controller frames. This checks full 156-byte results and every
+state key listed in the report, including saturation initialization at 100,
+unit current/baseline inputs, zero selection cache, convergence/frame/publication
+state and alpha cache. Original uClibc `floorf` executes for subsequent curves.
+Host and physical Luckfox Rust replay agree. The 98 library/five Unix tests,
+no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:ccm-initialized -- --adb SERIAL --report LOCAL.json`
+after building host/ARM fixtures. The native JSON parser is not executed;
+independent SDK input packing remains explicit. This does not claim byte-for-byte
+native context/ABI compatibility: pointer/metadata/manual-attribute storage and
+unconsumed state are not represented by the Rust controller. Symmetric,
+non-blended profiles and default user adjustments remain the supported path.
+Callback ownership and live transactional submission remain next. Physical CPU
+replay loads no vendor library and makes no ISP writes.

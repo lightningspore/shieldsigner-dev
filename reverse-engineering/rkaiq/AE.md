@@ -1958,3 +1958,42 @@ regression tests also pass, including the success/failure matrix across its
 four API/storage cases and five driver outcomes. Syscalls/mappings remain
 simulated; physical cancellation latency and driver cleanup require hardware
 qualification. Automatic capture still needs its public command wiring.
+
+### Runnable automatic-exposure capture command
+
+`camera-probe auto-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE`
+now joins the recovered AE runtime to actual Linux capture adapters. It reuses
+the first-frame command's graph validation, initial ISP parameters, active sensor
+timing and initial exposure setup. After initial parameter completion, a single
+owner handles SOF/statistics, sensor writes, persistent ISP gain QBUF/DQBUF and
+translator snapshots while image/raw/statistics workers run in a scoped capture
+task. It discards 32 image frames and saves frame 33, then joins all workers and
+releases statistics before the parameter pool. Existing `first-frame-sc3336`
+behavior remains available.
+
+This command enables **automatic exposure with fixed calibrated white balance**.
+Each processed frame republishes the quantized startup WB gain before applying
+the effective exposure's ISP digital gain. That explicit fixed-WB policy restores
+unscaled bank-0 words on a return to unity, rather than relying on an unported
+AWB controller to happen to publish a result. It uses the recovered native WB
+then exposure conversion order, but it is not a reconstruction of native AWB
+result-inclusion policy. Automatic WB and other unported 3A modes remain outside
+this command; it is not the completed RKAIQ replacement.
+
+The ARM sequence suite now runs six end-to-end scenarios: four fixed-exposure
+regressions plus automatic exposure with single- and multi-plane raw TX. Both
+automatic scenarios capture 33 synthetic image frames and save the final one, process over
+30 raw-statistics frames through AE, schedule sensor writes and submit over 30
+parameter batches/snapshots. Their startup/teardown checks keep parameters open
+through statistics cleanup. Earlier native numerical/runtime comparisons still
+supply equivalence evidence for recovered components; this end-to-end suite
+simulates kernel ioctls, mapping and pixel data. It does not prove brightness
+convergence, physical latency, QR quality, or operation on the actual camera.
+
+The run is deliberately bounded. Transport/pending/snapshot bounds remain
+64/16/128, parameter IDs must match explicit snapshots, and a late final
+statistics frame without corresponding SOF causes an error. Final queued ISP
+updates can be cancelled by parameter STREAMOFF after image capture ends; a
+successful QBUF or saved image is not proof that every final proposal appeared
+in that image. Hardware qualification and a reviewed updated test kit remain
+outstanding.

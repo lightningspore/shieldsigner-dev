@@ -6,15 +6,27 @@ fn first_frame_sc3336_observed(
     args: &[String],
     observer: Option<CameraAeSender>,
 ) -> io::Result<()> {
+    first_frame_sc3336_mode(args, observer, false)
+}
+fn auto_frame_sc3336(args: &[String]) -> io::Result<()> {
+    first_frame_sc3336_mode(args, None, true)
+}
+fn first_frame_sc3336_mode(
+    args: &[String],
+    observer: Option<CameraAeSender>,
+    automatic: bool,
+) -> io::Result<()> {
     use shieldsigner_rkaiq::{
         calibration::{RuntimeTiming, SensorCalibration},
         sensor, sensor_descriptor,
     };
     use std::io::Read;
-    if !matches!(args.len(), 5 | 6 | 10) {
-        return Err(error(
-            "first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME --step-seconds SECONDS]]",
-        ));
+    if (automatic && args.len() != 6) || (!automatic && !matches!(args.len(), 5 | 6 | 10)) {
+        return Err(error(if automatic {
+            "auto-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE"
+        } else {
+            "first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME --step-seconds SECONDS]]"
+        }));
     }
     let step = if args.len() == 10 {
         if args[6] != "--step-at" || args[8] != "--step-seconds" {
@@ -110,7 +122,7 @@ fn first_frame_sc3336_observed(
     report.sync_all()?;
     println!(
         "{}",
-        json!({"event":"first-frame-starting","sensor":sensor_path,"parameters":parameter_path,"initialReport":report_path,"automatic3A":false,"coldStartProven":false})
+        json!({"event":"first-frame-starting","sensor":sensor_path,"parameters":parameter_path,"initialReport":report_path,"automatic3A":false,"automaticExposure":automatic,"automaticWhiteBalance":false,"coldStartProven":false})
     );
     let outcome = (|| -> io::Result<()> {
         pipeline_configuration::run(&[args[0].clone()])?;
@@ -173,6 +185,50 @@ fn first_frame_sc3336_observed(
             codes.integration_time.to_string(),
             "-1".into(),
         ])?;
+        let control = if automatic {
+            let session = shieldsigner_rkaiq::ae_session::Session::from_profile(
+                &iq,
+                timing,
+                profile.width,
+                profile.height,
+            )
+            .map_err(error)?;
+            let initial_record = session.state.publication.previous_final;
+            let runtime = shieldsigner_rkaiq::ae_runtime::Runtime::new(
+                session,
+                initial_record,
+                shieldsigner_rkaiq::sensor_scheduler::EffectPolicy {
+                    shorten_enabled: false,
+                    designated_frame: 0,
+                    shorten_all: false,
+                },
+            )
+            .map_err(error)?;
+            let sensor = SensorDevice {
+                file: open(&sensor_path, true)?,
+                queries: vec![],
+                bus: None,
+                writes: vec![],
+            };
+            let (sender, events) = std::sync::mpsc::sync_channel(64);
+            Some(AutomaticCapture {
+                owner: CameraAeOwner::new(runtime, sensor, 0, parameters),
+                events,
+                sender,
+                statistics_node: statistics.unwrap().clone(),
+                statistics_output: format!("{}.stats.raw", args[4]),
+                initial_parameters: parameters,
+                target: initial["initialTargetLuma"]
+                    .as_f64()
+                    .ok_or_else(|| error("Missing AE target"))? as f32,
+            })
+        } else {
+            None
+        };
+        let capture_observer = control
+            .as_ref()
+            .map(|c| c.sender.clone())
+            .or_else(|| observer.clone());
         let step_codes = step
             .map(|(frame, seconds)| {
                 profile
@@ -206,8 +262,14 @@ fn first_frame_sc3336_observed(
             if let Some((frame, _)) = step_codes {
                 command.extend(["--warmup".into(), (frame + 8).to_string()]);
             }
-            capture_cif_with_parameters_observed(&command, observer.clone())
+            if automatic {
+                command.extend(["--warmup".into(), "32".into()]);
+            }
+            capture_cif_with_parameters_controlled(&command, capture_observer, control)
         };
+        if automatic {
+            return capture();
+        }
         match statistics {
             Some(node) => statistics_session::during_observed(
                 node,
@@ -225,7 +287,7 @@ fn first_frame_sc3336_observed(
     })();
     println!(
         "{}",
-        json!({"event":"first-frame-finished","success":outcome.is_ok(),"error":outcome.as_ref().err().map(|e|e.to_string()),"automatic3A":false,"coldStartProven":false,"partialSettingsMayRemain":true})
+        json!({"event":"first-frame-finished","success":outcome.is_ok(),"error":outcome.as_ref().err().map(|e|e.to_string()),"automatic3A":false,"automaticExposure":automatic,"automaticWhiteBalance":false,"coldStartProven":false,"partialSettingsMayRemain":true})
     );
     outcome
 }

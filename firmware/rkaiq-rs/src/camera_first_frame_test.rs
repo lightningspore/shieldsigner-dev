@@ -925,6 +925,7 @@ mod first_frame_driver {
         fs::write(&plan,serde_json::to_vec(&json!({"sensor":"/dev/null","isp":"/dev/urandom","route":"cif","raw_tx":["/dev/full"],"raw_rx":["/dev/random"],"bridges":[],"links":[]})).unwrap()).unwrap();
         let statistics = std::env::var("SHIELDSIGNER_TEST_STATS").is_ok();
         let multi_tx = std::env::var("SHIELDSIGNER_TEST_MPLANE_TX").is_ok();
+        let automatic = std::env::var("SHIELDSIGNER_TEST_AUTO_AE").is_ok();
         *DRIVER.lock().unwrap() = Some(Driver {
             statistics_required: statistics,
             multi_tx,
@@ -941,7 +942,11 @@ mod first_frame_driver {
             args.push("/dev/tty".into());
         }
         let (event_tx, event_rx) = std::sync::mpsc::sync_channel(64);
-        let outcome = first_frame_sc3336_observed(&args, Some(event_tx));
+        let outcome = if automatic {
+            auto_frame_sc3336(&args)
+        } else {
+            first_frame_sc3336_observed(&args, Some(event_tx))
+        };
         let events = event_rx.try_iter().collect::<Vec<_>>();
         let mut sof_events = 0;
         let mut statistics_events = 0;
@@ -963,12 +968,25 @@ mod first_frame_driver {
                 }
             }
         }
-        assert!(sof_events > 0);
+        assert!(automatic || sof_events > 0);
         let driver = DRIVER.lock().unwrap().take().unwrap();
         outcome.unwrap();
-        assert_eq!(statistics_events, driver.statistics_frames);
-        assert_eq!(driver.image_frames, 3);
-        assert!(driver.raw_frames >= 3);
+        if !automatic {
+            assert_eq!(statistics_events, driver.statistics_frames);
+        }
+        let image_frames = if automatic { 33 } else { 3 };
+        assert_eq!(driver.image_frames, image_frames);
+        if automatic {
+            assert!(
+                driver
+                    .trace
+                    .iter()
+                    .filter(|s| s.starts_with("sensor:write:"))
+                    .count()
+                    > 3
+            );
+        }
+        assert!(driver.raw_frames >= image_frames);
         assert_eq!(fs::metadata(&output).unwrap().len(), 4478976);
         assert_eq!(
             fs::metadata(format!("{output}.initial.bin")).unwrap().len(),
@@ -981,7 +999,12 @@ mod first_frame_driver {
         assert!(position("sensor:write:9e0901") < position("parameters:on"));
         if statistics {
             assert!(position("statistics:on") < position("tx:on"));
-            assert!(position("parameters:off") < position("statistics:off"));
+            if automatic {
+                assert!(position("rx:off") < position("statistics:off"));
+                assert!(position("statistics:off") < position("parameters:off"));
+            } else {
+                assert!(position("parameters:off") < position("statistics:off"));
+            }
             assert_eq!(
                 fs::metadata(format!("{output}.stats.raw")).unwrap().len(),
                 13040
@@ -1002,7 +1025,7 @@ mod first_frame_driver {
                 report["lastFrame"]["measurements"].as_u64(),
                 Some((1 << 8) | (1 << 12))
             );
-            assert_eq!(report["automaticExposure"], false);
+            assert_eq!(report["controlsExposure"], false);
             assert_eq!(report["initialTargetLuma"], 45.0);
             assert_eq!(report["lastFrame"]["aeLinear"]["weightedMeanQ8"], 0);
             assert_eq!(
@@ -1017,7 +1040,7 @@ mod first_frame_driver {
         }
         println!(
             "{}",
-            json!({"event":"simulated-startup-verified","sofEvents":sof_events,"statisticsEvents":statistics_events,"statisticsEnabled":statistics,"multiPlaneTx":multi_tx,"statisticsFrames":driver.statistics_frames,"imageFrames":driver.image_frames,"rawFrames":driver.raw_frames,"savedBytes":4478976,"hardwareVerified":false,"imageContent":"anonymous zero-filled simulated memory"})
+            json!({"event":"simulated-startup-verified","automaticAe":automatic,"sofEvents":sof_events,"statisticsEvents":statistics_events,"statisticsEnabled":statistics,"multiPlaneTx":multi_tx,"statisticsFrames":driver.statistics_frames,"imageFrames":driver.image_frames,"rawFrames":driver.raw_frames,"savedBytes":4478976,"hardwareVerified":false,"imageContent":"anonymous zero-filled simulated memory"})
         );
         fs::remove_dir_all(folder).unwrap();
     }

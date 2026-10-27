@@ -25,6 +25,7 @@ struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
     sensor: B,
     parameters: Vec<(u32, [u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES])>,
     last_sof: Option<u32>,
+    last_sof_timestamp_ns: Option<u64>,
     last_statistics: Option<u32>,
     pending: std::collections::VecDeque<Vec<u8>>,
     processed: u64,
@@ -44,6 +45,7 @@ where
             sensor,
             parameters: vec![(initial_id, initial)],
             last_sof: None,
+            last_sof_timestamp_ns: None,
             last_statistics: None,
             pending: std::collections::VecDeque::new(),
             processed: 0,
@@ -51,6 +53,7 @@ where
     }
     /// Snapshots must represent complete effective translator state. This is an
     /// explicit event-owner input, not native map lifetime/accumulation policy.
+    #[cfg(test)]
     fn add_parameters(
         &mut self,
         id: u32,
@@ -124,7 +127,7 @@ where
         match event {
             CameraAeEvent::Sof {
                 frame,
-                timestamp_ns: _,
+                timestamp_ns,
             } => {
                 if self.last_sof.is_some_and(|old| frame < old) {
                     return Err(error("Regressing AE SOF frame"));
@@ -140,6 +143,7 @@ where
                     )));
                 }
                 self.last_sof = Some(frame);
+                self.last_sof_timestamp_ns = Some(timestamp_ns);
             }
             CameraAeEvent::Statistics { bytes } => {
                 let stats = shieldsigner_rkaiq::statistics::Statistics::parse(&bytes)
@@ -199,11 +203,25 @@ where
     /// Keep all controller/device/parameter ownership on this thread while a
     /// bounded capture task emits events. Capture must honor cancellation or
     /// its own finite deadlines; no worker is detached on any failure.
+    #[cfg(test)]
     fn during_capture<F>(
         &mut self,
         backend: &mut ParameterBackend,
         queue: &mut parameter::Queue,
         events: &std::sync::mpsc::Receiver<CameraAeEvent>,
+        capture: F,
+    ) -> io::Result<()>
+    where
+        F: FnOnce(&std::sync::atomic::AtomicBool) -> io::Result<()> + Send,
+    {
+        self.during_capture_with_wb(backend, queue, events, None, capture)
+    }
+    fn during_capture_with_wb<F>(
+        &mut self,
+        backend: &mut ParameterBackend,
+        queue: &mut parameter::Queue,
+        events: &std::sync::mpsc::Receiver<CameraAeEvent>,
+        fixed_wb: Option<shieldsigner_rkaiq::isp32::WhiteBalanceGain>,
         capture: F,
     ) -> io::Result<()>
     where
@@ -247,7 +265,10 @@ where
                     if let Some(event) = event {
                         let processed = self.handle(event)?;
                         for output in processed {
-                            self.submit_gain(backend, queue, output.frame, None)?;
+                            // Frame zero already has the initial parameter ID.
+                            if output.frame != 0 {
+                                self.submit_gain(backend, queue, output.frame, fixed_wb)?;
+                            }
                         }
                         progress = Instant::now();
                     } else {
@@ -278,4 +299,14 @@ impl Drop for CameraStopGuard<'_> {
     fn drop(&mut self) {
         self.0.store(true, std::sync::atomic::Ordering::Release);
     }
+}
+
+struct AutomaticCapture {
+    owner: CameraAeOwner<SensorDevice>,
+    events: std::sync::mpsc::Receiver<CameraAeEvent>,
+    sender: CameraAeSender,
+    statistics_node: String,
+    statistics_output: String,
+    initial_parameters: [u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES],
+    target: f32,
 }

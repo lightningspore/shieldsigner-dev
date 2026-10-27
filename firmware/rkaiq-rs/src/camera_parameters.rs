@@ -98,7 +98,6 @@ impl ParameterBackend {
     /// effective map. This is an event-owner API, not an automatic capture loop.
     /// Commit the WB cache only after QBUF succeeds. Driver failures still
     /// require event-owner recovery; this method never retries automatically.
-    #[allow(dead_code)]
     fn enqueue_runtime_gain(
         &mut self,
         queue: &mut parameter::Queue,
@@ -341,6 +340,13 @@ fn capture_cif_with_parameters_observed(
     args: &[String],
     observer: Option<CameraAeSender>,
 ) -> io::Result<()> {
+    capture_cif_with_parameters_controlled(args, observer, None)
+}
+fn capture_cif_with_parameters_controlled(
+    args: &[String],
+    observer: Option<CameraAeSender>,
+    control: Option<AutomaticCapture>,
+) -> io::Result<()> {
     use std::os::unix::fs::MetadataExt;
     let separator = args
         .iter()
@@ -394,7 +400,7 @@ fn capture_cif_with_parameters_observed(
         raw_bridge::Bridge::prepare(&args[2], &args[3], &args[4], sof, step)?.observe_ae(observer);
     let mut combined = args[..2].to_vec();
     combined.extend_from_slice(&args[separator..]);
-    capture_with_parameters_using(&combined, Some(bridge))
+    capture_with_parameters_controlled(&combined, Some(bridge), control)
 }
 fn capture_with_parameters(args: &[String]) -> io::Result<()> {
     capture_with_parameters_using(args, None)
@@ -402,6 +408,13 @@ fn capture_with_parameters(args: &[String]) -> io::Result<()> {
 fn capture_with_parameters_using(
     args: &[String],
     raw: Option<raw_bridge::Bridge>,
+) -> io::Result<()> {
+    capture_with_parameters_controlled(args, raw, None)
+}
+fn capture_with_parameters_controlled(
+    args: &[String],
+    raw: Option<raw_bridge::Bridge>,
+    control: Option<AutomaticCapture>,
 ) -> io::Result<()> {
     use std::os::unix::fs::{FileTypeExt, MetadataExt};
     let separator = args.iter().position(|v| v == "--").ok_or_else(|| {
@@ -436,15 +449,64 @@ fn capture_with_parameters_using(
     }
     let mut parameter_args = args[..2].to_vec();
     parameter_args.extend(["--hold-ms".into(), "0".into()]);
-    submit_parameters_then(&parameter_args, || {
+    submit_parameters_then_with_backend(&parameter_args, |backend, queue| {
         println!(
             "{}",
             json!({"event":"image-capture-starting","parameterQueueHeldOpen":true,"device":image[0],"output":image[1],"coldStartProven":false})
         );
         io::stdout().flush()?;
-        let outcome = match raw {
-            Some(bridge) => bridge.during(|| capture(&capture_args, false)),
-            None => capture(&capture_args, false),
+        let outcome = if let Some(mut control) = control {
+            use shieldsigner_rkaiq::isp32;
+            let base = isp32::AWB_GAIN_OFFSET;
+            let gain = |offset| {
+                u16::from_le_bytes(
+                    control.initial_parameters[base + offset..base + offset + 2]
+                        .try_into()
+                        .unwrap(),
+                ) as f32
+                    / 256.
+            };
+            let fixed_wb = isp32::WhiteBalanceGain {
+                red: gain(6),
+                green_red: gain(2),
+                green_blue: gain(0),
+                blue: gain(4),
+                position: isp32::ApplyPosition::Gain1,
+            };
+            let observer = Some(control.sender);
+            let result = control.owner.during_capture_with_wb(
+                backend,
+                queue,
+                &control.events,
+                Some(fixed_wb),
+                move |cancel| {
+                    statistics_session::during_observed_cancelable(
+                        &control.statistics_node,
+                        &control.statistics_output,
+                        &control.initial_parameters,
+                        control.target,
+                        observer,
+                        Some(cancel),
+                        || match raw {
+                            Some(bridge) => bridge.during_cancelable(
+                                || capture_cancelable(&capture_args, false, Some(cancel)),
+                                Some(cancel),
+                            ),
+                            None => capture_cancelable(&capture_args, false, Some(cancel)),
+                        },
+                    )
+                },
+            );
+            println!(
+                "{}",
+                json!({"event":"automatic-ae-finished","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string()),"processedStatistics":control.owner.processed,"parameterSnapshots":control.owner.parameters.len(),"lastSof":control.owner.last_sof,"lastSofTimestampNs":control.owner.last_sof_timestamp_ns,"automaticWhiteBalance":false,"physicalApplicationVerified":false})
+            );
+            result
+        } else {
+            match raw {
+                Some(bridge) => bridge.during(|| capture(&capture_args, false)),
+                None => capture(&capture_args, false),
+            }
         };
         println!(
             "{}",

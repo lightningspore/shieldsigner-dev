@@ -2,6 +2,8 @@
 
 **Status: partial numerical reconstruction and camera-test tools. This is not a replacement `librkaiq.so`, and the existing image is unchanged.** The active objective is a Rust implementation of the camera-processing path used by ShieldSigner. A clean-boot hardware session has now produced a recognizable 640×480 ISP frame and valid AE statistics; automatic 3A and application integration remain unfinished.
 
+**Experimental automatic exposure:** `camera-probe auto-frame-sc3336` now joins SOF/statistics, recovered AE, sensor writes and ISP gain queues for a bounded 33-frame capture with fixed calibrated WB. Two end-to-end ARM adapter scenarios pass with simulated devices; real-camera qualification remains outstanding. [Command, evidence and limits](AE.md#runnable-automatic-exposure-capture-command).
+
 **Current priority: a runnable single-camera path.** Connect live graph/format setup, calibrated initial parameters and persistent queues before expanding optional algorithms or releasing more isolated routine kits. The next functional checkpoint is a usable SC3336 frame without vendor bootstrap, followed by the application's QR capture and required exposure/white-balance behavior. [Critical path and current blockers](ISP.md#current-implementation-priority).
 
 ## What is implemented

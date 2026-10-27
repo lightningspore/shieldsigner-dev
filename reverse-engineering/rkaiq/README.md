@@ -30,7 +30,7 @@ Recent hardware evidence:
 
 [HARDWARE-TEST.md](HARDWARE-TEST.md) is the runnable procedure. The frozen
 0.0.32-dev kit now includes the latest diagnostics and passes manifest and app
-integration checks on the actual board; the prior 0.0.31-dev archive remains
+integration checks on the actual board, including a controlled clean reboot; the prior 0.0.31-dev archive remains
 available unchanged. [Current kit evidence](kit-0.0.32-dev-hardware-validation.json). Next priorities are successful
 physical QR scanning, physical lighting/color response, complete LCD/button
 interaction and power-cycle qualification. Preserve the single-camera critical
@@ -197,7 +197,7 @@ Still open:
    required by this fixed profile. Existing comparisons cover many components
    and the live composition, with narrower oracle scopes stated explicitly.
 6. Repeat the remaining physical qualification with the exact 0.0.32-dev kit
-   before treating its warm-board test as complete deployment qualification.
+   before treating its controlled clean-reboot test as complete deployment qualification.
 
 Optional modes remain outside the current single-camera priority unless the
 actual QR capture path needs them. No completion claim follows from passing

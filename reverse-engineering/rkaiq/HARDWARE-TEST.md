@@ -1530,3 +1530,23 @@ AWB replay, shutter/gain timing and startup-convergence evidence. Each report
 identifies its own binary/scope; packaging historical evidence does not retest
 every behavior with the newly packaged binary. Use the archive's own quickstart
 with version 0.0.32-dev and fresh configuration/results paths.
+
+### Exact 0.0.32-dev package after controlled clean reboot
+
+A subsequent controlled reboot tested the same frozen package without vendor
+camera initialization in that boot. Both one-boot services restored their pinned
+original bytes before returning; markers, new boot ID, absence of vendor
+processes/library mappings/Rockit and initially empty module inventory were
+verified before the driver-only loader ran. Matching temporary backups were
+removed only after verification. Original service hashes and absent backups
+were checked again after capture. The installed application remains unchanged.
+
+The bundled integration check passed: 67 sampled previews, first in 0.605 s,
+clean owner exit and 0.325 s stop. Automatic AE/AWB processed 165 statistics
+frames, submitted 164 parameter batches and retained at most two snapshots.
+Both normal measurement groups appeared. The final exact-SDK translation
+matched all 7,680 original ARM output bytes with zero mismatches.
+[The package report](kit-0.0.32-dev-hardware-validation.json) now records both
+warm-board and controlled-clean-reboot checks. The frozen ZIP and its checksum
+are unchanged. A software reboot does not qualify a physical power cycle,
+optical scanning, physical lighting changes or complete LCD/button interaction.

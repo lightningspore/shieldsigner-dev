@@ -213,3 +213,4 @@ _Static_assert(offsetof(struct isp32_baynr_cfg,weit_d2)==84,"BAYNR reversed spat
 _Static_assert(offsetof(struct isp32_baynr_cfg,dat_max)==94,"BAYNR data maximum");
 _Static_assert(offsetof(struct isp32_baynr_cfg,gain_x)==102,"BAYNR gain x table");
 _Static_assert(offsetof(struct isp32_baynr_cfg,gain_y)==118,"BAYNR gain y table");
+_Static_assert(ISP32_MODULE_BAY3D==(1ULL<<37),"BAYNR dependency enable metadata");

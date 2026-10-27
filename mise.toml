@@ -692,3 +692,11 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:ae-cis"]
 description = "Compare normal AE sensor SNR metadata with original core/C++ routines"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-cis.py"
+
+[tasks."camera:rust:baynr-live-check"]
+description = "Compare real Bayer spatial NR controller inputs, state and submitted registers with native ARM"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/baynr-live-check.py"
+
+[tasks."camera:rust:verify-live"]
+description = "Verify every live reconstructed IQ module and final saved AWB translation"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/verify-live-capture.py"

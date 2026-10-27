@@ -1637,3 +1637,56 @@ reports optional NR-switch unsupported, so the current live consumer can use
 the independently verified signed-DCG fallback rather than assuming that an
 unpopulated exposure flag byte is correct. Physical CPU replay makes no ISP
 writes; the live BAYNR handoff is the next gate.
+
+
+### Live BAYNR startup and transactional capture (0.0.34 development)
+
+This checkpoint supersedes the earlier BAYNR-disabled checkpoints above.
+`Information::from_record` builds normal-frame inputs from the scheduler's
+associated AE record. It runs the reconstructed AE CIS fallback on actual DCG
+metadata, rather than assuming an SNR flag from gain. The SC3336 path requires
+unsupported optional NR-switch ioctl metadata and a DCG-disabled profile;
+sensors with switch metadata are rejected before streaming because full AE
+hysteresis publication is not yet integrated. The existing unity BLC predgain
+guard remains in force. Actual parameter bit 37 supplies BAY3D dependency state.
+
+Startup selects calibrated BAYNR and enables bit 36. The persistent owner is
+seeded from the actual converted AE initial record: requested exposure is
+3.000000026 ms, while the associated sensor record contains 2.990195993 ms.
+These produce identical initial registers, but the cached exposure must retain
+the actual value. `baynr-controller-startup` records that exact seed, selected
+252 bytes and exposure 88 bytes for native verification. Every runtime event
+records the same state plus the 152-byte result and updated packed 150 bytes.
+
+Controller/result changes are staged alongside the other IQ blocks, committed
+only after accepted QBUF, and copied into effective parameter snapshots. A
+no-update result can commit cache state when the entire batch needs no write.
+Six ARM orchestration scenarios include BAYNR rollback on queue failure and
+successful retry with exact packed snapshots.
+
+[Final live evidence](baynr-live-validation.json) covers 192 and 600 image
+captures plus the installed scan/preview application. Full native constructor,
+prepare and processing callbacks, calibration, selector, original-expf
+quantizer, CIS helpers and ISP32 dispatcher match startup and every runtime
+result, selected record and cached exposure. The 600-image run has 399 runtime
+steps (8 updates, 391 holds), 400 statistics and 399 batches; the 192-image run
+has 127 steps (9 updates). Existing LSC/CCM/DPCC/demosaic and final full
+7,680-byte AWB translation remain exact in both captures and the application.
+
+The app delivers ten frames to the QR decoder and 27 headless renders over
+7.36 seconds, processes 119 statistics and submits 118 batches (ten BAYNR
+updates). Owner exits zero, preview joins and thread errors are empty. Peak
+parameter history is seven snapshots in the app and two in dedicated captures.
+No optical decode or physical display/button qualification is claimed. A
+private final frame shows text and color without obvious corruption. Post-run
+CMA allocation is zero; no RKAIQ/Rockit processes or mappings were present.
+
+Use `mise run camera:rust:baynr-live-check -- BASE --report LOCAL.json` for one
+module, or `mise run camera:rust:verify-live -- BASE --min-submissions 100` for
+all five live IQ blocks, final AWB translation and controller bookkeeping.
+Both consume private capture artifacts; sanitized evidence alone is committed.
+All 107 library/five Unix tests, no-default-features, static ARM, SDK/kernel
+layout and six ARM sequence scenarios pass. The
+[current audit](profile-module-audit-0.0.34-baynr.json) leaves BAY3D, YNR, CNR
+and SHARP. Physical optical/lighting/UI qualification, a controlled cold boot
+of this exact binary and a new frozen kit remain open; frozen 0.0.33 is unchanged.

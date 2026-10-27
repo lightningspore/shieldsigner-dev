@@ -1,3 +1,14 @@
+struct CameraBaynr {
+    calibration: serde_json::Value,
+    state: shieldsigner_rkaiq::baynr_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_baynr::RESULT_BYTES],
+}
+struct CameraBaynrStage {
+    state: shieldsigner_rkaiq::baynr_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_baynr::RESULT_BYTES],
+    information: shieldsigner_rkaiq::baynr_frame::Information,
+    updated: bool, exposure_frame:u32, exact:bool, dcg:i32,
+}
 struct CameraLsc {
     calibration: shieldsigner_rkaiq::lsc_calibration::Automatic,
     state: shieldsigner_rkaiq::lsc_frame::State,
@@ -276,6 +287,7 @@ struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
     dpcc: Option<CameraDpcc>,
     ccm: Option<CameraCcm>,
     lsc: Option<CameraLsc>,
+    baynr: Option<CameraBaynr>,
     demosaic: Option<(shieldsigner_rkaiq::demosaic_selection::Calibration, shieldsigner_rkaiq::demosaic_runtime::State)>,
 }
 impl<B: shieldsigner_rkaiq::sensor::Backend> CameraAeOwner<B>
@@ -305,6 +317,7 @@ where
             dpcc: None,
             ccm: None,
             lsc: None,
+            baynr: None,
             demosaic: None,
         }
     }
@@ -422,6 +435,19 @@ where
             if updated {shieldsigner_rkaiq::isp_lsc::apply(&mut planned,&result,&mut converter);}
             Some(CameraLscStage{state,result,converter,information,updated,exposure_frame:exposure.frame,exact,gains})
         } else {None};
+        let baynr_staged = if let Some(baynr)=&self.baynr {
+            let (exposure,exact)=self.runtime.effective_exposure(frame).map_err(error)?;
+            let prior_enable=u64::from_le_bytes(snapshot[8..16].try_into().unwrap());
+            let next_enable=u64::from_le_bytes(planned[8..16].try_into().unwrap());
+            let enable_update=u64::from_le_bytes(planned[..8].try_into().unwrap());
+            let bay3d_enabled=((prior_enable & !enable_update)|(next_enable & enable_update))&(1u64<<37)!=0;
+            let information=shieldsigner_rkaiq::baynr_frame::Information::from_record(&exposure.exposure,1.,bay3d_enabled).map_err(error)?;
+            let dcg=i32::from_le_bytes(exposure.exposure[20..24].try_into().unwrap());
+            let mut state=baynr.state;let mut result=baynr.result;
+            let updated=state.process(&baynr.calibration,information,&mut result).map_err(error)?;
+            if updated {shieldsigner_rkaiq::isp_baynr::apply(&mut planned,&result);}
+            Some(CameraBaynrStage{state,result,information,updated,exposure_frame:exposure.frame,exact,dcg})
+        } else {None};
         let measurement = self.awb.as_ref().and_then(|awb| awb.measurement_for(frame));
         if let Some(record) = measurement {
             shieldsigner_rkaiq::isp_awb_measurement::Measurement(record).apply(&mut planned, true);
@@ -431,13 +457,14 @@ where
         if updates == 0 {
             if let Some(stage)=ccm_staged {self.commit_ccm(stage,frame,&planned,&mut snapshot,false);}
             if let Some(stage)=lsc_staged {self.commit_lsc(stage,frame,&planned,&mut snapshot,false);}
+            if let Some(stage)=baynr_staged {self.commit_baynr(stage,frame,&planned,&mut snapshot,false);}
             return Ok(None);
         }
         self.prune_histories();
         if self.parameters.len() == 128 || self.parameters.last().is_some_and(|p| p.0 >= frame) {
             return Err(error("Gain batch requires a new increasing parameter ID"));
         }
-        let index = if self.awb.is_some() || self.demosaic.is_some() || self.dpcc.is_some() || self.ccm.is_some() || self.lsc.is_some() {
+        let index = if self.awb.is_some() || self.demosaic.is_some() || self.dpcc.is_some() || self.ccm.is_some() || self.lsc.is_some() || self.baynr.is_some() {
             mark_runtime_parameter_frame(&mut planned, frame);
             let index = backend.enqueue_payload(queue, &planned)?;
             cache = planned_cache;
@@ -488,10 +515,18 @@ where
         }
         if let Some(stage)=ccm_staged {self.commit_ccm(stage,frame,&planned,&mut snapshot,true);}
         if let Some(stage)=lsc_staged {self.commit_lsc(stage,frame,&planned,&mut snapshot,true);}
+        if let Some(stage)=baynr_staged {self.commit_baynr(stage,frame,&planned,&mut snapshot,true);}
         self.parameters.push((frame, snapshot));
         self.parameter_submissions += 1;
         self.max_parameter_history = self.max_parameter_history.max(self.parameters.len());
         Ok(Some(index))
+    }
+    fn commit_baynr(&mut self,stage:CameraBaynrStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
+        let baynr=self.baynr.as_mut().unwrap();baynr.state=stage.state;baynr.result=stage.result;
+        use shieldsigner_rkaiq::isp_baynr::{OFFSET,BYTES};
+        if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
+        let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+        println!("{}",json!({"event":"automatic-baynr-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"bay3d":stage.information.bay3d_enabled,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[68..72].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
     }
     fn commit_lsc(&mut self,stage:CameraLscStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
         let lsc=self.lsc.as_mut().unwrap();lsc.state=stage.state;lsc.result=stage.result;lsc.converter=stage.converter;

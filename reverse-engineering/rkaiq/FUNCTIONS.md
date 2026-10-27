@@ -255,3 +255,10 @@ for a future accepted hardware batch.
 `ae_cis::normal` reconstructs the normal sensor SNR flag from both native AE
 core/batch and C++/per-record routines, including hysteresis and DCG fallback.
 [Full native/physical CPU evidence and SDK field offsets](ISP.md#ae-normal-sensor-snr-metadata-0034-development).
+
+
+`baynr_frame::Information::from_record` joins actual associated AE exposure and
+native CIS/DCG SNR fallback to the live BAYNR owner. Startup and runtime state
+are staged transactionally with parameter submission and verified against the
+full native constructor/callback/converter on actual camera captures and app
+frames. [Live evidence, sensor guards and verification tasks](ISP.md#live-baynr-startup-and-transactional-capture-0034-development).

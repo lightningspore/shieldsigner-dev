@@ -322,6 +322,10 @@ fn first_frame_sc3336_with_gain(
         if descriptor.width() != profile.width || descriptor.height() != profile.height {
             return Err(error("Active sensor resolution differs from calibration"));
         }
+        if descriptor.noise_switch().is_some() {
+            return Err(error("Live BAYNR requires the verified no-NR-switch sensor metadata path"));
+        }
+        println!("{}",json!({"event":"baynr-sensor-features-checked","nrSwitchUnsupported":true,"dcgSupported":false,"snrPolicy":"native signed DCG > 0 fallback"}));
         let timing = RuntimeTiming {
             frame_length: descriptor.line_periods_per_field() as u32,
             pixel_clock_mhz: descriptor.pixel_clock_mhz(),
@@ -423,6 +427,12 @@ fn first_frame_sc3336_with_gain(
             lsc_calibration.validate_geometry([profile.width,profile.height]).map_err(error)?;
             let (lsc_state,lsc_result)=shieldsigner_rkaiq::lsc_frame::State::seeded(&lsc_calibration,[gain,ccm_wb[0]/ccm_wb[1],ccm_wb[3]/ccm_wb[2]]).map_err(|e|error(format!("LSC owner startup: {e:?}")))?;
             owner.lsc=Some(CameraLsc{calibration:lsc_calibration,state:lsc_state,result:lsc_result,converter:shieldsigner_rkaiq::isp_lsc::State{enabled:lsc_result[2440]!=0},seed:owner.ccm.as_ref().unwrap().seed});
+            let baynr_calibration=iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["bayer2dnr_v23"].clone();
+            let baynr_information=shieldsigner_rkaiq::baynr_frame::Information::from_record(&initial_record,1.,u64::from_le_bytes(parameters[8..16].try_into().unwrap())&(1u64<<37)!=0).map_err(error)?;
+            let (baynr_state,baynr_result)=shieldsigner_rkaiq::baynr_frame::State::seeded(&baynr_calibration,baynr_information).map_err(error)?;
+            if initial["baynrStartup"]["result"].as_str()!=Some(&baynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>()) {return Err(error("BAYNR owner/startup result differs"));}
+            println!("{}",json!({"event":"baynr-controller-startup","seconds":baynr_information.seconds,"gains":baynr_information.gains,"blc":baynr_information.blc_predgain,"snr":baynr_information.snr_mode,"dcg":i32::from_le_bytes(initial_record[20..24].try_into().unwrap()),"gray":baynr_information.gray,"bay3d":baynr_information.bay3d_enabled,"force":baynr_information.force,"result":baynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>(),"exposure":baynr_state.exposure.iter().map(|v|format!("{v:02x}")).collect::<String>(),"selected":baynr_state.selected.iter().map(|v|format!("{v:02x}")).collect::<String>(),"matchesInitialRegisters":true}));
+            owner.baynr=Some(CameraBaynr{calibration:baynr_calibration,state:baynr_state,result:baynr_result});
             if live_awb {
                 owner.awb = Some(CameraAwb {
                     session: shieldsigner_rkaiq::awb_session::Session::new(

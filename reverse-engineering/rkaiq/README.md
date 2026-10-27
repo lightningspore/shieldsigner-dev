@@ -194,12 +194,13 @@ vendor algorithm is implemented.
 The [selected-profile audit](profile-module-audit.json) also identifies enabled
 profile blocks that frozen 0.0.33 startup explicitly disables: CCM, LSC, DPCC,
 spatial and temporal Bayer noise reduction, YNR, CNR and sharpening. Current
-0.0.34 development enables DPCC, CCM and LSC with native comparison and live capture
+0.0.34 development enables DPCC, CCM, LSC and BAYNR with native comparison and live capture
 ([CCM evidence](ccm-live-validation.json),
 [LSC evidence](lsc-live-validation.json),
-[current startup audit](profile-module-audit-0.0.34-lsc.json),
+[BAYNR evidence](baynr-live-validation.json),
+[current startup audit](profile-module-audit-0.0.34-baynr.json),
 [DPCC details](ISP.md#persistent-dpcc-and-live-submission-0034-development)).
-The other five blocks (BAYNR, BAY3D, YNR, CNR and SHARP) remain
+The other four blocks (BAY3D, YNR, CNR and SHARP) remain
 implementation gaps for full profile parity, separate from the physical tests
 below. A working QR subset is not complete vendor image-quality equivalence.
 

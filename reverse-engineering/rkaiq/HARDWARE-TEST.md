@@ -1778,3 +1778,28 @@ Source hashes and binary SHA are in the report. Controlled cold reboot with
 this binary and a new frozen 0.0.34 kit remain to be done. Frozen 0.0.33 and its
 archives are unchanged. Five profile-enabled blocks remain disabled in Rust:
 BAYNR, BAY3D, YNR, CNR and SHARP.
+
+
+## Development 0.0.34: live Bayer spatial noise reduction
+
+[Final BAYNR hardware evidence](baynr-live-validation.json) supersedes the
+five-remaining-block checkpoint above. Final-build 192/600-image captures pass
+127/399 native runtime comparisons including selected tuning, cached exposure,
+fixed results and packed updates. Initial seed uses actual sensor-rounded AE
+exposure rather than requested time. All five live IQ blocks and final AWB
+translation pass together via `mise run camera:rust:verify-live -- BASE`.
+
+The installed app passes ten decoder-input frames, 27 headless renders,
+119 statistics and 118 batches; owner exit zero, joined preview, no thread
+errors, no default saved image. Its BAYNR native check covers 118 steps and ten
+updates. Peak effective-parameter history is seven snapshots (dedicated runs:
+two). Post-capture CMA allocation is zero and no vendor camera processes or
+mapped RKAIQ/Rockit libraries are present. Private final color frame inspected;
+optical QR, calibrated image quality and physical display/buttons remain open.
+
+Sensor support is explicitly guarded: optional NR-switch metadata unsupported,
+profile DCG disabled, unity BLC predgain. Startup, frame association, queue
+rollback/retry and native oracle scope are documented in
+[ISP details](ISP.md#live-baynr-startup-and-transactional-capture-0034-development).
+Remaining profile blocks are BAY3D, YNR, CNR and SHARP. Exact-binary cold boot
+and a new frozen kit remain pending; frozen 0.0.33 remains immutable.

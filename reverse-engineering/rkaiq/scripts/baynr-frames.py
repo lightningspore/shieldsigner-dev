@@ -88,7 +88,7 @@ class OriginalFrames(fix.OriginalFix, calibration.OriginalCalibration):
         assert self.invoke("baynr-prepare", [inp]) == 0
         assert u(context + 0x58) == 3 and u(context + 0x5C) == 1
         self.uc.mem_write(out, struct.pack("<II", 0, result))
-        self.uc.mem_write(result, bytes([0xA5]) * 152)
+        self.uc.mem_write(result, bytes.fromhex(value.get("result", "a5" * 152)))
         self.uc.mem_write(ae, bytes(244))
         self.uc.mem_write(blc, bytes(32))
         self.uc.mem_write(inp + 24, struct.pack("<I", ae))

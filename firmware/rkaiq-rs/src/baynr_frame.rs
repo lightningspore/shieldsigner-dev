@@ -13,6 +13,28 @@ pub struct Information {
     pub bay3d_enabled: bool,
     pub force: bool,
 }
+impl Information {
+    /// Caller must verify NR-switch availability. This supports the selected
+    /// no-switch path, using associated AE fields and native signed-DCG SNR.
+    pub fn from_record(
+        record: &crate::ae_publication::Record,
+        blc_predgain: f32,
+        bay3d_enabled: bool,
+    ) -> Result<Self, String> {
+        let mut exposure = *record;
+        let snr_mode = crate::ae_cis::normal(&mut exposure, None)
+            .map_err(|e| format!("BAYNR sensor metadata: {e:?}"))?;
+        Ok(Self {
+            seconds: f32_at(record, 0),
+            gains: core::array::from_fn(|i| f32_at(record, 4 + i * 4)),
+            blc_predgain,
+            snr_mode,
+            gray: false,
+            bay3d_enabled,
+            force: false,
+        })
+    }
+}
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct State {
     pub table: [u8; baynr_selection::TABLE_BYTES],

@@ -785,6 +785,10 @@ mod first_frame_driver {
         let (mut lsc_state,lsc_result)=shieldsigner_rkaiq::lsc_frame::State::seeded(&lsc_calibration,[1.,wb.red/wb.green_red,wb.blue/wb.green_blue]).unwrap();lsc_state.force=true;
         owner.lsc=Some(CameraLsc{calibration:lsc_calibration,state:lsc_state,result:lsc_result,converter:shieldsigner_rkaiq::isp_lsc::State{enabled:true},seed:wb});
         let lsc_before=owner.lsc.as_ref().unwrap().state;let lsc_result_before=owner.lsc.as_ref().unwrap().result;let lsc_converter_before=owner.lsc.as_ref().unwrap().converter;
+        let baynr_calibration=iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["bayer2dnr_v23"].clone();
+        let (mut baynr_state,baynr_result)=shieldsigner_rkaiq::baynr_frame::State::seeded(&baynr_calibration,shieldsigner_rkaiq::baynr_frame::Information{seconds:0.01,gains:[1.;3],blc_predgain:1.,snr_mode:0,gray:false,bay3d_enabled:false,force:false}).unwrap();baynr_state.recalculate=true;
+        owner.baynr=Some(CameraBaynr{calibration:baynr_calibration,state:baynr_state,result:baynr_result});
+        let baynr_before=owner.baynr.as_ref().unwrap().state;let baynr_result_before=owner.baynr.as_ref().unwrap().result;
         let ccm_before=owner.ccm.as_ref().unwrap().state;
         let ccm_result_before=owner.ccm.as_ref().unwrap().result;
         let dpcc_before = owner.dpcc.as_ref().unwrap().state;
@@ -813,6 +817,9 @@ mod first_frame_driver {
         assert_eq!(owner.lsc.as_ref().unwrap().state,lsc_before);
         assert_eq!(owner.lsc.as_ref().unwrap().result,lsc_result_before);
         assert_eq!(owner.lsc.as_ref().unwrap().converter,lsc_converter_before);
+        assert_eq!(owner.baynr.as_ref().unwrap().state,baynr_before);
+        assert_eq!(owner.baynr.as_ref().unwrap().result,baynr_result_before);
+
 
 
         assert!(owner
@@ -831,6 +838,9 @@ mod first_frame_driver {
         assert_eq!(owner.lsc.as_ref().unwrap().state,lsc_before);
         assert_eq!(owner.lsc.as_ref().unwrap().result,lsc_result_before);
         assert_eq!(owner.lsc.as_ref().unwrap().converter,lsc_converter_before);
+        assert_eq!(owner.baynr.as_ref().unwrap().state,baynr_before);
+        assert_eq!(owner.baynr.as_ref().unwrap().result,baynr_result_before);
+
 
 
         owner
@@ -854,6 +864,11 @@ mod first_frame_driver {
         shieldsigner_rkaiq::isp_lsc::apply(&mut lsc_snapshot,&owner.lsc.as_ref().unwrap().result,&mut shieldsigner_rkaiq::isp_lsc::State{enabled:true});
         use shieldsigner_rkaiq::isp_lsc::{OFFSET as LSC_OFFSET,BYTES as LSC_BYTES};
         assert_eq!(&owner.parameters.last().unwrap().1[LSC_OFFSET..LSC_OFFSET+LSC_BYTES],&lsc_snapshot[LSC_OFFSET..LSC_OFFSET+LSC_BYTES]);
+        assert!(!owner.baynr.as_ref().unwrap().state.recalculate);
+        let mut baynr_snapshot=[0u8;isp32::PARAMETER_BYTES];
+        shieldsigner_rkaiq::isp_baynr::apply(&mut baynr_snapshot,&owner.baynr.as_ref().unwrap().result);
+        use shieldsigner_rkaiq::isp_baynr::{OFFSET as BAYNR_OFFSET,BYTES as BAYNR_BYTES};
+        assert_eq!(&owner.parameters.last().unwrap().1[BAYNR_OFFSET..BAYNR_OFFSET+BAYNR_BYTES],&baynr_snapshot[BAYNR_OFFSET..BAYNR_OFFSET+BAYNR_BYTES]);
         let mut dpcc_snapshot = [0u8; isp32::PARAMETER_BYTES];
         shieldsigner_rkaiq::isp_dpcc::apply(&mut dpcc_snapshot, &owner.dpcc.as_ref().unwrap().result);
         use shieldsigner_rkaiq::isp_dpcc::{OFFSET as DPCC_OFFSET, BYTES as DPCC_BYTES};
@@ -1051,7 +1066,7 @@ mod first_frame_driver {
         println!();
         println!(
             "{}",
-            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":6,"snapshotSubmissions":3,"poolExhaustionChecked":true,"unityNoopChecked":true,"snapshotRetentionChecked":true,"parameterRegressionChecked":true,"traceBoundedChecked":true,"ccmTransactionalChecked":true,"lscTransactionalChecked":true})
+            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":6,"snapshotSubmissions":3,"poolExhaustionChecked":true,"unityNoopChecked":true,"snapshotRetentionChecked":true,"parameterRegressionChecked":true,"traceBoundedChecked":true,"ccmTransactionalChecked":true,"lscTransactionalChecked":true,"baynrTransactionalChecked":true})
         );
     }
     #[test]

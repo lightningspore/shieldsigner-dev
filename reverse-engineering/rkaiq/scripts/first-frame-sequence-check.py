@@ -12,16 +12,17 @@ def main():
  assert hashlib.sha256(iq.read_bytes()).hexdigest()=='8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a'
  image='alpine@sha256:ee16d92f96db08d9d2d07da48555a27f3a69d8f0759021dbc601195ed0d2b5bd'
  summaries=[]
- for statistics in [False,True]:
+ for statistics,multi_tx in [(False,False),(True,False),(False,True),(True,True)]:
   command=['docker','run','--rm','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={binary.parent},dst=/tests,readonly','--mount',f'type=bind,src={iq.parent},dst=/iq,readonly','-e','SHIELDSIGNER_TEST_IQ=/iq/'+iq.name]
   if statistics:command+=['-e','SHIELDSIGNER_TEST_STATS=1']
+  if multi_tx:command+=['-e','SHIELDSIGNER_TEST_MPLANE_TX=1']
   command += [image,'/tests/'+binary.name,'first_frame_driver','--ignored','--nocapture']
   run=subprocess.run(command,text=True,capture_output=True,timeout=30)
   assert run.returncode==0,(run.stdout+run.stderr)[-6000:]
   events=[json.loads(line) for line in run.stdout.splitlines() if line.startswith('{') and line.endswith('}')]
   summary=next(e for e in events if e.get('event')=='simulated-startup-verified')
   assert summary['imageFrames']==3 and summary['rawFrames']>=3 and not summary['hardwareVerified']
-  assert summary['statisticsEnabled']==statistics
+  assert summary['statisticsEnabled']==statistics and summary['multiPlaneTx']==multi_tx
   if statistics:assert summary['statisticsFrames']>=3
   assert any(e.get('event')=='first-frame-finished' and e['success'] for e in events)
   summaries.append(summary)

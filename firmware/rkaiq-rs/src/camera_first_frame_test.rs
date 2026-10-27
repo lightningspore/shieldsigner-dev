@@ -14,6 +14,7 @@ mod first_frame_driver {
         image_frames: u32,
         statistics_frames: u32,
         statistics_required: bool,
+        multi_tx: bool,
         statistics_on: bool,
         statistics_mapping: usize,
     }
@@ -83,6 +84,7 @@ mod first_frame_driver {
             }
             QUERYCAP => {
                 let cap = match role.as_str() {
+                    "tx" if d.multi_tx => 0x04001000,
                     "tx" | "image" => 0x04000001,
                     "rx" => 0x04000002,
                     "parameters" => 0x0c000000,
@@ -92,6 +94,7 @@ mod first_frame_driver {
                 put32(b, 84, cap);
             }
             GETFMT => {
+                let multi = get32(b, 0) == 9;
                 if let Some(format) = d.formats.get(&role) {
                     b.copy_from_slice(format);
                 } else if role == "statistics" {
@@ -108,13 +111,26 @@ mod first_frame_driver {
                         12,
                         u32::from_le_bytes(if role == "image" { *b"NV12" } else { *b"BG10" }),
                     );
-                    put32(b, 20, if role == "image" { 2304 } else { 4608 });
-                    put32(b, 24, if role == "image" { 4478976 } else { 5971968 });
+                    put32(b, 20, if role == "image" { 2304 } else { 3072 });
+                    put32(b, 24, if role == "image" { 4478976 } else { 3981312 });
+                }
+                if multi {
+                    put32(b, 20, 0);
+                    put32(b, 24, 3981312);
+                    put32(b, 28, 3072);
+                    b[184] = 1;
                 }
             }
             SETFMT => {
-                put32(b, 20, if role == "image" { 2304 } else { 4608 });
-                put32(b, 24, if role == "image" { 4478976 } else { 5971968 });
+                let multi = get32(b, 0) == 9;
+                put32(b, 20, if role == "image" { 2304 } else { 3072 });
+                put32(b, 24, if role == "image" { 4478976 } else { 3981312 });
+                if multi {
+                    put32(b, 20, 0);
+                    put32(b, 24, 3981312);
+                    put32(b, 28, 3072);
+                    b[184] = 1;
+                }
                 d.formats.insert(role.clone(), b.to_vec());
                 d.trace.push(format!("{role}:format"));
             }
@@ -149,6 +165,12 @@ mod first_frame_driver {
                 d.trace.push(format!("{role}:req:{}", get32(b, 0)));
             }
             QUERYBUF => {
+                if get32(b, 4) == 9 {
+                    assert_eq!(get32(b, 56), 1);
+                    let p = unsafe { &mut *(get32(b, 52) as usize as *mut Plane) };
+                    p.length = 3981312;
+                    return Some(Ok(()));
+                }
                 put32(
                     b,
                     56,
@@ -159,7 +181,7 @@ mod first_frame_driver {
                     } else if role == "image" {
                         4478976
                     } else {
-                        5971968
+                        3981312
                     },
                 );
                 put32(b, 52, 0);
@@ -221,7 +243,14 @@ mod first_frame_driver {
                         return again();
                     }
                     put32(b, 0, 0);
-                    put32(b, 8, 5971968);
+                    if d.multi_tx {
+                        assert_eq!(get32(b, 4), 9);
+                        let p = unsafe { &mut *(get32(b, 52) as usize as *mut Plane) };
+                        p.used = 3981312;
+                        p.length = 3981312;
+                    } else {
+                        put32(b, 8, 3981312);
+                    }
                     put32(b, 20, 4);
                     put32(b, 24, 500);
                     put32(b, 44, d.raw_frames);
@@ -287,8 +316,10 @@ mod first_frame_driver {
         let output = format!("{folder}/frame.raw");
         fs::write(&plan,serde_json::to_vec(&json!({"sensor":"/dev/null","isp":"/dev/urandom","route":"cif","raw_tx":["/dev/full"],"raw_rx":["/dev/random"],"bridges":[],"links":[]})).unwrap()).unwrap();
         let statistics = std::env::var("SHIELDSIGNER_TEST_STATS").is_ok();
+        let multi_tx = std::env::var("SHIELDSIGNER_TEST_MPLANE_TX").is_ok();
         *DRIVER.lock().unwrap() = Some(Driver {
             statistics_required: statistics,
+            multi_tx,
             ..Driver::default()
         });
         let mut args = vec![
@@ -354,7 +385,7 @@ mod first_frame_driver {
         }
         println!(
             "{}",
-            json!({"event":"simulated-startup-verified","statisticsEnabled":statistics,"statisticsFrames":driver.statistics_frames,"imageFrames":driver.image_frames,"rawFrames":driver.raw_frames,"savedBytes":4478976,"hardwareVerified":false,"imageContent":"anonymous zero-filled simulated memory"})
+            json!({"event":"simulated-startup-verified","statisticsEnabled":statistics,"multiPlaneTx":multi_tx,"statisticsFrames":driver.statistics_frames,"imageFrames":driver.image_frames,"rawFrames":driver.raw_frames,"savedBytes":4478976,"hardwareVerified":false,"imageContent":"anonymous zero-filled simulated memory"})
         );
         fs::remove_dir_all(folder).unwrap();
     }

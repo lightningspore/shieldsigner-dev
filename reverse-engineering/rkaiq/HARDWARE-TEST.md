@@ -577,3 +577,11 @@ rejection before allocation, event subscription or streaming. The existing
 compact-mode query responses. Pinned-header ARM compilation independently
 checks both query ioctl numbers. This prevents a known class of DMA layout
 mismatches; it does not prove a positive device capture or cold startup.
+
+
+The full ARM startup simulation also exercises compact RAW10 with both
+single-plane TX and one-plane multi-plane TX, each with statistics disabled
+and enabled (four scenarios). Its raw geometry uses the observed 2304×1296,
+3072-byte stride and 3,981,312-byte plane extent. This tests pipeline-format
+configuration/readback and bridge buffer descriptors together. Image/driver
+responses remain synthetic and do not establish physical ISP capture.

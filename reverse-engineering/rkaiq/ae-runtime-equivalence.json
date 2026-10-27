@@ -3,7 +3,7 @@
   "profileSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
   "runtimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
   "sequences": 4,
-  "events": 139,
+  "events": 211,
   "counts": {
     "statistics": 56,
     "invalid": 4,
@@ -12,15 +12,19 @@
     "writes": 53,
     "write_failures": 2,
     "exact": 38,
-    "fallback": 18
+    "fallback": 18,
+    "isp_batches": 72,
+    "isp_exact": 53,
+    "isp_fallback": 19,
+    "isp_boosted": 9
   },
   "mismatches": 0,
   "armReplayPassed": true,
-  "scope": "Persistent ordinary AE runtime composition: raw translation and native lookup use the native SOF-produced exposure map; complete AE wrappers submit native publication records into native batch replacement, SOF and isolated sensor-writer bodies.",
+  "scope": "Persistent ordinary AE runtime composition: raw translation and native lookup use the native SOF-produced exposure map; complete AE wrappers submit native publication records into native batch replacement, SOF and isolated sensor-writer bodies; ISP gain conversion selects from that same effective map and composes optional WB updates.",
   "limitations": [
     "Independent emulators exchange explicit record bytes across recovered object interfaces; C++ object ownership/containers, translator access/run gating, device reads/ioctls, DPCC and logs retain documented harness boundaries.",
     "Initial effective exposure is explicitly seeded after AE initial publication; startup immediate sensor programming remains external.",
     "Declared profile delays drive scheduling keys. Synthetic raw scenes do not model optical feedback; reported failed writes remain in the native effective map and do not prove physical application.",
-    "Fixed-rate ordinary linear source-1 profile subset; live event collection, parameter accumulation, ISP gain updates, reconfiguration, AWB and physical latency qualification remain incomplete."
+    "Fixed-rate ordinary linear source-1 profile subset; live event collection, parameter accumulation, live ISP gain submission, reconfiguration, AWB and physical latency qualification remain incomplete."
   ]
 }

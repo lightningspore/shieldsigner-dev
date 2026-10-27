@@ -5,7 +5,7 @@ extern crate alloc;
 use crate::{
     ae_publication::Record,
     ae_session::{ParameterSnapshot, Session, StatisticsOutput},
-    sensor,
+    exposure_association, isp32, sensor,
     sensor_scheduler::{EffectPolicy, Outcome, Scheduler},
     sensor_submission,
     sensor_timing::Delays,
@@ -16,6 +16,11 @@ pub struct Runtime {
     pub session: Session,
     pub sensor: Scheduler<Record>,
     pub frame_length_mirror: Option<u32>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct IspGainOutput {
+    pub exposure_frame: u32,
+    pub exact_exposure: bool,
 }
 pub struct SofOutput<E> {
     /// Native scheduling state includes attempted exposures after writer errors.
@@ -33,6 +38,36 @@ impl Runtime {
             session,
             sensor,
             frame_length_mirror: None,
+        })
+    }
+    /// Apply gain results using the same effective exposure lookup as native
+    /// setIspConfig. This merges into a caller-owned batch; the caller controls
+    /// mask reset, frame ID, WB inclusion, pool reuse and driver submission.
+    /// Do not substitute the latest proposed AE exposure for this lookup.
+    pub fn apply_isp_gain_results(
+        &self,
+        frame: u32,
+        parameters: &mut [u8; isp32::PARAMETER_BYTES],
+        unscaled_wb: &mut [u8; isp32::AWB_GAIN_BYTES],
+        white_balance: Option<isp32::WhiteBalanceGain>,
+    ) -> Result<IspGainOutput, String> {
+        let effective = self.sensor.effective().collect::<Vec<_>>();
+        let frames = effective.iter().map(|e| e.frame).collect::<Vec<_>>();
+        let selected = exposure_association::effective_index(&frames, frame)
+            .map_err(|e| format!("ISP exposure lookup: {e:?}"))?
+            .ok_or("No effective exposure for ISP gain")?;
+        let entry = &effective[selected.index];
+        let gain = f32::from_le_bytes(entry.exposure[12..16].try_into().unwrap());
+        isp32::apply_gain_results(
+            parameters,
+            unscaled_wb,
+            white_balance,
+            Some(isp32::ExposureDigitalGain::Linear(gain)),
+        )
+        .map_err(|e| format!("ISP gain conversion: {e:?}"))?;
+        Ok(IspGainOutput {
+            exposure_frame: entry.frame,
+            exact_exposure: selected.exact,
         })
     }
     pub fn on_sof<B: sensor::Backend>(

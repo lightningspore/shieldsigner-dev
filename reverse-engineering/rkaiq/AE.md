@@ -1771,3 +1771,38 @@ question.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-effective.py --arm
 ```
+
+### Runtime ISP gain association
+
+`ae_runtime::Runtime::apply_isp_gain_results` now joins the recovered ISP gain
+conversion to the same scheduler-generated effective-exposure map used for AE
+statistics association. It selects exposure by the ISP batch's requested frame,
+including native exact/fallback and UINT32_MAX-to-frame-0 lookup semantics,
+reads ISP digital gain from that selected record, then merges optional WB and
+exposure gain results in native order. It returns the selected exposure frame
+and exact/fallback classification. It does not use the most recent proposed AE
+exposure, which can differ from the exposure scheduled for that frame.
+
+The caller supplies the existing parameter buffer and unscaled WB cache. Batch
+mask reset, frame assignment, WB result inclusion, parameter-pool ownership and
+actual driver submission remain caller responsibilities. Invalid gain inputs
+leave the buffer and cache unchanged through the checked converter. This method
+does not change controller or sensor scheduling state.
+
+The persistent native/Rust runtime oracle has been extended from 139 to **211
+events across four sequences**, retaining the statistics/submission/SOF checks
+and adding **72 ISP gain batches**. Fifty-three select exact effective exposures
+and 19 select native fallbacks; nine batches use gains above unity. One sequence
+explicitly seeds the initial effective sensor record with ISP gain 2 to exercise
+boosted-to-unity transitions independently of controller proposals. Optional WB
+results occur every third frame, and UINT32_MAX requests exercise normalized
+lookup. Before each batch the fixture clears the three header masks, matching
+the native batch boundary; the remaining parameter payload is reused.
+
+Independent native converter contexts receive the actual SOF-produced effective
+records and execute the original WB and exposure converter bodies. Complete
+11,145-byte output buffers and 32-byte caches, selected frame IDs, controller
+snapshots and sensor maps match host and ARM Rust after each event. Synthetic
+scenes remain independent of exposure, and result-list inclusion is explicit
+fixture input. This proves the joined data flow, not optical convergence, WB
+controller behavior, full setIspConfig execution, or live ISP submission.

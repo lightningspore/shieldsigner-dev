@@ -2,7 +2,7 @@
 """Persistent native AE -> submission -> SOF -> effective map -> AE composition."""
 import copy,hashlib,json,runpy,struct,subprocess,sys,tempfile
 from pathlib import Path
-from differential import ROOT,BINARY,HEAP
+from differential import OriginalArm,ROOT,BINARY,HEAP
 load=lambda name:runpy.run_path(str(Path(__file__).with_name(name)))
 Session=load('ae-session.py')['Original'];Translator=load('ae-linear-translation.py')['OriginalLinear'];Association=load('exposure-association.py')['Original'];Sensor=load('sensor-submission.py')['Original']
 def sensor_state(sensor):
@@ -15,13 +15,30 @@ def main():
  with tempfile.TemporaryDirectory() as d:
   file=Path(d)/'params.bin';subprocess.run([str(ROOT/'firmware/rkaiq-rs/target/release/camera-probe'),'make-initial-parameters',str(iq),str(file),'--ae-measurements'],capture_output=True,check=True);initial=file.read_bytes()
  changed=bytearray(initial);struct.pack_into('<4H',changed,0x1225,256,384,512,640);parameters={0:initial,3:bytes(changed)}
- cases=[];expected=[];counts=dict(statistics=0,invalid=0,missing_parameters=0,sofs=0,writes=0,write_failures=0,exact=0,fallback=0)
+ cases=[];expected=[];counts=dict(statistics=0,invalid=0,missing_parameters=0,sofs=0,writes=0,write_failures=0,exact=0,fallback=0,isp_batches=0,isp_exact=0,isp_fallback=0,isp_boosted=0)
  translator=Translator();lookup=Association()
  for k in range(4):
   p=copy.deepcopy(profile);ae=p['main_scene'][0]['sub_scene'][0]['scene_isp32']['ae_calib'];ae['LinearAeCtrl']['InitExp']['InitTimeValue']=[.003,.005][k%2];ae['CommCtrl']['AecSpeed']['SmoothEn']=0 if k==3 else 1
   delay=[0,1,2,2][k];p['sensor_calib']['CISExpUpdate']['Linear'].update(time_update=delay,gain_update=delay)
-  native=Session();native.prepare(dict(profile=p,frame=1360,width=2304,height=1296));sensor=Sensor();sensor.seed(bytes.fromhex(native.snapshot()['previous']));sensor.uc.mem_write(HEAP+0x274,struct.pack('<i',delay))
-  v=dict(profile=p,initial=native.snapshot()['previous'],parameters=[dict(id=n,bytes=b.hex()) for n,b in parameters.items()],events=[]);results=[dict(kind='initial',state=native.snapshot(),sensor=sensor_state(sensor))]
+  native=Session();native.prepare(dict(profile=p,frame=1360,width=2304,height=1296));sensor=Sensor();initial_record=bytearray.fromhex(native.snapshot()['previous'])
+  if k==3:struct.pack_into('<f',initial_record,12,2.)
+  sensor.seed(bytes(initial_record));sensor.uc.mem_write(HEAP+0x274,struct.pack('<i',delay))
+  v=dict(profile=p,initial=initial_record.hex(),parameters=[dict(id=n,bytes=b.hex()) for n,b in parameters.items()],events=[]);results=[dict(kind='initial',state=native.snapshot(),sensor=sensor_state(sensor))]
+  isp=OriginalArm(BINARY);context=HEAP+0x10000;params=HEAP+0x20000;wb_input=HEAP+0x30000;vtable=HEAP+0x50000+12
+  isp.uc.mem_write(context,bytes(0x2000));isp.uc.mem_write(context,struct.pack('<I',vtable));isp.uc.mem_write(vtable-12,bytes(4));isp.uc.mem_write(context+0x827,initial[0x1225:0x1245]);isp.uc.mem_write(params,initial)
+  def isp_batch(frame,wb):
+   keys=sorted(sensor.map);status,identity=map(int,lookup.run(dict(frames=keys,requested=frame)).split(','));assert status>=0
+   selected=keys[identity-10];record=bytes.fromhex(sensor.exposure(sensor.map[selected]));exact=selected==(0 if frame==0xffffffff else frame)
+   event=dict(kind='isp',frame=frame)
+   if wb is not None:event['wb']=wb
+   v['events'].append(event);isp.uc.mem_write(params,bytes(24))
+   if wb is not None:
+    isp.uc.mem_write(wb_input,struct.pack('<4fI',*wb,1));isp.invoke('_ZN5RkCam11Isp32Params30convertAiqAwbGainToIsp32ParamsER20isp32_isp_params_cfgRK20rk_aiq_wb_gain_v32_sb',[context,params,wb_input,1])
+   words=struct.unpack('<2I',record[:8]);isp.invoke('_ZN5RkCam11Isp32Params34convertAiqExpIspDgainToIsp32ParamsER20isp32_isp_params_cfg17RKAiqAecExpInfo_s',[context,params,*words],stack=record[8:])
+   results.append(dict(kind='isp',selected_frame=selected,exact=exact,parameters=bytes(isp.uc.mem_read(params,11145)).hex(),cache=bytes(isp.uc.mem_read(context+0x827,32)).hex(),state=native.snapshot(),sensor=sensor_state(sensor)))
+   counts['isp_batches']+=1;counts['isp_exact' if exact else 'isp_fallback']+=1
+   if struct.unpack_from('<f',record,12)[0]>1:counts['isp_boosted']+=1
+  isp_batch(0,None)
   def sof(frame,fail):
    sensor.fail=fail;v['events'].append(dict(kind='sof',frame=frame,fail=fail));state=sensor.sof(frame);results.append(dict(kind='sof',sensor=state,state=native.snapshot()));counts['sofs']+=1
    if state['written'] is not None:counts['writes']+=1
@@ -46,6 +63,8 @@ def main():
     sensor.submit(native.snapshot()['previous'],records)
     result=dict(kind='stats',status='processed',selected_frame=selected,exact=exact,mean=mean);counts['statistics']+=1;counts['exact' if exact else 'fallback']+=1
    result.update(state=native.snapshot(),sensor=sensor_state(sensor));results.append(result)
+   isp_batch(frame, [2.,1.,1.25,3.] if frame%3==0 else None)
+   if frame==8:isp_batch(0xffffffff,None)
   for frame in range(16,19):sof(frame,0)
   cases.append(v);expected.append(results);print(f'Native AE runtime {k+1}: {len(v["events"])} events',file=sys.stderr,flush=True)
  inputs=''.join('ae-runtime '+json.dumps(v,separators=(',',':'))+'\n' for v in cases);(ROOT/'dist/reverse-engineering/ae-runtime-replay.json').write_text(json.dumps(dict(inputs=inputs,expected=expected)))
@@ -69,6 +88,6 @@ def main():
  compare([str(ROOT/'firmware/rkaiq-rs/target/release/numeric-fixture')])
  if '--arm' in sys.argv:
   directory=ROOT/'firmware/rkaiq-rs/target/armv7-unknown-linux-musleabihf/release';compare(['docker','run','--rm','-i','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={directory},dst=/bincheck,readonly','alpine@sha256:ee16d92f96db08d9d2d07da48555a27f3a69d8f0759021dbc601195ed0d2b5bd','/bincheck/numeric-fixture'])
- report=dict(binarySha256=binary_sha,profileSha256=hashlib.sha256(iq_bytes).hexdigest(),runtimeSha256=manifest['uclibcRuntime']['memberSha256'],sequences=len(cases),events=sum(len(v['events']) for v in cases),counts=counts,mismatches=0,armReplayPassed='--arm' in sys.argv,scope='Persistent ordinary AE runtime composition: raw translation and native lookup use the native SOF-produced exposure map; complete AE wrappers submit native publication records into native batch replacement, SOF and isolated sensor-writer bodies.',limitations=['Independent emulators exchange explicit record bytes across recovered object interfaces; C++ object ownership/containers, translator access/run gating, device reads/ioctls, DPCC and logs retain documented harness boundaries.','Initial effective exposure is explicitly seeded after AE initial publication; startup immediate sensor programming remains external.','Declared profile delays drive scheduling keys. Synthetic raw scenes do not model optical feedback; reported failed writes remain in the native effective map and do not prove physical application.','Fixed-rate ordinary linear source-1 profile subset; live event collection, parameter accumulation, ISP gain updates, reconfiguration, AWB and physical latency qualification remain incomplete.'])
+ report=dict(binarySha256=binary_sha,profileSha256=hashlib.sha256(iq_bytes).hexdigest(),runtimeSha256=manifest['uclibcRuntime']['memberSha256'],sequences=len(cases),events=sum(len(v['events']) for v in cases),counts=counts,mismatches=0,armReplayPassed='--arm' in sys.argv,scope='Persistent ordinary AE runtime composition: raw translation and native lookup use the native SOF-produced exposure map; complete AE wrappers submit native publication records into native batch replacement, SOF and isolated sensor-writer bodies; ISP gain conversion selects from that same effective map and composes optional WB updates.',limitations=['Independent emulators exchange explicit record bytes across recovered object interfaces; C++ object ownership/containers, translator access/run gating, device reads/ioctls, DPCC and logs retain documented harness boundaries.','Initial effective exposure is explicitly seeded after AE initial publication; startup immediate sensor programming remains external.','Declared profile delays drive scheduling keys. Synthetic raw scenes do not model optical feedback; reported failed writes remain in the native effective map and do not prove physical application.','Fixed-rate ordinary linear source-1 profile subset; live event collection, parameter accumulation, live ISP gain submission, reconfiguration, AWB and physical latency qualification remain incomplete.'])
  (ROOT/'reverse-engineering/rkaiq/ae-runtime-equivalence.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

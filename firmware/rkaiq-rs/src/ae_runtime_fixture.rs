@@ -51,12 +51,35 @@ pub fn run(v: &Value) -> String {
         .iter()
         .map(|(id, bytes)| ae_session::ParameterSnapshot { id: *id, bytes })
         .collect::<Vec<_>>();
+    let mut isp_parameters = owned[0].1;
+    let mut wb_cache: [u8; 32] = isp_parameters
+        [isp32::AWB_GAIN_OFFSET..isp32::AWB_GAIN_OFFSET + 32]
+        .try_into()
+        .unwrap();
     let mut error = 0.;
     let mut results = vec![
         json!({"kind":"initial","state":snapshot(&runtime.session,error),"sensor":sensor(&runtime)}),
     ];
     for event in v["events"].as_array().unwrap() {
-        if event["kind"] == "sof" {
+        if event["kind"] == "isp" {
+            isp_parameters[..24].fill(0);
+            let wb = event.get("wb").map(|v| isp32::WhiteBalanceGain {
+                red: v[0].as_f64().unwrap() as f32,
+                green_red: v[1].as_f64().unwrap() as f32,
+                green_blue: v[2].as_f64().unwrap() as f32,
+                blue: v[3].as_f64().unwrap() as f32,
+                position: isp32::ApplyPosition::Gain1,
+            });
+            let out = runtime
+                .apply_isp_gain_results(
+                    event["frame"].as_u64().unwrap() as u32,
+                    &mut isp_parameters,
+                    &mut wb_cache,
+                    wb,
+                )
+                .unwrap();
+            results.push(json!({"kind":"isp","selected_frame":out.exposure_frame,"exact":out.exact_exposure,"parameters":hex(&isp_parameters),"cache":hex(&wb_cache),"state":snapshot(&runtime.session,error),"sensor":sensor(&runtime)}));
+        } else if event["kind"] == "sof" {
             let mut backend = Backend {
                 trace: vec!["descriptor".into()],
                 operations: 0,

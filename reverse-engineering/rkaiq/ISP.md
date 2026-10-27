@@ -450,3 +450,43 @@ temporary reference input, removed afterward. It makes no camera/ISP writes.
 Full JSON→expert-table initialization, BPT/PDAF assembly, processing/frame
 lifecycle and successful live enqueue remain next work; the runnable camera
 continues to leave DPCC disabled. The 0.0.33 frozen kit is unchanged.
+
+### DPCC expert table from the selected IQ object (0.0.34 development)
+
+`dpcc_calibration::expert_table` loads an explicitly supplied `DpccTuningPara`
+object, requires expert mode (`Fast_mode_en=0`), validates boolean/byte fields,
+13-element arrays and strictly increasing signed ISO knots, and constructs
+all thirteen 108-byte rows. The native initializer is
+`dpcc_expert_mode_basic_params_init` (ELF `0x11ac20`). Each row retains the
+103 basic fields used by the verified selector, with fresh padding zeroed.
+The RK/RG/RND/RO/LC/PG method enables are duplicated for the two hardware
+color groups exactly as the native initializer does. Thresholds and limits
+come from the supplied calibration arrays; no default thresholds are invented.
+
+Five additional SDK headers are pinned by commit URL/SHA in `artifacts.json`
+and fetched into ignored cache by the existing preparation tool. Independent
+ARM-target C compilation verifies the actual SDK layout: expert offset 40,
+ISO offset 48, first set offset 308, expert size 1204, row size 108, basic
+configuration size 103, full result size 192, BPT offset 104 and PDAF offset
+128. This now independently verifies the complete result size that the earlier
+serializer used as its bounded input window.
+
+[Native initializer comparison](dpcc-calibration-equivalence.json) checks every
+byte of all 1,404 table bytes for the actual SC3336 profile plus 199 varied
+calibrations. The Python reference packs the public SDK field declaration
+independently of Rust, then executes the entire native initializer. Only
+unused Fast-mode pointer descriptors/preceding padding are zero-filled input
+boundaries; the expert initializer does not read them. Host and physical
+Luckfox Rust execution are identical. The 86 library/five Unix tests,
+no-default-features/static ARM builds and SDK layout checks pass.
+
+Build host numeric-fixture and ARM binaries with mise, then run
+`mise run camera:rust:dpcc-calibration -- --adb SERIAL --report LOCAL.json`.
+The pinned original library, SDK headers and full IQ file remain local
+prerequisites. Raw vendor/decompiled code, full IQ data and camera images
+are not added to git. No vendor library is loaded on the Luckfox for replay.
+
+This closes expert-table construction, not full DPCC processing. BPT/PDAF
+assembly, complete automatic-processing composition and live frame/enqueue
+integration remain next; no speculative zero/default peripheral fields have
+been enabled on the camera. The frozen 0.0.33 kit is unchanged.

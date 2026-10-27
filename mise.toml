@@ -564,3 +564,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:dpcc-selection"]
 description = "Compare automatic expert DPCC ISO row selection with original ARM"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/dpcc-selection.py"
+
+[tasks."camera:rust:dpcc-calibration"]
+description = "Compare JSON expert DPCC table construction with native initialization"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/dpcc-calibration.py"

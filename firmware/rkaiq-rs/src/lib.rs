@@ -72,6 +72,8 @@ pub mod isp_color;
 pub mod isp_demosaic;
 pub mod isp_dpcc;
 pub mod dpcc_selection;
+#[cfg(feature = "diagnostics")]
+pub mod dpcc_calibration;
 pub mod isp_effective;
 pub mod isp_pipeline;
 pub mod media;

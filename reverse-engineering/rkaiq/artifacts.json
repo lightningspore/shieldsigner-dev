@@ -144,6 +144,31 @@
       "name": "awb_head.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/awb_head.h",
       "sha256": "f1473b29efba699aa72f985aa0eaa32706b21d5d4da5b401d912a13ef5211da2"
+    },
+    {
+      "name": "adpcc_head.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/adpcc_head.h",
+      "sha256": "7532db62a6d7ac7e9b779068fa6e5f219f71848d2328fe3ce8ccbc2fc14bf06b"
+    },
+    {
+      "name": "rk_aiq_types_adpcc_algo.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/adpcc/rk_aiq_types_adpcc_algo.h",
+      "sha256": "6d598ca104db0cb1287b49993aa68d066cd2fe0fec7d2eb8c4627c41f900139a"
+    },
+    {
+      "name": "rk_aiq_types_adpcc_algo_int.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/adpcc/rk_aiq_types_adpcc_algo_int.h",
+      "sha256": "3f630c10153926a3f3114f512793ebf69a2177bd963e5f00507354079bf5fa53"
+    },
+    {
+      "name": "rk_aiq_types_adpcc_hw.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/adpcc/rk_aiq_types_adpcc_hw.h",
+      "sha256": "bcd5dfb9e5f75ced539032e3d198900525d704d406c9de467eba76b918b1b655"
+    },
+    {
+      "name": "rk_aiq_types_adpcc_ext.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/adpcc/rk_aiq_types_adpcc_ext.h",
+      "sha256": "325d6f7c3a06485cee3e1cefd6897ef2a50fb9ed8df7e745baa4ca08b968a3f6"
     }
   ],
   "kernelHeaders": [

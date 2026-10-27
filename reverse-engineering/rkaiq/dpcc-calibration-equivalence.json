@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "cases": 200,
+  "actualProfileCases": 1,
+  "tableBytesComparedPerCase": 1404,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "sdkHeaderSha256": "7532db62a6d7ac7e9b779068fa6e5f219f71848d2328fe3ce8ccbc2fc14bf06b",
+  "hostBinarySha256": "4f45f1a8d486903e2be87061c842ca84eee1543df97d23f3ae89e41a6150e2cf",
+  "physicalArmBinarySha256": "b4627aa554aeeea2ce1d916f3c2d1b0cb9666f42493857165f93c33c54bd708e",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Explicit DpccTuningPara JSON through expert-table construction; independently SDK-packed input executes complete native initializer.",
+  "limitations": [
+    "Unused Fast-mode descriptors and preceding padding are zero-filled controlled input; native expert init does not read them.",
+    "Fresh table padding starts zero on both paths.",
+    "BPT/PDAF result construction, complete AdpccProcess and live camera integration remain separate."
+  ]
+}

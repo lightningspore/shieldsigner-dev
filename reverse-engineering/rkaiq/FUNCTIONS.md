@@ -116,3 +116,7 @@ match original ARM for 1,000 cases, with physical Luckfox CPU replay.
 `dpcc_selection::select` reconstructs automatic expert DPCC ISO row selection
 (ELF `0x11b6e0`) and its 103-byte configuration copy (`0x11b3c4`).
 [Original/physical ARM comparisons and profile-loading boundary](ISP.md#dpcc-automatic-expert-iso-selection-0034-development).
+
+`dpcc_calibration::expert_table` reconstructs expert-table initialization
+(ELF `0x11ac20`) from the explicit IQ JSON object.
+[Public SDK layout checks and original/physical ARM comparison](ISP.md#dpcc-expert-table-from-the-selected-iq-object-0034-development).

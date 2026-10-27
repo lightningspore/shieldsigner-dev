@@ -215,3 +215,32 @@ for field,offset in [('blkMeasureMode',0),('lightNum',4),('groupIllIndxCurrent',
 source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n'+macros+'\n'+sdk_record('rk_aiq_types_awb_stat_v201.h',r'#define RK_AIQ_AWB_STAT_WP_RANGE_NUM_V201[^\n]*')+'\n'+'\n'.join(awb_declarations+records+assertions)+'\n')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'awb-preparation-sdk-layout.o')],check=True)
 print('PASS: complete SDK AWB frame=7680 bytes; effect=108, all prepared input offsets verified')
+
+# Independently compile public DPCC IQ/result declarations under ARM32 ABI.
+def dpcc_header(name):
+    item=next(x for x in manifest['headers'] if x['name']==name)
+    path=ROOT/'.tools/reverse-engineering/headers'/name
+    assert hashlib.sha256(path.read_bytes()).hexdigest()==item['sha256']
+    return path.read_text()
+iq=dpcc_header('adpcc_head.h').replace('#include "rk_aiq_comm.h"','')
+ext=dpcc_header('rk_aiq_types_adpcc_ext.h')
+def dpcc_record(name,text):
+    match=re.search(r'typedef struct '+name+r'\s*\{.*?\}\s*\w+;',text,re.S)
+    assert match,name
+    return match.group(0)
+records=[dpcc_record(name,ext) for name in ['Adpcc_basic_params_select_s','Adpcc_basic_cfg_params_s','Adpcc_bpt_params_s','dpcc_pdaf_point_s','Adpcc_pdaf_params_s']]
+records.append(dpcc_record('AdpccProcResult_s',dpcc_header('rk_aiq_types_adpcc_algo_int.h')))
+source=cache/'dpcc-sdk-layout.c'
+source.write_text('#include <stdbool.h>\n#include <stdint.h>\n#include <stddef.h>\n#define RKAIQ_BEGIN_DECLARE\n#define RKAIQ_END_DECLARE\n#define DPCC_PDAF_POINT_NUM 16\n'+iq+'\n'+'\n'.join(records)+'''
+_Static_assert(offsetof(CalibDbV2_Dpcc_t,DpccTuningPara.Expert_Mode)==40,"DPCC expert offset");
+_Static_assert(offsetof(CalibDbV2_Dpcc_t,DpccTuningPara.Expert_Mode.SetEnable.ISO)==48,"DPCC ISO offset");
+_Static_assert(offsetof(CalibDbV2_Dpcc_t,DpccTuningPara.Expert_Mode.set1)==308,"DPCC set1 offset");
+_Static_assert(sizeof(CalibDb_Dpcc_Expert_Mode_V20_t)==1204,"DPCC IQ expert size");
+_Static_assert(sizeof(Adpcc_basic_params_select_t)==108,"DPCC ISO row");
+_Static_assert(sizeof(Adpcc_basic_cfg_params_t)==103,"DPCC basic fields");
+_Static_assert(sizeof(AdpccProcResult_t)==192,"DPCC complete result");
+_Static_assert(offsetof(AdpccProcResult_t,stBpt)==104,"DPCC BPT offset");
+_Static_assert(offsetof(AdpccProcResult_t,stPdaf)==128,"DPCC PDAF offset");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'dpcc-sdk-layout.o')],check=True)
+print('PASS: SDK DPCC expert=1204, row=108, basic=103, result=192 bytes; IQ/BPT/PDAF offsets verified')

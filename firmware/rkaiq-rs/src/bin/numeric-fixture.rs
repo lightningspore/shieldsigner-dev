@@ -3217,6 +3217,11 @@ fn main() {
                     hex(&cached)
                 );
             }
+            "dpcc-expert-init" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let table = shieldsigner_rkaiq::dpcc_calibration::expert_table(&v).unwrap();
+                println!("{}",table.iter().map(|v|format!("{v:02x}")).collect::<String>());
+            }
             "dpcc-select" => {
                 use shieldsigner_rkaiq::dpcc_selection;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

@@ -912,7 +912,7 @@ Zero-count results also have distinct native branches: an unchanged final
 record retains the previous-final fallback, while a transition whose every
 proposal matches the selected old-queue key returns zeroed scratch/final records.
 
-540 comparisons execute native result processing through normal return,
+630 comparisons execute native result processing through normal return,
 including its CIS feature and environment-history publication calls. They
 compare the complete six-record output area, count, synchronized frame and
 final record, covering one through six proposals, short/full prior queues,
@@ -929,4 +929,35 @@ work; no live sensor writes are enabled.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-publication.py --arm
+```
+
+## Connected exposure-publication state
+
+`ae_publication::finish` connects selection to the recovered state updates in
+native result processing. It updates convergence from the effective exposure,
+newly proposed final exposure and previous final exposure **before** selection.
+It saves the selected queue only when the synchronized frame equals the current
+frame, then publishes the native aggregate and the saved queue into the current
+five-entry environment-history slot. Finally it saves the returned final record
+and last-result frame. A zero output count therefore does not necessarily mean
+the stored publication queue is cleared.
+
+The 630-case connected comparison checks all output queue bytes plus both convergence
+flags, stored queue/count, prior-final replacement, last-result frame and all
+220 environment-history bytes against complete native `AecGetProcResults`
+execution. The corpus covers all five history slots and raw prior enable flags,
+matching/mismatching effective sensor codes and ISP gain, and empty/short/full
+prior queues. Empty queues are accepted for the same-final-key branch; a new
+transition with no prior queue is rejected instead of reproducing native
+underflow-based record access.
+[Connected publication state report](ae-publication-state-equivalence.json).
+
+The comparison still does not qualify other ISP result fields, CIS flags or
+unlisted context bytes. Proposed records, history index and effective exposure
+remain explicit inputs. Converted-record assembly, full frame orchestration and
+physical exposure association remain integration work. Callers must discard
+partially updated state on errors.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-publication.py --state --arm
 ```

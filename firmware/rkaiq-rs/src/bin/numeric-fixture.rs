@@ -380,7 +380,7 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
-            "ae-publication" => {
+            "ae-publication" | "ae-publication-state" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let record = |value: &serde_json::Value| -> ae_publication::Record {
                     let text = value.as_str().unwrap();
@@ -400,23 +400,88 @@ fn main() {
                     .iter()
                     .map(record)
                     .collect();
-                let out = ae_publication::select(
-                    &proposed,
-                    &record(&v["previous"]),
-                    &published,
-                    v["frame"].as_i64().unwrap() as i32,
-                    v["sync"].as_i64().unwrap() as i32,
-                )
-                .unwrap();
+                let mut state = ae_publication::State {
+                    previous_final: record(&v["previous"]),
+                    published: core::array::from_fn(|i| {
+                        published.get(i).copied().unwrap_or([0; 244])
+                    }),
+                    published_count: published.len(),
+                    synchronized_frame: v["sync"].as_i64().unwrap() as i32,
+                    last_result_frame: 0,
+                };
+                let mut convergence = ae_convergence::State {
+                    dynamic_enabled: v["dynamic"].as_u64().unwrap_or(0) as u8,
+                    gating_enabled: v["gating"].as_u64().unwrap_or(0) as u8,
+                };
+                let mut history = core::array::from_fn(|i| ae_environment::Record {
+                    frame: i as i32,
+                    current_exposure: 0.003,
+                    published_exposure: 0.006,
+                    error: 0.2,
+                    queued: [0.001, 0.002, 0.003, 0.004, 0.005, 0.006],
+                    queued_count: 2,
+                });
+                let state_mode = a[0] == "ae-publication-state";
+                let out = if state_mode {
+                    ae_publication::finish(
+                        &mut state,
+                        &mut convergence,
+                        &mut history,
+                        v["index"].as_u64().unwrap() as u32,
+                        v["aggregate"].as_f64().unwrap() as f32,
+                        ae_convergence::Exposure {
+                            time_code: v["effective"][0].as_u64().unwrap() as u32,
+                            gain_code: v["effective"][1].as_u64().unwrap() as u32,
+                            isp_gain: v["effective"][2].as_f64().unwrap() as f32,
+                        },
+                        &proposed,
+                        v["frame"].as_i64().unwrap() as i32,
+                    )
+                    .unwrap()
+                } else {
+                    ae_publication::select(
+                        &proposed,
+                        &state.previous_final,
+                        &published,
+                        v["frame"].as_i64().unwrap() as i32,
+                        state.synchronized_frame,
+                    )
+                    .unwrap()
+                };
                 let hex =
                     |bytes: &[u8]| bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
-                println!(
+                print!(
                     "{}:{}:{}:{}",
                     out.count,
                     out.synchronized_frame,
                     hex(&out.records.concat()),
                     hex(&out.final_record)
                 );
+                if state_mode {
+                    let mut words = Vec::new();
+                    for r in history {
+                        words.extend([
+                            r.frame as u32,
+                            r.current_exposure.to_bits(),
+                            r.published_exposure.to_bits(),
+                            r.error.to_bits(),
+                        ]);
+                        words.extend(r.queued.map(f32::to_bits));
+                        words.push(r.queued_count);
+                    }
+                    let bytes: Vec<u8> = words.into_iter().flat_map(u32::to_le_bytes).collect();
+                    print!(
+                        ":{}:{}:{}:{}:{}:{}:{}",
+                        state.published_count,
+                        state.last_result_frame,
+                        convergence.dynamic_enabled,
+                        convergence.gating_enabled,
+                        hex(&state.published.concat()),
+                        hex(&state.previous_final),
+                        hex(&bytes)
+                    );
+                }
+                println!();
             }
             "ae-conversion-queue" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

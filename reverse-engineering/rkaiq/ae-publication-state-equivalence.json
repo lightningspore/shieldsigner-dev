@@ -1,0 +1,13 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 630,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "complete native linear AecGetProcResults return: selected output plus convergence, saved publication, final record, last frame and complete five-record environment history",
+  "limitations": [
+    "Fixed frame-length mode, explicit proposed/prior records, no HDR or iris hardware control. Iris metadata differences exercise selection policy only.",
+    "memcmp, allocation and integer division modeled; complete native result body, CIS feature and environment-history publication execute.",
+    "Other ISP result fields, CIS flags and unlisted context bytes are not compared; exposure inputs and history index are explicit.",
+    "Real frame association and sensor writes remain external."
+  ]
+}

@@ -48,7 +48,7 @@ pub fn select(
     frame: i32,
     mut synchronized_frame: i32,
 ) -> Result<Output, InvalidInput> {
-    if proposed.is_empty() || proposed.len() > 6 || published.is_empty() || published.len() > 6 {
+    if proposed.is_empty() || proposed.len() > 6 || published.len() > 6 {
         return Err(InvalidInput::Length);
     }
     let final_record = &proposed[proposed.len() - 1];
@@ -70,6 +70,9 @@ pub fn select(
         }
         use_previous_fallback = count == 0;
     } else {
+        if published.is_empty() {
+            return Err(InvalidInput::Length);
+        }
         let delta = frame.wrapping_sub(synchronized_frame).max(1) as usize;
         let reference = &published[delta.min(published.len()) - 1];
         let first = proposed.iter().position(|r| r[..48] != reference[..48]);
@@ -100,4 +103,69 @@ pub fn select(
         synchronized_frame,
         final_record,
     })
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct State {
+    pub previous_final: Record,
+    pub published: [Record; 6],
+    pub published_count: usize,
+    pub synchronized_frame: i32,
+    pub last_result_frame: i32,
+}
+fn word(r: &Record, offset: usize) -> u32 {
+    u32::from_le_bytes(r[offset..offset + 4].try_into().unwrap())
+}
+fn point(r: &Record) -> Point {
+    Point {
+        time: f32::from_bits(word(r, 0)),
+        gain: f32::from_bits(word(r, 4)),
+        isp_gain: f32::from_bits(word(r, 12)),
+    }
+}
+fn convergence_exposure(r: &Record) -> crate::ae_convergence::Exposure {
+    crate::ae_convergence::Exposure {
+        time_code: word(r, 32),
+        gain_code: word(r, 36),
+        isp_gain: f32::from_bits(word(r, 12)),
+    }
+}
+/// Publish ordinary linear exposure state. Other result fields/CIS flags remain
+/// external. Do not publish partially updated state after an error.
+pub fn finish(
+    state: &mut State,
+    convergence: &mut crate::ae_convergence::State,
+    history: &mut [crate::ae_environment::Record; 5],
+    index: u32,
+    aggregate: f32,
+    effective: crate::ae_convergence::Exposure,
+    proposed: &[Record],
+    frame: i32,
+) -> Result<Output, InvalidInput> {
+    if proposed.is_empty() || state.published_count > 6 {
+        return Err(InvalidInput::Length);
+    }
+    crate::ae_convergence::linear(
+        convergence,
+        effective,
+        convergence_exposure(&proposed[proposed.len() - 1]),
+        convergence_exposure(&state.previous_final),
+    )?;
+    let output = select(
+        proposed,
+        &state.previous_final,
+        &state.published[..state.published_count],
+        frame,
+        state.synchronized_frame,
+    )?;
+    state.synchronized_frame = output.synchronized_frame;
+    if state.synchronized_frame == frame {
+        state.published_count = output.count;
+        state.published = output.records;
+    }
+    let points = state.published.map(|r| point(&r));
+    crate::ae_environment::publish(history, index, aggregate, &points[..state.published_count])?;
+    state.previous_final = output.final_record;
+    state.last_result_frame = frame;
+    Ok(output)
 }

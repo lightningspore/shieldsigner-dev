@@ -42,8 +42,8 @@ mod raw_bridge {
             };
             ioctl(self.file.as_raw_fd(), REQBUFS, &mut request)?;
             self.allocated = true;
-            if request.count < count || request.count > 16 {
-                return Err(error("Raw buffer allocation outside requested bounds"));
+            if request.count < 2 || request.count > 16 {
+                return Err(error(format!("Raw buffer allocation outside requested bounds: type={} memory={} requested={} returned={}", self.kind, self.memory, count, request.count)));
             }
             Ok(request.count)
         }
@@ -251,7 +251,7 @@ mod raw_bridge {
             subscription[0] = 4;
             ioctl(bridge.isp.as_raw_fd(), 0x4020565a, &mut subscription)?;
             let count = bridge.tx.allocate(4)?;
-            bridge.rx.allocate(count)?;
+            let count = count.min(bridge.rx.allocate(count)?);
             for index in 0..count {
                 let mut b = bridge.tx.record(index);
                 bridge.tx.buffer_ioctl(QUERYBUF, &mut b)?;
@@ -303,7 +303,14 @@ mod raw_bridge {
                             }
                         }
                     }
-                    Err(e) if e.kind() == io::ErrorKind::WouldBlock => break,
+                    // Linux v4l2_event_dequeue returns ENOENT for an empty
+                    // nonblocking event queue (not the buffer API's EAGAIN).
+                    Err(e)
+                        if e.kind() == io::ErrorKind::WouldBlock
+                            || e.raw_os_error() == Some(libc::ENOENT) =>
+                    {
+                        break
+                    }
                     Err(e) => return Err(e),
                 }
             }
@@ -516,6 +523,10 @@ mod raw_bridge_driver_test {
                 }
             }
             REQBUFS => {
+                // Real RV1106 returned two MMAP buffers when four were requested.
+                if get32(b, 0) != 0 {
+                    put32(b, 0, 2);
+                }
                 driver.trace.push(format!(
                     "{}:req:{}",
                     if driver.tx == Some(fd) { "tx" } else { "rx" },
@@ -543,7 +554,7 @@ mod raw_bridge_driver_test {
             }
             0x80805659 => {
                 if driver.sof_sent {
-                    outcome = Err(io::Error::from_raw_os_error(libc::EAGAIN));
+                    outcome = Err(io::Error::from_raw_os_error(libc::ENOENT));
                 } else {
                     driver.sof_sent = true;
                     b.fill(0);

@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "0e9bd4002bf4feaaef006434b75e1d4ed7002f34a6db89ae7de4dfcea96bf84c",
+  "testBinarySha256": "990699fad1fdc42f16aa0fab7a9764a59aaaa67032a8dfca8245bb8fcf120ba6",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -42,7 +42,7 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
       "statisticsEnabled": false,
       "statisticsFrames": 0

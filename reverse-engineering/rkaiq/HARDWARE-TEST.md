@@ -585,3 +585,33 @@ and enabled (four scenarios). Its raw geometry uses the observed 2304×1296,
 3072-byte stride and 3,981,312-byte plane extent. This tests pipeline-format
 configuration/readback and bridge buffer descriptors together. Image/driver
 responses remain synthetic and do not establish physical ISP capture.
+
+
+### Reconnected-board follow-up
+
+After a power cycle, ADB shells worked again. The image's normal
+`/etc/init.d/S21appinit stop` eventually stopped `rkipc`; its shutdown was not
+instant. Retaining the CIF link allowed graph setup, sensor writes and the
+statistics queue to start. CIF REQBUFS requested four buffers but returned two
+(type 9, MMAP). The bridge now accepts returned counts from 2 through 16 and
+uses the smaller TX/RX count, exporting/queuing only that shared index range.
+The ARM lifecycle mock now reproduces this two-buffer return.
+
+The board reports a 12 MiB CMA pool. Full-resolution NV12 allocation failed
+with ENOMEM after raw allocations. A separate combined capture at 640×480 with
+two image buffers progressed beyond allocation. It exposed a nonblocking
+SOF-event dequeue error: the pinned Linux
+[`__v4l2_event_dequeue`](https://github.com/LuckfoxTECH/luckfox-pico/blob/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/v4l2-core/v4l2-event.c#L35)
+returns ENOENT when the event queue is empty. The bridge now treats that as
+empty only in its event drain; image/raw-buffer errors are unaffected. The
+ARM event mock exercises ENOENT after the first SOF.
+
+With those fixes, raw inputs were queued/triggered (two SOF misses), but no RX
+completion or ISP output arrived before the bounded timeout. No new image was
+saved. Changing from `/dev/video17` (`rkisp_rawrd0_m`, middle exposure) toward
+`/dev/video18` (`rkisp_rawrd2_s`, short/single exposure) was blocked by EBUSY.
+The subsequent combined attempt reported EPERM and the kernel logged
+`check rkisp_rawrd2_s link`; do not interpret that attempt as a valid configured
+pipeline. Establish an idle graph with the correct linear input before retrying.
+The board still answered diagnostic shells after these attempts. Captured logs
+remain in the ignored local hardware artifact directory.

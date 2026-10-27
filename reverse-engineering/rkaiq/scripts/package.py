@@ -51,6 +51,17 @@ assert application['passed'] and application['cameraBinarySha256']==smoke['binar
 for name,digest in application['sourceSha256'].items():
  assert hashlib.sha256((ROOT/'firmware/rkaiq-rs/python'/name).read_bytes()).hexdigest()==digest,'Application hardware evidence is stale'
 assert hashlib.sha256((ROOT/'reverse-engineering/rkaiq/examples/public-address-qr.png').read_bytes()).hexdigest()==application['fixture']['sha256']
+# Include the complete committed public evidence/docs directory. This keeps new
+# live-module evidence and relative research links with the implementation;
+# ignored captures, full IQ files, vendor code and binary caches stay excluded.
+research_root=ROOT/'reverse-engineering/rkaiq'
+public_files=subprocess.check_output(['git','ls-files','-z','--','reverse-engineering/rkaiq'],cwd=ROOT).decode().split('\0')
+for name in sorted(filter(None,public_files)):
+ path=ROOT/name
+ if path.parent==research_root and path.suffix in ('.json','.md'):
+  target='research/'+path.name
+  if target not in items:copy(path,target)
+
 
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
@@ -112,10 +123,15 @@ if platform.system()=='Darwin' and platform.machine()=='arm64':
   if host.exists():copy(host,'host/'+name+'-macos-arm64').chmod(0o755)
 readme=r'''Experimental Rust SC3336 camera kit 0.0.1
 
-Start with this quickstart, then HARDWARE-TEST.md for evidence and detailed scope.
+Start with this quickstart, then research/HARDWARE-TEST.md for evidence and detailed scope.
 The ARM binary, managed Python adapter and opt-in application launcher are included.
 Development adds live ISO-dependent demosaic batches and default streaming
 without a final scene-image dump; explicit diagnostic saving remains available.
+Current development also includes live defect-pixel correction, color
+correction, lens shading and Bayer spatial noise reduction. CNR is reconstructed
+but disabled by its hardware qualification gate: enabling it stalls readback.
+Temporal Bayer NR, luma NR and sharpening remain unfinished. These limitations
+are recorded in research/cnr-live-startup-investigation.json and research/README.md.
 Calibration, statistics and logs are still retained.
 The current source passed real AE/AWB capture, owner restart/crash cleanup,
 full-range RGB delivery and application preview/decoder integration. A controlled

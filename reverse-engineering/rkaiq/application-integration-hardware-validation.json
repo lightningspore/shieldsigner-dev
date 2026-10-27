@@ -207,13 +207,12 @@
   "changedSourceRejected": true,
   "realFrameDecodeStatus": 4,
   "capture": {
-    "directory": "/shieldsigner-camera-tests/dev-0.0.33/results/camera-446woaig",
-    "firstFrameSeconds": 0.46059183299985307,
+    "firstFrameSeconds": 0.6066235010002856,
     "first": 6,
-    "last": 238,
-    "samples": 69,
-    "received": 72,
-    "stopSeconds": 0.2779140009999992,
+    "last": 235,
+    "samples": 62,
+    "received": 65,
+    "stopSeconds": 0.33406012500017823,
     "ownerExitCode": 0
   },
   "realFrameRotations": [
@@ -251,18 +250,23 @@
     }
   ],
   "rotationBenchmark": {
-    "croppedSecondsPerFrame": 0.05126000840000415,
-    "expandedSecondsPerFrame": 0.012413391600011892
+    "croppedSecondsPerFrame": 0.05139049999997951,
+    "expandedSecondsPerFrame": 0.012426224999944679
   },
   "installedCameraUnchanged": true,
-  "kind": "opt-in-camera-integration-and-synthetic-qr-hardware-check",
-  "version": "0.0.33-dev",
-  "run": "56",
-  "cameraBinarySha256": "51f3de4cf91d8c47dc92717aab42f0ef9b59c7a3f3dfde47bd06c731bcd226a9",
+  "kind": "process-local-application-integration-hardware-validation",
+  "version": "0.0.34-dev",
+  "run": 92,
+  "cameraBinarySha256": "162057d0e683bafacef6e4567d7eae16197cdff98f7c6343d8d66b2204399ae6",
   "sourceSha256": {
     "shieldsigner_integration.py": "2dfb752ce4529f66f5cb1713337f84bac3c6a51653a21b578e652f986d7766a5",
     "integration_hardware_check.py": "beeee86cbc96265b2dfaa2bb915c05ba071c499590fc7d6478b30f56660c3f85",
     "shieldsigner_video_stream.py": "b2d0456a8d9ba968aca09cb783b4fd0da236b6813d43de1dcef7fbc812b7af60"
+  },
+  "fixture": {
+    "kind": "generated public Bitcoin-address QR; software fixture, no optical qualification",
+    "sha256": "01c5263f30716c8536ce7e98881019cbe532bcf2a3f791172690e43ad86b37c1",
+    "passedCases": 16
   },
   "control": {
     "kind": "normal-timeshare-live-capture-check",
@@ -280,15 +284,15 @@
     "nativeTranslationChecked": true,
     "sceneImageSaved": false,
     "parameterSubmissions": 164,
-    "maxParameterSnapshots": 2,
+    "maxParameterSnapshots": 5,
     "retiredParameterSnapshots": 163,
     "scope": "Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification"
   },
   "nativeTranslation": {
     "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
-    "statisticsSha256": "55d799db9296eee354ef023e3098c1061e1f19bf69bb74227074ec12ab14663a",
+    "statisticsSha256": "67e2b0383afeeb5140cfce9b5b6b00f72925d3895a34c34018711ec89c7db785",
     "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
-    "translatedSha256": "057fe5c46bb252ed1d7edab034a4ce5c5ce2c9e47492f80c628b87f637628bc1",
+    "translatedSha256": "dddfe8f69697378b7029d83613e1864f5be8dc88b19a21343251bab90ac0c72a",
     "frameId": 246,
     "parametersId": 244,
     "bytesCompared": 7680,
@@ -299,15 +303,11 @@
       "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
     ]
   },
-  "fixture": {
-    "kind": "generated public Bitcoin-address QR; no private wallet data",
-    "sha256": "01c5263f30716c8536ce7e98881019cbe532bcf2a3f791172690e43ad86b37c1",
-    "passedCases": 16
-  },
-  "ownerLogSha256": "481582154a0a37e108448e7a9529df6407f0908d4a4e85b2960c8c14cf2b80cf",
+  "ownerLogSha256": "4f9b07223c1928e4e687748a904e290649e055404ab86cb530fad95db76c8b7f",
   "limitations": [
-    "Generated QR fixture pixels are software decoder checks; no optical target qualification.",
-    "Warm-board integration; exact 0.0.32 archive has separate controlled-clean-reboot evidence.",
-    "Complete physical LCD/button interaction remains unqualified."
+    "Generated QR pixels exercise software decoding; no optical target qualification.",
+    "Warm-board integration on exact current executable; this build has not yet passed controlled cold reboot.",
+    "Physical LCD/buttons and complete image quality remain unqualified.",
+    "CNR stays gated off because enabling it stalls first readback."
   ]
 }

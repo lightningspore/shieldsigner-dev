@@ -187,3 +187,8 @@ complete AE/AWB camera-service qualification is implied.
 parameter-snapshot IDs and effective-exposure lookup. [Raw-buffer comparison](AE.md#raw-isp-statistics-parameter-ids-and-exposure-map-association)
 checks the native composition and rejection of missing metadata/changed timing.
 The caller still owns the complete parameter snapshots and reported exposure map.
+
+The ordinary sensor submission path now preserves native per-record metadata and
+replaces pending batches by their first-entry markers. [Submission/SOF comparison](AE.md#exposure-submission-and-sof-handoff)
+checks native queuing, dequeue/effective-map behavior and linear control traces
+with modeled device callbacks. Live coordination and physical timing remain open.

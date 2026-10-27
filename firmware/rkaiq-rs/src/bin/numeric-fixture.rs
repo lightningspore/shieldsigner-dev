@@ -11,6 +11,8 @@ mod ae_session_fixture;
 mod awb_preparation_fixture;
 #[path = "../awb_translation_fixture.rs"]
 mod awb_translation_fixture;
+#[path = "../sensor_submission_fixture.rs"]
+mod sensor_submission_fixture;
 fn f(s: &str) -> f32 {
     f32::from_bits(u32::from_str_radix(s, 16).unwrap())
 }
@@ -32,6 +34,10 @@ fn main() {
         let line = line.unwrap();
         let a: Vec<_> = line.split_whitespace().collect();
         match a[0] {
+            "sensor-submission" => println!(
+                "{}",
+                sensor_submission_fixture::run(&serde_json::from_str(a[1]).unwrap())
+            ),
             "ae-raw-session" => println!(
                 "{}",
                 ae_session_fixture::run_raw(&serde_json::from_str(a[1]).unwrap())

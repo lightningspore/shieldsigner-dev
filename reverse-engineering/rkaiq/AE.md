@@ -1495,12 +1495,16 @@ is included in the corpus. The older translator oracle incorrectly treated any
 mask other than the two required bits as invalid in its assertion; that harness
 assertion now tests required-bit inclusion, matching the native translator.
 
-The session is still prepared for fixed timing. Complete effective-exposure
-records must carry matching frame length, line length and pixel clock. Changed
-or incomplete timing is rejected before controller state changes, because native
-reprepare/timing-update orchestration is not yet joined. This matters when long
-exposures change VBLANK; callers must not reinterpret those frames with a stale
-1,360-line configuration.
+The session is still prepared for fixed timing. Effective-exposure records must
+carry a matching frame length; conflicting nonzero line length or pixel clock
+also requires reconfiguration. Native publication can leave the latter two fields
+zero, and the sensor submission path preserves those zeros. The session now
+accepts them and retains its prepare-time timing rather than inventing descriptor
+values. The raw-session corpus uses actual native published records with these
+zero fields. Changed frame length is rejected before controller state changes,
+because native reprepare/timing-update orchestration is not yet joined. This
+matters when long exposures change VBLANK; callers must not reinterpret those
+frames with a stale 1,360-line configuration.
 
 [Raw-session comparison](ae-raw-session-equivalence.json) passes on host and ARM
 with zero mismatches. It composes real native
@@ -1522,4 +1526,56 @@ session; it does not establish a live automatic camera loop.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-raw-session.py --arm
+```
+
+## Exposure submission and SOF handoff
+
+`SensorHw::setExposureParams` (ELF 0x3c474) does more than append the latest
+publication queue. The ordinary, already-initialized path first removes pending
+intermediate entries from earlier batches, keeping each batch's first-entry
+marker. It then appends the new batch, marking only its first entry. A zero-count
+submission leaves pending entries untouched. `sensor_scheduler::enqueue_batch`
+now reproduces that replacement policy; single-entry `enqueue` remains available.
+
+`sensor_submission::assemble` reproduces the queued 244-byte exposure snapshot:
+start with the complete main exposure record, replace bytes 0–191 from the
+selected queue entry, replace the frame-length word at byte 232 and replace
+byte 240. All remaining fields retain the main record's values. This includes
+iris metadata, line length and pixel clock; the setter does not invent or
+restore descriptor timing. Tracing `RkAiqAeHandleInt::processing` and
+`genIspResult` also found no timing-restoration step in that path. Native
+publication's zero line-length/clock fields can therefore reach cached exposure
+records. The fixed-timing session now accepts those zeros and uses its existing
+prepare-time timing, while still rejecting changed frame length and conflicting
+nonzero timing values. The raw-buffer corpus now uses actual published records
+instead of filling in timing fields from the native engine context.
+
+The caller can submit a publication result with its main/final record and its
+active record prefix to `sensor_submission::submit`. This composes the exact
+copy policy with pending-batch replacement. `linear_controls` extracts the native
+frame-length, DCG, analogue/digital gain and integration codes for the recovered
+`sensor::program_linear` writer. These helpers do not open a device or perform
+I/O themselves. A SOF callback can use that writer with an explicit backend.
+
+[Submission comparison](sensor-submission-equivalence.json) passes on host and
+ARM with zero mismatches. It runs the actual native setter and `handle_sof` on the same sensor context across 12 sequences,
+96 submissions and 64 SOFs. It compares every queued exposure byte and first-entry
+marker, pending order after dequeue, current snapshot, reported effective-map
+entries and sensor-control traces/status. The actual native linear writer runs
+in a separate isolated emulator with descriptor/ioctl callbacks, including
+injected failures. As in the native scheduler, a failed writer can still update
+the reported effective map; that map must not be treated as proof of physical
+application. The native input-count reset and DPCC side-payload copy are also
+asserted; DPCC serialization/execution is outside the Rust submission payload API.
+
+Pool allocation, smart-pointer lifetime, C++ list links/map slots, locks, delete,
+DPCC execution and logs remain modeled boundaries. Native copy/removal/append,
+SOF and sensor-writer bodies execute. Rust has an explicit 32-entry pending
+capacity and rejects oversized batches before mutation; native partial mutations
+on allocation failure are not emulated. Startup immediate programming, custom
+I2C/test modes, split gain/DCG, full native ownership, live SOF coordination,
+ISP gain programming and physical latency qualification remain unfinished.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/sensor-submission.py --arm
 ```

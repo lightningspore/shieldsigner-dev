@@ -169,9 +169,11 @@ impl Session {
         let line = u16::from_le_bytes(effective[228..230].try_into().unwrap()) as u32;
         let frame_length = u32::from_le_bytes(effective[232..236].try_into().unwrap());
         let clock = u32::from_le_bytes(effective[236..240].try_into().unwrap());
-        if line != self.prepared.timing.line_length_pixels
+        // Native publication may leave cached line length / clock zero. AE
+        // retains its prepare-time timing; only nonzero conflicts are rejected.
+        if (line != 0 && line != self.prepared.timing.line_length_pixels)
             || frame_length != self.prepared.timing.frame_length
-            || clock != self.prepared.timing.pixel_clock_mhz.to_bits()
+            || (clock != 0 && clock != self.prepared.timing.pixel_clock_mhz.to_bits())
         {
             return Err("Incomplete or changed exposure timing; reconfigure the session".into());
         }

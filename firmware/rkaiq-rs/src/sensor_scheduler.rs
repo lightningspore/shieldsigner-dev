@@ -18,8 +18,13 @@ pub struct Outcome<T: Copy> {
     pub effective_frame: Option<u32>,
     pub status: i32,
 }
+#[derive(Clone, Copy, Debug)]
+pub struct Pending<T: Copy> {
+    pub exposure: T,
+    pub first: bool,
+}
 pub struct Scheduler<T: Copy> {
-    pending: [Option<T>; 32],
+    pending: [Option<Pending<T>>; 32],
     head: usize,
     pending_count: usize,
     effective: [Option<Entry<T>>; 11],
@@ -55,9 +60,45 @@ impl<T: Copy> Scheduler<T> {
         if self.pending_count == 32 {
             return Err(InvalidInput::Length);
         }
-        self.pending[(self.head + self.pending_count) % 32] = Some(exposure);
+        self.pending[(self.head + self.pending_count) % 32] = Some(Pending {
+            exposure,
+            first: true,
+        });
         self.pending_count += 1;
         Ok(())
+    }
+    /// Native ordinary setExposureParams removes pending non-first entries
+    /// before appending a new batch. An empty batch leaves the queue untouched.
+    /// The explicit 32-entry Rust capacity is checked before mutation; native
+    /// pool/allocation failure behavior is outside this successful-path API.
+    pub fn enqueue_batch(&mut self, exposures: &[T]) -> Result<(), InvalidInput> {
+        if exposures.is_empty() {
+            return Ok(());
+        }
+        let kept = self.pending().filter(|entry| entry.first).count();
+        if exposures.len() > 32 - kept {
+            return Err(InvalidInput::Length);
+        }
+        let mut pending = [None; 32];
+        let mut n = 0;
+        for entry in self.pending().filter(|entry| entry.first) {
+            pending[n] = Some(entry);
+            n += 1;
+        }
+        for (i, &exposure) in exposures.iter().enumerate() {
+            pending[n] = Some(Pending {
+                exposure,
+                first: i == 0,
+            });
+            n += 1;
+        }
+        self.pending = pending;
+        self.head = 0;
+        self.pending_count = n;
+        Ok(())
+    }
+    pub fn pending(&self) -> impl Iterator<Item = Pending<T>> + '_ {
+        (0..self.pending_count).map(|i| self.pending[(self.head + i) % 32].unwrap())
     }
     pub fn effective(&self) -> impl Iterator<Item = Entry<T>> + '_ {
         self.effective[..self.effective_count]
@@ -79,7 +120,7 @@ impl<T: Copy> Scheduler<T> {
                 status: 0,
             };
         }
-        let exposure = self.pending[self.head].take().unwrap();
+        let exposure = self.pending[self.head].take().unwrap().exposure;
         self.head = (self.head + 1) % 32;
         self.pending_count -= 1;
         self.current = exposure;

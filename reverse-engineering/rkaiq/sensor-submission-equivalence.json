@@ -1,0 +1,17 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "sequences": 12,
+  "submissions": 96,
+  "sofEvents": 64,
+  "writerCalls": 64,
+  "writerFailures": 48,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "Complete native ordinary SensorHw::setExposureParams queue path: 244-byte exposure assembly, first-entry markers, replacement of old intermediate entries and consumed input count, interleaved with real native handle_sof and isolated native linear sensor-writer execution. Native DPCC side payload and input-count reset also asserted.",
+  "limitations": [
+    "Pool allocation, smart-pointer operations, C++ list links, map slots, locking, delete, DPCC execution and logs are modeled boundaries; native queue/SOF control flow executes. Native sensor writer executes separately with descriptor/ioctl callbacks, including injected failures.",
+    "Submission success paths only, sensor already initialized, ordinary non-custom-I2C and non-test mode. Startup immediate writes and pool failures remain separate.",
+    "Rust pending capacity is explicitly 32 with preflight rejection; native allocation-failure partial mutation is not emulated.",
+    "No sensor writes, physical exposure timing or live feedback qualification."
+  ]
+}

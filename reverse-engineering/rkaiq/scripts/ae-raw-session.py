@@ -18,7 +18,7 @@ def main():
  for k in range(4):
   p=copy.deepcopy(profile);ae=p['main_scene'][0]['sub_scene'][0]['scene_isp32']['ae_calib'];ae['LinearAeCtrl']['InitExp']['InitTimeValue']=[.003,.005][k%2];ae['CommCtrl']['AecSpeed']['SmoothEn']=0 if k==3 else 1
   v=dict(profile=p,frame=1360,width=2304,height=1296,parameters=[dict(id=n,bytes=b.hex()) for n,b in snapshots.items()],frames=[])
-  native=Session();native.prepare(v);results=[dict(status='initial',state=native.snapshot())];effects={0:native.exposure()}
+  native=Session();native.prepare(v);results=[dict(status='initial',state=native.snapshot())];effects={0:bytes.fromhex(native.snapshot()['previous'])}
   for frame in range(16):
    raw=bytearray(13040);level=[45,45,3,0,120,240,45,45][(frame+k)%8]
    for j in range(225):
@@ -44,7 +44,7 @@ def main():
    native.uc.mem_write(HEAP+0x1d0000,bytes(body));native.wrappers(frame,False,HEAP+0x1d0000)
    counts['valid']+=1;counts['control_runs' if native.uc.mem_read(native.engine+0x22ed,1)[0] else 'control_skips']+=1
    results.append(dict(status='processed',frame=frame,parameters=parameter_id,exposure_frame=chosen['frame'],exact=exact,mean=means[0],state=native.snapshot()))
-   effects[frame+2]=native.exposure()
+   effects[frame+2]=bytes.fromhex(native.snapshot()['previous'])
   # Fixed-timing binding must not silently reinterpret a VBLANK/timing change.
   changed=bytearray(native.exposure());struct.pack_into('<I',changed,232,1361)
   raw=bytearray(raw);struct.pack_into('<3I',raw,0x32e0,0x5d80,16,0)

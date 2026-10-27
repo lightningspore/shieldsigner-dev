@@ -172,3 +172,7 @@ including native profile-name resolution/order from `pCcmMatrixAll_init`
 `ccm_input::filter` reconstructs complete `JudgeCcmRes3aConverge`
 (ELF `0xfe1dc`), including independent input holds and baseline mutations.
 [Meaning, fused distance and persistent native/physical CPU evidence](ISP.md#ccm-input-deadband-0034-development).
+
+`ccm_automatic::State` composes supported complete `AccmConfig` (`0xff10c`)
+and `AccmAutoConfig` (`0xfed30`) numerical/cache behavior.
+[Explicit initialization, frame control and joined native/physical CPU comparison](ISP.md#joined-automatic-ccm-configuration-0034-development).

@@ -917,3 +917,49 @@ Run `mise run camera:rust:ccm-input -- --adb SERIAL --report LOCAL.json` after
 building host/ARM fixtures. Physical replay makes no ISP writes. Joined
 `AccmConfig`/`AccmAutoConfig`, constructor-owned defaults/flags and live CCM
 submission remain next; the camera still leaves CCM disabled.
+
+### Joined automatic CCM configuration (0.0.34 development)
+
+`ccm_automatic::State` joins the supported numerical/state behavior of complete
+`AccmConfig` (ELF `0xff10c`) and `AccmAutoConfig` (`0xfed30`). Input filtering,
+selection, alpha scaling, symmetric luma publication, saturation adjustment,
+full-result damping and enhancement updates now run as one persistent controller.
+The supported profile is symmetric/non-blended, with constructor-default user
+inhibition zero and user saturation 50; arbitrary user adjustment attributes,
+manual mode and full native ABI ownership are outside this API.
+
+`State::new` explicitly reproduces the relevant `ConfigbyCalib` result/defaults:
+first-row alpha curve, static bounds/coefficients, initial enhancement flag/ratio,
+unit input/baseline records, zero target matrix/cache, and alpha cache one.
+Native constructor saturation cache starts at 100 while its user saturation
+curve is 50; this distinction is retained. This initialization boundary is
+explicit: the whole native constructor/JSON parser is not executed in this test.
+
+Frame controls remain explicit: native active byte `0x55c`, attribute/reconfigure
+flags, gray mode, and caller-owned prior-publication flag `0x560`. Small inputs
+are held by the verified deadband. When input/attributes change or damping has
+not converged, automatic configuration runs. Damping is zero until frame count
+reaches two and when calibration/active state disables it. Luma is scaled and
+static fields restored in native order; enhancement changes and ongoing damping
+can publish without a new selected matrix. Whole-frame state is staged and
+committed only after all supported stages succeed; a late invalid-alpha failure
+test verifies no partial commit after input/selection work.
+
+[Full native call-tree/physical CPU evidence](ccm-automatic-equivalence.json)
+compares 32 persistent 24-frame sequences (768 frames). The original complete
+`ConfigbyCalib`, `AccmConfig` and `AccmAutoConfig` execute with their numerical
+callees; only libc string/memory boundaries are modeled, and original ARM uClibc
+`floorf` executes. Every 156-byte result, selected names/matrix/offset cache,
+saturation/illuminant, baseline/current inputs, alpha/saturation caches,
+convergence, frame count, input-change and publication flag matches. Cases cover
+held/changed inputs, startup/active flags, reconfiguration/attributes, gray and
+disabled output, damping disabled/enabled, varied alpha scales, enhancement
+curves and WB tolerances. Raw IQ and constructed fixtures remain ignored.
+
+The 98 library/five Unix tests, no-default-features and static ARM builds pass.
+Run `mise run camera:rust:ccm-automatic -- --adb SERIAL --report LOCAL.json`
+after building host/ARM fixtures. This qualifies joined configuration under
+explicit initialization/control boundaries, not outer callback integration,
+physical ISP writes, image quality or a full RKAIQ replacement. Native full
+constructor defaults/callback ownership and transactional camera submission
+remain to be closed before enabling live CCM.

@@ -3256,6 +3256,20 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-automatic" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let cal=shieldsigner_rkaiq::ccm_calibration::Automatic::from_value(&v["calibration"]).unwrap();
+                let mut state=shieldsigner_rkaiq::ccm_automatic::State::new(&cal);let mut output=Vec::new();
+                let hex=|b: &[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+                for frame in v["frames"].as_array().unwrap() {
+                    let current=frame["current"].as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>().try_into().unwrap();
+                    state.process(&cal,current,frame["damping"].as_f64().unwrap() as f32,frame["active"].as_bool().unwrap(),frame["attributes"].as_bool().unwrap(),frame["reconfigure"].as_bool().unwrap(),frame["gray"].as_bool().unwrap(),frame["publish"].as_bool().unwrap()).unwrap();
+                    let mut selection=state.selection.saturation.to_le_bytes().to_vec();selection.extend((state.selection.illuminant as u32).to_le_bytes());selection.extend(state.selection.high_name);selection.extend(state.selection.low_name);selection.extend(state.selection.matrix.iter().chain(state.selection.offsets.iter()).flat_map(|v|v.to_le_bytes()));
+                    let inputs=state.baseline.iter().chain(state.current.iter()).flat_map(|v|v.to_le_bytes()).collect::<Vec<_>>();
+                    output.push(serde_json::json!({"result":hex(&state.result),"selection":hex(&selection),"inputs":hex(&inputs),"alpha":state.alpha.to_bits(),"saturation":state.saturation.to_bits(),"converged":state.converged,"frames":state.frames,"inputsChanged":state.inputs_changed,"published":state.published}));
+                }
+                println!("{}",serde_json::json!(output));
+            }
             "ccm-input" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let array=|p: &serde_json::Value|p.as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>().try_into().unwrap();

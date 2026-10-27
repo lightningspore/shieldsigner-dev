@@ -616,3 +616,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:ccm-input"]
 description = "Compare CCM AE/AWB deadband and baseline mutation with native and physical ARM"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ccm-input.py"
+
+[tasks."camera:rust:ccm-automatic"]
+description = "Compare joined automatic CCM configuration with full native controller call trees"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ccm-automatic.py"

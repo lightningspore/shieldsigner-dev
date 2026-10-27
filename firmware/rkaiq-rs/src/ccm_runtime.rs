@@ -11,7 +11,7 @@ pub struct Illuminant<'a> {
     pub saturations: [f32; 4],
     pub profiles: &'a [NamedProfile],
 }
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct State {
     pub illuminant: usize,
     pub saturation: f32,

@@ -354,3 +354,5 @@ pub mod ccm_luma;
 #[cfg(feature = "diagnostics")]
 pub mod ccm_calibration;
 pub mod ccm_input;
+#[cfg(feature = "diagnostics")]
+pub mod ccm_automatic;

@@ -2052,3 +2052,30 @@ changed on that assumption. Separate digital-gain stages, higher gains, changing
 frame length, and exposure association under all workloads remain unqualified.
 The source command and controller continue to label physical application as
 unverified; readback proves the requested driver value, not the sensor's frame.
+
+### Physical closed-loop startup convergence from opposite initial exposures
+
+Two 192-image SC3336 captures ran automatic AE and AWB from 3 ms/1× and
+24 ms/4× respectively, in the same scene. Each processed 128 real statistics
+frames and submitted 127 parameter batches while retaining at most two
+parameter snapshots. Initial measured brightness averaged 4.21 versus 86.32
+for the first three samples. Final sixteen-sample means were 42.716 and 46.273
+against target 45; final ranges were 42.699–42.738 and 46.254–46.289.
+
+Both reached the calibrated `ToleranceIn=10%` band and reduced initial target
+error by more than 70%. Last observed samples outside that band occurred at
+frames 18 and 13. These are observed sample boundaries, not interpolated
+settling times. The IQ's `ToleranceOut=15%` provides hysteresis. A preliminary
+stricter test requiring the two final means to agree within 5% of target failed;
+that equality is not required by the recovered tolerance gate. The controller
+was not changed to force it. Both individual target-band checks are retained,
+as is the failed cross-run agreement result.
+
+[Evidence](ae-startup-convergence-validation.json) retains all measured means,
+input/capture hashes and explicit criteria. Reproduce the offline analysis with
+`scripts/ae-startup-convergence.py DIM-PREFIX BRIGHT-PREFIX --iq PRIVATE-IQ
+--report LOCAL.json`. Captures use `auto-awb-frame-sc3336 ... --frames 192`;
+the bright private IQ changes only linear InitTimeValue and InitGainValue.
+This is real closed-loop response from different initial conditions, not an
+optical lighting change, proof of exact per-frame gain timing, or broad image
+quality qualification.

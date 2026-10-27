@@ -404,6 +404,84 @@ mod first_frame_driver {
         let boosted = make_runtime(2.);
         let unity = make_runtime(1.);
         *DRIVER.lock().unwrap() = Some(Driver::default());
+        let initial_parameters = shieldsigner_rkaiq::initial_parameters::assemble_with_ae(&iq)
+            .unwrap()
+            .0;
+        let sensor = SensorDevice {
+            file: open("/dev/null", true).unwrap(),
+            queries: vec![],
+            bus: None,
+            writes: vec![],
+        };
+        let mut owner = CameraAeOwner::new(make_runtime(1.), sensor, 0, initial_parameters);
+        let raw = |frame: u32, id: u32| {
+            let mut bytes = vec![0u8; 13040];
+            put32(&mut bytes, 0x32e0, (1 << 8) | (1 << 12));
+            put32(&mut bytes, 0x32e4, frame);
+            put32(&mut bytes, 0x32e8, id);
+            bytes
+        };
+        assert!(owner
+            .handle(CameraAeEvent::Statistics { bytes: raw(1, 0) })
+            .unwrap()
+            .is_empty());
+        assert_eq!(owner.pending.len(), 1);
+        assert!(owner.finish().is_err());
+        let outputs = owner
+            .handle(CameraAeEvent::Sof {
+                frame: 1,
+                timestamp_ns: 1_000_000,
+            })
+            .unwrap();
+        assert_eq!(outputs.len(), 1);
+        assert_eq!(outputs[0].frame, 1);
+        assert!(owner.pending.is_empty());
+        let previous = owner.last_statistics;
+        assert!(owner
+            .handle(CameraAeEvent::Statistics { bytes: raw(1, 0) })
+            .is_err());
+        assert_eq!(owner.last_statistics, previous);
+        owner.add_parameters(2, initial_parameters).unwrap();
+        assert!(owner.add_parameters(2, initial_parameters).is_err());
+        assert!(owner
+            .handle(CameraAeEvent::Statistics { bytes: raw(3, 2) })
+            .unwrap()
+            .is_empty());
+        assert!(owner
+            .handle(CameraAeEvent::Sof {
+                frame: 2,
+                timestamp_ns: 2_000_000
+            })
+            .unwrap()
+            .is_empty());
+        let outputs = owner
+            .handle(CameraAeEvent::Sof {
+                frame: 3,
+                timestamp_ns: 3_000_000,
+            })
+            .unwrap();
+        assert_eq!(outputs.len(), 1);
+        assert_eq!(outputs[0].parameters, 2);
+        for frame in 4..9 {
+            owner
+                .handle(CameraAeEvent::Sof {
+                    frame,
+                    timestamp_ns: frame as u64 * 1_000_000,
+                })
+                .unwrap();
+        }
+        assert_eq!(owner.processed, 2);
+        owner.finish().unwrap();
+        assert!(!owner.sensor.writes.is_empty());
+        let writes = owner.sensor.writes.len();
+        assert!(owner
+            .handle(CameraAeEvent::Sof {
+                frame: 7,
+                timestamp_ns: 7_000_000
+            })
+            .is_err());
+        assert_eq!(owner.sensor.writes.len(), writes);
+        drop(owner);
         let mut backend = ParameterBackend {
             file: Some(open("/dev/zero", true).unwrap()),
             requested: 2,

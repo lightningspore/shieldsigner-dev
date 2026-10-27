@@ -1835,3 +1835,36 @@ pixels or physical exposure timing.
 The existing CLI still selects the fixed initial-exposure path. The observed
 entry point is internal; it does not yet create the continuous AE event owner,
 issue automatic sensor writes, or submit dynamic parameters during capture.
+
+### Single-owner AE event consumption
+
+`CameraAeOwner` consumes the owned capture events on one thread and holds the
+persistent AE runtime plus its sensor backend. A SOF event invokes the recovered
+scheduler/writer path. A statistics event invokes raw translation, explicit
+parameter-ID lookup, effective-exposure association, AE processing and sensor
+batch submission through `Runtime::step_statistics`. Processed outputs are
+returned to the event-loop caller for ISP batch submission.
+
+To handle producer races, statistics whose frame exceeds the highest consumed
+SOF wait in an owned FIFO of at most 16 payloads. Each SOF releases eligible
+statistics in arrival order after its scheduled sensor write. The owner rejects
+duplicate/regressing statistics, regressing SOFs and queue overflow. Equal SOF
+frames remain allowed for native scheduler compatibility. Shutdown with pending
+statistics reports an error. These ordering and bounds are explicit Rust adapter
+policy; native numerical/scheduling routines retain their differential evidence,
+but this is not proof of the vendor's thread ordering or physical latency.
+
+The owner accepts explicit complete translator snapshots with unique increasing
+IDs (maximum 128). It does not silently substitute the latest snapshot for an
+unknown ID, and does not yet implement native parameter-map retention or derive
+snapshots from completed ISP updates. Controller/driver errors require discarding
+the owner, because subordinate native-style runtime changes are not transactional.
+
+The ARM integration test processes statistics received before SOF, verifies the
+pending payload is released at the matching SOF, runs later scheduled writes
+through the actual Linux `SensorDevice` adapter with simulated ioctls, installs
+and selects a second parameter snapshot, and checks duplicate statistics,
+regressing SOF and unfinished shutdown rejection. All four capture startup
+scenarios still pass. The existing capture CLI has not yet been switched to
+this consumer; continuous parameter submission, snapshot accumulation and
+shutdown coordination remain to be joined before enabling automatic capture.

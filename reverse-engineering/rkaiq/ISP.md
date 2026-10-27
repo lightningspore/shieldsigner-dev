@@ -1473,3 +1473,44 @@ The fixture selects all three exposure ISO slots, which is not HDR camera
 qualification. These are synthetic SDK tables: actual JSON calibration
 preparation, register quantization, persistent controller and live BAYNR remain
 separate. Physical CPU replay makes no ISP writes; live BAYNR stays disabled.
+
+### BAYNR fixed-register quantization (0.0.34 development)
+
+`baynr_quantize::quantize` reconstructs complete `bayer2dnr_fix_transfer_V23`
+(ELF `0xe4e8c`). It consumes the verified selected, 16-byte strength and 88-byte
+exposure records and updates the 152-byte fixed result. Native strength is one
+when disabled; enabled non-positive values use f32 `1e-6`. Soft threshold uses
+Q10 `(ratio/filter_strength)/strength`, register weight uses Q10
+`strength*weight`, and sigma uses `sigma*filter_strength`. Native leaves the
+bilateral-strength field zero. Independent clips cover pixel difference,
+thresholds, sigma, transform offsets/data maximum and gain curves. The selected
+data-maximum u32 field is clamped as a signed integer, matching native.
+
+Digital gain derives from the last active exposure's `ISO*time` product divided
+by each exposure product, Q10 conversion and division by four, with optional
+HDR scaling. Inactive gain slots and padding retain prior bytes. For a single
+exposure with positive BLC predgain, native clears all three digital-gain
+registers. BAY3D enabled forces Bayer enable and derives its gain-enable flag
+from the selected gain-bypass flag. Normal/gray spatial weights choose different
+indices from eight exponentials of recovered spatial distances divided by twice
+the squared, strength-scaled edge softness. Edge softness caps at sixteen;
+zero produces zero spatial weights through the native exponential path.
+
+[Native/physical CPU evidence](baynr-quantize-equivalence.json) checks 1,000
+complete fixed records and preservation of every selected/strength/exposure
+input byte. The entire original quantizer executes, including 8,000 calls to
+the pinned original uClibc `expf`; only its final diagnostic printer is
+suppressed. Rust host and physical Luckfox agree on every byte, including
+retained gain slots and padding. Cases vary strength enable/zero/negative,
+zero/negative/out-of-range tuning, gray weights, three exposure counts, HDR
+scaling, BAY3D and BLC gates. SDK ARM C assertions independently verify strength
+layout, alongside the existing selected/exposure/fixed/kernel layouts. All 104
+library/five Unix tests, no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:baynr-quantize -- --adb SERIAL --report LOCAL.json`
+after host/ARM fixture builds. The Rust boundary requires finite metadata,
+exposure modes 0–2 and positive finite ISO/time products, preserving prior
+registers on rejection. HDR/gray arithmetic is not camera qualification. These
+are synthetic selected records; actual JSON calibration, strength policy,
+persistent state and live integration remain separate. Physical CPU replay
+makes no ISP writes; live BAYNR is still disabled.

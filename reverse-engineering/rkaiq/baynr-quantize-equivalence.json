@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "fixedRecordBytesComparedPerCase": 152,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "expRuntimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "nativeExpCalls": 8000,
+  "hostBinarySha256": "f8de01c994992e98d8a433d634788e06862c6fed785067e4ba6f3fd2d766f5e6",
+  "physicalArmBinarySha256": "93a668dd7459b86af31d46120e2f44ad90526f3ce800883f4a62af01fef9e655",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Complete native bayer2dnr_fix_transfer_V23 with original uClibc expf. Every fixed-result byte compared including padding and inactive digital-gain slots; selected/strength/exposure inputs checked unchanged.",
+  "boundaries": [
+    "Only final diagnostic printer suppressed; no algorithm or math substitutes.",
+    "Finite selected/strength metadata, exposure mode 0..2, positive finite ISO*time products. Zero/nonpositive strength, zero filter/edge, negative/out-of-range tuning, HDR gain control, gray spatial weights, BAY3D flags and BLC predgain gates included.",
+    "Synthetic SDK records; actual calibration/strength policy, persistent controller and live BAYNR remain separate. HDR/gray arithmetic coverage is not camera qualification.",
+    "Physical CPU replay makes no ISP writes and loads no vendor library."
+  ]
+}

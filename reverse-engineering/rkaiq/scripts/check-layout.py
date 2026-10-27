@@ -340,3 +340,16 @@ _Static_assert(offsetof(Abayer2dnr_ExpInfo_V23_t,isoLevelLow)==80,"BAYNR selecte
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'baynr-selection-sdk-layout.o')],check=True)
 print('PASS: BAYNR thirteen-row table=3336/selected=252/exposure=88; all selector field offsets verified')
+
+baynr_comm=dpcc_header('rk_aiq_comm.h')
+sync_enum=re.search(r'typedef enum \{\s*RK_AIQ_UAPI_MODE_DEFAULT.*?\} rk_aiq_uapi_mode_sync_e;',baynr_comm,re.S)
+assert sync_enum
+source=cache/'baynr-strength-sdk-layout.c'
+source.write_text('#include <stdbool.h>\n#include <stddef.h>\n'+sync_enum.group(0)+'\n'+dpcc_record('rk_aiq_uapi_sync_s',baynr_comm)+'\n'+dpcc_record('rk_aiq_bayer2dnr_strength_v23_s',baynr_int)+'''
+_Static_assert(sizeof(rk_aiq_uapi_sync_t)==8,"SDK synchronization metadata");
+_Static_assert(sizeof(rk_aiq_bayer2dnr_strength_v23_t)==16,"BAYNR SDK strength size");
+_Static_assert(offsetof(rk_aiq_bayer2dnr_strength_v23_t,percent)==8,"BAYNR strength fraction");
+_Static_assert(offsetof(rk_aiq_bayer2dnr_strength_v23_t,strength_enable)==12,"BAYNR strength enable");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'baynr-strength-sdk-layout.o')],check=True)
+print('PASS: BAYNR strength SDK=16, percent=8/enable=12 verified from verbatim synchronization/strength declarations')

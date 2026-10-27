@@ -676,3 +676,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:baynr-selection"]
 description = "Compare complete Bayer spatial NR ISO selection and padding preservation with native ARM"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/baynr-selection.py"
+
+[tasks."camera:rust:baynr-quantize"]
+description = "Compare complete Bayer spatial NR fixed-register quantization with native ARM and uClibc expf"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/baynr-quantize.py"

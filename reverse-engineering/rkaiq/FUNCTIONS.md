@@ -237,3 +237,8 @@ NR conversion, including mask clearing and gain/weight permutations.
 selection, including integer-gain brackets, nearest-row choices, fused
 interpolation and preserved SDK padding.
 [Full native/physical CPU evidence and input bounds](ISP.md#baynr-iso-tuning-selection-0034-development).
+
+`baynr_quantize::quantize` reconstructs complete Bayer spatial NR fixed-register
+conversion, including exposure gains, fixed-point clips, spatial exponentials
+and retained slots/padding.
+[Full native/original-expf and physical CPU evidence](ISP.md#baynr-fixed-register-quantization-0034-development).

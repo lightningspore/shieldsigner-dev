@@ -3455,6 +3455,13 @@ fn main() {
                 let (x,y)=shieldsigner_rkaiq::lsc_geometry::gradients(&array("x"),&array("y")).unwrap();
                 println!("{}",x.iter().chain(y.iter()).flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "baynr-fix" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                let decode=|key:&str|{let s=v[key].as_str().unwrap();(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>()};
+                let selected=decode("selected").try_into().unwrap();let strength=decode("strength").try_into().unwrap();let exposure=decode("exposure").try_into().unwrap();let mut result=decode("result").try_into().unwrap();
+                shieldsigner_rkaiq::baynr_quantize::quantize(&selected,&strength,&exposure,&mut result).unwrap();
+                println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
+            }
             "baynr-select" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
                 let decode=|key:&str|{let s=v[key].as_str().unwrap();(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>()};

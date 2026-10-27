@@ -1448,3 +1448,34 @@ captured statistics and makes no ISP/sensor writes. Physical lighting/color
 changes remain a separate hardware test. See
 `awb-scene-sequence-validation.json` for hashes, original-ARM comparison limits
 and the live capture association evidence.
+
+### Repeated real application camera ownership
+
+Development sources include `firmware/rkaiq-rs/python/restart_hardware_check.py`.
+Copy it alongside the development `shieldsigner_integration.py` and
+`shieldsigner_video_stream.py`, outside the frozen kit. With the camera idle:
+
+```sh
+python3 /shieldsigner-camera-tests/dev-0.0.32/python/restart_hardware_check.py \
+  --app-root /seedsigner --config /shieldsigner-camera-tests/live-37-config.json \
+  --cycles 10 --report /shieldsigner-camera-tests/restart-UNIQUE.json
+```
+
+Use your own development configuration pointing at the tested binary and an
+existing persistent output directory. Each cycle exercises the real Camera
+adapter, waits for six distinct frame sequences, rotates the complete preview,
+stops ownership and checks process exit/socket removal. On this kernel the
+CMA allocator releases its pool to general memory: `CmaFree` may remain zero.
+The check therefore compares `CmaAllocated` when available, retaining
+`CmaReleased`, `CmaFree`, available-memory and slab measurements as context.
+System-wide memory counters are not proof of zero bytes leaked by every driver.
+This is repeated camera ownership qualification, not full UI/button interaction
+or optical QR qualification. Reports and private frame artifacts stay on local
+storage; only reviewed metadata summaries belong in git.
+
+[Hardware restart evidence](camera-restart-hardware-validation.json) records
+ten final cycles with zero allocated CMA after each stop, 0.455–0.560 s first
+preview and at most 0.200 s stop. The prior twenty-cycle run also passed owner
+and socket cleanup; its available-memory readings varied by 112 KiB, but its
+CMA-free-only comparison is deliberately not presented as allocation proof.
+No installed application file or boot service was modified by these tests.

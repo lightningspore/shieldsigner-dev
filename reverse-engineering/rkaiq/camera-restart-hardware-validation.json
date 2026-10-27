@@ -1,0 +1,287 @@
+{
+  "passed": true,
+  "cycles": [
+    {
+      "index": 0,
+      "rotation": 0,
+      "firstFrameSeconds": 0.5595493749997331,
+      "stopSeconds": 0.13526654199995392,
+      "sequences": [
+        0,
+        2,
+        3,
+        6,
+        12,
+        15
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24616,
+        "SlabKiB": 7520,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-n46jlsnj"
+    },
+    {
+      "index": 1,
+      "rotation": 90,
+      "firstFrameSeconds": 0.5244962920005491,
+      "stopSeconds": 0.12352783400001499,
+      "sequences": [
+        0,
+        1,
+        3,
+        5,
+        9,
+        12
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24612,
+        "SlabKiB": 7532,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-2jutrp6h"
+    },
+    {
+      "index": 2,
+      "rotation": 180,
+      "firstFrameSeconds": 0.4968777920003049,
+      "stopSeconds": 0.14282304199969076,
+      "sequences": [
+        0,
+        1,
+        3,
+        6,
+        9,
+        12
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24600,
+        "SlabKiB": 7536,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-3wczt_1g"
+    },
+    {
+      "index": 3,
+      "rotation": 270,
+      "firstFrameSeconds": 0.4545394579999993,
+      "stopSeconds": 0.17665433299953293,
+      "sequences": [
+        0,
+        2,
+        3,
+        5,
+        9,
+        12
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24620,
+        "SlabKiB": 7536,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-n5_b4426"
+    },
+    {
+      "index": 4,
+      "rotation": 0,
+      "firstFrameSeconds": 0.5302984170002674,
+      "stopSeconds": 0.12672070900043764,
+      "sequences": [
+        0,
+        1,
+        2,
+        5,
+        9,
+        12
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24596,
+        "SlabKiB": 7544,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-o3omn1l8"
+    },
+    {
+      "index": 5,
+      "rotation": 90,
+      "firstFrameSeconds": 0.4659214590001284,
+      "stopSeconds": 0.18295404200034682,
+      "sequences": [
+        0,
+        1,
+        2,
+        6,
+        8,
+        12
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24608,
+        "SlabKiB": 7492,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-gl8nyjs6"
+    },
+    {
+      "index": 6,
+      "rotation": 180,
+      "firstFrameSeconds": 0.5175312920000579,
+      "stopSeconds": 0.13002850000066246,
+      "sequences": [
+        0,
+        1,
+        2,
+        5,
+        9,
+        12
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24588,
+        "SlabKiB": 7500,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-odbl2f1k"
+    },
+    {
+      "index": 7,
+      "rotation": 270,
+      "firstFrameSeconds": 0.4589806670001053,
+      "stopSeconds": 0.13657525000053283,
+      "sequences": [
+        0,
+        1,
+        2,
+        5,
+        9,
+        12
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24608,
+        "SlabKiB": 7496,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-37sgz0dj"
+    },
+    {
+      "index": 8,
+      "rotation": 0,
+      "firstFrameSeconds": 0.497403082999881,
+      "stopSeconds": 0.19950408399927255,
+      "sequences": [
+        0,
+        1,
+        2,
+        5,
+        9,
+        12
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24360,
+        "SlabKiB": 7500,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-185rbbyi"
+    },
+    {
+      "index": 9,
+      "rotation": 90,
+      "firstFrameSeconds": 0.47135987499950716,
+      "stopSeconds": 0.18537516699961998,
+      "sequences": [
+        0,
+        2,
+        3,
+        5,
+        9,
+        12
+      ],
+      "ownerExitCode": 0,
+      "ownerGone": true,
+      "socketRemoved": true,
+      "memoryAfterStop": {
+        "MemAvailableKiB": 24584,
+        "SlabKiB": 7484,
+        "CmaTotalKiB": 12288,
+        "CmaAllocatedKiB": 0,
+        "CmaReleasedKiB": 12288,
+        "CmaFreeKiB": 0
+      },
+      "directory": "/shieldsigner-camera-tests/live-37-results/camera-j29uuwt7"
+    }
+  ],
+  "initialMemory": {
+    "MemAvailableKiB": 27132,
+    "SlabKiB": 7552,
+    "CmaTotalKiB": 12288,
+    "CmaAllocatedKiB": 0,
+    "CmaReleasedKiB": 12288,
+    "CmaFreeKiB": 0
+  },
+  "binarySha256": "a8c4c7b688d07a1bf5abfcfdb25e1020a5b25f912024056327908775f88a41da",
+  "opticalScanQualified": false,
+  "helperSha256": "e69c4cc5376e164f2eec55ae6c3ef88543127dbe9726cd3f6eab7952a35aaf18",
+  "reportSha256": "0a246ab95b11b2b8909d4fa23278c4dba220454eed4b9a11948e5e78b99e5f0a",
+  "previousTwentyCycleRun": {
+    "passed": true,
+    "reportSha256": "a019f62c9760a8d433094e5a47516cdc52aaf48b020783444dc3ff96a8257f1e",
+    "allocatedCmaMeasured": false,
+    "scope": "All owners exited, sockets removed, preview rotations exercised; free-CMA counter alone was insufficient for allocation proof."
+  },
+  "limitations": [
+    "No full UI/button or optical QR qualification.",
+    "System-wide memory counters and repeated successful allocations do not prove absence of every possible driver leak."
+  ]
+}

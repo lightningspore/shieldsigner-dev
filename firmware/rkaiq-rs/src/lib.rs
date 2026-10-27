@@ -285,3 +285,5 @@ pub mod ae_dynamic_calibration;
 pub mod ae_fps;
 
 pub mod ae_smoothing;
+
+pub mod ae_lifecycle;

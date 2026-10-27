@@ -18,7 +18,7 @@ f32=lambda x:struct.unpack('<f',struct.pack('<f',x))[0]
 fhex=lambda x:f'{u32(struct.pack("<f",x)):08x}'
 class OriginalArm:
  def __init__(self,path,tls=False):
-  self.uc=Uc(UC_ARCH_ARM,UC_MODE_ARM|UC_MODE_LITTLE_ENDIAN);self.symbols={};self.stubs={}
+  self.uc=Uc(UC_ARCH_ARM,UC_MODE_ARM|UC_MODE_LITTLE_ENDIAN);self.symbols={};self.symbol_candidates={};self.stubs={}
   with path.open('rb') as f:
    e=ELFFile(f);segments=[s for s in e.iter_segments() if s['p_type']=='PT_LOAD']
    lo=min(BASE+s['p_vaddr'] for s in segments)&~4095
@@ -26,7 +26,8 @@ class OriginalArm:
    self.uc.mem_map(lo,hi-lo)
    for s in segments:self.uc.mem_write(BASE+s['p_vaddr'],s.data())
    for s in e.get_section_by_name('.symtab').iter_symbols():
-    if s['st_info']['type']=='STT_FUNC' and s['st_shndx']!='SHN_UNDEF':self.symbols[s.name]=BASE+s['st_value']
+    if s['st_info']['type']=='STT_FUNC' and s['st_shndx']!='SHN_UNDEF':
+     target=BASE+s['st_value'];self.symbols[s.name]=target;self.symbol_candidates.setdefault(s.name,[]).append(target)
    self.uc.mem_map(HEAP,0x100000);self.uc.mem_map(RETURN,0x10000);self.uc.mem_map(STACK,0x100000)
    tls_offset=8
    if tls:
@@ -63,6 +64,11 @@ class OriginalArm:
   self.uc.reg_write(regs.UC_ARM_REG_FPEXC,0x40000000)
   self.uc.hook_add(UC_HOOK_CODE,self.hook)
   self.calls=[]
+ def resolve_symbol(self,name,entry=None):
+  candidates=sorted(set(self.symbol_candidates.get(name,[])))
+  if entry is not None:candidates=[p for p in candidates if (p&~1)==(entry&~1)]
+  if len(candidates)!=1:raise RuntimeError(f'Non-unique or missing symbol {name}: {[hex(p) for p in candidates]}')
+  return candidates[0]
  def hook(self,uc,address,size,user):
   name=self.stubs.get(address)
   if name is None:return

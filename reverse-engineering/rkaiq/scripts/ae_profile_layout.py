@@ -9,11 +9,11 @@ from differential import ROOT
 from pathlib import Path
 manifest=json.loads((ROOT/'reverse-engineering/rkaiq/artifacts.json').read_text())
 HEADER_HASHES={}
-for name in ['aec_head.h','sensorinfo_head.h','rk_aiq_comm.h']:
+for name in ['aec_head.h','sensorinfo_head.h','moduleinfo_head.h','rk_aiq_comm.h']:
  entry=next(x for x in manifest['headers'] if x['name']==name)
  assert hashlib.sha256((ROOT/'.tools/reverse-engineering/headers'/name).read_bytes()).hexdigest()==entry['sha256']
  HEADER_HASHES[name]=entry['sha256']
-text=(ROOT/'.tools/reverse-engineering/headers/aec_head.h').read_text()+(ROOT/'.tools/reverse-engineering/headers/sensorinfo_head.h').read_text();text=re.sub(r'/\*.*?\*/|//[^\n]*','',text,flags=re.S)
+text=''.join((ROOT/'.tools/reverse-engineering/headers'/name).read_text() for name in ['aec_head.h','sensorinfo_head.h','moduleinfo_head.h']);text=re.sub(r'/\*.*?\*/|//[^\n]*','',text,flags=re.S)
 macros={k:int(v) for k,v in re.findall(r'^#define\s+(\w+)\s+\(?(\d+)\)?',text,re.M)}
 enums={};values={}
 for raw in [text,(ROOT/'.tools/reverse-engineering/headers/rk_aiq_comm.h').read_text()]:
@@ -71,14 +71,14 @@ class Packer:
   return bytes(out)
 
 def verify_arm_layout():
- layout('CalibDb_Aec_ParaV2_t');layout('CalibDb_Sensor_ParaV2_t')
+ layout('CalibDb_Aec_ParaV2_t');layout('CalibDb_Sensor_ParaV2_t');layout('CalibDb_Module_ParaV2_t')
  common_text=(ROOT/'.tools/reverse-engineering/headers/rk_aiq_comm.h').read_text()
  source=['#include <stdint.h>','#include <stdbool.h>','#include <stddef.h>']
  for decl,name in re.findall(r'(typedef\s+enum\s+\w*\s*\{.*?\}\s*(\w+)\s*;)',common_text,re.S):
   if name in ['RKAiqOPMode_t','rk_aiq_working_mode_t','rk_aiq_isp_hdr_mode_t','rk_aiq_sensor_hdr_line_mode_t']:source.append(decl)
  for decl,name in re.findall(r'(typedef\s+struct\s+\w+\s*\{.*?\}\s*(\w+)\s*;)',common_text,re.S):
   if name in fields:source.append(decl)
- for name in ['aec_head.h','sensorinfo_head.h']:
+ for name in ['aec_head.h','sensorinfo_head.h','moduleinfo_head.h']:
   raw=(ROOT/'.tools/reverse-engineering/headers'/name).read_text()
   raw=re.sub(r'^#include[^\n]*','',raw,flags=re.M).replace('RKAIQ_BEGIN_DECLARE','').replace('RKAIQ_END_DECLARE','');source.append(raw)
  assertions=0

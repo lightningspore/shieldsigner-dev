@@ -1256,7 +1256,7 @@ and zero-fills unused fixed-table storage. It supplies 41 pointed arrays.
 The AE record is 0x1c20 bytes and the sensor record 0x10c bytes; together they
 end at configuration offset 0x1d2c, before the measurement seed/runtime records.
 
-The tool generates C from the literal pinned headers and verifies 347 structure
+The tool generates C from the literal pinned headers and verifies 354 structure
 size/field-offset assertions with the ARM compiler through mise/Zig. This checks
 the Python packet layout against the target compiler rather than relying on
 host pointer sizes. Generated C/object files stay in ignored `dist` storage.
@@ -1287,11 +1287,56 @@ processed rather than attempting publication with an unadvanced sentinel index.
 
 This is successful complete **configuration execution with selected binding
 comparisons**, not complete Rust engine initialization or full private-context
-equivalence. The native JSON parser is not executed. Runtime geometry and the
-measurement-record seed remain explicit, and `AecInit`/`AecCalibConfig` integration,
-remaining runtime state construction, AWB and physical exposure association
-still require work. No hardware writes are enabled.
+equivalence. The native JSON parser is not executed. Runtime geometry remains
+explicit. The measurement seed comes from real native initialization, while configuration
+still uses a separate explicitly initialized context. Remaining Rust runtime state
+construction, AWB and physical exposure association still require work. No hardware
+writes are enabled.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-zero-config.py --arm
+```
+
+## Native initialization and Rust activation lifecycle
+
+The new [initialization oracle](scripts/ae-initialization.py) executes the actual
+`AecInit` and `AecCalibConfig` bodies. Their calibration call is no longer
+replaced by a no-op in this oracle. It supplies header-derived AE (7,200 bytes),
+sensor (268 bytes) and lens-module (16 bytes) records. The pinned module header
+adds seven ARM compiler layout assertions, bringing the total to 354.
+
+Eight profile variants return successfully. Each constructor allocates the
+0x5998-byte engine and 0x25a4-byte configuration plus 41 owned table copies.
+The comparison checks all fixed copied bytes, pointer ownership, allocation
+sizes and pointed data, and confirms that source records/tables remain intact.
+`malloc` storage is poisoned to catch uninitialized copies; `calloc` is zeroed.
+The one explicit sensor-record exception is its first four bytes: native
+calibration leaves resolution zero instead of copying the profile resolution.
+Runtime image geometry must be supplied during preparation.
+
+Only allocation, profile-module lookup and memory primitives are modeled here.
+The ELF contains duplicate local symbols for the module accessor; the harness
+now resolves the AE instance explicitly at mapped address 0x000b6b5c and rejects
+ambiguous name-only resolution. The modeled accessor supplies `ae_calib`,
+`sensor_calib` and `module_calib`; the binary performs the actual copies.
+
+`ae_lifecycle` ports `AecStart` (ELF 0xa7618) and `AecStop` (ELF 0xa76a4).
+Initialization sets numeric state 1. Start changes it to 3, enabling the
+histogram controller; stop changes it to 2. Start rejects existing states 3/4,
+stop rejects state 4, and both return native error 8 for a null context.
+Other numeric states retain the binary's permissive predicates. Repeated calls,
+null contexts and boundary/unknown states are checked across 266 sequences and
+1,002 calls on host and ARM, including eight sequences on genuinely constructed
+native contexts. Each native call is also checked for mutations outside the
+four-byte lifecycle field. [Recorded comparison](ae-initialization-equivalence.json).
+
+The zero-mask configuration oracle now obtains its measurement seed from this
+real constructor instead of the earlier calibration-no-op checkpoint harness.
+Its configuration call still uses a separate explicit context: this does not
+yet establish a joined constructor/preparation/controller runtime. The complete
+Rust constructor, remaining preparation inputs and live AE/AWB coordination
+remain unfinished. Starting this algorithm state does not start a camera stream.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-initialization.py --arm
 ```

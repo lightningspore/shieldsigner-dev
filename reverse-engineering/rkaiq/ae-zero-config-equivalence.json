@@ -3,9 +3,10 @@
   "headerSha256": {
     "aec_head.h": "06c18174d9cad642660ad867a3c21103c38b1dd329e2338e51bf5610941f93fa",
     "sensorinfo_head.h": "aa04e304e4cf410a960b7b04dca3b268066bd4fc024cd57508e85a50de0ed0db",
+    "moduleinfo_head.h": "39e84f41614136a723bfacd498fbef71a52276e13966e05202f3dd14eb51bcec",
     "rk_aiq_comm.h": "de9ed8fa5194f2883e9a32ea209e0599d1352afdcddf27e53bc8418e975a1327"
   },
-  "armLayoutAssertions": 347,
+  "armLayoutAssertions": 354,
   "aeBytes": 7200,
   "sensorBytes": 268,
   "pointerArrays": 41,
@@ -16,8 +17,8 @@
   "scope": "complete zero-mask native configuration success using header-derived AE/sensor profile records; selected FPS/policy/delay/smoothing/initial-exposure/reset fields compared",
   "limitations": [
     "Native profile JSON parser is not executed; explicit header-derived records and zero-padded unused fixed-table storage are supplied.",
-    "Runtime geometry and measurement seed are explicit; allocation/comparison/division/rounding/diagnostics use inherited harness boundaries.",
-    "Full native AecInit/AecCalibConfig and complete engine-context equivalence remain unqualified; this is successful full configuration with selected Rust binding checks.",
+    "Runtime geometry is explicit; allocation/comparison/division/rounding/diagnostics use inherited harness boundaries.",
+    "Measurement seed now comes from real AecInit/AecCalibConfig execution; configuration still runs in a separate explicitly initialized context, and complete engine-context equivalence remains unqualified.",
     "No hardware writes or physical frame/exposure association."
   ]
 }

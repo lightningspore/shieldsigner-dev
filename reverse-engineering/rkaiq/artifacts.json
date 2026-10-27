@@ -134,6 +134,11 @@
       "name": "rk_aiq_comm.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/common/rk_aiq_comm.h",
       "sha256": "de9ed8fa5194f2883e9a32ea209e0599d1352afdcddf27e53bc8418e975a1327"
+    },
+    {
+      "name": "moduleinfo_head.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/moduleinfo_head.h",
+      "sha256": "39e84f41614136a723bfacd498fbef71a52276e13966e05202f3dd14eb51bcec"
     }
   ],
   "kernelHeaders": [

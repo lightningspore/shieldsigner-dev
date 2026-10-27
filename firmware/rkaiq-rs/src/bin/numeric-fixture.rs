@@ -30,6 +30,20 @@ fn main() {
         let line = line.unwrap();
         let a: Vec<_> = line.split_whitespace().collect();
         match a[0] {
+            "ae-lifecycle" => {
+                let mut state = ae_lifecycle::State(u32::from_str_radix(a[1], 16).unwrap());
+                let mut output = Vec::new();
+                for op in a[3].bytes() {
+                    let context = if a[2] == "1" { Some(&mut state) } else { None };
+                    let status = match op {
+                        b's' => ae_lifecycle::State::start(context),
+                        b't' => ae_lifecycle::State::stop(context),
+                        _ => panic!("invalid lifecycle operation"),
+                    };
+                    output.push(format!("{:02x}:{:08x}", status, state.0));
+                }
+                println!("{}", output.join(","));
+            }
             "awb-translation" => println!(
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())

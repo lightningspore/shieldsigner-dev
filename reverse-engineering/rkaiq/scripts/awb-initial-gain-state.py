@@ -12,12 +12,13 @@ import struct
 import subprocess
 import sys
 
-from differential import BINARY, HEAP, ROOT, OriginalArm, regs
+from differential import BINARY, HEAP, ROOT, regs
+from awb_reference import OriginalAwb
 
 
-class Original(OriginalArm):
+class Original(OriginalAwb):
     def __init__(self):
-        super().__init__(BINARY)
+        super().__init__(stdlib=True)
         self.logs = {
             p & ~1: n
             for n, p in self.symbols.items()

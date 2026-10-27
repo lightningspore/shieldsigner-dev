@@ -2029,3 +2029,42 @@ The latest physical text capture was saved locally as
 and opened for inspection. The raw frame and private scene stay outside Git.
 It uses 30 ms / 8x exposure and fixed calibrated white balance; readable text
 does not establish automatic white-balance operation or color accuracy.
+
+
+### Fresh measurement caches with captured data (2026-10-27)
+
+`awb_preparation::State::fresh` now initializes caller-owned cache buffers from
+the native zeroed-context / initial-software-result state. It validates lengths
+before clearing any buffer. Initial active-light count remains an explicit
+calibrated strategy input; FAST preparation selects the active prefix later.
+
+`awb-captured-preparation.py TRANSLATED.bin --arm --report REPORT.json` replays
+an already-associated private translated capture. It executes the original
+software-result initializer and then the complete original
+`PrepareMeasureResult`, comparing all 4,886 serialized bytes of preparation
+state both before and after processing. Allocation/logging/string operations
+are explicit adapters; integer-to-float conversion executes the pinned GCC ARM
+runtime. The test supplies calibrated strategy bindings explicitly. It covers
+this pinned seven-light scene's four FAST windows, group -1 and EXCLUDE extra
+regions, rather than claiming arbitrary calibration or complete startup.
+
+Both physical captures 02 (dark) and 03 (30 ms / 8x) match with zero differences
+on host and ARM Rust. Their translation/parameter-association checks previously
+passed independently. The comparisons include mode names, stability history,
+seen flags, light records/counts, pre-gain, the 225-cell grid, exclusions and
+histograms. Private inputs and detailed replay reports remain under ignored
+`dist/reverse-engineering/hardware-2026-10-27/`.
+
+Reproduce after building host numeric-fixture and `mise run camera:rust:arm`:
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python \
+  reverse-engineering/rkaiq/scripts/awb-captured-preparation.py \
+  dist/reverse-engineering/hardware-2026-10-27/ss-20261027-awb-measurement-03.awb-translated.bin \
+  --arm --report dist/reverse-engineering/hardware-2026-10-27/ss-20261027-awb-measurement-03.preparation-comparison.json
+```
+
+This closes fresh measurement-cache initialization and captured-data preparation,
+not the remaining numerical session setup or live gain publication. No hardware
+settings were changed by these offline replays. All 85 library tests and the
+no-default-features build pass after this change.

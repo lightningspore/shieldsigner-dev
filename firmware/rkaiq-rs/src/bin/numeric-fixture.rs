@@ -296,6 +296,29 @@ fn main() {
                 }
                 println!("{}", serde_json::json!(output));
             }
+            "awb-fresh-preparation" => {
+                use awb_preparation::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let n = v["n"].as_u64().unwrap() as usize;
+                let mut seen = vec![0xA5; n];
+                let mut records = vec![LightRecord([0xA5; LIGHT_BYTES]); n];
+                let mut second = vec![u32::MAX; n];
+                let mut total = vec![u32::MAX; n.max(2)];
+                let mut grid = [[f32::NAN; 3]; 225];
+                let mut state = State::fresh(&mut seen, &mut records, &mut second, &mut total, &mut grid, n).unwrap();
+                let before = awb_preparation_fixture::render(&state);
+                let text = v["raw"].as_str().unwrap();
+                let bytes: Vec<u8> = (0..text.len()).step_by(2).map(|i|u8::from_str_radix(&text[i..i+2],16).unwrap()).collect();
+                let bytes: [u8; FRAME_BYTES] = bytes.try_into().unwrap();
+                let curve = awb_probability::Curve { knots: &[0.], weights: &[0.] };
+                prepare(&mut state, &Frame(&bytes), &Settings {
+                    groups:v["groups"].as_u64().unwrap() as usize,
+                    fast_light_count:v["fast_count"].as_u64().unwrap() as u32,
+                    stability_threshold:v["threshold"].as_f64().unwrap() as f32,
+                    prior_sample:0., exclusion_kind:[1;4], exclusion_weight:[curve;4],
+                }).unwrap();
+                println!("{}",serde_json::json!({"before":before,"after":awb_preparation_fixture::render(&state)}));
+            }
             "awb-initial-gain-state" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let mut c = shieldsigner_rkaiq::awb_calibration::Scene::from_value(&v["iq"]).unwrap();

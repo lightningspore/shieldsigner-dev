@@ -130,6 +130,57 @@ pub struct State<'a> {
     pub histogram_aggregate: [u32; 8],
 }
 
+impl<'a> State<'a> {
+    /// Fresh caches after zeroed context allocation and initial software setup.
+    /// `active_lights` comes from the calibrated strategy, before FAST selection.
+    /// Validate all buffers before clearing them; reconfiguration is separate.
+    pub fn fresh(
+        seen: &'a mut [u8],
+        lights: &'a mut [LightRecord],
+        second_counts: &'a mut [u32],
+        total_counts: &'a mut [u32],
+        grid: &'a mut [[f32; 3]; 225],
+        active_lights: usize,
+    ) -> Result<Self, InvalidInput> {
+        let n = lights.len();
+        if n == 0
+            || n > 255
+            || active_lights > n
+            || seen.len() != n
+            || second_counts.len() != n
+            || total_counts.len() < n.max(2)
+        {
+            return Err(InvalidInput::Length);
+        }
+        seen.fill(0);
+        lights.fill(LightRecord([0; LIGHT_BYTES]));
+        second_counts.fill(0);
+        total_counts.fill(0);
+        grid.fill([0.; 3]);
+        Ok(Self {
+            update: true,
+            stability_mask: 0,
+            history: [[0.; 4]; 4],
+            mode_names: [ModeName([0; 64]); 4],
+            seen,
+            active_lights: active_lights as u8,
+            complete: false,
+            lights,
+            second_counts,
+            total_counts,
+            previous_pre_gain: [0.; 4],
+            grid_valid: false,
+            second_grid_valid: false,
+            grid,
+            exclusions_valid: false,
+            exclusions: [[0; REGION_BYTES]; 7],
+            exclusion_aggregate: [0; REGION_BYTES],
+            histogram_cache: [[0; 8]; 4],
+            histogram_aggregate: [0; 8],
+        })
+    }
+}
+
 /// IsMeasureResultStable4 (ELF 0xc2f90). Existing update=true is never cleared.
 /// The selected history slot is replaced only if update is true after gating.
 pub fn stability(
@@ -375,5 +426,34 @@ impl State<'_> {
             exclusion_gain: gains_at(&self.exclusion_aggregate, 4),
             divisors,
         }
+    }
+}
+
+#[cfg(test)]
+mod fresh_tests {
+    use super::*;
+    #[test]
+    fn invalid_cache_lengths_preserve_all_caller_buffers() {
+        let mut seen = [7; 2];
+        let mut lights = [LightRecord([7; LIGHT_BYTES]); 2];
+        let mut second = [7; 2];
+        let mut totals = [7; 1];
+        let mut grid = [[7.; 3]; 225];
+        assert!(matches!(
+            State::fresh(
+                &mut seen,
+                &mut lights,
+                &mut second,
+                &mut totals,
+                &mut grid,
+                2
+            ),
+            Err(InvalidInput::Length)
+        ));
+        assert_eq!(seen, [7; 2]);
+        assert!(lights.iter().all(|r| r.0 == [7; LIGHT_BYTES]));
+        assert_eq!(second, [7; 2]);
+        assert_eq!(totals, [7; 1]);
+        assert_eq!(grid, [[7.; 3]; 225]);
     }
 }

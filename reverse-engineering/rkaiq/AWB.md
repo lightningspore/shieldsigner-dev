@@ -635,3 +635,48 @@ This establishes exact output equivalence for the tested corpus, not universal
 double-math equality for every input. The classifier's grid matching,
 neighborhood rejection, candidate votes/history and enabled low-count integration
 remain unfinished. The fixed-WB camera kit is unchanged.
+
+## Complete single-color grid classifier
+
+`awb_single_color_grid::State::process` reconstructs the complete value path of
+`AwbSingleColorProcess2` (ELF `0xcb208`), through normal return. For each of 225
+grid cells it applies candidate red/blue gains, clamps only the upper red/blue
+values to 1, converts RGB through the recovered color transforms, and finds the
+nearest calibrated color/candidate pair. Distance uses the original weighted
+chroma/hue arithmetic and FMA, including signed hue and native hue wrapping.
+Strict improvements replace a winner; ties keep the earlier candidate/color.
+
+The second pass computes each selected candidate's CCT and interpolates the
+color's distance threshold. A cell is accepted only when it passes that threshold
+and all four neighbor color labels agree. Missing edge neighbors refer to the
+cell itself. Rejection does not change the labels used by later cells. The
+routine counts accepted cells by candidate and color, preserves float summation
+order for their mean distance, chooses first-index vote winners, updates the
+candidate history and applies its majority vote. The reported peak vote count
+and color remain from the current grid, even when history changes the selected
+gain. No accepted cells means invalid/unity gain, indices/votes -1 and distance
+9999; history remains unchanged. Unused count-array tails retain prior values.
+
+An optional prior gain becomes an additional candidate only when both green
+channels are strictly above the native double 1e-5 threshold. The checked API
+supports up to 14 available candidates and 14 colors and requires history indices
+to refer to available candidates. It rejects native out-of-range/uninitialized
+index domains and the corrupting singleton target-1 list update. Detection and
+history are published together only on success; a unit test checks rejection
+after numerical processing leaves the entire prior detection intact.
+
+`mise run camera:rust:awb-single-color-grid` compares **48 complete grids /
+10,800 cells** on host and ARM: 23 valid and 25 empty detections. The original
+classifier, list, CCT/color and pinned uClibc math bodies all execute. Only bounded
+allocation, standard memory and logging are adapters. It checks all represented
+result words/count tails, output gains, history contents/links and unchanged
+calibration, candidate, optional-prior and by-value grid inputs. Cases include
+uniform, split and noisy grids, candidate/color ties, optional valid/invalid
+priors, history voting, no-op/append/rotate updates and 14-candidate boundaries.
+The native function retains two candidate scratch allocations on return; the
+oracle accounts for those separately from history nodes, while Rust uses owned
+bounded scratch. [Reference report](awb-single-color-grid-equivalence.json).
+
+The next required step is joining this classifier and confidence manager into
+the enabled low-count strategy. IQ initialization, full gain postprocessing,
+frame lifecycle and live AWB integration remain unfinished.

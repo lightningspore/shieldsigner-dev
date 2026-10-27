@@ -77,7 +77,7 @@ pub struct Calibration {
 
 /// The pinned IQ has a repeated final density knot. Native interpolation
 /// supports nondecreasing knots and chooses the last value at that endpoint.
-fn curve<const N: usize>(
+pub(crate) fn curve<const N: usize>(
     knots: &[f32; N],
     values: &[f32; N],
     sample: f32,

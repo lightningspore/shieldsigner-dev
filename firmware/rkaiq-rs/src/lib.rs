@@ -32,6 +32,7 @@ pub mod awb_preprocess;
 pub mod awb_probability;
 pub mod awb_publication;
 pub mod awb_single_color;
+pub mod awb_single_color_grid;
 pub mod awb_stability;
 pub mod awb_translation;
 pub mod awb_xy_selection;

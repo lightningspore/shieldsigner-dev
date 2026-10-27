@@ -129,6 +129,89 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-single-color-grid" => {
+                use shieldsigner_rkaiq::{
+                    awb_luma_history::History, awb_single_color::Line, awb_single_color_grid::*,
+                };
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let line = |key: &str| Line {
+                    a: v[key][0].as_f64().unwrap() as f32,
+                    b: v[key][1].as_f64().unwrap() as f32,
+                    c: v[key][2].as_f64().unwrap() as f32,
+                    valid: v[key][3].as_bool().unwrap(),
+                };
+                let candidates: Vec<_> = v["candidates"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| Candidate {
+                        red: v[0].as_f64().unwrap() as f32,
+                        blue: v[1].as_f64().unwrap() as f32,
+                    })
+                    .collect();
+                let colors: Vec<_> = v["colors"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| Color {
+                        chroma: v["chroma"].as_f64().unwrap() as f32,
+                        hue: v["hue"].as_f64().unwrap() as f32,
+                        cct_knots: core::array::from_fn(|i| v["knots"][i].as_f64().unwrap() as f32),
+                        distance_thresholds: core::array::from_fn(|i| {
+                            v["thresholds"][i].as_f64().unwrap() as f32
+                        }),
+                    })
+                    .collect();
+                let grid = core::array::from_fn(|i| {
+                    core::array::from_fn(|j| v["grid"][i][j].as_f64().unwrap() as f32)
+                });
+                let history: Vec<_> = v["history"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_u64().unwrap() as u32)
+                    .collect();
+                let mut state = State {
+                    history: History::<32>::from_values(&history).unwrap(),
+                    result: Detection {
+                        selected: 0,
+                        color: 0,
+                        candidate_counts: [0x5a5a5a5a; 14],
+                        color_counts: [0x5a5a5a5a; 14],
+                        valid: false,
+                        disagreements: 0,
+                        votes: 0,
+                        mean_distance: 0.,
+                        gain: [0.; 4],
+                    },
+                };
+                let prior = if v["prior"].is_null() {
+                    None
+                } else {
+                    Some(core::array::from_fn(|i| {
+                        v["prior"][i].as_f64().unwrap() as f32
+                    }))
+                };
+                state
+                    .process(
+                        &grid,
+                        &Calibration {
+                            candidates: &candidates,
+                            colors: &colors,
+                            alpha: v["alpha"].as_f64().unwrap() as f32,
+                            history_target: v["target"].as_u64().unwrap() as u16,
+                            first: line("first"),
+                            second: line("second"),
+                        },
+                        prior,
+                    )
+                    .unwrap();
+                let r = state.result;
+                println!(
+                    "{}",
+                    serde_json::json!({"selected":r.selected,"color":r.color,"candidate_counts":r.candidate_counts,"color_counts":r.color_counts,"valid":r.valid,"disagreements":r.disagreements,"votes":r.votes,"mean":r.mean_distance.to_bits(),"gain":r.gain.map(f32::to_bits),"history":state.history.values()})
+                );
+            }
             "awb-color" => {
                 use shieldsigner_rkaiq::awb_color::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

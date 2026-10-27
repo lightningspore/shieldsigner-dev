@@ -1332,11 +1332,67 @@ four-byte lifecycle field. [Recorded comparison](ae-initialization-equivalence.j
 
 The zero-mask configuration oracle now obtains its measurement seed from this
 real constructor instead of the earlier calibration-no-op checkpoint harness.
-Its configuration call still uses a separate explicit context: this does not
-yet establish a joined constructor/preparation/controller runtime. The complete
-Rust constructor, remaining preparation inputs and live AE/AWB coordination
-remain unfinished. Starting this algorithm state does not start a camera stream.
+Its configuration call still uses a separate explicit context. The next oracle
+below joins native construction and preparation, with selected Rust startup
+binding checks. The complete Rust constructor, remaining controller state and
+live AE/AWB coordination remain unfinished. Starting this algorithm state does
+not start a camera stream.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-initialization.py --arm
+```
+
+## Joined native preparation and Rust startup exposure
+
+`scripts/ae-preparation.py` now invokes the real `AePrepare` on the actual engine
+and configuration returned by native `AecInit`/`AecCalibConfig`. No engine fields
+are patched at the update/route/conversion boundaries. For fresh linear mask-zero
+preparation it runs `AecStop`, `AecHwConfig`, `AecUpdateConfig`, `AecStart` and
+`AecInitEcm`, returning success. Sensor timing, dimensions and the complete
+header-derived profile are explicit inputs. The original uClibc `ceilf`,
+`floorf`, `roundf` and `powf` execute as ARM instructions; allocation, module
+lookup, memory primitives, integer division and diagnostic logging remain
+explicit harness boundaries.
+
+`ae_startup::profile::linear` composes the recovered fixed-FPS, flicker, shutter,
+gain-limit, smoothing and register-conversion ports into fresh startup state.
+It takes the IQ profile and runtime sensor timing. The numerical core remains
+`no_std`; JSON binding is under the diagnostics feature. The binder requires
+positive initial gain, automatic linear operation and disabled iris/DCG.
+Variable-rate and reprepare/update-mask behavior remain separate work.
+
+Two native details affect startup fidelity:
+
+- Fresh automatic configuration sets ISP gain to unity despite the profile's
+  `InitIspDGainValue`. It clamps initial shutter/gain to the selected limits
+  before register conversion. Requested/held aggregate exposure remains the
+  preconversion value; smoothing history uses converted gain times shutter.
+- Iris control being disabled does not zero all iris metadata. Configuration
+  selects/quantizes the initial iris gain against the PIris table, and startup
+  copies that integer into its smoothing history. The calculated table index
+  goes into a stack temporary during configuration; context offset 0x2024 stays
+  zero when iris is disabled, so the corresponding history field also stays
+  zero. The comparison caught this distinction; no iris actuator is enabled.
+
+The default SC3336 profile at 1,360 lines, 2,800 pixels/line and 114.24 MHz starts
+with a requested 3 ms / 1× exposure. Native preparation and Rust produce shutter
+code **122**, gain code **128**, and a smoothing count of **four**. No sensor
+write is performed by this test.
+
+The [preparation comparison](ae-preparation-equivalence.json) records **108** fresh
+initialization/preparation cases across initial exposure, requested FPS,
+frame length, smoothing delays, dimensions and iris metadata, plus clamp/flicker
+edges. Each case compares 63 words: active timing/FPS, selected limits,
+requested/held exposure, converted exposure/codes, count and all 45 words of
+startup smoothing history. Native execution also verifies running state 3,
+control index -1 and an empty publication queue after preparation.
+
+This establishes native construction through preparation and matching selected
+Rust startup outputs. It does not yet construct the full Rust engine state or
+connect the prepared state to first-frame preprocessing, control/publication,
+SOF scheduling and physical exposure association. Live AE/AWB and hardware
+writes remain disabled.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-preparation.py --arm
 ```

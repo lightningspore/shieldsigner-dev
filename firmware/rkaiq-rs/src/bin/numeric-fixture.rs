@@ -30,6 +30,65 @@ fn main() {
         let line = line.unwrap();
         let a: Vec<_> = line.split_whitespace().collect();
         match a[0] {
+            "ae-preparation" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let out = ae_startup::profile::linear(
+                    &v["profile"],
+                    calibration::RuntimeTiming {
+                        frame_length: v["frame"].as_u64().unwrap() as u32,
+                        line_length_pixels: v["line"].as_u64().unwrap() as u32,
+                        pixel_clock_mhz: v["clock"].as_f64().unwrap() as f32,
+                    },
+                )
+                .unwrap();
+                let p = out.register_policy;
+                let s = out.startup;
+                let mut words = vec![
+                    out.timing.frame_length,
+                    out.fps.to_bits(),
+                    p.time_range[0].to_bits(),
+                    p.time_range[1].to_bits(),
+                    p.gain_range[0].to_bits(),
+                    p.gain_range[1].to_bits(),
+                    p.isp_range[0].to_bits(),
+                    p.isp_range[1].to_bits(),
+                    p.time_quantum.to_bits(),
+                    s.requested_aggregate.to_bits(),
+                    s.held_aggregate.to_bits(),
+                    s.current.gain.to_bits(),
+                    s.current.isp_gain.to_bits(),
+                    u32::MAX,
+                    s.current.seconds.to_bits(),
+                    s.current.codes.integration_time,
+                    s.current.codes.gain,
+                    s.intermediate_count as u32,
+                ];
+                // Native structure of arrays, including both iris metadata arrays.
+                for field in 0..9 {
+                    for h in s.history {
+                        words.push(match field {
+                            0 => h.aggregate.to_bits(),
+                            1 => h.iris_gain as u32,
+                            8 => h.iris_step as u32,
+                            2 => h.isp_gain.to_bits(),
+                            3 => h.gain.to_bits(),
+                            4 => h.seconds.to_bits(),
+                            5 => h.dcg as u32,
+                            6 => h.time_code,
+                            7 => h.gain_code,
+                            _ => unreachable!(),
+                        });
+                    }
+                }
+                println!(
+                    "{}",
+                    words
+                        .iter()
+                        .map(|w| format!("{w:08x}"))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                );
+            }
             "ae-lifecycle" => {
                 let mut state = ae_lifecycle::State(u32::from_str_radix(a[1], 16).unwrap());
                 let mut output = Vec::new();

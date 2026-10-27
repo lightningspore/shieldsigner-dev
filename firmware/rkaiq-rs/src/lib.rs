@@ -287,3 +287,5 @@ pub mod ae_fps;
 pub mod ae_smoothing;
 
 pub mod ae_lifecycle;
+
+pub mod ae_startup;

@@ -131,6 +131,77 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-gain-clip" => {
+                use shieldsigner_rkaiq::{
+                    awb_gain_clip::*,
+                    awb_single_color::{self, ColorTemperature, Line},
+                };
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let gain = core::array::from_fn(|i| v["gain"][i].as_f64().unwrap() as f32);
+                let line = |key: &str| Line {
+                    a: v[key][0].as_f64().unwrap() as f32,
+                    b: v[key][1].as_f64().unwrap() as f32,
+                    c: v[key][2].as_f64().unwrap() as f32,
+                    valid: v[key][3].as_bool().unwrap(),
+                };
+                if v["kind"].as_str().unwrap() == "inverse" {
+                    let temperature = ColorTemperature {
+                        valid: v["valid"].as_bool().unwrap(),
+                        cct: v["cct"].as_f64().unwrap() as f32,
+                        ccri: v["ccri"].as_f64().unwrap() as f32,
+                    };
+                    let (gain, converted) = awb_single_color::gain_from_color_temperature(
+                        temperature,
+                        line("first"),
+                        line("second"),
+                        gain,
+                    )
+                    .unwrap();
+                    println!(
+                        "{}",
+                        serde_json::json!({"gain":gain.map(f32::to_bits),"converted":converted})
+                    );
+                } else {
+                    let floats = |key: &str| {
+                        v[key]
+                            .as_array()
+                            .unwrap()
+                            .iter()
+                            .map(|v| v.as_f64().unwrap() as f32)
+                            .collect::<Vec<_>>()
+                    };
+                    let knots = floats("knots");
+                    let lower = floats("lower");
+                    let upper = floats("upper");
+                    let cal = Calibration {
+                        first: line("first"),
+                        second: line("second"),
+                        daylight: v["daylight"].as_bool().unwrap(),
+                        daylight_threshold: v["daylight_threshold"].as_u64().unwrap() as u32,
+                        daylight_minimum_cct: v["daylight_minimum"].as_f64().unwrap() as f32,
+                        bounds: if v["bounds"].as_bool().unwrap() {
+                            Some(Bounds {
+                                cct: &knots,
+                                negative_tint: &lower,
+                                positive_tint: &upper,
+                            })
+                        } else {
+                            None
+                        },
+                    };
+                    let r = clip(
+                        gain,
+                        v["clipped"].as_bool().unwrap(),
+                        v["brightness"].as_u64().unwrap() as u32,
+                        &cal,
+                    )
+                    .unwrap();
+                    println!(
+                        "{}",
+                        serde_json::json!({"gain":r.gain.map(f32::to_bits),"clipped":r.clipped})
+                    );
+                }
+            }
             "awb-gain-history" => {
                 use shieldsigner_rkaiq::awb_gain_history::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

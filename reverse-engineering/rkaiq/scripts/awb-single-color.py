@@ -124,7 +124,7 @@ def main():
                   scope='Complete original gain-to-CCT/CCRI and single-color confidence manager with all interpolation and CCT helper bodies; exact result bits and input/output padding preservation',
                   limitations=['Finite values and nondecreasing finite calibration knots, including repeated endpoints; native nonfinite/invalid-pointer domains are outside the checked API.',
                                'Logging is an explicit adapter; numerical helper bodies execute without replacement.',
-                               'Single-color grid classification, its persistent result/history construction, low-count enabled orchestration and outer integration remain unfinished.'])
+                               'Grid classification and enabled low-count orchestration are covered separately; complete outer integration remains unfinished.'])
     (ROOT / 'reverse-engineering/rkaiq/awb-single-color-equivalence.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 

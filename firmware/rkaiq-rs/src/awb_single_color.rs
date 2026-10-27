@@ -77,12 +77,9 @@ pub struct Calibration {
 
 /// The pinned IQ has a repeated final density knot. Native interpolation
 /// supports nondecreasing knots and chooses the last value at that endpoint.
-pub(crate) fn curve<const N: usize>(
-    knots: &[f32; N],
-    values: &[f32; N],
-    sample: f32,
-) -> Result<f32, InvalidInput> {
-    if N == 0 {
+pub(crate) fn curve(knots: &[f32], values: &[f32], sample: f32) -> Result<f32, InvalidInput> {
+    let n = knots.len();
+    if n == 0 || values.len() != n {
         return Err(InvalidInput::Length);
     }
     if !sample.is_finite() || knots.iter().chain(values).any(|v| !v.is_finite()) {
@@ -94,8 +91,8 @@ pub(crate) fn curve<const N: usize>(
     if sample <= knots[0] {
         return Ok(values[0]);
     }
-    if sample >= knots[N - 1] {
-        return Ok(values[N - 1]);
+    if sample >= knots[n - 1] {
+        return Ok(values[n - 1]);
     }
     let upper = knots.iter().position(|&v| sample < v).unwrap();
     let lower = upper - 1;
@@ -108,6 +105,43 @@ pub(crate) fn curve<const N: usize>(
         values[upper] - values[lower],
         values[lower],
     ))
+}
+
+/// AwbCalcWBgainbyCT (ELF 0xca908). The native temperature.valid word is
+/// ignored; both line-valid flags and second-line A/B denominators gate writes.
+/// Returns the prior gain unchanged when native conversion would fail.
+pub fn gain_from_color_temperature(
+    temperature: ColorTemperature,
+    first: Line,
+    second: Line,
+    previous: Gains,
+) -> Result<(Gains, bool), InvalidInput> {
+    if !first.valid || !second.valid {
+        return Ok((previous, false));
+    }
+    if [
+        temperature.cct,
+        temperature.ccri,
+        first.a,
+        first.b,
+        first.c,
+        second.a,
+        second.b,
+        second.c,
+    ]
+    .iter()
+    .any(|v| !v.is_finite())
+    {
+        return Err(InvalidInput::NonFinite);
+    }
+    if (libm::fabsf(second.a) as f64) < 0.00001 || (libm::fabsf(second.b) as f64) < 0.00001 {
+        return Ok((previous, false));
+    }
+    let projected = libm::fmaf(-temperature.cct, second.b, second.c) / second.a;
+    let red = libm::fmaf(first.a, temperature.ccri, projected);
+    let blue_projection = libm::fmaf(-first.a, projected, first.c) / first.b;
+    let blue = libm::fmaf(first.b, temperature.ccri, blue_projection);
+    Ok((crate::awb_gain::normalize([red, 1., 1., blue])?, true))
 }
 
 /// AwbSingleColorManager (ELF 0xcbaf0), including its original CCT helper.
@@ -145,6 +179,30 @@ pub fn confidence(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn inverse_rejects_native_zero_first_line_division() {
+        let first = Line {
+            a: 1.,
+            b: 0.,
+            c: 1.,
+            valid: true,
+        };
+        let second = Line {
+            a: 1.,
+            b: 1.,
+            c: 1.,
+            valid: true,
+        };
+        let temperature = ColorTemperature {
+            valid: true,
+            cct: 1.,
+            ccri: 1.,
+        };
+        assert_eq!(
+            gain_from_color_temperature(temperature, first, second, [2.; 4]),
+            Err(InvalidInput::NonFinite)
+        );
+    }
     #[test]
     fn decreasing_calibration_is_rejected_and_disabled_line_skips_invalid_gain() {
         assert_eq!(

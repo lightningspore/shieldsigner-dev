@@ -1,0 +1,17 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 2048,
+  "casesPerFunction": 1024,
+  "mismatches": 0,
+  "arm": true,
+  "elfEntries": {
+    "inverseColorTemperature": "0xca908",
+    "clip": "0xca9c0"
+  },
+  "scope": "Original inverse CCT conversion and complete AwbGainClip forward/clamp/inverse call tree; exact gain bits, status/flag and unrelated-memory preservation",
+  "limitations": [
+    "Finite checked active inputs/outputs and nondecreasing finite bounds; first-line B zero division/nonfinite result domains are rejected.",
+    "Only logging is adapted; original numerical/interpolation/normalization helpers execute.",
+    "Gain adjustment LUT, complete outer composition and live AWB remain unfinished."
+  ]
+}

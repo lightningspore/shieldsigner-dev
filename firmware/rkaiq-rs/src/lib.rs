@@ -24,6 +24,7 @@ pub mod ae_weights;
 pub mod awb_color;
 pub mod awb_environment;
 pub mod awb_gain;
+pub mod awb_gain_clip;
 pub mod awb_gain_history;
 pub mod awb_high_gain;
 pub mod awb_low_gain;

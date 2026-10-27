@@ -776,3 +776,42 @@ are explicit adapters. [Reference report](awb-gain-history-equivalence.json).
 
 Clipping/adjustment, caller high/low composition, post-damping convergence,
 calibration loading and live AWB integration remain unfinished.
+
+## Gain clipping and inverse color-temperature conversion
+
+`awb_single_color::gain_from_color_temperature` reconstructs
+`AwbCalcWBgainbyCT` (ELF `0xca908`), the inverse of the forward CCT/CCRI helper.
+Both calibrated line-valid flags and the second line's A/B magnitude thresholds
+gate conversion. The input temperature-valid word is ignored by native code.
+On conversion failure the supplied prior gain is preserved. Success constructs
+red/blue gains with the original division/FMA order, sets both green gains to 1,
+and applies native normalization. The checked API rejects nonfinite arithmetic,
+including the native unchecked first-line B zero denominator.
+
+`awb_gain_clip::clip` reconstructs `AwbGainClip` (ELF `0xca9c0`) through its
+complete forward/clamp/inverse call tree. With valid forward CCT conversion,
+daylight clipping raises the temperature floor only when unsigned brightness is
+strictly above its threshold. Optional bounds clamp CCT to the table endpoints,
+interpolate lower/upper tint limits, negate the lower curve, and apply both tint
+comparisons in native order. Repeated/nondecreasing CCT knots are supported by
+the shared curve helper, now accepting slices as well as fixed arrays.
+
+The clipped flag preserves its incoming value and becomes true on any clamp.
+Inverse conversion runs even when no bound was hit, so a round trip can change
+gain bits while the clipped flag remains false. An inverse failure preserves the
+original gain even if earlier clamps set the flag. An invalid forward result
+returns the original gain/flag before reading inactive bounds. The caller still
+decides whether to invoke clipping based on its enable flags.
+
+`mise run camera:rust:awb-gain-clip` compares **2,048 cases**, 1,024 inverse
+conversions and 1,024 full clipping calls, on host and ARM. Original forward,
+interpolation, inverse and normalization bodies execute; only logging is adapted.
+Checks cover exact gain bits, inverse status, clipped flag, output padding,
+unrelated context and unchanged calibration/curves. Cases include line validity,
+green and denominator thresholds, temperature/tint limits, daylight threshold
+equality, repeated/single knots, inverted tint limits, inactive bounds and sticky
+flags. The confidence-manager regression is retained after sharing slice-based
+curves. [Reference report](awb-gain-clip-equivalence.json).
+
+Gain adjustment LUTs, caller high/low composition, remaining postprocessing,
+calibration loading and live AWB integration remain unfinished.

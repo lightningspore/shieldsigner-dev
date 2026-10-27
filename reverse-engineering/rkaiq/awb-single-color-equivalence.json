@@ -12,6 +12,6 @@
   "limitations": [
     "Finite values and nondecreasing finite calibration knots, including repeated endpoints; native nonfinite/invalid-pointer domains are outside the checked API.",
     "Logging is an explicit adapter; numerical helper bodies execute without replacement.",
-    "Single-color grid classification, its persistent result/history construction, low-count enabled orchestration and outer integration remain unfinished."
+    "Grid classification and enabled low-count orchestration are covered separately; complete outer integration remains unfinished."
   ]
 }

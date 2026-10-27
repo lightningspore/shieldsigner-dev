@@ -1279,3 +1279,119 @@ impl MeasurementInput {
         )
     }
 }
+
+pub struct WeightingLevel {
+    pub brightness: f32,
+    pub ratios: Vec<f32>,
+    pub weights: Vec<[f32; 9]>,
+}
+pub struct MeasurementWeighting {
+    pub enabled: bool,
+    pub block_enabled: bool,
+    pub block: [u8; 225],
+    pub y: [u8; 9],
+    pub perfect: [bool; 8],
+    pub minimum_brightness: u32,
+    pub levels: Vec<WeightingLevel>,
+}
+impl MeasurementWeighting {
+    pub fn from_value(wb: &Value) -> Result<Self, String> {
+        let auto = at(wb, "/autoPara")?;
+        let v = at(auto, "/wpDiffLumaWeight")?;
+        let exact = |v: &Value, path: &str, n: usize| -> Result<(), String> {
+            if at(v, path)?.as_array().map(Vec::len) == Some(n) {
+                Ok(())
+            } else {
+                Err(format!("Invalid weight array {path}"))
+            }
+        };
+        exact(auto, "/wpDiffBlkWeight", 225)?;
+        exact(v, "/wpDiffwei_y", 9)?;
+        exact(v, "/perfectBin", 8)?;
+        let mut block = [0; 225];
+        for (i, n) in block.iter_mut().enumerate() {
+            *n = integer(auto, &format!("/wpDiffBlkWeight/{i}"), 0, 65535)? as u8;
+        }
+        let mut y = [0; 9];
+        for (i, n) in y.iter_mut().enumerate() {
+            *n = integer(v, &format!("/wpDiffwei_y/{i}"), 0, 255)? as u8;
+        }
+        let mut perfect = [false; 8];
+        for (i, n) in perfect.iter_mut().enumerate() {
+            *n = flag(v, &format!("/perfectBin/{i}"))?;
+        }
+        let count = integer(v, "/wpDiffWeightLvSet_len", 1, i32::MAX as i64)? as usize;
+        exact(v, "/wpDiffWeightLvSet", count)?;
+        let mut levels: Vec<WeightingLevel> = Vec::new();
+        for i in 0..count {
+            let level = at(v, &format!("/wpDiffWeightLvSet/{i}"))?;
+            let brightness = number(level, "/LvValue")?;
+            if levels.last().is_some_and(|p| p.brightness >= brightness) {
+                return Err(format!("Weight brightness knots must increase"));
+            }
+            let n = integer(level, "/ratioSet_len", 1, i32::MAX as i64)? as usize;
+            exact(level, "/ratioSet", n)?;
+            let mut ratios: Vec<f32> = Vec::new();
+            let mut weights = Vec::new();
+            for j in 0..n {
+                let ratio = at(level, &format!("/ratioSet/{j}"))?;
+                let value = number(ratio, "/ratioValue")?;
+                if ratios.last().is_some_and(|p| *p >= value) {
+                    return Err(format!("Weight ratio knots must increase"));
+                }
+                exact(ratio, "/weight", 9)?;
+                let mut row = [0.; 9];
+                for (k, n) in row.iter_mut().enumerate() {
+                    *n = number(ratio, &format!("/weight/{k}"))?;
+                }
+                ratios.push(value);
+                weights.push(row);
+            }
+            levels.push(WeightingLevel {
+                brightness,
+                ratios,
+                weights,
+            });
+        }
+        Ok(Self {
+            enabled: flag(v, "/enable")?,
+            block_enabled: flag(auto, "/wpDiffBlkWeiEnable")?,
+            block,
+            y,
+            perfect,
+            minimum_brightness: integer(
+                v,
+                "/wpDiffWeiEnableTh/wpDiffWeiLvValueTh",
+                0,
+                u32::MAX as i64,
+            )? as u32,
+            levels,
+        })
+    }
+    pub fn apply(
+        &self,
+        record: &mut [u8; crate::isp_awb_measurement::INPUT_BYTES],
+        previous: &mut [f32; 9],
+        input: &crate::awb_measurement_weights::Input,
+    ) -> Result<bool, crate::InvalidInput> {
+        let rows: Vec<_> = self
+            .levels
+            .iter()
+            .map(|r| crate::awb_measurement_weights::Row {
+                brightness: r.brightness,
+                ratios: &r.ratios,
+                weights: &r.weights,
+            })
+            .collect();
+        crate::awb_measurement_weights::apply(
+            record,
+            previous,
+            &rows,
+            &crate::awb_measurement_weights::Input {
+                perfect: self.perfect,
+                minimum_brightness: self.minimum_brightness,
+                ..*input
+            },
+        )
+    }
+}

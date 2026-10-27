@@ -1797,3 +1797,40 @@ Checked startup rejects unsupported mode ranges and invalid HDR raw frames
 before modifying the record. Exposure-dependent RawAuto reconfiguration is
 still separate. Live AWB remains disabled pending weighting, initial group/FAST
 policy, whole-record assembly and runtime integration.
+
+## Complete luma-weight reconfiguration
+
+`awb_measurement_weights::apply` reconstructs full `ReconfigLumaWeight` (ELF
+0xc2c88) through its normal return, including `CalWeight` (0xc829a). It preserves
+the first-three-frame and disabled gates, signed wrapping histogram sums,
+preferred-bin count/brightness gates, ratio interpolation at each calibration
+level, brightness interpolation and nine-byte weight quantization. Ratio spans
+below native double `1e-5` retain the lower row. Temporal damping uses the
+original FMA order and double final rounding. The returned flag means the
+damped bytes equal the current target, not that the preceding output bytes
+were unchanged. Histogram region selection resets even on the disabled path.
+All checked errors preserve both the SDK record and the persistent float cache.
+
+`MeasurementWeighting::from_value` loads the selected scene's luma levels,
+ratio tables, preferred bins, cutoff, block-enable/weights and luma Y positions.
+The loader retains startup fields for later whole-record assembly; loading it
+does not itself enable measurement weighting. The runtime adapter binds the
+loaded preferred bins/cutoff and takes frame, histogram, brightness, derived
+minimum count and damping from the session.
+
+`mise run camera:rust:awb-measurement-weights` compares 192 seeded calls plus
+five SC3336 IQ-loader cases on host and ARM. The full original function executes
+its numerical interpolation, ratio logic and FMA damping, with allocation and
+memory operations as explicit adapters. Every SDK byte and float-cache word,
+plus the target-reached flag, is compared; unrelated context/cache bytes must
+remain unchanged. Cases cover disabled/startup/fallback behavior, zero-count
+histograms, close ratio knots, one to four levels and damping endpoints.
+[Complete weighting report](awb-measurement-weights-equivalence.json).
+
+The pinned IQ disables luma weighting. Its five exercised loader cases
+explicitly enable the record flags so the calibration logic is tested rather
+than bypassed; the actual scene/camera setting is unchanged. Exclusion-region
+include weights (`ConfigIncludeWei`) are a different function and remain open.
+Whole-record startup assembly, initial group/FAST setup and live AWB integration
+also remain unfinished. This closes the luma-weight calculation rather than
+claiming a live automatic-WB camera run.

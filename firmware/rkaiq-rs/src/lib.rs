@@ -329,3 +329,4 @@ pub mod awb_measurement_transforms;
 pub mod awb_measurement_geometry;
 pub mod awb_measurement_limits;
 pub mod awb_input_selection;
+pub mod awb_measurement_weights;

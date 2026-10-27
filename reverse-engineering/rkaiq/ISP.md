@@ -1160,7 +1160,7 @@ makes no ISP writes and the current camera path still has LSC disabled.
 ### LSC illuminant history (0.0.34 development)
 
 `lsc_illuminant::State` reconstructs the nearest-illuminant estimator (ELF
-`0x118498`) and the history used by `UpdateDominateIlluList` / 
+`0x118498`) and the history used by `UpdateDominateIlluList` /
 `StableIlluEstimation` (`0x118528` / `0x118576`). The estimator uses f32 deltas,
 fused red-square accumulation and a rounded square root, with strict `<`
 comparison against an initial 9,999,999 distance. Replacing this with squared
@@ -1186,3 +1186,34 @@ to seven illuminants; reset history when replacing calibration. This closes
 illuminant history only: resolution/table selection, vignetting interpolation,
 damping, OTP and live integration still need verification. CPU replay makes
 no ISP writes; the live camera keeps LSC disabled.
+
+### LSC target table selection (0.0.34 development)
+
+`lsc_tables::select` stably sorts up to five profiles by descending vignetting,
+clamps to the highest/lowest endpoint outside the range, and blends adjacent
+profiles inside it. Equal sort keys retain their input order. The selected
+profile's gain/vignetting curve uses the existing recovered interpolation.
+For a blend, native computes an f32 weight, independently truncates both
+`weight * 65536` and `(1 - weight) * 65536`, and rounds the integer weighted
+sum with `+32768` before shifting. Computing one integer weight as the
+complement of the other can change output. All four 17×17 planes retain their
+SDK order: red, green-red, green-blue, blue.
+
+[Native/physical CPU evidence](lsc-tables-equivalence.json) covers 319 complete
+four-plane targets: 63 gain samples across all seven illuminants from the
+selected board profile, plus 256 varied cases with 1–5 profiles, shuffled
+input order, duplicate vignetting keys, endpoints, interior samples and full
+u16 grid values. The full original `OrderLscProfilesByVignetting` and
+`AlscAutoConfig` execute. Every interpolated vignetting bit, selected high/low
+profile index and all 2,312 grid bytes match Rust on host and physical Luckfox.
+The oracle also verifies native no-OTP output equals its target with damping
+inactive on frame zero. All 101 library/five Unix tests, no-default-features
+and static ARM builds pass.
+
+Run `mise run camera:rust:lsc-tables -- --adb SERIAL --report LOCAL.json` after
+host/ARM fixture builds. The oracle directly constructs the SDK pointer graph
+and forces a fresh target; constructor/parser, name lookup, persistent cache
+and temporal damping are separate. Modeled allocation/free, string operations
+and suppressed logging form the boundaries; native selection, interpolation
+and grid loops execute without algorithm substitutes. Live LSC stays disabled;
+physical CPU replay makes no ISP writes.

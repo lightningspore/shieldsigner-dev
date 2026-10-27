@@ -205,3 +205,8 @@ complete `AlscManualGrad` (ELF `0x119018`).
 15-frame mode from native `illuminant_index_estimation`,
 `UpdateDominateIlluList` and `StableIlluEstimation`.
 [State, rounded ties and native/physical CPU evidence](ISP.md#lsc-illuminant-history-0034-development).
+
+`lsc_tables::select` reconstructs stable profile order, endpoint/bracket choice
+and four-plane Q16 target blending, checked through complete native
+`OrderLscProfilesByVignetting` and `AlscAutoConfig`.
+[Native/physical CPU evidence and boundaries](ISP.md#lsc-target-table-selection-0034-development).

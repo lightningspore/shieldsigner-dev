@@ -3405,6 +3405,17 @@ fn main() {
                 isp_ccm::apply(&mut parameters, &result).unwrap();
                 println!("{}",parameters.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "lsc-tables" => {
+                use shieldsigner_rkaiq::{lsc_tables,interpolate};
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                let floats=|key:&str|v[key].as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>();
+                let grids=v["profiles"].as_array().unwrap().iter().map(|p|p["samples"].as_array().unwrap().iter().map(|s|u16::try_from(s.as_u64().unwrap()).unwrap()).collect::<Vec<_>>().try_into().unwrap()).collect::<Vec<[u16;lsc_tables::SAMPLES]>>();
+                let profiles=v["profiles"].as_array().unwrap().iter().zip(grids.iter()).map(|(p,samples)|lsc_tables::Profile{vignetting:p["vignetting"].as_f64().unwrap() as f32,samples}).collect::<Vec<_>>();
+                let vig=interpolate(&floats("gains"),&floats("vig"),v["gain"].as_f64().unwrap() as f32).unwrap();
+                let result=lsc_tables::select(&profiles,vig).unwrap();
+                let bytes=result.samples.iter().flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>();
+                println!("{}",serde_json::json!({"high":result.high,"low":result.low,"vignetting":format!("{:08x}",vig.to_bits()),"samples":bytes}));
+            }
             "lsc-illuminant" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let pair=|p: &serde_json::Value|[p[0].as_f64().unwrap() as f32,p[1].as_f64().unwrap() as f32];

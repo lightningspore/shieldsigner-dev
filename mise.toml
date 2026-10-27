@@ -644,3 +644,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:lsc-illuminant"]
 description = "Compare LSC nearest illuminant and persistent 15-frame history with native ARM"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/lsc-illuminant.py"
+
+[tasks."camera:rust:lsc-tables"]
+description = "Compare LSC profile ordering and four-plane target blending with native ARM"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/lsc-tables.py"

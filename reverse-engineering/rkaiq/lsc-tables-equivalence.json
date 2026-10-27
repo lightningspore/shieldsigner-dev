@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "cases": 319,
+  "selectedProfileCases": 63,
+  "gridBytesComparedPerCase": 2312,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "935dfd513db983784601490c4f76a9123b47b84e5a5760ad803b550a1a0c1951",
+  "physicalArmBinarySha256": "f2c19ec35aa4a734eea7b21d96608a29cf964d4e7bb74964cf9c8fe8c909a662",
+  "hostMatchesPhysicalArm": true,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "scope": "Full native OrderLscProfilesByVignetting and AlscAutoConfig, fresh forced target, frame zero, no OTP. Compare interpolated vignetting bits, both original selected profile indices, all four 289-entry target grids and equality with native undamped output.",
+  "boundaries": [
+    "SDK pointer graph constructed directly; constructor/parser and calibration name lookup are separate.",
+    "Original nearest/history/interpolation/grid loops execute; modeled allocation/free, string operations, logging; original uClibc sqrtf.",
+    "Finite gain curves, 1..5 profiles; persistent cache/damping/OTP and live LSC remain separate.",
+    "Physical CPU replay makes no ISP writes."
+  ]
+}

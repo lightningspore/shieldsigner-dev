@@ -160,3 +160,28 @@ checking default construction plus geometry composition. This is still the
 pre-calibration seed: `AecCalibConfig`/`AecUpdateConfig` selection and the live
 measurement/statistics controller are not replaced by these defaults. The
 fixed first-frame capture command continues to leave automatic 3A disabled.
+
+### Calibration grid weighting
+
+`ae_weights` reconstructs `AecSetMeanLumaGridWeights.constprop.9` (ELF 0xa6e64)
+and `AecGridWeight15x15to5x5` (ELF 0xa6bf0). The 225-cell path copies the
+calibration grid; the 25-cell path averages each 3×3 block with integer division
+by nine and writes only the first 25 destination bytes. It preserves the other
+200 bytes, as does the original wrapper. This is software weighted-mean input,
+not the uniform histogram-weight initialization performed by `AecHwConfig`.
+
+The reference executes the original selector and reduction instructions with
+explicit allocation/free and imported integer-division boundaries. It compares
+all 225 destination bytes for 120 cases, including both grid sizes with the
+pinned SC3336 profile, zero/max patterns and random grids. Run ARM replay with:
+
+```sh
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-weights.py --arm
+```
+
+[Weight-selection report](ae-weights-equivalence.json). An all-zero profile grid
+is still passed through by this helper: the outer `AecUpdateConfig` detects that
+case and chooses its own built-in fallback before calling this function. That
+fallback, overrides, histogram-mode policy and live statistics/AE integration
+remain unfinished. The first-frame command still does not enable automatic 3A.

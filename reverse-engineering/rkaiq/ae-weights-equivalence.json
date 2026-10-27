@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 120,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "software 225/25-cell weight selection; all destination bytes including lite tail preservation",
+  "limitations": [
+    "Zero allocation, free and imported integer quotient/remainder are controlled boundaries.",
+    "Outer all-zero-calibration fallback, overrides and AE policy are not implemented by this helper.",
+    "Software luma weights differ from initial hardware histogram weights; no live automatic exposure is enabled."
+  ]
+}

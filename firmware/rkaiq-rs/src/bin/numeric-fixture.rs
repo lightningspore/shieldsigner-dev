@@ -380,6 +380,20 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-weights" => {
+                let source: [u8; 225] = core::array::from_fn(|i| {
+                    u8::from_str_radix(&a[2][i * 2..i * 2 + 2], 16).unwrap()
+                });
+                let mut output = [0xa5; 225];
+                ae_weights::select(&mut output, &source, a[1].parse().unwrap()).unwrap();
+                println!(
+                    "{}",
+                    output
+                        .iter()
+                        .map(|v| format!("{v:02x}"))
+                        .collect::<String>()
+                );
+            }
             "ae-defaults" => println!(
                 "{}",
                 ae_geometry::defaults()

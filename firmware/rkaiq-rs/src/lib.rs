@@ -32,6 +32,7 @@ pub mod demosaic_selection;
 pub mod discovery;
 pub mod engine;
 pub mod exposure;
+pub mod exposure_association;
 pub mod gain;
 #[cfg(feature = "diagnostics")]
 pub mod initial_parameters;

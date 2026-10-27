@@ -72,3 +72,35 @@ The command does not start a sensor/image stream or initialize the ISP. It print
 The pinned SC3336 driver (`sc3336.c`, URL/hash in `artifacts.json`) registers `V4L2_CID_ANALOGUE_GAIN` from 128 to **99,614** and handles combined sensor gain through that control. It does not register a separate digital-gain control. The native sequencer's digital slot uses generic `V4L2_CID_GAIN`; leaving the explicit digital code at zero skips that operation, as required for this driver. The profile's maximum register value is 99,615, one count above the driver limit. The planner preserves native conversion and does not hide that mismatch; the driver can reject an out-of-range code. Conversion-gain writes are skipped by default because this reference profile disables DCG support.
 
 The adapter uses a repr(C), eight-byte `v4l2_control` equivalent; read/write request numbers, control IDs and conversion-gain ioctl are cross-checked against pinned kernel headers. Existing 1,000-case native sensor sequencing tests continue to run. ARM smoke tests reject a nonsensor endpoint before any writes and reject invalid scalar/DCG arguments. No successful real sensor write is claimed by those tests. Sensor-specific limits, active streaming behavior, gain interpretation and before/after frames still need the hardware session.
+
+
+## Effective-exposure record selection
+
+`exposure_association::effective_index` reconstructs the selection policy in
+`SensorHw::getEffectiveExpParams` (ELF 0x3bb70). Inputs are ordered unsigned
+frame keys from the sensor's effective-exposure map. Request `0xffffffff`
+normalizes to frame zero. An exact key selects that record with native status
+0; otherwise the newest key not exceeding the request is selected with status
+1. If every retained key is newer than the request, native code selects the
+**newest retained record**, also with status 1. An empty map returns -2 and
+leaves the output pointer unchanged. Rust exposes exact/fallback separately and
+uses `None` for the empty case; unordered/duplicate keys are rejected.
+
+Ninety-one cases execute the native lookup wrapper, tree find and reverse
+iterator helpers against explicitly constructed map nodes. Imported tree
+predecessor operations use the supplied ordering; smart-pointer assignment,
+locking and logging are explicit boundaries. The comparison checks selected
+record/status and preservation of the sensor object. It does not validate
+reference counting, concurrency, red-black balancing or map population.
+[Equivalence report](exposure-association-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/exposure-association.py --arm
+```
+
+A fallback result is the original library's best available record, not proof
+that it produced a particular frame. Sensor scheduling, effect-frame insertion,
+retention, startup offsets and real statistics/exposure association remain to
+be connected. Live AE must retain the lookup status and its timing evidence.

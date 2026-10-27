@@ -380,6 +380,24 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "exposure-association" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let frames = v["frames"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|n| n.as_u64().unwrap() as u32)
+                    .collect::<Vec<_>>();
+                match exposure_association::effective_index(
+                    &frames,
+                    v["requested"].as_u64().unwrap() as u32,
+                )
+                .unwrap()
+                {
+                    Some(m) => println!("{},{}", if m.exact { 0 } else { 1 }, m.index + 10),
+                    None => println!("-2,0"),
+                }
+            }
             "ae-controller" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let f = |k: &str| v[k].as_f64().unwrap() as f32;

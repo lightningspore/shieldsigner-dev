@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 91,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "native effective-exposure lookup control flow, selected record and exact/fallback/empty status",
+  "limitations": [
+    "Explicit ordered map nodes; native find and reverse-iterator bodies execute, while imported tree decrement uses the supplied node ordering.",
+    "Smart-pointer assignment, lock lifetime and logging are modeled boundaries, not refcount/concurrency equivalence.",
+    "Map insertion, retention, sensor timing and physical frame association remain unimplemented by this selection helper."
+  ]
+}

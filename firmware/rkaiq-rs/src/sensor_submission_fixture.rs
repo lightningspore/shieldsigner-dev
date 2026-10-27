@@ -76,10 +76,10 @@ fn hex(record: &ae_publication::Record) -> String {
     record.iter().map(|b| format!("{b:02x}")).collect()
 }
 
-struct Backend {
-    trace: Vec<String>,
-    operations: usize,
-    fail: usize,
+pub(crate) struct Backend {
+    pub(crate) trace: Vec<String>,
+    pub(crate) operations: usize,
+    pub(crate) fail: usize,
 }
 impl Backend {
     fn result(&mut self) -> Result<(), ()> {

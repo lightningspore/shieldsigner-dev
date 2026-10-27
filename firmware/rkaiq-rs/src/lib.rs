@@ -294,3 +294,6 @@ pub mod ae_startup;
 pub mod ae_session;
 
 pub mod sensor_submission;
+
+#[cfg(feature = "diagnostics")]
+pub mod ae_runtime;

@@ -192,3 +192,10 @@ The ordinary sensor submission path now preserves native per-record metadata and
 replaces pending batches by their first-entry markers. [Submission/SOF comparison](AE.md#exposure-submission-and-sof-handoff)
 checks native queuing, dequeue/effective-map behavior and linear control traces
 with modeled device callbacks. Live coordination and physical timing remain open.
+
+`ae_runtime::Runtime` now owns the session and scheduler together: statistics
+consume the scheduler's own reported exposure map, AE submits its next batch,
+and SOFs drive the recovered writer through a caller-provided backend.
+[Persistent runtime comparison](AE.md#persistent-ae-runtime-with-scheduler-produced-association)
+covers the combined native data flow. Initial sensor programming, live capture,
+ISP gain updates, physical timing and AWB remain external or incomplete.

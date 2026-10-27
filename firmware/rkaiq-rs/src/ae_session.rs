@@ -50,6 +50,10 @@ fn array(v: &Value, key: &str) -> Result<Vec<f32>, String> {
         .collect()
 }
 impl Session {
+    pub(crate) fn sensor_update_delays(&self) -> [u32; 3] {
+        self.sensor.linear_update_delays
+    }
+
     pub fn from_profile(
         profile: &Value,
         timing: RuntimeTiming,

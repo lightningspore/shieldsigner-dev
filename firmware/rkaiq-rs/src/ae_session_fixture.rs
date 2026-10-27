@@ -3,7 +3,7 @@ use shieldsigner_rkaiq::*;
 fn hex(b: &[u8]) -> String {
     b.iter().map(|x| format!("{x:02x}")).collect()
 }
-fn snapshot(s: &ae_session::Session, error: f32) -> Value {
+pub(crate) fn snapshot(s: &ae_session::Session, error: f32) -> Value {
     let state = &s.state;
     let c = &state.controller;
     let p = &state.publication;

@@ -5,6 +5,8 @@ use std::io::{self, BufRead};
 mod ae_pipeline_fixture;
 #[path = "../ae_result_fixture.rs"]
 mod ae_result_fixture;
+#[path = "../ae_runtime_fixture.rs"]
+mod ae_runtime_fixture;
 #[path = "../ae_session_fixture.rs"]
 mod ae_session_fixture;
 #[path = "../awb_preparation_fixture.rs"]
@@ -34,6 +36,10 @@ fn main() {
         let line = line.unwrap();
         let a: Vec<_> = line.split_whitespace().collect();
         match a[0] {
+            "ae-runtime" => println!(
+                "{}",
+                ae_runtime_fixture::run(&serde_json::from_str(a[1]).unwrap())
+            ),
             "sensor-submission" => println!(
                 "{}",
                 sensor_submission_fixture::run(&serde_json::from_str(a[1]).unwrap())

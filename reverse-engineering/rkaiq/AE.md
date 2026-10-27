@@ -1579,3 +1579,60 @@ ISP gain programming and physical latency qualification remain unfinished.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/sensor-submission.py --arm
 ```
+
+## Persistent AE runtime with scheduler-produced association
+
+`ae_runtime::Runtime` now owns both `ae_session::Session` and the ordinary
+`sensor_scheduler::Scheduler`. `step_statistics` obtains effective exposures
+from that scheduler's current map, runs raw translation and AE, and submits the
+resulting publication batch back into the same scheduler. `on_sof` dequeues a
+pending exposure and calls `sensor::program_linear` through an explicit backend.
+The runtime returns both native scheduling status and the backend's original
+error. It preserves native reported-map updates after write failures; callers
+must not interpret those entries as verified physical application.
+
+This removes the manually supplied per-frame exposure maps from the combined
+fixture. `Session::scheduling_delays` binds the actual IQ time/gain/DCG delay
+fields through the recovered delay policy. Unsupported split combinations are
+rejected by the ordinary scheduler. The corpus exercises declared time/gain
+delays zero, one and two, plus smoothing enabled/disabled; these remain calibration
+inputs rather than measured sensor latencies.
+
+Construction takes an explicit initial effective exposure after creating the
+prepared AE session. It does **not** program the sensor at startup. The event
+owner must have initialized the sensor and must order SOF/statistics callbacks;
+there is no implicit thread, device discovery or live capture in this module.
+Complete parameter snapshots remain caller-owned and selected by recorded ID.
+Controller or submission errors can leave partial state and require discarding
+the runtime. Missing measurements submit no new batch.
+
+[Runtime comparison](ae-runtime-equivalence.json) passes on host and ARM with
+zero mismatches. It connects the actual native
+stages across independent emulator contexts: raw statistics translation, native
+effective-exposure lookup, complete SDK AE wrappers, exposure submission,
+`handle_sof` and the native linear sensor writer. The records submitted by AE
+become the native sensor queue; only actual native SOF calls create subsequent
+map entries. Those map entries feed the next statistics association. Explicit
+byte exchange represents recovered object interfaces; full C++ ownership and
+concurrency are not emulated.
+
+Four persistent sequences cover 139 events: 56 valid statistics frames, four
+invalid measurements, four missing parameter IDs and 75 SOFs. They produce
+53 attempted writes, including two injected failures, and exercise exact/fallback
+exposure lookup, missed/duplicate SOFs and queue draining after statistics stop.
+After every event the test compares listed AE/preprocessing/publication state,
+pending batches and markers, current exposure, the complete reported effective
+map, control traces and status. Synthetic raw scenes vary independently of the
+exposure, so this demonstrates event-loop/data-flow equivalence, not optical
+closed-loop convergence.
+
+The numerical/native components retain their documented boundaries: translator
+object access/run gating, C++ ownership and containers, descriptor/ioctl callbacks,
+DPCC and logging. The runtime is fixed-rate ordinary linear/source-1; startup
+immediate sensor programming, live event collection, parameter accumulation,
+ISP digital-gain updates, timing reconfiguration, AWB and physical latency
+qualification remain unfinished. No hardware has been changed by this test.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-runtime.py --arm
+```

@@ -477,3 +477,33 @@ error remain excluded. The Rust checked API returns its route error without
 updating the cache. Runtime threshold/configuration selection, outer brightness
 control, damping application and delayed sensor writes remain separate work;
 this does not enable automatic exposure on hardware.
+
+
+## Brightness-transition delay gate
+
+`ae_delay::linear` reconstructs the complete linear branch of native
+`AecCheckDelay` (ELF 0xa13b8). Disabled policy or a changed mode resets both
+counters and marks a transition. Stable error direction resets the counters
+without marking a transition. A new direction tracks positive/negative start
+frames independently, compares the current error with 0.98 times its reference
+error, clears the opposite counter and returns whether the selected delay has
+not yet elapsed. The native linear counter caps at 255; its frame arithmetic
+and byte narrowing are preserved.
+
+The native return and all modified state bytes match in 1,000 comparisons,
+including zero errors/frame IDs, direction changes, disabled/mode-reset paths,
+0.98 boundary values, byte thresholds and signed-frame wrap behavior. The
+reference also checks that unrelated context bytes remain unchanged. Host and
+ARM replay pass. [Equivalence report](ae-delay-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-delay.py --arm
+```
+
+This is a hold gate inside brightness control, **not** the sensor's physical
+register-to-frame delay. Its policy flags, error history and frame IDs still
+need to be supplied by the surrounding controller. HDR, full damping/brightness
+integration, frame/parameter/exposure history and live automatic writes remain
+unfinished.

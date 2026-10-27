@@ -380,6 +380,41 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-delay" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let f = |k: &str| v[k].as_f64().unwrap() as f32;
+                let n = |k: &str| v[k].as_i64().unwrap();
+                let mut state = ae_delay::State {
+                    negative_start: n("negative_start") as i32,
+                    positive_start: n("positive_start") as i32,
+                    negative_count: n("negative_count") as u8,
+                    positive_count: n("positive_count") as u8,
+                    changed: v["changed"].as_bool().unwrap(),
+                };
+                let blocked = ae_delay::linear(
+                    &mut state,
+                    ae_delay::Input {
+                        enabled: v["enabled"].as_bool().unwrap(),
+                        same_mode: v["same_mode"].as_bool().unwrap(),
+                        frame: n("frame") as i32,
+                        previous_error: f("previous"),
+                        current_error: f("current"),
+                        reference_error: f("reference"),
+                        negative_delay: n("negative_delay") as u8,
+                        positive_delay: n("positive_delay") as u8,
+                    },
+                )
+                .unwrap();
+                println!(
+                    "{},{},{},{},{},{}",
+                    blocked as u8,
+                    state.changed as u8,
+                    state.negative_start,
+                    state.positive_start,
+                    state.negative_count,
+                    state.positive_count
+                );
+            }
             "ae-gain-limits" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let pair =

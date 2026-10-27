@@ -694,3 +694,18 @@ An NV12-to-RGB conversion showed color data with a pronounced purple cast;
 color processing/white balance still need work. Display-only autocontrast is
 not an ISP correction. Scene lighting may change during later tests because
 the user plans to turn off the room light.
+
+
+### Manual dark-room exposure test
+
+After room lighting was reduced, a fixed 3 ms/1× capture had luma mean 24.02
+and maximum 29/255. A requested 30 ms/1× capture had mean 25.21 and maximum 31.
+The user then requested 500 ms. The existing recovered conversion selected
+frame length 20416, gain code 128 and integration code 20400 using the reported
+runtime descriptor; the driver accepted/read back exposure 20400 and VBLANK
+19120. The subsequent raw/ISP capture succeeded with four completed frames,
+four SOF matches and no misses. Its NV12 luma mean was 34.72 and maximum 51,
+revealing room/monitor outlines. These are requested timing and control readback,
+not independently measured optical integration duration. Gain stayed at 1×.
+The purple cast remains; no color correction was applied to this test.
+Private images/logs remain local under the hardware artifact directory.

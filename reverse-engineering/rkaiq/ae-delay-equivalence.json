@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 1000,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "complete linear AecCheckDelay helper, boolean return, all state writes and preservation of unrelated context",
+  "limitations": [
+    "Linear finite-input path; HDR excluded.",
+    "Context policy flags, frame IDs, error history and delay thresholds supplied explicitly.",
+    "This is a brightness-transition hold gate, not complete sensor-register application latency or live scheduling."
+  ]
+}

@@ -7,6 +7,7 @@ pub mod ae;
 pub mod ae_configuration;
 pub mod ae_damping;
 pub mod ae_decision;
+pub mod ae_delay;
 pub mod ae_flicker;
 pub mod ae_gain_limits;
 pub mod ae_geometry;

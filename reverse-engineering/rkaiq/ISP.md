@@ -125,3 +125,37 @@ The recovered metadata queue core and bounded Linux submission diagnostic are no
 ## Exposure measurement configuration
 
 The selected AE grid/histogram result-to-kernel branches are now reconstructed with exact four-channel routing and cached records. [AE measurement configuration](AE.md#measurement-parameter-configuration). The [AWB measurement converter](AWB.md) also reconstructs selected regions, thresholds, transforms, windows and grid weights. These supply parts of the initial parameter record; calibrated selection policy, the AWB algorithm and remaining module/service integration remain unfinished.
+
+## CIF raw readback: remaining first-frame dependency
+
+Development `capture-with-parameters` now retains the parameter queue while
+image capture runs. This resolves that resource lifetime only; it does not
+replace the CIF raw bridge.
+
+Ghidra exports of the pinned original establish that the nonshared path starts
+RawStreamCapUnit followed by RawStreamProcUnit. The latter maintains pending
+and in-flight raw buffers. Its `trigger_isp_readback` (ELF 0x35cf0) obtains a
+matching RX buffer for each raw exposure, transfers the source buffer handle
+(USERPTR, DMA-BUF, or a conditional MMAP copy), and queues RX before issuing
+`RKISP_CMD_TRIGGER_READ_BACK` to the ISP subdevice. A failed RX QBUF suppresses
+the trigger. Thus opening raw nodes or STREAMON alone does not implement the
+native per-frame path. A TX buffer must remain owned until RX completes, then
+be returned to TX; independent immediate requeue would risk overwriting data
+still consumed by the ISP.
+
+The new Rust `raw_readback::linear_trigger` encodes the 28-byte linear trigger:
+SOF nanoseconds, source timestamp converted from microseconds, frame ID,
+readback times and `T_START_X1`. It preserves the observed signed times rules
+and wrapping 64-bit timestamp conversion. The original ioctl literal at ELF
+0x362a4 is 0x401c56c0. Independent ARM compilation of pinned kernel headers checks
+the ioctl, every field offset, size and mode. Two Rust tests cover times and
+full-width timestamp edge cases. **This helper has not yet been differentially
+executed against the whole native trigger routine**, whose C++ queues and
+optional raw-dump path still need explicit boundaries.
+
+Next implementation is the persistent one-exposure TX→RX buffer bridge with
+RX-completion ownership, frame ID/timestamp propagation, per-frame trigger,
+backpressure and cleanup. Integrate it around the combined image capture before
+claiming CIF startup. Shared-CIF, HDR, optional raw dumps and multi-ISP support
+remain outside this minimum linear path. Positive hardware capture and QR
+quality remain unverified.

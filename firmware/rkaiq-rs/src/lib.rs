@@ -31,6 +31,7 @@ pub mod isp_demosaic;
 pub mod isp_pipeline;
 pub mod media;
 pub mod parameter_queue;
+pub mod raw_readback;
 pub mod sensor;
 pub mod sensor_descriptor;
 pub mod statistics;

@@ -156,3 +156,13 @@ _Static_assert(V4L2_FIELD_NONE==1,"raw no-field selector");
 _Static_assert(RKCIF_CMD_SET_CSI_MEMORY_MODE==0x400456c1,"CIF high-alignment ioctl");
 _Static_assert(RKISP_CMD_SET_CSI_MEMORY_MODE==0x40045725,"ISP high-alignment ioctl");
 _Static_assert(CSI_LVDS_MEM_WORD_HIGH_ALIGN==2 && CSI_MEM_WORD_BIG_ALIGN==2,"paired high-alignment enum");
+
+/* RawStreamProcUnit linear per-frame trigger payload. */
+_Static_assert(sizeof(struct isp2x_csi_trigger)==28,"readback trigger bytes");
+_Static_assert(offsetof(struct isp2x_csi_trigger,sof_timestamp)==0,"SOF timestamp offset");
+_Static_assert(offsetof(struct isp2x_csi_trigger,frame_timestamp)==8,"frame timestamp offset");
+_Static_assert(offsetof(struct isp2x_csi_trigger,frame_id)==16,"trigger frame offset");
+_Static_assert(offsetof(struct isp2x_csi_trigger,times)==20,"trigger times offset");
+_Static_assert(offsetof(struct isp2x_csi_trigger,mode)==24,"trigger mode offset");
+_Static_assert(T_START_X1==16,"linear trigger mode");
+_Static_assert(RKISP_CMD_TRIGGER_READ_BACK==0x401c56c0,"readback trigger ioctl");

@@ -242,3 +242,7 @@ interpolation and preserved SDK padding.
 conversion, including exposure gains, fixed-point clips, spatial exponentials
 and retained slots/padding.
 [Full native/original-expf and physical CPU evidence](ISP.md#baynr-fixed-register-quantization-0034-development).
+
+`baynr_calibration::prepare` reconstructs independent SNR prefix/fallback lookup
+and complete calibration/tuning table merge with retained rows/padding.
+[Actual-profile and varied native/physical CPU evidence](ISP.md#baynr-calibration-preparation-0034-development).

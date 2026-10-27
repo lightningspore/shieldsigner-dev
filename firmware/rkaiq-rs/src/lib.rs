@@ -370,3 +370,5 @@ pub mod lsc_frame;
 pub mod isp_baynr;
 pub mod baynr_selection;
 pub mod baynr_quantize;
+#[cfg(feature = "diagnostics")]
+pub mod baynr_calibration;

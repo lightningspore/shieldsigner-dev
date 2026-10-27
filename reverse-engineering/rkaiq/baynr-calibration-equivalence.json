@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "cases": 100,
+  "unalteredProfileCases": 6,
+  "preparedTableBytesComparedPerCase": 3336,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "048ecb3012f08d74bc3ff222b10d931e3d3d562ed5159a1a884dfb08f26af3a4",
+  "physicalArmBinarySha256": "09ebc69cefb300100733cf3fa3768e3b5b7b7c6ea8ecd900d519839740ef4223",
+  "hostMatchesPhysicalArm": true,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "scope": "Complete native bayer2dnr_config_setting_param_json_V23, get_setting_by_name and init_params. All 3336 prepared bytes and both independent setting indices; calibration SDK graph checked unchanged.",
+  "boundaries": [
+    "Raw SDK pointer graph built from selected JSON; native JSON parser not executed. strlen/strncmp are explicit libc boundaries, no algorithm/math substitutions.",
+    "Actual profile plus modified numeric fields, independent setting order, prefix/fallback/empty-name lookup, partial/capped rows and poisoned prior table. Sensor_Mode and BLC reference data not consumed by this routine.",
+    "Full constructor/automatic controller and live BAYNR remain separate. Physical CPU replay makes no ISP writes."
+  ]
+}

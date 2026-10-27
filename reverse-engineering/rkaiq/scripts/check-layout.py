@@ -353,3 +353,32 @@ _Static_assert(offsetof(rk_aiq_bayer2dnr_strength_v23_t,strength_enable)==12,"BA
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'baynr-strength-sdk-layout.o')],check=True)
 print('PASS: BAYNR strength SDK=16, percent=8/enable=12 verified from verbatim synchronization/strength declarations')
+
+baynr_json=dpcc_header('bayer2dnr_head_v23.h')
+names=['CalibDbV2_Bayer2dnrV23_C_ISO_s','CalibDbV2_Bayer2dnrV23_C_Set_s','CalibDbV2_BlcV32_calib_s','CalibDbV2_Bayer2dnrV23_Calib_s','CalibDbV2_Bayer2dnrV23_gain_s','CalibDbV2_Bayer2dnrV23_T_ISO_s','CalibDbV2_Bayer2dnrV23_T_Set_s','CalibDbV2_Bayer2dnrV23_Tuning_s','CalibDbV2_Bayer2dnrV23_s']
+source=cache/'baynr-json-sdk-layout.c'
+source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n'+'\n'.join(dpcc_record(n,baynr_json) for n in names)+'''
+_Static_assert(sizeof(CalibDbV2_Bayer2dnrV23_t)==32,"BAYNR SDK IQ root size");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_t,CalibPara)==4,"BAYNR calibration settings");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_t,TuningPara)==20,"BAYNR tuning settings");
+_Static_assert(sizeof(CalibDbV2_Bayer2dnrV23_C_Set_t)==16,"BAYNR calibration setting");
+_Static_assert(sizeof(CalibDbV2_Bayer2dnrV23_T_Set_t)==16,"BAYNR tuning setting");
+_Static_assert(sizeof(CalibDbV2_Bayer2dnrV23_C_ISO_t)==132,"BAYNR calibration row");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_C_ISO_t,lumapoint)==4,"BAYNR calibrated luma");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_C_ISO_t,sigma)==68,"BAYNR calibrated sigma");
+_Static_assert(sizeof(CalibDbV2_Bayer2dnrV23_T_ISO_t)==120,"BAYNR tuning row");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,gauss_guide)==4,"BAYNR tuning guide");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,filter_strength)==8,"BAYNR tuning strength");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,gain_bypass)==24,"BAYNR tuning gain bypass");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,gain_scale)==28,"BAYNR tuning gain scale");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,pix_diff)==32,"BAYNR tuning pixel difference");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,diff_thld)==34,"BAYNR tuning difference threshold");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,trans_mode)==36,"BAYNR tuning transform mode");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,trans_offset)==38,"BAYNR tuning transform offset");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,itrans_offset)==40,"BAYNR tuning inverse transform");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,trans_datmax)==44,"BAYNR tuning data maximum");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,hdr_dgain_scale_s)==48,"BAYNR tuning HDR scale");
+_Static_assert(offsetof(CalibDbV2_Bayer2dnrV23_T_ISO_t,gain_adj)==56,"BAYNR tuning gain curves");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'baynr-json-sdk-layout.o')],check=True)
+print('PASS: BAYNR IQ=32/calibration row=132/tuning row=120, settings=16 and every preparation offset verified')

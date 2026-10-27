@@ -1514,3 +1514,41 @@ registers on rejection. HDR/gray arithmetic is not camera qualification. These
 are synthetic selected records; actual JSON calibration, strength policy,
 persistent state and live integration remain separate. Physical CPU replay
 makes no ISP writes; live BAYNR is still disabled.
+
+### BAYNR calibration preparation (0.0.34 development)
+
+`baynr_calibration::prepare` reconstructs the table writes of complete
+`bayer2dnr_config_setting_param_json_V23`, including its native setting lookup
+and `bayer2dnr_init_params_json_V23` (ELF `0xe55e4`, `0xe53e8`, `0xe5490`).
+Calibration and tuning settings are chosen independently by the first SNR name
+with the requested prefix; no match falls back to setting zero. An empty
+request matches the first setting. Sensor-mode names and BLC reference rows
+are not read by this preparation path. ISO/luma/sigma first come from the
+calibration rows; tuning then overwrites ISO and writes strength, thresholds,
+transform settings, HDR scales and gain curves. Each side caps its row copies
+at thirteen and retains untouched rows, flags and padding from prior storage.
+
+The Rust JSON boundary checks finite f32 values, typed integer ranges, curve
+sizes, array counts when supplied, bounded arrays and valid ASCII SNR names.
+It stages the entire prepared table so a later invalid field cannot corrupt
+previous state. This is explicit JSON-to-SDK field preparation, not a claim
+that the original general JSON parser has been reproduced.
+
+[Native/physical CPU evidence](baynr-calibration-equivalence.json) checks all
+3,336 prepared bytes and both independently selected setting indices in 100
+cases. Six use the actual profile unchanged with LSNR/HSNR, shorter prefixes,
+unknown fallback and empty requests. Other cases vary every tuning field,
+calibration curves, independent setting order, partial/over-thirteen arrays
+and poisoned prior table contents. The original wrapper, lookup and merge
+algorithms execute; only libc `strlen`/`strncmp` form explicit boundaries.
+The complete constructed calibration graph remains unchanged. Host and
+physical Luckfox Rust agree exactly. Pinned SDK ARM C assertions independently
+verify IQ root=32, setting=16, calibration row=132, tuning row=120 and every
+used preparation offset. All 105 library/five Unix tests, no-default-features
+and static ARM builds pass, including late-error table preservation.
+
+Run `mise run camera:rust:baynr-calibration -- --adb SERIAL --report LOCAL.json`
+after host/ARM fixture builds. Native constructor/default strength policy,
+mode/SNR changes, persistent callback state and live integration remain to be
+joined and verified. Physical CPU replay makes no ISP writes; live BAYNR
+remains disabled.

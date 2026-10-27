@@ -164,6 +164,9 @@ fn render(s: &State<'_>) -> String {
     out.iter().map(|b| format!("{b:02x}")).collect()
 }
 pub fn run(v: &Value) -> String {
+    run_with_preprocess(v, false)
+}
+pub fn run_with_preprocess(v: &Value, outer: bool) -> String {
     let seed = v["seed"].as_u64().unwrap() as u32;
     let n = v["n"].as_u64().unwrap() as usize;
     let groups = v["groups"].as_u64().unwrap() as usize;
@@ -259,12 +262,106 @@ pub fn run(v: &Value) -> String {
         }),
         prior_sample: v["sample"].as_f64().unwrap() as f32,
     };
+    use shieldsigner_rkaiq::{awb_environment, awb_luma_history, awb_preprocess as pre};
+    let mut prefix = pre::State {
+        mode: 7,
+        update: false,
+        luma_integer: 0,
+        luma: 0.,
+        smart: [0.; 3],
+        interval: 0,
+        points: [0; 2],
+        regions: [0.; 2],
+        frame_counter: 0,
+    };
+    let mut meta = pre::Metadata {
+        history: awb_luma_history::History::<32>::from_values(&[]).unwrap(),
+        level: 9,
+        environment: -7,
+        variance: 0.5,
+        brightness_stable: true,
+    };
+    let smart = [0.01f32, 0.005, v["threshold"].as_f64().unwrap() as f32];
+    let iv = v
+        .get("outer_interval")
+        .and_then(|v| v.as_u64())
+        .unwrap_or(0) as f32;
+    let prefix_cal = pre::Calibration {
+        smart_knots: &[0.],
+        smart: [&smart[0..1], &smart[1..2], &smart[2..3]],
+        interval: pre::Curve {
+            knots: &[0.],
+            values: core::slice::from_ref(&iv),
+        },
+        point_knots: &[0.],
+        points: [&[150.], &[216.]],
+        region_knots: &[0.],
+        regions: [&[150.], &[216.]],
+    };
+    let env = awb_environment::Calibration {
+        boundaries: &[0, 128, 1024, 65536, 262144],
+        thresholds: [110, 200, 65536, 65600],
+    };
     let mut out = Vec::new();
     for step in 0..v["frames"].as_u64().unwrap() as usize {
         s.update = v["update"].as_bool().unwrap();
         let f = frame(v, step);
-        prepare(&mut s, &Frame(&f), &settings).unwrap();
-        out.push(render(&s));
+        if outer {
+            prefix.frame_counter = step as u32;
+            let input = pre::Input {
+                requested_mode: 0,
+                previous_update: v["update"].as_bool().unwrap(),
+                smart_enabled: true,
+                countdown: 0,
+                exposure_luma: None,
+                frame_choice: 0,
+                working_mode: 0,
+                fallback: 0,
+                override_enabled: true,
+                override_valid: true,
+                override_luma: v["sample"].as_f64().unwrap() as f32,
+                geometry: [2304, 1296],
+                block: [15, 15],
+                sample_scale: 1,
+            };
+            prefix
+                .prepare_frame(
+                    &input,
+                    &prefix_cal,
+                    &mut meta,
+                    &env,
+                    [true, true],
+                    4,
+                    &mut s,
+                    &Frame(&f),
+                    &settings,
+                )
+                .unwrap();
+            let mut prefix_words = vec![
+                prefix.update as u32,
+                prefix.luma_integer,
+                prefix.luma.to_bits(),
+                prefix.interval,
+                prefix.frame_counter,
+                meta.level,
+                meta.environment as u32,
+                meta.variance.to_bits(),
+                meta.brightness_stable as u32,
+            ];
+            prefix_words.extend(meta.history.values());
+            out.push(format!(
+                "{}:{}",
+                render(&s),
+                prefix_words
+                    .iter()
+                    .map(|v| format!("{v:08x}"))
+                    .collect::<Vec<_>>()
+                    .join(",")
+            ));
+        } else {
+            prepare(&mut s, &Frame(&f), &settings).unwrap();
+            out.push(render(&s));
+        }
     }
     out.join("|")
 }

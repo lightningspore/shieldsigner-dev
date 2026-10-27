@@ -47,20 +47,29 @@ def run(arm,v):
  struct.pack_into('<I',strategy,4,v['fast_count']);strategy[0x138]=n;strategy[0x139]=n;struct.pack_into('<I',strategy,0x398,groups);struct.pack_into('<f',strategy,0x4b0,v['threshold']);struct.pack_into('<4i',strategy,0x480,*v['exclusion_kind'])
  for i in range(4):
   struct.pack_into('<III',calibration,0x150+i*0x28,HEAP+0x30000+i*0x100,3,HEAP+0x30000+i*0x100+0x40);struct.pack_into('<3f',curves,i*0x100,0.,1.,3.);struct.pack_into('<3f',curves,i*0x100+0x40,*v['weights'][i])
+ if v.get('_outer'):arm.prepare_outer(ctx,strategy,calibration,v)
  for offset,b in [(0,ctx),(0x8000,strategy),(0x9000,calibration),(0x10000,records),(0x20000,seen),(0x21000,second),(0x22000,totals),(0x30000,curves)]:arm.uc.mem_write(HEAP+offset,bytes(b))
  out=[]
  allowed=[(0x3348,1),(0x334a,1),(0x334c,64),(0x13d,256),(0x13c,1),(0xf79,1),(0x1a08,1),(0xf7c,2700),(0x2ba0,1),(0x2ba4,364),(0x2d10,52),(0x3588,16),(0x2d44,32),(0x2d64,128)]
+ if v.get('_outer'):allowed += [(0x28,4),(0x33ac,4),(0x33b0,4),(0x33d4,16),(0x3345,1),(0x3478,12)]
  for step in range(v['frames']):
   source=frame(v,step);arm.uc.mem_write(HEAP+0x40000,bytes(source));arm.uc.mem_write(HEAP+0x334a,bytes([v['update']]));before=bytes(arm.uc.mem_read(HEAP,0x4000));strategy_before=bytes(arm.uc.mem_read(HEAP+0x8000,0x1000))
-  arm.invoke('_Z20PrepareMeasureResultPK25rk_aiq_awb_stat_res_v32_sP12awb_contex_s',[HEAP+0x40000,HEAP],instructions=2000000)
+  if v.get('_outer'):
+   arm.uc.mem_write(HEAP+0x33ac,struct.pack('<I',step));arm.uc.mem_write(HEAP+0x3349,bytes([v['update']]))
+   arm.invoke('_Z13AwbPreProcV32PK25rk_aiq_awb_stat_res_v32_sP12awb_contex_s',[HEAP+0x40000,HEAP],instructions=3000000)
+  else:
+   arm.invoke('_Z20PrepareMeasureResultPK25rk_aiq_awb_stat_res_v32_sP12awb_contex_s',[HEAP+0x40000,HEAP],instructions=2000000)
   after=bytes(arm.uc.mem_read(HEAP,0x4000));check=bytearray(after)
   for offset,size in allowed:check[offset:offset+size]=before[offset:offset+size]
   assert bytes(check)==before,'Unexpected context write'
-  st=bytearray(arm.uc.mem_read(HEAP+0x8000,0x1000));active=st[0x138];st[0x138]=strategy_before[0x138];assert bytes(st)==strategy_before
+  st=bytearray(arm.uc.mem_read(HEAP+0x8000,0x1000));active=st[0x138];st[0x138]=strategy_before[0x138]
+  if v.get('_outer'):
+   for offset,size in [(0x4a8,12),(0x1b8,8),(0x38c,8)]:st[offset:offset+size]=strategy_before[offset:offset+size]
+  assert bytes(st)==strategy_before
   assert bytes(arm.uc.mem_read(HEAP+0x40000,FRAME))==source and bytes(arm.uc.mem_read(HEAP+0x9000,len(calibration)))==calibration and bytes(arm.uc.mem_read(HEAP+0x30000,len(curves)))==curves and arm.allocation is None
   dump=bytearray([after[0x334a],after[0x3348],active,after[0x13c],after[0xf79],after[0x1a08],after[0x2ba0]])+after[0x334c:0x338c]+after[0x13d:0x23d]
   for pointer,size in [(0x20000,n),(0x10000,n*LIGHT),(0x21000,n*4),(0x22000,max(n,2)*4)]:dump.extend(arm.uc.mem_read(HEAP+pointer,size))
-  dump.extend(after[0x3588:0x3598]);dump.extend(after[0xf7c:0x1a08]);dump.extend(after[0x2ba4:0x2d10]);dump.extend(after[0x2d10:0x2d44]);dump.extend(after[0x2d64:0x2de4]);dump.extend(after[0x2d44:0x2d64]);out.append(dump.hex())
+  dump.extend(after[0x3588:0x3598]);dump.extend(after[0xf7c:0x1a08]);dump.extend(after[0x2ba4:0x2d10]);dump.extend(after[0x2d10:0x2d44]);dump.extend(after[0x2d64:0x2de4]);dump.extend(after[0x2d44:0x2d64]);out.append(dump.hex()+(':'+arm.outer_snapshot(after) if v.get('_outer') else ''))
  return '|'.join(out)
 def main():
  p=argparse.ArgumentParser();p.add_argument('--cases',type=int,default=500);p.add_argument('--emit-dir',type=Path);a=p.parse_args();arm=OriginalAwb(stdlib=True);rng=random.Random(0x41575050);inputs=[];expected=[];coverage={}

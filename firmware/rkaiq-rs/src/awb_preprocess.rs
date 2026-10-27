@@ -259,3 +259,45 @@ impl State {
         Ok(decision)
     }
 }
+
+impl State {
+    /// Join the outer prefix through complete native-style measurement
+    /// preparation. Gain selection and hardware reconfiguration follow later.
+    /// Preparation may partially mutate borrowed buffers on arithmetic failure;
+    /// discard the session after such an error, as with the underlying API.
+    pub fn prepare_frame<const CAP: usize>(
+        &mut self,
+        input: &Input,
+        calibration: &Calibration<'_>,
+        metadata: &mut Metadata<CAP>,
+        environment: &crate::awb_environment::Calibration<'_>,
+        convergence: [bool; 2],
+        history_target: i32,
+        measurements: &mut crate::awb_preparation::State<'_>,
+        frame: &crate::awb_preparation::Frame<'_>,
+        settings: &crate::awb_preparation::Settings<'_>,
+    ) -> Result<Continuation, InvalidInput> {
+        let decision = self.derive_measurements(
+            input,
+            calibration,
+            metadata,
+            environment,
+            convergence,
+            history_target,
+        )?;
+        measurements.update = self.update;
+        if decision == Continuation::Ready {
+            let effective = crate::awb_preparation::Settings {
+                groups: settings.groups,
+                fast_light_count: settings.fast_light_count,
+                stability_threshold: self.smart[2],
+                exclusion_kind: settings.exclusion_kind,
+                exclusion_weight: settings.exclusion_weight,
+                prior_sample: self.luma,
+            };
+            crate::awb_preparation::prepare(measurements, frame, &effective)?;
+            self.update = measurements.update;
+        }
+        Ok(decision)
+    }
+}

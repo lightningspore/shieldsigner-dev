@@ -307,9 +307,9 @@ isolated pinned libgcc instructions. Logging is intercepted. Cases cover
 fallback, channel/working-mode selection, overrides, signed scales, threshold
 interpolation and counter/rounding boundaries. [Reference report](awb-preprocess-equivalence.json).
 
-The ordinary non-null metadata continuation still needs to join environment
-classification, brightness history, measurement history and calibrated gain
-selection. This verified prefix does not enable automatic WB in capture.
+The non-null metadata continuation is now joined through complete measurement
+preparation in the later section below. Calibrated final gain selection remains
+separate; this numerical prefix alone does not enable automatic WB in capture.
 
 ## Joined preprocessing through measurement entry
 
@@ -353,3 +353,41 @@ Native node allocation and logging remain explicit boundaries. Calibration
 curves and starting histories are synthetic and supplied explicitly; full IQ
 initialization, the measurement classifier and later gain/publishing stages
 remain unfinished. The frozen camera kit continues using fixed calibrated WB.
+
+## Outer preprocessing through complete measurement preparation
+
+`awb_preprocess::State::prepare_frame` joins the new numerical/environment/luma
+history prefix to the existing complete `awb_preparation::prepare` implementation.
+It supplies the derived stability threshold and unrounded brightness to that
+routine, shares the update flag across both representations, and preserves
+mode/interval bypass behavior. Its output includes prepared time-share light
+records, counts, grid, exclusions and histograms, ready for the remaining gain
+strategy. Arithmetic errors inside measurement preparation retain that API's
+partial-mutation semantics; discard the session after such an error.
+
+The measurement stability implementation is now shared with `awb_stability`
+instead of duplicated. The existing preparation API keeps its original checked
+1–4-group boundary; the standalone gate's broader storage corpus is not used
+to expand supported time-share modes implicitly.
+
+`mise run camera:rust:awb-prepared-frame` compares **64 persistent sequences /
+512 frames** against the original standard preprocessor through the return from
+its full native `PrepareMeasureResult` call. All numerical prefix, environment,
+brightness-list and measurement helper bodies execute natively together.
+Execution stops at mapped caller PC `0xd4ae0` (ELF `0xc4ae0`), before final gain
+selection, countdown changes, counter advancement and ISP reconfiguration.
+The incoming frame counter is supplied explicitly each frame; its outer
+lifecycle is not claimed by this test.
+
+Host and ARM Rust compare complete represented measurement-cache bytes plus
+prefix flags, brightness, environment and rolling-history/variance bits. Cases
+cover interval skips, one-/two-/four-group state, FASTAWBACT including group -1,
+changing names/light maps, incomplete sets, zero/equal histories, grid handling,
+exclusion weights and histogram state. Native strings/allocation/logging are
+explicit bounded adapters, as in the earlier preparation suite. The original
+500-sequence measurement-preparation regression is also retained after sharing
+the stability code. [Joined reference report](awb-prepared-frame-equivalence.json).
+
+The next gap is the caller's calibrated `AwbCalAwbGain` path and its subsequent
+hardware/publication policy, followed by complete IQ initialization and live AWB
+integration. The automatic-exposure kit remains fixed-WB and unchanged.

@@ -138,37 +138,26 @@ pub fn stability(
     if groups == 0 || groups > 4 || group < -1 || group as i64 >= groups as i64 {
         return Err(InvalidInput::Length);
     }
-    finite(&[threshold])?;
-    for gain in &state.history[..groups] {
-        finite(gain)?;
-    }
-    let red = i64_at(frame.0, 0x1de8);
-    let green = i64_at(frame.0, 0x1df0);
-    let blue = i64_at(frame.0, 0x1df8);
-    let gain = if red > 0 && blue > 0 {
-        [
-            green as f32 / red as f32,
-            1.,
-            1.,
-            green as f32 / blue as f32,
-        ]
-    } else {
-        [0.; 4]
+    let mut history = [[0.; 4]; 8];
+    history[..4].copy_from_slice(&state.history);
+    let mut gate = crate::awb_stability::State {
+        matched: state.stability_mask,
+        update: state.update,
+        history,
     };
-    state.stability_mask = 0;
-    for (i, previous) in state.history[..groups].iter().enumerate() {
-        if libm::fabsf(gain[0] - previous[0]) <= threshold
-            && libm::fabsf(gain[3] - previous[3]) <= threshold
-        {
-            state.stability_mask |= 1 << i;
-        }
-    }
-    if state.stability_mask != (1u8 << groups) - 1 {
-        state.update = true;
-    }
-    if state.update {
-        state.history[group.max(0) as usize] = gain;
-    }
+    gate.measure(
+        [
+            i64_at(frame.0, 0x1de8),
+            i64_at(frame.0, 0x1df0),
+            i64_at(frame.0, 0x1df8),
+        ],
+        groups,
+        group,
+        threshold,
+    )?;
+    state.stability_mask = gate.matched;
+    state.update = gate.update;
+    state.history.copy_from_slice(&gate.history[..4]);
     Ok(())
 }
 

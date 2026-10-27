@@ -129,6 +129,13 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-prepared-frame" => println!(
+                "{}",
+                awb_preparation_fixture::run_with_preprocess(
+                    &serde_json::from_str(a[1]).unwrap(),
+                    true
+                )
+            ),
             "awb-preparation" => println!(
                 "{}",
                 awb_preparation_fixture::run(&serde_json::from_str(a[1]).unwrap())

@@ -139,3 +139,24 @@ construction, remaining calibration/control selection and startup measurement
 publication are still required before live statistics can drive the recovered
 AE solver. This helper is deliberately not enabled in the fixed first-frame
 command yet, which continues to disable measurement blocks and automatic 3A.
+
+### Native selected-record defaults
+
+`ae_geometry::defaults` now reconstructs the 633-byte seed created by `AecInit`
+(ELF 0xa861c) before calibration is applied. The implementation writes the
+recovered control/window/coefficient constants into zeroed SDK records rather
+than embedding an opaque memory dump. The reference executes the original
+allocation, stack construction and record copies, captures the seed on entry
+to `AecCalibConfig`, and models only zero allocation and that calibration
+boundary. All 633 bytes match on host and ARM replay.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-defaults.py --arm
+```
+
+[Default-record report](ae-defaults-equivalence.json). The geometry suite also
+uses these independently captured native defaults in 60 of its 120 cases,
+checking default construction plus geometry composition. This is still the
+pre-calibration seed: `AecCalibConfig`/`AecUpdateConfig` selection and the live
+measurement/statistics controller are not replaced by these defaults. The
+fixed first-frame capture command continues to leave automatic 3A disabled.

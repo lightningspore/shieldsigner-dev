@@ -2,6 +2,7 @@
   "armReplayPassed": true,
   "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
   "cases": 120,
+  "nativeDefaultSeedCases": 60,
   "mismatches": 0,
   "scope": "AecHwConfig selected 633 bytes, two mirrored selectors and preservation of other private context bytes",
   "limitations": [

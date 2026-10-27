@@ -380,9 +380,20 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-defaults" => println!(
+                "{}",
+                ae_geometry::defaults()
+                    .iter()
+                    .map(|v| format!("{v:02x}"))
+                    .collect::<String>()
+            ),
             "ae-geometry" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
-                let mut record = [0x5au8; ae_geometry::RECORD_BYTES];
+                let mut record = if v["defaults"].as_bool().unwrap_or(false) {
+                    ae_geometry::defaults()
+                } else {
+                    [0x5au8; ae_geometry::RECORD_BYTES]
+                };
                 let geometry = ae_geometry::Geometry {
                     width: v["width"].as_u64().unwrap() as u32,
                     height: v["height"].as_u64().unwrap() as u32,

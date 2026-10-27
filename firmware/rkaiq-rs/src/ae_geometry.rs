@@ -97,3 +97,57 @@ mod tests {
         assert_eq!(record, original);
     }
 }
+
+/// Selected AE/histogram seed constructed by AecInit before AecCalibConfig.
+/// Literal values are recovered from ELF 0xa8898/9c/c4/c8/cc/d0; the SDK
+/// 104-byte AE record and 529-byte histogram record are contiguous here.
+pub fn defaults() -> [u8; RECORD_BYTES] {
+    let mut record = [0u8; RECORD_BYTES];
+    for (offset, value) in [
+        (0x48, 0x00020002u32),
+        (0x4c, 0x00640064),
+        (0x1c, 0x00640002),
+        (0x20, 0x00960064),
+        (0x24, 0x00640002),
+        (0x50, 0x00020096),
+        (0x54, 0x00640064),
+        (0x28, 0x00020064),
+        (0x2c, 0x00640096),
+        (0x30, 0x00960064),
+        (0x34, 0x00640096),
+        (0x58, 0x00960002),
+        (0x5c, 0x00640064),
+        (0x60, 0x00960096),
+        (0x64, 0x00640064),
+        (0x3c, 0x01010101),
+    ] {
+        record[offset..offset + 4].copy_from_slice(&value.to_le_bytes());
+    }
+    for (offset, value) in [
+        (0x38, 100u16),
+        (0xe, 0x101),
+        (0x10, 0x101),
+        (0x1a, 2),
+        (0x18e, 0x4d4b),
+        (0x9c, 0x4d4b),
+        (0x72, 0x4d4b),
+    ] {
+        record[offset..offset + 2].copy_from_slice(&value.to_le_bytes());
+    }
+    for (offset, value) in [
+        (0x18a, 5u8),
+        (0x98, 5),
+        (0x6e, 5),
+        (3, 1),
+        (0xd, 2),
+        (0x95, 2),
+        (0x3b, 2),
+        (0x187, 2),
+        (0x18d, 0x1d),
+        (0x9b, 0x1d),
+        (0x71, 0x1d),
+    ] {
+        record[offset] = value;
+    }
+    record
+}

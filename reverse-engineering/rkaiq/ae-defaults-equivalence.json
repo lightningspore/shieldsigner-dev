@@ -1,0 +1,11 @@
+{
+  "armReplayPassed": true,
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "bytes": 633,
+  "mismatches": 0,
+  "scope": "AecInit selected AE/histogram record seed at entry to AecCalibConfig",
+  "limitations": [
+    "calloc is an explicit zero-allocation boundary; AecCalibConfig is a controlled no-op capturing its incoming selected records.",
+    "This verifies pre-calibration defaults only, not complete AecInit calibration, measurement publication or automatic exposure."
+  ]
+}

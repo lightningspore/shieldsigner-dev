@@ -1676,3 +1676,24 @@ live run entered that wait, so live recovery from pool pressure remains open.
 After both passing runs, CmaAllocated is zero and MemAvailable is about 34 MB.
 This does not qualify optical QR, defect-removal efficacy, color accuracy or
 physical register timing. The frozen 0.0.33 ZIP is unchanged.
+
+### DPCC through the installed scan loop
+
+[Development scan evidence](dpcc-scan-hardware-validation.json) uses the same
+0.0.34 camera binary through the installed application's actual ScanScreen
+and live preview threads. In 6.77 seconds, the real QR decoder consumed ten
+frames and the headless preview sink rendered 27. The owner exited zero,
+preview joined, no thread errors occurred and the private socket was removed.
+AE/AWB processed 113 statistics frames and accepted 112 batches, retaining at
+most two snapshots. All fifteen DPCC and fifteen demosaic submissions match
+the original callbacks/converters. The final AWB translation matches all
+7,680 bytes, both normal AWB groups appear, and streaming saves no scene image.
+After shutdown, CmaAllocated is zero and MemAvailable is 34,912 KiB.
+
+This decoder frame count is workload coverage, not ten successful QR decodes.
+No optical target success is claimed. Display rendering and cancellation use
+software substitutes; installed application source is patched only in memory.
+The [0.0.34 startup audit](profile-module-audit-0.0.34.json) independently
+confirms DPCC enabled and seven remaining selected-profile gaps: CCM, LSC,
+spatial/temporal Bayer noise reduction, YNR, CNR and sharpening. The frozen
+0.0.33 audit and archive are unchanged.

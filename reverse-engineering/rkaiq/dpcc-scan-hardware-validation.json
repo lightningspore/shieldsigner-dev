@@ -1,0 +1,1489 @@
+{
+  "passed": true,
+  "sourceRevision": "93e9c77",
+  "integration": {
+    "passed": true,
+    "opticalScanQualified": false,
+    "physicalDisplayQualified": false,
+    "physicalButtonsQualified": false,
+    "scanSourceSha256": "1955c6bd8733cb4238ec8880c5b6239abd2761f7de5ceb0e14fd64234df0dbaa",
+    "binarySha256": "b392d59b18390c519b7ca317c5d316df281abe4298ddd0f8e871a62de77c9887",
+    "helperSha256": "662c09fe7d36159363661146f44f83fe33ff94f789fecd7d95544304b5e3c6e8",
+    "controlSummary": {
+      "automaticWhiteBalance": true,
+      "error": null,
+      "event": "automatic-ae-finished",
+      "lastSof": 170,
+      "lastSofTimestampNs": 2736647294221,
+      "maxParameterSnapshots": 2,
+      "parameterSnapshots": 2,
+      "parameterSubmissions": 112,
+      "physicalApplicationVerified": false,
+      "processedStatistics": 113,
+      "retiredParameterSnapshots": 111,
+      "sensorQueries": [
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        },
+        {
+          "error": null,
+          "query": "active-pad-0-format",
+          "request": "0xc0585604"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0902",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x009e0901",
+          "request": "0xc0445624"
+        },
+        {
+          "error": null,
+          "query": "pad-0-frame-interval",
+          "request": "0xc0305615"
+        },
+        {
+          "error": null,
+          "query": "control-minimum-0x00980911",
+          "request": "0xc0445624"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-noise-switch",
+          "request": "0x801056c9"
+        },
+        {
+          "error": "Not a tty (os error 25)",
+          "query": "optional-conversion-gain-ratio",
+          "request": "0x800c56d2"
+        }
+      ],
+      "sensorTraceLimit": 256,
+      "sensorWrites": [
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 128
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 177
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 128
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 332
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 135
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 193
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 221
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 232
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 252
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 271
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 282
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 300
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 313
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 320
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 331
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 340
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 345
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 353
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 360
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 363
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 368
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 371
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 373
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        },
+        {
+          "error": null,
+          "id": 10356993,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 64
+        },
+        {
+          "error": null,
+          "id": 10356995,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 375
+        },
+        {
+          "error": null,
+          "id": 9963793,
+          "operation": "set-control",
+          "request": "0xc008561c",
+          "success": true,
+          "value": 408
+        }
+      ],
+      "success": true
+    },
+    "seconds": 6.773670752999806,
+    "decodedFrames": 10,
+    "renderedFrames": 27,
+    "ownerExitCode": 0,
+    "previewJoined": true,
+    "sessionDirectory": "/shieldsigner-camera-tests/dev-34-app-results/camera-zyw95xbr",
+    "limitations": [
+      "Actual installed scan/preview code and QR decoder receive real frames.",
+      "Display sink and cancellation inputs are software substitutes.",
+      "No decoded contents are recorded and no successful optical target is claimed."
+    ],
+    "threadErrors": []
+  },
+  "dpccNativeComparison": {
+    "passed": true,
+    "updates": 15,
+    "isoRange": [
+      50,
+      146
+    ],
+    "frames": [
+      1,
+      6,
+      7,
+      9,
+      10,
+      12,
+      13,
+      15,
+      16,
+      18,
+      19,
+      21,
+      22,
+      24,
+      25
+    ],
+    "isos": [
+      50,
+      52,
+      75,
+      90,
+      98,
+      110,
+      117,
+      125,
+      129,
+      134,
+      137,
+      141,
+      143,
+      145,
+      146
+    ],
+    "resultBytesComparedPerUpdate": 192,
+    "packedBytesComparedPerUpdate": 186,
+    "startupDpccEnabled": true,
+    "startupMatchesFirstRuntimeResult": true,
+    "processedStatistics": 113,
+    "parameterSubmissions": 112,
+    "maxParameterSnapshots": 2,
+    "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "ownerLogSha256": "44b5f375bebccd86d55e72624d1bcf4abf89a743b9138c3b0a9281008c5e9e79",
+    "initialParametersSha256": "618e90d0e7b3c2909d821a8bfa748037e7cf4a0330e3c35eefec89715c7d1748",
+    "limitations": [
+      "Native init retains allocator/IQ-module-lookup/log boundaries, and the dispatcher uses a controlled typed C++ cast.",
+      "The callback time input is an unused placeholder in this expert/sensor-auto-disabled path; actual logged gains drive ISO.",
+      "Successful QBUF is submission proof, not independent physical register/pixel application proof.",
+      "Optical QR and image-quality qualification remain open."
+    ]
+  },
+  "demosaicNativeComparison": {
+    "passed": true,
+    "submittedUpdates": 15,
+    "isoRange": [
+      50,
+      146
+    ],
+    "frames": [
+      1,
+      6,
+      7,
+      9,
+      10,
+      12,
+      13,
+      15,
+      16,
+      18,
+      19,
+      21,
+      22,
+      24,
+      25
+    ],
+    "isos": [
+      50,
+      52,
+      75,
+      90,
+      98,
+      110,
+      117,
+      125,
+      129,
+      134,
+      137,
+      141,
+      143,
+      145,
+      146
+    ],
+    "processedStatistics": 113,
+    "parameterSubmissions": 112,
+    "maxParameterSnapshots": 2,
+    "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "ownerLogSha256": "44b5f375bebccd86d55e72624d1bcf4abf89a743b9138c3b0a9281008c5e9e79",
+    "hardwareBytesComparedPerUpdate": 112,
+    "packedBytesComparedPerUpdate": 57,
+    "limitations": [
+      "Records are logged after successful QBUF; queued final proposals may be cancelled during shutdown.",
+      "Scheduler exposure association is not independent physical gain-timing proof.",
+      "Diagnostic logging is modeled; original callback, tuning, quantization and converter instructions execute."
+    ]
+  },
+  "awbNativeTranslation": {
+    "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "statisticsSha256": "95eff46ef021caee6796811cae5be3ac1e128e539f0632c2378c5896f36c4fbe",
+    "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "translatedSha256": "962e69b6da9133f7b23d3f7a3ae67e44e27e1c24b7ac307b85d610e6b6901f01",
+    "frameId": 168,
+    "parametersId": 166,
+    "bytesCompared": 7680,
+    "mismatches": 0,
+    "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+    "limitations": [
+      "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+      "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+    ]
+  },
+  "control": {
+    "kind": "normal-timeshare-live-capture-check",
+    "passed": true,
+    "aeFrames": 113,
+    "awbFrames": 113,
+    "normalFrames": 111,
+    "normalGroups": [
+      0,
+      1
+    ],
+    "finalFrame": 168,
+    "finalParametersId": 166,
+    "maxActiveLights": 7,
+    "nativeTranslationChecked": true,
+    "sceneImageSaved": false,
+    "parameterSubmissions": 112,
+    "maxParameterSnapshots": 2,
+    "retiredParameterSnapshots": 111,
+    "scope": "Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification"
+  }
+}

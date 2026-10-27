@@ -1749,3 +1749,45 @@ Run `mise run camera:rust:cnr-selection -- --adb SERIAL --report LOCAL.json`
 after building and deploying the exact ARM fixture. Physical CPU replay makes
 no ISP writes. JSON preparation, fixed quantization and persistent/live CNR
 remain separate gates; four profile blocks remain disabled in live capture.
+
+
+### CNR calibration preparation (0.0.34 development)
+
+`cnr_calibration::prepare` reconstructs complete
+`cnr_config_setting_param_json_V30` (ELF `0xe1b10`) and its SNR lookup
+(`0xe1948`) and initializer (`0xe19bc`). The first setting whose SNR name starts
+with the requested name wins; absent matches fall back to zero and an empty
+request selects the first setting. Sensor-mode labels are not read here.
+Global enable writes the table header and each copied row's enable byte.
+Up to thirteen rows copy ISO, downscale bytes, weight mode, all scalar strengths
+and three coefficient curves into the persistent tuning table, preserving
+padding and untouched rows. Version strings are not needed by this path.
+
+[Full native and physical CPU evidence](cnr-calibration-equivalence.json)
+compares every prepared byte and the selected index across 100 cases: six
+unchanged SC3336-profile requests plus varied settings/order, prefix/fallback
+names, partial/over-thirteen rows, arbitrary downscale bytes, finite strengths,
+curves and poisoned prior storage. Full original lookup/configuration/initializer
+instructions run; typed SDK graph, libc strings/memory and diagnostics are the
+explicit oracle boundaries. Every SDK graph byte is checked unchanged.
+Verbatim pinned SDK ARM declarations independently verify IQ root/setting/row
+sizes (16/16/184) and all field groups.
+
+Rust validates bounded nonempty arrays and optional explicit counts, ASCII SNR
+names, downscale bytes, booleans, finite f32 values and exact 13/4/6 curve sizes.
+Malformed data leaves the table unchanged; this is not a claim that native
+handles malformed pointers/JSON safely. All 109 library/five Unix tests,
+no-default-features, static ARM and SDK/kernel layouts pass.
+Run `mise run camera:rust:cnr-calibration -- --adb SERIAL --report LOCAL.json`
+after building/deploying the exact fixture. CPU replay makes no ISP writes;
+fixed quantization, persistent controller and live CNR are still open.
+
+
+The calibration build's exact camera executable also passed a fresh 192-image
+regression with all five currently live IQ blocks and final AWB translation
+matching native. An application attempt missed its fixed six-second decoder/
+render count threshold despite successful camera processing and shutdown;
+its old helper did not retain the failing counts. A repeat on the identical
+binary passed (ten decoder frames/27 renders), with all live native comparisons
+exact. Both outcomes are retained in the report; the first shortfall's exact
+cause is unqualified. This is regression evidence, not live CNR qualification.

@@ -436,3 +436,22 @@ _Static_assert(offsetof(AcnrV30_ExpInfo_t,isoLevelLow)==72,"CNR bracket");
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'cnr-selection-sdk-layout.o')],check=True)
 print('PASS: CNR table=2396/selected=180/exposure=88 and all selector offsets verified')
+
+cnr_json=dpcc_header('cnr_head_v30.h')
+source=cache/'cnr-json-sdk-layout.c'
+source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n#define ISP_HW_V32 1\n'+'\n'.join(dpcc_record(n,cnr_json) for n in ['CalibDbV2_CNRV30_T_ISO_s','CalibDbV2_CNRV30_T_Set_s','CalibDbV2_CNRV30_Tuning_s','CalibDbV2_CNRV30_s'])+'''
+_Static_assert(sizeof(CalibDbV2_CNRV30_t)==16,"CNR IQ root");
+_Static_assert(offsetof(CalibDbV2_CNRV30_t,TuningPara.Setting)==8,"CNR IQ settings");
+_Static_assert(sizeof(CalibDbV2_CNRV30_T_Set_t)==16,"CNR IQ setting");
+_Static_assert(offsetof(CalibDbV2_CNRV30_T_Set_t,Tuning_ISO)==8,"CNR IQ rows pointer");
+_Static_assert(sizeof(CalibDbV2_CNRV30_T_ISO_t)==184,"CNR IQ row");
+_Static_assert(offsetof(CalibDbV2_CNRV30_T_ISO_t,down_scale_x)==4,"CNR IQ downscale");
+_Static_assert(offsetof(CalibDbV2_CNRV30_T_ISO_t,thumb_sigma)==8,"CNR IQ floats");
+_Static_assert(offsetof(CalibDbV2_CNRV30_T_ISO_t,bf_wgt0_sel)==56,"CNR IQ discrete mode");
+_Static_assert(offsetof(CalibDbV2_CNRV30_T_ISO_t,global_alpha)==60,"CNR IQ second float group");
+_Static_assert(offsetof(CalibDbV2_CNRV30_T_ISO_t,gain_adj_strength_ratio)==92,"CNR IQ sigma curve");
+_Static_assert(offsetof(CalibDbV2_CNRV30_T_ISO_t,thumb_filter_wgt_coeff)==144,"CNR IQ spatial curve");
+_Static_assert(offsetof(CalibDbV2_CNRV30_T_ISO_t,gaus_coeff)==160,"CNR IQ gaussian curve");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'cnr-json-sdk-layout.o')],check=True)
+print('PASS: CNR IQ root=16/setting=16/row=184 and preparation offsets verified')

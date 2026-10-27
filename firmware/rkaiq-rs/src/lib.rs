@@ -377,3 +377,6 @@ pub mod baynr_frame;
 pub mod ae_cis;
 pub mod isp_cnr;
 pub mod cnr_selection;
+
+#[cfg(feature = "diagnostics")]
+pub mod cnr_calibration;

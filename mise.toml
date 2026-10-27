@@ -708,3 +708,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:cnr-selection"]
 description = "Compare complete chroma NR ISO interpolation, nearest-row fields and retained padding"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/cnr-selection.py"
+
+[tasks."camera:rust:cnr-calibration"]
+description = "Compare original chroma NR SNR lookup and complete tuning table preparation"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/cnr-calibration.py"

@@ -3476,6 +3476,12 @@ fn main() {
                 }
                 println!("{}",serde_json::json!(frames));
             }
+            "cnr-prepare" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();let s=v["table"].as_str().unwrap();
+                let mut table=(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>().try_into().unwrap();
+                let indices=shieldsigner_rkaiq::cnr_calibration::prepare(&v["calibration"],v["noise"].as_str().unwrap(),&mut table).unwrap();
+                println!("{}",serde_json::json!({"table":table.iter().map(|v|format!("{v:02x}")).collect::<String>(),"indices":indices}));
+            }
             "baynr-prepare" => {
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();let s=v["table"].as_str().unwrap();
                 let mut table=(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>().try_into().unwrap();

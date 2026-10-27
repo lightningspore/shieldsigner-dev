@@ -54,7 +54,9 @@ AWB measurement parameter conversion also matches **2,000 native ARM cases**, co
 
 Six AWB gain/temporal routines now match **6,000 native ARM cases**, including weighted-statistics conversion, normalization, mixture, adaptive damping and the complete temporal gain stage. Integer-to-float reference conversion executes the SDK GCC runtime's original instructions. Illumination classification, full calibrated AWB policy and live publication remain unfinished. See [AWB.md](AWB.md#gain-calculation-and-temporal-damping).
 
-AWB illumination probabilities and their weighted output gain now match **2,000 complete native sequences**: selected-region white-point filtering, gain distance, brightness, per-light curves, combined probabilities and channel accumulation/normalization. Upstream construction of those selected-region/calibrated inputs and the outer AWB controller remain unfinished. See [AWB.md](AWB.md#illumination-probabilities-and-weighted-gain).
+AWB illumination probabilities and their weighted output gain now match **2,000 complete native sequences**: selected-region white-point filtering, gain distance, brightness, per-light curves, combined probabilities and channel accumulation/normalization. The preparation stage below supplies selected counts/gains from full SDK frames; calibrated input construction and the outer controller remain unfinished. See [AWB.md](AWB.md#illumination-probabilities-and-weighted-gain).
+
+Complete SDK AWB measurement preparation now matches **500 native sequences across 1,144 frames**, including the original stability gate, time-share completeness, per-light pregain adjustment, grid conversion, exclusion aggregation and histograms. **124 sequences include fast group −1**, preserving its native history/histogram behavior. Full kernel-to-SDK translation, calibration loading, outer AWB policy and live startup remain unfinished. See [AWB.md](AWB.md#measurement-preparation-and-time-share-state).
 
 ## Exact originals
 

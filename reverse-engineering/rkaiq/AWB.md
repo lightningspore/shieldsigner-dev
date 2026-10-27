@@ -95,4 +95,40 @@ Finally, weighted-gain accumulation starts four channels at zero, traverses ligh
 
 The reference executes the pinned GCC runtime's signed integer-to-float conversion and integer division instructions. Bounded `strcmp` semantics and successful single `malloc`/`free` are explicit standard-library boundaries; allocation failures and arbitrary invalid native pointers are outside the Rust value API. The shared `awb_reference.py` executor is also used by the earlier 6,000-case gain suite, which is rerun after its refactor. [Probability reference report](awb-probability-equivalence.json).
 
-The checked API requires 1–255 lights, equal output lengths, finite inputs, nonempty increasing prior tables and nonzero reference green denominators. Errors during calculation can leave intermediate output fields changed; this API does not promise atomic mutation on invalid arithmetic inputs. These tests establish arithmetic/state equivalence in the stated corpus, not physical calibration or a functioning independent camera service. Upstream measurement preparation, illumination classification, spatial/temporal policy, gain adjustments, convergence, full calibrated initialization and live publication remain unfinished.
+The checked API requires 1–255 lights, equal output lengths, finite inputs, nonempty increasing prior tables and nonzero reference green denominators. Errors during calculation can leave intermediate output fields changed; this API does not promise atomic mutation on invalid arithmetic inputs. These tests establish arithmetic/state equivalence in the stated corpus, not physical calibration or a functioning independent camera service. The SDK measurement preparation below supplies selected counts/gains. Full upstream translation, calibration loading, illumination classification, spatial/temporal policy, gain adjustments, convergence, full calibrated initialization and live publication remain unfinished.
+
+## Measurement preparation and time-share state
+
+`awb_preparation::prepare` reconstructs complete `PrepareMeasureResult`, ELF `0xc3180` (Ghidra `0xd3180`), including its call to `IsMeasureResultStable4`, ELF `0xc2f90`. The API owns no vendor pointers: mutable light records, seen flags, totals, grid cells and other caches are explicit borrowed buffers/typed state. `Frame` borrows the exact **7,680-byte SDK full-V32 record**. The existing kernel statistics decoder is not yet a complete producer of this SDK record/configuration metadata.
+
+The pinned SDK declarations are compiled independently for ARM in `camera:rust:layout`. They verify the full frame size and these source offsets:
+
+| SDK field | Offset |
+| --- | --- |
+| Four light results, each containing two weighted-statistics records | `0x0` |
+| Four second white-point counts | `0xc0` |
+| 225 block results | `0xd0` |
+| Four exclusion-region results | `0x1cf0` |
+| Eight histogram bins | `0x1d50` |
+| 108-byte measurement-effect metadata | `0x1d70` |
+| Global block RGB sum | `0x1de0` |
+
+Effect metadata supplies the grid mode, up to four physical-light-to-cache mappings, signed time-share group, 64-byte configuration signature and R/Gr/Gb/B pregains. The checked API supports 1–255 total cached lights and 1–4 time-share groups, bounded terminated signatures, valid group indices and the special **fast group −1**. Finite curves/pregains and nonzero current red/blue pregains are required. Invalid arithmetic may leave intermediate state changed; this API does not promise rollback.
+
+The stability helper calculates `[G/R, 1, 1, G/B]` from the signed global sums when R and B are positive, or four zeros otherwise. It compares only red/blue differences against every group's previous gains and records a stability bit mask. Any unstable group sets `update=true`; an inherited true flag is retained. When update is true it stores the new gains in the current history slot, mapping group −1 to slot zero. If update remains false, the outer preparation routine returns after this gate and preserves all other caches.
+
+On update, a changed configuration signature clears the seen-light flags and all four signature slots. Each physical light's two SDK weighted-statistics records are converted by the previously recovered gain helper and written to its mapped **172-byte light cache**; their rounded counts narrow to the native low 32 bits. The second count and four pregains are cached too. Unwritten cache fields retain their previous bytes. An out-of-range nonnegative mapped light index clears seen flags and stops that mapping loop, preserving earlier writes exactly as native code does.
+
+Fast mode uses the low byte of the configured fast-light count, stores its signature in slot zero and declares the result complete. Normal mode requires matching configuration signatures across groups and every seen-light flag. Incomplete measurements still update grid/exclusion/histogram caches; they do not perform the complete-set count summation/pregain adjustment.
+
+For a complete set, preparation sums the two region counts with u32 wrapping and adjusts cached red/blue gains by `gain × stored_pregain / current_pregain`, preserving separate f32 multiply/divide rounding. It copies the current pregains into the prior-gain record. Native clearing uses only `active_light_count` total slots even though it adds two region totals: **with one active light, the prior second total is retained and incremented**. This behavior is preserved.
+
+Grid mode zero converts each block's signed 64-bit RGB sums using the **signed low 32 bits** of its count as divisor, then multiplies by `1/256`. A zero low count preserves the old cell; the high count word is ignored by this native path. Other modes clear grid-valid flags without changing cell values.
+
+Preparation clears seven 52-byte exclusion records and fills the first four from the SDK data. Their gain divisor uses the native wrapping 64-bit count shifted left by eight. Regions with configured kind 3 contribute interpolated weights to an FMA accumulation of their unsigned low-word counts. Above double `1e-5`, their gains are combined with the original product/division/FMA order and normalized; the aggregate count uses native unsigned float conversion. The remaining cleared fields stay zero.
+
+The current group's histogram cache is replaced, and a complete set rebuilds the eight-bin aggregate from all configured groups with u32 wrapping. **Fast group −1 writes the incoming histogram into the aggregate immediately before native code clears/rebuilds it from the existing group caches**, so that incoming histogram is not retained there. The Rust API preserves this aliasing outcome without exposing an out-of-bounds pointer.
+
+`mise run camera:rust:awb-preparation` compares **500 sequences and 1,144 frames**, using persistent one-/two-/four-frame caches. **124 sequences include fast group −1.** The native original preparation routine calls its own original stability, gain-conversion, normalization and interpolation code. The reference checks every represented state byte, every unrelated context/strategy byte, all input/calibration bytes, complete and incomplete sets, inherited/stability update gates, signature changes, invalid light mappings, one-light total behavior, zero grid counts, exclusion mixes and histogram wrapping. SDK GCC integer conversion executes as original ARM instructions. Successful bounded allocation/free, string copying/comparison and standard memory operations are explicit harness boundaries; vendor logging/debug formatting is outside the value API. [Reference report](awb-preparation-equivalence.json).
+
+The caller resets its incoming update flag before each test frame; the surrounding `AwbPreProcV32` brightness/variance/scheduling policy is not reconstructed by this suite. Full kernel-to-SDK translation, calibration construction, per-illumination/spatial strategy, convergence and live publication remain unfinished. Numeric replay still does not prove independent camera startup or image quality.

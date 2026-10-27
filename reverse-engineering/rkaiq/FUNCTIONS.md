@@ -90,3 +90,7 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 ## AWB illumination probabilities
 
 `awb_probability::calculate` reconstructs `AwbCalWpNoProbablity` followed by the complete `AwbCalTotalProbablity` call tree. `weighted_gain` reconstructs `AwbCalGainTotal`. [Six entries, retained counts, all per-light values and 2,000 full native sequences](AWB.md#illumination-probabilities-and-weighted-gain).
+
+## AWB measurement preparation
+
+`awb_preparation::prepare` reconstructs the numerical/cache behavior of complete `PrepareMeasureResult`, ELF `0xc3180`, including original `IsMeasureResultStable4`, ELF `0xc2f90`. `stability` also exposes that gate separately. [SDK frame ABI, persistent buffers, fast group −1 and 500 native sequences/1,144 frames](AWB.md#measurement-preparation-and-time-share-state). Outer `AwbPreProcV32` scheduling/strategy is not included in this API.

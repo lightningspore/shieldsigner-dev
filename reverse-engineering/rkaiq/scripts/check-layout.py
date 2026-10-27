@@ -197,3 +197,21 @@ _Static_assert(offsetof(rk_aiq_wb_gain_v32_t,applyPosition)==16,"gain position")
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'awb-gain-sdk-layout.o')],check=True)
 print('PASS: SDK weighted AWB statistics=24 bytes/alignment 8, gain result=20 bytes')
+
+# Entire SDK AWB frame consumed by PrepareMeasureResult, including effect
+# metadata and the final signed global RGB sum. Declarations remain verbatim.
+records=[]
+for version,tag,alias in [
+ ('v201','rk_aiq_awb_stat_wp_res_v201_s','rk_aiq_awb_stat_wp_res_v201_t'),
+ ('v201','rk_aiq_awb_stat_blk_res_v201_s','rk_aiq_awb_stat_blk_res_v201_t'),
+ ('v201','rk_aiq_awb_stat_wp_res_light_v201_s','rk_aiq_awb_stat_wp_res_light_v201_t'),
+ ('v32','rk_aiq_awb_stat_cfg_effect_v32_s','rk_aiq_awb_stat_cfg_effect_v32_t'),
+ ('v32','rk_aiq_awb_stat_res_v32_s','rk_aiq_awb_stat_res_v32_t')]:
+    records.append(sdk_record('rk_aiq_types_awb_stat_'+version+'.h',r'typedef struct '+tag+r' \{.*?\} '+alias+';'))
+source=cache/'awb-preparation-sdk-layout.c'
+assertions=['_Static_assert(sizeof(rk_aiq_awb_stat_res_v32_t)==0x1e00,"full AWB frame");','_Static_assert(sizeof(rk_aiq_awb_stat_cfg_effect_v32_t)==108,"AWB effect");']
+for field,offset in [('light',0),('WpNo2',0xc0),('blockResult',0xd0),('excWpRangeResult',0x1cf0),('WpNoHist',0x1d50),('awb_cfg_effect_v32',0x1d70),('dbginfo_fd',0x1ddc),('sumBlkRGB',0x1de0)]:assertions.append(f'_Static_assert(offsetof(rk_aiq_awb_stat_res_v32_t,{field})=={offset},"AWB frame {field}");')
+for field,offset in [('blkMeasureMode',0),('lightNum',4),('groupIllIndxCurrent',8),('IllIndxSetCurrent',12),('timeSign',28),('preWbgainSw',92)]:assertions.append(f'_Static_assert(offsetof(rk_aiq_awb_stat_cfg_effect_v32_t,{field})=={offset},"AWB effect {field}");')
+source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n'+macros+'\n'+sdk_record('rk_aiq_types_awb_stat_v201.h',r'#define RK_AIQ_AWB_STAT_WP_RANGE_NUM_V201[^\n]*')+'\n'+'\n'.join(awb_declarations+records+assertions)+'\n')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'awb-preparation-sdk-layout.o')],check=True)
+print('PASS: complete SDK AWB frame=7680 bytes; effect=108, all prepared input offsets verified')

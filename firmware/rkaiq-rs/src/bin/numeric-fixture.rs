@@ -1,6 +1,8 @@
 //! Line protocol used by the ARM-original differential harness.
 use shieldsigner_rkaiq::*;
 use std::io::{self, BufRead};
+#[path = "../awb_preparation_fixture.rs"]
+mod awb_preparation_fixture;
 fn f(s: &str) -> f32 {
     f32::from_bits(u32::from_str_radix(s, 16).unwrap())
 }
@@ -22,6 +24,10 @@ fn main() {
         let line = line.unwrap();
         let a: Vec<_> = line.split_whitespace().collect();
         match a[0] {
+            "awb-preparation" => println!(
+                "{}",
+                awb_preparation_fixture::run(&serde_json::from_str(a[1]).unwrap())
+            ),
             "interp" => emit(&[interpolate(&floats(a[2]), &floats(a[3]), f(a[1])).unwrap()]),
             "matrix" | "offset" => {
                 let x = floats(a[4]);

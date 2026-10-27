@@ -19,7 +19,7 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
-for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','AWB.md','ISP.md','PARAMETERS.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','isp-black-level-equivalence.json','isp-demosaic-equivalence.json','demosaic-selection-equivalence.json','parameter-queue-equivalence.json','ae-measurement-equivalence.json','awb-measurement-equivalence.json','awb-gain-equivalence.json','awb-probability-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
+for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','AWB.md','ISP.md','PARAMETERS.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','isp-black-level-equivalence.json','isp-demosaic-equivalence.json','demosaic-selection-equivalence.json','parameter-queue-equivalence.json','ae-measurement-equivalence.json','awb-measurement-equivalence.json','awb-gain-equivalence.json','awb-probability-equivalence.json','awb-preparation-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'lifecycle-fixtures'/name,'lifecycle-fixtures/'+name)
 for name in ['inputs.txt','expected.txt']:copy(base/'binding-fixtures'/name,'binding-fixtures/'+name)
@@ -61,6 +61,8 @@ for name in ['inputs.txt','expected.txt']:copy(base/'awb-gain-fixtures'/name,'aw
 assert smoke['awbGainReferenceCases']==6000 and smoke['awbGainMatch']
 for name in ['inputs.txt','expected.txt']:copy(base/'awb-probability-fixtures'/name,'awb-probability-fixtures/'+name)
 assert smoke['awbProbabilityReferenceCases']==2000 and smoke['awbProbabilityMatch']
+for name in ['inputs.txt','expected.txt']:copy(base/'awb-preparation-fixtures'/name,'awb-preparation-fixtures/'+name)
+assert smoke['awbPreparationReferenceCases']==500 and smoke['awbPreparationMatch']
 assert smoke['aeBigGridReferenceCases']==1000 and smoke['aeBigGridMatch']
 assert smoke['aeHistogramReferenceCases']==1000 and smoke['aeHistogramMatch']
 assert smoke['aeGridReferenceCases']==1000 and smoke['aeGridMatch']
@@ -252,6 +254,13 @@ if cmp -s "$kit_dir/awb-probability-fixtures/expected.txt" "$result_dir/awb-prob
     echo "PASS: AWB illumination probabilities and weighted gains match the original reference."
 else
     echo "FAIL: AWB illumination weighting differs; preserve $result_dir/awb-probability-actual.txt" >&2
+    exit 1
+fi
+"$kit_dir/bin/numeric-fixture" < "$kit_dir/awb-preparation-fixtures/inputs.txt" > "$result_dir/awb-preparation-actual.txt"
+if cmp -s "$kit_dir/awb-preparation-fixtures/expected.txt" "$result_dir/awb-preparation-actual.txt"; then
+    echo "PASS: AWB measurement preparation and time-share caches match the original reference."
+else
+    echo "FAIL: AWB preparation differs; preserve $result_dir/awb-preparation-actual.txt" >&2
     exit 1
 fi
 "$kit_dir/bin/camera-probe" list > "$result_dir/camera-nodes.json"

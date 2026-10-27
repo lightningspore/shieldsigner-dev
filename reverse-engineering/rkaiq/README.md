@@ -1,6 +1,6 @@
 # RKAIQ → Rust reconstruction
 
-**Status: partial numerical reconstruction and camera-test tools. This is not a replacement `librkaiq.so`, and the existing image is unchanged.** The active objective is a Rust implementation of the camera-processing path used by ShieldSigner. Real camera tests are deferred to the next hardware session.
+**Status: partial numerical reconstruction and camera-test tools. This is not a replacement `librkaiq.so`, and the existing image is unchanged.** The active objective is a Rust implementation of the camera-processing path used by ShieldSigner. A clean-boot hardware session has now produced a recognizable 640×480 ISP frame and valid AE statistics; automatic 3A and application integration remain unfinished.
 
 **Current priority: a runnable single-camera path.** Connect live graph/format setup, calibrated initial parameters and persistent queues before expanding optional algorithms or releasing more isolated routine kits. The next functional checkpoint is a usable SC3336 frame without vendor bootstrap, followed by the application's QR capture and required exposure/white-balance behavior. [Critical path and current blockers](ISP.md#current-implementation-priority).
 
@@ -151,3 +151,17 @@ The probe explicitly uses the kernel's ARM32, long-sized V4L2 timestamp layout, 
 5. Provide the required RKAIQ API surface or replace its callers, then verify startup, frame delivery, exposure transitions, shutdown and restart on real hardware.
 
 The completed numeric routines and diagnostic tools are an initial milestone toward this objective. They do not close the remaining implementation above.
+
+
+### First physical ISP capture
+
+On 2026-10-26, the Rust first-frame path saved a recognizable 640×480 NV12
+image and valid AE statistics on a Luckfox Pico/SC3336 after rebooting without
+vendor application startup. Only the camera kernel drivers were loaded;
+`rkipc`, RKAIQ userspace and the Rockit module were not started in that observed
+boot. The original startup script was restored and checksum-verified.
+[Recorded hardware result](hardware-first-frame-validation.json) and
+[reproduction details](HARDWARE-TEST.md#clean-boot-isp-capture-milestone) describe
+the scope. This demonstrates a physical ISP frame, not a complete replacement
+camera service: fixed exposure/WB, missing SOF matches, frame association,
+automatic control, QR quality and application integration remain open.

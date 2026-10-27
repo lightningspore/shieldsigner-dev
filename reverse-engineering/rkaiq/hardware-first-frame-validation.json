@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-26",
+  "board": "Luckfox Pico",
+  "sensor": "SC3336",
+  "kernel": "5.10.160",
+  "sourceCommit": "941a905",
+  "vendorApplicationStartupSkippedForObservedBoot": true,
+  "startupScriptRestoredAndChecksumMatched": true,
+  "rockitModuleLoaded": false,
+  "toolLinksRkaiq": false,
+  "output": {
+    "width": 640,
+    "height": 480,
+    "fourcc": "NV12",
+    "bytes": 460800,
+    "sha256": "355168061860bf803ef310491ff0a27c76d2e793440f00bd055b88ef8b1677b6",
+    "lumaMinimum": 23,
+    "lumaMaximum": 132,
+    "lumaMean": 45.337431640625
+  },
+  "rawBridgeCompletedFrames": 3,
+  "sofMatches": 0,
+  "sofMissing": 4,
+  "statisticsFrames": 2,
+  "statisticsValid": true,
+  "automaticExposure": false,
+  "automaticWhiteBalance": false,
+  "limitations": [
+    "Observed clean-boot capture with explicit kernel module loading and manual output format selection; not a general boot-service replacement.",
+    "Image is recognizable but dark; no QR decoding or quality qualification.",
+    "SOF association and statistics/exposure association remain unverified.",
+    "Existing command coldStartProven fields remain false; this report records external boot evidence.",
+    "Private scene images and detailed device logs remain local and are not published."
+  ]
+}

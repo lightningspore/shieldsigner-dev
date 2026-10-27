@@ -615,3 +615,46 @@ The subsequent combined attempt reported EPERM and the kernel logged
 pipeline. Establish an idle graph with the correct linear input before retrying.
 The board still answered diagnostic shells after these attempts. Captured logs
 remain in the ignored local hardware artifact directory.
+
+
+## Clean-boot ISP capture milestone
+
+A subsequent controlled reboot skipped `/etc/init.d/S21appinit` for one boot.
+The one-shot wrapper restored the original file before exiting; SHA-256
+`61dcd3bdb6740771b296611ab83e3238f9bc45b2ca0ec5ae78b542085be592e5`
+matched the saved original afterward, and the temporary backup was removed.
+A boot marker and process/module inventory were retained locally. Ordinary
+future boots retain their original behavior.
+
+Skipping that service also skips its kernel module loader. The test loaded
+available modules from `/oem/usr/ko` in this order: `rk_dvbm`,
+`videobuf2-memops`, `videobuf2-common`, `videobuf2-v4l2`, `videobuf2-vmalloc`,
+`videobuf2-cma-sg`, `sc3336`, `video_rkcif`, `video_rkisp`,
+`phy-rockchip-csi2-dphy-hw`, `phy-rockchip-csi2-dphy`. Missing module files were
+skipped because some components are built in. Then it wrote 1 to both CIF/ISP
+`clr_unready_dev` parameters as the image's loader does. It did **not** run the
+rest of `insmod_ko.sh`, load Rockit/its MCU firmware, or start `rkipc`/RKAIQ.
+
+With the idle graph, the explicit plan selected sensor `/dev/v4l-subdev2`,
+ISP `/dev/v4l-subdev3`, TX `/dev/video0`, RX `/dev/video18`, DPHY sink pad 0 and
+CSI sink pad 0. It disabled middle-exposure entity 42's link and enabled
+short/single-exposure entity 48's link to ISP entity 1, retaining the CIF link.
+Entity/node numbers must be rediscovered on other images. Before startup,
+`v4l2-ctl -d /dev/video11 --set-fmt-video=width=640,height=480,pixelformat=NV12`
+selected the smaller image output; the existing first-frame command retains
+that output size while configuring the sensor/ISP input at native resolution.
+
+`first-frame-sc3336` then succeeded with parameter node `/dev/video20`, image
+node `/dev/video11` and statistics node `/dev/video19`, using the matching full
+SC3336 IQ file. It completed three raw transfers, saved a 460,800-byte NV12
+image and two statistics frames. The preview is recognizable but dark at fixed
+3 ms exposure. AE translation reported valid nonempty histograms. Four SOF
+lookups missed and none matched; statistics/exposure association is not proven.
+No automatic AE/AWB or QR-quality claim follows from this capture.
+
+[Hardware result and image hash](hardware-first-frame-validation.json).
+Detailed logs, raw images and previews stay in the ignored local artifact
+directory. `isp-clean-upright.png` is the original luma preview rotated for
+viewing; `isp-clean-contrast.png` additionally applies display-only autocontrast.
+The command's conservative `coldStartProven:false` is unchanged; the separate
+report records the controlled reboot evidence for this particular session.

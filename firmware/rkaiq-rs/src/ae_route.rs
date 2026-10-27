@@ -14,6 +14,7 @@ pub struct Limits {
     pub minimum_gain: f32,
     pub maximum_gain: f32,
     pub time_quantum: f32,
+    /// Native context 0x680: maximum-register factor[1] (8 for pinned SC3336).
     pub floor_tolerance_coefficient: f32,
     pub line_length: f32,
     pub pixel_clock_mhz: f32,

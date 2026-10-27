@@ -367,5 +367,39 @@ uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python revers
 The pinned SC3336 measurement-enabled initial report now identifies its fixed
 50 Hz `routeTimeQuantumSeconds` using this recovered selector. **A route quantum
 is not a minimum shutter time.** The existing 3 ms initial exposure is retained.
-Shutter-bound selection, runtime state association and delayed feedback writes
-are still unfinished.
+Fixed-frame shutter bounds are reconstructed below; runtime state association
+and delayed feedback writes are still unfinished.
+
+
+## Fixed-frame linear shutter limits
+
+`ae_shutter::fixed_frame` reconstructs the physical and selected time bounds from
+`AecUpdateConfig` (ELF 0xa9068). It retains the native fused maximum-register
+calculation, calibration minimum-register conversion, route endpoints,
+zero-means-fallback overrides, conflicting-bound reconciliation and flicker
+rounding. Explicit minimum mode (native selector 1) replaces the route minimum
+with the greater of physical minimum and flicker quantum.
+
+The pinned SC3336 coefficients are `[0, 0, 1, 0.5]`, minimum register 1 and
+maximum-register factors `[1, 8]`. The second maximum-register factor is also
+the route floor-tolerance coefficient: **8**, not the time-conversion factor 1.
+Runtime frame length, line length and pixel clock must come from the active
+sensor. Driver exposure-control bounds still gate sensor writes separately.
+
+Thirty-four cases compare all four float results bit-for-bit with the original
+configuration function through normal return, then replay on the ARM Rust
+binary. Cases cover two frame lengths, route bounds, enabled/disabled flicker,
+explicit-minimum mode, conflicting overrides and alternate coefficients.
+The harness supplies runtime state and models allocation, math and diagnostic
+output; this is not complete private-context equivalence.
+[Equivalence report](ae-shutter-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-shutter.py --arm
+```
+
+FPS selection, variable-frame-rate/HDR policy, gain/DCG bounds, calibration enum
+binding and feedback scheduling remain separate work. These limits are not yet
+wired into automatic sensor writes. Real camera image quality remains untested.

@@ -49,6 +49,84 @@ impl ParameterBackend {
                 .unwrap_or("invalid driver response")
         ))
     }
+    /// Acquire and fill one persistent MMAP slot, then queue it through the
+    /// recovered state machine. Buffer ownership remains in this backend.
+    fn enqueue_payload(
+        &mut self,
+        queue: &mut parameter::Queue,
+        payload: &[u8],
+    ) -> io::Result<usize> {
+        if payload.len() != shieldsigner_rkaiq::isp32::PARAMETER_BYTES {
+            return Err(error("Expected one complete ISP32 parameter record"));
+        }
+        let mut buffers = std::mem::take(&mut self.buffers);
+        let result = (|| {
+            let index = queue
+                .get_buffer(self, &mut buffers, None)
+                .map_err(|status| self.failure("Parameter acquisition", status))?;
+            let result = (|| {
+                let mapping = self
+                    .mappings
+                    .get(index)
+                    .ok_or_else(|| error("No parameter buffer mapping"))?;
+                if mapping.length < payload.len() {
+                    return Err(error("Parameter mapping too short"));
+                }
+                unsafe {
+                    ptr::write_bytes(mapping.address.cast::<u8>(), 0, mapping.length);
+                    ptr::copy_nonoverlapping(
+                        payload.as_ptr(),
+                        mapping.address.cast::<u8>(),
+                        payload.len(),
+                    );
+                }
+                let status = queue.queue(self, &mut buffers[index], false, false);
+                if status != 0 {
+                    return Err(self.failure("Parameter QBUF", status));
+                }
+                Ok(index)
+            })();
+            if result.is_err() {
+                queue.return_to_pool(self, &mut buffers[index]);
+            }
+            result
+        })();
+        self.buffers = buffers;
+        result
+    }
+    /// Build and submit an ordinary linear gain batch from the runtime's actual
+    /// effective map. This is an event-owner API, not an automatic capture loop.
+    /// Commit the WB cache only after QBUF succeeds. Driver failures still
+    /// require event-owner recovery; this method never retries automatically.
+    #[allow(dead_code)]
+    fn enqueue_runtime_gain(
+        &mut self,
+        queue: &mut parameter::Queue,
+        runtime: &shieldsigner_rkaiq::ae_runtime::Runtime,
+        frame: u32,
+        unscaled_wb: &mut [u8; shieldsigner_rkaiq::isp32::AWB_GAIN_BYTES],
+        white_balance: Option<shieldsigner_rkaiq::isp32::WhiteBalanceGain>,
+    ) -> io::Result<Option<(usize, shieldsigner_rkaiq::ae_runtime::IspGainOutput)>> {
+        use shieldsigner_rkaiq::isp32;
+        let mut payload = [0u8; isp32::PARAMETER_BYTES];
+        payload[isp32::AWB_GAIN_OFFSET..isp32::AWB_GAIN_OFFSET + 32].copy_from_slice(unscaled_wb);
+        let mut next_wb = *unscaled_wb;
+        let association = runtime
+            .apply_isp_gain_results(frame, &mut payload, &mut next_wb, white_balance)
+            .map_err(error)?;
+        let updates = u64::from_le_bytes(payload[..8].try_into().unwrap())
+            | u64::from_le_bytes(payload[16..24].try_into().unwrap());
+        if updates == 0 {
+            return Ok(None);
+        }
+        // Native setIspConfig marks an ordinary ISP batch in the high mask word.
+        let config = u64::from_le_bytes(payload[16..24].try_into().unwrap()) | (1u64 << 63);
+        payload[16..24].copy_from_slice(&config.to_le_bytes());
+        payload[24..28].copy_from_slice(&frame.to_le_bytes());
+        let index = self.enqueue_payload(queue, &payload)?;
+        *unscaled_wb = next_wb;
+        Ok(Some((index, association)))
+    }
     fn initialize(&mut self) -> io::Result<()> {
         if !(2..=8).contains(&self.requested) {
             return Err(error(
@@ -422,23 +500,8 @@ fn submit_parameters_then<F: FnOnce() -> io::Result<()>>(
         if status != 0 {
             return Err(backend.failure("Parameter startup", status));
         }
+        backend.enqueue_payload(&mut queue, &payload)?;
         let mut buffers = std::mem::take(&mut backend.buffers);
-        let mapping = backend
-            .mappings
-            .first()
-            .ok_or_else(|| error("No parameter buffer mapping"))?;
-        unsafe {
-            ptr::write_bytes(mapping.address.cast::<u8>(), 0, mapping.length);
-            ptr::copy_nonoverlapping(
-                payload.as_ptr(),
-                mapping.address.cast::<u8>(),
-                payload.len(),
-            );
-        }
-        let status = queue.queue(&mut backend, &mut buffers[0], false, false);
-        if status != 0 {
-            return Err(backend.failure("Parameter QBUF", status));
-        }
         accepted = true;
         let deadline = Instant::now() + Duration::from_millis(timeout);
         let index = loop {

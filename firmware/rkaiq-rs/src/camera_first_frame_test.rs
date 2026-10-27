@@ -308,6 +308,186 @@ mod first_frame_driver {
     }
     #[test]
     #[ignore = "requires ARM32 Linux and the explicitly mounted full IQ fixture"]
+    fn runtime_gain_parameter_reuse() {
+        use shieldsigner_rkaiq::{
+            ae_runtime, ae_session, calibration::RuntimeTiming, isp32, sensor_scheduler,
+        };
+        let iq: Value = serde_json::from_slice(
+            &fs::read(std::env::var("SHIELDSIGNER_TEST_IQ").unwrap()).unwrap(),
+        )
+        .unwrap();
+        let make_runtime = |gain: f32| {
+            let session = ae_session::Session::from_profile(
+                &iq,
+                RuntimeTiming {
+                    frame_length: 1360,
+                    line_length_pixels: 2800,
+                    pixel_clock_mhz: 114.24,
+                },
+                2304,
+                1296,
+            )
+            .unwrap();
+            let mut initial = session.state.publication.previous_final;
+            initial[12..16].copy_from_slice(&gain.to_le_bytes());
+            ae_runtime::Runtime::new(
+                session,
+                initial,
+                sensor_scheduler::EffectPolicy {
+                    shorten_enabled: false,
+                    designated_frame: 0,
+                    shorten_all: false,
+                },
+            )
+            .unwrap()
+        };
+        let boosted = make_runtime(2.);
+        let unity = make_runtime(1.);
+        *DRIVER.lock().unwrap() = Some(Driver::default());
+        let mut backend = ParameterBackend {
+            file: Some(open("/dev/zero", true).unwrap()),
+            requested: 2,
+            allocated: false,
+            mappings: vec![],
+            buffers: vec![],
+            calls: vec![],
+            last_error: None,
+            last_errno: None,
+            last_dequeue: None,
+            cleanup_errors: vec![],
+            dequeue_would_block: 0,
+        };
+        let mut queue = parameter::Queue::default();
+        assert_eq!(queue.start(&mut backend, false), 0);
+        let mut cache = [0u8; 32];
+        for pair in cache.chunks_exact_mut(2) {
+            pair.copy_from_slice(&256u16.to_le_bytes());
+        }
+        let original_cache = cache;
+        let first = backend
+            .enqueue_runtime_gain(&mut queue, &boosted, 0, &mut cache, None)
+            .unwrap()
+            .unwrap();
+        assert_eq!(first.0, 0);
+        assert!(first.1.exact_exposure);
+        let bytes = unsafe {
+            std::slice::from_raw_parts(
+                backend.mappings[0].address.cast::<u8>(),
+                isp32::PARAMETER_BYTES,
+            )
+        };
+        assert_eq!(u64::from_le_bytes(bytes[..8].try_into().unwrap()), 0);
+        assert_eq!(
+            u64::from_le_bytes(bytes[16..24].try_into().unwrap()),
+            (1 << 63) | 32
+        );
+        assert_eq!(
+            u16::from_le_bytes(
+                bytes[isp32::AWB_GAIN_OFFSET + 8..isp32::AWB_GAIN_OFFSET + 10]
+                    .try_into()
+                    .unwrap()
+            ),
+            512
+        );
+        assert_eq!(cache, original_cache);
+        assert_eq!(
+            backend
+                .enqueue_runtime_gain(&mut queue, &boosted, 1, &mut cache, None)
+                .unwrap()
+                .unwrap()
+                .0,
+            1
+        );
+        assert!(backend
+            .enqueue_runtime_gain(&mut queue, &boosted, 2, &mut cache, None)
+            .is_err());
+        let cache_before_failure = cache;
+        assert!(backend
+            .enqueue_runtime_gain(
+                &mut queue,
+                &unity,
+                2,
+                &mut cache,
+                Some(isp32::WhiteBalanceGain {
+                    red: 4.,
+                    green_red: 1.,
+                    green_blue: 1.,
+                    blue: 2.,
+                    position: isp32::ApplyPosition::Gain1
+                })
+            )
+            .is_err());
+        assert_eq!(cache, cache_before_failure);
+        assert!(backend
+            .enqueue_runtime_gain(&mut queue, &unity, 2, &mut cache, None)
+            .unwrap()
+            .is_none());
+        assert_eq!(queue.queued_count, 2);
+        let mut buffers = std::mem::take(&mut backend.buffers);
+        let index = queue
+            .dequeue(&mut backend, &mut buffers, MMAP, false)
+            .unwrap();
+        queue.return_to_pool(&mut backend, &mut buffers[index]);
+        backend.buffers = buffers;
+        let wb = isp32::WhiteBalanceGain {
+            red: 2.,
+            green_red: 1.,
+            green_blue: 1.,
+            blue: 3.,
+            position: isp32::ApplyPosition::Gain1,
+        };
+        assert_eq!(
+            backend
+                .enqueue_runtime_gain(&mut queue, &unity, 3, &mut cache, Some(wb))
+                .unwrap()
+                .unwrap()
+                .0,
+            0
+        );
+        let bytes = unsafe {
+            std::slice::from_raw_parts(
+                backend.mappings[0].address.cast::<u8>(),
+                isp32::PARAMETER_BYTES,
+            )
+        };
+        assert_eq!(get32(bytes, 24), 3);
+        assert_eq!(
+            u16::from_le_bytes(
+                bytes[isp32::AWB_GAIN_OFFSET + 8..isp32::AWB_GAIN_OFFSET + 10]
+                    .try_into()
+                    .unwrap()
+            ),
+            256
+        );
+        assert_eq!(
+            u16::from_le_bytes(
+                bytes[isp32::AWB_GAIN_OFFSET + 6..isp32::AWB_GAIN_OFFSET + 8]
+                    .try_into()
+                    .unwrap()
+            ),
+            512
+        );
+        assert_eq!(queue.queued_count, 2);
+        let allocated = backend.allocated;
+        queue.stop(&mut backend, allocated);
+        assert!(backend.cleanup_errors.is_empty());
+        let driver = DRIVER.lock().unwrap().take().unwrap();
+        assert_eq!(
+            driver
+                .trace
+                .iter()
+                .filter(|s| s.as_str() == "parameters:queue")
+                .count(),
+            3
+        );
+        println!();
+        println!(
+            "{}",
+            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":3,"poolExhaustionChecked":true,"unityNoopChecked":true})
+        );
+    }
+    #[test]
+    #[ignore = "requires ARM32 Linux and the explicitly mounted full IQ fixture"]
     fn full_first_frame_userspace_sequence() {
         let iq = std::env::var("SHIELDSIGNER_TEST_IQ").expect("set full IQ fixture path");
         let folder = format!("/tmp/shieldsigner-startup-test-{}", std::process::id());

@@ -81,3 +81,36 @@ cached buffer records and lock traces. Standard vector indexing and smart-pointe
 assignment remain explicit adapters. Full payload reuse observations above
 come from the native reset/acquisition/configuration code and the pinned kernel
 source; this oracle does not execute the complete `setIspConfig` method.
+
+### Persistent Linux enqueue for runtime gain batches
+
+The camera diagnostic's `ParameterBackend::enqueue_payload` now uses recovered
+buffer acquisition before copying a complete ISP32 record into a free MMAP
+slot and issuing QBUF. The original single-startup-record command uses this
+same operation. The backend retains its slot states, supports a subsequent
+enqueue, and returns the acquired slot to the pool on copy/queue failure.
+
+`enqueue_runtime_gain` connects `Runtime::apply_isp_gain_results` to that live
+adapter: the event owner supplies the requested frame, unscaled WB cache and
+optional WB result. A gain-only record preserves the cached first WB bank,
+contains only the gain module updates, carries the requested frame, and adds
+the native ordinary-batch high configuration flag before QBUF. A unity-only
+no-op returns without consuming a slot or submitting a buffer. The WB cache
+commits only after successful QBUF, so pool exhaustion cannot publish a cache
+for a batch that was never queued. This is checked adapter behavior, not a
+claim that native error-side cache mutation has identical transactionality.
+
+The ARM startup sequence test now additionally runs the actual runtime gain
+adapter with simulated ioctl/MMAP boundaries. It verifies two queued boosted
+records use different slots, a third submission reports pool exhaustion,
+failed WB submission leaves its cache unchanged, unity-only produces no QBUF,
+DQBUF plus explicit return makes a slot reusable, and a WB-plus-unity record
+restores unscaled bank-0 words with correct frame and header masks. All four
+existing image/statistics and single-/multi-plane startup scenarios still run.
+The test directly checks mapped payload bytes, not just syscall call counts.
+
+This enqueue operation is ready for an event owner; the capture command still
+uses fixed initial exposure. Live SOF/statistics dispatch, completion draining,
+parameter snapshot accumulation and automatic WB publication are not yet
+connected into a continuously running capture loop. These adapter tests do
+not use a physical camera.

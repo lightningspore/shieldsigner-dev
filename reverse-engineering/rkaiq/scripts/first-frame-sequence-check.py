@@ -16,10 +16,11 @@ def main():
   command=['docker','run','--rm','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={binary.parent},dst=/tests,readonly','--mount',f'type=bind,src={iq.parent},dst=/iq,readonly','-e','SHIELDSIGNER_TEST_IQ=/iq/'+iq.name]
   if statistics:command+=['-e','SHIELDSIGNER_TEST_STATS=1']
   if multi_tx:command+=['-e','SHIELDSIGNER_TEST_MPLANE_TX=1']
-  command += [image,'/tests/'+binary.name,'first_frame_driver','--ignored','--nocapture']
+  command += [image,'/tests/'+binary.name,'first_frame_driver','--ignored','--nocapture','--test-threads=1']
   run=subprocess.run(command,text=True,capture_output=True,timeout=30)
   assert run.returncode==0,(run.stdout+run.stderr)[-6000:]
   events=[json.loads(line) for line in run.stdout.splitlines() if line.startswith('{') and line.endswith('}')]
+  gain=next(e for e in events if e.get('event')=='runtime-gain-queue-verified');assert gain['queued']==3 and gain['poolExhaustionChecked'] and gain['unityNoopChecked']
   summary=next(e for e in events if e.get('event')=='simulated-startup-verified')
   assert summary['imageFrames']==3 and summary['rawFrames']>=3 and not summary['hardwareVerified']
   assert summary['statisticsEnabled']==statistics and summary['multiPlaneTx']==multi_tx
@@ -27,7 +28,7 @@ def main():
   assert any(e.get('event')=='first-frame-finished' and e['success'] for e in events)
   summaries.append(summary)
  summary=summaries[0]
- report=dict(testBinarySha256=hashlib.sha256(binary.read_bytes()).hexdigest(),platform='linux/arm/v7',passed=True,summary=summary,scenarios=summaries,verified=['actual first-frame-sc3336 userspace orchestration','graph format readback and profile loading','active timing conversion and sensor writes','parameter dequeue before raw stream startup','raw readback during three image dequeues','image shutdown before raw shutdown before parameter shutdown','full-sized saved image and 11145-byte initial parameter artifact','optional statistics queue ready before raw startup and retained through camera teardown','metadata frame headers and raw statistics artifact'],limitations=['ioctl, readiness and image/metadata MMAP are test-only simulated boundaries; no actual camera/kernel pipeline is exercised.','Saved pixels are zero-filled synthetic memory, not sensor output or image-quality/QR evidence.','No full original RKAIQ controller equivalence or automatic 3A is established.'])
+ report=dict(testBinarySha256=hashlib.sha256(binary.read_bytes()).hexdigest(),platform='linux/arm/v7',passed=True,summary=summary,scenarios=summaries,verified=['runtime effective-exposure gains through persistent MMAP parameter enqueue, pool exhaustion, dequeue/reuse and unity no-op','actual first-frame-sc3336 userspace orchestration','graph format readback and profile loading','active timing conversion and sensor writes','parameter dequeue before raw stream startup','raw readback during three image dequeues','image shutdown before raw shutdown before parameter shutdown','full-sized saved image and 11145-byte initial parameter artifact','optional statistics queue ready before raw startup and retained through camera teardown','metadata frame headers and raw statistics artifact'],limitations=['ioctl, readiness and image/metadata MMAP are test-only simulated boundaries; no actual camera/kernel pipeline is exercised.','Saved pixels are zero-filled synthetic memory, not sensor output or image-quality/QR evidence.','No full original RKAIQ controller equivalence or automatic 3A is established.'])
  (ROOT/'reverse-engineering/rkaiq/first-frame-sequence-validation.json').write_text(json.dumps(report,indent=2)+'\n')
  print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "801fe7de13627969024517ebc98d2cf53d6bf3e1a1b58f915912e974f5334bcf",
+  "testBinarySha256": "7e5f6b3acccd751d5e2bed9cf92a4123692945e16394812cdb00b81554808af7",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -31,10 +31,10 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
       "statisticsEnabled": true,
-      "statisticsFrames": 5
+      "statisticsFrames": 6
     },
     {
       "event": "simulated-startup-verified",
@@ -42,7 +42,7 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 4,
+      "rawFrames": 5,
       "savedBytes": 4478976,
       "statisticsEnabled": false,
       "statisticsFrames": 0
@@ -60,6 +60,7 @@
     }
   ],
   "verified": [
+    "runtime effective-exposure gains through persistent MMAP parameter enqueue, pool exhaustion, dequeue/reuse and unity no-op",
     "actual first-frame-sc3336 userspace orchestration",
     "graph format readback and profile loading",
     "active timing conversion and sensor writes",

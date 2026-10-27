@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "57d13ae34cfeb4b68a5b296d3951e2ead15d918f161ac072ca3a16f59900242a",
+  "testBinarySha256": "95039e2c21c0b07e73384a46a89ef645a950660fe87e6c1699ba95e337037070",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -8,7 +8,7 @@
     "imageContent": "anonymous zero-filled simulated memory",
     "imageFrames": 3,
     "multiPlaneTx": false,
-    "rawFrames": 5,
+    "rawFrames": 6,
     "savedBytes": 4478976,
     "statisticsEnabled": false,
     "statisticsFrames": 0
@@ -20,7 +20,7 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
       "statisticsEnabled": false,
       "statisticsFrames": 0
@@ -31,10 +31,10 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 6,
+      "rawFrames": 5,
       "savedBytes": 4478976,
       "statisticsEnabled": true,
-      "statisticsFrames": 6
+      "statisticsFrames": 5
     },
     {
       "event": "simulated-startup-verified",
@@ -42,7 +42,7 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
       "statisticsEnabled": false,
       "statisticsFrames": 0
@@ -53,10 +53,10 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 6,
+      "rawFrames": 5,
       "savedBytes": 4478976,
       "statisticsEnabled": true,
-      "statisticsFrames": 6
+      "statisticsFrames": 5
     }
   ],
   "verified": [

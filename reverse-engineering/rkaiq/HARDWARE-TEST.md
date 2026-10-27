@@ -709,3 +709,36 @@ revealing room/monitor outlines. These are requested timing and control readback
 not independently measured optical integration duration. Gain stayed at 1×.
 The purple cast remains; no color correction was applied to this test.
 Private images/logs remain local under the hardware artifact directory.
+
+
+### Raw/SOF/trigger/statistics correspondence
+
+The bridge completion event now includes `recentFrames` (bounded to 256) and
+`frameRecordsDropped`. Each queued trigger records buffer index, raw sequence,
+trigger frame ID, SOF lookup ID/match/timestamp, source timestamp and RX
+completion/sequence. Completion updates the newest in-flight record for that
+buffer index, avoiding confusion when indices are reused. A final queued input
+may remain incomplete when image capture stops; it is reported as such.
+
+Two physical stream starts at fixed startup exposure produced statistics
+frames 0 and 1 matching completed raw transfers, trigger IDs and CIF SOF IDs.
+Both runs had four matched SOFs, no misses and three completed transfers.
+The RX dequeue sequence was **zero for all completed transfers**: it is not
+the raw/statistics frame key on this driver. The test reset exposure to the
+startup 3 ms setting; it did not retain the earlier manual 500 ms experiment.
+[Observed ID correspondence](frame-association-validation.json).
+
+The reusable checker joins IDs and verifies completion/SOF evidence:
+
+```sh
+uv run --python 3.13 python reverse-engineering/rkaiq/scripts/frame-association-check.py startup-events.txt frame.raw.stats.raw.json --output frame-id-check.json
+```
+
+It rejects dropped traces, ambiguous/missing raw IDs, missing SOFs and
+incomplete matching RX records. Those rejection paths were exercised by
+mutating the successful local trace. The ARM bridge test verifies the trace's
+frame/timestamp values and completion updates; full startup simulations pass.
+The checker retains `frameExposureAssociationVerified:false`: matching IDs at
+fixed exposure do not measure sensor update latency or prove the exposure and
+parameter record that physically produced a frame. Exposure changes and
+per-frame application evidence remain to be tested before live AE scheduling.

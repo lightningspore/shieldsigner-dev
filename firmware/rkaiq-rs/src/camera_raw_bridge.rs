@@ -126,6 +126,8 @@ mod raw_bridge {
         sof: std::collections::VecDeque<(u32, u64)>,
         sof_matches: u64,
         sof_missing: u64,
+        frames: std::collections::VecDeque<Value>,
+        frame_records_dropped: u64,
     }
     impl Bridge {
         pub fn prepare(
@@ -266,6 +268,8 @@ mod raw_bridge {
                 sof: std::collections::VecDeque::new(),
                 sof_matches: 0,
                 sof_missing: 0,
+                frames: std::collections::VecDeque::new(),
+                frame_records_dropped: 0,
             };
             let mut subscription = [0u32; 8];
             subscription[0] = 4;
@@ -365,6 +369,13 @@ mod raw_bridge {
                             return Err(error("Invalid/error raw RX completion"));
                         }
                         self.inflight[index] = false;
+                        if let Some(record) = self.frames.iter_mut().rev().find(|r| {
+                            r["bufferIndex"].as_u64() == Some(done.index as u64)
+                                && r["rxCompleted"] == false
+                        }) {
+                            record["rxCompleted"] = json!(true);
+                            record["rxSequence"] = json!(done.sequence);
+                        }
                         let mut b = self.tx.record(done.index);
                         self.tx.buffer_ioctl(QUEUE, &mut b)?;
                         self.transferred += 1;
@@ -433,6 +444,11 @@ mod raw_bridge {
                             shieldsigner_rkaiq::raw_readback::TRIGGER_IOCTL,
                             &mut trigger,
                         )?;
+                        if self.frames.len() == 256 {
+                            self.frames.pop_front();
+                            self.frame_records_dropped += 1;
+                        }
+                        self.frames.push_back(json!({"bufferIndex":raw.index,"rawFrameId":raw.sequence,"triggerFrameId":raw.sequence,"sofLookupFrameId":lookup,"sofMatched":self.sof.iter().any(|e|e.0==lookup),"sofTimestampNs":sof,"sensorTimestampUs":us,"rxCompleted":false,"rxSequence":null}));
                         self.first = false;
                         last = Instant::now();
                     }
@@ -460,7 +476,7 @@ mod raw_bridge {
                     if let Err(e)=self.rx.release(){cleanup.push(e.to_string());}
                     self.exports.clear();
                     if let Err(e)=self.tx.release(){cleanup.push(e.to_string());}
-                    println!("{}",json!({"event":"raw-bridge-finished","completedFrames":self.transferred,"sofMatches":self.sof_matches,"sofMissing":self.sof_missing,"error":outcome.as_ref().err().map(|e|e.to_string()),"cleanupErrors":cleanup,"hardwareVerified":false}));
+                    println!("{}",json!({"event":"raw-bridge-finished","completedFrames":self.transferred,"sofMatches":self.sof_matches,"sofMissing":self.sof_missing,"recentFrames":self.frames,"recentFrameLimit":256,"frameRecordsDropped":self.frame_records_dropped,"frameExposureAssociationVerified":false,"error":outcome.as_ref().err().map(|e|e.to_string()),"cleanupErrors":cleanup,"hardwareVerified":false}));
                     outcome.and_then(|_|if cleanup.is_empty(){Ok(())}else{Err(error("Raw bridge cleanup failed"))})
                 });
                 let startup = ready_rx

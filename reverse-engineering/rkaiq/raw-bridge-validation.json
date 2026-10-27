@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "57d13ae34cfeb4b68a5b296d3951e2ead15d918f161ac072ca3a16f59900242a",
+  "testBinarySha256": "95039e2c21c0b07e73384a46a89ef645a950660fe87e6c1699ba95e337037070",
   "platform": "linux/arm/v7",
   "storageMismatchRejectedBeforeAllocation": true,
   "endpointApiCombinations": 4,
@@ -17,7 +17,23 @@
       "completedFrames": 1,
       "error": null,
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [
+        {
+          "bufferIndex": 0,
+          "rawFrameId": 77,
+          "rxCompleted": true,
+          "rxSequence": 0,
+          "sensorTimestampUs": 4000500,
+          "sofLookupFrameId": 77,
+          "sofMatched": true,
+          "sofTimestampNs": 3000000456,
+          "triggerFrameId": 77
+        }
+      ],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -26,7 +42,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 0,
       "sofMissing": 0
     },
@@ -35,7 +55,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 0,
       "sofMissing": 0
     },
@@ -44,7 +68,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -53,7 +81,23 @@
       "completedFrames": 0,
       "error": "Invalid/error raw RX completion",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [
+        {
+          "bufferIndex": 0,
+          "rawFrameId": 77,
+          "rxCompleted": false,
+          "rxSequence": null,
+          "sensorTimestampUs": 4000500,
+          "sofLookupFrameId": 77,
+          "sofMatched": true,
+          "sofTimestampNs": 3000000456,
+          "triggerFrameId": 77
+        }
+      ],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -62,7 +106,23 @@
       "completedFrames": 1,
       "error": null,
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [
+        {
+          "bufferIndex": 0,
+          "rawFrameId": 77,
+          "rxCompleted": true,
+          "rxSequence": 0,
+          "sensorTimestampUs": 4000500,
+          "sofLookupFrameId": 77,
+          "sofMatched": true,
+          "sofTimestampNs": 3000000456,
+          "triggerFrameId": 77
+        }
+      ],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -71,7 +131,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 0,
       "sofMissing": 0
     },
@@ -80,7 +144,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 0,
       "sofMissing": 0
     },
@@ -89,7 +157,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -98,7 +170,23 @@
       "completedFrames": 0,
       "error": "Invalid/error raw RX completion",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [
+        {
+          "bufferIndex": 0,
+          "rawFrameId": 77,
+          "rxCompleted": false,
+          "rxSequence": null,
+          "sensorTimestampUs": 4000500,
+          "sofLookupFrameId": 77,
+          "sofMatched": true,
+          "sofTimestampNs": 3000000456,
+          "triggerFrameId": 77
+        }
+      ],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -107,7 +195,23 @@
       "completedFrames": 1,
       "error": null,
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [
+        {
+          "bufferIndex": 0,
+          "rawFrameId": 77,
+          "rxCompleted": true,
+          "rxSequence": 0,
+          "sensorTimestampUs": 4000500,
+          "sofLookupFrameId": 77,
+          "sofMatched": true,
+          "sofTimestampNs": 3000000456,
+          "triggerFrameId": 77
+        }
+      ],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -116,7 +220,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 0,
       "sofMissing": 0
     },
@@ -125,7 +233,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 0,
       "sofMissing": 0
     },
@@ -134,7 +246,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -143,7 +259,23 @@
       "completedFrames": 0,
       "error": "Invalid/error raw RX completion",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [
+        {
+          "bufferIndex": 0,
+          "rawFrameId": 77,
+          "rxCompleted": false,
+          "rxSequence": null,
+          "sensorTimestampUs": 4000500,
+          "sofLookupFrameId": 77,
+          "sofMatched": true,
+          "sofTimestampNs": 3000000456,
+          "triggerFrameId": 77
+        }
+      ],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -152,7 +284,23 @@
       "completedFrames": 1,
       "error": null,
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [
+        {
+          "bufferIndex": 0,
+          "rawFrameId": 77,
+          "rxCompleted": true,
+          "rxSequence": 0,
+          "sensorTimestampUs": 4000500,
+          "sofLookupFrameId": 77,
+          "sofMatched": true,
+          "sofTimestampNs": 3000000456,
+          "triggerFrameId": 77
+        }
+      ],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -161,7 +309,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 0,
       "sofMissing": 0
     },
@@ -170,7 +322,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 0,
       "sofMissing": 0
     },
@@ -179,7 +335,11 @@
       "completedFrames": 0,
       "error": "I/O error (os error 5)",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [],
       "sofMatches": 1,
       "sofMissing": 0
     },
@@ -188,7 +348,23 @@
       "completedFrames": 0,
       "error": "Invalid/error raw RX completion",
       "event": "raw-bridge-finished",
+      "frameExposureAssociationVerified": false,
+      "frameRecordsDropped": 0,
       "hardwareVerified": false,
+      "recentFrameLimit": 256,
+      "recentFrames": [
+        {
+          "bufferIndex": 0,
+          "rawFrameId": 77,
+          "rxCompleted": false,
+          "rxSequence": null,
+          "sensorTimestampUs": 4000500,
+          "sofLookupFrameId": 77,
+          "sofMatched": true,
+          "sofTimestampNs": 3000000456,
+          "triggerFrameId": 77
+        }
+      ],
       "sofMatches": 1,
       "sofMissing": 0
     }

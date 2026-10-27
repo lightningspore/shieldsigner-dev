@@ -16,6 +16,9 @@ def main():
  assert len(events)==20
  for start in range(0,20,5):
   assert events[start]['completedFrames']==1 and events[start]['sofMatches']==1
+  frame=events[start]['recentFrames'][0]
+  assert frame['rawFrameId']==77 and frame['triggerFrameId']==77 and frame['sofMatched'] and frame['sofTimestampNs']==3000000456 and frame['sensorTimestampUs']==4000500 and frame['rxCompleted']
+  assert events[start]['frameRecordsDropped']==0 and not events[start]['frameExposureAssociationVerified']
   assert all(event['completedFrames']==0 and event['error'] for event in events[start+1:start+5])
  assert all(not event['cleanupErrors'] for event in events)
  report=dict(testBinarySha256=hashlib.sha256(binary.read_bytes()).hexdigest(),platform='linux/arm/v7',storageMismatchRejectedBeforeAllocation=True,endpointApiCombinations=4,casesPerCombination=['successful frame with matched SOF','RX STREAMON failure','RX QBUF failure suppresses trigger','trigger ioctl failure','corrupted RX completion'],passed=True,events=events,limitations=['A cfg(test)-only ioctl boundary simulates the driver; actual ARM bridge logic, FD export ownership, scoped worker and cleanup execute.','No positive device, kernel-driver or original RKAIQ queue-controller equivalence is established.','Image capture and the metadata queue are outside this focused bridge test.'])

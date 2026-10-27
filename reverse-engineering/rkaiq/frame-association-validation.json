@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-26",
+  "board": "Luckfox Pico / SC3336",
+  "scenarios": [
+    {
+      "logSha256": "801a8427c46f76ff3c8d61caaaed607bc24a8b6893266c603dd206fa4c65321b",
+      "statisticsSha256": "7ca0dd3096040786551377ba4a47599c15c0b1acbb6e62e07a8f2d18f92619df",
+      "matchedStatisticsFrames": 2,
+      "completedRawFrames": 3,
+      "queuedRawFrames": 4,
+      "sofMatches": 4,
+      "sofMissing": 0,
+      "pairs": [
+        {
+          "frameId": 0,
+          "parametersId": 0,
+          "rxSequence": 0
+        },
+        {
+          "frameId": 1,
+          "parametersId": 0,
+          "rxSequence": 0
+        }
+      ],
+      "frameIdChainObserved": true,
+      "frameExposureAssociationVerified": false,
+      "limitations": [
+        "Observed matching IDs in one fixed-exposure stream; not proof of sensor register application or exposure-change latency.",
+        "RX sequence is recorded for comparison and is not used as the frame key.",
+        "Only the retained bounded trace is checked; dropped/incomplete traces are rejected."
+      ]
+    },
+    {
+      "logSha256": "5e0342476534e39c55ce4b30d9801c661f4fcbb306e0bf23e96073be8de57457",
+      "statisticsSha256": "530032b40870c9721c211201b86358b60e9c6739ff1c7ab274138a018fe5fca0",
+      "matchedStatisticsFrames": 2,
+      "completedRawFrames": 3,
+      "queuedRawFrames": 4,
+      "sofMatches": 4,
+      "sofMissing": 0,
+      "pairs": [
+        {
+          "frameId": 0,
+          "parametersId": 0,
+          "rxSequence": 0
+        },
+        {
+          "frameId": 1,
+          "parametersId": 0,
+          "rxSequence": 0
+        }
+      ],
+      "frameIdChainObserved": true,
+      "frameExposureAssociationVerified": false,
+      "limitations": [
+        "Observed matching IDs in one fixed-exposure stream; not proof of sensor register application or exposure-change latency.",
+        "RX sequence is recorded for comparison and is not used as the frame key.",
+        "Only the retained bounded trace is checked; dropped/incomplete traces are rejected."
+      ]
+    }
+  ],
+  "passed": true,
+  "frameExposureAssociationVerified": false,
+  "scope": "two physical fixed-exposure stream starts; raw/SOF/trigger/statistics ID correspondence only"
+}

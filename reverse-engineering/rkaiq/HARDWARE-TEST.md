@@ -8,6 +8,9 @@ Current bounded live syntax takes the six path arguments and optional `--frames 
 Continuous application streaming is documented [below](#live-frames-for-the-application-0031-dev-source).
 It derives scale from the single-camera binding, ISO from associated real gains,
 and brightness from the same-frame AE pre-result.
+The current frozen local kit is `dist/reverse-engineering/rkaiq-camera-test-0.0.31-dev.zip`;
+it includes the live commands and opt-in app integration. Its exact packaged
+build passed the [clean-reboot kit test](#frozen-0031-dev-kit-hardware-result).
 The frozen **0.0.30-dev ZIP described below is unchanged** and does not contain
 this new command. Build current source with `mise run camera:rust:arm` to use it.
 
@@ -1357,3 +1360,52 @@ cleanly. This checks the no-target/failure behavior; the optical success gate
 remains unproven until a physical target is presented. Configuration generation
 was also exercised against real device nodes. Packaged-artifact verification
 and subsequent hardware results are recorded separately from source tests.
+
+
+## Frozen 0.0.31-dev kit hardware result
+
+The local ZIP `dist/reverse-engineering/rkaiq-camera-test-0.0.31-dev.zip` is frozen
+from clean source revision `5e6e3610bd8f25f55a8ceabcf0ea1e96c1756bdc`.
+It is 25,710,870 bytes; SHA-256:
+`d93f1b0dfab298d982f1e0b0bf8862517b41536d987e9de47f8a5cbda3a93ff4`.
+A repeat package invocation produced the identical archive. Further source or
+release changes require a new version; this ZIP is not overwritten by later
+documentation/attestation commits.
+
+Run 31 extracted this exact archive on the Luckfox and verified all 303 listed
+files / 81,125,860 bytes before and after execution. A new kernel boot skipped
+vendor/UI startup; packaged helpers verified both restored startup scripts and
+removed only matching temporary backups. `/proc/modules` was empty before the
+packaged camera-driver loader ran; Rockit and vendor camera userspace were absent.
+No manual image-format setup or repository-side runtime files were used.
+
+The packaged configuration generator and app integration passed with 165 AE/AWB
+statistics frames, 164 submissions and at most two retained snapshots. Both
+normal AWB groups appeared. Independent original ARM translation matched all
+7,680 final statistics bytes. The full-frame rotation tests and all 16 generated
+QR cases passed; first live frame arrived in 0.69 s and owner shutdown in 0.33 s.
+All bundled numerical suites also passed on the physical board, and the exact
+bundled public QR PNG decoded through the installed application decoder.
+
+The packaged optical command examined seven real frames with no target,
+returned the expected exit 2, reported opticalScanQualified false, and shut down
+cleanly. That is failure-path validation, not optical success. The original
+Camera source and startup script hashes remain unchanged. Results and artifact
+provenance are in `kit-0.0.31-dev-hardware-validation.json`; private images/logs
+and detailed local execution files remain outside git.
+
+The board currently has this kit at
+`/shieldsigner-camera-tests/rkaiq-camera-test-0.0.31-dev` and its tested owner
+configuration at `/shieldsigner-camera-tests/kit-31-config.json`. To perform the
+remaining optical test, display/print the bundled public QR and run:
+
+```sh
+python3 /shieldsigner-camera-tests/rkaiq-camera-test-0.0.31-dev/python/optical_camera_check.py \
+  --app-root /seedsigner --config /shieldsigner-camera-tests/kit-31-config.json \
+  --report /shieldsigner-camera-tests/optical-UNIQUE.json --seconds 60
+```
+
+Physical power-cycle, successful optical target decoding, complete UI/button
+interaction, broader scene-change qualification and remaining controller policy
+are still open. The kit is an experimental runnable checkpoint toward the full
+migration, not a completion claim.

@@ -210,7 +210,31 @@ fn wait_parameter(fd: RawFd, deadline: Instant) -> io::Result<()> {
         }
     }
 }
+fn capture_cif_with_parameters(args: &[String]) -> io::Result<()> {
+    use std::os::unix::fs::MetadataExt;
+    if args.len() < 8 || args[5] != "--" {
+        return Err(error("capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE -- IMAGE_NODE OUT [capture options]"));
+    }
+    let mut devices = Vec::new();
+    for index in [0, 2, 3, 4, 6] {
+        let id = fs::metadata(&args[index])?.rdev();
+        if devices.contains(&id) {
+            return Err(error("All five camera endpoints must be distinct"));
+        }
+        devices.push(id);
+    }
+    let bridge = raw_bridge::Bridge::prepare(&args[2], &args[3], &args[4])?;
+    let mut combined = args[..2].to_vec();
+    combined.extend_from_slice(&args[5..]);
+    capture_with_parameters_using(&combined, Some(bridge))
+}
 fn capture_with_parameters(args: &[String]) -> io::Result<()> {
+    capture_with_parameters_using(args, None)
+}
+fn capture_with_parameters_using(
+    args: &[String],
+    raw: Option<raw_bridge::Bridge>,
+) -> io::Result<()> {
     use std::os::unix::fs::{FileTypeExt, MetadataExt};
     let separator = args.iter().position(|v| v == "--").ok_or_else(|| {
         error("capture-with-parameters PARAM_NODE PARAM.bin -- IMAGE_NODE OUT [capture options]")
@@ -250,7 +274,10 @@ fn capture_with_parameters(args: &[String]) -> io::Result<()> {
             json!({"event":"image-capture-starting","parameterQueueHeldOpen":true,"device":image[0],"output":image[1],"coldStartProven":false})
         );
         io::stdout().flush()?;
-        let outcome = capture(&capture_args, false);
+        let outcome = match raw {
+            Some(bridge) => bridge.during(|| capture(&capture_args, false)),
+            None => capture(&capture_args, false),
+        };
         println!(
             "{}",
             json!({"event":"image-capture-finished","success":outcome.is_ok(),"error":outcome.as_ref().err().map(|e|e.to_string()),"parameterQueueHeldOpen":true,"coldStartProven":false})

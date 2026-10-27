@@ -166,3 +166,8 @@ _Static_assert(offsetof(struct isp2x_csi_trigger,times)==20,"trigger times offse
 _Static_assert(offsetof(struct isp2x_csi_trigger,mode)==24,"trigger mode offset");
 _Static_assert(T_START_X1==16,"linear trigger mode");
 _Static_assert(RKISP_CMD_TRIGGER_READ_BACK==0x401c56c0,"readback trigger ioctl");
+_Static_assert(sizeof(struct v4l2_exportbuffer)==64,"raw export buffer bytes");
+_Static_assert(offsetof(struct v4l2_exportbuffer,fd)==16,"raw export fd offset");
+_Static_assert(VIDIOC_EXPBUF==0xc0405610,"raw export ioctl");
+_Static_assert(V4L2_MEMORY_DMABUF==4,"raw import memory mode");
+_Static_assert(V4L2_PIX_FMT_SBGGR10==0x30314742 && V4L2_PIX_FMT_SGBRG10==0x30314247 && V4L2_PIX_FMT_SGRBG10==0x30314142 && V4L2_PIX_FMT_SRGGB10==0x30314752,"RAW10 formats");

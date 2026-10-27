@@ -159,3 +159,12 @@ backpressure and cleanup. Integrate it around the combined image capture before
 claiming CIF startup. Shared-CIF, HDR, optional raw dumps and multi-ISP support
 remain outside this minimum linear path. Positive hardware capture and QR
 quality remain unverified.
+
+Development follow-up: `capture-cif-with-parameters` now integrates a persistent
+single-plane RAW10 DMA-BUF bridge around image capture. It exports TX buffers,
+imports them into matching RX indices, triggers readback after successful RX
+QBUF, and returns each TX index only after RX completion. See
+[hardware command and explicit limitations](HARDWARE-TEST.md#development-linear-cif-dma-buf-bridge).
+This implements the live bridge mechanism described above, but its positive
+hardware path, SOF-map/controller synchronization and whole-routine native
+queue equivalence remain unverified. It does not add automatic 3A.

@@ -272,3 +272,40 @@ Run the static ARM CLI rejection checks with:
 ```sh
 uv run --python 3.13 reverse-engineering/rkaiq/scripts/combined-capture-check.py
 ```
+
+### Development linear CIF DMA-BUF bridge
+
+The development source adds the raw bridge around combined image capture:
+
+```sh
+camera-probe capture-cif-with-parameters /dev/videoPARAM initial.bin /dev/videoRAW_TX /dev/videoRAW_RX /dev/v4l-subdevISP -- /dev/videoIMAGE frame.raw --fourcc NV12 --timeout-ms 10000 > capture-events.jsonl
+```
+
+All five endpoint paths must identify different actual devices. Configure links,
+raw formats and sensor exposure first. This command currently accepts only
+**single-plane unpacked RAW10 Bayer** TX/RX with matching dimensions, FourCC,
+stride and sizeimage. It allocates at least four TX MMAP buffers, exports their
+DMA-BUF descriptors, and allocates RX import slots. It does not map/copy the raw
+pixels. Multiplane raw endpoints, packed RAW10, USERPTR and fallback copies are
+rejected/unsupported, rather than silently guessed.
+
+After the parameter record completes, it starts TX then RX and starts image
+capture while a scoped worker pumps the raw bridge. Each dequeued TX index is
+queued into its matching RX import slot. Only after RX QBUF succeeds does the
+worker issue the linear readback trigger with the source sequence/timestamp.
+A TX buffer is requeued only when its corresponding RX completion arrives.
+The worker polls nonblocking DQBUF with a 1 ms backoff and a 10 s no-progress
+limit. It stops and joins after image capture, releases RX imports, closes
+exported descriptors and releases TX allocations. The parameter queue remains
+open around that entire operation. The `raw-bridge-finished` event reports
+completed raw frames, errors and cleanup errors.
+
+The first trigger uses one readback pass; subsequent fixed-startup triggers use
+zero extra passes. SOF event-map integration is pending, so the explicit native
+missing-SOF case (zero timestamp) is used. Automatic 3A, calibrated frame-delay
+scheduling, hardware restart and full native queue-controller equivalence remain
+unfinished. **No successful positive raw bridge/device path has been tested.**
+ARM compilation, kernel ABI assertions and CLI rejection tests establish only
+their stated offline coverage. Preserve errors and driver logs if STREAMON,
+DMA-BUF import/export, trigger or capture fails; do not call it functional based
+on compilation or parameter completion alone.

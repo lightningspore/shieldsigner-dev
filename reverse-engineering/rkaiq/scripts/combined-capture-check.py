@@ -10,5 +10,9 @@ def main():
  for args,expected in cases:
   result=subprocess.run(['docker','run','--rm','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={binary.parent},dst=/bincheck,readonly',image,'/bincheck/camera-probe','capture-with-parameters',*args],text=True,capture_output=True)
   assert result.returncode!=0 and expected in result.stderr,(args,result.returncode,result.stderr)
- print(json.dumps(dict(armCliPreflightCases=len(cases),passed=True,limitations='No positive hardware queue/capture execution; checks argument, alias, existing-output and missing-payload rejection only.')))
+ cif_cases=[([], 'capture-cif-with-parameters'), (['/dev/null','/missing','/dev/zero','/dev/null','/dev/zero','--','/dev/null','/tmp/out'],'distinct'), (['/missing','/missing','/dev/null','/dev/zero','/dev/full','--','/dev/random','/tmp/out'],'No such file')]
+ for args,expected in cif_cases:
+  result=subprocess.run(['docker','run','--rm','--platform','linux/arm/v7','--network=none','--mount',f'type=bind,src={binary.parent},dst=/bincheck,readonly',image,'/bincheck/camera-probe','capture-cif-with-parameters',*args],text=True,capture_output=True)
+  assert result.returncode!=0 and expected in result.stderr,(args,result.returncode,result.stderr)
+ print(json.dumps(dict(armCliPreflightCases=len(cases)+len(cif_cases),passed=True,limitations='No positive hardware queue/capture execution; checks argument, alias, existing-output and missing-payload rejection only.')))
 if __name__=='__main__':main()

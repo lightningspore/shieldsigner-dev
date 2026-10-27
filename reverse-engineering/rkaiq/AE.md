@@ -406,3 +406,40 @@ uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python revers
 FPS selection, variable-frame-rate/HDR policy, gain/DCG bounds, calibration enum
 binding and feedback scheduling remain separate work. These limits are not yet
 wired into automatic sensor writes. Real camera image quality remains untested.
+
+
+## Linear sensor and ISP gain limits
+
+`ae_gain_limits::linear` reconstructs the DCG-disabled, nonzero-calibration
+branch of `AecUpdateConfig` (ELF 0xa9068). Physical sensor gain bounds multiply
+analogue and sensor-digital ranges. Route endpoints are clamped against those
+physical bounds; ISP gain endpoints are clamped against their separate range.
+When overrides are enabled, each nonzero override replaces its route endpoint;
+zero keeps the route endpoint. If a selected minimum exceeds its selected
+maximum, the minimum collapses to the maximum, preserving native behavior.
+
+For the pinned SC3336 ranges, physical sensor gain is 1 through approximately
+778.24 (48.64 × 16), while the profile route ends at 512. These real-valued
+limits are distinct from register codes. Sensor register conversion, driver
+control limits and ISP digital-gain publication still need their existing
+separate checks.
+
+The native reference executes the complete configuration function through
+normal return. Thirty-six cases compare six float fields bit-for-bit: physical
+sensor min/max, selected sensor min/max and selected ISP min/max. They cover
+three physical-range sets, three route-range sets, zero-valued and nonzero
+overrides, and conflicting overrides. Host and static ARM replay both pass.
+[Equivalence report](ae-gain-limits-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-gain-limits.py --arm
+```
+
+This checked API rejects zero/negative physical or route endpoints, nonfinite
+inputs, reversed ranges and multiplication overflow. Native invalid-calibration
+fallbacks, DCG/HDR, iris and complete private configuration state are outside
+its scope. It does not enable feedback sensor writes or establish exposure
+frame scheduling. Together with the recovered shutter bounds, it supplies
+another input needed by the native route splitter.

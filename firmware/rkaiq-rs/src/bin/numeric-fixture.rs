@@ -380,6 +380,34 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-gain-limits" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let pair =
+                    |name: &str| core::array::from_fn(|i| v[name][i].as_f64().unwrap() as f32);
+                let out = ae_gain_limits::linear(ae_gain_limits::Input {
+                    analogue: pair("analogue"),
+                    digital: pair("digital"),
+                    isp: pair("isp"),
+                    route_gain: pair("route_gain"),
+                    route_isp: pair("route_isp"),
+                    overrides: if v["override"].as_bool().unwrap() {
+                        Some(core::array::from_fn(|i| {
+                            v["gain_overrides"][i].as_f64().unwrap() as f32
+                        }))
+                    } else {
+                        None
+                    },
+                })
+                .unwrap();
+                emit(&[
+                    out.physical_gain[0],
+                    out.physical_gain[1],
+                    out.gain[0],
+                    out.gain[1],
+                    out.isp[0],
+                    out.isp[1],
+                ]);
+            }
             "ae-shutter" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let n = |s: &str| v[s].as_f64().unwrap() as f32;

@@ -1868,3 +1868,32 @@ regressing SOF and unfinished shutdown rejection. All four capture startup
 scenarios still pass. The existing capture CLI has not yet been switched to
 this consumer; continuous parameter submission, snapshot accumulation and
 shutdown coordination remain to be joined before enabling automatic capture.
+
+### Gain submission and translator snapshot registration
+
+`CameraAeOwner::submit_gain` joins the single event consumer to persistent Linux
+parameter enqueue/completion handling. It drains at most eight available
+completions (the adapter's maximum pool size), plans the requested frame's gain
+results from the effective exposure map, and skips a no-update batch. A batch
+with updates must have a new increasing parameter ID and fit the explicit
+128-snapshot bound before it can be queued.
+
+After successful QBUF, the owner registers a complete translator snapshot under
+that batch's frame ID. The snapshot starts with the preceding complete state,
+preserving black-level, measurement configuration and other unchanged fields;
+only its frame and unscaled WB cache change for this gain-only module update.
+It does not substitute scaled hardware gain words for the unscaled metadata
+established by the native effective-parameter copy path. Queue failure cannot
+advance the snapshot history. Completed buffer ownership does not imply physical
+frame application: later statistics must still select their explicit parameter
+ID, and unknown IDs remain errors.
+
+The ARM adapter test now queues three additional owner-managed batches. It
+checks snapshot preservation outside WB/frame fields, distinguishes unscaled
+snapshot words (256) from boosted submitted words (512), processes statistics
+carrying the first new snapshot ID, checks duplicate-ID rejection, forces pool
+exhaustion without history mutation, drains completions and resumes submission.
+All four startup scenarios continue to pass. This accumulation rule covers
+only the existing gain/WB module update; other ISP module changes and native
+map retention are not implemented by it. The continuous capture entry point
+and coordinated shutdown are still pending.

@@ -633,6 +633,99 @@ mod first_frame_driver {
         let allocated = backend.allocated;
         queue.stop(&mut backend, allocated);
         assert!(backend.cleanup_errors.is_empty());
+        DRIVER
+            .lock()
+            .unwrap()
+            .as_mut()
+            .unwrap()
+            .parameter_error_flag = false;
+        queue = parameter::Queue::default();
+        assert_eq!(queue.start(&mut backend, false), 0);
+        let sensor = SensorDevice {
+            file: open("/dev/null", true).unwrap(),
+            queries: vec![],
+            bus: None,
+            writes: vec![],
+        };
+        let mut owner = CameraAeOwner::new(make_runtime(2.), sensor, 0, initial_parameters);
+        let index = owner
+            .submit_gain(&mut backend, &mut queue, 1, Some(wb))
+            .unwrap()
+            .unwrap();
+        assert_eq!(owner.parameters.len(), 2);
+        assert_eq!(owner.parameters[1].0, 1);
+        let snapshot = &owner.parameters[1].1;
+        assert_eq!(
+            &snapshot[28..isp32::AWB_GAIN_OFFSET],
+            &initial_parameters[28..isp32::AWB_GAIN_OFFSET]
+        );
+        assert_eq!(
+            u16::from_le_bytes(
+                snapshot[isp32::AWB_GAIN_OFFSET + 8..isp32::AWB_GAIN_OFFSET + 10]
+                    .try_into()
+                    .unwrap()
+            ),
+            256
+        );
+        let bytes = unsafe {
+            std::slice::from_raw_parts(
+                backend.mappings[index].address.cast::<u8>(),
+                isp32::PARAMETER_BYTES,
+            )
+        };
+        assert_eq!(
+            u16::from_le_bytes(
+                bytes[isp32::AWB_GAIN_OFFSET + 8..isp32::AWB_GAIN_OFFSET + 10]
+                    .try_into()
+                    .unwrap()
+            ),
+            512
+        );
+        owner
+            .handle(CameraAeEvent::Sof {
+                frame: 1,
+                timestamp_ns: 1_000_000,
+            })
+            .unwrap();
+        let outputs = owner
+            .handle(CameraAeEvent::Statistics { bytes: raw(1, 1) })
+            .unwrap();
+        assert_eq!(outputs.len(), 1);
+        assert_eq!(outputs[0].parameters, 1);
+        DRIVER
+            .lock()
+            .unwrap()
+            .as_mut()
+            .unwrap()
+            .parameter_would_block = true;
+        owner
+            .submit_gain(&mut backend, &mut queue, 2, Some(wb))
+            .unwrap()
+            .unwrap();
+        let snapshots = owner.parameters.clone();
+        DRIVER
+            .lock()
+            .unwrap()
+            .as_mut()
+            .unwrap()
+            .parameter_would_block = true;
+        assert!(owner
+            .submit_gain(&mut backend, &mut queue, 3, Some(wb))
+            .is_err());
+        assert_eq!(owner.parameters, snapshots);
+        assert!(owner
+            .submit_gain(&mut backend, &mut queue, 2, Some(wb))
+            .is_err());
+        assert_eq!(owner.parameters, snapshots);
+        owner
+            .submit_gain(&mut backend, &mut queue, 3, Some(wb))
+            .unwrap()
+            .unwrap();
+        assert_eq!(owner.parameters.len(), 4);
+        assert_eq!(owner.parameters[3].0, 3);
+        let allocated = backend.allocated;
+        queue.stop(&mut backend, allocated);
+        assert!(backend.cleanup_errors.is_empty());
         let driver = DRIVER.lock().unwrap().take().unwrap();
         assert_eq!(
             driver
@@ -640,12 +733,12 @@ mod first_frame_driver {
                 .iter()
                 .filter(|s| s.as_str() == "parameters:queue")
                 .count(),
-            3
+            6
         );
         println!();
         println!(
             "{}",
-            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":3,"poolExhaustionChecked":true,"unityNoopChecked":true})
+            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":6,"snapshotSubmissions":3,"poolExhaustionChecked":true,"unityNoopChecked":true})
         );
     }
     #[test]

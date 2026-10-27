@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "071ee30ac6b8138786f9d3bf9af457620cbcbf3bd6ea367ee049618d50ba3d4e",
+  "testBinarySha256": "927fe441d055b3b09526ac69eb031bb5b00bf59ba6f1cbbd7c24622775b1817f",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -35,12 +35,12 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
-      "sofEvents": 6,
+      "sofEvents": 7,
       "statisticsEnabled": true,
-      "statisticsEvents": 5,
-      "statisticsFrames": 5
+      "statisticsEvents": 6,
+      "statisticsFrames": 6
     },
     {
       "event": "simulated-startup-verified",
@@ -61,17 +61,17 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 6,
+      "rawFrames": 5,
       "savedBytes": 4478976,
-      "sofEvents": 7,
+      "sofEvents": 6,
       "statisticsEnabled": true,
-      "statisticsEvents": 6,
-      "statisticsFrames": 6
+      "statisticsEvents": 5,
+      "statisticsFrames": 5
     }
   ],
   "verified": [
     "runtime effective-exposure gains through persistent MMAP parameter enqueue, pool exhaustion, EAGAIN preservation, ordered completion/reuse, invalid-completion quarantine and unity no-op",
-    "owned SOF/statistics transport plus single-owner AE processing, early-statistics buffering, explicit snapshot selection and scheduled Linux sensor writes",
+    "owned SOF/statistics transport, single-owner AE/sensor processing and successful gain-submission snapshot registration with failure preservation",
     "actual first-frame-sc3336 userspace orchestration",
     "graph format readback and profile loading",
     "active timing conversion and sensor writes",

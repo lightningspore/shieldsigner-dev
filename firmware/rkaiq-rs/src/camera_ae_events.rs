@@ -64,6 +64,56 @@ where
         self.parameters.push((id, bytes));
         Ok(())
     }
+    /// Submit one gain-only ISP batch and register complete translator state
+    /// under its frame ID. Queue failure cannot advance the snapshot cache.
+    /// DQBUF confirms ownership only; statistics still choose their explicit ID.
+    fn submit_gain(
+        &mut self,
+        backend: &mut ParameterBackend,
+        queue: &mut parameter::Queue,
+        frame: u32,
+        white_balance: Option<shieldsigner_rkaiq::isp32::WhiteBalanceGain>,
+    ) -> io::Result<Option<usize>> {
+        use shieldsigner_rkaiq::isp32;
+        // One drain is bounded by the driver's maximum pool size.
+        for _ in 0..8 {
+            if backend.try_complete(queue)?.is_none() {
+                break;
+            }
+        }
+        let mut snapshot = self
+            .parameters
+            .last()
+            .ok_or_else(|| error("No initial AE parameters"))?
+            .1;
+        let mut cache: [u8; 32] = snapshot[isp32::AWB_GAIN_OFFSET..isp32::AWB_GAIN_OFFSET + 32]
+            .try_into()
+            .unwrap();
+        let mut planned = [0u8; isp32::PARAMETER_BYTES];
+        let mut planned_cache = cache;
+        self.runtime
+            .apply_isp_gain_results(frame, &mut planned, &mut planned_cache, white_balance)
+            .map_err(error)?;
+        let updates = u64::from_le_bytes(planned[..8].try_into().unwrap())
+            | u64::from_le_bytes(planned[16..24].try_into().unwrap());
+        if updates == 0 {
+            return Ok(None);
+        }
+        if self.parameters.len() == 128 || self.parameters.last().is_some_and(|p| p.0 >= frame) {
+            return Err(error("Gain batch requires a new increasing parameter ID"));
+        }
+        let Some((index, _)) =
+            backend.enqueue_runtime_gain(queue, &self.runtime, frame, &mut cache, white_balance)?
+        else {
+            return Err(error("Gain batch changed between planning and enqueue"));
+        };
+        // Effective translator metadata uses the unscaled converter WB cache,
+        // not the ISP-digital-gain-scaled register words submitted to hardware.
+        snapshot[isp32::AWB_GAIN_OFFSET..isp32::AWB_GAIN_OFFSET + 32].copy_from_slice(&cache);
+        snapshot[24..28].copy_from_slice(&frame.to_le_bytes());
+        self.parameters.push((frame, snapshot));
+        Ok(Some(index))
+    }
     /// Statistics can overtake their SOF producer. Retain at most 16 complete
     /// owned payloads until SOF reaches their frame. Never guess a future map.
     /// Regressions/duplicates in statistics and regressing SOFs are errors.

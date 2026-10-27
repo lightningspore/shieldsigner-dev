@@ -886,3 +886,34 @@ Run `mise run camera:rust:ccm-tables -- --adb SERIAL --report LOCAL.json` after
 building host/ARM fixtures. Physical replay loads only the Rust fixture program,
 not the vendor library, and makes no ISP writes. The next integration is the
 outer automatic CCM state and result publication; live CCM remains disabled.
+
+### CCM input deadband (0.0.34 development)
+
+`ccm_input::filter` reconstructs complete `JudgeCcmRes3aConverge` (ELF
+`0xfe1dc`, Ghidra `0x10e1dc`). Its mutable records are `[sensor gain, red WB
+gain, blue WB gain]`: a stored baseline and current proposed inputs. A gain
+change no greater than the absolute gain tolerance replaces current gain with
+the held baseline. A greater change advances the baseline to current gain and
+sets the change flag. White balance uses the analogous radial R/B tolerance,
+comparing squared distance with tolerance squared. The blue squared difference
+is rounded first and red squared is fused into it, matching `vfma.f32`.
+At equality the prior inputs are retained. Either significant component sets
+the return flag, while gain/WB baseline updates remain independent.
+
+This is the outer controller's input hold/update gate, not a test of final
+matrix convergence. `AccmConfig` invokes it before deciding whether selection
+and automatic configuration need to run. The selected profile's WB tolerance
+is zero; the implementation does not invent a larger noise threshold.
+
+[Complete native/physical CPU evidence](ccm-input-equivalence.json) checks 100
+persistent 32-frame sequences (3,200 frames), including identical inputs,
+tolerance boundaries, radial R/B changes and the actual .2/0 tolerance pair.
+All 24 baseline/current record bytes and the change flag agree. The original
+entire gate executes with no numerical/external stubs. Rust rejects non-finite
+records and negative/non-finite tolerances before modifying either record.
+The 97 library/five Unix tests, no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:ccm-input -- --adb SERIAL --report LOCAL.json` after
+building host/ARM fixtures. Physical replay makes no ISP writes. Joined
+`AccmConfig`/`AccmAutoConfig`, constructor-owned defaults/flags and live CCM
+submission remain next; the camera still leaves CCM disabled.

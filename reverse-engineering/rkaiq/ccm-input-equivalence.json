@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "cases": 100,
+  "frames": 3200,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "ccd86a26f946b1bd1983bce16e25295cf8f50a7d340cc5cc1651bdafe4e426a2",
+  "physicalArmBinarySha256": "cd89fb95bc898d45fa920371e94767a3f32cd49a0110a0ea2307d3abb35898d0",
+  "hostMatchesPhysicalArm": true,
+  "seed": "0x43434d49",
+  "scope": "Complete native JudgeCcmRes3aConverge across persistent 32-frame sequences; all 24 input/baseline bytes and change flag. No numerical or external-call stubs.",
+  "limitations": [
+    "Finite records and nonnegative tolerances; invalid Rust inputs rejected atomically.",
+    "Joined outer CCM controller and live submission remain separate.",
+    "Physical CPU replay does not write ISP registers."
+  ]
+}

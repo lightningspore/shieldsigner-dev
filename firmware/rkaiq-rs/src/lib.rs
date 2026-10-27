@@ -353,3 +353,4 @@ pub mod ccm_saturation;
 pub mod ccm_luma;
 #[cfg(feature = "diagnostics")]
 pub mod ccm_calibration;
+pub mod ccm_input;

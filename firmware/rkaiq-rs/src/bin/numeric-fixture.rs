@@ -3256,6 +3256,18 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-input" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let array=|p: &serde_json::Value|p.as_array().unwrap().iter().map(|v|v.as_f64().unwrap() as f32).collect::<Vec<_>>().try_into().unwrap();
+                let mut baseline=array(&v["baseline"]);let mut output=Vec::new();
+                for frame in v["frames"].as_array().unwrap() {
+                    let mut current=array(&frame["current"]);
+                    let changed=shieldsigner_rkaiq::ccm_input::filter(&mut baseline,&mut current,frame["gainTolerance"].as_f64().unwrap() as f32,frame["wbTolerance"].as_f64().unwrap() as f32).unwrap();
+                    let hex=baseline.iter().chain(current.iter()).flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>();
+                    output.push(serde_json::json!({"records":hex,"changed":changed}));
+                }
+                println!("{}",serde_json::json!(output));
+            }
             "ccm-tables" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let cal=shieldsigner_rkaiq::ccm_calibration::Automatic::from_value(&v).unwrap();

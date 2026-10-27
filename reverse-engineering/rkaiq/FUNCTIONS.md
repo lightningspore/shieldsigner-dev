@@ -168,3 +168,7 @@ profile names, cached publication and early exits.
 including native profile-name resolution/order from `pCcmMatrixAll_init`
 (ELF `0xfdc04`) and `CamCalibDbGetCcmProfileByName` (`0xfdba8`).
 [Validation boundaries and original/physical CPU table evidence](ISP.md#owned-ccm-calibration-tables-0034-development).
+
+`ccm_input::filter` reconstructs complete `JudgeCcmRes3aConverge`
+(ELF `0xfe1dc`), including independent input holds and baseline mutations.
+[Meaning, fused distance and persistent native/physical CPU evidence](ISP.md#ccm-input-deadband-0034-development).

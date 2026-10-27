@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "bytesComparedPerCase": 11145,
+  "mismatches": 0,
+  "seed": "0x4c5343",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "acf88f5e2c939e96a497f9e26ea08f4f2befe849dc3594f05472a8abbaafdb41",
+  "physicalArmBinarySha256": "f2fc354d4f2ab51f0ab86155fe83ba48fc9cf878a6b5bc5609108555faf32bb0",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Original full ISP32 dispatcher LSC branch (result type 10); all 11,145 output bytes, 2,449 packed LSC bytes, input preservation and native cached enable byte.",
+  "limitations": [
+    "Typed C++ dynamic_cast is a controlled oracle boundary; actual LSC branch instructions execute.",
+    "Calibration selection, geometry and AlscConfig are separate from this serializer.",
+    "Physical ARM replay does not enable LSC on the camera or qualify image quality."
+  ]
+}

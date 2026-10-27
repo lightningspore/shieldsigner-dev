@@ -283,3 +283,17 @@ _Static_assert(CCM_ILLUMINATION_MAX==9 && CCM_PROFILES_NUM_MAX==5,"CCM context c
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'ccm-sdk-layout.o')],check=True)
 print('PASS: SDK CCM IQ=2164/result=156, illuminant=56/profile=60/luma row=72 bytes; all used offsets verified')
+
+lsc_hw=dpcc_header('rk_aiq_types_alsc_hw.h').replace('#include "rk_aiq_comm.h"','')
+source=cache/'lsc-sdk-layout.c'
+source.write_text('#include <stdbool.h>\n#include <stddef.h>\n#define RKAIQ_BEGIN_DECLARE\n#define RKAIQ_END_DECLARE\n'+lsc_hw+'''
+_Static_assert(sizeof(rk_aiq_lsc_cfg_t)==2442,"LSC SDK result size");
+_Static_assert(offsetof(rk_aiq_lsc_cfg_t,gr_data_tbl)==578,"LSC SDK green red plane");
+_Static_assert(offsetof(rk_aiq_lsc_cfg_t,b_data_tbl)==1734,"LSC SDK blue plane");
+_Static_assert(offsetof(rk_aiq_lsc_cfg_t,x_grad_tbl)==2312,"LSC SDK gradients");
+_Static_assert(offsetof(rk_aiq_lsc_cfg_t,x_size_tbl)==2376,"LSC SDK sizes");
+_Static_assert(offsetof(rk_aiq_lsc_cfg_t,lsc_en)==2440,"LSC SDK enable");
+_Static_assert(LSC_DATA_TBL_SIZE==289,"LSC SDK plane count differs from kernel");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'lsc-sdk-layout.o')],check=True)
+print('PASS: SDK LSC result=2442/289 entries per plane; packed kernel=2449/290 entries per plane')

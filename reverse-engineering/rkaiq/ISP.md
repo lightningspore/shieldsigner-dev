@@ -1089,3 +1089,43 @@ CNR and SHARP. The frozen 0.0.33 kit and its audit remain unchanged. Current
 CCM qualification is warm capture on the previously verified driver-only boot;
 physical register timing, calibrated color quality, successful optical QR and
 an exact new-package cold boot remain separate.
+
+### LSC selected-result serialization (0.0.34 development)
+
+`isp_lsc::apply` reconstructs the LSC result-type-10 case inside complete
+`Isp32Params::convert3aResultsToIspCfg` (ELF `0x304c4`). It accepts the public
+SDK's 2442-byte `rk_aiq_lsc_cfg_t` and writes the 2449-byte packed kernel
+`isp3x_lsc_cfg` at offset `0x894`. ARM-target C assertions independently compile
+both declarations and verify sizes, plane/geometry/enable offsets and module
+bit 4. Three public ALSC headers are provenance-pinned in `artifacts.json`;
+raw header downloads remain in the ignored local cache.
+
+The SDK has four 17×17 planes, 289 u16 entries each. The kernel has 290 entries
+per plane. Native copies the first 289, preserving the previous kernel value
+in slot 290. When enabled, it clamps **all 290**, including that retained slot,
+to 8191. When disabled, it does not clamp. In either case it copies four
+sixteen-entry gradient/size tables and sets `sector_16x16` to one. SDK trailing
+padding and unrelated parameter bytes remain untouched.
+
+Native always sets enable-update bit 4. Enabled results set both module-enable
+and configuration-update bit 4; disabled results clear both, unlike the DPCC/CCM
+enable-mask asymmetry. The serializer also updates the original converter
+context's cached enabled byte (offset `0x68` at the controlled base offset);
+Rust represents that state explicitly rather than claiming a native C++ layout.
+
+[Full native dispatcher/physical CPU evidence](isp-lsc-equivalence.json) checks
+1,000 cases, comparing every one of the 11,145 output parameter bytes and cached
+enable state. Random prior contents/masks, non-boolean enable bytes, explicit
+8190/8191/8192/65535 table boundaries and retained-slot values cover both paths.
+The full original dispatcher branch executes; only the valid typed C++
+`dynamic_cast` is controlled. Original result bytes and all other converter
+context bytes are independently checked unchanged. Host and physical Luckfox
+Rust replay agree; SDK/kernel layout checks, 99 library/five Unix tests,
+no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:isp-lsc -- --adb SERIAL --report LOCAL.json` after
+building host/ARM fixture tools. This is conversion of an explicit result,
+not calibrated LSC selection, geometry, damping, OTP handling or `AlscConfig`.
+Physical CPU replay makes no ISP writes and loads no vendor library on the
+board. Live LSC remains disabled until the remaining input/controller path is
+verified; the existing live CCM binary and frozen 0.0.33 archive are unchanged.

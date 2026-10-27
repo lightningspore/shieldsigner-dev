@@ -191,3 +191,8 @@ native −21 selector-status early exit in joined automatic configuration.
 startup and transactional live CCM. `awb_session::Session::ccm_damping` exposes
 the native-published base IIR coefficient for exact-frame handoff.
 [Live mapping, driver-failure behavior and camera/scan evidence](ISP.md#transactional-live-ccm-0034-development).
+
+`isp_lsc::apply` reconstructs the LSC result-type-10 branch inside the full
+ISP32 dispatcher (ELF `0x304c4`), including retained entries, clamping,
+mask clearing and cached enable state.
+[SDK/kernel layout and complete native/physical CPU evidence](ISP.md#lsc-selected-result-serialization-0034-development).

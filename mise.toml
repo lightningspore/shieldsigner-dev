@@ -632,3 +632,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:ccm-live-check"]
 description = "Check captured startup/runtime CCM against full native constructor/callback/converter"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ccm-live-check.py"
+
+[tasks."camera:rust:isp-lsc"]
+description = "Compare LSC selected-result packing, masks and clamp behavior with full native dispatcher"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/isp-lsc.py"

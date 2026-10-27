@@ -195,3 +195,10 @@ _Static_assert(offsetof(struct isp32_ccm_cfg,coeff0_r)==5,"CCM coefficient offse
 _Static_assert(offsetof(struct isp32_ccm_cfg,alp_y)==35,"CCM alpha curve offset");
 _Static_assert(offsetof(struct isp32_ccm_cfg,color_enh_rat_max)==77,"CCM enhancement ratio offset");
 _Static_assert(ISP32_MODULE_CCM==(1ULL<<8),"CCM module bit");
+_Static_assert(sizeof(struct isp3x_lsc_cfg)==2449,"LSC kernel bytes");
+_Static_assert(offsetof(struct isp32_isp_params_cfg,others.lsc_cfg)==0x894,"LSC kernel offset");
+_Static_assert(offsetof(struct isp3x_lsc_cfg,r_data_tbl)==1,"LSC first plane");
+_Static_assert(offsetof(struct isp3x_lsc_cfg,gr_data_tbl)==581,"LSC second plane");
+_Static_assert(offsetof(struct isp3x_lsc_cfg,x_grad_tbl)==2321,"LSC gradient offset");
+_Static_assert(ISP3X_LSC_DATA_TBL_SIZE==290,"LSC kernel plane count");
+_Static_assert(ISP32_MODULE_LSC==(1ULL<<4),"LSC module bit");

@@ -213,3 +213,8 @@ fn camera_stream_write(
     }
     Ok(())
 }
+
+fn camera_stream_cancelled() -> bool {
+    CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed)
+        && CAMERA_STREAM_STOP.load(std::sync::atomic::Ordering::Relaxed)
+}

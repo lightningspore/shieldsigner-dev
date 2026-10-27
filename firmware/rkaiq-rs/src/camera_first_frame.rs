@@ -1,7 +1,33 @@
 // Continuous application owner; SIGINT/SIGTERM finish the current image and unwind all queues.
 fn stream_sc3336(args: &[String]) -> io::Result<()> {
     if args.len() != 7 { return Err(error("stream-sc3336 PLAN IQ PARAM IMAGE OUT STATS SOCKET")); }
+    // Take ownership before graph/sensor reconfiguration, not merely at STREAMON.
+    // Keep the inode: unlinking a held flock would let a new opener bypass it.
+    let ownership = OpenOptions::new().read(true).write(true).create(true)
+        .mode(0o600).custom_flags(libc::O_NOFOLLOW).open("/tmp/shieldsigner-camera-owner.lock")?;
+    if unsafe { libc::flock(ownership.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) } != 0 {
+        return Err(error("Another Rust camera owner is already running"));
+    }
     let _signals = CameraStreamSignals::install()?;
+    // A managed application session must not orphan a camera owner if Python dies.
+    if let Some(expected) = std::env::var_os("SHIELDSIGNER_CAMERA_PARENT_PID") {
+        let expected = expected.to_str().and_then(|v| v.parse::<u32>().ok())
+            .filter(|v| *v > 1).ok_or_else(|| error("Invalid managed camera parent PID"))?;
+        if unsafe { libc::prctl(libc::PR_SET_PDEATHSIG, libc::SIGTERM) } != 0 {
+            return Err(io::Error::last_os_error());
+        }
+        if unsafe { libc::getppid() } as u32 != expected {
+            return Err(error("Managed camera parent exited before startup"));
+        }
+    }
+    if let Some(fd) = std::env::var_os("SHIELDSIGNER_CAMERA_READY_FD") {
+        use std::os::fd::FromRawFd;
+        let fd = fd.to_str().and_then(|v| v.parse::<i32>().ok()).filter(|fd| *fd >= 3)
+            .ok_or_else(|| error("Invalid managed camera readiness descriptor"))?;
+        // Acknowledge only after signal handling and parent-death cleanup are armed.
+        let mut ready = unsafe { File::from_raw_fd(fd) };
+        ready.write_all(b"1")?;
+    }
     std::env::set_var("SHIELDSIGNER_CAMERA_SOCKET", &args[6]);
     auto_awb_frame_sc3336(&args[..6])
 }
@@ -467,7 +493,7 @@ fn first_frame_sc3336_with_gain(
     });
     println!(
         "{}",
-        json!({"event":"first-frame-finished","success":outcome.is_ok(),"error":outcome.as_ref().err().map(|e|e.to_string()),"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":live_awb,"coldStartProven":false,"partialSettingsMayRemain":true})
+        json!({"event":"first-frame-finished","success":outcome.is_ok(),"cancelled":camera_stream_cancelled(),"error":outcome.as_ref().err().map(|e|e.to_string()),"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":live_awb,"coldStartProven":false,"partialSettingsMayRemain":true})
     );
     outcome
 }

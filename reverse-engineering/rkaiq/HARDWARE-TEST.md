@@ -1091,7 +1091,74 @@ produced 29 and 30 distinct rotated previews over its two eight-second windows
 (about 3–4 fps); this is a functional checkpoint, not final UI/QR performance.
 See `application-stream-hardware-validation.json` for hashes and exact scope.
 
-Remaining: app-owned process lifetime/default integration, real scan/UI tests,
+Remaining: default integration, real scan/UI tests,
 restart/environment qualification, variable AWB configuration epochs and a
 cold start without prior vendor initialization. No vendor-free boot claim is
 made by these tests. The frozen 0.0.30-dev ZIP remains unchanged.
+
+## Application-owned camera sessions
+
+The Python adapter can now own the Rust process instead of requiring a separate
+terminal. Copy `python/sc3336-owner.example.json` to the board, review its seven
+paths against the verified graph, and set `SHIELDSIGNER_CAMERA_CONFIG` to that
+file. Create its `output_directory` on SD storage first. The camera import
+replacement described above is still opt-in and has not been installed by the
+tests. No boot service changes are required.
+
+For example, after copying the adapter and example configuration to `/tmp`:
+
+```sh
+export SHIELDSIGNER_CAMERA_CONFIG=/tmp/shieldsigner-camera-config.json
+# With the adapter on Python's module path and Camera's import switched:
+# Camera.start_video_stream_mode() launches Rust; Camera.stop_video_stream_mode()
+# closes the reader, sends SIGTERM, waits for queue cleanup, and reaps Rust.
+```
+
+`PiVideoStream(owner_config=configuration_dict)` selects the same managed mode
+explicitly. Without a configuration, the existing external-socket mode remains
+available. Each managed start uses a new `camera-*` directory containing its
+socket, `owner.log`, final image and control/statistics artifacts. No shell is
+used to construct the Rust command. Output directories are retained for review;
+archive/remove old sessions deliberately so SD usage does not grow forever.
+
+Rust acknowledges readiness after installing its stop handler and parent-death
+signal. An immediate Python `stop()` therefore cannot race signal-handler
+installation. A requested stop before the first image/measurements is recorded
+as cancellation, not successful image acquisition, and does not fabricate image
+or AWB/statistics artifacts. Cleanup errors still fail. Normal stop waits up to
+five seconds before forced termination; a forced or nonzero owner exit is
+reported as an error. Missing output storage fails before launching an owner.
+
+A held `flock` on `/tmp/shieldsigner-camera-owner.lock` rejects another
+`stream-sc3336` owner **before graph/sensor configuration**. The lock inode is
+intentionally retained; process exit releases its lock. This guards stream
+owners, not every independent low-level diagnostic command. Do not run those
+other camera tools concurrently. Linux parent-death signaling requests the
+same orderly cleanup if the Python parent disappears, including `os._exit()`.
+
+Reproduce the managed hardware checks by copying
+`python/managed_hardware_check.py` beside the adapter and running:
+
+```sh
+cd /tmp
+python3 managed_hardware_check.py \
+  --binary /tmp/shieldsigner-camera-probe-live-awb \
+  --plan /tmp/shieldsigner-pipeline-sof.json \
+  --iq /oem/usr/share/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json \
+  --output-directory /mnt/sdcard/shieldsigner-camera-tests \
+  --app-root /mnt/sdcard/seedsigner \
+  --report /mnt/sdcard/shieldsigner-camera-tests/managed-UNIQUE.json
+```
+
+This exercises the installed Camera wrapper through two separately owned
+sessions, a competing owner, immediate stop, missing output storage, and a
+separate Python process exiting without calling stop. Default application files
+remain unchanged. Final-source run 22 passed every path, including missing storage. First frames
+arrived in 0.74–0.76 s; normal shutdown took 0.30–0.32 s and early cancellation
+0.37 s. Both normal sessions passed capture/control validation and full 7,680-byte
+original-ARM translation comparison, with 172/169 AE+AWB statistics frames,
+171/168 submissions, and at most two retained snapshots. See
+`managed-camera-hardware-validation.json` for source/artifact hashes and scope. These timings
+are observations on the current warm board, not a cold-boot or latency guarantee.
+Full scan/UI integration, preview performance and vendor-free cold startup
+remain open work.

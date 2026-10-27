@@ -2502,3 +2502,34 @@ are in [HARDWARE-TEST.md](HARDWARE-TEST.md#live-frames-for-the-application-0031-
 Private images/raw statistics/logs remain ignored. Full UI/QR scanning,
 app-owned lifetime, cold-start independence and variable configuration policy
 remain required work toward a complete solution.
+
+## Managed application lifetime (2026-10-27)
+
+The application adapter can launch one Rust owner per camera session from an
+explicit JSON path configuration, then stop/reap it when Camera stops. Startup
+has a readiness acknowledgment after native signal/parent-death setup, and an
+exclusive stream-owner lock is acquired before configuring the graph. A second
+owner is rejected while the first continues. A Python parent exiting abruptly
+causes the native owner to finish through its regular shutdown path.
+
+Repeated hardware iterations covered two Camera sessions, competing-owner
+rejection, immediate cancellation before any image, and parent exit without
+adapter.stop(). The immediate cancellation initially failed with `No frame
+saved`; capture, statistics and AWB now distinguish that explicit cancellation
+from absent data during a requested acquisition. They do not manufacture empty
+measurement evidence. Normal capture/control failures and cleanup failures
+remain errors. See the managed-session instructions in HARDWARE-TEST.md.
+
+This completes the opt-in application-owned lifetime path, not default UI
+installation, scanning qualification, cold-start independence or remaining AWB
+configuration policy. Test runs and artifacts remain separated from default
+application/boot files.
+
+Final-source managed run 22 passes missing-storage rejection, two independent
+Camera-owned sessions, competing-owner rejection, immediate cancellation and
+parent exit. Both normal sessions pass exact-ID control checks and independent
+7,680-byte original ARM translation (zero mismatches); peak retained parameter
+snapshots is two. First frames arrive in 0.74–0.76 s and owner stop/reap takes
+0.30–0.32 s. The 85 library tests, three Unix transport tests, ARM build,
+no-default-features build and six existing simulated adapter scenarios pass.
+See `managed-camera-hardware-validation.json`.

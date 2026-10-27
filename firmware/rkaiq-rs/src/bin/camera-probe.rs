@@ -1020,6 +1020,10 @@ mod linux {
         drop(mapped);
         request.count = 0;
         ioctl(fd, REQBUFS, &mut request)?;
+        if saved.is_none() && continuous && camera_stream_cancelled() {
+            println!("{}", json!({"event":"image-capture-cancelled","beforeFirstFrame":true}));
+            return Ok(());
+        }
         let (bytes, planes, sequence, seconds, microseconds) =
             saved.ok_or_else(|| error("No frame saved"))?;
         let statistics_header = if statistics {

@@ -238,7 +238,7 @@ mod statistics_session {
                 let result=session.receive(&flag,&snapshot,&observer,cancel);
                 while !flag.load(Ordering::Acquire) {std::thread::sleep(Duration::from_millis(1));}
                 session.release();
-                let saved=if session.last.is_some(){session.save(out,initial_target)}else{Err(error("No statistics frames captured"))};
+                let saved=if session.last.is_some(){session.save(out,initial_target)}else if camera_stream_cancelled(){Ok(())}else{Err(error("No statistics frames captured"))};
                 println!("{}",json!({"event":"statistics-finished","framesReceived":session.frames,"error":result.as_ref().err().map(|e|e.to_string()),"saveError":saved.as_ref().err().map(|e|e.to_string()),"cleanupErrors":session.cleanup,"controlsExposure":false}));
                 result.and(saved).and_then(|_|if session.cleanup.is_empty(){Ok(())}else{Err(error("Statistics cleanup failed"))})
             });

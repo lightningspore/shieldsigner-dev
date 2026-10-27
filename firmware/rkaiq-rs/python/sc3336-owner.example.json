@@ -1,0 +1,9 @@
+{
+  "binary": "/tmp/shieldsigner-camera-probe-live-awb",
+  "plan": "/tmp/shieldsigner-pipeline-sof.json",
+  "iq": "/oem/usr/share/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json",
+  "parameters": "/dev/video20",
+  "image": "/dev/video11",
+  "statistics": "/dev/video19",
+  "output_directory": "/mnt/sdcard/shieldsigner-camera-tests"
+}

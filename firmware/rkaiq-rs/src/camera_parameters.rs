@@ -510,6 +510,10 @@ fn capture_with_parameters_controlled(
                 },
             );
             let result = result.and_then(|()| match control.owner.awb.as_ref() {
+                Some(awb) if awb.last.is_none() && camera_stream_cancelled() => {
+                    println!("{}", json!({"event":"automatic-awb-cancelled","processedStatistics":0}));
+                    Ok(())
+                }
                 Some(awb) => awb.save(&awb_output),
                 None => Ok(()),
             });

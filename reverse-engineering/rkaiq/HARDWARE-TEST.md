@@ -301,8 +301,14 @@ open around that entire operation. The `raw-bridge-finished` event reports
 completed raw frames, errors and cleanup errors.
 
 The first trigger uses one readback pass; subsequent fixed-startup triggers use
-zero extra passes. SOF event-map integration is pending, so the explicit native
-missing-SOF case (zero timestamp) is used. Automatic 3A, calibrated frame-delay
+zero extra passes. Before streaming, the ISP FD subscribes to FRAME_SYNC events.
+The worker drains events into a bounded 64-frame cache and looks up the raw
+frame sequence using the native signed-negative-ID-to-zero rule. It uses the
+matched SOF timestamp in nanoseconds; a missing match uses zero, matching the
+original caller's initialized fallback. `sofMatches` and `sofMissing` in the
+final event expose this distinction. The cache bound and nonblocking drain are
+explicit Rust service choices; no native ordered-map equivalence is claimed.
+Automatic 3A, calibrated frame-delay
 scheduling, hardware restart and full native queue-controller equivalence remain
 unfinished. **No successful positive raw bridge/device path has been tested.**
 ARM compilation, kernel ABI assertions and CLI rejection tests establish only

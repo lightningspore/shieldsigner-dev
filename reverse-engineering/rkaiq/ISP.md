@@ -166,5 +166,16 @@ imports them into matching RX indices, triggers readback after successful RX
 QBUF, and returns each TX index only after RX completion. See
 [hardware command and explicit limitations](HARDWARE-TEST.md#development-linear-cif-dma-buf-bridge).
 This implements the live bridge mechanism described above, but its positive
-hardware path, SOF-map/controller synchronization and whole-routine native
+hardware path, outer controller synchronization and whole-routine native
 queue equivalence remain unverified. It does not add automatic 3A.
+
+The raw bridge now subscribes to ISP FRAME_SYNC events before streaming and
+matches payload frame IDs to raw sequences. Ghidra `RKSofEventStream` (ELF
+0x32658) reads frame ID at event byte 8 and converts signed old-time seconds/
+nanoseconds at bytes 80/84. The delivery sequence at byte 76 is unrelated.
+`match_sof_timestamp_map` (ELF 0x34d8c) clamps signed-negative IDs to zero before
+lookup; the caller initializes the missing timestamp to zero. Rust uses those
+fields/rules with a bounded 64-entry cache and reports hits/misses. Independent
+ARM header assertions verify event size, every consumed offset and ioctls.
+Live delivery order, misses and SOF timing still require hardware measurement;
+this does not establish full native ordered-map/controller equivalence.

@@ -171,3 +171,9 @@ _Static_assert(offsetof(struct v4l2_exportbuffer,fd)==16,"raw export fd offset")
 _Static_assert(VIDIOC_EXPBUF==0xc0405610,"raw export ioctl");
 _Static_assert(V4L2_MEMORY_DMABUF==4,"raw import memory mode");
 _Static_assert(V4L2_PIX_FMT_SBGGR10==0x30314742 && V4L2_PIX_FMT_SGBRG10==0x30314247 && V4L2_PIX_FMT_SGRBG10==0x30314142 && V4L2_PIX_FMT_SRGGB10==0x30314752,"RAW10 formats");
+_Static_assert(V4L2_EVENT_FRAME_SYNC==4,"SOF event type");
+_Static_assert(offsetof(struct v4l2_event,u.frame_sync.frame_sequence)==8,"SOF frame ID");
+_Static_assert(offsetof(struct v4l2_event,timestamp)==80,"SOF old-time timestamp");
+_Static_assert(offsetof(struct v4l2_event,sequence)==76,"event sequence differs from frame ID");
+_Static_assert(sizeof(struct v4l2_event)==128,"SOF event bytes");
+_Static_assert(VIDIOC_SUBSCRIBE_EVENT==0x4020565a && VIDIOC_DQEVENT==0x80805659,"SOF ioctls");

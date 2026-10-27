@@ -3,6 +3,25 @@
 pub const TRIGGER_BYTES: usize = 28;
 pub const TRIGGER_IOCTL: u32 = 0x401c56c0;
 
+/// ARM32 old-time V4L2 FRAME_SYNC event consumed by RKSofEventStream.
+/// The payload union is aligned to 8 bytes; its frame_sequence is not the
+/// event delivery sequence at offset 76.
+pub fn frame_sync(bytes: &[u8; 128]) -> Result<Option<(u32, u64)>, crate::InvalidInput> {
+    let word = |offset| u32::from_le_bytes(bytes[offset..offset + 4].try_into().unwrap());
+    if word(0) != 4 {
+        return Ok(None);
+    }
+    let seconds = word(80) as i32;
+    let nanos = word(84) as i32;
+    if seconds < 0 || !(0..1_000_000_000).contains(&nanos) {
+        return Err(crate::InvalidInput::Exposure);
+    }
+    Ok(Some((
+        word(8),
+        seconds as u64 * 1_000_000_000 + nanos as u64,
+    )))
+}
+
 /// Build the native linear trigger after successfully queueing its raw RX buffer.
 /// `frame_timestamp_us` is the source proxy's unsigned 64-bit timestamp; the
 /// original converts it to nanoseconds with wrapping multiplication by 1000.
@@ -35,6 +54,16 @@ pub fn linear_trigger(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn sof_uses_payload_frame_id_and_old_time_offsets() {
+        let mut event = [0u8; 128];
+        for (offset, value) in [(0, 4u32), (8, 17), (76, 99), (80, 2), (84, 123)] {
+            event[offset..offset + 4].copy_from_slice(&value.to_le_bytes());
+        }
+        assert_eq!(frame_sync(&event), Ok(Some((17, 2_000_000_123))));
+        event[84..88].copy_from_slice(&1_000_000_000u32.to_le_bytes());
+        assert!(frame_sync(&event).is_err());
+    }
     #[test]
     fn first_trigger_and_native_signed_times_rules() {
         let times = |value, first, multi| {

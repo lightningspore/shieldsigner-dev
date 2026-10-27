@@ -89,6 +89,9 @@ mod raw_bridge {
         inflight: Vec<bool>,
         first: bool,
         transferred: u64,
+        sof: std::collections::VecDeque<(u32, u64)>,
+        sof_matches: u64,
+        sof_missing: u64,
     }
     impl Bridge {
         pub fn prepare(tx_path: &str, rx_path: &str, isp_path: &str) -> io::Result<Self> {
@@ -158,7 +161,13 @@ mod raw_bridge {
                 inflight: vec![],
                 first: true,
                 transferred: 0,
+                sof: std::collections::VecDeque::new(),
+                sof_matches: 0,
+                sof_missing: 0,
             };
+            let mut subscription = [0u32; 8];
+            subscription[0] = 4;
+            ioctl(bridge.isp.as_raw_fd(), 0x4020565a, &mut subscription)?;
             let count = bridge.tx.allocate(4)?;
             bridge.rx.allocate(count)?;
             for index in 0..count {
@@ -192,9 +201,36 @@ mod raw_bridge {
             }
             Ok(bridge)
         }
+        fn drain_sof(&mut self) -> io::Result<()> {
+            // Bounded drain/cache prevents a noisy event source from starving raw I/O.
+            for _ in 0..64 {
+                let mut event = [0u8; 128];
+                match ioctl(self.isp.as_raw_fd(), 0x80805659, &mut event) {
+                    Ok(()) => {
+                        if let Some(pair) = shieldsigner_rkaiq::raw_readback::frame_sync(&event)
+                            .map_err(|_| error("Invalid SOF timestamp"))?
+                        {
+                            if let Some(entry) = self.sof.iter_mut().find(|entry| entry.0 == pair.0)
+                            {
+                                *entry = pair;
+                            } else {
+                                if self.sof.len() == 64 {
+                                    self.sof.pop_front();
+                                }
+                                self.sof.push_back(pair);
+                            }
+                        }
+                    }
+                    Err(e) if e.kind() == io::ErrorKind::WouldBlock => break,
+                    Err(e) => return Err(e),
+                }
+            }
+            Ok(())
+        }
         fn pump(&mut self, stop: &AtomicBool) -> io::Result<()> {
             let mut last = Instant::now();
             while !stop.load(Ordering::Acquire) {
+                self.drain_sof()?;
                 // Complete RX before admitting more TX. A TX buffer remains held
                 // until the corresponding imported RX index has been dequeued.
                 let mut done = self.rx.record(0);
@@ -246,11 +282,26 @@ mod raw_bridge {
                         let us = (raw.time.seconds as u64)
                             .wrapping_mul(1_000_000)
                             .wrapping_add(raw.time.microseconds as u64);
-                        // SOF subscription is not integrated yet. Native missing
-                        // SOF-map matches use zero; preserve that explicit case.
+                        self.drain_sof()?;
+                        // The original map lookup clamps signed-negative IDs to zero.
+                        let lookup = if (raw.sequence as i32) < 0 {
+                            0
+                        } else {
+                            raw.sequence
+                        };
+                        let sof = match self.sof.iter().find(|entry| entry.0 == lookup) {
+                            Some(entry) => {
+                                self.sof_matches += 1;
+                                entry.1
+                            }
+                            None => {
+                                self.sof_missing += 1;
+                                0
+                            }
+                        };
                         let mut trigger = shieldsigner_rkaiq::raw_readback::linear_trigger(
                             raw.sequence,
-                            0,
+                            sof,
                             us,
                             0,
                             self.first,
@@ -288,7 +339,7 @@ mod raw_bridge {
                     if let Err(e)=self.rx.release(){cleanup.push(e.to_string());}
                     self.exports.clear();
                     if let Err(e)=self.tx.release(){cleanup.push(e.to_string());}
-                    println!("{}",json!({"event":"raw-bridge-finished","completedFrames":self.transferred,"error":outcome.as_ref().err().map(|e|e.to_string()),"cleanupErrors":cleanup,"hardwareVerified":false}));
+                    println!("{}",json!({"event":"raw-bridge-finished","completedFrames":self.transferred,"sofMatches":self.sof_matches,"sofMissing":self.sof_missing,"error":outcome.as_ref().err().map(|e|e.to_string()),"cleanupErrors":cleanup,"hardwareVerified":false}));
                     outcome.and_then(|_|if cleanup.is_empty(){Ok(())}else{Err(error("Raw bridge cleanup failed"))})
                 });
                 let startup = ready_rx

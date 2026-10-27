@@ -690,7 +690,7 @@ fn main() {
                     hex(&cache)
                 );
             }
-            "isp-pipeline" => {
+            "isp-pipeline" | "isp-pad-cif" => {
                 use shieldsigner_rkaiq::isp_pipeline::*;
                 fn hex(v: &[u8]) -> String {
                     v.iter().map(|b| format!("{b:02x}")).collect()
@@ -789,12 +789,21 @@ fn main() {
                     scaler: v["scaler"].as_bool().unwrap(),
                     pixel_format: v["pixel"].as_u64().unwrap() as u32,
                 };
-                let result = setup(
-                    &mut trace,
-                    config,
-                    &decode("sensor").try_into().unwrap(),
-                    &decode("crop").try_into().unwrap(),
-                );
+                let result = if a[0] == "isp-pad-cif" {
+                    configure_pads(
+                        &mut trace,
+                        &decode("sensor").try_into().unwrap(),
+                        &decode("crop").try_into().unwrap(),
+                        InputRoute::Cif,
+                    )
+                } else {
+                    setup(
+                        &mut trace,
+                        config,
+                        &decode("sensor").try_into().unwrap(),
+                        &decode("crop").try_into().unwrap(),
+                    )
+                };
                 trace.calls.push(format!("return:{result}"));
                 println!("{}", trace.calls.join(";"));
             }

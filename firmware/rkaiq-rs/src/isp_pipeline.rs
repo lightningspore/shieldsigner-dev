@@ -1,9 +1,14 @@
-//! Recovered setupPipelineFmtIsp orchestration. A live backend and the rest of
-//! prepare/start, links, calibration and parameter queues remain unfinished.
+//! Recovered ISP pad-format setup used by the live Linux configuration adapter.
+//! Complete prepare/start, calibration and queue orchestration remain unfinished.
 pub const FORMAT_BYTES: usize = 88;
 pub const SELECTION_BYTES: usize = 64;
 pub type Format = [u8; FORMAT_BYTES];
 pub type Selection = [u8; SELECTION_BYTES];
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum InputRoute {
+    DirectIsp,
+    Cif,
+}
 #[derive(Clone, Copy, Debug)]
 pub struct Configuration {
     pub shared_cif: bool,
@@ -44,12 +49,27 @@ pub fn setup<B: Backend>(
         let bits = backend.bits_per_pixel(config.pixel_format);
         backend.set_scaler_format(crop, config.pixel_format, bits);
     }
+    configure_pads(backend, sensor, crop, InputRoute::DirectIsp)
+}
+/// Common live pad operations. CIF uses the sensor crop dimensions and a zero
+/// sink origin, as in setupPipelineFmtCif; direct ISP preserves the input crop
+/// origin and uses the complete sensor-format dimensions for the sink format.
+/// Raw streams, optional CSI alignment and scalers are configured by the caller.
+pub fn configure_pads<B: Backend>(
+    backend: &mut B,
+    sensor: &Format,
+    crop: &Selection,
+    route: InputRoute,
+) -> i32 {
     let mut format = [0; FORMAT_BYTES];
     let mut status = backend.get_format(1, 0, &mut format);
     if status != 0 {
         return status;
     }
     format[8..20].copy_from_slice(&sensor[8..20]);
+    if route == InputRoute::Cif {
+        format[8..16].copy_from_slice(&crop[24..32]);
+    }
     status = backend.set_format(&mut format);
     if status != 0 {
         return status;
@@ -57,15 +77,21 @@ pub fn setup<B: Backend>(
     let mut selection = [0; SELECTION_BYTES];
     put(&mut selection, 0, 1); // ACTIVE; pad 0, CROP target, no flags.
     selection[16..32].copy_from_slice(&crop[16..32]);
+    if route == InputRoute::Cif {
+        put(&mut selection, 16, 0);
+        put(&mut selection, 20, 0);
+    }
     status = backend.set_selection(&mut selection);
     if status != 0 {
         return status;
     }
     put(&mut selection, 4, 2); // ISP output pad, zero origin.
-    put(&mut selection, 8, 0); // Reset CROP target after possible driver adjustment.
-    selection[24..32].copy_from_slice(&crop[24..32]);
-    put(&mut selection, 16, 0);
-    put(&mut selection, 20, 0);
+    if route == InputRoute::DirectIsp {
+        put(&mut selection, 8, 0); // Direct path resets adjusted target/rectangle.
+        selection[24..32].copy_from_slice(&crop[24..32]);
+        put(&mut selection, 16, 0);
+        put(&mut selection, 20, 0);
+    } // CIF forwards the first driver's adjusted selection except for pad=2.
     status = backend.set_selection(&mut selection);
     if status != 0 {
         return status;
@@ -77,4 +103,10 @@ pub fn setup<B: Backend>(
     put(&mut format, 8, word(&selection, 24));
     put(&mut format, 12, word(&selection, 28));
     backend.set_format(&mut format)
+}
+
+/// Native RawStreamCap/Proc CSI alignment predicate. Both request high-aligned
+/// 16-bit memory mode (2) when this expression is nonzero.
+pub fn needs_word_alignment(width: u32, bits: i8) -> bool {
+    (((bits as i32).wrapping_mul((width >> 1) as i32) as u32 & 0x7f) >> 3) != 0
 }

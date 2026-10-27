@@ -1,0 +1,9 @@
+{
+  "sensor": "/dev/v4l-subdevSENSOR",
+  "isp": "/dev/v4l-subdevISP",
+  "route": "cif",
+  "raw_tx": [],
+  "raw_rx": [],
+  "bridges": [],
+  "links": []
+}

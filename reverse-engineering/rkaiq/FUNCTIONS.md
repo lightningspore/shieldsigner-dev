@@ -59,6 +59,10 @@ Linear gain at or below 1 is a complete no-op. HDR gains below 1 become unity, a
 
 `isp_pipeline::setup` reconstructs `CamHwIsp20::setupPipelineFmtIsp`, ELF `0x2319c`. It preserves the native sequence and full UAPI records through an explicit backend. Device/raw-stream/scaler implementations remain outside this verified function. [Contract, driver evidence and missing startup work](ISP.md).
 
+## Live link/format startup adapter
+
+Development `camera-probe configure-pipeline` supplies real Linux device methods for the recovered ISP pad setup and the CIF pad sequence (ELF `0x22f90`). It configures explicit existing media links, optional bridge pads and one linear RAW10 TX/RX pair, including the native CSI high-alignment predicate/requests where needed. [Command, scope and hardware limitations](ISP.md#live-linux-configuration-adapter). [Focused CIF/ARM command validation](live-pipeline-validation.json). This is not full calibrated startup or persistent queue ownership.
+
 ## ISP black-level conversion
 
 `isp_black_level::apply` reconstructs `Isp32Params::convertAiqBlcToIsp32Params`, ELF `0x2d58c`, including its complete 44-byte kernel block and cache. [Contract and evidence](ISP.md#black-level-parameter-block).

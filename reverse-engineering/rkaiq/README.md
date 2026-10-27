@@ -12,7 +12,7 @@
 - A Rust **`frame-preview`** converter for uncalibrated grayscale inspection of supported YUV/luma/Bayer captures. Bayer preview uses simple 2×2 binning, not the vendor ISP algorithm.
 - A static ARM `numeric-fixture` executable and reference corpus for checking the recovered routines on the actual processor.
 
-The probe uses Linux's existing V4L2/media interfaces. It does not call or link RKAIQ. It also **does not yet rebuild the media graph, initialize ISP parameters, load IQ calibration, run auto-exposure/white-balance, or replace the camera service**. Capturing from a graph previously initialized by the vendor is a useful diagnostic, not proof of an independent cold-start implementation.
+The probe uses Linux's existing V4L2/media interfaces and does not call or link RKAIQ. Development can now configure explicitly supplied media links and formats, but **does not yet supply complete calibrated ISP startup, an exposure/white-balance loop, or a replacement camera service**. Capturing from a graph previously initialized by the vendor is a useful diagnostic, not proof of an independent cold-start implementation.
 
 A recovered Rust service controller also matches **100 original-daemon event traces** for initialization call order, stream subscriptions, and alternating start/stop filtering. Its processing backend is still incomplete: this is not a working substitute for the camera daemon. See [LIFECYCLE.md](LIFECYCLE.md). `camera-probe events` observes real driver events without configuring the ISP.
 
@@ -40,7 +40,9 @@ The histogram-driven `ClmExecute` exposure solver is now reconstructed, includin
 
 History-based `AecDynamicDamp` now matches **1,000 original-ARM cases**, including the 9×9 rule surface, custom mode, ring wrap, linear/HDR diagnostic writes and disabled behavior. This returns a damping coefficient; it does not complete the outer controller or independent ISP startup. See [AE.md](AE.md).
 
-The ISP pad-format/crop setup sequence now matches **1,000 original-ARM traces**, including shared-CIF behavior, optional scaler calls, complete record preservation, adjusted crop responses and first-error returns. Its device methods are recorded boundaries, not a live startup backend. The first-parameter-buffer startup dependency is confirmed in the pinned kernel source. See [ISP.md](ISP.md).
+The ISP pad-format/crop setup sequence now matches **1,000 original-ARM traces**, including shared-CIF behavior, optional scaler calls, complete record preservation, adjusted crop responses and first-error returns. That reference suite uses recorded device boundaries; the live development adapter is described below. The first-parameter-buffer startup dependency is confirmed in the pinned kernel source. See [ISP.md](ISP.md).
+
+Development now includes a [live Linux link/format adapter](ISP.md#live-linux-configuration-adapter), exposed as `camera-probe configure-pipeline`. It operates on an explicit current-graph plan, with real ioctls and readback for single-camera RAW10 startup. Initial calibrated parameters and persistent queue/stream orchestration are still missing; this does not yet produce an independent camera-start command or a new kit release.
 
 The ISP32 black-level converter now matches **1,000 original-ARM cases** for the complete BLS parameter block, masks and cache. Calibration selection and live parameter submission remain separate work. See [ISP.md](ISP.md#black-level-parameter-block).
 

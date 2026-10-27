@@ -8,7 +8,32 @@ The next deliverable is one runnable SC3336/RV1106 camera path, rather than anot
 
 The immediate bottlenecks are the live media/format backend, a sufficient calibrated initial ISP parameter record, and persistent ownership/order of the parameter and capture queues. Connect those before extending optional algorithm modes or adding broader equivalence corpora. Reuse the recovered algorithms needed by the actual single-camera linear path. HDR, multiple cameras/ISPs, unused tuning branches and optional image-quality features are deferred unless the functional path demonstrates a dependency on them.
 
-Current evidence still shows that `isp_pipeline` has a recorded backend, the kit does not generate a complete initial parameter record, and capture may depend on earlier vendor initialization. The existing numerical results remain useful validation, but additional passing routine counts do not satisfy this hardware checkpoint. The AWB translation implemented after kit 0.0.28 bridges raw statistics to the SDK preparation frame; it is development work and does not constitute a new runnable-camera release.
+The live Linux format/link adapter is now implemented below, with positive device operation still untested. The kit still does not generate a sufficient initial parameter record, and capture may depend on earlier vendor initialization. The existing numerical results remain useful validation, but additional passing routine counts do not satisfy this hardware checkpoint. Development after kit 0.0.28 is being assembled toward the runnable camera milestone rather than released as another standalone-routine kit.
+
+## Live Linux configuration adapter
+
+Development `camera-probe configure-pipeline PLAN.json` now executes real media/subdevice/video ioctls. It is in the development ARM build from `mise run camera:rust:arm`, not kit 0.0.28. It preflights the supplied sensor, ISP, optional raw TX/RX nodes, bridge pads and existing media links before its first mutation. Character-device aliases across pipeline roles are rejected. It reads the sensor's ACTIVE format and crop bounds, using the recovered full-sensor fallback when bounds are unsupported. This initial path supports one linear RAW10 Bayer camera, with at most one raw capture and one raw readback endpoint; it does not select optional scalers, HDR or shared-camera modes.
+
+The explicit plan supplies device paths/links from the actual inventory. The adapter does not guess media entity IDs or cross-media connections. It preserves link flags while changing only enabled state, rejects conflicting immutable links and checks link readback. Optional bridge pads receive the sensor format. Raw TX/RX formats use the appropriate capture/output buffer type and native `FIELD_NONE`, and dimensions/pixel format are checked after setting/readback.
+
+For `direct-isp`, the existing recovered `setupPipelineFmtIsp` core runs against live methods. For `cif`, the raw formats use the crop dimensions before the recovered CIF pad operations. CIF forwards the driver's adjusted sink selection into the source-pad request except for its pad number; direct ISP resets target/origin/requested dimensions as the original direct path does. The adapter preserves those differences. Where the native RAW10 width predicate requires high-aligned CSI memory, TX receives `RKCIF_CMD_SET_CSI_MEMORY_MODE` and RX receives `RKISP_CMD_SET_CSI_MEMORY_MODE`, both with mode 2. Full SC3336 width 2304 does not trigger that predicate.
+
+Commands for the next hardware session:
+
+```sh
+./camera-probe list > inventory.json
+# Create pipeline.json from the template using this board's actual inventory.
+./camera-probe configure-pipeline pipeline.json --dry-run > pipeline-preflight.json
+./camera-probe configure-pipeline pipeline.json > pipeline-configured.json
+```
+
+The [template](examples/pipeline-linear.template.json) deliberately contains placeholder device paths. Populate `raw_tx`, `raw_rx`, `bridges` and `links` where the real route needs them. Empty arrays mean no such operations are requested, not automatic discovery. Each bridge has `device` and a `pads` array. Each link has `media`, `source`, `source_pad`, `sink`, `sink_pad`, and boolean `enabled`; source/sink IDs must be present in that media graph. Put competing-link disables before required-link enables.
+
+Dry run performs reads/preflight only and cannot establish that a later set ioctl will succeed. Apply produces an operation trace with ioctl numbers, returned formats/selections and errors. Accepted changes remain if a subsequent operation fails. The command refuses active known vendor camera processes, closes its device handles when it exits, and does not start streaming or own persistent capture/parameter queues.
+
+`mise run camera:rust:startup-check` independently compiles the ARM kernel ABI constants, compares 14 focused CIF pad/error/adjustment traces with the original routine, and executes the actual static ARM command under Linux emulation. Invalid endpoints fail the first sensor read with no mutations; six malformed/bounded-plan checks fail before device I/O. The existing 1,000-case direct-ISP regression remains unchanged/passing. [Development validation](live-pipeline-validation.json).
+
+This implements the live link/format portion of startup. **It is not a complete camera-start command.** The next required pieces are sufficient calibrated initial ISP parameters and persistent queue/stream orchestration. Positive real ioctls, cold startup and image/QR quality remain hardware checks.
 
 ## Recovered ISP pad setup
 
@@ -28,7 +53,7 @@ Current evidence still shows that `isp_pipeline` has a recorded backend, the kit
 
 Driver-adjusted crop responses matter. The native method passes mutable records to device methods. Rust preserves those mutations rather than assuming the requested source dimensions were accepted. Sink width/height/code and source width/height changes are byte copies; the helper does not invent color-space values. The first nonzero ISP-device result stops subsequent calls and is returned, including a positive nonzero result. Raw-stream and scaler return values are not checked by this native helper. This behavior is recovered, not a recommendation for the final service's error policy.
 
-The Rust backend trait exposes these operations explicitly. **There is no live backend for this helper yet.** `numeric-fixture` supplies controlled driver records and records each call. Kernel UAPI cross-compilation independently checks 88-byte format/64-byte selection layouts, field offsets, ACTIVE/CROP constants and get/set ioctl numbers.
+The Rust backend trait exposes these operations explicitly. The live adapter above now supplies real device methods; `numeric-fixture` separately supplies controlled driver records for reference comparisons. Kernel UAPI cross-compilation independently checks 88-byte format/64-byte selection layouts, field offsets, ACTIVE/CROP constants and get/set ioctl numbers.
 
 `mise run camera:rust:isp-pipeline` executes the original ARM method and compares normalized call traces, every byte passed to set-format/selection/scaler methods and return status across 1,000 cases. Shared-CIF flags, optional scaler, all six ISP-call failure positions, positive/negative failures and adjusted driver selections are covered. Original context, input selection and sensor format must remain unchanged. Device methods, raw-stream helpers, bpp lookup and scaler are **recorded boundary stubs**, not recovered implementations proved by this test. Uninitialized bytes of get-format requests beyond which/pad are excluded. [Reference report](isp-pipeline-equivalence.json).
 
@@ -47,7 +72,7 @@ These observations identify a required startup mechanism. They do not yet establ
 
 ## Remaining startup work
 
-The native Ghidra exports now include hardware `init`, `prepare`, `start`, `setupPipelineFmt`, CIF/ISP format helpers and parameter submission. The next implementation work is to connect the format/link setup to real device adapters, recover calibrated initial module configuration, implement parameter queue ownership/lifetime, synchronize it with statistics/image streams, and reproduce restart/cleanup. AWB/gain parameter serializers and statistics capture already exist separately; they do not constitute full initialization. Real hardware must then validate cold boot without a vendor bootstrap, frame quality, exposure/WB response and restart behavior.
+The native Ghidra exports now include hardware `init`, `prepare`, `start`, `setupPipelineFmt`, CIF/ISP format helpers and parameter submission. With the live format/link adapter implemented, the next work is sufficient calibrated initial module configuration, persistent parameter/capture queue ownership and stream order, then synchronization/restart/cleanup. AWB/gain parameter serializers and statistics capture already exist separately; they do not constitute full initialization. Real hardware must validate cold boot without a vendor bootstrap, frame quality, exposure/WB response and restart behavior.
 
 For focused exports, `ExportRkaiq.java` accepts an optional second argument containing a Java full-match symbol regex. Its default selection remains unchanged. Exported pseudocode stays in ignored tool caches and is not distributed in the test kit.
 

@@ -181,6 +181,11 @@
       "name": "rk-camera-module.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/rk-camera-module.h",
       "sha256": "92da4c445c852d58e7096a6a83d343275bde6370b0c7afa9e957c121de60c93a"
+    },
+    {
+      "name": "rkcif-config.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/rkcif-config.h",
+      "sha256": "9d2a145dacbe142ab53e20ded77722da2ee56758ec817cd9d5ce2088439b43ad"
     }
   ],
   "kernelSources": [

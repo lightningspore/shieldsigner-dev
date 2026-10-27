@@ -144,3 +144,15 @@ _Static_assert(ISP32_MODULE_RAWAWB==(1ULL<<22),"AWB measurement mask");
 _Static_assert(offsetof(struct isp32_rawawb_meas_cfg,bnr2awb_sel)==2,"AWB preserved BNR selector");
 _Static_assert(offsetof(struct isp32_rawawb_meas_cfg,wp_blk_wei_w)==0x61,"AWB weights");
 _Static_assert(offsetof(struct isp32_rawawb_meas_cfg,bls2_val)==799,"AWB black-level tail");
+#include <linux/rkcif-config.h>
+_Static_assert(VIDIOC_SUBDEV_G_SELECTION==0xc040563d,"get crop bounds ioctl");
+_Static_assert(V4L2_SEL_TGT_CROP_BOUNDS==2,"crop bounds target");
+_Static_assert(MEDIA_IOC_ENUM_ENTITIES==0xc1007c01,"media entity query");
+_Static_assert(MEDIA_IOC_SETUP_LINK==0xc0347c03,"media setup link ioctl");
+_Static_assert(VIDIOC_S_FMT==0xc0cc5605,"ARM32 set video format");
+_Static_assert(VIDIOC_QUERYCAP==0x80685600,"video capability request");
+_Static_assert(V4L2_BUF_TYPE_VIDEO_OUTPUT==2 && V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE==10,"raw RX types");
+_Static_assert(V4L2_FIELD_NONE==1,"raw no-field selector");
+_Static_assert(RKCIF_CMD_SET_CSI_MEMORY_MODE==0x400456c1,"CIF high-alignment ioctl");
+_Static_assert(RKISP_CMD_SET_CSI_MEMORY_MODE==0x40045725,"ISP high-alignment ioctl");
+_Static_assert(CSI_LVDS_MEM_WORD_HIGH_ALIGN==2 && CSI_MEM_WORD_BIG_ALIGN==2,"paired high-alignment enum");

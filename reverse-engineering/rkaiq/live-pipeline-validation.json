@@ -1,0 +1,13 @@
+{
+  "cifPadCases": 14,
+  "cifPadMismatches": 0,
+  "scope": "CIF ISP pad records/order/first-error status, including forwarding driver-adjusted sink selection to source pad",
+  "limitations": [
+    "Raw streams/scaler and disabled optional alignment prelude are controlled boundaries for this pad-only comparison.",
+    "Positive real device operations still require hardware."
+  ],
+  "armBinarySha256": "dfc20f71be1e1d379d29926a1da6bd5747fe3e53120a623af37f592c9af90c71",
+  "armInvalidDeviceBeforeMutation": true,
+  "armDryRunInvalidDeviceBeforeMutation": true,
+  "planRejectionChecks": 6
+}

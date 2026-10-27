@@ -332,3 +332,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:awb-translation"]
 description = "Compare full RV1106 AWB translation and SDK configuration metadata against original ARM"
 run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-translation.py --cases 1000 --emit-dir dist/reverse-engineering/awb-translation-fixtures"]
+
+[tasks."camera:rust:startup-check"]
+description = "Check live pipeline ABI, CIF pad records and static ARM configuration-command preflight failures"
+run = ["mise run camera:rust:layout", "mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/live-pipeline-check.py"]

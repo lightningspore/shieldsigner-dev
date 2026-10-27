@@ -254,6 +254,30 @@ fn main() {
                         .collect::<String>()
                 );
             }
+            "awb-luma-history" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let initial = v["initial"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_u64().unwrap() as u32)
+                    .collect::<Vec<_>>();
+                let mut history = awb_luma_history::History::<32>::from_values(&initial).unwrap();
+                let mut results = vec![
+                    serde_json::json!({"values":history.values(),"variance":history.variance().to_bits(),"grew":false}),
+                ];
+                for event in v["events"].as_array().unwrap() {
+                    let length = history.values().len();
+                    history
+                        .update(
+                            event["value"].as_i64().unwrap() as i32,
+                            event["target"].as_i64().unwrap() as i32,
+                        )
+                        .unwrap();
+                    results.push(serde_json::json!({"values":history.values(),"variance":history.variance().to_bits(),"grew":history.values().len()>length}));
+                }
+                println!("{}", serde_json::json!(results));
+            }
             "awb-stability" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let mut state = awb_stability::State {

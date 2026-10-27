@@ -48,7 +48,7 @@ The statistics helper consumes the algorithm's signed 64-bit `WpNo`, `RgainValue
 
 Normalization searches for a divisor starting at **5.0**, replacing it with each smaller/equal channel. It divides only when the resulting value is greater than the double constant `1e-5`. All gains above five are therefore divided by five, rather than by their minimum. Zero, negative and sufficiently small minima leave the record unchanged. Mixture computes `first*weight + second*(1-weight)` with the native rounded product/FMA ordering, then normalizes.
 
-The base damping coefficient moves down by one configured step when variance is greater than its threshold, or up by one step otherwise, followed by the original ordered lower/upper comparisons. This leaf consumes an already computed variance; the brightness-history/variance estimator is not implemented here.
+The base damping coefficient moves down by one configured step when variance is greater than its threshold, or up by one step otherwise, followed by the original ordered lower/upper comparisons. This leaf consumes an already computed variance; the recovered brightness-history estimator is described below. The surrounding calibrated policy is still separate.
 
 Temporal damping first checks the **previous red channel alone** against the double constant `1e-5`. Below it, the new gains remain unchanged and both coefficient fields reset to zero. Otherwise it finds the maximum absolute channel difference and scales the base coefficient using this native curve:
 
@@ -223,3 +223,43 @@ Development is now `0.0.31-dev`; the previously delivered `0.0.30-dev` hardware
 kit remains frozen. The ordinary AWB controller still needs calibrated region
 selection, history/variance policy, classification and publication integration.
 The automatic capture command continues to use fixed calibrated white balance.
+
+## Brightness history and relative variance
+
+`awb_luma_history::History` reconstructs `UpdateLvValueList` (ELF `0xc9e54`)
+and `CalculateVarianceLuma` (ELF `0xc9ea4`), called together by standard
+`AwbPreProcV32` before its stability/update decision and gain damping.
+
+A nonzero target length appends while the current list is shorter, otherwise
+reuses its oldest entry at the tail. Lowering the target therefore does not
+truncate existing history. Target zero leaves the list alone. The update API
+accepts a signed i32 brightness value, but variance reads its stored bits as
+u32, preserving the native signed/unsigned distinction.
+
+Variance first accumulates ordered u32-to-f32 values and divides by the count
+for the mean. It then accumulates squared relative deviations `(value/mean-1)`
+using a fused f32 multiply-add, and divides by count. Empty history returns
+zero; a nonempty all-zero history yields the native ARM quiet NaN
+`0x7fc00000`. The implementation preserves that result instead of manufacturing
+zero variability for missing/zero brightness data. Disassembly confirms the
+native `vfma.f32` instruction used for accumulation.
+
+The pinned native list implementation corrupts a singleton list when its target
+is one: the head's next pointer becomes the head while its previous pointer
+still names the node, and that node points to itself. The oracle explicitly
+checks those resulting pointers. The checked Rust API rejects this case, along
+with negative or out-of-capacity targets, before mutation. It uses owned
+const-generic bounded storage rather than reproducing C allocator/link corruption.
+
+The native/Rust corpus covers 64 persistent sequences, 1,536 updates and 1,600
+variance calculations, including changing targets, node reuse, zero/equal and
+widely differing histories, signed inputs, unsigned extrema and exact NaN bits.
+Three singleton/target-1 cases are redirected to a safe target for sequence
+continuation; their native corruption is audited separately. Host and ARM Rust
+match list order, append-versus-reuse behavior and every variance bit. Native
+allocation uses an explicit 12-byte-node allocator adapter; native update and
+variance instructions execute unchanged. [Reference report](awb-luma-history-equivalence.json).
+
+This supplies the estimator needed by AWB preprocessing and existing damping,
+not the complete brightness interpolation, calibrated classification or AWB
+controller. The automatic capture command still holds calibrated WB fixed.

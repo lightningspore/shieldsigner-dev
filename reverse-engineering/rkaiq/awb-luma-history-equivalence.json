@@ -1,0 +1,16 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "sequences": 64,
+  "updates": 1536,
+  "varianceChecks": 1600,
+  "mismatches": 0,
+  "arm": true,
+  "singletonCorruptionVerified": true,
+  "singletonCasesGuarded": 3,
+  "scope": "Persistent list order, append-versus-reuse and exact f32 relative-variance bits including native zero-history NaN",
+  "limitations": [
+    "Native malloc uses an explicit 12-byte node allocator; allocation failure/lifetime cleanup excluded.",
+    "Checked Rust storage capacity is 32; negative/out-of-capacity limits and the native singleton/target-1 corruption case are rejected before mutation.",
+    "AWB outer brightness interpolation and full controller remain separate."
+  ]
+}

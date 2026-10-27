@@ -20,6 +20,9 @@ def main():
   assert frame['rawFrameId']==77 and frame['triggerFrameId']==77 and frame['sofMatched'] and frame['sofTimestampNs']==3000000456 and frame['sensorTimestampUs']==4000500 and frame['rxCompleted']
   assert events[start]['frameRecordsDropped']==0 and not events[start]['frameExposureAssociationVerified']
   assert all(event['completedFrames']==0 and event['error'] for event in events[start+1:start+5])
+ steps=[json.loads(line) for line in run.stdout.splitlines() if line.startswith('{"automaticExposure"') and '"exposure-step-applied"' in line]
+ assert {step["controlId"] for step in steps}=={0x00980911,0x009e0903}
+ assert all(step["readbackCode"]==step["requestedCode"]==123 for step in steps)
  assert all(not event['cleanupErrors'] for event in events)
  report=dict(testBinarySha256=hashlib.sha256(binary.read_bytes()).hexdigest(),platform='linux/arm/v7',storageMismatchRejectedBeforeAllocation=True,endpointApiCombinations=4,casesPerCombination=['successful frame with matched SOF','RX STREAMON failure','RX QBUF failure suppresses trigger','trigger ioctl failure','corrupted RX completion'],passed=True,events=events,limitations=['A cfg(test)-only ioctl boundary simulates the driver; actual ARM bridge logic, FD export ownership, scoped worker and cleanup execute.','No positive device, kernel-driver or original RKAIQ queue-controller equivalence is established.','Image capture and the metadata queue are outside this focused bridge test.'])
  (ROOT/'reverse-engineering/rkaiq/raw-bridge-validation.json').write_text(json.dumps(report,indent=2)+'\n')

@@ -145,12 +145,12 @@ fn first_frame_sc3336_with_gain(
         return Err(error(if automatic {
             "auto-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE"
         } else {
-            "first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME --step-seconds SECONDS]]"
+            "first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME (--step-seconds SECONDS | --step-gain GAIN)]]"
         }));
     }
     let step = if args.len() == 10 {
-        if args[6] != "--step-at" || args[8] != "--step-seconds" {
-            return Err(error("Expected --step-at FRAME --step-seconds SECONDS"));
+        if args[6] != "--step-at" || !matches!(args[8].as_str(), "--step-seconds" | "--step-gain") {
+            return Err(error("Expected --step-at FRAME followed by --step-seconds SECONDS or --step-gain GAIN"));
         }
         let frame = args[7]
             .parse::<u32>()
@@ -161,7 +161,7 @@ fn first_frame_sc3336_with_gain(
         if frame > 64 || !seconds.is_finite() || seconds <= 0. {
             return Err(error("Invalid exposure-step request"));
         }
-        Some((frame, seconds))
+        Some((frame, seconds, args[8] == "--step-gain"))
     } else {
         None
     };
@@ -425,10 +425,10 @@ fn first_frame_sc3336_with_gain(
             .map(|c| c.sender.clone())
             .or_else(|| observer.clone());
         let step_codes = step
-            .map(|(frame, seconds)| {
+            .map(|(frame, value, gain_step)| {
                 profile
-                    .linear_codes(seconds, gain, timing)
-                    .map(|c| (frame, c.integration_time))
+                    .linear_codes(if gain_step { seconds } else { value }, if gain_step { value } else { gain }, timing)
+                    .map(|c| (frame, if gain_step { c.gain } else { c.integration_time }, gain_step))
             })
             .transpose()
             .map_err(error)?;
@@ -437,9 +437,9 @@ fn first_frame_sc3336_with_gain(
             if let Some(node) = sof {
                 command.extend(["--sof-node".into(), node]);
             }
-            if let Some((frame, code)) = step_codes {
+            if let Some((frame, code, gain_step)) = step_codes {
                 command.extend([
-                    "--exposure-step".into(),
+                    if gain_step { "--gain-step" } else { "--exposure-step" }.into(),
                     sensor_path.clone(),
                     frame.to_string(),
                     code.to_string(),
@@ -459,7 +459,7 @@ fn first_frame_sc3336_with_gain(
                 // and native-sized image buffers exhaust this board's 12 MiB CMA.
                 command.extend(["--width".into(), "640".into(), "--height".into(), "480".into()]);
             }
-            if let Some((frame, _)) = step_codes {
+            if let Some((frame, _, _)) = step_codes {
                 command.extend(["--warmup".into(), (frame + 8).to_string()]);
             }
             if automatic {

@@ -113,11 +113,13 @@ mod raw_bridge {
         }
     }
     pub struct ExposureStep {
+        pub control_id: u32,
         pub sensor: String,
         pub frame: u32,
         pub code: i32,
     }
     struct PreparedStep {
+        control_id: u32,
         file: File,
         frame: u32,
         code: i32,
@@ -190,12 +192,13 @@ mod raw_bridge {
                 if !m.file_type().is_char_device()
                     || devices.contains(&m.rdev())
                     || step.frame > 255
+                    || !matches!(step.control_id, 0x00980911 | 0x009e0903)
                 {
                     return Err(error("Invalid exposure-step endpoint/frame"));
                 }
                 let file = open(&step.sensor, true)?;
                 let mut query = [0u8; 68];
-                put32(&mut query, 0, 0x00980911);
+                put32(&mut query, 0, step.control_id);
                 ioctl(file.as_raw_fd(), 0xc0445624, &mut query)?;
                 let minimum = get32(&query, 40) as i32;
                 let maximum = get32(&query, 44) as i32;
@@ -207,9 +210,10 @@ mod raw_bridge {
                 {
                     return Err(error("Exposure step outside active driver control range"));
                 }
-                let mut control = [0x00980911u32, 0];
+                let mut control = [step.control_id, 0];
                 ioctl(file.as_raw_fd(), 0xc008561b, &mut control)?;
                 Some(PreparedStep {
+                    control_id: step.control_id,
                     file,
                     frame: step.frame,
                     code: step.code,
@@ -395,7 +399,7 @@ mod raw_bridge {
                                     return Err(error("Missed requested exposure-step SOF"));
                                 }
                                 if !step.applied && pair.0 == step.frame {
-                                    let mut control = [0x00980911u32, step.code as u32];
+                                    let mut control = [step.control_id, step.code as u32];
                                     let write_start_ns = camera_monotonic_ns()?;
                                     ioctl(step.file.as_raw_fd(), 0xc008561c, &mut control)?;
                                     let write_end_ns = camera_monotonic_ns()?;
@@ -407,7 +411,7 @@ mod raw_bridge {
                                     step.applied = true;
                                     println!(
                                         "{}",
-                                        json!({"event":"exposure-step-applied","sofFrameId":pair.0,"sofTimestampNs":pair.1,"writeStartNs":write_start_ns,"writeEndNs":write_end_ns,"clock":"CLOCK_MONOTONIC","beforeCode":step.before,"requestedCode":step.code,"readbackCode":control[1],"gainChanged":false,"frameLengthChanged":false,"physicalApplicationVerified":false,"automaticExposure":false})
+                                        json!({"event":"exposure-step-applied","sofFrameId":pair.0,"sofTimestampNs":pair.1,"writeStartNs":write_start_ns,"writeEndNs":write_end_ns,"clock":"CLOCK_MONOTONIC","beforeCode":step.before,"requestedCode":step.code,"readbackCode":control[1],"controlId":step.control_id,"shutterChanged":step.control_id==0x00980911,"gainChanged":step.control_id==0x009e0903,"frameLengthChanged":false,"physicalApplicationVerified":false,"automaticExposure":false})
                                     );
                                 }
                             }
@@ -629,7 +633,7 @@ mod raw_bridge_driver_test {
                 put32(b, 4, driver.step_value);
             }
             0xc008561c => {
-                assert_eq!(get32(b, 0), 0x00980911);
+                assert_eq!(get32(b, 0), if driver.api == 2 { 0x009e0903 } else { 0x00980911 });
                 driver.step_value = get32(b, 4);
                 driver.trace.push("sensor:step".into());
             }
@@ -836,6 +840,7 @@ mod raw_bridge_driver_test {
             "/dev/full",
             None,
             Some(raw_bridge::ExposureStep {
+                control_id: 0x00980911,
                 sensor: "/dev/urandom".into(),
                 frame: 77,
                 code: 65536,
@@ -855,8 +860,9 @@ mod raw_bridge_driver_test {
                     api,
                     ..Driver::default()
                 });
-                let step = if api == 3 {
+                let step = if api >= 2 {
                     Some(raw_bridge::ExposureStep {
+                        control_id: if api == 2 { 0x009e0903 } else { 0x00980911 },
                         sensor: "/dev/urandom".into(),
                         frame: 77,
                         code: 123,
@@ -884,7 +890,7 @@ mod raw_bridge_driver_test {
                 if mode != 1 {
                     assert!(position("rx:off") < position("tx:off"));
                 }
-                if api == 3 && mode != 1 {
+                if api >= 2 && mode != 1 {
                     assert_eq!(driver.step_value, 123);
                     assert_eq!(
                         driver

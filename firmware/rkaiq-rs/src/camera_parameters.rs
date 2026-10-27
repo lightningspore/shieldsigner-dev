@@ -373,8 +373,9 @@ fn capture_cif_with_parameters_controlled(
         if args[i] == "--sof-node" && i + 1 < separator && sof.is_none() {
             sof = Some(args[i + 1].as_str());
             i += 2;
-        } else if args[i] == "--exposure-step" && i + 3 < separator && step.is_none() {
+        } else if matches!(args[i].as_str(), "--exposure-step" | "--gain-step") && i + 3 < separator && step.is_none() {
             step = Some(raw_bridge::ExposureStep {
+                control_id: if args[i] == "--gain-step" { 0x009e0903 } else { 0x00980911 },
                 sensor: args[i + 1].clone(),
                 frame: args[i + 2]
                     .parse()

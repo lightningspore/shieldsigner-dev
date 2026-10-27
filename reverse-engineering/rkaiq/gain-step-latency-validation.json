@@ -1,0 +1,756 @@
+{
+  "kind": "physical-sc3336-gain-step-response",
+  "passed": true,
+  "hashes": {
+    "binary": "a8c4c7b688d07a1bf5abfcfdb25e1020a5b25f912024056327908775f88a41da",
+    "dimIq": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "brightIq": "4f2772155efbf75aae67641506c7eba78ef7849b9102e8c4b83bc4eabcf0816b",
+    "plan": "197596aefdb513f6d4c03d3bf862502d08e853715d54d506140ecdc4cc9e5b7e"
+  },
+  "cases": [
+    {
+      "name": "gain-latency-38-increase-18",
+      "stepSof": 18,
+      "initialGain": 1.0,
+      "targetGain": 4.0,
+      "gainCodes": [
+        128,
+        512
+      ],
+      "writeStartAfterSofUs": 690.667,
+      "writeDurationUs": 414.167,
+      "baselineLuma": 4.46484375,
+      "settledLuma": 17.8984375,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 22,
+      "effectDelayFrames": [
+        2,
+        3
+      ],
+      "settledDelayFrames": [
+        4,
+        4
+      ],
+      "partialTransitionFrames": [
+        21
+      ],
+      "observedFractions": [
+        [
+          18,
+          -0.000582
+        ],
+        [
+          19,
+          -0.000291
+        ],
+        [
+          21,
+          0.770573
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          1.000582
+        ],
+        [
+          25,
+          0.999418
+        ]
+      ],
+      "logSha256": "20d493dfb70f558be257c114a17de6debf7f3689381398117845877f3c657875",
+      "statisticsSummarySha256": "6948fb2d07c25c112c9d22f1dd21af79cee94aa0aed012e9b7cc2c82a3a2145b"
+    },
+    {
+      "name": "gain-latency-39-increase-18",
+      "stepSof": 18,
+      "initialGain": 1.0,
+      "targetGain": 4.0,
+      "gainCodes": [
+        128,
+        512
+      ],
+      "writeStartAfterSofUs": 704.375,
+      "writeDurationUs": 419.125,
+      "baselineLuma": 4.45703125,
+      "settledLuma": 17.91015625,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        2,
+        3
+      ],
+      "settledDelayFrames": [
+        2,
+        3
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          18,
+          0.000871
+        ],
+        [
+          19,
+          0.0
+        ],
+        [
+          21,
+          0.99971
+        ],
+        [
+          22,
+          0.99971
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          25,
+          1.00029
+        ]
+      ],
+      "logSha256": "fd2e8a8cbad558be6198986cbcf2c88d3e5be655f1b51f8fc25560fc1ec43ea0",
+      "statisticsSummarySha256": "f4838cf6cd93060779a6a6bb15a99e590484d9c0a3034e3e79929d5e6cbaa1da"
+    },
+    {
+      "name": "gain-latency-39-increase-19",
+      "stepSof": 19,
+      "initialGain": 1.0,
+      "targetGain": 4.0,
+      "gainCodes": [
+        128,
+        512
+      ],
+      "writeStartAfterSofUs": 757.458,
+      "writeDurationUs": 439.25,
+      "baselineLuma": 4.46484375,
+      "settledLuma": 17.890625,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        1,
+        2
+      ],
+      "settledDelayFrames": [
+        1,
+        2
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          18,
+          -0.004364
+        ],
+        [
+          19,
+          -0.000582
+        ],
+        [
+          21,
+          0.999709
+        ],
+        [
+          22,
+          1.000873
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          25,
+          1.000873
+        ],
+        [
+          27,
+          0.977306
+        ]
+      ],
+      "logSha256": "0f4b56163265a4da56578e6d61605afce0447a7ca367237a2d485302e7110c7f",
+      "statisticsSummarySha256": "9af0ef1bbbd64383ddf68fe040acb8c67b7c1d53fa1032f47835496a595dcecc"
+    },
+    {
+      "name": "gain-latency-39-increase-20",
+      "stepSof": 20,
+      "initialGain": 1.0,
+      "targetGain": 4.0,
+      "gainCodes": [
+        128,
+        512
+      ],
+      "writeStartAfterSofUs": 1169.0,
+      "writeDurationUs": 449.458,
+      "baselineLuma": 4.46875,
+      "settledLuma": 17.892578125,
+      "lastUnchangedFrame": 21,
+      "firstChangedFrame": 22,
+      "effectDelayFrames": [
+        2,
+        2
+      ],
+      "settledDelayFrames": [
+        2,
+        2
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          19,
+          0.0
+        ],
+        [
+          21,
+          0.0
+        ],
+        [
+          22,
+          1.000145
+        ],
+        [
+          24,
+          0.999855
+        ],
+        [
+          25,
+          1.000145
+        ],
+        [
+          27,
+          1.000145
+        ],
+        [
+          28,
+          0.999855
+        ]
+      ],
+      "logSha256": "6ff581730d49805a626e9f3a25d61583c4cab702ab24d94b112ae31b45830961",
+      "statisticsSummarySha256": "c4bdca5cc86819419817f0aa800a5abc9fa0f5a5b2b1e8ade7546f3493d7875e"
+    },
+    {
+      "name": "gain-latency-39-decrease-18",
+      "stepSof": 18,
+      "initialGain": 4.0,
+      "targetGain": 1.0,
+      "gainCodes": [
+        512,
+        128
+      ],
+      "writeStartAfterSofUs": 690.083,
+      "writeDurationUs": 417.083,
+      "baselineLuma": 17.7890625,
+      "settledLuma": 4.46875,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        2,
+        3
+      ],
+      "settledDelayFrames": [
+        2,
+        3
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          18,
+          -0.006158
+        ],
+        [
+          19,
+          -0.006452
+        ],
+        [
+          21,
+          1.0
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          25,
+          1.0
+        ]
+      ],
+      "logSha256": "93265f6ee508137bf03622fb00adc39ad6d69b2fc493c970061fee2e6ac6db6b",
+      "statisticsSummarySha256": "e7773f082ffcdb91cfeda4e898d2f598bab0f282c8138b8fe445b36392ea3067"
+    },
+    {
+      "name": "gain-latency-39-decrease-19",
+      "stepSof": 19,
+      "initialGain": 4.0,
+      "targetGain": 1.0,
+      "gainCodes": [
+        512,
+        128
+      ],
+      "writeStartAfterSofUs": 697.375,
+      "writeDurationUs": 413.583,
+      "baselineLuma": 17.8671875,
+      "settledLuma": 4.47265625,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        1,
+        2
+      ],
+      "settledDelayFrames": [
+        1,
+        2
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          18,
+          -0.000583
+        ],
+        [
+          19,
+          -0.000875
+        ],
+        [
+          21,
+          1.0
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          25,
+          1.0
+        ],
+        [
+          27,
+          1.000292
+        ]
+      ],
+      "logSha256": "850bcfe080c8020dcb30c827b6be158b3bd918b8533e5a2e3af303e04e36a6ca",
+      "statisticsSummarySha256": "e2131a8ca3fc8312bc3369c952e583cc59d89cbc29c03d6774e3a520417fcc61"
+    },
+    {
+      "name": "gain-latency-39-decrease-20",
+      "stepSof": 20,
+      "initialGain": 4.0,
+      "targetGain": 1.0,
+      "gainCodes": [
+        512,
+        128
+      ],
+      "writeStartAfterSofUs": 717.5,
+      "writeDurationUs": 414.166,
+      "baselineLuma": 17.875,
+      "settledLuma": 4.46875,
+      "lastUnchangedFrame": 21,
+      "firstChangedFrame": 22,
+      "effectDelayFrames": [
+        2,
+        2
+      ],
+      "settledDelayFrames": [
+        2,
+        2
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          19,
+          -0.001166
+        ],
+        [
+          21,
+          -0.001166
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          25,
+          0.999709
+        ],
+        [
+          27,
+          1.000874
+        ],
+        [
+          28,
+          1.0
+        ]
+      ],
+      "logSha256": "67c6244d7f6134e6854f447ea9a7769f97531b73dd5ed366d3c6d4358c848a9e",
+      "statisticsSummarySha256": "2baf17c0efbedadace058c6b4639ed8d8a8bd7f00dee71534c986e2bb8442f5e"
+    },
+    {
+      "name": "gain-latency-40-increase-18",
+      "stepSof": 18,
+      "initialGain": 1.0,
+      "targetGain": 4.0,
+      "gainCodes": [
+        128,
+        512
+      ],
+      "writeStartAfterSofUs": 697.667,
+      "writeDurationUs": 417.958,
+      "baselineLuma": 4.46875,
+      "settledLuma": 17.8828125,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        2,
+        3
+      ],
+      "settledDelayFrames": [
+        2,
+        3
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          18,
+          0.0
+        ],
+        [
+          19,
+          0.000291
+        ],
+        [
+          21,
+          0.999418
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          0.998835
+        ],
+        [
+          25,
+          1.000582
+        ]
+      ],
+      "logSha256": "dc005ac857a206d51c7ef956b88a4ec983053d7dcd02754047205f6b8175850b",
+      "statisticsSummarySha256": "5d1acb9eca5a3b30ba71a251f330155e88b6f64205060ba33093bff943077a07"
+    },
+    {
+      "name": "gain-latency-40-increase-19",
+      "stepSof": 19,
+      "initialGain": 1.0,
+      "targetGain": 4.0,
+      "gainCodes": [
+        128,
+        512
+      ],
+      "writeStartAfterSofUs": 782.833,
+      "writeDurationUs": 418.542,
+      "baselineLuma": 4.46875,
+      "settledLuma": 17.9140625,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        1,
+        2
+      ],
+      "settledDelayFrames": [
+        1,
+        2
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          18,
+          0.0
+        ],
+        [
+          19,
+          0.000291
+        ],
+        [
+          21,
+          1.000581
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          1.000581
+        ],
+        [
+          25,
+          1.0
+        ],
+        [
+          27,
+          1.0
+        ]
+      ],
+      "logSha256": "fc6511269ff5dae9a987bbbedf7e688b4f9a3c6d9c24c6ec29c79c7ecaa555ea",
+      "statisticsSummarySha256": "42065c396abd98e943a80c1b598ea52fe5697bfa79e04d76b051692386ce6296"
+    },
+    {
+      "name": "gain-latency-40-increase-20",
+      "stepSof": 20,
+      "initialGain": 1.0,
+      "targetGain": 4.0,
+      "gainCodes": [
+        128,
+        512
+      ],
+      "writeStartAfterSofUs": 689.5,
+      "writeDurationUs": 417.958,
+      "baselineLuma": 4.46875,
+      "settledLuma": 17.9375,
+      "lastUnchangedFrame": 21,
+      "firstChangedFrame": 22,
+      "effectDelayFrames": [
+        2,
+        2
+      ],
+      "settledDelayFrames": [
+        2,
+        2
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          19,
+          0.0
+        ],
+        [
+          21,
+          0.00029
+        ],
+        [
+          22,
+          1.00029
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          25,
+          1.0
+        ],
+        [
+          27,
+          0.99855
+        ],
+        [
+          28,
+          1.00029
+        ]
+      ],
+      "logSha256": "f7f4a302aa18053f74d84de12a38344459704ef1790782b217ff5db79ecdb811",
+      "statisticsSummarySha256": "46560fdc2ede2a22ca5e7d4de4e632a2183094e39f2a8b4887bce7fe59e246bf"
+    },
+    {
+      "name": "gain-latency-40-decrease-18",
+      "stepSof": 18,
+      "initialGain": 4.0,
+      "targetGain": 1.0,
+      "gainCodes": [
+        512,
+        128
+      ],
+      "writeStartAfterSofUs": 714.291,
+      "writeDurationUs": 411.834,
+      "baselineLuma": 17.83203125,
+      "settledLuma": 4.47265625,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        2,
+        3
+      ],
+      "settledDelayFrames": [
+        2,
+        3
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          18,
+          -0.003509
+        ],
+        [
+          19,
+          -0.004386
+        ],
+        [
+          21,
+          1.0
+        ],
+        [
+          22,
+          1.0
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          25,
+          1.0
+        ]
+      ],
+      "logSha256": "9a240ddcc92e7fe625bc01e15000ba21812816b66c80576659ecb76622fbcf75",
+      "statisticsSummarySha256": "77c792d8b70536541b63baabaed4a4783f4fe0823d951d60e4bba4dc9752fa67"
+    },
+    {
+      "name": "gain-latency-40-decrease-19",
+      "stepSof": 19,
+      "initialGain": 4.0,
+      "targetGain": 1.0,
+      "gainCodes": [
+        512,
+        128
+      ],
+      "writeStartAfterSofUs": 1155.0,
+      "writeDurationUs": 445.959,
+      "baselineLuma": 17.87109375,
+      "settledLuma": 4.47265625,
+      "lastUnchangedFrame": 19,
+      "firstChangedFrame": 21,
+      "effectDelayFrames": [
+        1,
+        2
+      ],
+      "settledDelayFrames": [
+        1,
+        2
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          18,
+          -0.002332
+        ],
+        [
+          19,
+          -0.002332
+        ],
+        [
+          21,
+          1.0
+        ],
+        [
+          22,
+          1.058601
+        ],
+        [
+          24,
+          1.0
+        ],
+        [
+          25,
+          1.000292
+        ],
+        [
+          27,
+          0.999708
+        ]
+      ],
+      "logSha256": "5e066c1c5fa2637ca483a30901ee8c9a61719ebe97eca0215f5aef2c13c058b2",
+      "statisticsSummarySha256": "b005c84ce92d5e104d220000d80d9b890064b305ab4d555b093f65b48a8afd63"
+    },
+    {
+      "name": "gain-latency-40-decrease-20",
+      "stepSof": 20,
+      "initialGain": 4.0,
+      "targetGain": 1.0,
+      "gainCodes": [
+        512,
+        128
+      ],
+      "writeStartAfterSofUs": 778.75,
+      "writeDurationUs": 411.833,
+      "baselineLuma": 17.88671875,
+      "settledLuma": 4.474609375,
+      "lastUnchangedFrame": 21,
+      "firstChangedFrame": 22,
+      "effectDelayFrames": [
+        2,
+        2
+      ],
+      "settledDelayFrames": [
+        2,
+        2
+      ],
+      "partialTransitionFrames": [],
+      "observedFractions": [
+        [
+          19,
+          -0.001456
+        ],
+        [
+          21,
+          0.13776
+        ],
+        [
+          22,
+          0.999563
+        ],
+        [
+          24,
+          0.999854
+        ],
+        [
+          25,
+          1.000146
+        ],
+        [
+          27,
+          0.999854
+        ],
+        [
+          28,
+          1.004223
+        ]
+      ],
+      "logSha256": "0359dac10e807608586075f568b00b4b67816ea7cac620f495f6b2b45e3793fc",
+      "statisticsSummarySha256": "345acb7b62432568cde8dfdff111a63be08505459c5a56ac152ae923109fc14a"
+    }
+  ],
+  "commonDelayIntervalFrames": [
+    2,
+    2
+  ],
+  "configuredSchedulerDelayFrames": 2,
+  "configuredDelayConsistent": true,
+  "scope": "Combined sensor gain steps with fixed 3 ms shutter/frame length; three SOF phases, two directions, same scene",
+  "limitations": [
+    "Sparse statistics yield inclusive frame intervals; no missing sample is invented.",
+    "Other controls, gain stages outside the tested range and frame-length changes are not qualified by this test.",
+    "This does not qualify every runtime scheduling/load condition or full physical frame/exposure association.",
+    "The kernel combined-gain control writes coarse digital, fine digital and coarse analogue registers separately; attribution of the observed transient to that sequence is not proven."
+  ],
+  "responseThresholds": {
+    "unchangedAtMost": 0.2,
+    "settledAtLeast": 0.8
+  },
+  "partialTransitionObserved": true,
+  "settledDelayUpperBoundFrames": 4,
+  "fixedTwoFrameSettlingQualified": false,
+  "interpretation": "Twelve repeat captures support nominal two-frame response; the first capture has a partial response at SOF+3 and settles at SOF+4. Keep the anomalous run: these results do not qualify an always-settled two-frame gain map."
+}

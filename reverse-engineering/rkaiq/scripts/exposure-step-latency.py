@@ -26,6 +26,7 @@ def median(values):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--serial", required=True)
+    parser.add_argument("--control", choices=["shutter", "gain"], default="shutter")
     for name in ["binary", "plan", "dim-iq", "bright-iq", "prefix"]:
         parser.add_argument("--" + name, required=True)
     parser.add_argument("--local", type=Path, required=True)
@@ -49,9 +50,10 @@ def main():
         ]
     }
     cases = []
+    dim, bright = (1.0, 4.0) if args.control == "gain" else (0.003, 0.024)
     for direction, iq, initial, target in [
-        ("increase", args.dim_iq, 0.003, 0.024),
-        ("decrease", args.bright_iq, 0.024, 0.003),
+        ("increase", args.dim_iq, dim, bright),
+        ("decrease", args.bright_iq, bright, dim),
     ]:
         for frame in [18, 19, 20]:
             basename = args.prefix + "-" + direction + "-" + str(frame)
@@ -70,7 +72,7 @@ def main():
                 "/dev/video19",
                 "--step-at",
                 str(frame),
-                "--step-seconds",
+                "--step-gain" if args.control == "gain" else "--step-seconds",
                 str(target),
             ]
             remote = (
@@ -98,27 +100,36 @@ def main():
                     check=True,
                     capture_output=True,
                 )
-            result = analyze(args.local / Path(basename).name, frame, initial, target)
+            result = analyze(
+                args.local / Path(basename).name, frame, initial, target, args.control
+            )
             cases.append(result)
             print(json.dumps(result), flush=True)
     low = max(case["effectDelayFrames"][0] for case in cases)
     high = min(case["effectDelayFrames"][1] for case in cases)
     assert low <= high, "No common exposure effect delay across observations"
-    assert low <= 2 <= high, (
-        "Observed shutter delay conflicts with configured two-frame delay"
-    )
+    if args.control == "shutter":
+        assert low <= 2 <= high, (
+            "Observed shutter delay conflicts with configured two-frame delay"
+        )
     report = {
-        "kind": "physical-sc3336-shutter-step-response",
+        "kind": "physical-sc3336-" + args.control + "-step-response",
         "passed": True,
+        "responseThresholds": {"unchangedAtMost": 0.2, "settledAtLeast": 0.8},
         "hashes": hashes,
         "cases": cases,
         "commonDelayIntervalFrames": [low, high],
-        "configuredSchedulerTimeDelayFrames": 2,
-        "configuredTimeDelayConsistent": True,
-        "scope": "Large shutter-only steps at three SOF phases, two directions, same scene and fixed analogue gain/frame length",
+        "configuredSchedulerDelayFrames": 2,
+        "configuredDelayConsistent": low <= 2 <= high,
+        "scope": (
+            "Combined sensor gain steps with fixed 3 ms shutter/frame length"
+            if args.control == "gain"
+            else "Shutter-only steps with fixed unity gain/frame length"
+        )
+        + "; three SOF phases, two directions, same scene",
         "limitations": [
             "Sparse statistics yield inclusive frame intervals; no missing sample is invented.",
-            "Gain, digital gain and frame-length changes are not qualified by this test.",
+            "Other controls, gain stages outside the tested range and frame-length changes are not qualified by this test.",
             "This does not qualify every runtime scheduling/load condition or full physical frame/exposure association.",
         ],
     }
@@ -126,7 +137,7 @@ def main():
     print(json.dumps({"passed": True, "commonDelayIntervalFrames": [low, high]}))
 
 
-def analyze(base, step_frame, initial, target):
+def analyze(base, step_frame, initial, target, control="shutter"):
     def path(suffix):
         return Path(str(base) + suffix)
 
@@ -152,8 +163,15 @@ def analyze(base, step_frame, initial, target):
         event["sofFrameId"] == step_frame
         and event["requestedCode"] == event["readbackCode"]
     )
-    assert not event["gainChanged"] and not event["frameLengthChanged"]
-    assert abs(starts[0]["seconds"] - initial) < 1e-6 and starts[0]["gain"] == 1
+    assert not event["frameLengthChanged"]
+    if control == "gain":
+        assert event["gainChanged"] and not event["shutterChanged"]
+        assert event["controlId"] == 0x009E0903
+        assert abs(starts[0]["gain"] - initial) < 1e-6
+        assert abs(starts[0]["seconds"] - 0.003) < 1e-6
+    else:
+        assert not event["gainChanged"]
+        assert abs(starts[0]["seconds"] - initial) < 1e-6 and starts[0]["gain"] == 1
     assert (
         event["clock"] == "CLOCK_MONOTONIC"
         and event["writeEndNs"] >= event["writeStartNs"] >= event["sofTimestampNs"]
@@ -183,18 +201,32 @@ def analyze(base, step_frame, initial, target):
     unchanged = [frame for frame, fraction in fractions if fraction <= 0.2]
     changed = [frame for frame, fraction in fractions if fraction >= 0.8]
     partial = [frame for frame, fraction in fractions if 0.2 < fraction < 0.8]
-    assert unchanged and changed and max(unchanged) < min(changed) and not partial, (
-        "Unresolved/partial transition"
+    assert unchanged and changed and max(unchanged) < min(changed), (
+        "Unresolved/reversing transition"
+    )
+    if control == "shutter":
+        assert not partial, "Unresolved/partial shutter transition"
+    assert all(max(unchanged) < frame < min(changed) for frame in partial)
+    assert all(-0.2 <= fraction <= 1.2 for _, fraction in fractions), (
+        "Unstable response"
     )
     first, last = min(changed), max(unchanged)
-    interval = [max(0, last + 1 - step_frame), first - step_frame]
+    onset = min(partial + changed)
+    interval = [max(0, last + 1 - step_frame), onset - step_frame]
+    settled_interval = [
+        max(0, max(unchanged + partial) + 1 - step_frame),
+        first - step_frame,
+    ]
     assert 0 <= interval[0] <= interval[1] <= 5
     return {
         "name": base.name,
         "stepSof": step_frame,
-        "initialSeconds": initial,
-        "targetSeconds": target,
-        "shutterCodes": [event["beforeCode"], event["requestedCode"]],
+        "initialGain" if control == "gain" else "initialSeconds": initial,
+        "targetGain" if control == "gain" else "targetSeconds": target,
+        "gainCodes" if control == "gain" else "shutterCodes": [
+            event["beforeCode"],
+            event["requestedCode"],
+        ],
         "writeStartAfterSofUs": (event["writeStartNs"] - event["sofTimestampNs"])
         / 1000,
         "writeDurationUs": (event["writeEndNs"] - event["writeStartNs"]) / 1000,
@@ -203,6 +235,8 @@ def analyze(base, step_frame, initial, target):
         "lastUnchangedFrame": last,
         "firstChangedFrame": first,
         "effectDelayFrames": interval,
+        "settledDelayFrames": settled_interval,
+        "partialTransitionFrames": partial,
         "observedFractions": [
             [frame, round(fraction, 6)] for frame, fraction in fractions
         ],

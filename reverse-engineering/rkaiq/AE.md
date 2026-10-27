@@ -2026,3 +2026,29 @@ succeeded, started 0.402–1.239 ms after SOF and took 0.644–1.387 ms.
 All scheduled effective-frame labels were SOF+2.
 [Live timing evidence](live-ae-write-timing-validation.json) distinguishes these
 software timing measurements from physical shutter-response measurements above.
+
+### Physical combined-gain response: development 0.0.32
+
+The fixed-exposure diagnostic accepts `--step-at FRAME --step-gain GAIN`
+as an alternative to `--step-seconds`. It converts the requested gain through
+the same profile conversion as startup, checks the active driver range, and
+writes only SC3336's combined ANALOGUE_GAIN control at the selected SOF.
+Shutter stays 3 ms and frame length stays fixed. Other control IDs are rejected.
+
+[Thirteen retained hardware captures](gain-step-latency-validation.json) compare
+1× and 4× gain in both directions and at three SOF phases. Twelve repeated
+captures support a nominal two-frame response. The first capture contains a
+partial response at SOF+3 and reaches its settled brightness at SOF+4. This
+exception is retained: **a gain map that assumes fully settled gain at exactly
+two frames is not physically qualified**. The response thresholds are explicitly
+20%/80% of the observed transition; exact normalized samples are also retained.
+Missing statistics frames remain intervals, never interpolated measurements.
+
+The kernel driver writes coarse digital, fine digital and coarse analogue
+registers separately, even though userspace submits a single combined-gain
+control. That is a possible source of transitional frames, not a proven cause
+of this observation. No kernel register sequence or scheduler policy was
+changed on that assumption. Separate digital-gain stages, higher gains, changing
+frame length, and exposure association under all workloads remain unqualified.
+The source command and controller continue to label physical application as
+unverified; readback proves the requested driver value, not the sensor's frame.

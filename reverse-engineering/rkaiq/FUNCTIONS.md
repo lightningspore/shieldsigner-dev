@@ -232,3 +232,8 @@ transactional live LSC with raw geometry and AE/AWB input checks.
 `isp_baynr::apply` reconstructs the complete ISP32 result-type-12 Bayer spatial
 NR conversion, including mask clearing and gain/weight permutations.
 [SDK/kernel layouts and full native/physical CPU evidence](ISP.md#baynr-selected-result-serialization-0034-development).
+
+`baynr_selection::select` reconstructs complete thirteen-row ISO tuning
+selection, including integer-gain brackets, nearest-row choices, fused
+interpolation and preserved SDK padding.
+[Full native/physical CPU evidence and input bounds](ISP.md#baynr-iso-tuning-selection-0034-development).

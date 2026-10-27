@@ -368,3 +368,4 @@ pub mod lsc_calibration;
 #[cfg(feature = "diagnostics")]
 pub mod lsc_frame;
 pub mod isp_baynr;
+pub mod baynr_selection;

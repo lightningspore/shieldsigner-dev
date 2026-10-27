@@ -3455,6 +3455,14 @@ fn main() {
                 let (x,y)=shieldsigner_rkaiq::lsc_geometry::gradients(&array("x"),&array("y")).unwrap();
                 println!("{}",x.iter().chain(y.iter()).flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "baynr-select" => {
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                let decode=|key:&str|{let s=v[key].as_str().unwrap();(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>()};
+                let table=decode("table").try_into().unwrap();let mut output=decode("output").try_into().unwrap();
+                let mode=v["mode"].as_u64().unwrap() as usize;let iso=v["iso"][mode].as_i64().unwrap() as i32;
+                let bracket=shieldsigner_rkaiq::baynr_selection::select(&table,iso,&mut output).unwrap();
+                println!("{}",serde_json::json!({"output":output.iter().map(|v|format!("{v:02x}")).collect::<String>(),"bracket":bracket}));
+            }
             "isp-baynr" => {
                 use shieldsigner_rkaiq::{isp_baynr,isp32::PARAMETER_BYTES};
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();

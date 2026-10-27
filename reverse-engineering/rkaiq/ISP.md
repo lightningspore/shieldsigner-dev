@@ -1432,3 +1432,44 @@ host/ARM fixture builds. Physical CPU replay makes no ISP writes and loads
 no vendor library on the board. Calibration, ISO selection, fixed-register
 quantization and live BAYNR remain separate; the live camera still has this
 module disabled.
+
+### BAYNR ISO tuning selection (0.0.34 development)
+
+`baynr_selection::select` reconstructs the complete selected-record writes of
+`bayer2dnr_select_params_by_ISO_V23` (ELF `0xe4ac4`). The SDK table contains
+thirteen 252-byte rows after a 60-byte header. Native first truncates each ISO
+knot divided by 50 to integer gain. Input ISO below 50 maps to gain one;
+otherwise integer division by 50 discards finer ISO changes. The last inclusive
+matching interval wins, so an exact internal knot belongs to the following
+interval. The nearest row uses gain distance, with midpoint ties choosing the
+lower row.
+
+Sigma, gain-adjustment, pixel/difference thresholds, filter strength,
+edge-softness, ratio, weight, gain scale and HDR scales interpolate. Luma points,
+gain luma points, Gaussian guide, gain bypass and transform settings come from
+the nearest row. Global enable normalizes the table's signed int to a boolean;
+HDR gain control copies the table header byte. Rust preserves native fused f32
+interpolation, integer truncation and every selected-record padding byte. The
+two selected row indices are returned separately from the record.
+
+[Native/physical CPU evidence](baynr-selection-equivalence.json) covers 1,000
+cases with standard power-of-two and nonstandard ISO knots, explicit midpoint
+and exact-knot ties, `+49` ISO quantization, signed sigma extremes, noncanonical
+flag bytes and varied nearest/interpolated fields. Complete native selection
+executes without algorithm or math stubs. All 252 selected bytes and both
+indices match Rust on host and physical Luckfox; the entire calibration and
+all exposure bytes outside the two output indices remain unchanged. Pinned SDK
+ARM C assertions independently verify table=3,336, selected=252, exposure=88
+and all used field offsets. All 103 library/five Unix tests,
+no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:baynr-selection -- --adb SERIAL --report LOCAL.json`
+after host/ARM fixture builds. Supported knots must remain strictly increasing
+and positive after integer-gain truncation, and the effective sample must lie
+in their covered range. Native leaves zero bracket bounds outside that range,
+which can generate non-finite selected values; Rust rejects that proposal
+without changing output. Invalid-range/collapsed-knot tests verify preservation.
+The fixture selects all three exposure ISO slots, which is not HDR camera
+qualification. These are synthetic SDK tables: actual JSON calibration
+preparation, register quantization, persistent controller and live BAYNR remain
+separate. Physical CPU replay makes no ISP writes; live BAYNR stays disabled.

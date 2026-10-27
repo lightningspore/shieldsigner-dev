@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "cases": 1000,
+  "selectedRecordBytesComparedPerCase": 252,
+  "mismatches": 0,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "d11cc1564825048aa0a29f5086fd82dda1a7fd7415b03799ac802e3e34342c35",
+  "physicalArmBinarySha256": "428786738b391b94fca27c4f69229dce01541e67701019d731ee3de6cb32c3e2",
+  "hostMatchesPhysicalArm": true,
+  "scope": "Complete native bayer2dnr_select_params_by_ISO_V23, all selected bytes including retained padding and both chosen ISO indices. Full calibration and all unrelated exposure bytes verified unchanged. No algorithm/math/log stubs executed.",
+  "boundaries": [
+    "Thirteen positive strictly increasing truncated gain knots; sample min-one integer gain lies within covered range. Native unsupported out-of-range zero-bracket/nonfinite behavior is rejected transactionally by Rust.",
+    "Power-of-two and nonstandard ISO knots; ISO<50, exact knots, +49 quantization and interior samples; nearest-row ties, signed sigma extremes and noncanonical flag bytes included.",
+    "Synthetic SDK records; actual JSON calibration preparation and fixed-register quantization remain separate. Selecting exposure slots 0/1/2 does not qualify HDR camera operation.",
+    "Physical CPU replay makes no ISP writes; live BAYNR remains disabled."
+  ]
+}

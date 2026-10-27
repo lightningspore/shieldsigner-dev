@@ -313,3 +313,30 @@ _Static_assert(offsetof(RK_Bayer2dnr_Fix_V23_t,gain_y)==120,"BAYNR SDK gain y");
 ''')
 subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'baynr-sdk-layout.o')],check=True)
 print('PASS: BAYNR SDK=152/kernel=150, enable/dgain/sigma/weight/gain offsets and module mask verified')
+
+baynr_uapi=dpcc_header('bayer2dnr_uapi_head_v23.h')
+baynr_int=dpcc_header('rk_aiq_types_abayer2dnr_algo_int_v23.h')
+source=cache/'baynr-selection-sdk-layout.c'
+source.write_text('#include <stdint.h>\n#include <stdbool.h>\n#include <stddef.h>\n#define RK_BAYER2DNR_V23_MAX_ISO_NUM 13\n'+dpcc_record('RK_Bayer2dnr_Params_V23_Select_s',baynr_uapi)+'\n'+dpcc_record('Abayer2dnr_ExpInfo_V23_s',baynr_uapi)+'\n'+dpcc_record('RK_Bayer2dnr_Params_V23_s',baynr_int)+'''
+_Static_assert(sizeof(RK_Bayer2dnrV23_Params_Select_t)==252,"BAYNR selected record");
+_Static_assert(sizeof(RK_Bayer2dnr_Params_V23_t)==3336,"BAYNR thirteen-row table");
+_Static_assert(offsetof(RK_Bayer2dnr_Params_V23_t,iso)==8,"BAYNR ISO knots");
+_Static_assert(offsetof(RK_Bayer2dnr_Params_V23_t,Bayer2dnrParamsISO)==60,"BAYNR ISO row base");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,lumapoint)==4,"BAYNR selected luma");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,sigma)==68,"BAYNR selected sigma");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,gauss_guide)==132,"BAYNR selected guide");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,filter_strength)==136,"BAYNR selected strength");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,pix_diff)==152,"BAYNR selected pixel difference");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,trans_mode)==156,"BAYNR selected transform");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,trans_datmax)==164,"BAYNR selected max data");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,gain_scale)==172,"BAYNR selected gain scale");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,gain_lumapoint)==176,"BAYNR selected gain luma");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,gain_adj)==208,"BAYNR selected gain adjustment");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,hdrdgain_ctrl_en)==240,"BAYNR selected HDR control");
+_Static_assert(offsetof(RK_Bayer2dnrV23_Params_Select_t,hdr_dgain_scale_s)==244,"BAYNR selected HDR scale");
+_Static_assert(sizeof(Abayer2dnr_ExpInfo_V23_t)==88,"BAYNR exposure record");
+_Static_assert(offsetof(Abayer2dnr_ExpInfo_V23_t,arIso)==68,"BAYNR exposure ISO");
+_Static_assert(offsetof(Abayer2dnr_ExpInfo_V23_t,isoLevelLow)==80,"BAYNR selected lower index");
+''')
+subprocess.run(['mise','exec','zig@0.15.2','--','zig','cc','-target','arm-linux-musleabihf','-c',str(source),'-o',str(cache/'baynr-selection-sdk-layout.o')],check=True)
+print('PASS: BAYNR thirteen-row table=3336/selected=252/exposure=88; all selector field offsets verified')

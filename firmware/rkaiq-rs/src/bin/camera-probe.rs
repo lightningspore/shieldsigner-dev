@@ -1,7 +1,7 @@
 //! Experimental standalone V4L2 diagnostic. No RKAIQ symbols or vendor library.
 //! This does not yet configure the full media graph or replace the ISP engine.
 use std::env;
-const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE [--frames 33..96]\n  camera-probe awb-gain-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE R GR GB B\n  camera-probe awb-measurement-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE\n  camera-probe auto-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE\n  camera-probe first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME --step-seconds SECONDS]]\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe configure-pipeline PLAN.json [--dry-run]\n  camera-probe apply-linear /dev/v4l-subdevN FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]\n  camera-probe make-initial-parameters IQ.json OUT.bin [--ae-measurements | --awb-measurements SDK.bin SAMPLE_SCALE]\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE [--sof-node NODE] [--exposure-step SENSOR FRAME CODE] -- IMAGE_NODE OUT [capture options]\n  camera-probe capture-with-parameters PARAM_NODE PARAM.bin -- IMAGE_NODE OUT [capture options]\n  camera-probe submit-parameters /dev/videoN FULL_PARAMETERS.bin [--timeout-ms 3000] [--hold-ms 30000]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
+const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE [--frames 33..3600]\n  camera-probe awb-gain-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE R GR GB B\n  camera-probe awb-measurement-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE\n  camera-probe auto-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE\n  camera-probe first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME --step-seconds SECONDS]]\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe configure-pipeline PLAN.json [--dry-run]\n  camera-probe apply-linear /dev/v4l-subdevN FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]\n  camera-probe make-initial-parameters IQ.json OUT.bin [--ae-measurements | --awb-measurements SDK.bin SAMPLE_SCALE]\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE [--sof-node NODE] [--exposure-step SENSOR FRAME CODE] -- IMAGE_NODE OUT [capture options]\n  camera-probe capture-with-parameters PARAM_NODE PARAM.bin -- IMAGE_NODE OUT [capture options]\n  camera-probe submit-parameters /dev/videoN FULL_PARAMETERS.bin [--timeout-ms 3000] [--hold-ms 30000]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
     if interpolate(&[0., 1.], &[2., 4.], 0.5) != Ok(3.) {
@@ -841,9 +841,9 @@ mod linux {
             }
             i += 2;
         }
-        if !(1..=4).contains(&buffers) || !(1..=60000).contains(&timeout) || warmup > 100 {
+        if !(1..=4).contains(&buffers) || !(1..=60000).contains(&timeout) || warmup > 10000 {
             return Err(error(
-                "Options exceed bounds: buffers 1–4, timeout 1–60000 ms, warmup 0–100",
+                "Options exceed bounds: buffers 1–4, timeout 1–60000 ms, warmup 0–10000",
             ));
         }
         if statistics && buffers < 2 {
@@ -1042,6 +1042,11 @@ mod linux {
         println!("{}", serde_json::to_string_pretty(&report)?);
         Ok(())
     }
+    const CAMERA_TRACE_LIMIT:usize=256;
+    fn record_camera_trace(trace:&mut Vec<Value>,value:Value) {
+        if trace.len()==CAMERA_TRACE_LIMIT {trace.remove(0);}
+        trace.push(value);
+    }
     // Raw ARM32 kernel event storage: do not use musl's time64 timespec.
     struct SensorDevice {
         file: File,
@@ -1052,7 +1057,7 @@ mod linux {
     impl SensorDevice {
         fn query<T>(&mut self, label: &str, request: u32, value: &mut T) -> io::Result<()> {
             let result = ioctl(self.file.as_raw_fd(), request, value);
-            self.queries.push(json!({"query":label,"request":format!("0x{request:08x}"),"error":result.as_ref().err().map(|e|e.to_string())}));
+            record_camera_trace(&mut self.queries,json!({"query":label,"request":format!("0x{request:08x}"),"error":result.as_ref().err().map(|e|e.to_string())}));
             result
         }
     }
@@ -1117,13 +1122,13 @@ mod linux {
         fn control(&mut self, id: u32, value: i32) -> io::Result<()> {
             let mut control = shieldsigner_rkaiq::sensor::Control { id, value };
             let result = ioctl(self.file.as_raw_fd(), 0xc008561c, &mut control);
-            self.writes.push(json!({"operation":"set-control","id":id,"value":value,"request":"0xc008561c","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string())}));
+            record_camera_trace(&mut self.writes,json!({"operation":"set-control","id":id,"value":value,"request":"0xc008561c","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string())}));
             result
         }
         fn conversion_gain(&mut self, value: u32) -> io::Result<()> {
             let mut code = value;
             let result = ioctl(self.file.as_raw_fd(), 0x400456c6, &mut code);
-            self.writes.push(json!({"operation":"conversion-gain","value":value,"request":"0x400456c6","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string())}));
+            record_camera_trace(&mut self.writes,json!({"operation":"conversion-gain","value":value,"request":"0x400456c6","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string())}));
             result
         }
     }

@@ -2,8 +2,8 @@
 
 Current **0.0.31-dev source** has passed bounded live AE + AWB captures, including FAST-to-normal time sharing, on
 the SC3336/Luckfox. The opt-in `auto-awb-frame-sc3336` command and its remaining
-runtime limitations are documented in [AWB.md](AWB.md#single-camera-scale-and-longer-live-capture-2026-10-27).
-Current live syntax takes the six path arguments and optional `--frames 33..96`.
+runtime limitations are documented in [AWB.md](AWB.md#rolling-snapshot-ownership-beyond-short-captures-2026-10-27).
+Current live syntax takes the six path arguments and optional `--frames 33..3600`.
 It derives scale from the single-camera binding, ISO from associated real gains,
 and brightness from the same-frame AE pre-result.
 The frozen **0.0.30-dev ZIP described below is unchanged** and does not contain

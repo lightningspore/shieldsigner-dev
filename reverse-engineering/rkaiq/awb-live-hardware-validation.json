@@ -1,6 +1,6 @@
 {
   "kind": "experimental-live-ae-awb-hardware-check",
-  "cameraBinarySha256": "152e7b97ee6a4a948d5e9e2ea4319050ccaa226ff731a31acf384519fffa249d",
+  "cameraBinarySha256": "89813ea612e55ac48ce4a6b9f78bb2a6b24cc814048f50dd273c0a555ba32bcf",
   "runs": [
     {
       "run": "01",
@@ -202,6 +202,43 @@
       "sampleScaleSource": "Original single-camera factory literal; selected automatically",
       "vendorProcessChecksBeforeAfterEmpty": true,
       "nativeEffectiveTranslationMismatches": 0
+    },
+    {
+      "run": "08",
+      "cameraBinarySha256": "89813ea612e55ac48ce4a6b9f78bb2a6b24cc814048f50dd273c0a555ba32bcf",
+      "success": true,
+      "imageFramesRequested": 600,
+      "savedImageSequence": 599,
+      "awbFrames": 400,
+      "aeFrames": 400,
+      "firstGain": [
+        1.4876494407653809,
+        1.0,
+        1.0,
+        1.8254132270812988
+      ],
+      "lastGain": [
+        1.4426296949386597,
+        1.0,
+        1.0,
+        1.822668194770813
+      ],
+      "lastFrame": 598,
+      "lastParametersId": 597,
+      "savedImageBytes": 460800,
+      "normalFrames": 398,
+      "normalGroups": [
+        0,
+        1
+      ],
+      "maxActiveLights": 7,
+      "parameterSubmissions": 399,
+      "retiredParameterSnapshots": 398,
+      "peakRetainedParameterSnapshots": 2,
+      "finalRetainedParameterSnapshots": 2,
+      "sensorTraceLimit": 256,
+      "sampleScaleSource": "Original single-camera factory literal",
+      "nativeEffectiveTranslationMismatches": 0
     }
   ],
   "libraryTests": 85,
@@ -211,11 +248,11 @@
     "Runs 01-04 used fixed FAST; 05 is rejected; 06/07 transition to normal zero-reserved groups. Full native outer reconfiguration policy and variable-limit/weight signature epochs remain separate.",
     "Runs 01/02 used brightness fallback; 03 bound brightness with explicit ISO; later runs bind brightness and native-equivalent ISO. Run 07 also selects the proven single-camera scale automatically.",
     "Physical per-frame gain/exposure latency, color accuracy and vendor-free cold startup remain unqualified.",
-    "Short bounded diagnostic captures, not yet a continuous application camera service.",
+    "Successful 600-image-dequeue diagnostic with rolling snapshots; continuous application frame delivery and longer environmental/restart qualification remain work.",
     "Full joined original startup/controller equivalence remains unproven."
   ],
   "lastTranslationComparisons": {
-    "runs": 6,
+    "runs": 7,
     "bytesEach": 7680,
     "mismatches": 0,
     "snapshotAssociation": "Per-run registered effective SDK; capture 06 uses saved normal time-share SDK, not initial FAST SDK."
@@ -244,5 +281,14 @@
     "scale": 1,
     "hostAndArmReplayPassed": true,
     "calibrationAndInitAreExplicitBoundaries": true
+  },
+  "retentionAndTraceContracts": {
+    "queuedStatisticsIdsPinned": true,
+    "lastSavedAwbIdPinned": true,
+    "regressingParameterIdsRejected": true,
+    "successfulSubmissionRemovesConsumedPendingAwbGain": true,
+    "recentTraceLimit": 256,
+    "residentSnapshotSafetyLimit": 128,
+    "hardwareSubmissionsBeyondOldLifetimeLimit": 399
   }
 }

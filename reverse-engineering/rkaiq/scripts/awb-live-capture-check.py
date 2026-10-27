@@ -17,6 +17,7 @@ def main():
     ap.add_argument("base", type=Path)
     ap.add_argument("--native-report", type=Path)
     ap.add_argument("--report", type=Path)
+    ap.add_argument("--min-submissions", type=int, default=0)
     args = ap.parse_args()
 
     def path(suffix):
@@ -84,6 +85,24 @@ def main():
         assert native["statisticsSha256"] == hashlib.sha256(raw).hexdigest()
         assert native["translatedSha256"] == hashlib.sha256(decoded).hexdigest()
         numerical = True
+    ae_summary = next(v for v in events if v.get("event") == "automatic-ae-finished")
+    assert ae_summary["processedStatistics"] == len(ae), "Missing AE log events"
+    submissions = ae_summary.get("parameterSubmissions")
+    peak = ae_summary.get("maxParameterSnapshots")
+    retired = ae_summary.get("retiredParameterSnapshots")
+    if args.min_submissions:
+        assert submissions is not None and submissions >= args.min_submissions, (
+            "Too few successful parameter submissions"
+        )
+        assert peak is not None and peak <= 128, "Unbounded resident snapshot history"
+        assert retired is not None and retired > 0, "No snapshots retired"
+        assert ae_summary["parameterSnapshots"] <= 128
+        assert len(ae_summary["sensorWrites"]) <= ae_summary["sensorTraceLimit"]
+        assert len(ae_summary["sensorQueries"]) <= ae_summary["sensorTraceLimit"]
+        queue = next(
+            v for v in events if v.get("event") == "finished" and "callTraceLimit" in v
+        )
+        assert len(queue["calls"]) <= queue["callTraceLimit"]
     report = dict(
         kind="normal-timeshare-live-capture-check",
         passed=True,
@@ -95,6 +114,9 @@ def main():
         finalParametersId=parameter,
         maxActiveLights=max(v["activeLights"] for v in awb),
         nativeTranslationChecked=numerical,
+        parameterSubmissions=submissions,
+        maxParameterSnapshots=peak,
+        retiredParameterSnapshots=retired,
         scope="Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification",
     )
     if args.report:

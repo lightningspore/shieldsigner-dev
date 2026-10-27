@@ -32,7 +32,7 @@ impl ParameterBackend {
             .and_then(|file| ioctl(file.as_raw_fd(), request, value));
         match result {
             Ok(()) => {
-                self.calls.push(json!({"operation":operation,"ok":true}));
+                record_camera_trace(&mut self.calls, json!({"operation":operation,"ok":true}));
                 self.last_error = None;
                 self.last_errno = None;
                 0
@@ -43,8 +43,10 @@ impl ParameterBackend {
                 if request == DEQUEUE && e.kind() == io::ErrorKind::WouldBlock {
                     self.dequeue_would_block = self.dequeue_would_block.saturating_add(1);
                 } else {
-                    self.calls
-                        .push(json!({"operation":operation,"ok":false,"error":e.to_string()}));
+                    record_camera_trace(
+                        &mut self.calls,
+                        json!({"operation":operation,"ok":false,"error":e.to_string()}),
+                    );
                 }
                 -9
             }
@@ -239,8 +241,10 @@ impl parameter::Backend for ParameterBackend {
             Ok(()) => 0,
             Err(e) => {
                 self.last_error = Some(e.to_string());
-                self.calls
-                    .push(json!({"operation":"initialize-pool","ok":false,"error":e.to_string()}));
+                record_camera_trace(
+                    &mut self.calls,
+                    json!({"operation":"initialize-pool","ok":false,"error":e.to_string()}),
+                );
                 -2
             }
         }
@@ -260,7 +264,7 @@ impl parameter::Backend for ParameterBackend {
     }
     fn close(&mut self) {
         self.file.take();
-        self.calls.push(json!({"operation":"close"}));
+        record_camera_trace(&mut self.calls, json!({"operation":"close"}));
     }
     fn finalize_pool(&mut self) {
         self.buffers.clear();
@@ -511,7 +515,7 @@ fn capture_with_parameters_controlled(
             });
             println!(
                 "{}",
-                json!({"event":"automatic-ae-finished","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string()),"processedStatistics":control.owner.processed,"parameterSnapshots":control.owner.parameters.len(),"lastSof":control.owner.last_sof,"lastSofTimestampNs":control.owner.last_sof_timestamp_ns,"sensorWrites":control.owner.sensor.writes,"sensorQueries":control.owner.sensor.queries,"automaticWhiteBalance":control.owner.awb.is_some(),"physicalApplicationVerified":false})
+                json!({"event":"automatic-ae-finished","success":result.is_ok(),"error":result.as_ref().err().map(|e|e.to_string()),"processedStatistics":control.owner.processed,"parameterSnapshots":control.owner.parameters.len(),"maxParameterSnapshots":control.owner.max_parameter_history,"parameterSubmissions":control.owner.parameter_submissions,"retiredParameterSnapshots":control.owner.retired_parameters,"sensorTraceLimit":CAMERA_TRACE_LIMIT,"lastSof":control.owner.last_sof,"lastSofTimestampNs":control.owner.last_sof_timestamp_ns,"sensorWrites":control.owner.sensor.writes,"sensorQueries":control.owner.sensor.queries,"automaticWhiteBalance":control.owner.awb.is_some(),"physicalApplicationVerified":false})
             );
             result
         } else {
@@ -668,7 +672,7 @@ fn submit_parameters_then_with_backend<
     });
     println!(
         "{}",
-        json!({"event":"finished","success":failure.is_none(),"error":failure,"device":args[0],"parameterFile":args[1],"parameterFrameId":get32(&payload,24),"payloadBytes":payload.len(),"parameterQueued":accepted,"frameApplicationVerified":false,"coldStartProven":false,"completion":completed,"holdMs":hold,"bufferCount":backend.requested,"cleanupErrors":backend.cleanup_errors,"dequeueWouldBlockCount":backend.dequeue_would_block,"calls":backend.calls})
+        json!({"event":"finished","success":failure.is_none(),"error":failure,"device":args[0],"parameterFile":args[1],"parameterFrameId":get32(&payload,24),"payloadBytes":payload.len(),"parameterQueued":accepted,"frameApplicationVerified":false,"coldStartProven":false,"completion":completed,"holdMs":hold,"bufferCount":backend.requested,"cleanupErrors":backend.cleanup_errors,"dequeueWouldBlockCount":backend.dequeue_would_block,"calls":backend.calls,"callTraceLimit":CAMERA_TRACE_LIMIT})
     );
     match failure {
         Some(e) => Err(error(e)),

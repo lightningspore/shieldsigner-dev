@@ -21,12 +21,12 @@ def main():
   run=subprocess.run(command,text=True,capture_output=True,timeout=30)
   assert run.returncode==0,(run.stdout+run.stderr)[-6000:]
   events=[json.loads(line) for line in run.stdout.splitlines() if line.startswith('{') and line.endswith('}')]
-  gain=next(e for e in events if e.get('event')=='runtime-gain-queue-verified');assert gain['queued']==6 and gain['snapshotSubmissions']==3 and gain['poolExhaustionChecked'] and gain['unityNoopChecked']
+  gain=next(e for e in events if e.get('event')=='runtime-gain-queue-verified');assert gain['queued']==6 and gain['snapshotSubmissions']==3 and gain['poolExhaustionChecked'] and gain['unityNoopChecked'] and gain['snapshotRetentionChecked'] and gain['parameterRegressionChecked'] and gain['traceBoundedChecked']
   summary=next(e for e in events if e.get('event')=='simulated-startup-verified')
   if not automatic:assert summary['sofEvents']>0 and summary['statisticsEvents']==summary['statisticsFrames']
   assert summary['imageFrames']==(33 if automatic else 3) and summary['rawFrames']>=summary['imageFrames'] and not summary['hardwareVerified']
   if automatic:
-   ae=next(e for e in events if e.get('event')=='automatic-ae-finished');assert ae['success'] and ae['processedStatistics']>=3 and ae['parameterSnapshots']>=3 and len(ae['sensorWrites'])>3
+   ae=next(e for e in events if e.get('event')=='automatic-ae-finished');assert ae['success'] and ae['processedStatistics']>=3 and ae['parameterSubmissions']>=3 and 1<=ae['parameterSnapshots']<=128 and ae['maxParameterSnapshots']<=128 and len(ae['sensorWrites'])>3
    summary['ae']={k:v for k,v in ae.items() if k not in ['sensorWrites','sensorQueries']}
    summary['ae'].update(sensorWriteCount=len(ae['sensorWrites']),sensorQueryCount=len(ae['sensorQueries']))
   assert summary['statisticsEnabled']==statistics and summary['multiPlaneTx']==multi_tx

@@ -2413,3 +2413,59 @@ The remaining practical work includes sustained application streaming (current
 event/snapshot histories still have bounded diagnostic limits), variable
 measurement reconfiguration epochs and cold-start qualification. This longer
 run is a checkpoint, not a completed replacement-library claim.
+
+
+### Rolling snapshot ownership beyond short captures (2026-10-27)
+
+The event owner no longer retains every historical ISP/SDK snapshot until the
+128-entry diagnostic limit stops the run. Statistics admission enforces
+nondecreasing parameter IDs within one stream epoch. Before publication, the
+owner retires entries older than the last admitted parameter watermark, while
+pinning exact IDs referenced by queued statistics, the last saved AWB record,
+and the most recent submitted snapshot. AE parameter and AWB SDK histories use
+the same retention predicate. Unknown or regressing IDs still fail explicitly;
+no caller guesses the latest configuration for an older frame.
+
+Successful submission also removes consumed frame-specific pending AWB gain
+records. Recent sensor query/write and parameter-queue traces are bounded to
+256 records, with the limits disclosed in the final diagnostic JSON. These
+lists now mean recent traces rather than complete lifetime histories. The
+128-entry snapshot safety cap remains for genuinely unretired/in-flight state;
+it is not an arbitrary total-submission limit. This is an owned event-loop
+retention policy, not a reconstruction of every native C++ map lifetime detail.
+
+Adapter contract checks now cover retaining old IDs needed by queued statistics,
+preserving snapshot payloads, rejecting regressing IDs before changing admitted
+queue state, and retaining only the newest 256 diagnostic trace entries. Existing
+queue-failure, duplicate-ID, cancellation, single-/multi-plane and startup
+checks still pass. The capture checker accepts `--min-submissions 129` to require
+actual successful publication past the former lifetime boundary and verify
+bounded resident histories/traces.
+
+Current live syntax accepts `--frames 33..3600`; the generic capture warmup
+bound is 10,000. The actual hardware command for capture 08 was:
+
+```sh
+/tmp/shieldsigner-camera-probe-live-awb auto-awb-frame-sc3336 \
+  /tmp/shieldsigner-pipeline-sof.json /tmp/sc3336-awb-30ms-8x.private.json \
+  /dev/video20 /dev/video11 /tmp/ss-20261027-live-awb-08 /dev/video19 \
+  --frames 600
+```
+
+It passed 600 image dequeues, saving image sequence 599, with **400 AE/AWB
+statistics events, 399 successful parameter submissions, 398 retired snapshots,
+and only two retained snapshots at peak and finish**. Both normal groups were
+observed; final gains held around `[1.44263, 1, 1, 1.822668]`. The saved image
+has readable text. Final frame 598 / parameter ID 597 matches all 7,680 translated
+bytes of original ARM with its saved effective normal SDK. Protocol checking
+with `--min-submissions 129` passes. The 85 library tests, no-default-features
+build, ARM build and six existing simulated adapter scenarios also pass.
+
+Private capture artifacts and detailed logs stay ignored locally. Temporary
+board copies of capture 03 were removed only after comparing every file's
+SHA-256 with the local archive. No boot/kernel/service changes occurred.
+
+This removes the short-run ownership barrier. Continuous application frame
+delivery, environmental/restart testing, variable measurement epochs and
+cold-start qualification remain required work; no whole-process memory or
+color/latency qualification is inferred from these bounded-history checks.

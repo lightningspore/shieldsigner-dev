@@ -18,6 +18,13 @@ fn emit_camera_ae_event(sender: &Option<CameraAeSender>, event: CameraAeEvent) -
     Ok(())
 }
 
+/// Retain snapshots that can still be referenced: in-flight/future IDs and
+/// explicit pins for queued statistics or the final saved AWB record.
+fn retain_parameter_snapshots<T>(records: &mut Vec<(u32, T)>, watermark: u32, pinned: &[u32]) {
+    let latest = records.last().map(|(id, _)| *id);
+    records.retain(|(id, _)| Some(*id) == latest || *id >= watermark || pinned.contains(id));
+}
+
 /// Persistent AWB beside the AE owner, including FAST-to-normal scheduling.
 /// Each successful submission registers its own effective measurement record.
 struct CameraAwb {
@@ -157,6 +164,7 @@ impl CameraAwb {
     ) {
         self.measurements.push((id, record));
         self.sdk = record;
+        self.gains.retain(|(frame, _, _)| *frame > id);
     }
     fn save(&self, statistics_output: &str) -> io::Result<()> {
         let (frame, id, bytes) = self
@@ -201,6 +209,10 @@ struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
     last_sof: Option<u32>,
     last_sof_timestamp_ns: Option<u64>,
     last_statistics: Option<u32>,
+    last_parameters_id: Option<u32>,
+    max_parameter_history: usize,
+    parameter_submissions: u64,
+    retired_parameters: u64,
     pending: std::collections::VecDeque<Vec<u8>>,
     processed: u64,
     awb: Option<CameraAwb>,
@@ -222,9 +234,36 @@ where
             last_sof: None,
             last_sof_timestamp_ns: None,
             last_statistics: None,
+            last_parameters_id: None,
+            max_parameter_history: 1,
+            parameter_submissions: 0,
+            retired_parameters: 0,
             pending: std::collections::VecDeque::new(),
             processed: 0,
             awb: None,
+        }
+    }
+    fn prune_histories(&mut self) {
+        let Some(watermark) = self.last_parameters_id else {
+            return;
+        };
+        let mut pinned: Vec<_> = self
+            .pending
+            .iter()
+            .map(|bytes| {
+                shieldsigner_rkaiq::statistics::Statistics::parse(bytes)
+                    .unwrap()
+                    .parameters_id()
+            })
+            .collect();
+        if let Some((_, id, _)) = self.awb.as_ref().and_then(|awb| awb.last.as_ref()) {
+            pinned.push(*id);
+        }
+        let before = self.parameters.len();
+        retain_parameter_snapshots(&mut self.parameters, watermark, &pinned);
+        self.retired_parameters += (before - self.parameters.len()) as u64;
+        if let Some(awb) = self.awb.as_mut() {
+            retain_parameter_snapshots(&mut awb.measurements, watermark, &pinned);
         }
     }
     /// Snapshots must represent complete effective translator state. This is an
@@ -282,6 +321,7 @@ where
         if updates == 0 {
             return Ok(None);
         }
+        self.prune_histories();
         if self.parameters.len() == 128 || self.parameters.last().is_some_and(|p| p.0 >= frame) {
             return Err(error("Gain batch requires a new increasing parameter ID"));
         }
@@ -313,6 +353,8 @@ where
             awb.register(frame, record);
         }
         self.parameters.push((frame, snapshot));
+        self.parameter_submissions += 1;
+        self.max_parameter_history = self.max_parameter_history.max(self.parameters.len());
         Ok(Some(index))
     }
     /// Statistics can overtake their SOF producer. Retain at most 16 complete
@@ -350,10 +392,18 @@ where
                 if self.last_statistics.is_some_and(|old| frame <= old) {
                     return Err(error("Duplicate or regressing AE statistics frame"));
                 }
+                let id = stats.parameters_id();
+                if self
+                    .last_parameters_id
+                    .is_some_and(|previous| id < previous)
+                {
+                    return Err(error("Regressing statistics parameter ID"));
+                }
                 if self.pending.len() == 16 {
                     return Err(error("AE statistics are too far ahead of SOF"));
                 }
                 self.last_statistics = Some(frame);
+                self.last_parameters_id = Some(id);
                 self.pending.push_back(bytes);
             }
         }

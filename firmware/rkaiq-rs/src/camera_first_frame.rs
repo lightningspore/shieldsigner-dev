@@ -13,7 +13,7 @@ fn auto_frame_sc3336(args: &[String]) -> io::Result<()> {
 }
 fn auto_awb_frame_sc3336(args: &[String]) -> io::Result<()> {
     if !matches!(args.len(), 6 | 8) {
-        return Err(error("auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE [--frames 33..96]"));
+        return Err(error("auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE [--frames 33..3600]"));
     }
     let frames = if args.len() == 8 {
         if args[6] != "--frames" {
@@ -22,8 +22,8 @@ fn auto_awb_frame_sc3336(args: &[String]) -> io::Result<()> {
         let n = args[7]
             .parse::<u32>()
             .map_err(|_| error("Invalid frame count"))?;
-        if !(33..=96).contains(&n) {
-            return Err(error("Live diagnostic requires 33..96 image frames"));
+        if !(33..=3600).contains(&n) {
+            return Err(error("Live diagnostic requires 33..3600 image frames"));
         }
         Some(n)
     } else {

@@ -467,6 +467,23 @@ mod first_frame_driver {
             .unwrap();
         assert_eq!(outputs.len(), 1);
         assert_eq!(outputs[0].parameters, 2);
+        let before = (
+            owner.last_statistics,
+            owner.last_parameters_id,
+            owner.pending.len(),
+        );
+        assert!(owner
+            .handle(CameraAeEvent::Statistics { bytes: raw(4, 1) })
+            .is_err());
+        assert_eq!(
+            (
+                owner.last_statistics,
+                owner.last_parameters_id,
+                owner.pending.len()
+            ),
+            before
+        );
+
         for frame in 4..9 {
             owner
                 .handle(CameraAeEvent::Sof {
@@ -486,6 +503,43 @@ mod first_frame_driver {
             })
             .is_err());
         assert_eq!(owner.sensor.writes.len(), writes);
+        let mut records: Vec<_> = (0..=200).map(|id| (id, id * 10)).collect();
+        retain_parameter_snapshots(&mut records, 190, &[5, 150, 180]);
+        assert_eq!(
+            records.iter().map(|(id, _)| *id).collect::<Vec<_>>(),
+            [vec![5, 150, 180], (190..=200).collect()].concat()
+        );
+        assert!(records.iter().all(|(id, payload)| *payload == id * 10));
+        owner.parameters = (0..=200)
+            .map(|id| {
+                let mut bytes = initial_parameters;
+                put32(&mut bytes, 24, id);
+                (id, bytes)
+            })
+            .collect();
+        owner.last_parameters_id = Some(190);
+        owner.pending.push_back(raw(201, 5));
+        owner.pending.push_back(raw(202, 180));
+        owner.prune_histories();
+        assert_eq!(
+            owner
+                .parameters
+                .iter()
+                .map(|(id, _)| *id)
+                .collect::<Vec<_>>(),
+            [vec![5, 180], (190..=200).collect()].concat()
+        );
+        assert!(owner
+            .parameters
+            .iter()
+            .all(|(id, bytes)| *id == get32(bytes, 24)));
+        let mut trace = vec![];
+        for n in 0..1000 {
+            record_camera_trace(&mut trace, json!(n));
+        }
+        assert_eq!(trace.len(), CAMERA_TRACE_LIMIT);
+        assert_eq!(trace.first(), Some(&json!(744)));
+        assert_eq!(trace.last(), Some(&json!(999)));
         drop(owner);
         let mut backend = ParameterBackend {
             file: Some(open("/dev/zero", true).unwrap()),
@@ -726,8 +780,15 @@ mod first_frame_driver {
             .submit_gain(&mut backend, &mut queue, 3, Some(wb))
             .unwrap()
             .unwrap();
-        assert_eq!(owner.parameters.len(), 4);
-        assert_eq!(owner.parameters[3].0, 3);
+        assert_eq!(owner.parameters.len(), 3);
+        assert_eq!(
+            owner
+                .parameters
+                .iter()
+                .map(|(id, _)| *id)
+                .collect::<Vec<_>>(),
+            vec![1, 2, 3]
+        );
         let sensor = SensorDevice {
             file: open("/dev/null", true).unwrap(),
             queries: vec![],
@@ -911,7 +972,7 @@ mod first_frame_driver {
         println!();
         println!(
             "{}",
-            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":6,"snapshotSubmissions":3,"poolExhaustionChecked":true,"unityNoopChecked":true})
+            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":6,"snapshotSubmissions":3,"poolExhaustionChecked":true,"unityNoopChecked":true,"snapshotRetentionChecked":true,"parameterRegressionChecked":true,"traceBoundedChecked":true})
         );
     }
     #[test]

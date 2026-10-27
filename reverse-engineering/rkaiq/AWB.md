@@ -1019,3 +1019,31 @@ aggregate bypass only. Native mode-1/2 Exclusion reachability with real IQ/state
 allocation trailing contents, and a deliberate safe replacement policy remain
 to be established before connecting this branch. No production mapping or
 fallback policy changed in this audit.
+
+## SC3336 Exclusion reachability in INITIAL mode
+
+The hash-pinned SC3336 IQ selects `AWB_SGC_CALL_INITIAL`. The SDK's pinned
+`iq_parser_v2/awb_head.h` defines INITIAL=0, AUTO=1 and ALWAYS=2; this header is
+now recorded in `artifacts.json` and checked by the directed audit. Its
+`xyRegionStableSelection` thresholds for Big and Extra are both 216.
+Thus the configured INITIAL mode satisfies the native `mode < 1` guard:
+when region 3 is selected, it uses the global Exclusion aggregate and skips
+per-light probability/high/low calculation. This holds independently of how
+stabilization selected region 3. It is conditional on retaining INITIAL mode;
+it does not establish safety for a runtime change to AUTO or ALWAYS.
+
+`mise run camera:rust:awb-gain-controller-initial-exclusion` verifies **192
+whole native controller calls** against Rust on host and ARM. Sparse Normal/Big
+counts force Exclusion, using the pinned 216 thresholds and mode 0. A native
+entry hook asserts that the selected-gain helper is never entered, and that
+single-color classification is skipped. Exact output/state comparisons include
+the common processing tail. The suite disables stabilization to isolate the
+branch and uses synthetic state/calibration for remaining fields; it is not a
+full IQ-initialized frame replay. The preexisting 192-case controller regression
+also remains required. [Directed comparison report](awb-gain-controller-initial-exclusion-equivalence.json).
+
+This establishes a route for connecting the pinned INITIAL-mode Exclusion
+aggregate without inventing per-light region-3 gains. A future prepared-data
+adapter must explicitly guard mode-1/2 Exclusion until its boundary-crossing
+native behavior has a deliberate, documented resolution. Full IQ loading,
+preprocessing/controller composition and live AWB remain unfinished.

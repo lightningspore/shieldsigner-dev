@@ -33,6 +33,11 @@ class Original(post.Original, color.OriginalColor):
     def hook(self, uc, address, size, user):
         if address == (self.symbols.get(PROCESS, 0) & ~1):
             self.single_calls += 1
+        if address == (
+            self.symbols.get("_Z29AwbCalGainForDiffIlluminationiP12awb_contex_s", 0)
+            & ~1
+        ):
+            self.selected_gain_calls += 1
         super().hook(uc, address, size, user)
 
     def setup_controller(self, v, ctx, cfg, cal, results):
@@ -332,6 +337,7 @@ class Original(post.Original, color.OriginalColor):
     def invoke(self, name, *args, **kwargs):
         if name == "_Z18AwbCalGainByWbModeP12awb_contex_s":
             self.single_calls = 0
+            self.selected_gain_calls = 0
             self.before_controller = bytes(self.uc.mem_read(HEAP, 0x4000))
         return super().invoke(name, *args, **kwargs)
 
@@ -347,6 +353,44 @@ def main():
     math_sha = hashlib.sha256(color.MATH.read_bytes()).hexdigest()
     assert math_sha == manifest["uclibcRuntime"]["memberSha256"]
     single = "--single" in sys.argv
+    initial_exclusion = "--initial-exclusion" in sys.argv
+    assert not (single and initial_exclusion)
+    iq_sha = None
+    if initial_exclusion:
+        iq_file = (
+            ROOT / ".tools/reverse-engineering/iqfiles" / manifest["iqFiles"][0]["name"]
+        )
+        iq_sha = hashlib.sha256(iq_file.read_bytes()).hexdigest()
+        assert iq_sha == manifest["iqFiles"][0]["sha256"]
+
+        def find_single(value):
+            if isinstance(value, dict):
+                if "singleColorProces" in value:
+                    yield value
+                for child in value.values():
+                    yield from find_single(child)
+            elif isinstance(value, list):
+                for child in value:
+                    yield from find_single(child)
+
+        header = (ROOT / ".tools/reverse-engineering/headers/awb_head.h").read_bytes()
+        header_sha = hashlib.sha256(header).hexdigest()
+        assert header_sha == next(
+            h["sha256"] for h in manifest["headers"] if h["name"] == "awb_head.h"
+        )
+        for name, value in [("INITIAL", 0), ("AUTO", 1), ("ALWAYS", 2)]:
+            assert f"AWB_SGC_CALL_{name} = {value}".encode() in header
+        iq_profiles = list(find_single(json.loads(iq_file.read_bytes())))
+        assert iq_profiles
+        assert all(
+            p["singleColorProces"]["mode"] == "AWB_SGC_CALL_INITIAL"
+            for p in iq_profiles
+        )
+        assert all(
+            p["xyRegionStableSelection"]["wpNumTh"]["forBigType"] == [216]
+            and p["xyRegionStableSelection"]["wpNumTh"]["forExtraType"] == [216]
+            for p in iq_profiles
+        )
     arm = Original()
     rng = random.Random(0x434F4E54)
     cases = []
@@ -477,9 +521,26 @@ def main():
                 threshold=0.5,
                 confidence=c,
             )
+        if initial_exclusion:
+            # Directed branch test: force the raw Exclusion proposal. Stability
+            # is disabled here; this is not replay of a full IQ-initialized frame.
+            s.update(
+                mode=0,
+                complete=True,
+                exclusion_count=5,
+                previous_region=3,
+                stabilization=False,
+                xy_target=0,
+                region_thresholds=[216.0, 216.0],
+            )
+            for light in s["lights"]:
+                light["counts"][0:2] = [0, 0]
         v["controller"] = s
         cases.append(v)
         expected.append(arm.run(v))
+        if initial_exclusion:
+            assert expected[-1]["controller"]["selected"] == 3
+            assert arm.selected_gain_calls == 0 and arm.single_calls == 0
         classifier_calls += arm.single_calls
         if arm.single_calls:
             observed = expected[-1]["controller"]
@@ -491,7 +552,7 @@ def main():
                 file=sys.stderr,
                 flush=True,
             )
-        key = f"{s['complete']}:{mode}:{expected[-1]['controller']['selected']}"
+        key = f"{s['complete']}:{s['mode']}:{expected[-1]['controller']['selected']}"
         coverage[key] = coverage.get(key, 0) + 1
     assert (
         set(arm.calls) <= {"memcpy", "memset"}
@@ -539,6 +600,9 @@ def main():
         )
     report = dict(
         binarySha256=sha,
+        iqSha256=iq_sha,
+        initialExclusionAudit=initial_exclusion,
+        enumHeaderSha256=header_sha if initial_exclusion else None,
         runtimeSha256=runtime_sha,
         mathRuntimeSha256=math_sha,
         nativeMathCalls=arm.math_calls,
@@ -553,7 +617,9 @@ def main():
         elfEntry="0xc72b8",
         scope="Whole original gain-mode function: XY/probabilities/high/low/mix/retention plus common processing through ranked metadata",
         limitations=[
-            "Single-color is enabled in this corpus."
+            "Directed INITIAL-mode Exclusion: stability disabled, sparse counts, no full IQ initialization."
+            if initial_exclusion
+            else "Single-color is enabled in this corpus."
             if single
             else "This joined corpus disables single-color; its enabled suite is separate.",
             "Optional clipping/adjustment are disabled; their full native suites remain separate.",
@@ -565,7 +631,9 @@ def main():
     (
         ROOT
         / (
-            "reverse-engineering/rkaiq/awb-gain-controller-single-color-equivalence.json"
+            "reverse-engineering/rkaiq/awb-gain-controller-initial-exclusion-equivalence.json"
+            if initial_exclusion
+            else "reverse-engineering/rkaiq/awb-gain-controller-single-color-equivalence.json"
             if single
             else "reverse-engineering/rkaiq/awb-gain-controller-equivalence.json"
         )

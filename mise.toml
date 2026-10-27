@@ -428,3 +428,7 @@ run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path 
 [tasks."camera:rust:awb-prepared-layout"]
 description = "Audit native AWB selected-region reads across prepared-record boundaries"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-prepared-layout.py"
+
+[tasks."camera:rust:awb-gain-controller-initial-exclusion"]
+description = "Compare INITIAL-mode Exclusion bypass with the complete native AWB gain controller"
+run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture", "mise run camera:rust:arm", "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/awb-gain-controller.py --initial-exclusion --arm"]

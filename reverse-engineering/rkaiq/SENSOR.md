@@ -185,3 +185,41 @@ Rust uses a bounded 32-entry pending queue and rejects overflow. The constructor
 rejects split-gain/DCG configurations and unequal/negative shutter/gain delays.
 HDR, mirror changes, split-I2C/internal scheduling and integration into the live
 CIF worker remain open. This code does not itself enable automatic writes.
+
+## AE inverse exposure mapping
+
+`exposure::decode_linear` reconstructs the linear `mapSensorExpToHal` mapping
+(ELF `0xae558`, Ghidra `0xbe558`). The exposure controller uses this inverse
+inside `__AecRegConvertion` to measure the real gain and shutter represented by
+its rounded register codes before compensating ISP gain. It is a different
+operation from the earlier forward `AeReal2RegConv` helper.
+
+The native inverse selects a gain band using the rounded register values of
+its endpoints, maps gain back through that band's equation, clamps to the
+profile's outer gain limits, then applies DCG ratio if enabled. Its shutter
+mapping deliberately does **not** subtract the fourth forward time coefficient.
+This matches the binary rather than enforcing an algebraically exact round trip.
+Codes outside the calibrated gain endpoint domain are rejected by Rust instead
+of copying the native unmatched-band fallback. Finite timing and valid gain
+calibration are required.
+
+512 comparisons execute the complete native function with the actual pinned
+SC3336 profile. They compare both output float bit patterns across gain-code
+boundaries, shutter codes, timing geometries and DCG-disabled selectors `-1/0`.
+SC3336 calibration disables DCG and has ratio zero, so positive DCG selectors
+are not part of the qualified profile path. The oracle models allocation/free
+and integer division and executes pinned uClibc `powf` instructions.
+[Inverse mapping report](exposure-decode-equivalence.json).
+
+The Rust API includes other model/exponent branches, but this corpus qualifies
+only the SC3336 positive-slope linear band. Register-code correction and ISP
+compensation in the surrounding `__AecRegConvertion` remain separate work.
+
+Ghidra initially omitted the two stack output-pointer arguments when showing
+calls to this mapper, making the conversion loop appear to divide by zero.
+`ghidra/FixAecMapAbi.java` sets its verified six integer/pointer arguments
+before re-exporting the caller. It changes analysis types, not the binary.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/exposure-decode.py --arm
+```

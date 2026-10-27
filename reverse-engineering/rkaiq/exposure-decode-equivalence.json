@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 512,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "complete native mapSensorExpToHal with actual SC3336 calibration; gain and shutter float bits",
+  "limitations": [
+    "Linear SC3336 positive-slope calibrated gain band only in this corpus; other model/exponent branches remain unqualified.",
+    "Allocator/free and integer division are modeled; native uClibc powf executes.",
+    "No register-code correction, ISP compensation, scheduling or live writes are claimed."
+  ]
+}

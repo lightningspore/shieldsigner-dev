@@ -166,6 +166,93 @@ pub fn convert(
         gain,
     })
 }
+/// Real exposure represented by sensor codes, as mapped by the AE caller.
+#[derive(Clone, Copy, Debug)]
+pub struct Decoded {
+    pub seconds: f32,
+    pub gain: f32,
+}
+/// Linear mapSensorExpToHal (ELF 0xae558). Unlike forward conversion this
+/// inverse intentionally does not subtract factors[3], matching the binary.
+/// Codes outside the calibrated band endpoint domain are rejected.
+pub fn decode_linear(
+    codes: Codes,
+    dcg_mode: i32,
+    calibration: Calibration<'_>,
+) -> Result<Decoded, InvalidInput> {
+    let c = calibration;
+    if [c.frame_length, c.pixel_clock_mhz, c.line_length_pixels]
+        .iter()
+        .chain(c.factors.iter())
+        .any(|x| !x.is_finite())
+    {
+        return Err(InvalidInput::NonFinite);
+    }
+    if c.pixel_clock_mhz <= 0.
+        || c.line_length_pixels <= 0.
+        || c.factors[2] == 0.
+        || codes.gain > i32::MAX as u32
+        || codes.integration_time > i32::MAX as u32
+    {
+        return Err(InvalidInput::Exposure);
+    }
+    let code = codes.gain as f32;
+    let mut gain = match c.gain {
+        GainModel::Logarithmic => libm::pow(10., f64::from((code * 3.) / 200.)) as f32,
+        GainModel::Bands(bands) => {
+            if bands.is_empty() {
+                return Err(InvalidInput::GainRange);
+            }
+            let mut selected = None;
+            for b in bands {
+                if [b.lower, b.upper, b.scale, b.offset, b.exponent]
+                    .iter()
+                    .any(|x| !x.is_finite())
+                {
+                    return Err(InvalidInput::NonFinite);
+                }
+                if b.lower < 0. || b.upper < b.lower || b.scale <= 0. || b.exponent == 0. {
+                    return Err(InvalidInput::GainRange);
+                }
+                let lower =
+                    (libm::fmaf(b.scale, libm::powf(b.lower, b.exponent), -b.offset) + 0.5) as i32;
+                let upper =
+                    (libm::fmaf(b.scale, libm::powf(b.upper, b.exponent), -b.offset) + 0.5) as i32;
+                if lower as f32 <= code && code <= upper as f32 {
+                    selected = Some(b);
+                    break;
+                }
+            }
+            let b = selected.ok_or(InvalidInput::GainRange)?;
+            let value = if b.exponent == 1. {
+                (code + b.offset) / b.scale
+            } else if b.exponent == -1. {
+                b.scale / (code + b.offset)
+            } else {
+                libm::pow(
+                    10.,
+                    f64::from(libm::log10f((code + b.offset) / b.scale) / b.exponent),
+                ) as f32
+            };
+            value.max(bands[0].lower).min(bands[bands.len() - 1].upper)
+        }
+    };
+    if dcg_mode > 0 {
+        if !c.linear_dcg_ratio.is_finite() || c.linear_dcg_ratio <= 0. {
+            return Err(InvalidInput::GainRange);
+        }
+        gain *= c.linear_dcg_ratio;
+    }
+    let seconds = (((libm::fmaf(-c.frame_length, c.factors[0], codes.integration_time as f32)
+        - c.factors[1])
+        / c.factors[2])
+        * c.line_length_pixels)
+        / (c.pixel_clock_mhz * 1_000_000.);
+    if !gain.is_finite() || !seconds.is_finite() {
+        return Err(InvalidInput::NonFinite);
+    }
+    Ok(Decoded { seconds, gain })
+}
 #[cfg(test)]
 mod tests {
     use super::*;

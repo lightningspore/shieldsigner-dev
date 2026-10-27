@@ -380,6 +380,25 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "exposure-decode" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let profile = calibration::SensorCalibration::from_value(&v["profile"]).unwrap();
+                let c = profile.conversion(calibration::RuntimeTiming {
+                    frame_length: v["frame"].as_u64().unwrap() as u32,
+                    pixel_clock_mhz: v["clock"].as_f64().unwrap() as f32,
+                    line_length_pixels: v["line"].as_u64().unwrap() as u32,
+                });
+                let result = exposure::decode_linear(
+                    exposure::Codes {
+                        integration_time: v["time_code"].as_u64().unwrap() as u32,
+                        gain: v["gain_code"].as_u64().unwrap() as u32,
+                    },
+                    v["dcg"].as_i64().unwrap() as i32,
+                    c,
+                )
+                .unwrap();
+                emit(&[result.gain, result.seconds]);
+            }
             "ae-convergence" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let exposure = |key: &str| ae_convergence::Exposure {

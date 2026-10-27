@@ -1,0 +1,16 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "runtimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "cases": 144,
+  "processed": 120,
+  "skipped": 24,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "native preprocessing current-error checkpoint, complete automatic AecRun with real conversion, then complete result publication on one context",
+  "limitations": [
+    "Explicit initialized state, profile timing/limits, fixed target45, standard linear mode, no iris/HDR/DCG; preprocessing stops at its documented checkpoint.",
+    "Outputs and listed controller/convergence/queue/history/sample state compared; other ISP result fields and unlisted context bytes excluded.",
+    "Pinned native math executes; imported integer division, byte comparison and allocation modeled.",
+    "No real frame/exposure association, hardware writes or multi-frame sequence qualification."
+  ]
+}

@@ -7,6 +7,8 @@ use crate::{
 pub struct Output {
     pub conversion: ae_conversion_queue::Output,
     pub publication: ae_publication::Output,
+    pub proposed_records: [ae_publication::Record; 6],
+    pub proposed_count: usize,
 }
 pub fn linear(
     state: &mut ae_publication::State,
@@ -92,5 +94,7 @@ pub fn linear(
     Ok(Output {
         conversion,
         publication,
+        proposed_records: records,
+        proposed_count: count + 1,
     })
 }

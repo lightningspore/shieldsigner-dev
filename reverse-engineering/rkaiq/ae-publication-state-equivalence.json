@@ -1,6 +1,6 @@
 {
   "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
-  "cases": 630,
+  "cases": 636,
   "mismatches": 0,
   "armReplayPassed": true,
   "scope": "complete native linear AecGetProcResults return: selected output plus convergence, saved publication, final record, last frame and complete five-record environment history",

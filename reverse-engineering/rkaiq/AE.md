@@ -942,14 +942,15 @@ five-entry environment-history slot. Finally it saves the returned final record
 and last-result frame. A zero output count therefore does not necessarily mean
 the stored publication queue is cleared.
 
-The 630-case connected comparison checks all output queue bytes plus both convergence
+The 636-case connected comparison checks all output queue bytes plus both convergence
 flags, stored queue/count, prior-final replacement, last-result frame and all
 220 environment-history bytes against complete native `AecGetProcResults`
 execution. The corpus covers all five history slots and raw prior enable flags,
 matching/mismatching effective sensor codes and ISP gain, and empty/short/full
-prior queues. Empty queues are accepted for the same-final-key branch; a new
-transition with no prior queue is rejected instead of reproducing native
-underflow-based record access.
+prior queues. Empty queues are accepted for the same-final-key branch. Standalone selection
+rejects a new transition with no prior queue; connected publication can use an
+explicit `empty_reference` record for the native context region preceding the
+queue, as described below.
 [Connected publication state report](ae-publication-state-equivalence.json).
 
 The comparison still does not qualify other ISP result fields, CIS flags or
@@ -991,4 +992,51 @@ are the checked domain. Partial state after an error must be discarded.
 
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-result.py --arm
+```
+
+
+## Joined standard linear frame pipeline
+
+`ae_pipeline::linear` now joins standard preprocessing/history, run/skip selection,
+brightness control, sensor/ISP conversion, intermediate records, convergence,
+publication and exposure-history updates. Processed frames replace the retained
+converted proposals. Skipped frames keep those converted proposals and the
+requested aggregate, while still running result publication and its state updates.
+They do not run conversion again.
+
+The integration preserves a native alias: controller environment queued-count
+and publisher saved-count are the **same** context field (`+0x5574`). The wrapper
+synchronizes its typed views before/after each owning stage. Priming can clear
+this count before conversion and publication, so treating the copies as independent
+state produces a different pipeline even when each individual helper passes.
+
+When publication has no saved entries, the native selector reads the 244-byte
+region at context `+0x4ec8`, immediately preceding the queue. Connected state
+carries those explicitly initialized bytes as `empty_reference`; Rust performs
+no underflow memory access and does not invent a reference exposure. The joined
+frame corpus seeds this region to zero, matching its native initialized context.
+Six additional publication-state cases check both matching and differing explicit
+reference keys with an empty saved queue.
+
+144 host/ARM comparisons execute native preprocessing to its current-error
+checkpoint, then complete native `AecRun` **with real DCG-disabled selection,
+register conversion and intermediate queue generation**, then complete native
+result publication, all on the same context. The corpus has 120 processed and
+24 skipped frames across intermediate counts zero/two/five, fixed/dynamic damping,
+priming, held transitions, saturation and route forcing. It compares listed
+controller/cache/delay/convergence/history/sample state, converted final codes
+and real point, requested aggregate, route knots, complete selected/saved queues
+and previous-final records.
+[Joined frame pipeline report](ae-pipeline-equivalence.json).
+
+This is still an explicitly initialized, single-frame corpus. It does not prove
+multi-frame sequence equivalence, full preprocessing side effects, runtime/profile
+binding, physical applied-exposure association, AWB service completion or live
+feedback behavior. Target is fixed at 45 in this corpus; limits/timing/policy are
+explicit. Other ISP result fields, CIS flags and unlisted native bytes remain
+outside the comparison. The module performs no hardware writes, and callers
+must discard partial state after any failure.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-pipeline.py --arm
 ```

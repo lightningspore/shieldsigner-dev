@@ -46,7 +46,24 @@ pub fn select(
     previous_final: &Record,
     published: &[Record],
     frame: i32,
+    synchronized_frame: i32,
+) -> Result<Output, InvalidInput> {
+    select_with_reference(
+        proposed,
+        previous_final,
+        published,
+        frame,
+        synchronized_frame,
+        None,
+    )
+}
+fn select_with_reference(
+    proposed: &[Record],
+    previous_final: &Record,
+    published: &[Record],
+    frame: i32,
     mut synchronized_frame: i32,
+    empty_reference: Option<&Record>,
 ) -> Result<Output, InvalidInput> {
     if proposed.is_empty() || proposed.len() > 6 || published.len() > 6 {
         return Err(InvalidInput::Length);
@@ -70,11 +87,12 @@ pub fn select(
         }
         use_previous_fallback = count == 0;
     } else {
-        if published.is_empty() {
-            return Err(InvalidInput::Length);
-        }
         let delta = frame.wrapping_sub(synchronized_frame).max(1) as usize;
-        let reference = &published[delta.min(published.len()) - 1];
+        let reference = if published.is_empty() {
+            empty_reference.ok_or(InvalidInput::Length)?
+        } else {
+            &published[delta.min(published.len()) - 1]
+        };
         let first = proposed.iter().position(|r| r[..48] != reference[..48]);
         if let Some(first) = first {
             count = 1;
@@ -108,6 +126,9 @@ pub fn select(
 #[derive(Clone, Copy, Debug)]
 pub struct State {
     pub previous_final: Record,
+    /// Native empty-queue selection reads the 244-byte region immediately
+    /// preceding the queue (context +0x4ec8); caller supplies its defined bytes.
+    pub empty_reference: Record,
     pub published: [Record; 6],
     pub published_count: usize,
     pub synchronized_frame: i32,
@@ -151,12 +172,13 @@ pub fn finish(
         convergence_exposure(&proposed[proposed.len() - 1]),
         convergence_exposure(&state.previous_final),
     )?;
-    let output = select(
+    let output = select_with_reference(
         proposed,
         &state.previous_final,
         &state.published[..state.published_count],
         frame,
         state.synchronized_frame,
+        Some(&state.empty_reference),
     )?;
     state.synchronized_frame = output.synchronized_frame;
     if state.synchronized_frame == frame {

@@ -24,6 +24,7 @@ pub fn run(v: &serde_json::Value) -> String {
         }
     }
     let mut state = ae_publication::State {
+        empty_reference: [0; 244],
         previous_final: previous,
         published,
         published_count: v["published"].as_array().unwrap().len(),

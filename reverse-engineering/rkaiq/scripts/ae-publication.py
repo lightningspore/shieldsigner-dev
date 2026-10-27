@@ -19,6 +19,7 @@ class Original(Base):
    for source,dest in [(0,0x184),(4,0x170),(12,0x15c),(20,0x198),(32,0x1ac),(36,0x1c0),(196,0x1d4),(200,0x148)]:c[dest+i*4:dest+i*4+4]=r[source:source+4]
   for source,dest in [(0,0xe8),(4,0xdc),(12,0xe0),(20,0xe4),(32,0xec),(36,0xf0),(196,0x2024),(200,0x2020)]:c[dest:dest+4]=last[source:source+4]
   c[0x4c30:0x4c30+244]=bytes.fromhex(v['previous'])
+  if 'empty_reference' in v:c[0x4ec8:0x4fbc]=bytes.fromhex(v['empty_reference'])
   for i,r in enumerate(published):c[0x4fbc+244*i:0x4fbc+244*(i+1)]=r
   if v.get('state',False):
    c[0x4fb8]=v['dynamic'];c[0x4fb9]=v['gating'];struct.pack_into('<I',c,0x3d40,v['index']);struct.pack_into('<f',c,0xd4,v['aggregate']);struct.pack_into('<I',c,0x2434,v['effective'][0]);struct.pack_into('<I',c,0x2438,v['effective'][1]);struct.pack_into('<f',c,0x2420,v['effective'][2])
@@ -48,6 +49,9 @@ def main():
      previous=record(keys[-1] if pattern in [0,4,5] else 4,frame=1320 if pattern==4 else 1360,iris=1 if pattern==5 else 0)
      cases.append(dict(proposed=[record(k) for k in keys],published=[record(0 if pattern==3 else (i%3)) for i in range(old_count)],previous=previous,frame=30,sync=30-delta))
  if '--state' in sys.argv:
+  for ref in [0,1]:
+   for keys in [[0],[1],[0,1]]:
+    cases.append(dict(proposed=[record(k) for k in keys],published=[],previous=record(4),frame=30,sync=28,empty_reference=record(ref)))
   for i,v in enumerate(cases):
    r=bytes.fromhex(v['proposed'][-1]);tc,gc=struct.unpack_from('<2I',r,32)
    v.update(state=True,dynamic=i%4,gating=(i//4)%3,index=i%20,aggregate=[.003,.12,2.4][i%3],effective=[tc+(i%5==0),gc,1. if i%2==0 else 1.002])

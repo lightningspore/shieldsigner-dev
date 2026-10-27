@@ -273,3 +273,5 @@ pub mod ae_conversion_queue;
 pub mod ae_publication;
 
 pub mod ae_result;
+
+pub mod ae_pipeline;

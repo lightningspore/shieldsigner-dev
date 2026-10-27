@@ -1,6 +1,8 @@
 //! Line protocol used by the ARM-original differential harness.
 use shieldsigner_rkaiq::*;
 use std::io::{self, BufRead};
+#[path = "../ae_pipeline_fixture.rs"]
+mod ae_pipeline_fixture;
 #[path = "../ae_result_fixture.rs"]
 mod ae_result_fixture;
 #[path = "../awb_preparation_fixture.rs"]
@@ -382,6 +384,10 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-pipeline" => println!(
+                "{}",
+                ae_pipeline_fixture::run(&serde_json::from_str(a[1]).unwrap())
+            ),
             "ae-result" => println!(
                 "{}",
                 ae_result_fixture::run(&serde_json::from_str(a[1]).unwrap())
@@ -407,6 +413,7 @@ fn main() {
                     .map(record)
                     .collect();
                 let mut state = ae_publication::State {
+                    empty_reference: v.get("empty_reference").map(record).unwrap_or([0; 244]),
                     previous_final: record(&v["previous"]),
                     published: core::array::from_fn(|i| {
                         published.get(i).copied().unwrap_or([0; 244])

@@ -26,7 +26,7 @@ class Original(Base):
    a=uc.reg_read(regs.UC_ARM_REG_R0);b=uc.reg_read(regs.UC_ARM_REG_R1);assert a<0x80000000 and b in [5,10]
    uc.reg_write(regs.UC_ARM_REG_R0,a//b);uc.reg_write(regs.UC_ARM_REG_R1,a%b);uc.reg_write(regs.UC_ARM_REG_PC,uc.reg_read(regs.UC_ARM_REG_LR));return
   super().hook(uc,address,size,user)
- def run(self,v):
+ def setup(self,v):
   c=bytearray(0x6000)
   for o,x in [(0x130,45.),(0x114,v['measured']),(0xd0,v['exposure']),(0x10,10.),(0x14,10.),(0xf4,.00005),(0xf8,15.36),(0x2404,.4),(0x2408,.5),(0x5988,v['fps']),(0xfc,.00005),(0x100,.03),(0x104,1.),(0x108,512.),(0x3cc4,.01),(0x680,8.),(0x3d18,114.24),(0x3d1c,2800.),(0x124,v['previous']),(0x128,v['reference']),(0xd8,.003),(0x3ccc,.003),(0x3cc8,.01),(0x3cdc,1.),(0x3d00,1.),(0x3cec,.003)]:struct.pack_into('<f',c,o,x)
   for o,x in [(0x22dc,3),(0x2300,v['frame']),(0x22fc,v['sync']),(0x3d40,v['index']),(0x5574,2),(0x22e4,1),(0x22e8,1 if v['same_mode'] else 2),(0x3c84,6)]:struct.pack_into('<i',c,o,x)
@@ -40,6 +40,9 @@ class Original(Base):
   if v.get('run_wrapper',False):
    for o,x in [(0xd4,.009),(0xdc,2.),(0xe0,1.),(0xe8,.0045),(0x118,11.),(0x3c8,12.),(0x3cc,13.),(0x3d0,14.),(0x3bc,2.),(0x3c0,3.),(0x3c4,4.)]:struct.pack_into('<f',c,o,x)
    c[0x22ed]=int(v['run']);c[0xc]=1;struct.pack_into('<H',c,6,256);struct.pack_into('<3H',c,0x404,100,200,300)
+  return c
+ def run(self,v):
+  c=self.setup(v)
   self.uc.mem_write(HEAP,bytes(c));self.uc.mem_write(HEAP+0x20000,struct.pack('<256I',*v['histogram']));self.symbols['controller']=0xb40c9
   if v.get('preprocess',False):
    self.uc.mem_write(HEAP+0x40cc,struct.pack('<I',HEAP+0x30000));self.uc.mem_write(HEAP+0x30000,struct.pack('<4I',HEAP+0x31000,2,HEAP+0x32000,2));self.uc.mem_write(HEAP+0x31000,struct.pack('<2f',0.,1.));self.uc.mem_write(HEAP+0x32000,struct.pack('<2f',45.,45.))

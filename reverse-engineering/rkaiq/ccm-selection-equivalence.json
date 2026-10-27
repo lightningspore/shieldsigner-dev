@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "cases": 1035,
+  "selectedProfileCases": 35,
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "clampedCases": 740,
+  "interpolatedCases": 295,
+  "matrixAndOffsetBytesCompared": 48,
+  "exactFloatBits": true,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "a82c1796862669ee84040906132d09a666407c62186cf434f8bf0a78b845f1d7",
+  "physicalArmBinarySha256": "055c794697b7a6682ea01cae5a76e2738064350daa8756322f21f82db974816b",
+  "hostMatchesPhysicalArm": true,
+  "seed": "0x43434d53",
+  "scope": "Complete native SatSelectCcmProfiles, SatInterpolateMatrices and SatInterpolateOffset execution; profile indices, native clamp status and all output float bits.",
+  "limitations": [
+    "Finite profiles with strictly descending saturation; malformed native inputs excluded.",
+    "Illuminant estimation, gain-to-saturation calibration, temporal state and live CCM remain separate.",
+    "Physical CPU replay does not write ISP registers."
+  ]
+}

@@ -345,3 +345,4 @@ pub mod awb_fast_configuration;
 pub mod awb_measurement_binding;
 
 pub mod isp_ccm;
+pub mod ccm_selection;

@@ -607,3 +607,35 @@ Physical replay executes Rust numerical conversion only; it does not load the
 vendor library or write ISP registers. This closes register conversion, not
 calibrated CCM matrix selection, temporal damping or live controller integration.
 CCM remains disabled on the live camera until those inputs are verified.
+
+### CCM saturation selection and interpolation (0.0.34 development)
+
+`ccm_selection::select` reconstructs `SatSelectCcmProfiles` (ELF `0xfd278`),
+`SatInterpolateMatrices` (`0xfd2e6`) and `SatInterpolateOffset` (`0xfd32e`).
+Input is an explicit nonempty list of finite profiles, strictly descending by
+saturation. At or beyond an endpoint, native status −21 means clamp/copy that
+endpoint. Interior selection returns status zero and a neighboring pair;
+an exact interior knot retains a two-profile bracket rather than becoming a
+clamped singleton. Rust exposes both indices and clamp status.
+
+The native high-profile weight is `(lowSat − sample)/(lowSat − highSat)`.
+Each coefficient/offset first multiplies the low value by the complementary
+weight, then uses `vfma.f32` for the high value/weight addition. Ghidra's plain
+multiply/add expression hides that fused rounding; a first unfused Rust attempt
+failed exact-bit comparison and was corrected with `libm::fmaf` after checking
+ARM instructions. All nine matrix and three offset floats are compared by bits.
+
+[Native and physical CPU evidence](ccm-selection-equivalence.json) covers 1,000
+varied lists/samples plus 35 cases using all seven selected-profile illuminant
+matrix pairs at endpoints, midpoint and outside bounds. The original full
+selector and interpolation routines execute without algorithm stubs. Invalid
+empty/duplicate/non-finite input is explicitly rejected, without claiming the
+native routine safely handles malformed grids. The 89 library/five Unix tests,
+no-default-features and static ARM builds pass.
+
+Run `mise run camera:rust:ccm-selection -- --adb SERIAL --report LOCAL.json`
+after building host/ARM numeric fixtures. Full IQ is a local prerequisite and
+is not committed. This step does not yet select the illuminant, derive saturation
+from calibrated gain, apply damping or drive the live CCM controller. The actual
+profile has illuminant blending disabled; its nearest-illuminant path remains
+next. Physical CPU replay makes no ISP writes.

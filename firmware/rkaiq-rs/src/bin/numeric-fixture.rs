@@ -3256,6 +3256,15 @@ fn main() {
                 dpcc_selection::select(&table,v["iso"].as_i64().unwrap() as i32,&mut result).unwrap();
                 println!("{}",result.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
+            "ccm-selection" => {
+                use shieldsigner_rkaiq::ccm_selection::{Profile,select};
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let array = |x: &serde_json::Value| x.as_array().unwrap().iter().map(|n|n.as_f64().unwrap() as f32).collect::<Vec<_>>();
+                let profiles = v["profiles"].as_array().unwrap().iter().map(|p|Profile { saturation:p["saturation"].as_f64().unwrap() as f32,matrix:array(&p["matrix"]).try_into().unwrap(),offsets:array(&p["offsets"]).try_into().unwrap() }).collect::<Vec<_>>();
+                let out=select(&profiles,v["saturation"].as_f64().unwrap() as f32).unwrap();
+                let hex=out.matrix.iter().chain(out.offsets.iter()).flat_map(|v|v.to_le_bytes()).map(|v|format!("{v:02x}")).collect::<String>();
+                println!("{}",serde_json::json!({"high":out.high,"low":out.low,"clamped":out.clamped,"result":hex}));
+            }
             "isp-ccm" => {
                 use shieldsigner_rkaiq::{isp_ccm, isp32::PARAMETER_BYTES};
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

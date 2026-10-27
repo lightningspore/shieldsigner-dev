@@ -133,3 +133,8 @@ integer ISO, reconfiguration and cached-result publication.
 `isp_ccm::apply` reconstructs complete CCM register conversion,
 `Isp32Params::convertAiqCcmToIsp32Params` (ELF `0x2d0cc`).
 [Quantization, native mask behavior and comparison scope](ISP.md#ccm-register-conversion-0034-development).
+
+`ccm_selection::select` reconstructs saturation profile selection
+(`0xfd278`), matrix interpolation (`0xfd2e6`) and offset interpolation
+(`0xfd32e`), preserving native fused rounding.
+[Indices, clamp status, profile cases and native/physical CPU evidence](ISP.md#ccm-saturation-selection-and-interpolation-0034-development).

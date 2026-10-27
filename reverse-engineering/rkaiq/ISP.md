@@ -1885,3 +1885,37 @@ no-default-features and static ARM builds pass; failed recalculation preserves
 all Rust state and result bytes. CPU replay makes no ISP writes or vendor
 library loads. HDR callback assembly, absent AE, manual/UAPI policy and live
 camera/application CNR handoff remain outside this checkpoint.
+
+
+### CNR live handoff: startup stall remains open
+
+The CNR owner now has associated-AE input, exact startup state telemetry,
+transactional queue submission and packed snapshot handling. Both CNR-enabled
+and default-gated six-scenario ARM startup simulations pass; rejected batches
+preserve CNR state/result and a successful retry registers its packed snapshot.
+These are simulated transport checks, not camera qualification.
+
+[The hardware investigation](cnr-live-startup-investigation.json) records the
+failed enablement. Startup result, selected tuning, cached exposure and packed
+CNR bytes match the complete native constructor/callback/converter, but the
+camera produces no raw RX completions, statistics or images. A controlled
+fixed capture clearing only bit 39 succeeds. Changing YUV422 mode, thumbnail
+mode or adding an exploratory bypassed YNR configuration did not resolve it.
+Read-only MMIO confirmed CNR enabled during the failure. Allocator warnings
+also occurred with working captures; their causal role is unproven. Enumeration
+confirms video11 is the main path, correcting an earlier self-path hypothesis.
+
+`initial_parameters::LIVE_CNR_ENABLED` therefore remains false. The restored
+exact build passes 192-image capture and installed app scanning (ten decoder
+inputs, 26 headless renders), with every existing live IQ and final AWB native
+check passing. CNR is still one of four incomplete profile blocks. The failed
+experimental executable is retained in ignored local artifacts and on-board
+SD storage for diagnosis; no vendor library was loaded by these tests.
+
+`mise run camera:rust:cnr-live-check -- BASE --startup-only --report LOCAL.json`
+can compare the startup of a failed capture. Its report explicitly sets
+`captureSucceeded=false` and `liveCaptureQualified=false`; it does not turn
+this failure into a live pass. Without that option, successful capture and at
+least ten runtime records are required. The aggregate verifier retains the
+five currently live modules by default; CNR requires explicit `--modules cnr`
+until its hardware gate is resolved. Current feature counts do not include it.

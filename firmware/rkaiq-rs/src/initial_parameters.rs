@@ -1,4 +1,7 @@
 //! Experimental linear first-frame profile assembly, not an automatic 3A engine.
+// Hardware qualification gate: enabling CNR currently stalls first readback.
+// Keep the reconstructed algorithm available while the live startup is diagnosed.
+pub const LIVE_CNR_ENABLED: bool = false;
 use crate::{demosaic_selection::Calibration, isp32::*, isp_black_level, isp_color, isp_demosaic};
 extern crate alloc;
 use alloc::{format, string::String, vec::Vec};
@@ -157,6 +160,10 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
     let baynr_info=crate::baynr_frame::Information::from_record(&baynr_exposure,1.,false)?;
     let (_,baynr_result)=crate::baynr_frame::State::seeded(&scene["bayer2dnr_v23"],baynr_info)?;
     crate::isp_baynr::apply(&mut params,&baynr_result);
+    let cnr_geometry=[dimensions[0].unwrap(),dimensions[1].unwrap()];
+    let cnr_info=crate::cnr_frame::Information::from_record(&baynr_exposure,1.)?;
+    let (_,cnr_result)=crate::cnr_frame::State::seeded(&scene["cnr_v30"],cnr_info,cnr_geometry)?;
+    if LIVE_CNR_ENABLED {crate::isp_cnr::apply(&mut params,&cnr_result);}
 
 
     apply_awb_gain(
@@ -229,7 +236,7 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
     );
     Ok((
         params,
-        json!({"kind":"experimental-linear-first-frame-parameters","scene":"/main_scene/0/sub_scene/0/scene_isp32","bytes":PARAMETER_BYTES,"iso":iso,"requestedExposureSeconds":seconds,"requestedGain":gain,"sensorExposureApplied":false,"whiteBalanceLight":light,"whiteBalanceSeed":g,"baynrStartup":{"seconds":baynr_info.seconds,"gains":baynr_info.gains,"blc":baynr_info.blc_predgain,"snr":baynr_info.snr_mode,"dcg":-1,"gray":false,"bay3d":false,"force":false,"requiresNrSwitchUnsupported":true,"result":baynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"lscStartup":{"current":ccm_current,"result":lsc_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"ccmStartup":{"current":ccm_current,"result":ccm_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"whiteBalanceApplyPosition":"Gain1","limitations":["Fixed first-frame checkpoint; no automatic exposure/white balance controller.","Constant BLC tables only; selected CSM/CGC profile values are explicit inputs, not recovered automatic selection.","No hardware qualification or usable-frame claim; Unimplemented ISP modules explicitly disabled."]}),
+        json!({"kind":"experimental-linear-first-frame-parameters","scene":"/main_scene/0/sub_scene/0/scene_isp32","bytes":PARAMETER_BYTES,"iso":iso,"requestedExposureSeconds":seconds,"requestedGain":gain,"sensorExposureApplied":false,"whiteBalanceLight":light,"whiteBalanceSeed":g,"cnrStartup":{"enabled":LIVE_CNR_ENABLED,"geometry":cnr_geometry,"seconds":cnr_info.seconds,"gains":cnr_info.gains,"blc":cnr_info.blc_predgain,"snr":cnr_info.snr_mode,"dcg":-1,"gray":false,"force":false,"requiresNrSwitchUnsupported":true,"result":cnr_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"baynrStartup":{"seconds":baynr_info.seconds,"gains":baynr_info.gains,"blc":baynr_info.blc_predgain,"snr":baynr_info.snr_mode,"dcg":-1,"gray":false,"bay3d":false,"force":false,"requiresNrSwitchUnsupported":true,"result":baynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"lscStartup":{"current":ccm_current,"result":lsc_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"ccmStartup":{"current":ccm_current,"result":ccm_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"whiteBalanceApplyPosition":"Gain1","limitations":["Fixed first-frame checkpoint; no automatic exposure/white balance controller.","Constant BLC tables only; selected CSM/CGC profile values are explicit inputs, not recovered automatic selection.","No hardware qualification or usable-frame claim; Unimplemented ISP modules explicitly disabled."]}),
     ))
 }
 

@@ -1821,3 +1821,19 @@ explicit AssertionError in its failing report. This verifies diagnostics, not
 optical decoding or a fix for the earlier short-duration count miss. Use the
 report's `passed` field as authoritative; a successful transport command alone
 does not imply the application test passed.
+
+
+## CNR enablement is not qualified
+
+CNR numerical/controller replay passes, but enabling its hardware block stalls
+first readback. [Investigation and restored-build proof](cnr-live-startup-investigation.json)
+retain both failures and the successful default build. `LIVE_CNR_ENABLED=false`
+preserves usable capture. The CNR-enabled simulator report is separately saved
+as `cnr-enabled-sequence-validation.json`; the current default simulator report
+remains `first-frame-sequence-validation.json`. Neither is physical capture proof.
+
+The restored default executable passes 192-image capture, native checks for all
+five existing live IQ blocks/final AWB, and installed scan/preview loops. Full
+CNR live checking intentionally fails on the stalled run; `--startup-only`
+checks only its mathematically matching initialization and labels capture as
+failed. Keep CNR disabled in a runnable kit until a real capture passes.

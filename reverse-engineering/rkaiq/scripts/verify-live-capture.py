@@ -9,13 +9,13 @@ import subprocess
 import sys
 
 SCRIPTS = Path(__file__).resolve().parent
-MODULES = ("baynr", "lsc", "ccm", "dpcc", "demosaic")
+MODULES = ("cnr", "baynr", "lsc", "ccm", "dpcc", "demosaic")
 
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("base", type=Path)
-    p.add_argument("--modules", nargs="+", choices=MODULES, default=list(MODULES))
+    p.add_argument("--modules", nargs="+", choices=MODULES, default=[m for m in MODULES if m != "cnr"])
     p.add_argument("--min-submissions", type=int, default=0)
     args = p.parse_args()
 

@@ -720,3 +720,7 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:cnr-frames"]
 description = "Compare full native CNR constructor, prepare and persistent normal-frame processing"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/cnr-frames.py"
+
+[tasks."camera:rust:cnr-live-check"]
+description = "Compare live chroma NR startup, controller state and accepted packed updates with native ARM"
+run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/cnr-live-check.py"

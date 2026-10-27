@@ -1,0 +1,603 @@
+{
+  "status": "open",
+  "liveCnrQualified": false,
+  "normalBuildCnrEnabled": false,
+  "experimentalBinarySha256": "f9e69a8c2cd543729ef0925ba6f9cb635518a8fbf5e7e788f8db7ad0e5d4928a",
+  "startupComparison": {
+    "passed": true,
+    "startupOnly": true,
+    "captureSucceeded": false,
+    "liveCaptureQualified": false,
+    "processedCnrFrames": 0,
+    "startupCnrEnabled": true,
+    "startupNativeCallbackAndPackingMatch": true,
+    "updatedFrames": 0,
+    "noUpdateFrames": 0,
+    "queuedBatches": 0,
+    "resultBytesComparedPerFrame": 66,
+    "selectedBytesComparedPerFrame": 180,
+    "exposureBytesComparedPerFrame": 88,
+    "startupMatchesAssociatedInitialRecord": false,
+    "requestedStartupSeconds": 0.003000000026077032,
+    "effectiveStartupSeconds": 0.002990195993334055,
+    "packedBytesComparedPerUpdate": 59,
+    "processedStatistics": 0,
+    "parameterSubmissions": 0,
+    "maxParameterSnapshots": 1,
+    "allInputsUseAssociatedAe": true,
+    "nativeCisDcgFallbackChecked": true,
+    "nrSwitchUnsupportedChecked": true,
+    "bay3dDisabled": true,
+    "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "ownerLogSha256": "62c3f833e2086a2e7817c2ba4491ff0306c5dfcd90a56eed6ab65fdc6cd36cdc",
+    "initialParametersSha256": "810e63508c4701119e9e856042fd043c6f6a0e9f22be44214f57c3e8610beaf0",
+    "scope": "STARTUP ONLY; no live capture pass. Real startup/runtime inputs through complete native sensor SNR helpers, CNR constructor, prepare/processing callbacks, calibration, selection, quantizer/original double log and full ISP32 dispatcher conversion. No vendor library runs on board.",
+    "limitations": [
+      "General JSON parsing and C++ scheduling framework not executed; SDK calibration/AE/BLC records, allocation, strings and diagnostics are explicit boundaries.",
+      "Associated AE records are scheduler reports, not independent physical sensor timing proof; QBUF acceptance does not prove final proposals applied before shutdown.",
+      "Normal no-NR-switch/DCG-disabled profile with BAY3D disabled; manual/HDR/optional sensor switching and optical QR/image-quality qualification remain open."
+    ]
+  },
+  "controlledRuns": [
+    {
+      "name": "cnr-live-83",
+      "change": "Calibrated CNR enabled in automatic capture",
+      "completedRawFrames": 0,
+      "error": "Camera capture cancelled",
+      "ownerLogSha256": "62c3f833e2086a2e7817c2ba4491ff0306c5dfcd90a56eed6ab65fdc6cd36cdc"
+    },
+    {
+      "name": "cnr-disabled-84",
+      "change": "Only enable bit 39 cleared from run 83 initial parameters",
+      "completedRawFrames": 4,
+      "error": null,
+      "ownerLogSha256": "7af7d215860cadc64bd9694d34b09a4f54094a3ecde4699356690c0766003d69"
+    },
+    {
+      "name": "cnr-enabled-85",
+      "change": "Unmodified run 83 initial parameters, fixed capture",
+      "completedRawFrames": 0,
+      "error": "Raw bridge made no progress for 10 seconds",
+      "ownerLogSha256": "e5d766a02b70b2e13925489e857c0eca4f8709dcc61f03237f7d1a287f7e377e"
+    },
+    {
+      "name": "cnr-422-86",
+      "change": "CNR YUV422 flag set",
+      "completedRawFrames": 0,
+      "error": "Raw bridge made no progress for 10 seconds",
+      "ownerLogSha256": "5e2bf206cc7ee53944802ad378c28a58e5d617ef05c589ed8d4ea6693a311f1e"
+    },
+    {
+      "name": "cnr-ynr-bypass-87",
+      "change": "Original native converter adds bypassed YNR; exploratory, not YNR qualification",
+      "completedRawFrames": 0,
+      "error": "Raw bridge made no progress for 10 seconds",
+      "ownerLogSha256": "0c1baeb45219d208894bd79004a70bdb7697817fdf6e260c52136bf10e2de95a"
+    },
+    {
+      "name": "cnr-mmio-88",
+      "change": "Unmodified CNR parameters plus read-only register observation",
+      "completedRawFrames": 0,
+      "error": "Raw bridge made no progress for 10 seconds",
+      "ownerLogSha256": "93c746766ab6a7baeb471930d6154a33e28d15f38bbe66faf584af5c82fd8500"
+    },
+    {
+      "name": "cnr-mode2-89",
+      "change": "CNR thumbnail mode changed to two",
+      "completedRawFrames": 0,
+      "error": "Raw bridge made no progress for 10 seconds",
+      "ownerLogSha256": "15931311c77fe2c1cefec4acecc17328fd97d6554037a046e40621adb0c91528"
+    }
+  ],
+  "readOnlyMmioDuringFailure": {
+    "VI_ID": "0x03022112",
+    "CLK": "0x00000000",
+    "CTRL0": "0x00006197",
+    "CTRL1": "0x34000018",
+    "RIS": "0x00000080",
+    "CNR_CTRL": "0xC0000013",
+    "CNR_EXGAIN": "0x00008010",
+    "CNR_IIR": "0x05A04D95",
+    "YNR_CTRL": "0x04801000"
+  },
+  "restoredWorkingBuild": {
+    "cameraProbeSha256": "162057d0e683bafacef6e4567d7eae16197cdff98f7c6343d8d66b2204399ae6",
+    "imageFrames": 192,
+    "captureChecks": {
+      "baynr": {
+        "passed": true,
+        "processedBaynrFrames": 127,
+        "startupBaynrEnabled": true,
+        "startupNativeCallbackAndPackingMatch": true,
+        "updatedFrames": 10,
+        "noUpdateFrames": 117,
+        "queuedBatches": 127,
+        "resultBytesComparedPerFrame": 152,
+        "selectedBytesComparedPerFrame": 252,
+        "exposureBytesComparedPerFrame": 88,
+        "startupMatchesAssociatedInitialRecord": true,
+        "requestedStartupSeconds": 0.003000000026077032,
+        "effectiveStartupSeconds": 0.002990195993334055,
+        "packedBytesComparedPerUpdate": 150,
+        "processedStatistics": 128,
+        "parameterSubmissions": 127,
+        "maxParameterSnapshots": 2,
+        "allInputsUseAssociatedAe": true,
+        "nativeCisDcgFallbackChecked": true,
+        "nrSwitchUnsupportedChecked": true,
+        "bay3dDisabled": true,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "2fd55d017eba93251cecc774d6e697c441b953c01211dca7d77554d3fcacedb8",
+        "initialParametersSha256": "25fa983c0dfc6313290336d25614db461be205cafaf9aa7598274be80fdded82",
+        "scope": "Real startup/runtime inputs through complete native sensor SNR helpers, BAYNR constructor, prepare/processing callbacks, calibration, selection, quantizer/original expf and full ISP32 dispatcher conversion. No vendor library runs on board.",
+        "limitations": [
+          "General JSON parsing and C++ scheduling framework not executed; SDK calibration/AE/BLC records, allocation, strings and diagnostics are explicit boundaries.",
+          "Associated AE records are scheduler reports, not independent physical sensor timing proof; QBUF acceptance does not prove final proposals applied before shutdown.",
+          "Normal no-NR-switch/DCG-disabled profile with BAY3D disabled; manual/HDR/optional sensor switching and optical QR/image-quality qualification remain open."
+        ]
+      },
+      "lsc": {
+        "passed": true,
+        "processedLscFrames": 127,
+        "startupLscEnabled": true,
+        "startupNativeCallbackAndPackingMatch": true,
+        "updatedFrames": 12,
+        "noUpdateFrames": 115,
+        "queuedBatches": 127,
+        "resultBytesComparedPerFrame": 2442,
+        "packedBytesComparedPerUpdate": 2449,
+        "processedStatistics": 128,
+        "parameterSubmissions": 127,
+        "maxParameterSnapshots": 2,
+        "allInputsMatchExactFrameAwbAndAssociatedAe": true,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "2fd55d017eba93251cecc774d6e697c441b953c01211dca7d77554d3fcacedb8",
+        "initialParametersSha256": "25fa983c0dfc6313290336d25614db461be205cafaf9aa7598274be80fdded82",
+        "scope": "Real startup/runtime inputs through full original AlscInit/AlscPrepare, LSC processing descriptor callback and complete ISP32 LSC converter. Accepted driver submissions checked, no vendor runtime loaded on board.",
+        "limitations": [
+          "Native JSON parsing not executed; SDK scene/allocator and libc string/memory boundaries explicit. Original native module lookup, constructor, controller, callback and uClibc sqrtf execute.",
+          "Exposure association labels are not independent physical sensor-gain timing proof.",
+          "QBUF acceptance does not prove each proposal reached hardware before shutdown.",
+          "Optical QR and image-quality/color-accuracy qualification remain open."
+        ]
+      },
+      "ccm": {
+        "passed": true,
+        "processedCcmFrames": 127,
+        "startupCcmEnabled": true,
+        "startupNativeCallbackAndPackingMatch": true,
+        "updatedFrames": 76,
+        "noUpdateFrames": 51,
+        "queuedBatches": 127,
+        "resultBytesComparedPerFrame": 156,
+        "packedBytesComparedPerUpdate": 79,
+        "processedStatistics": 128,
+        "parameterSubmissions": 127,
+        "maxParameterSnapshots": 2,
+        "allInputsMatchExactFrameAwbAndAssociatedAe": true,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "2fd55d017eba93251cecc774d6e697c441b953c01211dca7d77554d3fcacedb8",
+        "initialParametersSha256": "25fa983c0dfc6313290336d25614db461be205cafaf9aa7598274be80fdded82",
+        "scope": "Real startup/runtime inputs through full original AccmInit, CCM processing descriptor callback and complete ISP32 CCM converter. Accepted driver submissions checked, no vendor runtime loaded on board.",
+        "limitations": [
+          "Native JSON parsing not executed; SDK scene/allocator and libc string/memory boundaries explicit. Original native module lookup, constructor, controller, callback and uClibc floorf execute.",
+          "Exposure association labels are not independent physical sensor-gain timing proof.",
+          "QBUF acceptance does not prove each proposal reached hardware before shutdown.",
+          "Optical QR and image-quality/color-accuracy qualification remain open."
+        ]
+      },
+      "dpcc": {
+        "passed": true,
+        "updates": 14,
+        "isoRange": [
+          50,
+          385
+        ],
+        "frames": [
+          1,
+          6,
+          7,
+          9,
+          10,
+          12,
+          13,
+          15,
+          16,
+          18,
+          19,
+          21,
+          22,
+          24
+        ],
+        "isos": [
+          50,
+          100,
+          175,
+          266,
+          308,
+          331,
+          351,
+          385,
+          201,
+          210,
+          216,
+          223,
+          226,
+          228
+        ],
+        "resultBytesComparedPerUpdate": 192,
+        "packedBytesComparedPerUpdate": 186,
+        "startupDpccEnabled": true,
+        "startupMatchesFirstRuntimeResult": true,
+        "processedStatistics": 128,
+        "parameterSubmissions": 127,
+        "maxParameterSnapshots": 2,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "2fd55d017eba93251cecc774d6e697c441b953c01211dca7d77554d3fcacedb8",
+        "initialParametersSha256": "25fa983c0dfc6313290336d25614db461be205cafaf9aa7598274be80fdded82",
+        "limitations": [
+          "Native init retains allocator/IQ-module-lookup/log boundaries, and the dispatcher uses a controlled typed C++ cast.",
+          "The callback time input is an unused placeholder in this expert/sensor-auto-disabled path; actual logged gains drive ISO.",
+          "Successful QBUF is submission proof, not independent physical register/pixel application proof.",
+          "Optical QR and image-quality qualification remain open."
+        ]
+      },
+      "demosaic": {
+        "passed": true,
+        "submittedUpdates": 14,
+        "isoRange": [
+          50,
+          385
+        ],
+        "frames": [
+          1,
+          6,
+          7,
+          9,
+          10,
+          12,
+          13,
+          15,
+          16,
+          18,
+          19,
+          21,
+          22,
+          24
+        ],
+        "isos": [
+          50,
+          100,
+          175,
+          266,
+          308,
+          331,
+          351,
+          385,
+          201,
+          210,
+          216,
+          223,
+          226,
+          228
+        ],
+        "processedStatistics": 128,
+        "parameterSubmissions": 127,
+        "maxParameterSnapshots": 2,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "2fd55d017eba93251cecc774d6e697c441b953c01211dca7d77554d3fcacedb8",
+        "hardwareBytesComparedPerUpdate": 112,
+        "packedBytesComparedPerUpdate": 57,
+        "limitations": [
+          "Records are logged after successful QBUF; queued final proposals may be cancelled during shutdown.",
+          "Scheduler exposure association is not independent physical gain-timing proof.",
+          "Diagnostic logging is modeled; original callback, tuning, quantization and converter instructions execute."
+        ]
+      },
+      "awbTranslation": {
+        "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "statisticsSha256": "b273de1b72cf867b5ccc9dad9b01d7f2e1db7f2c3d667467f71a7e700bf4e520",
+        "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+        "translatedSha256": "02fa8153e44c4194926e51986231ab0cf0dcdb71d5b2e11b2f24a737cd48760e",
+        "frameId": 190,
+        "parametersId": 189,
+        "bytesCompared": 7680,
+        "mismatches": 0,
+        "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+        "limitations": [
+          "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+          "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+        ]
+      },
+      "control": {
+        "kind": "normal-timeshare-live-capture-check",
+        "passed": true,
+        "aeFrames": 128,
+        "awbFrames": 128,
+        "normalFrames": 126,
+        "normalGroups": [
+          0,
+          1
+        ],
+        "finalFrame": 190,
+        "finalParametersId": 189,
+        "maxActiveLights": 7,
+        "nativeTranslationChecked": true,
+        "sceneImageSaved": true,
+        "parameterSubmissions": 127,
+        "maxParameterSnapshots": 2,
+        "retiredParameterSnapshots": 126,
+        "scope": "Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification"
+      }
+    },
+    "application": {
+      "passed": true,
+      "opticalScanQualified": false,
+      "physicalDisplayQualified": false,
+      "physicalButtonsQualified": false,
+      "scanSourceSha256": "1955c6bd8733cb4238ec8880c5b6239abd2761f7de5ceb0e14fd64234df0dbaa",
+      "binarySha256": "162057d0e683bafacef6e4567d7eae16197cdff98f7c6343d8d66b2204399ae6",
+      "helperSha256": "453099bc6ce451e2c988107d4bed0e87858e81765041dd7944c846a5bcbe13c2",
+      "seconds": 7.296815753999908,
+      "decodedFrames": 10,
+      "renderedFrames": 26,
+      "ownerExitCode": 0,
+      "previewJoined": true,
+      "limitations": [
+        "Actual installed scan/preview code and QR decoder receive real frames.",
+        "Display sink and cancellation inputs are software substitutes.",
+        "No decoded contents are recorded and no successful optical target is claimed."
+      ],
+      "threadErrors": []
+    },
+    "applicationChecks": {
+      "baynr": {
+        "passed": true,
+        "processedBaynrFrames": 118,
+        "startupBaynrEnabled": true,
+        "startupNativeCallbackAndPackingMatch": true,
+        "updatedFrames": 11,
+        "noUpdateFrames": 107,
+        "queuedBatches": 118,
+        "resultBytesComparedPerFrame": 152,
+        "selectedBytesComparedPerFrame": 252,
+        "exposureBytesComparedPerFrame": 88,
+        "startupMatchesAssociatedInitialRecord": true,
+        "requestedStartupSeconds": 0.003000000026077032,
+        "effectiveStartupSeconds": 0.002990195993334055,
+        "packedBytesComparedPerUpdate": 150,
+        "processedStatistics": 119,
+        "parameterSubmissions": 118,
+        "maxParameterSnapshots": 7,
+        "allInputsUseAssociatedAe": true,
+        "nativeCisDcgFallbackChecked": true,
+        "nrSwitchUnsupportedChecked": true,
+        "bay3dDisabled": true,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "a34452409ef21123995c800edcb73c93cd119cfa5f9a1e00491e31141d028456",
+        "initialParametersSha256": "25fa983c0dfc6313290336d25614db461be205cafaf9aa7598274be80fdded82",
+        "scope": "Real startup/runtime inputs through complete native sensor SNR helpers, BAYNR constructor, prepare/processing callbacks, calibration, selection, quantizer/original expf and full ISP32 dispatcher conversion. No vendor library runs on board.",
+        "limitations": [
+          "General JSON parsing and C++ scheduling framework not executed; SDK calibration/AE/BLC records, allocation, strings and diagnostics are explicit boundaries.",
+          "Associated AE records are scheduler reports, not independent physical sensor timing proof; QBUF acceptance does not prove final proposals applied before shutdown.",
+          "Normal no-NR-switch/DCG-disabled profile with BAY3D disabled; manual/HDR/optional sensor switching and optical QR/image-quality qualification remain open."
+        ]
+      },
+      "lsc": {
+        "passed": true,
+        "processedLscFrames": 118,
+        "startupLscEnabled": true,
+        "startupNativeCallbackAndPackingMatch": true,
+        "updatedFrames": 12,
+        "noUpdateFrames": 106,
+        "queuedBatches": 118,
+        "resultBytesComparedPerFrame": 2442,
+        "packedBytesComparedPerUpdate": 2449,
+        "processedStatistics": 119,
+        "parameterSubmissions": 118,
+        "maxParameterSnapshots": 7,
+        "allInputsMatchExactFrameAwbAndAssociatedAe": true,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "a34452409ef21123995c800edcb73c93cd119cfa5f9a1e00491e31141d028456",
+        "initialParametersSha256": "25fa983c0dfc6313290336d25614db461be205cafaf9aa7598274be80fdded82",
+        "scope": "Real startup/runtime inputs through full original AlscInit/AlscPrepare, LSC processing descriptor callback and complete ISP32 LSC converter. Accepted driver submissions checked, no vendor runtime loaded on board.",
+        "limitations": [
+          "Native JSON parsing not executed; SDK scene/allocator and libc string/memory boundaries explicit. Original native module lookup, constructor, controller, callback and uClibc sqrtf execute.",
+          "Exposure association labels are not independent physical sensor-gain timing proof.",
+          "QBUF acceptance does not prove each proposal reached hardware before shutdown.",
+          "Optical QR and image-quality/color-accuracy qualification remain open."
+        ]
+      },
+      "ccm": {
+        "passed": true,
+        "processedCcmFrames": 118,
+        "startupCcmEnabled": true,
+        "startupNativeCallbackAndPackingMatch": true,
+        "updatedFrames": 76,
+        "noUpdateFrames": 42,
+        "queuedBatches": 118,
+        "resultBytesComparedPerFrame": 156,
+        "packedBytesComparedPerUpdate": 79,
+        "processedStatistics": 119,
+        "parameterSubmissions": 118,
+        "maxParameterSnapshots": 7,
+        "allInputsMatchExactFrameAwbAndAssociatedAe": true,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "a34452409ef21123995c800edcb73c93cd119cfa5f9a1e00491e31141d028456",
+        "initialParametersSha256": "25fa983c0dfc6313290336d25614db461be205cafaf9aa7598274be80fdded82",
+        "scope": "Real startup/runtime inputs through full original AccmInit, CCM processing descriptor callback and complete ISP32 CCM converter. Accepted driver submissions checked, no vendor runtime loaded on board.",
+        "limitations": [
+          "Native JSON parsing not executed; SDK scene/allocator and libc string/memory boundaries explicit. Original native module lookup, constructor, controller, callback and uClibc floorf execute.",
+          "Exposure association labels are not independent physical sensor-gain timing proof.",
+          "QBUF acceptance does not prove each proposal reached hardware before shutdown.",
+          "Optical QR and image-quality/color-accuracy qualification remain open."
+        ]
+      },
+      "dpcc": {
+        "passed": true,
+        "updates": 16,
+        "isoRange": [
+          50,
+          384
+        ],
+        "frames": [
+          1,
+          6,
+          7,
+          9,
+          10,
+          12,
+          13,
+          15,
+          16,
+          18,
+          19,
+          21,
+          22,
+          24,
+          25,
+          27
+        ],
+        "isos": [
+          50,
+          87,
+          162,
+          253,
+          299,
+          327,
+          349,
+          384,
+          201,
+          215,
+          225,
+          235,
+          241,
+          250,
+          253,
+          257
+        ],
+        "resultBytesComparedPerUpdate": 192,
+        "packedBytesComparedPerUpdate": 186,
+        "startupDpccEnabled": true,
+        "startupMatchesFirstRuntimeResult": true,
+        "processedStatistics": 119,
+        "parameterSubmissions": 118,
+        "maxParameterSnapshots": 7,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "a34452409ef21123995c800edcb73c93cd119cfa5f9a1e00491e31141d028456",
+        "initialParametersSha256": "25fa983c0dfc6313290336d25614db461be205cafaf9aa7598274be80fdded82",
+        "limitations": [
+          "Native init retains allocator/IQ-module-lookup/log boundaries, and the dispatcher uses a controlled typed C++ cast.",
+          "The callback time input is an unused placeholder in this expert/sensor-auto-disabled path; actual logged gains drive ISO.",
+          "Successful QBUF is submission proof, not independent physical register/pixel application proof.",
+          "Optical QR and image-quality qualification remain open."
+        ]
+      },
+      "demosaic": {
+        "passed": true,
+        "submittedUpdates": 16,
+        "isoRange": [
+          50,
+          384
+        ],
+        "frames": [
+          1,
+          6,
+          7,
+          9,
+          10,
+          12,
+          13,
+          15,
+          16,
+          18,
+          19,
+          21,
+          22,
+          24,
+          25,
+          27
+        ],
+        "isos": [
+          50,
+          87,
+          162,
+          253,
+          299,
+          327,
+          349,
+          384,
+          201,
+          215,
+          225,
+          235,
+          241,
+          250,
+          253,
+          257
+        ],
+        "processedStatistics": 119,
+        "parameterSubmissions": 118,
+        "maxParameterSnapshots": 7,
+        "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "ownerLogSha256": "a34452409ef21123995c800edcb73c93cd119cfa5f9a1e00491e31141d028456",
+        "hardwareBytesComparedPerUpdate": 112,
+        "packedBytesComparedPerUpdate": 57,
+        "limitations": [
+          "Records are logged after successful QBUF; queued final proposals may be cancelled during shutdown.",
+          "Scheduler exposure association is not independent physical gain-timing proof.",
+          "Diagnostic logging is modeled; original callback, tuning, quantization and converter instructions execute."
+        ]
+      },
+      "awbTranslation": {
+        "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+        "statisticsSha256": "82d998256f1b3c105fc712ad00c1dc91e41618996fcf3e8196443f1be8753d57",
+        "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+        "translatedSha256": "af4b686dd44438d27ce9d12b00292392bb9d06330bf71067d9f82d81ec03e2bf",
+        "frameId": 177,
+        "parametersId": 175,
+        "bytesCompared": 7680,
+        "mismatches": 0,
+        "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+        "limitations": [
+          "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+          "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+        ]
+      },
+      "control": {
+        "kind": "normal-timeshare-live-capture-check",
+        "passed": true,
+        "aeFrames": 119,
+        "awbFrames": 119,
+        "normalFrames": 117,
+        "normalGroups": [
+          0,
+          1
+        ],
+        "finalFrame": 177,
+        "finalParametersId": 175,
+        "maxActiveLights": 7,
+        "nativeTranslationChecked": true,
+        "sceneImageSaved": false,
+        "parameterSubmissions": 118,
+        "maxParameterSnapshots": 7,
+        "retiredParameterSnapshots": 117,
+        "scope": "Logged controller transitions, registered IDs, held gains, raw header and saved effective SDK metadata; no physical-latency/color-accuracy qualification"
+      }
+    }
+  },
+  "conclusions": [
+    "CNR-enabled initial result, selected tuning, cached exposure and packed bytes match complete original constructor/callback/converter.",
+    "Enabling CNR stalls first raw RX completion; no statistics or output images arrive. Clearing only its enable bit restores capture.",
+    "YUV422 flag, alternate thumbnail mode and exploratory bypassed YNR did not resolve the stall. No YNR dependency claim follows.",
+    "Device enumeration confirms video11 is rkisp_mainpath; the self-path hypothesis was incorrect.",
+    "Default compile-time LIVE_CNR_ENABLED gate remains false. Its restored executable passes capture/application and all existing live native checks.",
+    "Kernel/runtime CNR startup cause remains unidentified. CNR is not counted as a working feature."
+  ],
+  "limitations": [
+    "Numerical startup comparison is not a successful hardware capture.",
+    "Kernel allocator warnings also appeared with working captures; not established as the CNR failure cause.",
+    "Read-only MMIO observes registers but does not prove all driver/cache state or diagnose root cause.",
+    "No optical QR, physical display/buttons, cold power-cycle or full profile parity qualification."
+  ]
+}

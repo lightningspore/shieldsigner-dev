@@ -433,6 +433,14 @@ fn first_frame_sc3336_with_gain(
             if initial["baynrStartup"]["result"].as_str()!=Some(&baynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>()) {return Err(error("BAYNR owner/startup result differs"));}
             println!("{}",json!({"event":"baynr-controller-startup","seconds":baynr_information.seconds,"gains":baynr_information.gains,"blc":baynr_information.blc_predgain,"snr":baynr_information.snr_mode,"dcg":i32::from_le_bytes(initial_record[20..24].try_into().unwrap()),"gray":baynr_information.gray,"bay3d":baynr_information.bay3d_enabled,"force":baynr_information.force,"result":baynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>(),"exposure":baynr_state.exposure.iter().map(|v|format!("{v:02x}")).collect::<String>(),"selected":baynr_state.selected.iter().map(|v|format!("{v:02x}")).collect::<String>(),"matchesInitialRegisters":true}));
             owner.baynr=Some(CameraBaynr{calibration:baynr_calibration,state:baynr_state,result:baynr_result});
+            if shieldsigner_rkaiq::initial_parameters::LIVE_CNR_ENABLED {
+            let cnr_calibration=iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["cnr_v30"].clone();
+            let cnr_information=shieldsigner_rkaiq::cnr_frame::Information::from_record(&initial_record,1.).map_err(error)?;
+            let (cnr_state,cnr_result)=shieldsigner_rkaiq::cnr_frame::State::seeded(&cnr_calibration,cnr_information,[profile.width,profile.height]).map_err(error)?;
+            if initial["cnrStartup"]["result"].as_str()!=Some(&cnr_result.iter().map(|v|format!("{v:02x}")).collect::<String>()) {return Err(error("CNR owner/startup result differs"));}
+            println!("{}",json!({"event":"cnr-controller-startup","geometry":[profile.width,profile.height],"seconds":cnr_information.seconds,"gains":cnr_information.gains,"blc":cnr_information.blc_predgain,"snr":cnr_information.snr_mode,"dcg":i32::from_le_bytes(initial_record[20..24].try_into().unwrap()),"gray":cnr_information.gray,"force":cnr_information.force,"result":cnr_result.iter().map(|v|format!("{v:02x}")).collect::<String>(),"exposure":cnr_state.exposure.iter().map(|v|format!("{v:02x}")).collect::<String>(),"selected":cnr_state.selected.iter().map(|v|format!("{v:02x}")).collect::<String>(),"matchesInitialRegisters":true}));
+            owner.cnr=Some(CameraCnr{calibration:cnr_calibration,state:cnr_state,result:cnr_result});
+            }
             if live_awb {
                 owner.awb = Some(CameraAwb {
                     session: shieldsigner_rkaiq::awb_session::Session::new(

@@ -358,6 +358,21 @@
       "name": "isp_params_v32.c",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/isp_params_v32.c",
       "sha256": "bd22b031cb402e758be25626869587290ef45af700e85de4dc6e0181a68f50ed"
+    },
+    {
+      "name": "rkisp.c",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/rkisp.c",
+      "sha256": "39082393332549f5698921975000df360360b036495a82d51076a3292c8085c5"
+    },
+    {
+      "name": "regs.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/regs.h",
+      "sha256": "1501f8bfdc185ff0f90a4e19569c1c0221acadb2f8d3e4a8d4d899bc87802f11"
+    },
+    {
+      "name": "regs_v3x.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/media/platform/rockchip/isp/regs_v3x.h",
+      "sha256": "b4dc8c4c8ace277486d466fcf2c8dc282cacde2540b82d51f4d510885532122f"
     }
   ],
   "uclibcRuntime": {

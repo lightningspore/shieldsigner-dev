@@ -380,6 +380,32 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-flicker" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let n = |s: &str| v[s].as_f64().unwrap() as f32;
+                let result = ae_flicker::select(
+                    ae_flicker::State {
+                        quantum: n("prior"),
+                        alternate: n("alternate"),
+                        frequency_selector: 0,
+                    },
+                    v["enabled"].as_bool().unwrap(),
+                    v["frequency"].as_i64().unwrap() as i32,
+                    n("detected"),
+                    Some(ae_flicker::LineTiming {
+                        line_length: n("line"),
+                        pixel_clock_mhz: n("clock"),
+                        coefficient: n("coefficient"),
+                    }),
+                )
+                .unwrap();
+                println!(
+                    "{}:{:08x}:{:08x}",
+                    result.frequency_selector,
+                    result.quantum.to_bits(),
+                    result.alternate.to_bits()
+                );
+            }
             "ae-route" | "ae-route-profile" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let n = |key: &str| v[key].as_f64().unwrap() as f32;

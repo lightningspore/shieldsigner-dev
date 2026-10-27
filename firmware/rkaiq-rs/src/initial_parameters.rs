@@ -236,6 +236,27 @@ pub fn assemble_with_ae(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), St
     report["initialTargetLuma"] = json!(crate::ae_target::initial_from_scene(
         iq.pointer("/main_scene/0/sub_scene/0/scene_isp32").unwrap()
     )?);
+    // The pinned SC3336 profile explicitly requests fixed 50 Hz. This is a
+    // route quantum, not a derived minimum shutter time or flicker detector.
+    let flicker = &comm["AecAntiFlicker"];
+    if flicker["enable"].as_u64() == Some(1)
+        && flicker["Frequency"].as_str() == Some("AECV2_FLICKER_FREQUENCY_50HZ")
+    {
+        let state = crate::ae_flicker::select(
+            crate::ae_flicker::State {
+                quantum: 0.,
+                alternate: 0.,
+                frequency_selector: 0,
+            },
+            true,
+            1,
+            0.,
+            None,
+        )
+        .map_err(|_| "Invalid fixed flicker timing")?;
+        report["routeTimeQuantumSeconds"] = json!(state.quantum);
+        report["minimumShutterTimeDerived"] = json!(false);
+    }
     report["aeMeasurementsConfigured"] = json!(true);
     report["automaticExposure"] = json!(false);
     report["aeGeometry"] = json!({"width":dimension("width")?,"height":dimension("height")?,"source":"sensor_calib.resolution","requiresMatchingActiveIspGeometry":true});

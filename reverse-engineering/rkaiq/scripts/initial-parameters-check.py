@@ -26,6 +26,7 @@ def main():
   ae_out=d/'initial-ae.bin'
   ae_run=subprocess.run([str(binary),'make-initial-parameters',str(iq_path),str(ae_out),'--ae-measurements'],text=True,capture_output=True,check=True)
   ae_report=json.loads(ae_run.stdout);ae_data=ae_out.read_bytes();assert ae_report['aeMeasurementsConfigured'] and not ae_report['automaticExposure']
+  assert abs(ae_report['routeTimeQuantumSeconds']-.01)<1e-8 and not ae_report['minimumShutterTimeDerived']
   measurement_mask=0x003c4000|0x07800008
   for offset in [0,8,16]:assert struct.unpack_from('<Q',ae_data,offset)[0]==struct.unpack_from('<Q',data,offset)[0]|measurement_mask
   assert ae_data[24:0x41b]==data[24:0x41b] and ae_data[0x7ae:]==data[0x7ae:]

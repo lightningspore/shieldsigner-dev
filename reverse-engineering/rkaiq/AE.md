@@ -338,3 +338,34 @@ in the comparison. The checked API excludes iris and simultaneous three-variable
 intervals, which the native interpolation helper rejects. Outer `EcmExecute`
 caching, frame/exposure association, remaining limit/flicker policy and delayed
 sensor scheduling remain unfinished. No live feedback writes are enabled.
+
+## Runtime flicker quantum selection
+
+`ae_flicker::select` reconstructs the quantum-selection fields of
+`AecUpdateConfig` (ELF 0xa9068). With flicker enabled, selector 1 chooses 0.01 s
+and selector 2 chooses 1/120 s, with the other value stored as the alternate.
+Selector 3 uses a detected **period in seconds**, compared to the double-precision
+0.01 and 1/120 constants within f32 epsilon. Zero/negligible detection defaults
+to 50 Hz timing; an unrecognized nonzero period preserves the prior quantum pair.
+With flicker disabled, the quantum is the absolute native line-time/coefficient
+expression, the frequency field becomes zero and the alternate is preserved.
+
+The full native configuration call is executed through normal return for 57
+cases, checking frequency and both quantum fields, including prior-state
+preservation and detection-tolerance boundaries. Calibration timing and prior
+state are injected explicitly; allocation/comparison/division and imported
+rounding functions are controlled boundaries. This does not compare every
+private context field or recover the period estimator.
+[Equivalence report](ae-flicker-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-flicker.py --arm
+```
+
+The pinned SC3336 measurement-enabled initial report now identifies its fixed
+50 Hz `routeTimeQuantumSeconds` using this recovered selector. **A route quantum
+is not a minimum shutter time.** The existing 3 ms initial exposure is retained.
+Shutter-bound selection, runtime state association and delayed feedback writes
+are still unfinished.

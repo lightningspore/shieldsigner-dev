@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 57,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "flicker frequency selector and primary/alternate quantums after normal native AecUpdateConfig return under update mask 0x80",
+  "limitations": [
+    "Calibration timing and prior state are explicitly injected at method entry; complete private-context equivalence is not claimed.",
+    "Allocation, memory comparisons, imported integer division and ceilf/floorf/roundf are explicit harness boundaries.",
+    "Detected input is a period in seconds; automatic period estimation and shutter min/max policy remain unfinished."
+  ]
+}

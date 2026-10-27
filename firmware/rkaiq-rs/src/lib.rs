@@ -7,6 +7,7 @@ pub mod ae;
 pub mod ae_configuration;
 pub mod ae_damping;
 pub mod ae_decision;
+pub mod ae_flicker;
 pub mod ae_geometry;
 pub mod ae_histogram;
 pub mod ae_route;

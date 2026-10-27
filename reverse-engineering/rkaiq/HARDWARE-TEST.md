@@ -471,3 +471,9 @@ with measured `weightedMeanLuma` when inspecting a hardware run, while retaining
 the unverified snapshot-association distinction. The target comes from the
 recovered dynamic curve/bias branch using initial exposure settings. It is not
 an automatic exposure decision and does not trigger sensor writes.
+
+For the pinned fixed-50-Hz profile, the measurement-enabled initial report also
+includes `routeTimeQuantumSeconds` (approximately 0.01 s). This describes the
+recovered route timing quantum; `minimumShutterTimeDerived:false` makes clear
+that it is not a computed minimum exposure. The current 3 ms first-frame setting
+is retained. No flicker detector or automatic timing updates are enabled.

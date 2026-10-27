@@ -265,3 +265,5 @@ pub mod ae_run;
 pub mod ae_convergence;
 
 pub mod ae_frame;
+
+pub mod ae_register;

@@ -223,3 +223,42 @@ before re-exporting the caller. It changes analysis types, not the binary.
 ```sh
 uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/exposure-decode.py --arm
 ```
+
+## AE register correction and ISP compensation
+
+`ae_register::linear` ports the ordinary linear `__AecRegConvertion` loop
+(ELF `0xae8b0`). It computes sensor codes, maps them back through the native
+inverse rules, then chooses among ISP compensation, sensor-code decrements,
+and bounded shutter/gain redistribution. It returns the final codes **and**
+the real shutter/gain those codes represent, plus the resulting ISP gain.
+This preserves quantization effects rather than reporting the requested
+exposure as if it were applied exactly.
+
+The ISP compensation path uses 3% relative-error comparisons and quantizes
+ISP gain to 1/256 increments, with the native choice of rounding or flooring.
+When ISP compensation is unavailable, automatic-mode handling can redistribute
+shutter and gain, with the native 5% gain check and separate ten-retry counters.
+Native context `+0x23c0` bit `0x1000`, operating mode, flicker policy, limits
+and timing quantum remain explicit policy inputs. They are not guessed from a
+part number. The Rust implementation limits this path to a single positive-slope
+exponent-one band, which includes the pinned SC3336 calibration.
+
+600 comparisons execute the complete native converter and inverse mapper
+through normal return, checking both codes, all three output float bit patterns,
+and the number of inverse mappings. They include 300 actual SC3336 profile
+cases and 300 deliberately coarser one-band calibrations that exercise
+correction branches more strongly; some require 21 mappings. Host and ARM
+replay are recorded in the [register-conversion report](ae-register-equivalence.json).
+The oracle executes pinned uClibc `powf`, `roundf` and `floorf`; allocation/free
+and integer division are explicit boundary models. The full native context
+and DCG selector must remain unchanged.
+
+This qualifies the DCG-disabled ordinary linear path, not other sensor models,
+HDR, iris or all native error behavior. A one-million-mapping resource bound
+rejects malformed/extreme inputs outside the checked domain. The function is
+not yet connected to live control or queue/result publication; physical
+exposure association remains unmeasured.
+
+```sh
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/ae-register.py --arm
+```

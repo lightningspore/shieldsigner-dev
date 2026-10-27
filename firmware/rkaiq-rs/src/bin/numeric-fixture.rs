@@ -380,6 +380,51 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "ae-register" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let profile = calibration::SensorCalibration::from_value(&v["profile"]).unwrap();
+                let c = profile.conversion(calibration::RuntimeTiming {
+                    frame_length: v["frame"].as_u64().unwrap() as u32,
+                    pixel_clock_mhz: v["clock"].as_f64().unwrap() as f32,
+                    line_length_pixels: v["line"].as_u64().unwrap() as u32,
+                });
+                let f = |k: &str| v[k].as_f64().unwrap() as f32;
+                let range = |k: &str| core::array::from_fn(|i| v[k][i].as_f64().unwrap() as f32);
+                let out = ae_register::linear(
+                    f("seconds"),
+                    f("gain"),
+                    f("isp"),
+                    v["dcg"].as_i64().unwrap() as i32,
+                    c,
+                    ae_register::Policy {
+                        isp_range: range("isp_range"),
+                        time_range: range("time_range"),
+                        gain_range: range("gain_range"),
+                        analogue_minimum: f("analogue_minimum"),
+                        time_quantum: f("quantum"),
+                        flicker_enabled: v["flicker"].as_bool().unwrap(),
+                        automatic: v["automatic"].as_bool().unwrap(),
+                        suppress_isp_compensation: v["suppress"].as_bool().unwrap(),
+                    },
+                )
+                .unwrap();
+                let words = [
+                    out.codes.integration_time,
+                    out.codes.gain,
+                    out.gain.to_bits(),
+                    out.seconds.to_bits(),
+                    out.isp_gain.to_bits(),
+                    out.mappings,
+                ];
+                println!(
+                    "{}",
+                    words
+                        .iter()
+                        .map(|w| format!("{w:08x}"))
+                        .collect::<Vec<_>>()
+                        .join(",")
+                );
+            }
             "exposure-decode" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let profile = calibration::SensorCalibration::from_value(&v["profile"]).unwrap();

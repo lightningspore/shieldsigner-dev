@@ -1,0 +1,16 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 600,
+  "actualProfileCases": 300,
+  "coarseBandCases": 300,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "maxMappings": 21,
+  "scope": "complete native linear __AecRegConvertion and mapSensorExpToHal through normal return, final codes/gain/time/ISP gain and mapping counts",
+  "limitations": [
+    "Single positive-slope exponent-one band; SC3336 DCG-disabled path. Coarse test bands deliberately exercise correction branches.",
+    "Policy is explicit; calibration/runtime binding and caller queue/result publication remain separate.",
+    "Allocator/free and integer division modeled; pinned uClibc powf/roundf/floorf execute as ARM instructions.",
+    "Finite valid domain only, no hardware writes; malformed/extreme input resource limit is a checked Rust restriction."
+  ]
+}

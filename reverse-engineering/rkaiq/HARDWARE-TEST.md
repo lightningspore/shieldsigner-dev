@@ -1748,3 +1748,33 @@ This is CPU evidence, not a camera test: no ISP writes occur, no vendor library
 is installed/loaded on the board, and the live camera retains LSC disabled.
 The next gate is sensor/ISP geometry and input handoff followed by transactional
 parameter submission and actual camera/application captures.
+
+## Development 0.0.34: live LSC startup, capture and scan
+
+[The LSC hardware report](lsc-live-validation.json) supersedes the CPU-only
+checkpoint above for current development. Its exact binary enables calibrated
+LSC at startup and updates it transactionally beside AE/AWB/CCM/DPCC/demosaic.
+The full raw-input crop and sector sums are checked as 2304×1296; scaled output
+is 640×480. Failed submissions preserve LSC controller/result/converter state;
+all six ARM simulated scenarios verify retry and packed snapshots.
+
+Real 192- and 600-image runs pass 127/399 runtime LSC comparisons, plus each
+startup result, through full original initialization, prepare, callback and
+ISP32 conversion. Each run produces one runtime LSC update before holding
+converged output. The stable scene therefore does not independently qualify
+physical illumination changes; varied numerical frame suites cover selection
+and damping separately. Existing CCM/DPCC/demosaic comparisons and final AWB
+translation remain exact. Peak parameter history is two snapshots.
+
+The installed scan/preview loops pass with ten decoder-input frames, 26
+headless renders, 111 statistics and 110 batches. All LSC/CCM records and final
+AWB translation match native, owner exits zero, preview joins and default
+stream saves no image. No optical target decode, LCD or button qualification
+is claimed. Post-capture CMA allocated is zero with 12 MiB released; no vendor
+camera processes or mapped RKAIQ/Rockit libraries were found. Private images,
+statistics and full logs remain ignored local artifacts.
+
+Source hashes and binary SHA are in the report. Controlled cold reboot with
+this binary and a new frozen 0.0.34 kit remain to be done. Frozen 0.0.33 and its
+archives are unchanged. Five profile-enabled blocks remain disabled in Rust:
+BAYNR, BAY3D, YNR, CNR and SHARP.

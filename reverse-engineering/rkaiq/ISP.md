@@ -1332,3 +1332,75 @@ No OTP, manual/attribute cloning, gray/HDR or multicamera qualification is
 claimed. All 102 library/five Unix tests, no-default-features and static ARM
 builds pass. This is physical CPU replay, with no ISP writes. Live LSC remains
 disabled pending geometry/handoff and transactional camera integration.
+
+### Transactional live LSC (0.0.34 development)
+
+The preceding LSC subsections record recovery checkpoints; their statements
+that live LSC was disabled describe those checkpoints. Current development
+startup and camera runtime now enable calibrated normal-case, no-OTP LSC.
+Frozen 0.0.33 is unchanged.
+
+`lsc_frame::State::seeded` executes the first calibrated proposal with damping
+zero. Startup writes its result through the recovered dispatcher conversion;
+the runtime carries that advanced state forward after initial parameter
+submission. Explicit diagnostic WB overrides regenerate LSC as well as CCM.
+`CameraLsc` stages controller state, result and converter enable cache alongside
+AE/ISP gain, WB, CCM, DPCC and demosaic. QBUF failure cannot advance any LSC
+state or its snapshot. A successful retry preserves the pending update and
+registers the full 2,449-byte packed LSC block. A no-hardware-update proposal
+can advance internal state without queueing only when the whole batch has no
+updates. All six simulated ARM scenarios check LSC state/result/converter
+preservation on failed batches and snapshot contents after retry.
+
+LSC uses exact-frame AWB R/Gr and B/Gb ratios, the published AWB base IIR
+coefficient, and associated AE `(analogue * sensor-digital) * ISP-digital` gain.
+The native C++ LSC handoff (ELF `0x6a830`) was inspected to corroborate those
+fields and its conditional optical-black predgain multiplication. Current
+startup explicitly requires the selected unity BLC predgain; it rejects an
+unsupported non-unity value. The original entire C++ scheduling framework is
+not executed by the live numerical oracle. A structured native probe of the
+[result handoff's mirror/flip branches](lsc-result-handoff-validation.json)
+(ELF `0x6a320`) found no net grid change:
+the full swap loops undo themselves. No additional orientation transform is
+introduced, and mirror/flip image-quality qualification is not claimed.
+
+Geometry is checked twice: the LSC resolution name and both sixteen-sector
+sums must match sensor calibration, and read-only pipeline preflight requires
+a zero-origin full raw input crop with matching dimensions before any graph
+mutation. Configuration repeats that guard. On this board, raw input/crop and
+LSC calibration are 2304×1296; the NV12 image endpoint is resized to 640×480.
+Substituting image dimensions would produce incorrect sector geometry.
+
+[Live camera/application evidence](lsc-live-validation.json) records:
+
+- A 192-image run: 128 AE/AWB statistics, 127 submitted batches; startup plus
+  all 127 runtime LSC results/update decisions match native. One runtime
+  update, 126 held results. All published LSC register bytes match too.
+- A 600-image run: 400 statistics, 399 submitted batches; startup plus all 399
+  runtime results match native, with one update and 398 held results. Parameter
+  history peaks at two snapshots. CCM, all fifteen DPCC/demosaic updates and
+  final 7,680-byte AWB translation independently match native.
+- Installed `ScanScreen` / preview execution: 10 decoder-input frames and 26
+  headless renders in 6.82 seconds; 111 statistics, 110 batches. LSC, CCM and
+  final AWB translation match native. Owner exits zero, preview joins, no
+  thread errors, and the default stream saves no scene image.
+
+`lsc-live-check.py` prepends the real startup input, runs full native
+`AlscInit`, `AlscPrepare` and the descriptor-confirmed callback over actual
+runtime inputs, and compares all 2,442 result bytes, publication/convergence
+and frame count. Published results pass through the complete original ISP32
+converter for every 2,449-byte packed comparison. It also checks gain/WB/IIR
+inputs against their logged exact-frame AWB and associated AE records.
+Run `mise run camera:rust:lsc-live-check -- BASE --report LOCAL.json` on private
+local artifacts. No original vendor library runs on the board.
+
+The captured private color frame was visually inspected: text and colored
+features are visible without obvious corruption. This is not flat-field,
+color-accuracy or optical QR qualification. Post-capture vendor mappings and
+processes are absent, CMA allocated is zero/all 12,288 KiB released. Memory was
+sampled with an inspection process active, not as a before/after leak test.
+All 102 library/five Unix tests, no-default-features, static ARM and six
+simulated-device scenarios pass. Cold reboot with these exact new bytes,
+optical QR/LCD/buttons and a new frozen kit remain open. The
+[current profile audit](profile-module-audit-0.0.34-lsc.json) leaves five blocks:
+BAYNR, BAY3D, YNR, CNR and SHARP.

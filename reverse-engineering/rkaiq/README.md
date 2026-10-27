@@ -194,11 +194,12 @@ vendor algorithm is implemented.
 The [selected-profile audit](profile-module-audit.json) also identifies enabled
 profile blocks that frozen 0.0.33 startup explicitly disables: CCM, LSC, DPCC,
 spatial and temporal Bayer noise reduction, YNR, CNR and sharpening. Current
-0.0.34 development enables DPCC and CCM with native comparison and live capture
+0.0.34 development enables DPCC, CCM and LSC with native comparison and live capture
 ([CCM evidence](ccm-live-validation.json),
-[current startup audit](profile-module-audit-0.0.34-ccm.json),
+[LSC evidence](lsc-live-validation.json),
+[current startup audit](profile-module-audit-0.0.34-lsc.json),
 [DPCC details](ISP.md#persistent-dpcc-and-live-submission-0034-development)).
-The other six blocks remain
+The other five blocks (BAYNR, BAY3D, YNR, CNR and SHARP) remain
 implementation gaps for full profile parity, separate from the physical tests
 below. A working QR subset is not complete vendor image-quality equivalence.
 
@@ -214,8 +215,9 @@ Still open:
 5. Complete joined-native AWB controller equivalence and any remaining policy
    required by this fixed profile. Existing comparisons cover many components
    and the live composition, with narrower oracle scopes stated explicitly.
-6. Repeat the remaining physical qualification with the exact 0.0.33-dev kit
-   before treating its controlled-reboot tests as complete deployment qualification.
+6. Freeze a new kit containing the current development path and repeat controlled
+   reboot/application and remaining physical qualification with those exact bytes.
+   Frozen 0.0.33 has neither live DPCC, CCM nor LSC and remains unchanged.
 
 Optional modes remain outside the current single-camera priority unless the
 actual QR capture path needs them. No completion claim follows from passing

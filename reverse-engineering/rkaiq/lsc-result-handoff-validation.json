@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "mirror": false,
+      "flip": false,
+      "gridUnchanged": true
+    },
+    {
+      "mirror": true,
+      "flip": false,
+      "gridUnchanged": true
+    },
+    {
+      "mirror": false,
+      "flip": true,
+      "gridUnchanged": true
+    },
+    {
+      "mirror": true,
+      "flip": true,
+      "gridUnchanged": true
+    }
+  ],
+  "resultBytesComparedPerCase": 2442,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "scope": "Full native genIspResult carry-forward publication branch and common mirror/flip loops. All unique grid entries and geometry/enable/padding preserved; frame/sync/update metadata checked.",
+  "limitations": [
+    "Constructed valid typed C++ pointer graph; fresh-result SmartPtr assignment branch not executed.",
+    "Native loops make a full set of pair swaps twice, yielding identity; no corrected orientation behavior is inferred.",
+    "Native emulation only; not physical mirror/flip or shading qualification."
+  ]
+}

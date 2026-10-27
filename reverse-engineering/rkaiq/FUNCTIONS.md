@@ -224,3 +224,7 @@ LSC processing callback.
 The full native `AlscInit` / `AlscPrepare` now precede the LSC callback oracle,
 checking Rust defaults and native SDK name lookup/grouping/geometry end to end.
 [Initialized native/physical CPU evidence](ISP.md#lsc-constructor-and-calibration-preparation-0034-development).
+
+`lsc_frame::State::seeded` and `CameraLsc` now integrate accepted startup and
+transactional live LSC with raw geometry and AE/AWB input checks.
+[Live camera/application and full native packing evidence](ISP.md#transactional-live-lsc-0034-development).

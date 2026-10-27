@@ -1,3 +1,17 @@
+struct CameraLsc {
+    calibration: shieldsigner_rkaiq::lsc_calibration::Automatic,
+    state: shieldsigner_rkaiq::lsc_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_lsc::RESULT_BYTES],
+    converter: shieldsigner_rkaiq::isp_lsc::State,
+    seed: shieldsigner_rkaiq::isp32::WhiteBalanceGain,
+}
+struct CameraLscStage {
+    state: shieldsigner_rkaiq::lsc_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_lsc::RESULT_BYTES],
+    converter: shieldsigner_rkaiq::isp_lsc::State,
+    information: shieldsigner_rkaiq::lsc_frame::Information,
+    updated: bool, exposure_frame: u32, exact: bool, gains: [f32;3],
+}
 struct CameraCcm {
     calibration: shieldsigner_rkaiq::ccm_calibration::Automatic,
     state: shieldsigner_rkaiq::ccm_frame::State,
@@ -261,6 +275,7 @@ struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
     awb: Option<CameraAwb>,
     dpcc: Option<CameraDpcc>,
     ccm: Option<CameraCcm>,
+    lsc: Option<CameraLsc>,
     demosaic: Option<(shieldsigner_rkaiq::demosaic_selection::Calibration, shieldsigner_rkaiq::demosaic_runtime::State)>,
 }
 impl<B: shieldsigner_rkaiq::sensor::Backend> CameraAeOwner<B>
@@ -289,6 +304,7 @@ where
             awb: None,
             dpcc: None,
             ccm: None,
+            lsc: None,
             demosaic: None,
         }
     }
@@ -394,6 +410,18 @@ where
             if updated {shieldsigner_rkaiq::isp_ccm::apply(&mut planned,&result).map_err(|e|error(format!("Live CCM packing: {e:?}")))?;}
             Some(CameraCcmStage{state,result,information,updated,exposure_frame:exposure.frame,exact,gains})
         } else {None};
+        let lsc_staged = if let Some(lsc)=&self.lsc {
+            let (exposure,exact)=self.runtime.effective_exposure(frame).map_err(error)?;
+            let gains=core::array::from_fn(|i|f32::from_le_bytes(exposure.exposure[4+i*4..8+i*4].try_into().unwrap()));
+            let wb=white_balance.unwrap_or(lsc.seed);
+            if f64::from(wb.green_red)<0.00001 || f64::from(wb.green_blue)<0.00001 {return Err(error("LSC requires supported positive WB green gains"));}
+            let damping=match &self.awb {Some(awb)=>awb.damping_for(frame)?,None=>0.};
+            let information=shieldsigner_rkaiq::lsc_frame::Information{current:[(gains[0]*gains[1])*gains[2],wb.red/wb.green_red,wb.blue/wb.green_blue],damping,force:false,bypass:false};
+            let mut state=lsc.state;let mut result=lsc.result;let mut converter=lsc.converter;
+            let updated=state.process(&lsc.calibration,information,&mut result).map_err(|e|error(format!("Live LSC: {e:?}")))?;
+            if updated {shieldsigner_rkaiq::isp_lsc::apply(&mut planned,&result,&mut converter);}
+            Some(CameraLscStage{state,result,converter,information,updated,exposure_frame:exposure.frame,exact,gains})
+        } else {None};
         let measurement = self.awb.as_ref().and_then(|awb| awb.measurement_for(frame));
         if let Some(record) = measurement {
             shieldsigner_rkaiq::isp_awb_measurement::Measurement(record).apply(&mut planned, true);
@@ -402,13 +430,14 @@ where
             | u64::from_le_bytes(planned[16..24].try_into().unwrap());
         if updates == 0 {
             if let Some(stage)=ccm_staged {self.commit_ccm(stage,frame,&planned,&mut snapshot,false);}
+            if let Some(stage)=lsc_staged {self.commit_lsc(stage,frame,&planned,&mut snapshot,false);}
             return Ok(None);
         }
         self.prune_histories();
         if self.parameters.len() == 128 || self.parameters.last().is_some_and(|p| p.0 >= frame) {
             return Err(error("Gain batch requires a new increasing parameter ID"));
         }
-        let index = if self.awb.is_some() || self.demosaic.is_some() || self.dpcc.is_some() || self.ccm.is_some() {
+        let index = if self.awb.is_some() || self.demosaic.is_some() || self.dpcc.is_some() || self.ccm.is_some() || self.lsc.is_some() {
             mark_runtime_parameter_frame(&mut planned, frame);
             let index = backend.enqueue_payload(queue, &planned)?;
             cache = planned_cache;
@@ -458,10 +487,18 @@ where
             }
         }
         if let Some(stage)=ccm_staged {self.commit_ccm(stage,frame,&planned,&mut snapshot,true);}
+        if let Some(stage)=lsc_staged {self.commit_lsc(stage,frame,&planned,&mut snapshot,true);}
         self.parameters.push((frame, snapshot));
         self.parameter_submissions += 1;
         self.max_parameter_history = self.max_parameter_history.max(self.parameters.len());
         Ok(Some(index))
+    }
+    fn commit_lsc(&mut self,stage:CameraLscStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
+        let lsc=self.lsc.as_mut().unwrap();lsc.state=stage.state;lsc.result=stage.result;lsc.converter=stage.converter;
+        use shieldsigner_rkaiq::isp_lsc::{OFFSET,BYTES};
+        if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
+        let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+        println!("{}",json!({"event":"automatic-lsc-processed","frame":frame,"current":stage.information.current,"damping":stage.information.damping,"updated":stage.updated,"converged":stage.state.converged,"controllerFrames":stage.state.frame_count,"illuminant":stage.state.illuminant,"vignetting":stage.state.vignetting,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"gains":stage.gains,"queuedBatch":queued,"physicalApplicationVerified":false}));
     }
     fn commit_ccm(&mut self,stage:CameraCcmStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
         let ccm=self.ccm.as_mut().unwrap();ccm.state=stage.state;ccm.result=stage.result;

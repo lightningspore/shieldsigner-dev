@@ -48,6 +48,24 @@ impl Default for State {
     }
 }
 impl State {
+    pub fn seeded(
+        cal: &Automatic,
+        current: [f32; 3],
+    ) -> Result<(Self, [u8; RESULT_BYTES]), InvalidInput> {
+        let mut state = Self::default();
+        let mut result = [0; RESULT_BYTES];
+        state.process(
+            cal,
+            Information {
+                current,
+                damping: 0.,
+                force: false,
+                bypass: false,
+            },
+            &mut result,
+        )?;
+        Ok((state, result))
+    }
     /// Transactional proposal: caller commits this state only after successful
     /// hardware submission. No publication preserves every caller output byte.
     pub fn process(

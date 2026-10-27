@@ -70,6 +70,21 @@ fn words<const N: usize>(v: &Value) -> Result<[u16; N], String> {
     Ok(out)
 }
 impl Automatic {
+    /// LSC covers the raw ISP input crop, never the resized image endpoint.
+    pub fn validate_geometry(&self, dimensions: [u32; 2]) -> Result<(), String> {
+        let expected = format!("{}x{}", dimensions[0], dimensions[1]);
+        let end = self.resolution.iter().position(|v| *v == 0).unwrap_or(32);
+        if &self.resolution[..end] != expected.as_bytes()
+            || self
+                .sectors
+                .iter()
+                .zip(dimensions)
+                .any(|(axis, size)| axis.iter().map(|n| u32::from(*n)).sum::<u32>() != size)
+        {
+            return Err("LSC resolution/sector sums differ from raw ISP input geometry".into());
+        }
+        Ok(())
+    }
     /// Reject unsupported calibration cases rather than silently omitting them.
     /// Full resolution switching/OTP/manual mode are handled separately.
     pub fn from_value(v: &Value) -> Result<Self, String> {

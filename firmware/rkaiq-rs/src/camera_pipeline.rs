@@ -481,7 +481,7 @@ mod pipeline_configuration {
             }
         }
     }
-    fn execute(plan: &Plan, dry: bool, trace: &mut Vec<Value>) -> io::Result<Value> {
+    fn execute(plan: &Plan, dry: bool, trace: &mut Vec<Value>, lsc_dimensions:Option<[u32;2]>) -> io::Result<Value> {
         let sensor = open_node(&plan.sensor)?;
         let isp = open_node(&plan.isp)?;
         let sensor_format = get_pad(trace, &sensor, &plan.sensor, 0)?;
@@ -560,6 +560,12 @@ mod pipeline_configuration {
             links.push(PreparedLink { change, file, link });
         }
         let mut summary = json!({"route":if plan.route==InputRoute::Cif{"cif"}else{"direct-isp"},"sensor":pad_view(&sensor_format),"crop":selection_view(&crop),"rawPixelFormat":fourcc(pixel),"rawTxCount":tx.len(),"rawRxCount":rx.len(),"plannedLinkCount":links.len(),"plannedBridgeCount":bridges.len()});
+        if let Some([width,height])=lsc_dimensions {
+            if get32(&crop,16)!=0 || get32(&crop,20)!=0 || get32(&crop,24)!=width || get32(&crop,28)!=height {
+                return Err(error("LSC requires a full uncropped ISP input matching its calibration"));
+            }
+            summary["lscRawGeometryChecked"]=json!(true);
+        }
         if dry {
             return Ok(summary);
         }
@@ -683,7 +689,9 @@ mod pipeline_configuration {
             plan.sof,
         ))
     }
-    pub fn run(args: &[String]) -> io::Result<()> {
+    pub fn run(args: &[String]) -> io::Result<()> {run_checked(args,None)}
+    pub fn run_lsc(args: &[String],dimensions:[u32;2])->io::Result<()> {run_checked(args,Some(dimensions))}
+    fn run_checked(args: &[String],lsc_dimensions:Option<[u32;2]>) -> io::Result<()> {
         if args.is_empty() || args.len() > 2 || (args.len() == 2 && args[1] != "--dry-run") {
             return Err(error("configure-pipeline requires PLAN.json [--dry-run]"));
         }
@@ -708,7 +716,7 @@ mod pipeline_configuration {
         }
         let dry = args.len() == 2;
         let mut trace = Vec::new();
-        let result = execute(&plan, dry, &mut trace);
+        let result = execute(&plan, dry, &mut trace,lsc_dimensions);
         println!(
             "{}",
             serde_json::to_string_pretty(

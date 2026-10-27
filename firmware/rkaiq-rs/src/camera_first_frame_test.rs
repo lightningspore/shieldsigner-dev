@@ -781,6 +781,10 @@ mod first_frame_driver {
         let ccm_calibration=shieldsigner_rkaiq::ccm_calibration::Automatic::from_value(&iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["ccm_calib_v2"]).unwrap();
         let (mut ccm_state,ccm_result)=shieldsigner_rkaiq::ccm_frame::State::seeded(&ccm_calibration,[1.,wb.red/wb.green_red,wb.blue/wb.green_blue]).unwrap();ccm_state.reconfigure=true;
         owner.ccm=Some(CameraCcm{calibration:ccm_calibration,state:ccm_state,result:ccm_result,seed:wb});
+        let lsc_calibration=shieldsigner_rkaiq::lsc_calibration::Automatic::from_value(&iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["lsc_v2"]).unwrap();
+        let (mut lsc_state,lsc_result)=shieldsigner_rkaiq::lsc_frame::State::seeded(&lsc_calibration,[1.,wb.red/wb.green_red,wb.blue/wb.green_blue]).unwrap();lsc_state.force=true;
+        owner.lsc=Some(CameraLsc{calibration:lsc_calibration,state:lsc_state,result:lsc_result,converter:shieldsigner_rkaiq::isp_lsc::State{enabled:true},seed:wb});
+        let lsc_before=owner.lsc.as_ref().unwrap().state;let lsc_result_before=owner.lsc.as_ref().unwrap().result;let lsc_converter_before=owner.lsc.as_ref().unwrap().converter;
         let ccm_before=owner.ccm.as_ref().unwrap().state;
         let ccm_result_before=owner.ccm.as_ref().unwrap().result;
         let dpcc_before = owner.dpcc.as_ref().unwrap().state;
@@ -806,6 +810,10 @@ mod first_frame_driver {
         assert_eq!(owner.dpcc.as_ref().unwrap().result, dpcc_result_before);
         assert_eq!(owner.ccm.as_ref().unwrap().state,ccm_before);
         assert_eq!(owner.ccm.as_ref().unwrap().result,ccm_result_before);
+        assert_eq!(owner.lsc.as_ref().unwrap().state,lsc_before);
+        assert_eq!(owner.lsc.as_ref().unwrap().result,lsc_result_before);
+        assert_eq!(owner.lsc.as_ref().unwrap().converter,lsc_converter_before);
+
 
         assert!(owner
             .submit_gain(&mut backend, &mut queue, 2, Some(wb))
@@ -820,6 +828,10 @@ mod first_frame_driver {
         assert_eq!(owner.dpcc.as_ref().unwrap().result, dpcc_result_before);
         assert_eq!(owner.ccm.as_ref().unwrap().state,ccm_before);
         assert_eq!(owner.ccm.as_ref().unwrap().result,ccm_result_before);
+        assert_eq!(owner.lsc.as_ref().unwrap().state,lsc_before);
+        assert_eq!(owner.lsc.as_ref().unwrap().result,lsc_result_before);
+        assert_eq!(owner.lsc.as_ref().unwrap().converter,lsc_converter_before);
+
 
         owner
             .submit_gain(&mut backend, &mut queue, 3, Some(wb))
@@ -837,6 +849,11 @@ mod first_frame_driver {
         shieldsigner_rkaiq::isp_ccm::apply(&mut ccm_snapshot,&owner.ccm.as_ref().unwrap().result).unwrap();
         use shieldsigner_rkaiq::isp_ccm::{OFFSET as CCM_OFFSET,BYTES as CCM_BYTES};
         assert_eq!(&owner.parameters.last().unwrap().1[CCM_OFFSET..CCM_OFFSET+CCM_BYTES],&ccm_snapshot[CCM_OFFSET..CCM_OFFSET+CCM_BYTES]);
+        assert_eq!(owner.lsc.as_ref().unwrap().state.frame_count,lsc_before.frame_count+1);
+        let mut lsc_snapshot=[0u8;isp32::PARAMETER_BYTES];
+        shieldsigner_rkaiq::isp_lsc::apply(&mut lsc_snapshot,&owner.lsc.as_ref().unwrap().result,&mut shieldsigner_rkaiq::isp_lsc::State{enabled:true});
+        use shieldsigner_rkaiq::isp_lsc::{OFFSET as LSC_OFFSET,BYTES as LSC_BYTES};
+        assert_eq!(&owner.parameters.last().unwrap().1[LSC_OFFSET..LSC_OFFSET+LSC_BYTES],&lsc_snapshot[LSC_OFFSET..LSC_OFFSET+LSC_BYTES]);
         let mut dpcc_snapshot = [0u8; isp32::PARAMETER_BYTES];
         shieldsigner_rkaiq::isp_dpcc::apply(&mut dpcc_snapshot, &owner.dpcc.as_ref().unwrap().result);
         use shieldsigner_rkaiq::isp_dpcc::{OFFSET as DPCC_OFFSET, BYTES as DPCC_BYTES};
@@ -1034,7 +1051,7 @@ mod first_frame_driver {
         println!();
         println!(
             "{}",
-            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":6,"snapshotSubmissions":3,"poolExhaustionChecked":true,"unityNoopChecked":true,"snapshotRetentionChecked":true,"parameterRegressionChecked":true,"traceBoundedChecked":true,"ccmTransactionalChecked":true})
+            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":6,"snapshotSubmissions":3,"poolExhaustionChecked":true,"unityNoopChecked":true,"snapshotRetentionChecked":true,"parameterRegressionChecked":true,"traceBoundedChecked":true,"ccmTransactionalChecked":true,"lscTransactionalChecked":true})
         );
     }
     #[test]

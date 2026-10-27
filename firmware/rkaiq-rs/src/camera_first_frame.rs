@@ -244,6 +244,11 @@ fn first_frame_sc3336_with_gain(
         let (_,result)=shieldsigner_rkaiq::ccm_frame::State::seeded(&cal,current).map_err(|e|error(format!("CCM override startup: {e:?}")))?;
         shieldsigner_rkaiq::isp_ccm::apply(&mut parameters,&result).map_err(|e|error(format!("CCM override packing: {e:?}")))?;
         initial["ccmStartup"]=json!({"current":current,"result":result.iter().map(|v|format!("{v:02x}")).collect::<String>()});
+        let lsc_cal=shieldsigner_rkaiq::lsc_calibration::Automatic::from_value(&iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["lsc_v2"]).map_err(error)?;
+        let (_,lsc_result)=shieldsigner_rkaiq::lsc_frame::State::seeded(&lsc_cal,current).map_err(|e|error(format!("LSC override startup: {e:?}")))?;
+        shieldsigner_rkaiq::isp_lsc::apply(&mut parameters,&lsc_result,&mut shieldsigner_rkaiq::isp_lsc::State{enabled:false});
+        initial["lscStartup"]=json!({"current":current,"result":lsc_result.iter().map(|v|format!("{v:02x}")).collect::<String>()});
+
         initial["diagnosticWhiteBalanceOverride"] = json!(g);
         initial["automaticWhiteBalance"] = json!(false);
     }
@@ -280,7 +285,7 @@ fn first_frame_sc3336_with_gain(
         }
     }
     // Read-only graph preflight before any settings or sensor controls change.
-    pipeline_configuration::run(&[args[0].clone(), "--dry-run".into()])?;
+    pipeline_configuration::run_lsc(&[args[0].clone(), "--dry-run".into()],[profile.width,profile.height])?;
     let mut params = OpenOptions::new()
         .write(true)
         .create_new(true)
@@ -306,7 +311,7 @@ fn first_frame_sc3336_with_gain(
         json!({"event":"first-frame-starting","sensor":sensor_path,"parameters":parameter_path,"initialReport":report_path,"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":live_awb,"coldStartProven":false})
     );
     let outcome = (|| -> io::Result<()> {
-        pipeline_configuration::run(&[args[0].clone()])?;
+        pipeline_configuration::run_lsc(&[args[0].clone()],[profile.width,profile.height])?;
         let mut device = SensorDevice {
             file: open(&sensor_path, true)?,
             queries: vec![],
@@ -414,6 +419,10 @@ fn first_frame_sc3336_with_gain(
             let ccm_wb=gain_override.unwrap_or(core::array::from_fn(|i|initial["whiteBalanceSeed"][i].as_f64().unwrap() as f32));
             let (ccm_state,ccm_result)=shieldsigner_rkaiq::ccm_frame::State::seeded(&ccm_calibration,[gain,ccm_wb[0]/ccm_wb[1],ccm_wb[3]/ccm_wb[2]]).map_err(|e|error(format!("CCM owner startup: {e:?}")))?;
             owner.ccm=Some(CameraCcm{calibration:ccm_calibration,state:ccm_state,result:ccm_result,seed:shieldsigner_rkaiq::isp32::WhiteBalanceGain{red:ccm_wb[0],green_red:ccm_wb[1],green_blue:ccm_wb[2],blue:ccm_wb[3],position:shieldsigner_rkaiq::isp32::ApplyPosition::Gain1}});
+            let lsc_calibration=shieldsigner_rkaiq::lsc_calibration::Automatic::from_value(&iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["lsc_v2"]).map_err(error)?;
+            lsc_calibration.validate_geometry([profile.width,profile.height]).map_err(error)?;
+            let (lsc_state,lsc_result)=shieldsigner_rkaiq::lsc_frame::State::seeded(&lsc_calibration,[gain,ccm_wb[0]/ccm_wb[1],ccm_wb[3]/ccm_wb[2]]).map_err(|e|error(format!("LSC owner startup: {e:?}")))?;
+            owner.lsc=Some(CameraLsc{calibration:lsc_calibration,state:lsc_state,result:lsc_result,converter:shieldsigner_rkaiq::isp_lsc::State{enabled:lsc_result[2440]!=0},seed:owner.ccm.as_ref().unwrap().seed});
             if live_awb {
                 owner.awb = Some(CameraAwb {
                     session: shieldsigner_rkaiq::awb_session::Session::new(

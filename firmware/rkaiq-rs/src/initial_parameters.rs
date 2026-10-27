@@ -144,6 +144,13 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
     let ccm_current=[gain*isp_gain,g[0]/g[1],g[3]/g[2]];
     let (_,ccm_result)=crate::ccm_frame::State::seeded(&ccm_calibration,ccm_current).map_err(|e|format!("CCM startup: {e:?}"))?;
     crate::isp_ccm::apply(&mut params,&ccm_result).map_err(|e|format!("CCM startup packing: {e:?}"))?;
+    let lsc_calibration=crate::lsc_calibration::Automatic::from_value(&scene["lsc_v2"])?;
+    let dimensions=["width","height"].map(|k|iq["sensor_calib"]["resolution"][k].as_u64().and_then(|n|u32::try_from(n).ok()));
+    lsc_calibration.validate_geometry([dimensions[0].ok_or("Missing LSC sensor width")?,dimensions[1].ok_or("Missing LSC sensor height")?])?;
+    if startup_black_level(scene)?.optical_black_predgain!=1. {return Err("Live CCM/LSC require supported unity BLC optical-black predgain".into());}
+    let (_,lsc_result)=crate::lsc_frame::State::seeded(&lsc_calibration,ccm_current).map_err(|e|format!("LSC startup: {e:?}"))?;
+    crate::isp_lsc::apply(&mut params,&lsc_result,&mut crate::isp_lsc::State{enabled:false});
+
     apply_awb_gain(
         &mut params,
         &mut [0; 32],
@@ -214,7 +221,7 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
     );
     Ok((
         params,
-        json!({"kind":"experimental-linear-first-frame-parameters","scene":"/main_scene/0/sub_scene/0/scene_isp32","bytes":PARAMETER_BYTES,"iso":iso,"requestedExposureSeconds":seconds,"requestedGain":gain,"sensorExposureApplied":false,"whiteBalanceLight":light,"whiteBalanceSeed":g,"ccmStartup":{"current":ccm_current,"result":ccm_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"whiteBalanceApplyPosition":"Gain1","limitations":["Fixed first-frame checkpoint; no automatic exposure/white balance controller.","Constant BLC tables only; selected CSM/CGC profile values are explicit inputs, not recovered automatic selection.","No hardware qualification or usable-frame claim; Unimplemented ISP modules explicitly disabled."]}),
+        json!({"kind":"experimental-linear-first-frame-parameters","scene":"/main_scene/0/sub_scene/0/scene_isp32","bytes":PARAMETER_BYTES,"iso":iso,"requestedExposureSeconds":seconds,"requestedGain":gain,"sensorExposureApplied":false,"whiteBalanceLight":light,"whiteBalanceSeed":g,"lscStartup":{"current":ccm_current,"result":lsc_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"ccmStartup":{"current":ccm_current,"result":ccm_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"whiteBalanceApplyPosition":"Gain1","limitations":["Fixed first-frame checkpoint; no automatic exposure/white balance controller.","Constant BLC tables only; selected CSM/CGC profile values are explicit inputs, not recovered automatic selection.","No hardware qualification or usable-frame claim; Unimplemented ISP modules explicitly disabled."]}),
     ))
 }
 

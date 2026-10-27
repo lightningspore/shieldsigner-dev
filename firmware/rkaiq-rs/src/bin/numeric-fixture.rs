@@ -129,6 +129,57 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-high-gain" => {
+                use shieldsigner_rkaiq::awb_high_gain::*;
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let gains = |v: &serde_json::Value| -> [f32; 4] {
+                    core::array::from_fn(|i| v[i].as_f64().unwrap() as f32)
+                };
+                let lights: Vec<_> = v["lights"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|l| Light {
+                        selected_gain: gains(&l["selected_gain"]),
+                        selected_count: l["selected_count"].as_u64().unwrap() as u32,
+                        extra_gain: gains(&l["extra_gain"]),
+                        extra_count: l["extra_count"].as_u64().unwrap() as u32,
+                        extra_enabled: l["extra_enabled"].as_bool().unwrap(),
+                        low_threshold: l["low"].as_u64().unwrap() as u32,
+                        high_threshold: l["high"].as_u64().unwrap() as u32,
+                        low_gain: gains(&l["low_gain"]),
+                        high_gain: gains(&l["high_gain"]),
+                        spatial_percentage: l["percentage"].as_u64().unwrap() as u8,
+                        probability: l["probability"].as_f64().unwrap() as f32,
+                    })
+                    .collect();
+                let mut output = vec![
+                    LightResult {
+                        statistic: [0.; 4],
+                        spatial: [0.; 4],
+                        spatial_weight: 0.25,
+                        extra_weight: 0.75
+                    };
+                    lights.len()
+                ];
+                let settings = Settings {
+                    fast: v["fast"].as_bool().unwrap(),
+                    brightness: v["brightness"].as_u64().unwrap() as u32,
+                    temporal_default: gains(&v["default"]),
+                    temporal_knots: core::array::from_fn(|i| {
+                        v["knots"][i].as_u64().unwrap() as u32
+                    }),
+                    temporal_percentages: core::array::from_fn(|i| {
+                        v["percentages"][i].as_u64().unwrap() as u8
+                    }),
+                };
+                let result = calculate(&lights, &mut output, &settings).unwrap();
+                let lights: Vec<_> = output.iter().map(|r| serde_json::json!({"statistic": r.statistic.map(f32::to_bits), "spatial": r.spatial.map(f32::to_bits), "spatial_weight": r.spatial_weight.to_bits(), "extra_weight": r.extra_weight.to_bits()})).collect();
+                println!(
+                    "{}",
+                    serde_json::json!({"lights": lights, "gain": result.gain.map(f32::to_bits), "temporal": result.temporal.map(f32::to_bits), "weight": result.temporal_weight.to_bits()})
+                );
+            }
             "awb-temporal" => {
                 use shieldsigner_rkaiq::awb_gain;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();

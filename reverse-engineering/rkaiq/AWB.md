@@ -488,3 +488,39 @@ large knots, zero gains and percentage extrapolation.
 History insertion/eviction and complete high/low gain orchestration remain
 unfinished, as do calibration loading and live AWB integration. This stage does
 not change the frozen fixed-WB camera kit or establish camera image quality.
+
+## Complete high-count gain strategy
+
+`awb_high_gain::calculate` now joins the full value-level call chain of
+`AwbCalGainWpTypeHigh` (ELF `0xc6a20`). For each illumination it copies the
+selected-region gain, optionally mixes extra-region statistics, derives the
+spatial gain, and blends spatial/statistical results unless the mode is
+`FASTAWBACT`. It then combines illuminations using their precomputed total
+probabilities, loads the configured temporal default and applies the recovered
+brightness-dependent temporal blend. The native final gain is copied to both
+current-gain and high-strategy-result fields; the value API returns that gain.
+
+Extra-region weight is `extra_count / selected_count` after u32-to-f32 rounding,
+capped at 1. Disabled extra mixing or zero selected count preserves the previous
+extra weight, while still replacing the statistic gain with the selected gain.
+FASTAWBACT similarly preserves the previous spatial weight, but still calculates
+the spatial gain. The API accepts prior per-light result values so these native
+preservation rules remain visible. All output is staged until every numerical
+operation succeeds. A late-invalid-probability unit test checks atomic failure.
+The light-order weighted accumulator is shared with `awb_probability`.
+
+`mise run camera:rust:awb-high-gain` invokes the original high-count function
+once per case and lets its full native numerical call tree return normally.
+**1,024 cases / 6,866 illumination results** match host and ARM Rust exactly:
+current/stored gain, temporal source and raw percentage, per-light statistics
+and spatial gains, both mixture weights, and unrelated-memory preservation.
+Coverage includes normal/FASTAWBACT, XY selections 0/1/3, four calibration groups,
+up to 255 lights, zero/full-width counts, extra-weight clamping, preserved fields,
+zero probabilities/gains and spatial/temporal boundary behavior. Only bounded
+`strcmp` and logging are adapters; numerical and strategy helpers run natively.
+[Reference report](awb-high-gain-equivalence.json).
+
+This completes the high-count strategy for explicit finite calibration,
+selected-region measurements and total probabilities. It does not complete the
+low-count strategy, caller's high/low interpolation, postprocessing, IQ loading,
+outer frame lifecycle or live AWB integration. The camera kit remains fixed-WB.

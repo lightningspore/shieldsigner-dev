@@ -23,6 +23,7 @@ pub mod ae_translation;
 pub mod ae_weights;
 pub mod awb_environment;
 pub mod awb_gain;
+pub mod awb_high_gain;
 pub mod awb_luma_history;
 pub mod awb_preparation;
 pub mod awb_preprocess;

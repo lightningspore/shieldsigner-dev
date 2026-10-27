@@ -52,15 +52,31 @@ pub fn weighted_gain(
     lights: &[Light<'_>],
     probabilities: &[Probability],
 ) -> Result<Gains, InvalidInput> {
-    if lights.is_empty() || lights.len() > 255 || lights.len() != probabilities.len() {
+    if lights.len() != probabilities.len() {
+        return Err(InvalidInput::Length);
+    }
+    weighted_gain_values(
+        lights
+            .iter()
+            .zip(probabilities)
+            .map(|(l, p)| (l.statistic_gain, p.total)),
+    )
+}
+
+/// Value-level accumulator shared with the gain strategies after they replace
+/// per-light statistic gains. Same light order and normalization as above.
+pub fn weighted_gain_values(
+    values: impl ExactSizeIterator<Item = (Gains, f32)>,
+) -> Result<Gains, InvalidInput> {
+    if values.len() == 0 || values.len() > 255 {
         return Err(InvalidInput::Length);
     }
     let mut gain = [0.; 4];
-    for (light, probability) in lights.iter().zip(probabilities) {
-        finite(&light.statistic_gain)?;
-        finite(&[probability.total])?;
-        for (value, channel) in gain.iter_mut().zip(light.statistic_gain) {
-            *value = libm::fmaf(probability.total, channel, *value);
+    for (channels, probability) in values {
+        finite(&channels)?;
+        finite(&[probability])?;
+        for (value, channel) in gain.iter_mut().zip(channels) {
+            *value = libm::fmaf(probability, channel, *value);
         }
     }
     crate::awb_gain::normalize(gain)

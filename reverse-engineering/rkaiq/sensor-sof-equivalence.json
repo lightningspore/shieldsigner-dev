@@ -1,0 +1,12 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 97,
+  "mismatches": 0,
+  "armReplayPassed": true,
+  "scope": "native ordinary unsplit linear handle_sof through normal return: dequeue/write decisions, effective frame keys, retention, current snapshot and writer errors",
+  "limitations": [
+    "C++ containers, smart-pointer ownership, locking, DPCC and sensor writer are modeled boundaries.",
+    "Split gain/DCG, HDR, mirror changes, internal split-I2C path and native queue capacity are excluded.",
+    "Fixed Rust pending capacity is 32; effective records include failed writer attempts and do not establish physical application."
+  ]
+}

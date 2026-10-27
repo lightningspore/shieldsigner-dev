@@ -140,3 +140,48 @@ before processing and associates a newly dequeued main exposure with SOF plus
 the shutter delay, with additional conditional handling. That scheduling path
 has not yet been ported or differentially verified; the lookup/configuration
 helpers alone do not establish physical association.
+
+
+## Ordinary unsplit SOF scheduler
+
+`sensor_scheduler::Scheduler` reconstructs the ordinary non-iris linear
+`SensorHw::handle_sof` branch (ELF 0x3d558) used when shutter/gain share their
+delay. It starts with the initial snapshot at frame zero, accepts caller-owned
+snapshot payloads, dequeues at most one main exposure per SOF and invokes the
+sensor-writer callback. It records the current snapshot and the native
+effective-frame key, normally `sof + shutterDelay` with unsigned wrap.
+
+The native conditional shortening policy is explicit: when its enable flag
+is set and either the designated SOF matches or the all-frames flag is set,
+a delay greater than one uses `sof + 1`. The API preserves those arithmetic
+conditions without assigning unverified product semantics to the flags.
+Retention trims the unsigned oldest key while count exceeds ten **before**
+queue processing, so insertion can leave eleven records until the next SOF.
+Duplicate keys replace the existing record. Idle SOFs still update last-SOF
+state and perform retention, but do not call the writer.
+
+A failed writer still leaves the dequeued snapshot and effective entry recorded,
+as native RKAIQ does. `Outcome::status` retains that failure: callers must not
+infer physical application from map membership. The separate effective-lookup
+helper supplies native exact/fallback selection; live sensor association still
+needs application evidence.
+
+Ninety-seven multi-SOF scenarios execute the original handler through normal
+return, comparing each write/dequeue decision, status, current snapshot and
+complete effective map after every SOF. Scenarios cover empty queues, long
+runs/retention, a full 32-entry Rust queue, duplicate/wrapping frame IDs,
+shortening conditions and writer failure. Host and ARM replay pass.
+[SOF scheduler report](sensor-sof-equivalence.json).
+
+```sh
+mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin numeric-fixture
+mise run camera:rust:arm
+uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/sensor-sof.py --arm
+```
+
+The native C++ list/map operations, ownership/locks, DPCC and sensor writer are
+explicit test boundaries. Native queue capacity is not claimed equivalent:
+Rust uses a bounded 32-entry pending queue and rejects overflow. The constructor
+rejects split-gain/DCG configurations and unequal/negative shutter/gain delays.
+HDR, mirror changes, split-I2C/internal scheduling and integration into the live
+CIF worker remain open. This code does not itself enable automatic writes.

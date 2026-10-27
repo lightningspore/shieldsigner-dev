@@ -380,6 +380,61 @@ fn main() {
                     hex_bytes(&params[OFFSET..OFFSET + BYTES])
                 );
             }
+            "sensor-sof" => {
+                let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
+                let delay = v["delay"].as_i64().unwrap() as i32;
+                let mut d = sensor_timing::Delays {
+                    time: 0,
+                    gain: 0,
+                    dcg: 0,
+                    split_gain: false,
+                    split_dcg: false,
+                    dcg_with_time: false,
+                };
+                assert_eq!(d.configure(delay, delay, 0), 0);
+                let mut scheduler = sensor_scheduler::Scheduler::new(
+                    1u32,
+                    d,
+                    sensor_scheduler::EffectPolicy {
+                        shorten_enabled: v["shorten"].as_bool().unwrap(),
+                        designated_frame: v["designated"].as_u64().unwrap() as u32,
+                        shorten_all: v["all"].as_bool().unwrap(),
+                    },
+                )
+                .unwrap();
+                for n in v["requests"].as_array().unwrap() {
+                    scheduler.enqueue(n.as_u64().unwrap() as u32).unwrap();
+                }
+                let fail = v["fail"].as_u64().unwrap() as u32;
+                let out = v["frames"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|f| {
+                        let o = scheduler.on_sof(f.as_u64().unwrap() as u32, |id| {
+                            if id == fail {
+                                -5
+                            } else {
+                                0
+                            }
+                        });
+                        let map = scheduler
+                            .effective()
+                            .map(|e| format!("{}={}", e.frame, e.exposure))
+                            .collect::<Vec<_>>()
+                            .join(";");
+                        format!(
+                            "{},{},{},{}:{}",
+                            o.status,
+                            scheduler.last_sof,
+                            scheduler.current,
+                            o.written.unwrap_or(0),
+                            map
+                        )
+                    })
+                    .collect::<Vec<_>>();
+                println!("{}", out.join("|"));
+            }
             "sensor-delays" => {
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
                 let mut d = sensor_timing::Delays {

@@ -48,6 +48,7 @@ pub mod parameter_queue;
 pub mod raw_readback;
 pub mod sensor;
 pub mod sensor_descriptor;
+pub mod sensor_scheduler;
 pub mod sensor_timing;
 pub mod statistics;
 

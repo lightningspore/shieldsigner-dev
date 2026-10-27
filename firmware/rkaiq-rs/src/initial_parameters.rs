@@ -140,6 +140,10 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
     if g.iter().copied().fold(f32::INFINITY, f32::min) != 1. {
         return Err("startup WB seed requires normalized unity minimum".into());
     }
+    let ccm_calibration=crate::ccm_calibration::Automatic::from_value(&scene["ccm_calib_v2"])?;
+    let ccm_current=[gain*isp_gain,g[0]/g[1],g[3]/g[2]];
+    let (_,ccm_result)=crate::ccm_frame::State::seeded(&ccm_calibration,ccm_current).map_err(|e|format!("CCM startup: {e:?}"))?;
+    crate::isp_ccm::apply(&mut params,&ccm_result).map_err(|e|format!("CCM startup packing: {e:?}"))?;
     apply_awb_gain(
         &mut params,
         &mut [0; 32],
@@ -210,7 +214,7 @@ pub fn assemble(iq: &Value) -> Result<([u8; PARAMETER_BYTES], Value), String> {
     );
     Ok((
         params,
-        json!({"kind":"experimental-linear-first-frame-parameters","scene":"/main_scene/0/sub_scene/0/scene_isp32","bytes":PARAMETER_BYTES,"iso":iso,"requestedExposureSeconds":seconds,"requestedGain":gain,"sensorExposureApplied":false,"whiteBalanceLight":light,"whiteBalanceSeed":g,"whiteBalanceApplyPosition":"Gain1","limitations":["Fixed first-frame checkpoint; no automatic exposure/white balance controller.","Constant BLC tables only; selected CSM/CGC profile values are explicit inputs, not recovered automatic selection.","No hardware qualification or usable-frame claim; other ISP modules explicitly disabled."]}),
+        json!({"kind":"experimental-linear-first-frame-parameters","scene":"/main_scene/0/sub_scene/0/scene_isp32","bytes":PARAMETER_BYTES,"iso":iso,"requestedExposureSeconds":seconds,"requestedGain":gain,"sensorExposureApplied":false,"whiteBalanceLight":light,"whiteBalanceSeed":g,"ccmStartup":{"current":ccm_current,"result":ccm_result.iter().map(|v|format!("{v:02x}")).collect::<String>()},"whiteBalanceApplyPosition":"Gain1","limitations":["Fixed first-frame checkpoint; no automatic exposure/white balance controller.","Constant BLC tables only; selected CSM/CGC profile values are explicit inputs, not recovered automatic selection.","No hardware qualification or usable-frame claim; Unimplemented ISP modules explicitly disabled."]}),
     ))
 }
 

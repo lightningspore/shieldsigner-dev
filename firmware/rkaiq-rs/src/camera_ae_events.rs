@@ -1,3 +1,15 @@
+struct CameraCcm {
+    calibration: shieldsigner_rkaiq::ccm_calibration::Automatic,
+    state: shieldsigner_rkaiq::ccm_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_ccm::RESULT_BYTES],
+    seed: shieldsigner_rkaiq::isp32::WhiteBalanceGain,
+}
+struct CameraCcmStage {
+    state: shieldsigner_rkaiq::ccm_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_ccm::RESULT_BYTES],
+    information: shieldsigner_rkaiq::ccm_frame::Information,
+    updated: bool, exposure_frame: u32, exact: bool, gains: [f32;3],
+}
 struct CameraDpcc {
     calibration: shieldsigner_rkaiq::dpcc_calibration::Automatic,
     state: shieldsigner_rkaiq::dpcc_runtime::State,
@@ -42,6 +54,7 @@ struct CameraAwb {
         u32,
         shieldsigner_rkaiq::isp32::WhiteBalanceGain,
         Option<[u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES]>,
+        f32,
     )>,
     measurements: Vec<(
         u32,
@@ -132,7 +145,7 @@ impl CameraAwb {
                     .gains
                     .iter()
                     .rev()
-                    .find_map(|(_, _, record)| *record)
+                    .find_map(|(_, _, record, _)| *record)
                     .unwrap_or(self.sdk);
                 let mut signature = [0u8; 64];
                 let name = b"RUST-AWB-NORMAL";
@@ -147,7 +160,7 @@ impl CameraAwb {
             self.last = Some((stats.frame_id(), stats.parameters_id(), frame.to_vec()));
             println!(
                 "{}",
-                json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"complete":result.complete,"activeLights":result.active_lights,"group":i32::from_le_bytes(frame[0x1d78..0x1d7c].try_into().unwrap()),"physicalLights":frame[0x1d74],"exposureMetadata":"same-frame-AE-normalized-brightness","aeNormalizedBrightness":ae_pre.normalized_brightness,"brightness":result.numeric.luma,"iso":iso,"isoSource":"same-frame-associated-real-gains","measurementConfiguration":"FAST-to-normal-timeshare"})
+                json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"ccmDamping":self.session.ccm_damping(),"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"complete":result.complete,"activeLights":result.active_lights,"group":i32::from_le_bytes(frame[0x1d78..0x1d7c].try_into().unwrap()),"physicalLights":frame[0x1d74],"exposureMetadata":"same-frame-AE-normalized-brightness","aeNormalizedBrightness":ae_pre.normalized_brightness,"brightness":result.numeric.luma,"iso":iso,"isoSource":"same-frame-associated-real-gains","measurementConfiguration":"FAST-to-normal-timeshare"})
             );
         }
         let g = self.session.gain();
@@ -164,15 +177,19 @@ impl CameraAwb {
                 position: isp32::ApplyPosition::Gain1,
             },
             next_measurement,
+            self.session.ccm_damping(),
         ));
         Ok(())
     }
     fn gain_for(&self, frame: u32) -> io::Result<shieldsigner_rkaiq::isp32::WhiteBalanceGain> {
         self.gains
             .iter()
-            .find(|(id, _, _)| *id == frame)
-            .map(|(_, g, _)| *g)
+            .find(|(id, _, _, _)| *id == frame)
+            .map(|(_, g, _, _)| *g)
             .ok_or_else(|| error("Missing exact-frame AWB gain"))
+    }
+    fn damping_for(&self, frame:u32)->io::Result<f32> {
+        self.gains.iter().find(|(id,_,_,_)|*id==frame).map(|(_,_,_,d)|*d).ok_or_else(||error("Missing exact-frame CCM AWB damping"))
     }
     fn measurement_for(
         &self,
@@ -180,8 +197,8 @@ impl CameraAwb {
     ) -> Option<[u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES]> {
         self.gains
             .iter()
-            .find(|(id, _, _)| *id == frame)
-            .and_then(|(_, _, record)| *record)
+            .find(|(id, _, _, _)| *id == frame)
+            .and_then(|(_, _, record, _)| *record)
     }
     fn register(
         &mut self,
@@ -190,7 +207,7 @@ impl CameraAwb {
     ) {
         self.measurements.push((id, record));
         self.sdk = record;
-        self.gains.retain(|(frame, _, _)| *frame > id);
+        self.gains.retain(|(frame, _, _, _)| *frame > id);
     }
     fn save(&self, statistics_output: &str) -> io::Result<()> {
         let (frame, id, bytes) = self
@@ -243,6 +260,7 @@ struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
     processed: u64,
     awb: Option<CameraAwb>,
     dpcc: Option<CameraDpcc>,
+    ccm: Option<CameraCcm>,
     demosaic: Option<(shieldsigner_rkaiq::demosaic_selection::Calibration, shieldsigner_rkaiq::demosaic_runtime::State)>,
 }
 impl<B: shieldsigner_rkaiq::sensor::Backend> CameraAeOwner<B>
@@ -270,6 +288,7 @@ where
             processed: 0,
             awb: None,
             dpcc: None,
+            ccm: None,
             demosaic: None,
         }
     }
@@ -363,6 +382,18 @@ where
             if changed { shieldsigner_rkaiq::isp_dpcc::apply(&mut planned, &result); }
             Some((next, result, changed, exposure.frame, exact, gains))
         } else { None };
+        let ccm_staged = if let Some(ccm)=&self.ccm {
+            let (exposure,exact)=self.runtime.effective_exposure(frame).map_err(error)?;
+            let gains=core::array::from_fn(|i|f32::from_le_bytes(exposure.exposure[4+i*4..8+i*4].try_into().unwrap()));
+            let wb=white_balance.unwrap_or(ccm.seed);
+            if wb.green_red<=0. || wb.green_blue<=0. {return Err(error("CCM requires positive WB green gains"));}
+            let damping=match &self.awb {Some(awb)=>awb.damping_for(frame)?,None=>0.};
+            let mut information=shieldsigner_rkaiq::ccm_frame::Information{current:[(gains[0]*gains[1])*gains[2],wb.red/wb.green_red,wb.blue/wb.green_blue],damping,gray:false,software_gray:false,converged:false};
+            let mut state=ccm.state;let mut result=ccm.result;
+            let updated=state.process(&ccm.calibration,&mut information,&mut result).map_err(|e|error(format!("Live CCM: {e:?}")))?;
+            if updated {shieldsigner_rkaiq::isp_ccm::apply(&mut planned,&result).map_err(|e|error(format!("Live CCM packing: {e:?}")))?;}
+            Some(CameraCcmStage{state,result,information,updated,exposure_frame:exposure.frame,exact,gains})
+        } else {None};
         let measurement = self.awb.as_ref().and_then(|awb| awb.measurement_for(frame));
         if let Some(record) = measurement {
             shieldsigner_rkaiq::isp_awb_measurement::Measurement(record).apply(&mut planned, true);
@@ -370,13 +401,14 @@ where
         let updates = u64::from_le_bytes(planned[..8].try_into().unwrap())
             | u64::from_le_bytes(planned[16..24].try_into().unwrap());
         if updates == 0 {
+            if let Some(stage)=ccm_staged {self.commit_ccm(stage,frame,&planned,&mut snapshot,false);}
             return Ok(None);
         }
         self.prune_histories();
         if self.parameters.len() == 128 || self.parameters.last().is_some_and(|p| p.0 >= frame) {
             return Err(error("Gain batch requires a new increasing parameter ID"));
         }
-        let index = if self.awb.is_some() || self.demosaic.is_some() || self.dpcc.is_some() {
+        let index = if self.awb.is_some() || self.demosaic.is_some() || self.dpcc.is_some() || self.ccm.is_some() {
             mark_runtime_parameter_frame(&mut planned, frame);
             let index = backend.enqueue_payload(queue, &planned)?;
             cache = planned_cache;
@@ -425,10 +457,18 @@ where
                 println!("{}",json!({"event":"automatic-dpcc-submitted","frame":frame,"iso":next.iso,"gains":gains,"exposureFrame":exposure_frame,"exactExposureLookup":exact,"result":hex(&result),"packed":hex(&planned[OFFSET..OFFSET+BYTES]),"physicalApplicationVerified":false}));
             }
         }
+        if let Some(stage)=ccm_staged {self.commit_ccm(stage,frame,&planned,&mut snapshot,true);}
         self.parameters.push((frame, snapshot));
         self.parameter_submissions += 1;
         self.max_parameter_history = self.max_parameter_history.max(self.parameters.len());
         Ok(Some(index))
+    }
+    fn commit_ccm(&mut self,stage:CameraCcmStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
+        let ccm=self.ccm.as_mut().unwrap();ccm.state=stage.state;ccm.result=stage.result;
+        use shieldsigner_rkaiq::isp_ccm::{OFFSET,BYTES};
+        if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
+        let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+        println!("{}",json!({"event":"automatic-ccm-processed","frame":frame,"current":stage.information.current,"damping":stage.information.damping,"updated":stage.updated,"informationConverged":stage.information.converged,"converged":stage.state.automatic.converged,"controllerFrames":stage.state.automatic.frames,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"gains":stage.gains,"queuedBatch":queued,"physicalApplicationVerified":false}));
     }
     /// Statistics can overtake their SOF producer. Retain at most 16 complete
     /// owned payloads until SOF reaches their frame. Never guess a future map.

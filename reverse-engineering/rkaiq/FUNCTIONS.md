@@ -186,3 +186,8 @@ and `AccmAutoConfig` (`0xfed30`) numerical/cache behavior.
 ownership and flag clearing. The full callback comparison also closes the
 native −21 selector-status early exit in joined automatic configuration.
 [Descriptor identity, regression and native/physical CPU evidence](ISP.md#complete-ccm-callback-and-publication-0034-development).
+
+`ccm_frame::State::seeded` and the camera event owner now integrate calibrated
+startup and transactional live CCM. `awb_session::Session::ccm_damping` exposes
+the native-published base IIR coefficient for exact-frame handoff.
+[Live mapping, driver-failure behavior and camera/scan evidence](ISP.md#transactional-live-ccm-0034-development).

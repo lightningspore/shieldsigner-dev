@@ -1,0 +1,112 @@
+{
+  "kind": "selected-profile-vs-rust-startup-module-audit",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "startupSha256": "daf04a84de51e6e5333084c377fa1156f3b5803d8589888fd1f8b5324fa58696",
+  "uapiSha256": {
+    "rk-isp2-config.h": "4222985137397f36ad8ed067d6b094d7e87dc07f621269ede9ff1eada8ff28c7",
+    "rk-isp21-config.h": "ed7486c90504906825729d4f60d13a89d93c06bc9ea77c6af705d5d8edf8f1ca",
+    "rk-isp3-config.h": "441a9722939ddcbeff8e73e2284db106d1356fc35c2e66be6c80394515f0055b",
+    "rk-isp32-config.h": "dbf3e0fc8bccc4f2f7211d0c43e39f793f61ff867de8ca21a4226c6933d0353a"
+  },
+  "startupMasks": [
+    "0x3fffffffffff",
+    "0x180807fc4329",
+    "0x180807fc432b"
+  ],
+  "blocks": [
+    {
+      "name": "CCM",
+      "bit": 8,
+      "purpose": "Calibrated color correction",
+      "profilePointer": "/main_scene/0/sub_scene/0/scene_isp32/ccm_calib_v2/control/enable",
+      "profileConfiguredEnabled": true,
+      "startupEnableUpdated": true,
+      "rustStartupEnabled": true,
+      "startupConfigurationUpdated": true
+    },
+    {
+      "name": "LSC",
+      "bit": 4,
+      "purpose": "Lens shading correction",
+      "profilePointer": "/main_scene/0/sub_scene/0/scene_isp32/lsc_v2/common/enable",
+      "profileConfiguredEnabled": true,
+      "startupEnableUpdated": true,
+      "rustStartupEnabled": false,
+      "startupConfigurationUpdated": false
+    },
+    {
+      "name": "DPCC",
+      "bit": 0,
+      "purpose": "Defect pixel correction",
+      "profilePointer": "/main_scene/0/sub_scene/0/scene_isp32/adpcc_calib/DpccTuningPara/Enable",
+      "profileConfiguredEnabled": true,
+      "startupEnableUpdated": true,
+      "rustStartupEnabled": true,
+      "startupConfigurationUpdated": true
+    },
+    {
+      "name": "BAYNR",
+      "bit": 36,
+      "purpose": "Spatial Bayer noise reduction",
+      "profilePointer": "/main_scene/0/sub_scene/0/scene_isp32/bayer2dnr_v23/TuningPara/enable",
+      "profileConfiguredEnabled": true,
+      "startupEnableUpdated": true,
+      "rustStartupEnabled": false,
+      "startupConfigurationUpdated": false
+    },
+    {
+      "name": "BAY3D",
+      "bit": 37,
+      "purpose": "Temporal Bayer noise reduction",
+      "profilePointer": "/main_scene/0/sub_scene/0/scene_isp32/bayertnr_v23/TuningPara/enable",
+      "profileConfiguredEnabled": true,
+      "startupEnableUpdated": true,
+      "rustStartupEnabled": false,
+      "startupConfigurationUpdated": false
+    },
+    {
+      "name": "YNR",
+      "bit": 38,
+      "purpose": "Luma noise reduction",
+      "profilePointer": "/main_scene/0/sub_scene/0/scene_isp32/ynr_v22/TuningPara/enable",
+      "profileConfiguredEnabled": true,
+      "startupEnableUpdated": true,
+      "rustStartupEnabled": false,
+      "startupConfigurationUpdated": false
+    },
+    {
+      "name": "CNR",
+      "bit": 39,
+      "purpose": "Chroma noise reduction",
+      "profilePointer": "/main_scene/0/sub_scene/0/scene_isp32/cnr_v30/TuningPara/enable",
+      "profileConfiguredEnabled": true,
+      "startupEnableUpdated": true,
+      "rustStartupEnabled": false,
+      "startupConfigurationUpdated": false
+    },
+    {
+      "name": "SHARP",
+      "bit": 40,
+      "purpose": "Sharpening",
+      "profilePointer": "/main_scene/0/sub_scene/0/scene_isp32/sharp_v33/TuningPara/enable",
+      "profileConfiguredEnabled": true,
+      "startupEnableUpdated": true,
+      "rustStartupEnabled": false,
+      "startupConfigurationUpdated": false
+    }
+  ],
+  "profileEnabledButRustDisabled": [
+    "LSC",
+    "BAYNR",
+    "BAY3D",
+    "YNR",
+    "CNR",
+    "SHARP"
+  ],
+  "limitations": [
+    "Profile enable flags do not prove the vendor daemon enabled these blocks on hardware.",
+    "The captured startup request is not independent register readback.",
+    "This selected-block audit does not inventory all calibration sections or establish whether a block is necessary for QR decoding.",
+    "BLS has separately controlled internal stages; its module-enable bit alone must not be used to classify all black-level processing."
+  ]
+}

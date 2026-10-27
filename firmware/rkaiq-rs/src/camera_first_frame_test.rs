@@ -778,6 +778,11 @@ mod first_frame_driver {
             state: shieldsigner_rkaiq::dpcc_runtime::State { iso: 0, reconfigure: true },
             result: [0xa5; 192],
         });
+        let ccm_calibration=shieldsigner_rkaiq::ccm_calibration::Automatic::from_value(&iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["ccm_calib_v2"]).unwrap();
+        let (mut ccm_state,ccm_result)=shieldsigner_rkaiq::ccm_frame::State::seeded(&ccm_calibration,[1.,wb.red/wb.green_red,wb.blue/wb.green_blue]).unwrap();ccm_state.reconfigure=true;
+        owner.ccm=Some(CameraCcm{calibration:ccm_calibration,state:ccm_state,result:ccm_result,seed:wb});
+        let ccm_before=owner.ccm.as_ref().unwrap().state;
+        let ccm_result_before=owner.ccm.as_ref().unwrap().result;
         let dpcc_before = owner.dpcc.as_ref().unwrap().state;
         let dpcc_result_before = owner.dpcc.as_ref().unwrap().result;
         let demosaic_before = owner.demosaic.as_ref().unwrap().1;
@@ -799,6 +804,8 @@ mod first_frame_driver {
         assert_eq!(owner.dpcc.as_ref().unwrap().state.iso, dpcc_before.iso);
         assert_eq!(owner.dpcc.as_ref().unwrap().state.reconfigure, dpcc_before.reconfigure);
         assert_eq!(owner.dpcc.as_ref().unwrap().result, dpcc_result_before);
+        assert_eq!(owner.ccm.as_ref().unwrap().state,ccm_before);
+        assert_eq!(owner.ccm.as_ref().unwrap().result,ccm_result_before);
 
         assert!(owner
             .submit_gain(&mut backend, &mut queue, 2, Some(wb))
@@ -811,6 +818,8 @@ mod first_frame_driver {
         assert_eq!(owner.dpcc.as_ref().unwrap().state.iso, dpcc_before.iso);
         assert_eq!(owner.dpcc.as_ref().unwrap().state.reconfigure, dpcc_before.reconfigure);
         assert_eq!(owner.dpcc.as_ref().unwrap().result, dpcc_result_before);
+        assert_eq!(owner.ccm.as_ref().unwrap().state,ccm_before);
+        assert_eq!(owner.ccm.as_ref().unwrap().result,ccm_result_before);
 
         owner
             .submit_gain(&mut backend, &mut queue, 3, Some(wb))
@@ -822,6 +831,12 @@ mod first_frame_driver {
         assert_eq!(owner.demosaic.as_ref().unwrap().1.hardware[0], 0);
         assert!(!owner.dpcc.as_ref().unwrap().state.reconfigure);
         assert!(owner.dpcc.as_ref().unwrap().state.iso >= 50);
+        assert!(!owner.ccm.as_ref().unwrap().state.reconfigure);
+        assert_eq!(owner.ccm.as_ref().unwrap().state.automatic.frames,ccm_before.automatic.frames+1);
+        let mut ccm_snapshot=[0u8;isp32::PARAMETER_BYTES];
+        shieldsigner_rkaiq::isp_ccm::apply(&mut ccm_snapshot,&owner.ccm.as_ref().unwrap().result).unwrap();
+        use shieldsigner_rkaiq::isp_ccm::{OFFSET as CCM_OFFSET,BYTES as CCM_BYTES};
+        assert_eq!(&owner.parameters.last().unwrap().1[CCM_OFFSET..CCM_OFFSET+CCM_BYTES],&ccm_snapshot[CCM_OFFSET..CCM_OFFSET+CCM_BYTES]);
         let mut dpcc_snapshot = [0u8; isp32::PARAMETER_BYTES];
         shieldsigner_rkaiq::isp_dpcc::apply(&mut dpcc_snapshot, &owner.dpcc.as_ref().unwrap().result);
         use shieldsigner_rkaiq::isp_dpcc::{OFFSET as DPCC_OFFSET, BYTES as DPCC_BYTES};
@@ -1019,7 +1034,7 @@ mod first_frame_driver {
         println!();
         println!(
             "{}",
-            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":6,"snapshotSubmissions":3,"poolExhaustionChecked":true,"unityNoopChecked":true,"snapshotRetentionChecked":true,"parameterRegressionChecked":true,"traceBoundedChecked":true})
+            json!({"event":"runtime-gain-queue-verified","hardwareVerified":false,"queued":6,"snapshotSubmissions":3,"poolExhaustionChecked":true,"unityNoopChecked":true,"snapshotRetentionChecked":true,"parameterRegressionChecked":true,"traceBoundedChecked":true,"ccmTransactionalChecked":true})
         );
     }
     #[test]

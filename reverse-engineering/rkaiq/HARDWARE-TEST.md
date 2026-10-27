@@ -1697,3 +1697,37 @@ The [0.0.34 startup audit](profile-module-audit-0.0.34.json) independently
 confirms DPCC enabled and seven remaining selected-profile gaps: CCM, LSC,
 spatial/temporal Bayer noise reduction, YNR, CNR and sharpening. The frozen
 0.0.33 audit and archive are unchanged.
+
+## Development 0.0.34: live CCM startup, capture and scan
+
+[The CCM hardware report](ccm-live-validation.json) records the exact camera
+binary hash and boot ID. Startup CCM now uses the calibrated first result;
+the runtime retains that seeded state and stages subsequent updates with its
+existing AE/AWB/DPCC/demosaic batch. Simulated driver acquisition/enqueue failures
+preserve CCM state, result and frame count; successful retry registers the
+packed snapshot. All six simulated capture scenarios pass that explicit gate.
+
+Real hardware passes 192- and 600-image captures. Their 127/399 runtime CCM
+results match full original constructor/callback execution, including 72/38
+published updates and 55/361 held results. Every 79-byte published block and
+both startup blocks match original conversion. Final AE means are about 42.9
+and 44.2, within the profile's 45 ±10% band. Both runs use both normal AWB groups;
+final exact-snapshot AWB translations match all 7,680 bytes, with DPCC/demosaic
+native comparisons still passing. Retained snapshots peak at two; the longer
+run needs no parameter-pool wait.
+
+The same binary passes installed ScanScreen/preview operation: twelve decoder
+input frames, 28 headless renders, 115 AE/AWB statistics frames and 114 accepted
+batches in 6.89 seconds. Every CCM result/update and the final AWB translation
+match native execution. Owner exit is zero, preview joins, no thread errors
+occur, socket cleanup succeeds and default streaming saves no scene image.
+Afterward CmaAllocated is zero and MemAvailable is 34,772 KiB. The finite diagnostic
+captures intentionally save images to persistent storage; a private color frame
+was inspected for obvious corruption without claiming color accuracy.
+
+This is a warm-board result on the already verified driver-only boot, not a new
+controlled-reboot or physical power-cycle result. Display/cancel boundaries are
+software substitutes and no successful optical QR is claimed. The current
+[audit](profile-module-audit-0.0.34-ccm.json) leaves six IQ blocks disabled: LSC,
+spatial/temporal Bayer noise reduction, YNR, CNR and sharpening. Frozen 0.0.33
+artifacts remain unchanged and still have CCM disabled.

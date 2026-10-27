@@ -24,6 +24,23 @@ impl State {
             reconfigure: true,
         }
     }
+    /// Startup proposal, retained by the runtime only after its initial QBUF.
+    pub fn seeded(
+        cal: &Automatic,
+        current: [f32; 3],
+    ) -> Result<(Self, [u8; RESULT_BYTES]), InvalidInput> {
+        let mut state = Self::new(cal);
+        let mut output = [0; RESULT_BYTES];
+        let mut info = Information {
+            current,
+            damping: 0.,
+            gray: false,
+            software_gray: false,
+            converged: false,
+        };
+        state.process(cal, &mut info, &mut output)?;
+        Ok((state, output))
+    }
     /// Preserve output bytes on no-update. Native writes gray/convergence back
     /// into software information; convergence reflects the pre-process state.
     /// Typed records exclude arbitrary SDK padding and unused metadata words.

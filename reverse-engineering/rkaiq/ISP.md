@@ -1041,3 +1041,51 @@ with default user adjustments. Native JSON parsing, arbitrary raw SDK ABI,
 manual/HDR/multicamera modes and live camera submission are not qualified by this
 result. CPU replay makes no ISP writes. Transactional integration and real
 capture verification are next; live CCM remains disabled until then.
+
+### Transactional live CCM (0.0.34 development)
+
+The startup builder now generates and packs its first CCM result from the
+selected calibration, requested initial gain and seeded WB ratios. Diagnostic
+WB overrides regenerate CCM too. The event owner retains that seeded state
+only on a successfully started parameter pipeline, so runtime begins after
+the startup result rather than restarting the controller's frame count.
+
+Live inputs follow the linear `RkAiqAccmHandleInt::processing` value mapping
+(ELF `0x64318`): `(analogue × sensor-digital) × ISP-digital`, R/Gr and B/Gb.
+This multiplication order differs from DPCC's recovered order. The pinned BLC
+guard requires unity optical-black pre-gain, so no extra gain factor is added.
+Native `awbProcessing` publishes the base IIR coefficient from context `0x3484`;
+`Session::ccm_damping` exposes that verified AWB state. Both gain and coefficient
+are retained under their exact statistics frame, preventing later AWB processing
+from replacing an older queued frame's CCM inputs. AE inputs use the same
+explicit effective-exposure association as gain/demosaic/DPCC, without claiming
+independent physical timing proof.
+
+CCM processing/output and all state changes are staged with the ordinary ISP
+batch. Accepted QBUF commits state, the output cache and packed snapshot; failed
+acquisition/enqueue preserves them, including frame count and pending tuning.
+The six ARM simulated startup scenarios now explicitly gate transactional CCM
+failure/retry coverage. A true no-hardware-update step can commit its internal
+state without QBUF; any CCM publication requests its module update in the batch.
+Logs record every committed step and distinguish update from held output.
+
+[Live camera evidence](ccm-live-validation.json) covers a 192-image run, a
+600-image run and the installed application scan workload. All 640 runtime CCM
+results and three startup results match full original construction/callback
+execution; all 148 runtime packed updates match original conversion. The longer
+run processed 400 AE/AWB statistics frames and accepted 399 batches, with 38 CCM
+updates and 361 held results. Snapshot retention peaks at two and no parameter
+pool waiting occurs. Both finite runs retain native DPCC/demosaic equivalence;
+final AWB translations match all 7,680 bytes. The app scan adds 114 accepted
+batches, twelve real decoder-input frames and 28 headless preview renders,
+with clean owner exit. Those counts are not successful optical decodes.
+
+Run `mise run camera:rust:ccm-live-check -- LOCAL_CAPTURE_BASE --report LOCAL.json`
+with the pinned original library/runtime and IQ prerequisites. Only hashes and
+metadata are committed; scene images, full IQ and raw vendor code remain ignored.
+The [current startup audit](profile-module-audit-0.0.34-ccm.json) independently
+confirms CCM/DPCC enabled and six remaining profile gaps: LSC, BAYNR, BAY3D, YNR,
+CNR and SHARP. The frozen 0.0.33 kit and its audit remain unchanged. Current
+CCM qualification is warm capture on the previously verified driver-only boot;
+physical register timing, calibrated color quality, successful optical QR and
+an exact new-package cold boot remain separate.

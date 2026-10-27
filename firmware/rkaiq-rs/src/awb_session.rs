@@ -275,6 +275,8 @@ impl Session {
     pub fn geometry(&self) -> &crate::awb_measurement_geometry::Geometry {
         &self.geometry
     }
+    /// Published AWB IIR coefficient (native context 0x3484).
+    pub fn ccm_damping(&self) -> f32 { self.state.gain.controller.post.coefficient }
     pub fn gain(&self) -> [f32; 4] {
         self.state.gain.controller.post.current
     }

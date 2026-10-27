@@ -239,6 +239,11 @@ fn first_frame_sc3336_with_gain(
             true,
         )
         .map_err(|e| error(format!("WB gain override: {e:?}")))?;
+        let cal=shieldsigner_rkaiq::ccm_calibration::Automatic::from_value(&iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["ccm_calib_v2"]).map_err(error)?;
+        let current=[initial["requestedGain"].as_f64().ok_or_else(||error("Missing CCM startup gain"))? as f32,g[0]/g[1],g[3]/g[2]];
+        let (_,result)=shieldsigner_rkaiq::ccm_frame::State::seeded(&cal,current).map_err(|e|error(format!("CCM override startup: {e:?}")))?;
+        shieldsigner_rkaiq::isp_ccm::apply(&mut parameters,&result).map_err(|e|error(format!("CCM override packing: {e:?}")))?;
+        initial["ccmStartup"]=json!({"current":current,"result":result.iter().map(|v|format!("{v:02x}")).collect::<String>()});
         initial["diagnosticWhiteBalanceOverride"] = json!(g);
         initial["automaticWhiteBalance"] = json!(false);
     }
@@ -405,6 +410,10 @@ fn first_frame_sc3336_with_gain(
                 state: shieldsigner_rkaiq::dpcc_runtime::State::default(),
                 result: [0; shieldsigner_rkaiq::isp_dpcc::RESULT_BYTES],
             });
+            let ccm_calibration=shieldsigner_rkaiq::ccm_calibration::Automatic::from_value(&iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["ccm_calib_v2"]).map_err(error)?;
+            let ccm_wb=gain_override.unwrap_or(core::array::from_fn(|i|initial["whiteBalanceSeed"][i].as_f64().unwrap() as f32));
+            let (ccm_state,ccm_result)=shieldsigner_rkaiq::ccm_frame::State::seeded(&ccm_calibration,[gain,ccm_wb[0]/ccm_wb[1],ccm_wb[3]/ccm_wb[2]]).map_err(|e|error(format!("CCM owner startup: {e:?}")))?;
+            owner.ccm=Some(CameraCcm{calibration:ccm_calibration,state:ccm_state,result:ccm_result,seed:shieldsigner_rkaiq::isp32::WhiteBalanceGain{red:ccm_wb[0],green_red:ccm_wb[1],green_blue:ccm_wb[2],blue:ccm_wb[3],position:shieldsigner_rkaiq::isp32::ApplyPosition::Gain1}});
             if live_awb {
                 owner.awb = Some(CameraAwb {
                     session: shieldsigner_rkaiq::awb_session::Session::new(

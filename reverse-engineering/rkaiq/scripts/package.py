@@ -44,7 +44,7 @@ for name in ['cold-camera-modules.sh','prepare-cold-boot.py','verify-cold-boot.p
  copy(ROOT/'reverse-engineering/rkaiq/scripts'/name,'tools/'+name)
 for name in ['awb-live-hardware-validation.json','managed-camera-hardware-validation.json','clean-reboot-camera-hardware-validation.json','rgb-colorimetry-hardware-validation.json','application-integration-hardware-validation.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
-for name in ['awb-scene-sequence-validation.json','exposure-step-latency-validation.json','gain-step-latency-validation.json','live-ae-write-timing-validation.json','camera-restart-hardware-validation.json','scan-loop-hardware-validation.json','ae-startup-convergence-validation.json']:
+for name in ['awb-scene-sequence-validation.json','exposure-step-latency-validation.json','gain-step-latency-validation.json','live-ae-write-timing-validation.json','camera-restart-hardware-validation.json','scan-loop-hardware-validation.json','ae-startup-convergence-validation.json','demosaic-frame-equivalence.json','demosaic-live-validation.json','stream-image-artifact-validation.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'research/'+name)
 application=json.loads((ROOT/'reverse-engineering/rkaiq/application-integration-hardware-validation.json').read_text())
 assert application['passed'] and application['cameraBinarySha256']==smoke['binaries']['camera-probe']

@@ -761,6 +761,13 @@ mod first_frame_driver {
             .submit_gain(&mut backend, &mut queue, 2, Some(wb))
             .unwrap()
             .unwrap();
+        owner.demosaic = Some((
+            shieldsigner_rkaiq::demosaic_selection::Calibration::from_value(
+                &iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["debayer_v2"]["param"]
+            ).unwrap(),
+            shieldsigner_rkaiq::demosaic_runtime::State { iso: 0, reconfigure: true, hardware: [0; 112] },
+        ));
+        let demosaic_before = owner.demosaic.as_ref().unwrap().1;
         let snapshots = owner.parameters.clone();
         DRIVER
             .lock()
@@ -772,15 +779,27 @@ mod first_frame_driver {
             .submit_gain(&mut backend, &mut queue, 3, Some(wb))
             .is_err());
         assert_eq!(owner.parameters, snapshots);
+        let demosaic_after = owner.demosaic.as_ref().unwrap().1;
+        assert_eq!(demosaic_after.iso, demosaic_before.iso);
+        assert_eq!(demosaic_after.reconfigure, demosaic_before.reconfigure);
+        assert_eq!(demosaic_after.hardware, demosaic_before.hardware);
         assert!(owner
             .submit_gain(&mut backend, &mut queue, 2, Some(wb))
             .is_err());
         assert_eq!(owner.parameters, snapshots);
+        let demosaic_after = owner.demosaic.as_ref().unwrap().1;
+        assert_eq!(demosaic_after.iso, demosaic_before.iso);
+        assert_eq!(demosaic_after.reconfigure, demosaic_before.reconfigure);
+        assert_eq!(demosaic_after.hardware, demosaic_before.hardware);
         owner
             .submit_gain(&mut backend, &mut queue, 3, Some(wb))
             .unwrap()
             .unwrap();
         assert_eq!(owner.parameters.len(), 3);
+        assert!(!owner.demosaic.as_ref().unwrap().1.reconfigure);
+        assert!(owner.demosaic.as_ref().unwrap().1.iso >= 50);
+        assert_eq!(owner.demosaic.as_ref().unwrap().1.hardware[0], 0);
+
         assert_eq!(
             owner
                 .parameters

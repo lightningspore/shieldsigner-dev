@@ -1,0 +1,137 @@
+{
+  "passed": true,
+  "submittedUpdates": 15,
+  "isoRange": [
+    50,
+    164
+  ],
+  "frames": [
+    1,
+    6,
+    7,
+    9,
+    10,
+    12,
+    13,
+    15,
+    16,
+    18,
+    19,
+    21,
+    22,
+    24,
+    25
+  ],
+  "isos": [
+    50,
+    66,
+    90,
+    104,
+    112,
+    125,
+    133,
+    141,
+    146,
+    151,
+    155,
+    159,
+    161,
+    163,
+    164
+  ],
+  "processedStatistics": 128,
+  "parameterSubmissions": 127,
+  "maxParameterSnapshots": 2,
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "ownerLogSha256": "76737713a843c1040982c18dca15637f61bdfc041267cb5c1d2c3247468f79ed",
+  "hardwareBytesComparedPerUpdate": 112,
+  "packedBytesComparedPerUpdate": 57,
+  "limitations": [
+    "Records are logged after successful QBUF; queued final proposals may be cancelled during shutdown.",
+    "Scheduler exposure association is not independent physical gain-timing proof.",
+    "Diagnostic logging is modeled; original callback, tuning, quantization and converter instructions execute."
+  ],
+  "brightStart": {
+    "passed": true,
+    "submittedUpdates": 12,
+    "isoRange": [
+      184,
+      304
+    ],
+    "frames": [
+      1,
+      4,
+      6,
+      7,
+      9,
+      10,
+      12,
+      13,
+      15,
+      16,
+      18,
+      19
+    ],
+    "isos": [
+      200,
+      203,
+      304,
+      277,
+      253,
+      235,
+      212,
+      202,
+      193,
+      189,
+      185,
+      184
+    ],
+    "processedStatistics": 128,
+    "parameterSubmissions": 127,
+    "maxParameterSnapshots": 2,
+    "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "ownerLogSha256": "ddd00b3c4e37efdfd39bae5faa83828d0ab86e2b9a13dbaa215818c46f0ba7bc",
+    "hardwareBytesComparedPerUpdate": 112,
+    "packedBytesComparedPerUpdate": 57,
+    "limitations": [
+      "Records are logged after successful QBUF; queued final proposals may be cancelled during shutdown.",
+      "Scheduler exposure association is not independent physical gain-timing proof.",
+      "Diagnostic logging is modeled; original callback, tuning, quantization and converter instructions execute."
+    ]
+  },
+  "nativeAwbTranslation": {
+    "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "statisticsSha256": "06d1b289c000edcfe379d344a2ea124be3355aa9ceea4f688fad964acc3dac9a",
+    "snapshotSha256": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "translatedSha256": "ae1f91382ab2980647bb8f57b595d94f7253707309c1e6c7bbbc440a166a5df0",
+    "frameId": 190,
+    "parametersId": 189,
+    "bytesCompared": 7680,
+    "mismatches": 0,
+    "scope": "Real captured ISP32 statistics plus exact supplied SDK snapshot, full original single-ISP translation",
+    "limitations": [
+      "Object access and single-ISP routing are controlled oracle boundaries; actual translation instructions execute.",
+      "Does not qualify automatic white balance, physical exposure timing or vendor-free cold startup."
+    ]
+  },
+  "cameraBinarySha256": "51f3de4cf91d8c47dc92717aab42f0ef9b59c7a3f3dfde47bd06c731bcd226a9",
+  "dimStartBrightness": {
+    "finalSixteenMean": 42.86279296875,
+    "range": [
+      42.84765625,
+      42.8828125
+    ],
+    "target": 45,
+    "tolerancePercent": 10
+  },
+  "brightStartBrightness": {
+    "finalSixteenMean": 46.59033203125,
+    "range": [
+      46.5703125,
+      46.61328125
+    ],
+    "target": 45,
+    "tolerancePercent": 10
+  },
+  "enqueueFailureTest": "ARM simulated pool exhaustion preserves ISO, reconfigure flag, all hardware-cache bytes and snapshots; retry commits once."
+}

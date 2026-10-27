@@ -51,12 +51,7 @@ impl Runtime {
         unscaled_wb: &mut [u8; isp32::AWB_GAIN_BYTES],
         white_balance: Option<isp32::WhiteBalanceGain>,
     ) -> Result<IspGainOutput, String> {
-        let effective = self.sensor.effective().collect::<Vec<_>>();
-        let frames = effective.iter().map(|e| e.frame).collect::<Vec<_>>();
-        let selected = exposure_association::effective_index(&frames, frame)
-            .map_err(|e| format!("ISP exposure lookup: {e:?}"))?
-            .ok_or("No effective exposure for ISP gain")?;
-        let entry = &effective[selected.index];
+        let (entry, exact) = self.effective_exposure(frame)?;
         let gain = f32::from_le_bytes(entry.exposure[12..16].try_into().unwrap());
         isp32::apply_gain_results(
             parameters,
@@ -67,8 +62,21 @@ impl Runtime {
         .map_err(|e| format!("ISP gain conversion: {e:?}"))?;
         Ok(IspGainOutput {
             exposure_frame: entry.frame,
-            exact_exposure: selected.exact,
+            exact_exposure: exact,
         })
+    }
+    /// Scheduler-associated linear record for an ISP processing frame. This is
+    /// the reported exposure map, not verified physical sensor application.
+    pub fn effective_exposure(&self, frame: u32)
+        -> Result<(crate::sensor_scheduler::Entry<Record>, bool), String>
+    {
+        let effective = self.sensor.effective().collect::<Vec<_>>();
+        let frames = effective.iter().map(|e| e.frame).collect::<Vec<_>>();
+        let selected = exposure_association::effective_index(&frames, frame)
+            .map_err(|e| format!("ISP exposure lookup: {e:?}"))?
+            .ok_or("No effective exposure for ISP gain")?;
+        let entry = effective[selected.index];
+        Ok((entry, selected.exact))
     }
     pub fn on_sof<B: sensor::Backend>(
         &mut self,

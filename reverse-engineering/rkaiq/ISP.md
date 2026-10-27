@@ -286,3 +286,43 @@ this automatic-color API. Live queues still retain startup demosaic tuning;
 connecting this verified frame gate to the associated exposure and atomic
 parameter enqueue is the next implementation step. This is a component
 checkpoint, not a claim that live ISO-dependent ISP tuning is finished.
+
+### Live ISO-dependent demosaic batches (0.0.33 development)
+
+The automatic SC3336 owner now connects the verified frame gate to actual ISP
+parameter submission. `Runtime::effective_exposure` is shared by gain conversion
+and demosaic tuning, selecting the scheduler-associated record for the processing
+frame; the latest proposed AE exposure is not substituted. The three real gains
+feed the recovered demosaic callback's unclamped ISO calculation.
+
+Each proposal stages its own state/cache and merges the packed demosaic block
+with WB/exposure gain and optional AWB measurement changes in one runtime
+parameter batch. The owner marks its frame ID, successfully enqueues it, then
+commits the tuning state and retained effective snapshot. Pool exhaustion or
+QBUF failure preserves the old ISO, reconfiguration flag and all hardware-cache
+bytes. An ARM simulated queue-exhaustion/retry case verifies that invariant.
+Both AE-only and AE/AWB automatic factories enable this integration; fixed
+first-frame capture remains an explicit calibrated startup checkpoint.
+
+[Live evidence](demosaic-live-validation.json) covers two actual 192-image runs,
+starting dim (3 ms/1×) and bright (24 ms/4×). Each processes 128 AE/AWB
+statistics frames, submits 127 parameter batches and retains at most two
+snapshots. The dim run submits 15 demosaic updates across ISO 50–164; the
+bright run submits 12 across ISO 184–304, including both increasing and
+decreasing transitions. All 27 returned 112-byte hardware records and 57-byte
+packed ISP blocks match the original full callback and converter instructions.
+The three demosaic mask bits are checked independently in the native converter.
+
+Final sixteen-sample brightness means are 42.863 and 46.590, both inside the
+calibrated target-45 ±10% band. The dim run's final exact-snapshot AWB translation
+still matches all 7,680 native bytes. All 85 library/five Unix tests, the
+no-default-features build, ARM build and six simulated full capture scenarios
+pass, including the new failed-enqueue/retry check.
+
+Run `scripts/demosaic-live-check.py LOCAL-OWNER.log --report LOCAL.json` through
+uv with pyelftools/unicorn to repeat the original-ARM comparison. Records are
+logged only after successful QBUF; driver completion is ownership evidence, and
+shutdown may cancel final queued proposals. This does not prove that every
+proposal appeared in pixels, settle the observed physical gain-delay exception,
+or qualify optical QR/color accuracy, optional modes or full native service
+equivalence. Frozen 0.0.32-dev remains unchanged.

@@ -36,7 +36,9 @@ physical QR scanning, physical lighting/color response, complete LCD/button
 interaction and power-cycle qualification. Preserve the single-camera critical
 path before adding optional HDR/multi-camera/tuning modes.
 
-Development 0.0.33-dev omits the final scene-image dump during normal app
+Development 0.0.33-dev connects recovered ISO-dependent demosaic frame tuning
+to live, atomic ISP batches; [two hardware runs and original comparisons](demosaic-live-validation.json) pass.
+It also omits the final scene-image dump during normal app
 streaming; explicit diagnostic image saving remains available.
 [Hardware behavior and scope](stream-image-artifact-validation.json).
 

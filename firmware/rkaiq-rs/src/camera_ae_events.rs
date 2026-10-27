@@ -237,6 +237,7 @@ struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
     pending: std::collections::VecDeque<Vec<u8>>,
     processed: u64,
     awb: Option<CameraAwb>,
+    demosaic: Option<(shieldsigner_rkaiq::demosaic_selection::Calibration, shieldsigner_rkaiq::demosaic_runtime::State)>,
 }
 impl<B: shieldsigner_rkaiq::sensor::Backend> CameraAeOwner<B>
 where
@@ -262,6 +263,7 @@ where
             pending: std::collections::VecDeque::new(),
             processed: 0,
             awb: None,
+            demosaic: None,
         }
     }
     fn prune_histories(&mut self) {
@@ -333,6 +335,17 @@ where
         self.runtime
             .apply_isp_gain_results(frame, &mut planned, &mut planned_cache, white_balance)
             .map_err(error)?;
+        let demosaic_staged = if let Some((calibration, state)) = &self.demosaic {
+            let (exposure, exact) = self.runtime.effective_exposure(frame).map_err(error)?;
+            let gains = core::array::from_fn(|i| f32::from_le_bytes(exposure.exposure[4+i*4..8+i*4].try_into().unwrap()));
+            let mut next = *state;
+            let hardware = next.process(calibration, Some(gains))
+                .map_err(|e| error(format!("Live demosaic processing: {e:?}")))?;
+            if let Some(hardware) = &hardware {
+                shieldsigner_rkaiq::isp_demosaic::apply(&mut planned, hardware);
+            }
+            Some((next, hardware, exposure.frame, exact, gains))
+        } else { None };
         let measurement = self.awb.as_ref().and_then(|awb| awb.measurement_for(frame));
         if let Some(record) = measurement {
             shieldsigner_rkaiq::isp_awb_measurement::Measurement(record).apply(&mut planned, true);
@@ -346,7 +359,7 @@ where
         if self.parameters.len() == 128 || self.parameters.last().is_some_and(|p| p.0 >= frame) {
             return Err(error("Gain batch requires a new increasing parameter ID"));
         }
-        let index = if self.awb.is_some() {
+        let index = if self.awb.is_some() || self.demosaic.is_some() {
             mark_runtime_parameter_frame(&mut planned, frame);
             let index = backend.enqueue_payload(queue, &planned)?;
             cache = planned_cache;
@@ -372,6 +385,17 @@ where
             let record = measurement.unwrap_or(awb.sdk);
             shieldsigner_rkaiq::isp_awb_measurement::Measurement(record).apply(&mut snapshot, true);
             awb.register(frame, record);
+        }
+        if let Some((next, hardware, exposure_frame, exact, gains)) = demosaic_staged {
+            // Commit only after successful QBUF; failed enqueue retains the old
+            // ISO/update state so the next attempt cannot lose its tuning update.
+            self.demosaic.as_mut().unwrap().1 = next;
+            if let Some(hardware) = hardware {
+                use shieldsigner_rkaiq::isp_demosaic::{OFFSET, BYTES};
+                snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);
+                let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
+                println!("{}",json!({"event":"automatic-demosaic-submitted","frame":frame,"iso":next.iso,"gains":gains,"exposureFrame":exposure_frame,"exactExposureLookup":exact,"hardware":hex(&hardware),"packed":hex(&planned[OFFSET..OFFSET+BYTES]),"physicalApplicationVerified":false}));
+            }
         }
         self.parameters.push((frame, snapshot));
         self.parameter_submissions += 1;

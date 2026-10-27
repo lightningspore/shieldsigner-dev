@@ -388,6 +388,16 @@ fn first_frame_sc3336_with_gain(
             };
             let (sender, events) = std::sync::mpsc::sync_channel(64);
             let mut owner = CameraAeOwner::new(runtime, sensor, 0, parameters);
+            owner.demosaic = Some((
+                shieldsigner_rkaiq::demosaic_selection::Calibration::from_value(
+                    &iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["debayer_v2"]["param"]
+                ).map_err(error)?,
+                shieldsigner_rkaiq::demosaic_runtime::State {
+                    iso: initial["iso"].as_i64().ok_or_else(|| error("Missing startup ISO"))? as i32,
+                    reconfigure: true,
+                    hardware: [0; shieldsigner_rkaiq::isp_demosaic::HARDWARE_BYTES],
+                },
+            ));
             if live_awb {
                 owner.awb = Some(CameraAwb {
                     session: shieldsigner_rkaiq::awb_session::Session::new(

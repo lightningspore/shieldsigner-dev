@@ -2196,3 +2196,47 @@ continuous application camera service remain unqualified. This is a functioning
 live diagnostic iteration, not the completed replacement library. The 85
 library tests, no-default-features build, ARM build and existing simulated
 first-frame/AE queue checks pass.
+
+
+### Same-frame AE brightness binding (2026-10-27)
+
+The live owner now supplies AWB's exposure-luma input from
+`runtime.session.preprocessing.normalized_brightness` after processing the same
+statistics frame through AE. It rejects a mismatched AE pre-result frame before
+AWB processing. The offline replay still deliberately supports the missing-AE
+fallback; the live path no longer uses that fallback.
+
+The original binding is corroborated end to end:
+
+- `AecGetPreResults` (ELF 0xb1cb8) copies context `+0x251c` into result word 12.
+  This is the normalized-brightness field already compared with Rust's standard
+  AE preprocessing in the full native AE session tests.
+- `AePreProcess` passes its output `+4` to `AecGetPreResults`, placing that word
+  at output byte offset `0x34`.
+- `awbProcessing` (ELF 0x10f848) obtains the AE pre-result through its proxy and
+  binds AWB context `+0x4c` to the returned result `+0x34`.
+- `AwbPreProcV32` reads source element zero for this linear profile and multiplies
+  by 1000, as the existing Rust numerical implementation does. The unused HDR
+  element is not synthesized from a second image measurement.
+
+The native AE session harness now additionally verifies output `+0x34` against
+context `+0x251c` after each actual `AecGetPreResults` call. All 128 frames across
+8 complete native AE sessions pass, along with the existing host/ARM Rust state
+comparisons (zero differences). The wrapper's proxy/pointer mapping is static
+Ghidra evidence, rather than a claim of full native AWB wrapper execution.
+
+Physical live capture 03 passed with 22 AE/AWB updates. AWB brightness changed
+from about 423.893 to 741.447 while AE adjusted exposure, instead of staying at
+fallback 2048. Final gain was approximately `[1.429826, 1, 1, 1.903011]`.
+The image remains readable. Its final frame 31 / parameter ID 30 translation
+again matches all 7,680 bytes of the original routine. The same command and
+runtime inputs as live captures 01/02 apply, with output basename
+`/tmp/ss-20261027-live-awb-03`. Per-run executable hashes and source conditions
+are recorded in `awb-live-hardware-validation.json`; earlier fallback runs
+retain their original evidence rather than being relabeled.
+
+ISO is still an explicit input, sample-scale provenance remains unresolved, and
+measurement configuration remains fixed FAST startup. Binding those runtime
+inputs and native measurement reconfiguration remains required; this change
+does not establish complete startup/controller equivalence or cold-boot
+independence. The 85 library tests and simulated capture/queue scenarios pass.

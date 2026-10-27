@@ -21,6 +21,8 @@
   },
   "sequences": 8,
   "frames": 128,
+  "awbPreResultBrightnessOffset": 52,
+  "awbPreResultBrightnessChecks": 128,
   "nativeMath": [
     "ceilf",
     "floorf",
@@ -35,7 +37,7 @@
   "limitations": [
     "Fixed-rate ordinary auto SC3336 profile; backlight/overexposure/lux/automatic-flicker/HDR/iris/DCG modes remain excluded from the Rust session.",
     "Allocation, module lookup, memory primitives, integer division and logs are modeled; native pinned uClibc math executes.",
-    "Only listed preprocessing/controller/publication/sample state, full exposure-info record, publication records, control history and route times are compared; unlisted context and other ISP/pre-result structures excluded.",
+    "Only listed preprocessing/controller/publication/sample state, full exposure-info record, publication records, control history and route times are compared; AE pre-result normalized brightness at offset 0x34 is additionally checked against its source; other unlisted context and ISP/pre-result structures excluded.",
     "Effective exposure for each frame is the previous native proposal, replayed as an explicit common input; this is not physical application latency or hardware association. No sensor/ISP writes."
   ]
 }

@@ -33,11 +33,17 @@ impl CameraAwb {
         &mut self,
         bytes: &[u8],
         parameters: &[(u32, [u8; shieldsigner_rkaiq::isp32::PARAMETER_BYTES])],
+        ae_pre: &shieldsigner_rkaiq::ae_preprocess::Standard,
     ) -> io::Result<()> {
         use shieldsigner_rkaiq::{
             awb_preparation::FRAME_BYTES, awb_translation::*, isp32, statistics::Statistics,
         };
         let stats = Statistics::parse(bytes).map_err(|_| error("Invalid live AWB statistics"))?;
+        if ae_pre.frame < 0 || ae_pre.frame as u32 != stats.frame_id() {
+            return Err(error(
+                "AE pre-result does not match the AWB statistics frame",
+            ));
+        }
         // Every successful gain-only submission preserves the SDK measurement
         // record. Register that unchanged record under its actual submitted ID.
         let snapshots: Vec<_> = parameters
@@ -64,7 +70,7 @@ impl CameraAwb {
                     &frame,
                     &shieldsigner_rkaiq::awb_session::Input {
                         requested_update: self.processed == 0,
-                        exposure_luma: None,
+                        exposure_luma: Some([ae_pre.normalized_brightness, 0.]),
                         iso: self.iso,
                         site_reference: None,
                     },
@@ -74,7 +80,7 @@ impl CameraAwb {
             self.last = Some((stats.frame_id(), stats.parameters_id(), frame.to_vec()));
             println!(
                 "{}",
-                json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"exposureMetadata":"calibrated-missing-metadata-fallback","measurementConfiguration":"fixed-FAST-startup"})
+                json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"exposureMetadata":"same-frame-AE-normalized-brightness","aeNormalizedBrightness":ae_pre.normalized_brightness,"brightness":result.numeric.luma,"measurementConfiguration":"fixed-FAST-startup"})
             );
         }
         let g = self.session.gain();
@@ -113,7 +119,7 @@ impl CameraAwb {
             .create_new(true)
             .open(format!("{base}.awb-translated.bin"))?;
         file.write_all(bytes)?;
-        let report = json!({"event":"automatic-awb-finished","processedStatistics":self.processed,"frameId":frame,"parametersId":id,"association":"exact-registered-gain-only-snapshot","gain":self.session.gain(),"automaticWhiteBalance":true,"measurementConfiguration":"fixed-FAST-startup","exposureMetadata":"calibrated-missing-metadata-fallback","isoInput":self.iso,"coldStartProven":false});
+        let report = json!({"event":"automatic-awb-finished","processedStatistics":self.processed,"frameId":frame,"parametersId":id,"association":"exact-registered-gain-only-snapshot","gain":self.session.gain(),"automaticWhiteBalance":true,"measurementConfiguration":"fixed-FAST-startup","exposureMetadata":"same-frame-AE-normalized-brightness","isoInput":self.iso,"coldStartProven":false});
         let mut sidecar = OpenOptions::new()
             .write(true)
             .create_new(true)
@@ -291,7 +297,11 @@ where
                 .map_err(error)?
             {
                 if let Some(awb) = self.awb.as_mut() {
-                    awb.step(&bytes, &self.parameters)?;
+                    awb.step(
+                        &bytes,
+                        &self.parameters,
+                        &self.runtime.session.preprocessing,
+                    )?;
                 }
                 self.processed += 1;
                 // Report the owner's snapshot-associated metric, rather than

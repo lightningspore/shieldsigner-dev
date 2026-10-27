@@ -1,0 +1,29 @@
+{
+  "binarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "cases": 1024,
+  "mismatches": 0,
+  "arm": true,
+  "coverage": {
+    "updateFalse:completeFalse:scaleTrue": 128,
+    "updateTrue:completeFalse:scaleTrue": 128,
+    "updateFalse:completeTrue:scaleTrue": 128,
+    "updateTrue:completeTrue:scaleTrue": 128,
+    "updateFalse:completeFalse:scaleFalse": 128,
+    "updateTrue:completeFalse:scaleFalse": 128,
+    "updateFalse:completeTrue:scaleFalse": 128,
+    "updateTrue:completeTrue:scaleFalse": 128
+  },
+  "elfStart": "0xc4ae0",
+  "initialRegisters": {
+    "r4": "context",
+    "r5": "0x334a update offset",
+    "r8": "disabled logging context"
+  },
+  "scope": "Original standard preprocessor post-preparation dispatch: countdown, calculate/reconfigure decisions, red/blue scaling and frame increment.",
+  "limitations": [
+    "Native execution starts at post-PrepareMeasureResult instruction; preceding preprocessing is covered separately.",
+    "Gain wrapper is adapted to an explicit computed result; its original-body suite is separate.",
+    "Stops at hardware reconfiguration entry or common epilogue; no hardware configuration/publication is tested.",
+    "Finite synthetic gains/scales; scaling overflow is checked by Rust and excluded from equivalence."
+  ]
+}

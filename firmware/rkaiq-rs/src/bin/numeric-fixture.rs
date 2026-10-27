@@ -15,6 +15,8 @@ mod awb_gain_adjust_fixture;
 mod awb_gain_controller_fixture;
 #[path = "../awb_site_fixture.rs"]
 mod awb_site_fixture;
+#[path = "../awb_dispatch_fixture.rs"]
+mod awb_dispatch_fixture;
 #[path = "../awb_low_single_color_fixture.rs"]
 mod awb_low_single_color_fixture;
 #[path = "../awb_postprocess_fixture.rs"]
@@ -139,6 +141,7 @@ fn main() {
                 "{}",
                 awb_translation_fixture::run(&serde_json::from_str(a[1]).unwrap())
             ),
+            "awb-dispatch" => println!("{}", awb_dispatch_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-site" => println!("{}", awb_site_fixture::run(&serde_json::from_str(a[1]).unwrap())),
             "awb-gain-controller" => println!(
                 "{}",

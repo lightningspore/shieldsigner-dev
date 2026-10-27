@@ -1175,3 +1175,42 @@ Remaining work includes full IQ/state initialization, preprocessor-to-wrapper
 composition, outer processing/publication lifecycle, saved-reference persistence,
 resolution of AUTO/ALWAYS Exclusion, and live automatic-WB qualification. This
 wrapper is a joined stage, not a complete vendor-free camera claim.
+
+## Post-preparation frame dispatch
+
+`awb_dispatch::State::process` reconstructs the standard `AwbPreProcV32`
+continuation beginning at ELF `0xc4ae0`, immediately after
+`PrepareMeasureResult`. If update is false, it returns without gain calculation,
+countdown change, frame increment or reconfiguration. A pending update decrements
+only a positive signed countdown and always requests hardware reconfiguration.
+With incomplete measurements, it leaves gain and frame counter unchanged.
+With complete measurements, it calls the gain-wrapper callback, optionally
+multiplies red and blue by their per-channel scale factors, then increments the
+u32 frame counter with wrapping arithmetic. Green channels are unchanged.
+
+The wrapper has already copied its unscaled output to previous gain before this
+scaling. Dispatch does not overwrite that previous gain or recompute the
+wrapper's CCT/other diagnostics. This ordering matters for the next frame's
+damping. The dispatcher returns an explicit calculate/reconfigure action; the
+actual hardware-configuration stage is not yet joined here.
+
+`mise run camera:rust:awb-dispatch` compares **1,024 cases** on host and ARM:
+all update/completeness/scaling combinations, negative/zero/positive and extreme
+signed countdowns, frame wraparound, and zero/negative/unit/asymmetric scales.
+It checks exact current/previous gain words, countdown/frame state, action flags
+and unrelated context/configuration preservation. The oracle executes the
+original continuation instructions with R4=context, R5=update offset `0x334a`
+and a disabled logging context in R8. Gain calculation is an explicit callback
+adapter supplying current and previous results; its full original-body numerical
+comparison is the separate wrapper suite. Execution stops at hardware
+reconfiguration entry or the common preprocessor epilogue. This evidence does
+not claim a full native preprocessor-to-gain-wrapper comparison.
+[Dispatch report](awb-dispatch-equivalence.json).
+
+Rust rejects nonfinite scale inputs before invoking the gain callback. It stages
+its countdown/frame and gain outputs on checked failures; callback-owned state
+must also be staged by a joined session, since a finite scale can overflow only
+after the callback produces gain. A regression verifies invalid input cannot
+invoke the callback or change dispatch state. Complete IQ initialization,
+shared session construction, hardware reconfiguration/publication and live AWB
+qualification remain outstanding.

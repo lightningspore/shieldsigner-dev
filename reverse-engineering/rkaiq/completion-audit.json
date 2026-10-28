@@ -1,0 +1,76 @@
+{
+  "kind": "camera-replacement-completion-audit",
+  "goalComplete": false,
+  "frozenKit": "0.0.36-dev",
+  "development": "0.0.37-dev",
+  "items": [
+    {
+      "requirement": "Normal SC3336 full ISP group operates without RKAIQ userspace",
+      "status": "verified-with-stated-scope",
+      "evidence": "combined-isp-0.0.36-hardware-validation.json",
+      "sha256": "e788dab6cb7148df75b9875c5fd88bde56a0cf910f60f5331d55cd1faa965d8c",
+      "scope": "All nine module comparisons plus final AWB translation on actual application run109."
+    },
+    {
+      "requirement": "Ordered live AWB matches original native calculation and next measurement records",
+      "status": "verified-with-stated-scope",
+      "evidence": "awb-ordered-trace-hardware-validation.json",
+      "sha256": "b5b54590849d21e0de8c6944a31fb406f6a00396519f9b353b2ebfb1437a683a",
+      "scope": "32 actual processed inputs; gains also match live owner logs. Native context/calibration construction remains adapted."
+    },
+    {
+      "requirement": "Frozen kit starts after vendor camera startup is skipped",
+      "status": "verified-with-stated-scope",
+      "evidence": "kit-0.0.36-dev-cold-reboot-validation.json",
+      "sha256": "160a6cb2582b130a11800f1d5a2c29ca68dcd48b0b5a67c570863ac48acc7f80",
+      "scope": "Exact0.0.36 archive after controlled software reboot,74 real frames,clean shutdown; not physical power cycle."
+    },
+    {
+      "requirement": "Distributed archive contents match installed hardware files",
+      "status": "verified-with-stated-scope",
+      "evidence": "kit-0.0.36-dev-installation-verification.json",
+      "sha256": "9881cae9a58b18c3e8892290e79f65cdc898169d1a9c1fe30cde8b7acd6d8238",
+      "scope": "542 files verified locally and on Luckfox, executable mode checked."
+    },
+    {
+      "requirement": "Desktop preview improvement preserves default application RGB protocol",
+      "status": "verified-with-stated-scope",
+      "evidence": "nv12-preview-hardware-validation.json",
+      "sha256": "5411ccebeae73aa2c763e4ee96a35fdfdb705f2ca222ad8d3029e274131a9107",
+      "scope": "Optional0.0.37 NV12 preview about10.6FPS; defaultRGB application passed73 received frames."
+    },
+    {
+      "requirement": "Successful known-public optical QR through physical camera and installed decoder",
+      "status": "unverified",
+      "needed": "Position the supplied public test QR in the camera view; run existing optical_camera_check.py. Pending user target-position question has no answer."
+    },
+    {
+      "requirement": "Physical lighting/color changes and broader image quality",
+      "status": "unverified",
+      "needed": "Controlled physical scene/lighting changes and observed image response; numerical or cyclic replay cannot substitute."
+    },
+    {
+      "requirement": "Physical LCD/buttons and complete application interaction",
+      "status": "unverified",
+      "needed": "Confirm hardware wiring and observe display/button behavior; SPI/input device nodes alone are insufficient."
+    },
+    {
+      "requirement": "Physical power cycle and permanent startup choice",
+      "status": "unverified",
+      "needed": "A physical power cycle and explicit deployment choice; controlled reboot and opt-in launch already work."
+    },
+    {
+      "requirement": "Complete joined-native AWB equivalence beyond adapted context construction",
+      "status": "partial",
+      "evidence": "awb-ordered-trace-hardware-validation.json",
+      "scope": "Runtime preparation/gain/reconfiguration compared on actual ordered inputs. Whole native calibration/context initialization and arbitrary variable policy are not established."
+    }
+  ],
+  "hardwareObservation": {
+    "spiDevice": "/dev/spidev0.0",
+    "inputDevice": "adc-keys /dev/input/event0",
+    "framebufferObserved": false,
+    "physicalWiringVerified": false
+  },
+  "nextPracticalTest": "Known public optical QR; the target must actually be in view."
+}

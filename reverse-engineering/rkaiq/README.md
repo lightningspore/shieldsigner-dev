@@ -5,6 +5,8 @@ exposure/white balance and opt-in SeedSigner integration.** It uses Linux's
 existing open kernel camera drivers and does not link or call RKAIQ. It is not
 a drop-in `librkaiq.so`, and installed application/boot files are unchanged by
 the launcher. Complete qualification of the requested replacement remains open.
+[Current completion audit](completion-audit.json) separates exact build evidence
+from the physical checks and remaining reference boundaries.
 
 ## Current deliverable and work rules
 

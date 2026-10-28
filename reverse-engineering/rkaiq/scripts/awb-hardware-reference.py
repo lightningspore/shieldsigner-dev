@@ -78,7 +78,14 @@ class Reference(OriginalAwb):
         return self.put(struct.pack("<" + "f" * len(values), *values))
 
     def seed(
-        self, wb, record, *, capacity=4, minimum_count=None, previous_weights=None
+        self,
+        wb,
+        record,
+        *,
+        capacity=4,
+        minimum_count=None,
+        previous_weights=None,
+        strategy_signature=None,
     ):
         """Preserve post-gain context; assemble hardware fields from actual IQ.
 
@@ -88,6 +95,10 @@ class Reference(OriginalAwb):
         previous_weights optionally supplies all nine unrounded native cache
         floats; omission models freshly zeroed hardware calibration, not a
         reconstructed historical cache inferred from rounded SDK bytes.
+        strategy_signature optionally supplies the exact 64-byte initial cohort
+        name at strategy+0x440; omission preserves the copied strategy name.
+        This is input state, distinct from the timeString adapter used only
+        when native update predicates request a new signature.
         Normal non-reserved time-share scheduling is initialized by native ARM.
         """
         assert len(record) == 1204 and 1 <= capacity <= 4
@@ -208,6 +219,9 @@ class Reference(OriginalAwb):
             self.uc.mem_write(
                 strategy_pointer + 0x49C, struct.pack("<f", minimum_count)
             )
+        if strategy_signature is not None:
+            assert len(strategy_signature) == 64 and b"\0" in strategy_signature
+            self.uc.mem_write(strategy_pointer + 0x440, strategy_signature)
         self.timestamp = self.put(self.signature)
         self.strategy = strategy_pointer
 

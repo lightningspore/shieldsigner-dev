@@ -48,6 +48,8 @@ class NativeJson(OriginalAwb):
         self.free_blocks = []
         self.allocate_context = False
         self.strtod_calls = 0
+        self.module_lookups = 0
+        self.creating_single = False
         self.adapters = {}
 
     def syscall(self, uc, interrupt, user):
@@ -103,6 +105,14 @@ class NativeJson(OriginalAwb):
         raise AssertionError("Unterminated native string")
 
     def hook(self, uc, address, size, user):
+        if self.creating_single and address == 0xCD598:
+            # Exact single-AWB constprop.2 module lookup. The caller's opaque
+            # calibration handle resolves to the real native J2S WB graph.
+            assert uc.reg_read(regs.UC_ARM_REG_R0) == HEAP + 0x7310
+            self.module_lookups += 1
+            uc.reg_write(regs.UC_ARM_REG_R0, self.wb)
+            uc.reg_write(regs.UC_ARM_REG_PC, uc.reg_read(regs.UC_ARM_REG_LR))
+            return
         name = self.stubs.get(address)
         if name not in (
             "malloc",
@@ -296,6 +306,31 @@ class NativeJson(OriginalAwb):
         assert status == 0 and context == HEAP, (status, hex(context))
         return context
 
+    def create_single(self):
+        """Execute the complete SDK single-camera constructor at mapped CD5F4.
+
+        The only wrapper adapter resolves its opaque calibration handle to the
+        actual J2S-parsed WB pointer. AwbInit and scale/default state stores all
+        execute natively; no initialized context fields are written here.
+        """
+        self.allocate_context = True
+        output, config = HEAP + 0x7040, HEAP + 0x7300
+        self.uc.mem_write(output, bytes(4))
+        self.uc.mem_write(config, bytes(16))
+        self.uc.mem_write(config + 0xC, struct.pack("<I", HEAP + 0x7310))
+        symbol = "single-awb-create-context"
+        self.symbols[symbol] = self.resolve_symbol("create_context", 0xCD5F4)
+        self.creating_single = True
+        try:
+            self.invoke(symbol, [output, config], instructions=150_000_000)
+        finally:
+            self.creating_single = False
+        context = struct.unpack("<I", self.uc.mem_read(output, 4))[0]
+        assert context == HEAP, hex(context)
+        assert struct.unpack("<I", self.uc.mem_read(HEAP + 0x369C, 4))[0] == 1
+        assert self.uc.mem_read(HEAP + 0x3698, 1) == b"\0"
+        return context
+
     def prepare(self, width=2304, height=1296, working_mode=0):
         """Actual AwbPrepareV32 with caller geometry; retain native init flags."""
         self.uc.mem_write(HEAP + 0x34, struct.pack("<I", working_mode))
@@ -359,6 +394,7 @@ class NativeJson(OriginalAwb):
             "heap_highwater": self.arena - HEAP,
             "live_allocations": len(self.allocations),
             "strtod_calls": self.strtod_calls,
+            "module_lookups": self.module_lookups,
             "adapters": self.adapters,
             "binary_sha256": hashlib.sha256(BINARY.read_bytes()).hexdigest(),
             "libc_sha256": hashlib.sha256(LIBC.read_bytes()).hexdigest(),
@@ -387,7 +423,7 @@ if __name__ == "__main__":
     ]
     native = NativeJson()
     native.parse(wb)
-    context = native.initialize()
+    context = native.create_single()
     record = native.prepare()
     report = native.summary()
     report.update(

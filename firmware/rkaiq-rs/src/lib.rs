@@ -384,3 +384,11 @@ pub mod cnr_quantize;
 
 #[cfg(feature = "diagnostics")]
 pub mod cnr_frame;
+
+pub mod isp_bay3d;
+pub mod bay3d_selection;
+pub mod bay3d_quantize;
+#[cfg(feature="diagnostics")]
+pub mod bay3d_calibration;
+#[cfg(feature="diagnostics")]
+pub mod bay3d_frame;

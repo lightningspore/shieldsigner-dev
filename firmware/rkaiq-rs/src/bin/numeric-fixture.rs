@@ -3465,6 +3465,17 @@ fn main() {
                 }).collect::<Vec<_>>();
                 println!("{}",serde_json::json!(output));
             }
+            "bay3d-frames" => {
+                use shieldsigner_rkaiq::bay3d_frame;
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();let mut state=bay3d_frame::State::new(&v["calibration"],core::array::from_fn(|i|v["geometry"][i].as_u64().unwrap() as u32)).unwrap();let mut result=[0xa5;224];let mut frames=Vec::new();
+                let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+                for f in v["frames"].as_array().unwrap(){
+                    let info=bay3d_frame::Information{seconds:f["seconds"].as_f64().unwrap() as f32,gains:core::array::from_fn(|i|f["gains"][i].as_f64().unwrap() as f32),blc_predgain:f["blc"].as_f64().unwrap() as f32,snr_mode:f["snr"].as_u64().unwrap() as u8,gray:f["gray"].as_bool().unwrap(),force:f["force"].as_bool().unwrap()};
+                    let updated=state.process(&v["calibration"],info,&mut result).unwrap();
+                    frames.push(serde_json::json!({"updated":updated,"result":hex(&result),"table":hex(&state.table),"selected":hex(&state.selected),"exposure":hex(&state.exposure),"strength":hex(&state.strength),"gray":state.gray,"parameterMode":state.parameter_mode,"recalculate":state.recalculate}));
+                }
+                println!("{}",serde_json::json!(frames));
+            }
             "cnr-frames" => {
                 use shieldsigner_rkaiq::cnr_frame;
                 let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();let mut state=cnr_frame::State::new(&v["calibration"],core::array::from_fn(|i|v["geometry"][i].as_u64().unwrap() as u32)).unwrap();let mut result=[0xa5;66];let mut frames=Vec::new();
@@ -3528,6 +3539,14 @@ fn main() {
                 let mode=v["mode"].as_u64().unwrap() as usize;let iso=v["iso"][mode].as_i64().unwrap() as i32;
                 let bracket=shieldsigner_rkaiq::baynr_selection::select(&table,iso,&mut output).unwrap();
                 println!("{}",serde_json::json!({"output":output.iter().map(|v|format!("{v:02x}")).collect::<String>(),"bracket":bracket}));
+            }
+            "isp-bay3d" => {
+                use shieldsigner_rkaiq::{isp_bay3d,isp32::PARAMETER_BYTES};
+                let v:serde_json::Value=serde_json::from_str(a[1]).unwrap();
+                let decode=|key:&str|{let s=v[key].as_str().unwrap();(0..s.len()).step_by(2).map(|i|u8::from_str_radix(&s[i..i+2],16).unwrap()).collect::<Vec<_>>()};
+                let result=decode("result").try_into().unwrap();let mut parameters:[u8;PARAMETER_BYTES]=decode("parameters").try_into().unwrap();
+                isp_bay3d::apply(&mut parameters,&result);
+                println!("{}",parameters.iter().map(|v|format!("{v:02x}")).collect::<String>());
             }
             "isp-cnr" => {
                 use shieldsigner_rkaiq::{isp_cnr,isp32::PARAMETER_BYTES};

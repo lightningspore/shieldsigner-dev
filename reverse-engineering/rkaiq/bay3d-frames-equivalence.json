@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "sequences": 4,
+  "frames": 48,
+  "updatedFrames": 40,
+  "packingCases": 64,
+  "sdkModuleOffset": "0x5994",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "144f8817ddb9894749ff8bb46e3a9b136ff5c9d54c3faafc40f3f6b99b285196",
+  "scope": "Complete native constructor/prepare/normal processing plus calibration/selection/fixed transfer and complete ISP32 TNR converter. Full state/result bytes, input graph and all packed parameter bytes compared.",
+  "limitations": [
+    "Focused host ARM-instruction oracle, not physical hardware qualification.",
+    "Typed SDK graph replaces JSON parsing; allocation/string/memory/diagnostic boundaries explicit.",
+    "Normal present-AE path, default auto strength; HDR/manual policy outside this integration."
+  ],
+  "sdkHeaders": [
+    {
+      "name": "rk_aiq_types_abayertnr_hw_v23.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/abayertnrV23/rk_aiq_types_abayertnr_hw_v23.h",
+      "sha256": "245d37a3ce1beb34c805d705ea972498f51376b93cc573889c22b74b47bb30e5"
+    },
+    {
+      "name": "rk_aiq_types_abayertnr_algo_int_v23.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/abayertnrV23/rk_aiq_types_abayertnr_algo_int_v23.h",
+      "sha256": "cd67c4ae6fa927748e55e84e07b2347e66e1c25c4ca114d2acdb41d94092fe43"
+    },
+    {
+      "name": "bayertnr_head_v23.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/bayertnr_head_v23.h",
+      "sha256": "21d6de8d3bf6839af71f73424c2d64fb02f6cd6491167347d2ae5f2396c96559"
+    },
+    {
+      "name": "bayertnr_uapi_head_v23.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/bayertnr_uapi_head_v23.h",
+      "sha256": "4447375bd1c0c15ea398531946f0609d14d2140858cee52307a75ab55d48f4bb"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "analysisDate": "2026-10-28",
+  "scope": "Read-only measurements of the preserved vendor-camera baseline SD image and extracted failed850 packed root. No layout or package changes performed.",
+  "baseline": {
+    "imageSha256": "8ba8fa6bcad15514297a2e058bf06c94774ce4e3a891e5a0364527a458302761",
+    "imageBytes": 347537408,
+    "appCommit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+    "partitionScheme": "Rockchip raw SD; no populated MBR partition entries; U-Boot environment blkdevparts determines layout",
+    "blkdevparts": "mmcblk1:32K(env),512K@32K(idblock),256K(uboot),32M(boot),256M(userdata),6656M(rootfs)",
+    "regions": [
+      {
+        "name": "env",
+        "offsetBytes": 0,
+        "reservedBytes": 32768,
+        "nonzero4096ByteBlockBytes": 4096
+      },
+      {
+        "name": "idblock",
+        "offsetBytes": 32768,
+        "reservedBytes": 524288,
+        "nonzero4096ByteBlockBytes": 188416
+      },
+      {
+        "name": "uboot",
+        "offsetBytes": 557056,
+        "reservedBytes": 262144,
+        "nonzero4096ByteBlockBytes": 196608
+      },
+      {
+        "name": "boot",
+        "offsetBytes": 819200,
+        "reservedBytes": 33554432,
+        "nonzero4096ByteBlockBytes": 2781184
+      },
+      {
+        "name": "userdata",
+        "offsetBytes": 34373632,
+        "reservedBytes": 268435456,
+        "nonzero4096ByteBlockBytes": 307200
+      }
+    ],
+    "rootfs": {
+      "offsetBytes": 302809088,
+      "squashfsBytesUsed": 44725597,
+      "declaredReservationMiB": 6656
+    },
+    "measurementMethod": "SHA-256 of complete image; raw environment printable-string extraction; existing FIT/squashfs probes; scan each preceding region in 4096-byte blocks and sum whole blocks containing any nonzero byte. This is neither filesystem allocated usage nor minimum safe partition size."
+  },
+  "failed850": {
+    "status": "Build failed strict post-firmware startup verification; not a successful image release or boot result. Extracted packed root retained for read-only footprint analysis.",
+    "packedRootfsApproxMiB": 44,
+    "unpackedDuKiB": 141636,
+    "duMethod": "du -sk on extracted squashfs; allocated filesystem blocks, not compressed contribution. Hardlinks prevent adding independently measured subtree totals blindly.",
+    "selectedDuKiB": {
+      "usr": 107564,
+      "usrLibShieldsignerCamera": 23608,
+      "runtimeLicenses": 13808,
+      "gitCoreMeasuredAlone": 13476,
+      "pythonSetuptools": 4024,
+      "pythonPIL": 1864,
+      "pythonCryptography": 3256,
+      "pythonCryptodome": 4860,
+      "oem": 10356
+    },
+    "rustCopyrightHtmlBytes": 13722140,
+    "comparison": "Old compressed rootfs is 42.65 MiB; failed850 compressed rootfs is approximately 44 MiB. Comparing either to the entire 347537408-byte old SD image would mix scopes. No final new whole-image size or large OS reduction is established."
+  },
+  "candidates": [
+    {
+      "change": "Reduce reserved boot/userdata regions",
+      "evidence": "32 MiB boot and 256 MiB userdata precede rootfs; nonzero-block measurements are much smaller.",
+      "impact": "Potentially large raw uncompressed image reduction; not an equivalent reduction in compressed Linux code. No proposed final size.",
+      "gates": [
+        "Coordinate environment, raw image packer, boot/update offsets and filesystem size; do not truncate existing image.",
+        "Retain required writable capacity and boot growth margin.",
+        "Verify bootloader load paths, mounts, normal boot, physical power cycle and update/recovery."
+      ]
+    },
+    {
+      "change": "Omit runtime Git and setuptools in a lean profile",
+      "evidence": "OS already disables these for Mini NAND. Git core and setuptools occupy measured unpacked blocks above. App helpers/version.py invokes git rev-parse HEAD.",
+      "gates": [
+        "Bake version metadata before removing Git.",
+        "Audit remaining startup/update/import dependencies and exercise app UI, QR, multisig and smartcard workflows.",
+        "Rebuild/repack to measure actual compressed saving."
+      ]
+    },
+    {
+      "change": "Review runtime license packaging",
+      "evidence": "Rust COPYRIGHT.html alone is 13722140 bytes.",
+      "gates": [
+        "Preserve all required notices and redistribution obligations; do not simply delete notices.",
+        "Review any generated smaller attribution bundle before shipping.",
+        "Measure compressed saving after repacking."
+      ]
+    },
+    {
+      "change": "Remove unused OEM executables/libraries",
+      "evidence": "OEM subtree occupies 10356 KiB, including utilities and multimedia libraries. Not all are unused.",
+      "gates": [
+        "Audit ELF dependencies, dynamic loading, startup scripts and camera/sensor/module requirements.",
+        "Keep required IQ, kernel modules and controls.",
+        "Verify final packed root and hardware boot/capture."
+      ]
+    }
+  ],
+  "retainByDefault": [
+    "Python/Pillow/fonts used by actual UI rendering",
+    "Crypto and smartcard dependencies used by wallet/card functionality",
+    "Camera kernel modules, selected sensor support and required runtime data"
+  ],
+  "limits": [
+    "Unpacked subtree sizes are not promised compressed savings.",
+    "No baseline config, active build, runtime or partition layout was modified.",
+    "Final successful packed image, whole-image hash/size and physical boot qualification remain separate acceptance gates."
+  ]
+}

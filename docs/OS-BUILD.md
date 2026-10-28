@@ -97,6 +97,32 @@ file checks and synthetic fixture results. No new image has been flashed by
 the build or verification tools.
 
 
+## Image size: software versus reserved space
+
+The measured vendor-camera SD image is 347,537,408 bytes, but its compressed
+Linux root filesystem uses only 44,725,597 bytes (42.65 MiB). Its Rockchip
+layout reserves 32 MiB for boot and 256 MiB for writable userdata before the
+root filesystem, which starts at byte 302,809,088. These reservations explain
+most of the raw file size. Nonzero-block counts do not establish minimum safe
+partition sizes. See the [measured size analysis](../reverse-engineering/rkaiq/image-size-analysis.json).
+
+The failed Rust-camera packing attempt contained approximately 44 MiB of
+compressed root filesystem, not a 44 MiB complete SD image. It demonstrates
+neither a large OS reduction nor a successful image release.
+
+For a smaller download, compress the verified full image and verify its hash
+after decompression. For a smaller raw image, a future lean layout could reduce
+boot/userdata reservations together with bootloader, packer and mount settings;
+this needs boot, power-cycle and update/recovery testing. Do not truncate the
+existing image, because its root filesystem is located after those regions.
+
+For less installed software, first evaluate removing runtime Git and
+setuptools, replacing Git-based version lookup with baked metadata, then audit
+unused OEM tools and libraries. Preserve UI/fonts, wallet/smartcard crypto,
+camera drivers and required notices. Unpacked file sizes are not compressed
+savings: measure the repacked filesystem before setting a target. These are
+follow-up options; the current verified-baseline build is unchanged.
+
 ## Notes: faster iteration and a possible Linux-free variant
 
 These are development options, not changes made to the current build. A PyPI mirror is deferred.

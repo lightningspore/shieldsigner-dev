@@ -1,0 +1,214 @@
+{
+  "inputBundle": "0.0.38-dev-dd4bd96",
+  "mutatedFrozenInputs": false,
+  "tool": "Homebrew LLVM objcopy",
+  "variants": {
+    "camera-probe": {
+      "original": {
+        "bytes": 1522328,
+        "sha256": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+        "gzip9Bytes": 785094,
+        "xz6Bytes": 572676,
+        "debugSectionBytes": 0,
+        "symbolTableAndNamesBytes": 0
+      },
+      "strip-debug": {
+        "bytes": 1522328,
+        "sha256": "da770c4c43a1605b121c850fd336eb8c9cc876d8298d9b8458df4a5fdb3a9f21",
+        "gzip9Bytes": 785096,
+        "xz6Bytes": 572676,
+        "debugSectionBytes": 0,
+        "symbolTableAndNamesBytes": 0,
+        "allocatedSectionsIdentical": true,
+        "savedBytes": 0
+      },
+      "strip-all": {
+        "bytes": 1522196,
+        "sha256": "b2dadcdcef902704f3b547ba6710dc4362b527523314ad25a2a495e25e492e58",
+        "gzip9Bytes": 784997,
+        "xz6Bytes": 572668,
+        "debugSectionBytes": 0,
+        "symbolTableAndNamesBytes": 0,
+        "allocatedSectionsIdentical": true,
+        "savedBytes": 132
+      },
+      "allocatedSectionsCompared": [
+        ".ARM.exidx",
+        ".ARM.extab",
+        ".rodata",
+        ".text",
+        ".tdata",
+        ".data.rel.ro",
+        ".got",
+        ".data"
+      ]
+    },
+    "shieldsigner-qr-reader": {
+      "original": {
+        "bytes": 8431056,
+        "sha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+        "gzip9Bytes": 2584197,
+        "xz6Bytes": 1922704,
+        "debugSectionBytes": 7180305,
+        "symbolTableAndNamesBytes": 354915
+      },
+      "strip-debug": {
+        "bytes": 1228848,
+        "sha256": "227d9d23fd4e42d0d8459fd8aa16e39bf2cfb5803898750f52473c3b506a520c",
+        "gzip9Bytes": 501632,
+        "xz6Bytes": 385780,
+        "debugSectionBytes": 0,
+        "symbolTableAndNamesBytes": 333563,
+        "allocatedSectionsIdentical": true,
+        "savedBytes": 7202208
+      },
+      "strip-all": {
+        "bytes": 894932,
+        "sha256": "63b9e2132842a5a9fbbe0a1aba5ff3809d125f5f2ca003f065bc58541d09ec42",
+        "gzip9Bytes": 429762,
+        "xz6Bytes": 333408,
+        "debugSectionBytes": 0,
+        "symbolTableAndNamesBytes": 0,
+        "allocatedSectionsIdentical": true,
+        "savedBytes": 7536124
+      },
+      "allocatedSectionsCompared": [
+        ".ARM.exidx",
+        ".ARM.extab",
+        ".rodata",
+        ".ARM.extab__lcxx_override",
+        ".text",
+        "__lcxx_override",
+        ".data.rel.ro",
+        ".init_array",
+        ".got",
+        ".data"
+      ]
+    }
+  },
+  "rustNotice": {
+    "source": "payload/licenses/runtime/rust-runtime/COPYRIGHT.html",
+    "bytes": 13722140,
+    "sha256": "ed776cb483639823551326501ea4a7d0e63a040a5589d25d68234c223bd9d9f9",
+    "gzip9Bytes": 408938,
+    "xz6Bytes": 97564
+  },
+  "kind": "camera-and-qr-runtime-storage-size-analysis",
+  "scope": "Read-only source inspection and transformations of separate temporary copies. No frozen binaries, image bundles, active build inputs or running camera changed.",
+  "transformation": {
+    "tool": "llvm-objcopy",
+    "version": "Homebrew LLVM20.1.7",
+    "commands": [
+      "llvm-objcopy --strip-debug IMMUTABLE_INPUT TEMP_OUTPUT",
+      "llvm-objcopy --strip-all IMMUTABLE_INPUT TEMP_OUTPUT"
+    ],
+    "sourceBundleManifestSha256": "067b8dcc3a21462dc31df13cf14459e917bfe924782892556b4b6e6ceea42ae6",
+    "pythonVersion": "3.13.11",
+    "debuggerStrategy": "Retain original full binary/symbols off-device. Strip an image-specific derivative before making its immutable bundle manifest; validate new hashes and executable behavior. Existing SDK deliberately exempts both camera binaries from late stripping to preserve manifest hashes."
+  },
+  "emulatedSmoke": {
+    "scope": "Temporary stripped copies in ARM/v7 emulation only; no board or image changes",
+    "checks": [
+      {
+        "variant": "shieldsigner-qr-reader.strip-debug",
+        "handshake": true,
+        "cases": [
+          {
+            "fixture": "nul-highbit",
+            "byteExact": true,
+            "payloadBytes": 13
+          },
+          {
+            "fixture": "all-byte-values",
+            "byteExact": true,
+            "payloadBytes": 256
+          },
+          {
+            "fixture": "binary32-bytes",
+            "byteExact": true,
+            "payloadBytes": 32
+          }
+        ],
+        "cleanEofExitCode": 0
+      },
+      {
+        "variant": "shieldsigner-qr-reader.strip-all",
+        "handshake": true,
+        "cases": [
+          {
+            "fixture": "nul-highbit",
+            "byteExact": true,
+            "payloadBytes": 13
+          },
+          {
+            "fixture": "all-byte-values",
+            "byteExact": true,
+            "payloadBytes": 256
+          },
+          {
+            "fixture": "binary32-bytes",
+            "byteExact": true,
+            "payloadBytes": 32
+          }
+        ],
+        "cleanEofExitCode": 0
+      }
+    ]
+  },
+  "compressionEstimates": {
+    "gzip": "Python gzip.compress level9,mtime0",
+    "xz": "Python lzma.compress preset6",
+    "actualSquashfsSavingsMeasured": false,
+    "limit": "These are whole-file estimates. Actual SquashFS compressor/block settings, fragment packing and layout determine flash-image savings. Do not equate uncompressed/debug/notice bytes with image bytes."
+  },
+  "existingFeatureSubset": {
+    "zxingVersion": "3.1.1",
+    "qrOnly": true,
+    "otherReaders": [
+      "1D",
+      "AZTEC",
+      "DATAMATRIX",
+      "MAXICODE",
+      "PDF417"
+    ],
+    "otherReadersEnabled": false,
+    "writersEnabled": false,
+    "cApiEnabled": false,
+    "sharedLibraries": false,
+    "scope": "Current CMakeCache and build-qr-native-bench.py already disable non-QR functionality. Further major feature-pruning savings are not established."
+  },
+  "dependencyOptions": [
+    {
+      "option": "Remove host build toolchains from target",
+      "assessment": "LLVM/Rust compilers are build-host tools; no target toolchain size has been identified in the camera image payload. Do not count host build-cache GB as image savings."
+    },
+    {
+      "option": "Remove optional cv2/numpy/pygame and legacy QR libraries if present",
+      "assessment": "Pinned app catches missing imports and native fixed-camera/QR path does not need them. Actual final-rootfs presence/bytes must be inventoried before claiming savings; desktop/Pi and fallback features would change."
+    },
+    {
+      "option": "Trim dependency self-tests only in runtime packaging",
+      "measuredDiagnosticPycryptodomexSelfTestDiskKiB": 1504,
+      "assessment": "Diagnostic dependency overlay contains SelfTest, unused by app imports. This is not an inventory of the final3.23Buildroot package; only count savings if present there."
+    },
+    {
+      "option": "Reduce fonts/locales",
+      "measuredPinnedAppFontDiskKiB": 2768,
+      "measuredTranslationResourceDiskKiB": 3116,
+      "assessment": "These include functional fonts/icons/locales. Removing them changes UI/language coverage and is lower priority than debug removal."
+    },
+    {
+      "option": "Compress or reorganize Rust notices",
+      "assessment": "13,722,140-byte original notice is only97,564bytes under whole-file xz6 estimate. Preserve notices; do not assume13MiBflash savings or precompress blindly inside already-compressed SquashFS."
+    },
+    {
+      "option": "Rust size-oriented optimization or minimal runtime-only CLI",
+      "assessment": "Rust camera already lacks DWARF and symbol tables. Alternative opt-level/z/LTO or removing diagnostics needs a separate build and new hardware validation; no safe large saving is measured."
+    }
+  ],
+  "recommendedPriority": [
+    "Strip QR worker derivative before hashing; measured raw7,536,124B saving, estimated xz1,589,296B/gzip2,154,435B saving.",
+    "Inventory actual final SquashFS file sizes and package ownership for whole-image reductions; camera/QR code after strip is about2.42MB combined uncompressed.",
+    "Keep current baseline frozen and active build intact; any slimming profile gets its own reproducible manifest/hash and runtime checks."
+  ]
+}

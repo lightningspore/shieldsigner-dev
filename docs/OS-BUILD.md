@@ -123,6 +123,15 @@ camera drivers and required notices. Unpacked file sizes are not compressed
 savings: measure the repacked filesystem before setting a target. These are
 follow-up options; the current verified-baseline build is unchanged.
 
+The [temporary-copy QR size experiment](../reverse-engineering/rkaiq/qr-runtime-size-analysis.json)
+reduces the native worker from 8,431,056 to 894,932 bytes by stripping symbols;
+allocated sections remain byte-identical and ARM-emulated binary payload tests
+pass. Estimated whole-file compressed savings are 1.59–2.15 MB, not measured
+SquashFS savings. A future release must strip before computing bundle hashes
+and rerun hardware qualification. The Rust camera executable is already
+stripped. Its large copyright HTML compresses to about 98 KB with xz, so it is
+not a meaningful first target for flash savings; preserve the notices.
+
 ## Notes: faster iteration and a possible Linux-free variant
 
 These are development options, not changes made to the current build. A PyPI mirror is deferred.

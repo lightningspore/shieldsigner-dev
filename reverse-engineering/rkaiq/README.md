@@ -15,17 +15,16 @@ DPCC, BAYNR, BAY3D, YNR, CNR and SHARP, plus demosaic and live AE/AWB.
 The 600-image default-all capture passed native comparisons for all nine
 modules and final AWB translation. [Combined evidence](combined-isp-hardware-validation.json).
 
-**DELIVERED:** [0.0.36 development kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.36-dev.zip),
-with the corrected initial AWB damping history, bounded diagnostic trace capture
-and desktop dashboard. All 542 files were verified on the Luckfox, including
-executable permissions. [Installation evidence](kit-0.0.36-dev-installation-verification.json).
-Its exact camera binary passed application integration with 70 received frames,
-all nine module comparisons and an actual ordered 32-frame joined AWB comparison.
-[Combined evidence](combined-isp-0.0.36-hardware-validation.json),
-[AWB trajectory](awb-ordered-trace-hardware-validation.json).
-Older frozen archives remain unchanged.
-Development 0.0.37 additionally corrects paired normal UV/YUV detector flags;
-0.0.36 predates that correction. [Native initialization and hardware proof](awb-native-initialization-hardware-validation.json).
+**DELIVERED:** [0.0.37 development kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.37-dev.zip),
+including corrected AWB damping history, paired detector enables, bounded
+private trace capture and optional faster NV12 desktop preview. All 548 files
+were verified on the Luckfox, including executable permissions.
+[Installation evidence](kit-0.0.37-dev-installation-verification.json).
+Its exact camera executable passed application integration with 71 received
+frames and all nine ISP checks. The reference now executes native JSON parsing,
+constructor, prepare, BLC binding and 32 actual runtime inputs.
+[Native-initialized hardware proof](awb-native-initialization-hardware-validation.json).
+Older frozen archives remain unchanged; 0.0.36 predates the paired detector fix.
 
 **NEXT:** qualify actual optical QR scanning, physical lighting/color response,
 LCD/buttons and physical power cycling. The exact 0.0.36 kit passed a
@@ -274,11 +273,10 @@ Still open:
    now executes JSON parsing, constructor, prepare, binding and 32 actual runtime
    inputs; the previous adapted-context boundary is closed for that trajectory.
    This does not claim arbitrary mode or full-library ABI equivalence.
-6. Complete the physical qualification above using the frozen 0.0.36 kit.
-   Its exact executable now passed [controlled clean-reboot application
-   integration](kit-0.0.36-dev-cold-reboot-validation.json), with all eight
-   advanced blocks enabled, 74 received frames and clean shutdown. Older kits
-   retain their own build-specific evidence and remain unchanged.
+6. Test the frozen 0.0.37 kit after controlled reboot, then complete the
+   physical qualification above. The older 0.0.36 exact executable passed
+   [controlled clean-reboot integration](kit-0.0.36-dev-cold-reboot-validation.json);
+   that report retains its own build-specific scope.
 
 Optional modes remain outside the current single-camera priority unless the
 actual QR capture path needs them. No completion claim follows from passing

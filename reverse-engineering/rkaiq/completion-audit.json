@@ -1,7 +1,7 @@
 {
   "kind": "camera-replacement-completion-audit",
   "goalComplete": false,
-  "frozenKit": "0.0.36-dev",
+  "frozenKit": "0.0.37-dev",
   "development": "0.0.37-dev",
   "items": [
     {
@@ -28,9 +28,9 @@
     {
       "requirement": "Distributed archive contents match installed hardware files",
       "status": "verified-with-stated-scope",
-      "evidence": "kit-0.0.36-dev-installation-verification.json",
-      "sha256": "9881cae9a58b18c3e8892290e79f65cdc898169d1a9c1fe30cde8b7acd6d8238",
-      "scope": "542 files verified locally and on Luckfox, executable mode checked."
+      "evidence": "kit-0.0.37-dev-installation-verification.json",
+      "sha256": "12b8ff8ca13280b256368817553e0926a22fd4ccf7109000759761d4854ff471",
+      "scope": "548 files verified locally and on Luckfox, executable mode checked."
     },
     {
       "requirement": "Desktop preview improvement preserves default application RGB protocol",
@@ -73,5 +73,5 @@
     "physicalWiringVerified": false
   },
   "nextPracticalTest": "Known public optical QR; the target must actually be in view.",
-  "knownFrozenKitLimitation": "Frozen0.0.36 predates paired normal UV/YUV detector enable correction; current0.0.37 development includes it."
+  "knownFrozenKitLimitation": "Exact0.0.37 frozen-directory controlled reboot is pending; earlier0.0.36 has its own successful reboot record."
 }

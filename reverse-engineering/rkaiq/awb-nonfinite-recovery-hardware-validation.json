@@ -1,0 +1,28 @@
+{
+  "kind": "awb-nonfinite-stream-recovery",
+  "development": "0.0.38-dev",
+  "binarySha256": "7f25927aae042431ab2fa8f4b9d76f96befb091684084b72d5f27c5b6cc421b8",
+  "originalFailure": "Frozen0.0.37 exited with Live AWB session: NonFinite; restart reproduced the failure.",
+  "change": "Reject only NonFinite session updates, preserving transactional session state; still register retained gain for that frame. Other errors remain fatal.",
+  "rejectedUpdates": 91,
+  "firstRejectedFrame": 7,
+  "lastRejectedFrame": 515,
+  "successfulAwbUpdates": 259,
+  "lastSuccessfulAwbFrame": 524,
+  "lastAwbGain": [
+    1.2563207149505615,
+    1.0,
+    1.0,
+    2.279357433319092
+  ],
+  "lastAeFrame": 524,
+  "lastAeDecision": {
+    "analogueGain": 512.0,
+    "held": false,
+    "ispGain": 1.0,
+    "relativeError": -0.6166666746139526,
+    "timeSeconds": 0.029999999329447746
+  },
+  "scope": "Live hardware recovered from invalid AWB startup statistics and resumed valid AWB updates while AE and preview continued. Dark-scene cause of invalid arithmetic not yet isolated. No native error-handling equivalence claim.",
+  "tests": "Full cargo test --locked suite passed; ARM camera-probe compiled and ran on Luckfox."
+}

@@ -1424,7 +1424,10 @@ fn main() {
             "awb-gain" => {
                 use shieldsigner_rkaiq::awb_gain::*;
                 let v: serde_json::Value = serde_json::from_str(a[1]).unwrap();
-                let value = |name: &str| v[name].as_f64().unwrap() as f32;
+                let value = |name: &str| v.get(format!("{name}_bits"))
+                    .and_then(serde_json::Value::as_u64)
+                    .map(|bits| f32::from_bits(u32::try_from(bits).unwrap()))
+                    .unwrap_or_else(|| v[name].as_f64().unwrap() as f32);
                 let gains =
                     |name: &str| core::array::from_fn(|i| v[name][i].as_f64().unwrap() as f32);
                 if matches!(v["kind"].as_str().unwrap(), "ratios" | "statistics") {

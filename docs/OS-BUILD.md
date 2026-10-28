@@ -1,12 +1,56 @@
-# Luckfox OS build trial
+# Luckfox OS image builds
 
 ## Current carrier build command
 
-Use the [compile walkthrough](https://shieldsigner.dev/build/compile/) for the shortest route. The wrapper now defaults to `SHIELDSIGNER_READER_VARIANT=UR2`, prepares the one Luckfox reader configuration file at the pinned OS revision, and writes `dist/os/UR2/reader-config.json`. `mise run os:prepare` performs this preparation without compiling. The Raspberry Pi overlay is unchanged; unknown source edits are rejected.
+The wrapper now defaults to `SHIELDSIGNER_READER_VARIANT=UR2` and `SHIELDSIGNER_CAMERA_BACKEND=rust`. It prepares reviewed camera/image hooks in the pinned Luckfox OS checkout, configures SEC1210 UR2, and installs the Rust SC3336 owner plus the native open-source QR reader. `mise run os:prepare` applies only reviewed source preparation without compiling or flashing. Unknown checkout edits are rejected.
 
-Preparation, the UR2/URT round-trip and rejection of unknown edits have been tested. A full UR2 image compilation/boot has not been qualified here. The historical two successful builds and matching hashes below used unchanged upstream **URT**; they remain baseline evidence. Use `SHIELDSIGNER_READER_VARIANT=URT mise run os:build` only for that baseline or URT hardware.
+The historical two successful builds and matching hashes below used unchanged upstream **URT/vendor camera**; they remain baseline evidence. They do not qualify the new Rust image. Use `SHIELDSIGNER_CAMERA_BACKEND=vendor SHIELDSIGNER_READER_VARIANT=URT mise run os:build` only for that explicit baseline or matching hardware.
 
-Current output is `dist/os/<reader-variant>/`, with `build.log` and `reader-config.json`. Keep the reader manifest with your image/checksum files. A new UR2 image is expected to differ from the historical URT checksum.
+Local output defaults to `dist/os/<reader-variant>/<camera-backend>/`, with `build.log`, `reader-config.json`, `camera-hooks.json` and `camera-bundle.json`. Keep these input manifests with image/checksum files. New image checksums are expected to differ from the historical URT/vendor baseline.
+
+## Build the Rust-camera image
+
+The complete SDK build requires x86_64 Linux and Docker. The documented Proxmox guest can run it independently of this desktop. From the project root:
+
+```sh
+SHIELDSIGNER_BUILD_HOST=YOUR_CONFIGURED_SSH_BUILDER mise run os:remote:build
+SHIELDSIGNER_BUILD_HOST=YOUR_CONFIGURED_SSH_BUILDER mise run os:remote:status
+```
+
+The remote launcher builds the locked Rust ARM binaries and pinned ZXing C++ reader locally with mise/uv, creates a checksummed runtime bundle, verifies the bundle, transfers only public build scripts/runtime assets to guest 610, and starts a detached image job. It refuses to overwrite an existing attempt or run alongside another SDK build. A workspace/cache lock survives SSH disconnection. Inspect the actual launcher process, Docker container and exit-code file; a log or PID file alone is not liveness evidence. Job metadata is under ignored `dist/os/remote-jobs/`.
+
+The guest prerequisites are the Docker/Git setup below plus pinned `uv 0.12.7` on its PATH. The new detached runner adds `/usr/local/bin` explicitly. It preserves the upstream compiler/toolchain/source caches and records the true exit status atomically. It does not flash hardware, enable secure boot, provision fuses or publish images.
+
+For a local x86_64 Linux builder with Docker, use `mise run os:build`. Without an explicit bundle the wrapper first runs `camera:rust:arm` and `camera:qr:native-build`. To reuse one immutable, verified runtime snapshot:
+
+```sh
+mise run os:camera:bundle -- --output dist/os/my-reviewed-camera-bundle
+SHIELDSIGNER_CAMERA_BUNDLE="$PWD/dist/os/my-reviewed-camera-bundle" mise run os:remote:build
+```
+
+The bundle command expects native outputs from the two build tasks to exist. Bundles are immutable directories; select a new directory after changing code. Each bundle records file hashes, source revision/dirty status, version and upstream pins. It contains runtime assets and license notices only, without original RKAIQ binaries, reverse-engineering fixtures, camera images or private IQ/reference traces. Runtime license notices are regenerated for every staged bundle. A dirty development snapshot is identified as such and is not a frozen release.
+
+### What is installed
+
+| Item | Image path / behavior |
+|---|---|
+| Rust camera owner | `/usr/lib/shieldsigner-camera/camera-probe`, static ARM executable |
+| Native QR worker | `/usr/lib/shieldsigner-camera/shieldsigner-qr-reader`, pinned open-source ZXing build |
+| Python process-local integration | `/usr/lib/shieldsigner-camera/python/`; installed app source stays unchanged |
+| Native pipeline/owner config | `/usr/lib/shieldsigner-camera/pipeline.json` and `owner.json` |
+| Startup | `/usr/bin/shieldsigner-launch` invokes the pinned app at `/opt/src` through the integration launcher |
+| Open kernel modules | S21 loads the reviewed CIF/ISP/CSI/sensor modules without Rockit; capture starts when the app opens Camera |
+| Runtime output | `/tmp/shieldsigner-camera` on tmpfs; diagnostic full logs remain opt-in |
+| Calibration | Selected SDK SC3336 IQ JSON is retained; the Rust owner reads it directly |
+| Reader/display configuration | UR2; reviewed FOX_22 HOTHMI SPI limit of 10 MHz, validated against existing DC/reset/CS mapping |
+
+The camera source hash/profile must match the reviewed image application. The Mini build selects the Mini device tree; final compiled model/profile and hardware behavior must be verified, not inferred from its filename. A compatibility adapter explicitly reports the fixed native 640x480 RGB stream even if old V4L2 configuration requests another size/node.
+
+The SDK still compiles its media stage because the image pipeline and open drivers depend on its build structure. The staged image removes closed camera userspace (`rkipc`, RKAIQ/ Rockit camera libraries and launchers) both during rootfs installation and again in the late OEM pre-pack hook. The stock camera bootstrap and delayed RKAIQ startup are disabled. A post-pack staging check fails if forbidden userspace, required IQ data, open ISP modules, startup hashes or runtime assets do not match. This is not a claim that every kernel component or every unused vendor package has been rewritten.
+
+The pinned application's QR classifier imports `Cryptodome.Cipher.AES` even before classifying CompactSeedQR. The SDK baseline carried PyCryptodomex 3.21.0 while the app pins 3.23.0. The Rust-image hook now aligns that package to **3.23.0**, with reviewed recipe/hash-file guards, a SHA-256-pinned PyPI source and license hashes in `scripts/camera-image-dependencies.json`. Rootfs installation requires the 3.23.0 package-install stamp and records its build inputs in `python-dependency-build.json`. Older 3.21.0 dependencies used for isolated on-device diagnostics do not qualify the final image's dependency alignment.
+
+An image build and staged-rootfs checks do not prove hardware boot, LCD/buttons, smartcards, physical power cycling or secure-boot configuration. Those remain separate acceptance tests. See the [Rust-camera completion audit](../reverse-engineering/rkaiq/completion-audit.json) for current evidence.
 
 
 ## Notes: faster iteration and a possible Linux-free variant

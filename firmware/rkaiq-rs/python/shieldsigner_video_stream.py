@@ -16,6 +16,7 @@ import threading
 import time
 
 from PIL import Image
+from shieldsigner_process_log import ProcessLog, record_finished_session
 
 
 class PiVideoStream:
@@ -37,6 +38,7 @@ class PiVideoStream:
         self.owner_exit_code = None
         self._owner = None
         self._owner_log = None
+        self.log_info = None
         self._ready_fd = None
         self.width, self.height = width, height
         self.connect_timeout = connect_timeout
@@ -63,7 +65,9 @@ class PiVideoStream:
             self.session_directory = tempfile.mkdtemp(prefix="camera-", dir=config["output_directory"])
             self.socket_path = os.path.join(self.session_directory, "camera.sock")
             self.owner_exit_code = None
-            self._owner_log = open(os.path.join(self.session_directory, "owner.log"), "xb")
+            self._owner = None
+            self._owner_log = ProcessLog(os.path.join(self.session_directory, "owner.log"),
+                                         full=os.environ.get("SHIELDSIGNER_CAMERA_LOG_FULL") == "1")
             command = [config["binary"], "stream-sc3336", config["plan"], config["iq"],
                        config["parameters"], config["image"], os.path.join(self.session_directory, "frame"),
                        config["statistics"], self.socket_path]
@@ -73,13 +77,11 @@ class PiVideoStream:
                 environment = dict(os.environ, SHIELDSIGNER_CAMERA_PARENT_PID=str(os.getpid()),
                                    SHIELDSIGNER_CAMERA_READY_FD=str(ready_write))
                 self._owner = subprocess.Popen(command, stdin=subprocess.DEVNULL,
-                                               stdout=self._owner_log, stderr=self._owner_log,
+                                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                                env=environment, start_new_session=True, pass_fds=(ready_write,))
+                self._owner_log.start(self._owner.stdout)
             except Exception:
-                os.close(ready_read)
-                self._ready_fd = None
-                self._owner_log.close()
-                self._owner_log = None
+                self._finish_owner()
                 self.is_stopped = True
                 raise
             finally:
@@ -181,8 +183,12 @@ class PiVideoStream:
                 os.close(self._ready_fd)
                 self._ready_fd = None
             if self._owner_log is not None:
-                self._owner_log.close()
-                self._owner_log = None
+                try:
+                    self.log_info = self._owner_log.finish()
+                    if self._owner is not None:
+                        record_finished_session(self.session_directory, self.owner_exit_code, self.log_info)
+                finally:
+                    self._owner_log = None
 
     def read(self):
         with self._lock:

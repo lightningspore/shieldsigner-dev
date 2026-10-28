@@ -1,0 +1,934 @@
+{
+  "kind": "luckfox-quirc-comparison",
+  "quircSourceCommit": "927d680904dc95fdff4cd9d022eb374b438ff8f2",
+  "build": "mise Zig0.15.2 cc -target arm-linux-musleabihf -mcpu=cortex_a7 -O3 -static; default double and QUIRC_FLOAT_TYPE=float with QUIRC_USE_TGMATH",
+  "conditions": "Camera stopped; four identical private real-camera VGA luminance frames. Two reversed-order rounds, three calls per frame/reader. Compatibility checks were separate from this timed run.",
+  "summary": {
+    "installed-zbar-pyzbar": {
+      "matches": 0,
+      "attempts": 24,
+      "medianAttemptSeconds": 0.058050562500284286,
+      "processPeakRssKiBRange": [
+        11372,
+        11552
+      ]
+    },
+    "quirc-default": {
+      "matches": 0,
+      "attempts": 24,
+      "medianAttemptSeconds": 0.0076176035,
+      "processPeakRssKiBRange": [
+        740,
+        740
+      ]
+    },
+    "quirc-float": {
+      "matches": 0,
+      "attempts": 24,
+      "medianAttemptSeconds": 0.0068282085,
+      "processPeakRssKiBRange": [
+        736,
+        736
+      ]
+    },
+    "zxing-cpp-3.1.1": {
+      "matches": 24,
+      "attempts": 24,
+      "medianAttemptSeconds": 0.0153335,
+      "processPeakRssKiBRange": [
+        1524,
+        1528
+      ]
+    }
+  },
+  "benchmark": {
+    "kind": "same-device-qr-decoder-benchmark",
+    "width": 640,
+    "height": 480,
+    "input": "Identical Pillow L luminance bytes; no JPEG or preprocessing in timed calls",
+    "scope": "Static public target, saved real camera frames; not live/animated app integration",
+    "timing": "Per-call wall time; QR-only, default search settings, ZXing LocalAverage",
+    "memory": "Current-executable /proc/self/status VmHWM, including Python for ZBar and static C++ for ZXing; not isolated library overhead",
+    "nativeSha256": "e75ee7716f28f26025d8f6565418d8e1fe6ced9e34d30448355b0f7e41e613ec",
+    "zbarLibrarySha256": "91bd8c6d6154ae28d9892f3c40d90650cab54bcc779cd7cef85b2c456c0b0829",
+    "cases": [
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.07177712499833433,
+        "medianSeconds": 0.05906541700096568,
+        "minSeconds": 0.058055666006112006,
+        "maxSeconds": 0.07177712499833433,
+        "processCpuSeconds": 1.273101,
+        "processMaxRssKiB": 11372,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015398542,
+        "medianSeconds": 0.01517075,
+        "minSeconds": 0.015127583,
+        "maxSeconds": 0.015398542,
+        "processCpuSeconds": 0.058645,
+        "processMaxRssKiB": 1528,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008078875,
+        "medianSeconds": 0.007595291,
+        "minSeconds": 0.007536375,
+        "maxSeconds": 0.008078875,
+        "processCpuSeconds": 0.025735,
+        "processMaxRssKiB": 740,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.00735525,
+        "medianSeconds": 0.006833458,
+        "minSeconds": 0.006738667,
+        "maxSeconds": 0.00735525,
+        "processCpuSeconds": 0.023327,
+        "processMaxRssKiB": 736,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.07255091700062621,
+        "medianSeconds": 0.05803437500435393,
+        "minSeconds": 0.05766804199811304,
+        "maxSeconds": 0.07255091700062621,
+        "processCpuSeconds": 1.2220069999999998,
+        "processMaxRssKiB": 11496,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015876292,
+        "medianSeconds": 0.015331459,
+        "minSeconds": 0.015285667,
+        "maxSeconds": 0.015876292,
+        "processCpuSeconds": 0.059013,
+        "processMaxRssKiB": 1524,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.00799925,
+        "medianSeconds": 0.007703791,
+        "minSeconds": 0.007610458,
+        "maxSeconds": 0.00799925,
+        "processCpuSeconds": 0.025737,
+        "processMaxRssKiB": 740,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.00730625,
+        "medianSeconds": 0.006813042,
+        "minSeconds": 0.00673225,
+        "maxSeconds": 0.00730625,
+        "processCpuSeconds": 0.023299,
+        "processMaxRssKiB": 736,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.07251183300104458,
+        "medianSeconds": 0.05784420899726683,
+        "minSeconds": 0.05774212599499151,
+        "maxSeconds": 0.07251183300104458,
+        "processCpuSeconds": 1.2215099999999999,
+        "processMaxRssKiB": 11552,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015814458,
+        "medianSeconds": 0.01537725,
+        "minSeconds": 0.015294125,
+        "maxSeconds": 0.015814458,
+        "processCpuSeconds": 0.058774,
+        "processMaxRssKiB": 1528,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007988167,
+        "medianSeconds": 0.007639916,
+        "minSeconds": 0.007615708,
+        "maxSeconds": 0.007988167,
+        "processCpuSeconds": 0.025764,
+        "processMaxRssKiB": 740,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007415625,
+        "medianSeconds": 0.006764333,
+        "minSeconds": 0.006726417,
+        "maxSeconds": 0.007415625,
+        "processCpuSeconds": 0.023255,
+        "processMaxRssKiB": 736,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05907358399417717,
+        "medianSeconds": 0.0581317920004949,
+        "minSeconds": 0.05798800000047777,
+        "maxSeconds": 0.05907358399417717,
+        "processCpuSeconds": 1.2010830000000001,
+        "processMaxRssKiB": 11488,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.016119542,
+        "medianSeconds": 0.0154,
+        "minSeconds": 0.015260292,
+        "maxSeconds": 0.016119542,
+        "processCpuSeconds": 0.059194,
+        "processMaxRssKiB": 1528,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008153834,
+        "medianSeconds": 0.007591792,
+        "minSeconds": 0.007542208,
+        "maxSeconds": 0.008153834,
+        "processCpuSeconds": 0.02569,
+        "processMaxRssKiB": 740,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.00741825,
+        "medianSeconds": 0.006825583,
+        "minSeconds": 0.006787958,
+        "maxSeconds": 0.00741825,
+        "processCpuSeconds": 0.023377,
+        "processMaxRssKiB": 736,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007200667,
+        "medianSeconds": 0.006885375,
+        "minSeconds": 0.00683375,
+        "maxSeconds": 0.007200667,
+        "processCpuSeconds": 0.023356,
+        "processMaxRssKiB": 736,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008160833,
+        "medianSeconds": 0.007574292,
+        "minSeconds": 0.007549208,
+        "maxSeconds": 0.008160833,
+        "processCpuSeconds": 0.025756,
+        "processMaxRssKiB": 740,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.0158095,
+        "medianSeconds": 0.01525825,
+        "minSeconds": 0.015079459,
+        "maxSeconds": 0.0158095,
+        "processCpuSeconds": 0.058687,
+        "processMaxRssKiB": 1528,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05831058300100267,
+        "medianSeconds": 0.05806674999621464,
+        "minSeconds": 0.05784887499612523,
+        "maxSeconds": 0.05831058300100267,
+        "processCpuSeconds": 1.204433,
+        "processMaxRssKiB": 11548,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007188709,
+        "medianSeconds": 0.006826459,
+        "minSeconds": 0.006762292,
+        "maxSeconds": 0.007188709,
+        "processCpuSeconds": 0.023324,
+        "processMaxRssKiB": 736,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.0081865,
+        "medianSeconds": 0.00758625,
+        "minSeconds": 0.007582459,
+        "maxSeconds": 0.0081865,
+        "processCpuSeconds": 0.025755,
+        "processMaxRssKiB": 740,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015878041,
+        "medianSeconds": 0.015414584,
+        "minSeconds": 0.015224125,
+        "maxSeconds": 0.015878041,
+        "processCpuSeconds": 0.059116,
+        "processMaxRssKiB": 1524,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05826945900480496,
+        "medianSeconds": 0.05795620899880305,
+        "minSeconds": 0.057683500002895016,
+        "maxSeconds": 0.05826945900480496,
+        "processCpuSeconds": 1.199519,
+        "processMaxRssKiB": 11420,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.011389,
+        "medianSeconds": 0.006897625,
+        "minSeconds": 0.006749167,
+        "maxSeconds": 0.011389,
+        "processCpuSeconds": 0.023509,
+        "processMaxRssKiB": 736,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008011792,
+        "medianSeconds": 0.007756292,
+        "minSeconds": 0.007604625,
+        "maxSeconds": 0.008011792,
+        "processCpuSeconds": 0.025755,
+        "processMaxRssKiB": 740,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.0159215,
+        "medianSeconds": 0.015258833,
+        "minSeconds": 0.015122042,
+        "maxSeconds": 0.0159215,
+        "processCpuSeconds": 0.058812,
+        "processMaxRssKiB": 1528,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.058254874995327555,
+        "medianSeconds": 0.057701290999830235,
+        "minSeconds": 0.05762749999848893,
+        "maxSeconds": 0.058254874995327555,
+        "processCpuSeconds": 1.19987,
+        "processMaxRssKiB": 11532,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007317334,
+        "medianSeconds": 0.006829958,
+        "minSeconds": 0.006755292,
+        "maxSeconds": 0.007317334,
+        "processCpuSeconds": 0.023263,
+        "processMaxRssKiB": 736,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008144208,
+        "medianSeconds": 0.007713125,
+        "minSeconds": 0.007632625,
+        "maxSeconds": 0.008144208,
+        "processCpuSeconds": 0.025818,
+        "processMaxRssKiB": 740,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015703042,
+        "medianSeconds": 0.015335541,
+        "minSeconds": 0.01521625,
+        "maxSeconds": 0.015703042,
+        "processCpuSeconds": 0.05953,
+        "processMaxRssKiB": 1528,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05872329099656781,
+        "medianSeconds": 0.058221915998728946,
+        "minSeconds": 0.058090958002139814,
+        "maxSeconds": 0.05872329099656781,
+        "processCpuSeconds": 1.200434,
+        "processMaxRssKiB": 11524,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      }
+    ],
+    "nativeBinariesSha256": {
+      "zxing": "e75ee7716f28f26025d8f6565418d8e1fe6ced9e34d30448355b0f7e41e613ec",
+      "quirc": "8a480ef850303b805c9971b634bc587dcd7c38a3e7b093dc3a33cf49527d9124",
+      "quirc-float": "500c90260fbf79f43a8a8c64e1d543df4125eb9a89334299d49c37e1623753ed"
+    }
+  },
+  "syntheticBinaryCompatibility": [
+    {
+      "decoder": "quirc-default",
+      "runs": 3,
+      "matches": 3,
+      "symbols": 3,
+      "candidates": 3,
+      "firstSeconds": 0.072539542,
+      "medianSeconds": 0.072539542,
+      "minSeconds": 0.027274042,
+      "maxSeconds": 0.085539125,
+      "processCpuSeconds": 0.080668,
+      "processMaxRssKiB": 748,
+      "fixture": {
+        "name": "nul-highbit",
+        "payloadBytes": 13,
+        "payloadSha256": "2edbbf9b98402ac02b6f18d4edc5cd1f5b08fa9fb957c18019b0f9664c375df0",
+        "inputSha256": "c3b1b902df595e6d88e46c2e89a5d9c45c887928d848905fba8bdaf7428fd85a"
+      }
+    },
+    {
+      "decoder": "quirc-default",
+      "runs": 3,
+      "matches": 3,
+      "symbols": 3,
+      "candidates": 3,
+      "firstSeconds": 0.055407334,
+      "medianSeconds": 0.054335459,
+      "minSeconds": 0.053866458,
+      "maxSeconds": 0.055407334,
+      "processCpuSeconds": 0.165244,
+      "processMaxRssKiB": 748,
+      "fixture": {
+        "name": "all-byte-values",
+        "payloadBytes": 256,
+        "payloadSha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880",
+        "inputSha256": "d77c77274152a9c839053fb270bc3c2dbf06b2076af0c77e816e45dec7a9de25"
+      }
+    },
+    {
+      "decoder": "quirc-default",
+      "runs": 3,
+      "matches": 3,
+      "symbols": 3,
+      "candidates": 3,
+      "firstSeconds": 0.050164334,
+      "medianSeconds": 0.059713208,
+      "minSeconds": 0.050164334,
+      "maxSeconds": 0.060395417,
+      "processCpuSeconds": 0.094243,
+      "processMaxRssKiB": 748,
+      "fixture": {
+        "name": "binary32-bytes",
+        "payloadBytes": 32,
+        "payloadSha256": "d8d04ea66a4c5b31915f38c073229f5f5691773c7549891cbd7280e13f0ba43d",
+        "inputSha256": "ef342d5cc6b590fee5f37367cfd9838e22d46174a6da72a6ef4a8e3f2e54d948"
+      }
+    },
+    {
+      "decoder": "quirc-float",
+      "runs": 3,
+      "matches": 3,
+      "symbols": 3,
+      "candidates": 3,
+      "firstSeconds": 0.047820208,
+      "medianSeconds": 0.038395875,
+      "minSeconds": 0.0313075,
+      "maxSeconds": 0.047820208,
+      "processCpuSeconds": 0.067387,
+      "processMaxRssKiB": 748,
+      "fixture": {
+        "name": "nul-highbit",
+        "payloadBytes": 13,
+        "payloadSha256": "2edbbf9b98402ac02b6f18d4edc5cd1f5b08fa9fb957c18019b0f9664c375df0",
+        "inputSha256": "c3b1b902df595e6d88e46c2e89a5d9c45c887928d848905fba8bdaf7428fd85a"
+      }
+    },
+    {
+      "decoder": "quirc-float",
+      "runs": 3,
+      "matches": 3,
+      "symbols": 3,
+      "candidates": 3,
+      "firstSeconds": 0.095834667,
+      "medianSeconds": 0.084581583,
+      "minSeconds": 0.061900417,
+      "maxSeconds": 0.095834667,
+      "processCpuSeconds": 0.141777,
+      "processMaxRssKiB": 748,
+      "fixture": {
+        "name": "all-byte-values",
+        "payloadBytes": 256,
+        "payloadSha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880",
+        "inputSha256": "d77c77274152a9c839053fb270bc3c2dbf06b2076af0c77e816e45dec7a9de25"
+      }
+    },
+    {
+      "decoder": "quirc-float",
+      "runs": 3,
+      "matches": 3,
+      "symbols": 3,
+      "candidates": 3,
+      "firstSeconds": 0.031830167,
+      "medianSeconds": 0.031830167,
+      "minSeconds": 0.024683459,
+      "maxSeconds": 0.0357,
+      "processCpuSeconds": 0.077798,
+      "processMaxRssKiB": 748,
+      "fixture": {
+        "name": "binary32-bytes",
+        "payloadBytes": 32,
+        "payloadSha256": "d8d04ea66a4c5b31915f38c073229f5f5691773c7549891cbd7280e13f0ba43d",
+        "inputSha256": "ef342d5cc6b590fee5f37367cfd9838e22d46174a6da72a6ef4a8e3f2e54d948"
+      }
+    }
+  ],
+  "preprocessing": {
+    "formula": "Pillow ImageChops.subtract(gray, BoxBlur(gray,radius), offset=128); point(255 if p>128-bias else 0)",
+    "settingsTested": [
+      {
+        "radius": 8,
+        "bias": 3
+      },
+      {
+        "radius": 16,
+        "bias": 3
+      },
+      {
+        "radius": 16,
+        "bias": 6
+      },
+      {
+        "radius": 24,
+        "bias": 6
+      }
+    ],
+    "results": [
+      {
+        "variant": "all-140-adaptive-16-3.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009298041,
+          "medianSeconds": 0.009298041,
+          "minSeconds": 0.009298041,
+          "maxSeconds": 0.009298041,
+          "processCpuSeconds": 0.01208,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-140-adaptive-16-6.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009188083,
+          "medianSeconds": 0.009188083,
+          "minSeconds": 0.009188083,
+          "maxSeconds": 0.009188083,
+          "processCpuSeconds": 0.011794,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-140-adaptive-24-6.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009086,
+          "medianSeconds": 0.009086,
+          "minSeconds": 0.009086,
+          "maxSeconds": 0.009086,
+          "processCpuSeconds": 0.011902,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-140-adaptive-8-3.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009345292,
+          "medianSeconds": 0.009345292,
+          "minSeconds": 0.009345292,
+          "maxSeconds": 0.009345292,
+          "processCpuSeconds": 0.01203,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-218-adaptive-16-3.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009429291,
+          "medianSeconds": 0.009429291,
+          "minSeconds": 0.009429291,
+          "maxSeconds": 0.009429291,
+          "processCpuSeconds": 0.01223,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-218-adaptive-16-6.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009133834,
+          "medianSeconds": 0.009133834,
+          "minSeconds": 0.009133834,
+          "maxSeconds": 0.009133834,
+          "processCpuSeconds": 0.011869,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-218-adaptive-24-6.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.0091175,
+          "medianSeconds": 0.0091175,
+          "minSeconds": 0.0091175,
+          "maxSeconds": 0.0091175,
+          "processCpuSeconds": 0.011976,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-218-adaptive-8-3.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009207042,
+          "medianSeconds": 0.009207042,
+          "minSeconds": 0.009207042,
+          "maxSeconds": 0.009207042,
+          "processCpuSeconds": 0.01203,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-296-adaptive-16-3.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009622083,
+          "medianSeconds": 0.009622083,
+          "minSeconds": 0.009622083,
+          "maxSeconds": 0.009622083,
+          "processCpuSeconds": 0.012313,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-296-adaptive-16-6.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009095333,
+          "medianSeconds": 0.009095333,
+          "minSeconds": 0.009095333,
+          "maxSeconds": 0.009095333,
+          "processCpuSeconds": 0.01191,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-296-adaptive-24-6.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009207334,
+          "medianSeconds": 0.009207334,
+          "minSeconds": 0.009207334,
+          "maxSeconds": 0.009207334,
+          "processCpuSeconds": 0.011913,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-296-adaptive-8-3.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009075791,
+          "medianSeconds": 0.009075791,
+          "minSeconds": 0.009075791,
+          "maxSeconds": 0.009075791,
+          "processCpuSeconds": 0.01186,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-35-adaptive-16-3.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 1,
+          "symbols": 1,
+          "candidates": 1,
+          "firstSeconds": 0.031517208,
+          "medianSeconds": 0.031517208,
+          "minSeconds": 0.031517208,
+          "maxSeconds": 0.031517208,
+          "processCpuSeconds": 0.034245,
+          "processMaxRssKiB": 748
+        }
+      },
+      {
+        "variant": "all-35-adaptive-16-6.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009002,
+          "medianSeconds": 0.009002,
+          "minSeconds": 0.009002,
+          "maxSeconds": 0.009002,
+          "processCpuSeconds": 0.011864,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-35-adaptive-24-6.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.00916475,
+          "medianSeconds": 0.00916475,
+          "minSeconds": 0.00916475,
+          "maxSeconds": 0.00916475,
+          "processCpuSeconds": 0.011944,
+          "processMaxRssKiB": 740
+        }
+      },
+      {
+        "variant": "all-35-adaptive-8-3.luma",
+        "result": {
+          "decoder": "quirc-default",
+          "runs": 1,
+          "matches": 0,
+          "symbols": 0,
+          "candidates": 0,
+          "firstSeconds": 0.009195083,
+          "medianSeconds": 0.009195083,
+          "minSeconds": 0.009195083,
+          "maxSeconds": 0.009195083,
+          "processCpuSeconds": 0.011966,
+          "processMaxRssKiB": 740
+        }
+      }
+    ],
+    "scope": "Preprocessed on desktop, native quirc decoded on Luckfox; preparation excluded from native timing. Best setting rescued1/4; not a reliable solution."
+  },
+  "conclusion": "quirc supports exact binary payloads and is smaller in this harness, but ZXing LocalAverage is more reliable for these captured frames. Failed-detection attempt latency is not successful decoding throughput.",
+  "limits": [
+    "Limited static target and lighting; not a universal decoder ranking.",
+    "RSS is whole standalone process, not library-only allocation.",
+    "quirc context is allocated/resized once per process; required image copy is inside the timer.",
+    "No live SeedSigner integration, animated assembly, or camera optics qualification follows."
+  ],
+  "upstreamThresholdSource": "https://github.com/dlbeer/quirc/blob/927d680904dc95fdff4cd9d022eb374b438ff8f2/lib/identify.c",
+  "sourceSha256": {
+    "reverse-engineering/rkaiq/scripts/quirc-native-bench.c": "943a5e3da76e3b64acdb0d6edb27a3622ad2dc182a4546f3e0a4a66b7d0a4038",
+    "reverse-engineering/rkaiq/scripts/build-quirc-native-bench.py": "5db7116de76c3c31036cba60cd1618e17d2053769752c40ae2afbb1f55f1cf4a"
+  }
+}

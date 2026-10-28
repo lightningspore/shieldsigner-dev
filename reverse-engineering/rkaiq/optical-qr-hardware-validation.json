@@ -1,0 +1,329 @@
+{
+  "kind": "real-optical-qr-hardware-validation",
+  "development": "0.0.38-dev",
+  "cameraExecutableFromFrozenKit": "0.0.37-dev",
+  "frozenArchiveModified": false,
+  "target": "Bundled known-public printed Bitcoin address; no synthetic input in optical test",
+  "sourceSha256": {
+    "firmware/rkaiq-rs/python/shieldsigner_integration.py": "58d7f8fffb9a6c1c7cfaa54f23843c737761c22fb0c2a429973b7440be4db191",
+    "firmware/rkaiq-rs/python/optical_camera_check.py": "fc2856e882480d5d0150c68f03bdb5886bdd7bc0982dda2ac6678fe3f261f212",
+    "firmware/rkaiq-rs/python/integration_hardware_check.py": "beeee86cbc96265b2dfaa2bb915c05ba071c499590fc7d6478b30f56660c3f85"
+  },
+  "optical": {
+    "kind": "known-public-target-optical-camera-check",
+    "matched": true,
+    "opticalScanQualified": true,
+    "framesExamined": 2,
+    "otherCompletedOrInvalid": 0,
+    "cameraBinarySha256": "127f7195e56b34d169f1c527815156855c3efbffc11a528a72cc75fbc4eec825",
+    "integration": {
+      "sourceSha256": "7cf9c67797d5b14cfbea206e91bc5c85292ec01f36fca68edbaee13977a5809e",
+      "patchedSourceSha256": "726294bdd9d3a2b1b85a6109b9fd8db0f3761eadb1292f436f4767af19a2ff71",
+      "changes": [
+        "Rust PiVideoStream import",
+        "Preserve complete rotated preview canvas"
+      ],
+      "installedFilesModified": false,
+      "qrFallback": {
+        "kind": "jpeg85-after-no-raw-symbol",
+        "attempts": 2,
+        "successes": 1
+      }
+    },
+    "scope": "One known public static address through real camera, ISP, Rust controls and installed DecodeQR; no synthetic image input",
+    "matchAfterSeconds": 4.442176961001678,
+    "ownerExitCode": 0,
+    "passed": true,
+    "durationSeconds": 4.620632336000199
+  },
+  "integration": {
+    "passed": true,
+    "integration": {
+      "sourceSha256": "7cf9c67797d5b14cfbea206e91bc5c85292ec01f36fca68edbaee13977a5809e",
+      "patchedSourceSha256": "726294bdd9d3a2b1b85a6109b9fd8db0f3761eadb1292f436f4767af19a2ff71",
+      "changes": [
+        "Rust PiVideoStream import",
+        "Preserve complete rotated preview canvas"
+      ],
+      "installedFilesModified": false,
+      "qrFallback": {
+        "kind": "jpeg85-after-no-raw-symbol",
+        "attempts": 1,
+        "successes": 0
+      }
+    },
+    "opticalScanQualified": false,
+    "syntheticQrCases": [
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      }
+    ],
+    "changedSourceRejected": true,
+    "realFrameDecodeStatus": 4,
+    "capture": {
+      "firstFrameSeconds": 0.6094655010001588,
+      "first": 35,
+      "last": 120,
+      "samples": 53,
+      "received": 72,
+      "stopSeconds": 0.3076476670012198,
+      "ownerExitCode": 0
+    },
+    "realFrameRotations": [
+      {
+        "setting": 0,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 90,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 180,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 270,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      }
+    ],
+    "rotationBenchmark": {
+      "croppedSecondsPerFrame": 0.052948408399970504,
+      "expandedSecondsPerFrame": 0.012705758399897604
+    },
+    "installedCameraUnchanged": true
+  },
+  "diagnosis": {
+    "rawOnlyRuns": [
+      {
+        "frames": 88,
+        "matched": false
+      },
+      {
+        "frames": 58,
+        "matched": false
+      }
+    ],
+    "sameCapturedFrame": {
+      "rawRgb": false,
+      "grayscale": false,
+      "rotated180": false,
+      "autocontrast": false,
+      "jpegQuality85Subsampling0": true
+    },
+    "medianAndBlurFallbacks": false,
+    "preciseImagingCauseEstablished": false
+  },
+  "limits": [
+    "One static known public address and current scene only.",
+    "No animated QR throughput or full LCD/buttons qualification.",
+    "Fallback adds an in-memory JPEG encode and second ZBar pass on raw misses.",
+    "Existing installed application files and frozen kit remain unchanged.",
+    "Development Python integration tested with exact frozen executable; no new Rust executable or 0.0.38 archive built."
+  ]
+}

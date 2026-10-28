@@ -70,11 +70,21 @@ def main():
     v['red']=boundary[i//len(boundary)%len(boundary)] if i%3==1 else rng.randrange(-(1<<63),1<<63)
     v['blue']=boundary[i//3%len(boundary)] if i%3==2 else rng.randrange(-(1<<63),1<<63)
    inputs.append('awb-gain '+json.dumps(v,separators=(',',':')));expected.append(run(arm,v));key=f'{kind}:{i%8}';coverage[key]=coverage.get(key,0)+1
+ # Native luma-history variance is qNaN when every rounded brightness is zero.
+ # It is a comparison input, not a gain/coefficient, so preserve the original
+ # ordered branch instead of rejecting an otherwise valid dark-frame update.
+ variance_cases=0
+ for bits in [0x7fc00000,0xffc00000,0x7f800001,0x7fffffff,0x7f800000,0xff800000]:
+  for coefficient in [0.,.3,.85]:
+   v=dict(kind='factor',first=[1.]*4,second=[1.]*4,threshold=.5,step=.1,minimum=0.,maximum=.9,coefficient=f32(coefficient),variance=struct.unpack('<f',struct.pack('<I',bits))[0])
+   expected.append(run(arm,v));value=dict(v);value.pop('variance');value['variance_bits']=bits
+   inputs.append('awb-gain '+json.dumps(value,separators=(',',':')));variance_cases+=1
+ coverage['factor:nonfinite-variance']=variance_cases
  assert not arm.calls,arm.calls
  assert not arm.runtime.calls,arm.runtime.calls
  actual=subprocess.run([str(ROOT/'firmware/rkaiq-rs/target/release/numeric-fixture')],input='\n'.join(inputs)+'\n',text=True,capture_output=True,check=True).stdout.splitlines();assert len(actual)==len(expected)
  mismatches=[dict(case=i,input=inputs[i],expected=x,actual=y) for i,(x,y) in enumerate(zip(expected,actual)) if x!=y]
- report=dict(binarySha256=sha,runtimeSha256=runtime_sha,nativeRuntimeFunctions=['__aeabi_l2f'],nativeRuntimeCalls=arm.runtime_calls,nativeRuntimeImportedCalls=arm.runtime.calls,seed='0x41574247',cases=len(inputs),casesPerFunction=a.cases,mismatchCount=len(mismatches),importedCalls=arm.calls,elfEntries={'normalize':'0xca030','mixture':'0xca080','factor':'0xc9f2c','damp':'0xca0e0','ratios':'0xca7cc','statistics':'0xc99d8'},coverage=coverage,scope='Exact f32 gain/coefficient bits for six original AWB routines, signed weighted-count rounding and temporal context preservation',limitations=['Checked finite inputs and outputs; arbitrary NaN/infinity or native pointer aliasing outside the Rust value API.','This is the original gain/temporal stage, not illumination classification, probability weighting, calibration loading, convergence policy or a complete AWB controller.','No live sensor/ISP frame application or independent camera startup has been verified.'])
+ report=dict(binarySha256=sha,runtimeSha256=runtime_sha,nativeRuntimeFunctions=['__aeabi_l2f'],nativeRuntimeCalls=arm.runtime_calls,nativeRuntimeImportedCalls=arm.runtime.calls,seed='0x41574247',cases=len(inputs),casesPerFunction=a.cases,mismatchCount=len(mismatches),importedCalls=arm.calls,elfEntries={'normalize':'0xca030','mixture':'0xca080','factor':'0xc9f2c','damp':'0xca0e0','ratios':'0xca7cc','statistics':'0xc99d8'},coverage=coverage,scope='Exact f32 gain/coefficient bits for six original AWB routines, signed weighted-count rounding and temporal context preservation',limitations=['Finite gains, coefficients and calibration; damping additionally covers18 NaN/infinity variance cases matching native ordered comparisons. Native pointer aliasing remains outside the Rust value API.','This is the original gain/temporal stage, not illumination classification, probability weighting, calibration loading, convergence policy or a complete AWB controller.','No live sensor/ISP frame application or independent camera startup has been verified.'])
  if mismatches:report['firstMismatches']=mismatches[:3]
  (ROOT/'reverse-engineering/rkaiq/awb-gain-equivalence.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k not in ('coverage','firstMismatches')},indent=2))
  if mismatches:print(json.dumps(mismatches[:1]));raise SystemExit(1)

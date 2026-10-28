@@ -16,6 +16,38 @@ Binaries:
   measurement and log diagnostics remain retained.
 - `numeric-fixture`: line-based comparison runner for recovered native routines.
 - `frame-preview`: supported frame payloads to uncalibrated grayscale PGM.
+- `shieldsigner-qr-reader`: persistent QR-only ZXing-C++ worker, separate from
+  the Rust RKAIQ replacement. It returns unchanged binary payloads over a local
+  framed connection; no vendor runtime or target C++ installation is required.
+
+Development **0.0.38-dev** fixes native dark-history damping (NaN variance is
+compared rather than rejected), bounds runtime logs, and supports both the
+legacy test-board app and the pinned image app Camera APIs. Its exact Rust
+binary passed [fresh native ISP/AWB comparisons](../../reverse-engineering/rkaiq/isp-0.0.38-fresh-hardware-validation.json).
+The [native QR integration check](../../reverse-engineering/rkaiq/native-qr-integration-hardware-validation.json)
+passed binary payloads, CompactSeedQR, reversed/duplicated animated UR PSBT,
+and the pinned image app's real stream/still APIs. This is distinct from booting
+the newly built image and from a live optical target qualification.
+
+To opt in on an existing app installation:
+
+```sh
+python3 python/shieldsigner_integration.py --app-root /ABSOLUTE/APP_ROOT --config /ABSOLUTE/owner.json --qr-reader /ABSOLUTE/shieldsigner-qr-reader
+```
+
+The launcher changes modules only in that process and rejects unreviewed
+Camera source hashes. `--qr-reader` (or `SHIELDSIGNER_QR_READER`) selects the
+persistent native worker. Without it, the existing ZBar/JPEG fallback remains
+available. Stop closes the worker; failures are counted and the installed ZBar
+extractor remains an emergency fallback. Binary bytes are never transcoded to
+text before SeedSigner's existing payload classification/assembly.
+
+Normal managed capture logs retain the first 256 KiB and newest 768 KiB, with
+at most three explicitly owned finished bounded sessions. Scene frames and QR
+payloads are not written. `SHIELDSIGNER_CAMERA_LOG_FULL=1` is an explicit
+unbounded diagnostic mode required for full original-ARM replay traces.
+[Actual bounded-log hardware evidence](../../reverse-engineering/rkaiq/bounded-logging-hardware-validation.json)
+records 4.39 MB received and about 1 MiB retained, with clean shutdown.
 
 Use `camera:rust:*` mise tasks. `Cargo.lock` pins dependencies; static
 ARMv7/musl binaries require no target dynamic uClibc runtime. Local tests,
@@ -53,10 +85,139 @@ animated formats such as UR. That decoder is separate from RKAIQ and remains
 the installed application implementation. No new Rust QR decoder is required
 to replace the proprietary camera-control library.
 
+The development 0.0.38 integration adds a process-local retry: if the original
+decoder finds no symbol in a Pillow frame, it retries an in-memory JPEG at
+quality 85 with chroma subsampling disabled. Raw successes bypass the retry;
+binary payloads and SeedSigner's format handling remain intact. No JPEG or
+decoded payload is written to disk. A real target failed raw decoding but
+decoded after this transformation of the **same** frame; simple blur and
+median filters did not help. This establishes a useful workaround, not the
+precise imaging cause. Misses incur an extra encode and ZBar pass.
+
+[Optical hardware evidence](../../reverse-engineering/rkaiq/optical-qr-hardware-validation.json)
+records a known public printed address decoded through the real camera and
+installed decoder using the new integration with the frozen 0.0.37 executable.
+This does not qualify animated QR throughput or every lighting condition.
+
+Run the focused fallback contract checks with:
+
+```sh
+mise exec -- uv run --python 3.13 --with pillow python firmware/rkaiq-rs/python/test_qr_fallback.py
+```
+
 The optical checker compares camera-decoded content only against the bundled
 public test target; synthetic fixture success does not qualify an optical scan.
 
+#### QR robustness investigation
+
+[Paired-frame investigation](../../reverse-engineering/rkaiq/qr-decoder-investigation.json)
+found that JPEG quality 75 helped one live batch (8/8 versus raw 0/8 and
+quality 85 3/8), but every tested JPEG variant failed subsequent batches.
+There is no reliable quality-only fix established. ISP defaults and the current
+application fallback remain unchanged.
+
+ZXing-C++ 3.1.1 decoded all four saved raw frames from the last batch on the
+desktop; ZBar decoded none of those same frames, with or without JPEG.
+ZXing's `LocalAverage` binarizer passed 4/4; its `GlobalHistogram` and
+`FixedThreshold` settings passed 0/4. This points to decoder/binarization
+sensitivity and demonstrates readable data in the raw camera images. It does
+not prove ideal ISP quality. The current uClibc board cannot use the ordinary
+glibc Python wheel, so a static ARM executable was built instead.
+
+[Native Luckfox comparison](../../reverse-engineering/rkaiq/qr-native-hardware-benchmark.json)
+now passes: ZXing read 40/40 attempts on four identical saved camera luminance
+frames, versus ZBar 0/40. With capture stopped, median decode times were
+15.38 ms versus 58.04 ms (3.77x). This is a decode-only comparison excluding
+process startup and file loading; it does not establish live scan-loop FPS.
+Whole-process peak RSS was about 1.5 MiB for the native harness and 11.2 MiB
+for the Python/ZBar harness; that is not a library-only memory comparison.
+
+The native `Barcode::bytes()` API also preserved synthetic NUL/high-bit data,
+all 256 byte values and a 32-byte payload exactly (9/9 total reads on Luckfox).
+No text conversion is used. SeedSigner integration, animated assembly and
+speed under concurrent capture remain open.
+
+[quirc hardware comparison](../../reverse-engineering/rkaiq/quirc-native-hardware-comparison.json)
+also tested upstream quirc, default and float builds. Both preserved all binary
+fixtures (9/9 each), but found no QR in the four difficult raw frames (0/24
+attempts each), versus ZXing 24/24. Default quirc took about 7.6 ms per failed
+attempt and float about 6.8 ms, versus ZXing 15.3 ms per successful decode;
+failure latency is not successful-read throughput. Native process peaks were
+about 0.72 MiB for quirc versus 1.49 MiB for ZXing. Local box-threshold
+preprocessing rescued only 1/4 frames at the best tested setting. This is a
+limited scene comparison, not a universal ranking. ZXing remains the current
+integration candidate. Rebuild with `mise run camera:qr:quirc-build`; retain
+the upstream ISC license if distributing the resulting quirc binary.
+
+The [successful-read pipeline comparison](../../reverse-engineering/rkaiq/qr-successful-pipeline-comparison.json)
+now brings every decoder to 24/24 using the **same original four real camera
+frames**, six attempts each. Every decoder follows a fixed sequence: full raw
+frame, center crop `(160,120)-(480,360)`, then full-frame hybrid local threshold.
+It stops at any decoded symbol, independently of the known public-target
+comparison. No per-frame choice of settings or replacement synthetic images
+is used. Both the raw failures above and the successful pipelines are retained.
+
+| Reader | Raw reads | Pipeline reads | Median total | P95 total | Median CPU | Successful stage(s) |
+|---|---:|---:|---:|---:|---:|---|
+| ZXing-C++ | 24/24 | 24/24 | 35.1 ms | 37.7 ms | 33.9 ms | Raw: 24 |
+| quirc float | 0/24 | 24/24 | 49.5 ms | 117.8 ms | 47.1 ms | Crop: 18; local threshold: 6 |
+| quirc default | 0/24 | 24/24 | 54.5 ms | 127.8 ms | 52.2 ms | Crop: 18; local threshold: 6 |
+| ZBar/pyzbar | 0/24 | 24/24 | 174.8 ms | 210.8 ms | 172.6 ms | Local threshold: 24 |
+
+These are prototype pipeline times with capture stopped. They include failed
+earlier stages, preprocessing, native process startup, input loading and
+temporary I/O; source frames and initial Python imports precede the timer.
+CPU includes child processes. They differ intentionally from decode-only times
+above and do not establish final app FPS. All four readers also pass the same
+binary fixtures (9/9 each, including NUL and all 256 byte values).
+
+The shared final preprocessor is ZXing's `HybridBinarizer`, without its QR
+reader. Successful quirc/ZBar pipelines therefore depend on that additional
+component; they are not unassisted quirc/ZBar measurements. Reader-only RSS
+figures above exclude the Python parent and preprocessing worker, so they
+cannot be presented as total pipeline memory. The crop favors the central
+scan area; whole-frame stages remain first and last. Broader independent
+framing/lighting and animated application tests remain open.
+
+`python/qr_success_pipeline_benchmark.py` reproduces the cascade on the device
+using `--directory PRIVATE_LUMA_DIRECTORY --native-directory NATIVE_DIRECTORY
+--report NEW_JSON`. Its native directory contains `reader`, `quirc-default`,
+`quirc-float`, and `threshold` (the built `qr-native-threshold` executable).
+`mise run camera:qr:native-build` builds the threshold helper as well.
+
+Rebuild the pinned QR-only ZXing 3.1.1 benchmark with
+`mise run camera:qr:native-build`. It uses mise Zig 0.15.2 as a C/C++
+cross-compiler for Cortex-A7/musl; no application code is written in Zig and no
+board system libraries are replaced. The ignored `.tools` checkout preserves
+upstream licensing. `python/qr_device_benchmark.py` alternates decoder order
+across two rounds; the native reader accepts `LUMA WIDTH HEIGHT ITERATIONS`
+and an optional expected-payload file for byte-exact synthetic checks.
+`reverse-engineering/rkaiq/scripts/qr-binary-fixtures.py --output NEW_DIRECTORY`
+generates the public binary fixtures using Pillow and qrcode. Keep real camera
+frames private and stop the camera owner before repeating the timed comparison.
+
+`python/qr_pipeline_hardware_check.py --config CONFIG --report NEW_JSON`
+compares preprocessing on identical real frames. It owns the camera, so stop
+the preview owner first. Optional `--compare-sharp` changes only the diagnostic
+child's module selection. That A/B attempt produced no frames and remains
+inconclusive. Images are not saved unless `--private-frame-directory` is
+explicitly supplied; keep such frames under private ignored storage.
+
+For an offline decoder comparison on those private lossless PNGs:
+
+```sh
+mise exec -- uv run --python 3.13 --with pillow --with zxing-cpp==3.1.1 python firmware/rkaiq-rs/python/qr_decoder_desktop_check.py --input-directory PRIVATE_PNG_DIRECTORY --report NEW_JSON
+```
+
 ### Faster desktop preview (0.0.37 development)
+
+Development 0.0.38 also keeps capture running if an AWB session update returns
+`NonFinite`: the transactional session retains its previous state/gains and
+retries on subsequent statistics. AE continues. On hardware, the old executable
+stopped in the dark scene; the updated executable rejected initial updates and
+then resumed successful AWB processing. [Recovery evidence](../../reverse-engineering/rkaiq/awb-nonfinite-recovery-hardware-validation.json).
+The underlying invalid arithmetic still needs investigation; this is an owner
+recovery policy, not a claim of native algorithm equivalence for the error case.
 
 For the desktop demo only, set `SHIELDSIGNER_CAMERA_STREAM_FORMAT=nv12` on the
 Rust owner process. It sends tightly packed full-range BT.601 NV12 using

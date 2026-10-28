@@ -334,6 +334,8 @@ def main():
         help="Replay contiguous frame-NNN capture files once in actual order; overrides paired samples",
     )
     p.add_argument("--cycles", type=int, default=2)
+    p.add_argument("--zero-brightness-diagnostic", action="store_true",
+                   help="Override only AE brightness metadata to zero; numerical dark-history regression, not a physical dark-scene test")
     p.add_argument(
         "--require-match",
         action="store_true",
@@ -420,6 +422,9 @@ def main():
         order = [i for _ in range(a.cycles) for i in range(2)]
         incoming_updates = [index == 0 for index in range(len(order))]
         initial_sdk = a.samples / "group-0.sdk.bin"
+    if a.zero_brightness_diagnostic:
+        for value in meta:
+            value["normalizedBrightness"] = 0.0
     assert all(len(r) == 7680 for r in raw)
     assert all(m["association"] == "exact-registered-snapshot" for m in meta)
     common = dict(iq=wb, dimensions=[2304, 1296], sample_scale=1, iso=meta[0]["iso"])
@@ -601,7 +606,9 @@ def main():
     report = dict(
         kind="joined-native-awb-captured-diagnostic",
         hardwareWrites=False,
-        inputMode="actual-frame-order" if a.trace_dir else "cyclic-paired-captures",
+        inputMode=("zero-brightness-metadata-diagnostic" if a.zero_brightness_diagnostic
+                   else "actual-frame-order" if a.trace_dir else "cyclic-paired-captures"),
+        zeroBrightnessDiagnostic=a.zero_brightness_diagnostic,
         seedPreviousDiagnostic=a.seed_previous_diagnostic,
         fullControllerQualified=False,
         nativeStartup=arm.startup,
@@ -652,7 +659,9 @@ def main():
                 else "Stops at ReconfigHwParaV32 entry; SDK record generation is not executed."
             ),
             (
-                "Actual captured frame order and per-frame AE/update inputs; capture provenance does not itself qualify optical response."
+                "Recorded statistics/order/ISO/update inputs with AE brightness deliberately forced to zero; not a physical dark-scene capture."
+                if a.zero_brightness_diagnostic
+                else "Actual captured frame order and per-frame AE/update inputs; capture provenance does not itself qualify optical response."
                 if a.trace_dir
                 else "Paired captured records replayed cyclically; not a continuous optical scene sequence."
             ),

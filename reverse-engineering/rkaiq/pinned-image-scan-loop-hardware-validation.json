@@ -1,0 +1,95 @@
+{
+  "passed": true,
+  "opticalScanQualified": false,
+  "physicalDisplayQualified": false,
+  "physicalButtonsQualified": false,
+  "runtimeProfileOverride": "luckfox_22",
+  "cameraBinarySha256": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+  "nativeQrBinarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "appSourcesSha256": {
+    "seedsigner/hardware/camera.py": "f5a927cdf7fd99f9c21aff793b540f59c1e9523a8945daaec96e1cb35375f6f2",
+    "seedsigner/models/decode_qr.py": "cd981f1b31144617836b1823198423fa53cc047fe251f28f6d5d7403466e2f1c",
+    "seedsigner/gui/screens/scan_screens.py": "738cfec806bb3eaa500b66331ec7fc515634c22739e246fe1ac5ad0d14b53ecf"
+  },
+  "helperSha256": "3a538d30be7df58e816d85a3ffb9be9d6e1f5d2f83e772df2f49979357adf69f",
+  "scope": "Pinned app real Camera/ScanScreen._run/LivePreviewThread rendering; only physical display/buttons and full Screen construction substituted",
+  "seconds": 3.9884810020012083,
+  "decodedFrames": 8,
+  "decodeStatusCounts": {
+    "4": 8
+  },
+  "renderedFrames": 13,
+  "renderedSizes": [
+    [
+      240,
+      240
+    ]
+  ],
+  "previewJoined": true,
+  "softwareCancelTriggered": true,
+  "screenReturnedCancel": true,
+  "backendInfo": {
+    "backend": "rust-sc3336-fixed-native",
+    "nativeResolution": [
+      640,
+      480
+    ],
+    "returnedImageMode": "RGB",
+    "requestedResolution": [
+      480,
+      480
+    ],
+    "requestedFramerate": 6,
+    "requestedFormat": "bgr",
+    "requestedV4l2": true,
+    "legacyCameraConfig": {
+      "device": "/dev/video12",
+      "pixelformat": "GREY",
+      "framerate": 6,
+      "resolution": [
+        480,
+        480
+      ]
+    },
+    "resamplingPerformed": false
+  },
+  "receivedFrames": 11,
+  "ownerExitCode": 0,
+  "qrWorkerClosedOnCameraStop": true,
+  "controlSummary": {
+    "success": true,
+    "processedStatistics": 25,
+    "parameterSubmissions": 24,
+    "automaticWhiteBalance": true
+  },
+  "threadErrors": [],
+  "nativeQrStats": {
+    "kind": "native-zxing-3.1.1-local-average",
+    "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+    "starts": 1,
+    "calls": 8,
+    "decoded": 0,
+    "errors": 0,
+    "lastRoundTripSeconds": 0.14274954199936474,
+    "lastExitCode": 0
+  },
+  "installedSourcesUnchanged": true,
+  "kind": "pinned-image-app-scan-loop-hardware-validation",
+  "version": "0.0.38-dev",
+  "run": 169,
+  "privateReportSha256": "4be785cc4013632e90eee3e6a72b639c0156d77b451a42c470a366975d50f6de",
+  "diagnosticDependencyOverlay": {
+    "shamir-mnemonic": "0.3.0",
+    "pycryptodomex": "3.21.0",
+    "scope": "Isolated board PYTHONPATH dependencies used because the old rootfs differs from the intended image; final image pins pycryptodomex3.23 and is separately built/checked."
+  },
+  "limits": [
+    "Actual pinned ScanScreen._run,LivePreviewThread and _render_preview_frame execute with actual Camera and nativeQR backend; actual app fonts/resources load.",
+    "Full BaseScreen constructor/hardware Renderer/buttons are replaced only at headless display/software cancel boundaries. This is not a physical LCD/button test.",
+    "Settings.RUNTIME_PROFILE is explicitly overridden to luckfox_22; device-tree runtime-profile autodetection remains outside this check.",
+    "The existing physical public QR is clipped. All8decode attempts return FALSE and timedcancel succeeds; no optical scan success is claimed.",
+    "Decode/render counts are actual loop iterations, not a unique-frame throughput benchmark.",
+    "The backend publishes its explicit fixed640x480 RGB native stream despite upstream480x480/6FPS/BGR/legacyV4L2 requests. Requested settings and ignored legacy device remain visible in backendInfo.",
+    "Old-rootfs diagnostic dependencies differ from finalimage; this does not prove the final rootfs boots."
+  ]
+}

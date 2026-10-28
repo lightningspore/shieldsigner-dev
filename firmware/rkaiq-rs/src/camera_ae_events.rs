@@ -111,6 +111,8 @@ fn retain_parameter_snapshots<T>(records: &mut Vec<(u32, T)>, watermark: u32, pi
     records.retain(|(id, _)| Some(*id) == latest || *id >= watermark || pinned.contains(id));
 }
 
+use super::camera_awb_trace::write_awb_trace_attempt;
+
 /// Persistent AWB beside the AE owner, including FAST-to-normal scheduling.
 /// Each successful submission registers its own effective measurement record.
 struct CameraAwb {
@@ -119,6 +121,7 @@ struct CameraAwb {
     last_iso: Option<f32>,
     sample_directory: Option<std::path::PathBuf>,
     trace_directory: Option<std::path::PathBuf>,
+    trace_attempts: usize,
     sampled_groups: u8,
     gains: Vec<(
         u32,
@@ -170,6 +173,7 @@ impl CameraAwb {
             .map_err(|e| error(format!("Live AWB association: {e:?}")))?;
         let mut next_measurement = None;
         if outcome == Outcome::Translated {
+          'awb_update: {
             let real_gain = |offset| {
                 f32::from_le_bytes(ae_pre.exposure[offset..offset + 4].try_into().unwrap())
             };
@@ -201,22 +205,16 @@ impl CameraAwb {
             // Explicit private diagnostic: retain the first 32 translated
             // inputs in owner processing order, including their exact SDK/AE
             // association. Normal streaming performs no trace writes.
-            if self.processed < 32 {
+            if self.trace_attempts < 32 {
                 if let Some(directory) = &self.trace_directory {
-                    fs::create_dir_all(directory)?;
                     let sdk = self.measurements.iter().find(|(id, _)| *id == stats.parameters_id())
                         .ok_or_else(|| error("Missing traced AWB configuration"))?;
-                    for (suffix, data) in [("stats.raw", bytes), ("sdk.bin", sdk.1.as_slice()), ("translated.bin", frame.as_slice())] {
-                        let path = directory.join(format!("frame-{:03}.{suffix}", self.processed));
-                        OpenOptions::new().write(true).create_new(true).open(path)?.write_all(data)?;
-                    }
-                    let metadata = json!({"index":self.processed,"frameId":stats.frame_id(),"parametersId":stats.parameters_id(),"group":group,"iso":iso,"normalizedBrightness":ae_pre.normalized_brightness,"requestedUpdate":self.processed==0,"association":"exact-registered-snapshot","order":"owner-processed-translated-statistics"});
-                    let file = OpenOptions::new().write(true).create_new(true)
-                        .open(directory.join(format!("frame-{:03}.json", self.processed)))?;
-                    serde_json::to_writer_pretty(file, &metadata).map_err(|e| error(e.to_string()))?;
+                    let metadata = json!({"processedBeforeCapture":self.processed,"frameId":stats.frame_id(),"parametersId":stats.parameters_id(),"group":group,"iso":iso,"normalizedBrightness":ae_pre.normalized_brightness,"requestedUpdate":self.processed==0,"association":"exact-registered-snapshot","order":"owner-attempted-translated-statistics"});
+                    write_awb_trace_attempt(directory, &mut self.trace_attempts,
+                        [("stats.raw", bytes), ("sdk.bin", sdk.1.as_slice()), ("translated.bin", frame.as_slice())], metadata)?;
                 }
             }
-            let result = self
+            let result = match self
                 .session
                 .process(
                     &frame,
@@ -226,8 +224,17 @@ impl CameraAwb {
                         iso,
                         site_reference: None,
                     },
-                )
-                .map_err(|e| error(format!("Live AWB session: {e:?}")))?;
+                ) {
+                    Ok(result) => result,
+                    Err(shieldsigner_rkaiq::InvalidInput::NonFinite) => {
+                        // Session::process stages its state: a rejected update
+                        // leaves the previous gains and histories intact. Keep
+                        // AE/capture alive and retry AWB on subsequent frames.
+                        println!("{}", json!({"event":"automatic-awb-rejected","frame":stats.frame_id(),"reason":"NonFinite","retainedPreviousGain":true}));
+                        break 'awb_update;
+                    }
+                    Err(e) => return Err(error(format!("Live AWB session: {e:?}"))),
+                };
             if result.action.reconfigure && stats.frame_id() != 0 {
                 let mut record = self
                     .gains
@@ -251,6 +258,7 @@ impl CameraAwb {
                 json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"ccmDamping":self.session.ccm_damping(),"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"complete":result.complete,"activeLights":result.active_lights,"group":i32::from_le_bytes(frame[0x1d78..0x1d7c].try_into().unwrap()),"physicalLights":frame[0x1d74],"exposureMetadata":"same-frame-AE-normalized-brightness","aeNormalizedBrightness":ae_pre.normalized_brightness,"brightness":result.numeric.luma,"iso":iso,"isoSource":"same-frame-associated-real-gains","measurementConfiguration":"FAST-to-normal-timeshare"})
             );
         }
+          }
         let g = self.session.gain();
         if self.gains.len() == 128 {
             return Err(error("Live AWB gain history limit reached"));

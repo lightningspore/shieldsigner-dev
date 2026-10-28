@@ -1,0 +1,335 @@
+{
+  "kind": "luckfox-native-qr-decoder-comparison",
+  "zxingVersion": "3.1.1",
+  "zxingSourceCommit": "287c85df6f961c8efbfb5ffd736cd9457b8b890e",
+  "build": "QR-only Release C++20, mise Zig0.15.2, arm-linux-musleabihf cortex_a7, static executable; no board system libraries replaced",
+  "conditions": "Camera owner stopped during timed comparison; four saved real VGA camera frames converted once to identical Pillow L bytes; two rounds with decoder order reversed, five calls per frame per decoder per round. Decode timers exclude loading and process startup.",
+  "summary": {
+    "installed-zbar-pyzbar": {
+      "matches": 0,
+      "attempts": 40,
+      "medianOfCaseMediansSeconds": 0.05804122899644426,
+      "processPeakRssKiBRange": [
+        11436,
+        11524
+      ]
+    },
+    "zxing-cpp-3.1.1": {
+      "matches": 40,
+      "attempts": 40,
+      "medianOfCaseMediansSeconds": 0.015378853500000001,
+      "processPeakRssKiBRange": [
+        1532,
+        1536
+      ]
+    }
+  },
+  "medianTimeRatioZbarOverZxing": 3.774093367652163,
+  "benchmark": {
+    "kind": "same-device-qr-decoder-benchmark",
+    "width": 640,
+    "height": 480,
+    "input": "Identical Pillow L luminance bytes; no JPEG or preprocessing in timed calls",
+    "scope": "Static public target, saved real camera frames; not live/animated app integration",
+    "timing": "Per-call wall time; QR-only, default search settings, ZXing LocalAverage",
+    "memory": "Current-executable /proc/self/status VmHWM, including Python for ZBar and static C++ for ZXing; not isolated library overhead",
+    "nativeSha256": "e75ee7716f28f26025d8f6565418d8e1fe6ced9e34d30448355b0f7e41e613ec",
+    "zbarLibrarySha256": "91bd8c6d6154ae28d9892f3c40d90650cab54bcc779cd7cef85b2c456c0b0829",
+    "cases": [
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 5,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.058494040997175034,
+        "medianSeconds": 0.05802183299965691,
+        "minSeconds": 0.0578870840035961,
+        "maxSeconds": 0.058494040997175034,
+        "processCpuSeconds": 1.3294190000000001,
+        "processMaxRssKiB": 11512,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 5,
+        "matches": 5,
+        "symbols": 5,
+        "firstSeconds": 0.015343417,
+        "medianSeconds": 0.015221791,
+        "minSeconds": 0.015144792,
+        "maxSeconds": 0.015596,
+        "processCpuSeconds": 0.089204,
+        "processMaxRssKiB": 1536,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 5,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.058438042004127055,
+        "medianSeconds": 0.05793608399835648,
+        "minSeconds": 0.057757583002967294,
+        "maxSeconds": 0.05879270799778169,
+        "processCpuSeconds": 1.311547,
+        "processMaxRssKiB": 11508,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 5,
+        "matches": 5,
+        "symbols": 5,
+        "firstSeconds": 0.015813292,
+        "medianSeconds": 0.015371416,
+        "minSeconds": 0.015200791,
+        "maxSeconds": 0.015813292,
+        "processCpuSeconds": 0.089787,
+        "processMaxRssKiB": 1532,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 5,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05836191599519225,
+        "medianSeconds": 0.05836191599519225,
+        "minSeconds": 0.05777158399723703,
+        "maxSeconds": 0.0825305840044166,
+        "processCpuSeconds": 1.311549,
+        "processMaxRssKiB": 11440,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 5,
+        "matches": 5,
+        "symbols": 5,
+        "firstSeconds": 0.015811833,
+        "medianSeconds": 0.015423625,
+        "minSeconds": 0.015115625,
+        "maxSeconds": 0.015811833,
+        "processCpuSeconds": 0.089442,
+        "processMaxRssKiB": 1536,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 5,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05868187500163913,
+        "medianSeconds": 0.05826158299896633,
+        "minSeconds": 0.05815308300225297,
+        "maxSeconds": 0.05898899999738205,
+        "processCpuSeconds": 1.317815,
+        "processMaxRssKiB": 11524,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 5,
+        "matches": 5,
+        "symbols": 5,
+        "firstSeconds": 0.015796959,
+        "medianSeconds": 0.015495083,
+        "minSeconds": 0.015339333,
+        "maxSeconds": 0.015796959,
+        "processCpuSeconds": 0.089985,
+        "processMaxRssKiB": 1536,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 5,
+        "matches": 5,
+        "symbols": 5,
+        "firstSeconds": 0.015537667,
+        "medianSeconds": 0.015386291,
+        "minSeconds": 0.015094625,
+        "maxSeconds": 0.015940166,
+        "processCpuSeconds": 0.089066,
+        "processMaxRssKiB": 1536,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 5,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05839779199595796,
+        "medianSeconds": 0.0579952910047723,
+        "minSeconds": 0.0577928749989951,
+        "maxSeconds": 0.05839779199595796,
+        "processCpuSeconds": 1.313488,
+        "processMaxRssKiB": 11488,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 5,
+        "matches": 5,
+        "symbols": 5,
+        "firstSeconds": 0.015789375,
+        "medianSeconds": 0.015298792,
+        "minSeconds": 0.015206917,
+        "maxSeconds": 0.015789375,
+        "processCpuSeconds": 0.089343,
+        "processMaxRssKiB": 1532,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 5,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05813149999448797,
+        "medianSeconds": 0.05795679099537665,
+        "minSeconds": 0.05771937499957858,
+        "maxSeconds": 0.05813149999448797,
+        "processCpuSeconds": 1.3116690000000002,
+        "processMaxRssKiB": 11500,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 5,
+        "matches": 5,
+        "symbols": 5,
+        "firstSeconds": 0.015641209,
+        "medianSeconds": 0.015284209,
+        "minSeconds": 0.015071875,
+        "maxSeconds": 0.015641209,
+        "processCpuSeconds": 0.089245,
+        "processMaxRssKiB": 1536,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 5,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.058092999999644235,
+        "medianSeconds": 0.05806062499323161,
+        "minSeconds": 0.0576254589977907,
+        "maxSeconds": 0.058458457999222446,
+        "processCpuSeconds": 1.3127209999999998,
+        "processMaxRssKiB": 11492,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 5,
+        "matches": 5,
+        "symbols": 5,
+        "firstSeconds": 0.01575525,
+        "medianSeconds": 0.015404958,
+        "minSeconds": 0.015273709,
+        "maxSeconds": 0.01575525,
+        "processCpuSeconds": 0.089712,
+        "processMaxRssKiB": 1536,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 5,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05856812500132946,
+        "medianSeconds": 0.058322541997767985,
+        "minSeconds": 0.0581991669969284,
+        "maxSeconds": 0.058883999998215586,
+        "processCpuSeconds": 1.315267,
+        "processMaxRssKiB": 11436,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      }
+    ]
+  },
+  "binaryCompatibility": {
+    "kind": "synthetic-byte-mode-QR-to-native-bytes-check",
+    "nativeBinarySha256": "ef5f4d247c3f9ae28cac79248fbe78d2041b4c9f2dd318b401a086cc03d1c693",
+    "cameraRunningDuringCompatibilityCheck": true,
+    "fixtures": [
+      {
+        "name": "nul-highbit",
+        "payloadBytes": 13,
+        "payloadSha256": "2edbbf9b98402ac02b6f18d4edc5cd1f5b08fa9fb957c18019b0f9664c375df0",
+        "inputSha256": "c3b1b902df595e6d88e46c2e89a5d9c45c887928d848905fba8bdaf7428fd85a",
+        "result": {
+          "decoder": "zxing-cpp-3.1.1",
+          "runs": 3,
+          "matches": 3,
+          "symbols": 3,
+          "firstSeconds": 0.110258458,
+          "medianSeconds": 0.103375125,
+          "minSeconds": 0.095015667,
+          "maxSeconds": 0.110258458,
+          "processCpuSeconds": 0.082597,
+          "processMaxRssKiB": 1464
+        }
+      },
+      {
+        "name": "all-byte-values",
+        "payloadBytes": 256,
+        "payloadSha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880",
+        "inputSha256": "d77c77274152a9c839053fb270bc3c2dbf06b2076af0c77e816e45dec7a9de25",
+        "result": {
+          "decoder": "zxing-cpp-3.1.1",
+          "runs": 3,
+          "matches": 3,
+          "symbols": 3,
+          "firstSeconds": 0.159682833,
+          "medianSeconds": 0.159682833,
+          "minSeconds": 0.15413825,
+          "maxSeconds": 0.17252375,
+          "processCpuSeconds": 0.120824,
+          "processMaxRssKiB": 1528
+        }
+      },
+      {
+        "name": "binary32-bytes",
+        "payloadBytes": 32,
+        "payloadSha256": "d8d04ea66a4c5b31915f38c073229f5f5691773c7549891cbd7280e13f0ba43d",
+        "inputSha256": "ef342d5cc6b590fee5f37367cfd9838e22d46174a6da72a6ef4a8e3f2e54d948",
+        "result": {
+          "decoder": "zxing-cpp-3.1.1",
+          "runs": 3,
+          "matches": 3,
+          "symbols": 3,
+          "firstSeconds": 0.113258833,
+          "medianSeconds": 0.109714209,
+          "minSeconds": 0.08736,
+          "maxSeconds": 0.113258833,
+          "processCpuSeconds": 0.081115,
+          "processMaxRssKiB": 1468
+        }
+      }
+    ],
+    "limits": "Synthetic payload compatibility; not a physical optical test or animated QR assembly test."
+  },
+  "limits": [
+    "Static known public QR, four camera frames only.",
+    "Standalone native reader, not yet installed in SeedSigner app.",
+    "Whole-process RSS includes Python for ZBar; not a comparison of library-only allocations.",
+    "processCpuSeconds includes startup/imports; use per-call wall times for the speed comparison.",
+    "Performance under concurrent live capture and animated/binary app integration remain unqualified."
+  ],
+  "next": "Integrate native bytes into process-local SeedSigner decoder, preserve raw byte payloads, test real scan loop and animated fragments."
+}

@@ -1,12 +1,72 @@
 # First camera session
 
-Current development and latest frozen kit are **0.0.37-dev**.
+Current development is **0.0.38-dev**; the latest frozen kit is **0.0.37-dev**.
+Use the [current completion audit](completion-audit.json) and
+[current development README](../../firmware/rkaiq-rs/README.md) for current scope.
+The dated version statements and isolated-module failures later in this file
+are historical sessions, not instructions to disable blocks in today's
+complete-group configuration.
 [Kit verification](kit-0.0.37-dev-installation-verification.json) covers all 548 files.
 The [exact0.0.37 controlled-reboot test](kit-0.0.37-dev-cold-reboot-validation.json) passed with vendor camera startup skipped, 75 real application frames, corrected paired detector flags and clean shutdown. Original startup scripts were restored.
 The [exact0.0.36 controlled-reboot test](kit-0.0.36-dev-cold-reboot-validation.json) passed with 74 received real frames, complete preview rotation and clean shutdown; vendor camera startup was skipped and original scripts restored.
 See the [combined ISP result](ISP.md#development-0035-combined-isp-hardware-result).
 Version statements below describe historical sessions.
 The exact frozen 0.0.35 kit passed [controlled clean-reboot application integration](kit-0.0.35-dev-cold-reboot-validation.json): vendor startup skipped, open drivers loaded, 74 real frames received, clean owner shutdown. This is not a physical power-cycle test.
+
+### Development release checks and bounded runtime logs
+
+The default managed application stores at most 256 KiB of startup log plus
+768 KiB of its latest log payload per camera session, with a truncation marker.
+Only the latest three explicitly owned, finished bounded-log sessions are
+retained. Unknown directories, active sessions and full diagnostic sessions
+are not pruned. A log write error is recorded while the output pipe continues
+draining, so a full filesystem cannot deadlock Rust on diagnostic output.
+
+Set `SHIELDSIGNER_CAMERA_LOG_FULL=1` only for a bounded diagnostic run into
+persistent storage when reconstructing the full native parameter sequence.
+The live native verifier refuses truncated logs. Full diagnostic mode keeps
+all logs and disables automatic session pruning; it can fill an SD card and
+does not belong in the default image launch environment.
+
+After final source edits, rebuild the exact runtime artifacts and smoke-test
+them before running application/native/optical hardware checks:
+
+```sh
+mise run camera:rust:arm
+mise run camera:qr:native-build
+mise run camera:rust:smoke
+```
+
+`native_qr_hardware_check.py --app-root APP_ROOT --reader NATIVE_QR_WORKER
+--report NEW_JSON` verifies byte-exact QR extraction, CompactSeedQR and
+animated UR assembly against the installed application. It uses synthetic
+public fixtures and supplies no optical proof. For actual optical scanning,
+set `SHIELDSIGNER_QR_READER` to the exact worker and run
+`optical_camera_check.py --app-root APP_ROOT --config OWNER_JSON --report
+NEW_JSON` while the printed public target is in view.
+
+The release gate is `mise run camera:release:preflight`. It checks current
+static ARM executables, exact smoke hashes, application camera/Python hashes,
+and the native worker/Python hardware evidence. Development inspection can
+use `--allow-dirty`; freezing a kit requires committed, clean source. Preserve
+existing archives and bump the package version if their content changes.
+After extracting a new mode-aware kit, run `verify_kit.py --restore-modes KIT`
+to verify all content before restoring executable bits. Legacy 0.0.37 kits
+without mode records remain verifiable.
+
+A test kit is not a bootable image. The image build independently compiles and
+stages the runtime camera/QR/Python modules from public locked source; it does
+not require the private original-reference fixture cache used for research.
+
+[Image SDK/kernel ABI validation](image-sdk-kernel-abi-validation.json)
+independently compiles the builder's actual SDK headers for ARM (190 layout/
+ioctl assertions), checks its generated kernel configuration and compiled Mini
+DTB, and follows that DTB's driver match to full ISP32 rather than ISP32-Lite.
+The selected sensor is below the single-ISP size limit, giving a 11,145-byte
+parameter packet and 13,040-byte aligned statistics buffer. This verifies the
+source ABI, not boot-time `/dev/video*` or media-entity numbering. The finished
+image still needs installed module/firmware checks and an actual boot inventory
+and capture before its fixed observed graph can be called qualified.
 
 Development source is now **0.0.32-dev**; the recommended frozen kit is **0.0.31-dev**.
 The latest diagnostic work is [paired AWB sampling and controlled scene replay](#development-0032-paired-awb-samples-and-scene-change-diagnostics).

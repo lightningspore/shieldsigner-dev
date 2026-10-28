@@ -1,0 +1,414 @@
+{
+  "kind": "native-corroborated-dark-brightness-awb-fix",
+  "development": "0.0.38-dev",
+  "rootCause": "All rounded brightness history entries can legitimately be zero. Original CalculateVarianceLuma returns qNaN. Rust preserved that native value, but DampingParameters::adapt incorrectly rejected it as a nonfinite gain-like input.",
+  "fix": "Keep finite validation of gains, prior coefficient and calibrated damping parameters. Allow variance to drive the native ordered less-than comparison, which is false for NaN; this increases damping by its configured step. No fabricated zero variance and no arbitrary damping fallback.",
+  "beforeFixReproduction": "Production Session replay of an actual captured FAST statistics record with AE brightness metadata forced to zero returned session stage0cycle0 NonFinite.",
+  "nativeDamping": {
+    "symbol": "_Z16AwbCalDampFactorfffffPf",
+    "elfEntry": "0xc9f2c",
+    "nonfiniteVarianceCases": 18,
+    "totalGainFunctionCases": 6018,
+    "mismatches": 0,
+    "evidence": "awb-gain-equivalence.json",
+    "sha256": "50c52f396e14f02084fc9e7a47e020fba6607961ab4544ef3bb76b5bd0663157"
+  },
+  "persistentSession": {
+    "mode": "zero-brightness-metadata-diagnostic",
+    "hardwareWrites": false,
+    "frames": 32,
+    "mismatchingFrames": 0,
+    "allNativeVariancesAreNaN": true,
+    "nativeInitializationStatus": 0,
+    "nativeInitializationWbBytes": 2108,
+    "wrapperCalls": 19,
+    "hardwareReconfigurationCompared": true,
+    "packedIspBytesComparedPerFrame": 11145,
+    "initializedSdkBytesComparedPerFrame": 1140,
+    "rawPrivateReportSha256": "a809a0ea9c6d1a4c248a58fea883a066a001438716f811f4d5fc9c73ea836607",
+    "sourceFrameGainBits": [
+      {
+        "index": 0,
+        "gainBits": [
+          1068806282,
+          1065353216,
+          1065353216,
+          1073930056
+        ],
+        "dampingCoefficient": 0.0,
+        "differences": {}
+      },
+      {
+        "index": 1,
+        "gainBits": [
+          1068797494,
+          1065353216,
+          1065353216,
+          1073658360
+        ],
+        "dampingCoefficient": 0.699999988079071,
+        "differences": {}
+      },
+      {
+        "index": 2,
+        "gainBits": [
+          1068797494,
+          1065353216,
+          1065353216,
+          1073658360
+        ],
+        "dampingCoefficient": 0.699999988079071,
+        "differences": {}
+      },
+      {
+        "index": 3,
+        "gainBits": [
+          1068817414,
+          1065353216,
+          1065353216,
+          1073111826
+        ],
+        "dampingCoefficient": 0.75,
+        "differences": {}
+      },
+      {
+        "index": 4,
+        "gainBits": [
+          1068858041,
+          1065353216,
+          1065353216,
+          1072705502
+        ],
+        "dampingCoefficient": 0.800000011920929,
+        "differences": {}
+      },
+      {
+        "index": 5,
+        "gainBits": [
+          1068890105,
+          1065353216,
+          1065353216,
+          1072384826
+        ],
+        "dampingCoefficient": 0.8500000238418579,
+        "differences": {}
+      },
+      {
+        "index": 6,
+        "gainBits": [
+          1068910618,
+          1065353216,
+          1065353216,
+          1072074856
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 7,
+        "gainBits": [
+          1068927821,
+          1065353216,
+          1065353216,
+          1071814897
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 8,
+        "gainBits": [
+          1068939953,
+          1065353216,
+          1065353216,
+          1071664959
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 9,
+        "gainBits": [
+          1068842813,
+          1065353216,
+          1065353216,
+          1071774616
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 10,
+        "gainBits": [
+          1068807681,
+          1065353216,
+          1065353216,
+          1071797373
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 11,
+        "gainBits": [
+          1068757619,
+          1065353216,
+          1065353216,
+          1071862589
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 12,
+        "gainBits": [
+          1068736250,
+          1065353216,
+          1065353216,
+          1071862348
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 13,
+        "gainBits": [
+          1068799983,
+          1065353216,
+          1065353216,
+          1071770492
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 14,
+        "gainBits": [
+          1068782794,
+          1065353216,
+          1065353216,
+          1071715199
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 15,
+        "gainBits": [
+          1068874422,
+          1065353216,
+          1065353216,
+          1071593096
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 16,
+        "gainBits": [
+          1068874036,
+          1065353216,
+          1065353216,
+          1071563461
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 17,
+        "gainBits": [
+          1068874036,
+          1065353216,
+          1065353216,
+          1071563461
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 18,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 19,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 20,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 21,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 22,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 23,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 24,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 25,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 26,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 27,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 28,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 29,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 30,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      },
+      {
+        "index": 31,
+        "gainBits": [
+          1068871836,
+          1065353216,
+          1065353216,
+          1071553582
+        ],
+        "dampingCoefficient": 0.8999999761581421,
+        "differences": {}
+      }
+    ]
+  },
+  "tests": {
+    "cargoTest": "114library+1camera-trace+5preview+6transport tests passed,zero failures or ignored",
+    "newRegression": "Damping accepts native NaN/signed infinities as comparison inputs, while rejecting NaN coefficients or calibration."
+  },
+  "physicalDarkRetestQualified": false,
+  "limits": [
+    "AE brightness is deliberately forced to zero for this numerical regression. Captured statistics, ISO, input order and update metadata are preserved; this is not a physical dark-scene recording.",
+    "Full joined native JSON/context initialization, preparation, BLC binding and next measurement compare for this trajectory only; arbitrary IQ modes/full RKAIQ ABI remain outside scope.",
+    "Original scene/IQ/statistics are private and omitted from public evidence.",
+    "The camera owner retains its existing defensive NonFinite hold policy for other invalid updates."
+  ],
+  "sourceSha256": {
+    "firmware/rkaiq-rs/src/awb_gain.rs": "2cf1abd099b970b6306bb5a805f58f3474a7520b2c46b60a65367d9a6463a378",
+    "firmware/rkaiq-rs/src/bin/numeric-fixture.rs": "6b77546752a82061c6d22230ee27d8f108125ffc9d66ece72a80eed37d5172a5",
+    "reverse-engineering/rkaiq/scripts/awb-gain.py": "d510644cd16b5b5bb16ba4a18a28fd614eaae4233d9419790ab5f689deee764d",
+    "reverse-engineering/rkaiq/scripts/awb-joined-captured.py": "c0ac4373e22463df554d68ed4a5bc6c7d702fbfb336ae023ed0e539693923703",
+    "firmware/rkaiq-rs/src/camera_awb_trace.rs": "d777e84a865836992b5f7ee26de9f19da4f74d14c3ba4110f31e5f0b5b7c5860",
+    "firmware/rkaiq-rs/src/camera_ae_events.rs": "5d8454ccd80f717381698f84ced9f0d4d1639931ff82da4736a11b67aa51396c",
+    "firmware/rkaiq-rs/src/camera_first_frame.rs": "d665c4d17778b631836713bcc9f18f66294624680ea38b05086b6dad269fcb99"
+  },
+  "traceAttemptRegression": {
+    "fixed": true,
+    "scope": "Repeated rejected-session retries retain successful processedcount0 but use unique trace indices; private trace bounded to32attempts/128files.",
+    "test": "camera_awb_trace::awb_trace_tests::rejected_session_retry_keeps_unique_trace_names_and_attempt_budget"
+  },
+  "armBuild": {
+    "camera-probe": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+    "numeric-fixture": "da2e13dbc82b7e9423204350e0c2126642d0f2314012f0e069503ad7a5d237d0",
+    "frame-preview": "f7ed30fab01abd812237c649da665a29dad0fb1256ead5c1220213fd52118b14"
+  }
+}

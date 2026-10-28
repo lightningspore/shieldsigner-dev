@@ -10,6 +10,21 @@ from the physical checks and remaining reference boundaries.
 
 ## Current deliverable and work rules
 
+**CURRENT SOURCE: 0.0.38-dev.** The corrected dark-history damping follows the
+original ARM ordered NaN comparison. The exact new camera binary passed all
+nine ISP checks and 32 native-initialized AWB frames on a
+[fresh real capture](isp-0.0.38-fresh-hardware-validation.json).
+The [native QR/app integration](native-qr-integration-hardware-validation.json)
+and [pinned scan-loop check](pinned-image-scan-loop-hardware-validation.json)
+pass binary/CompactSeedQR, animated UR, stream/still capture and headless
+render/cancel paths. Runtime diagnostics are now
+[bounded on the actual board](bounded-logging-hardware-validation.json).
+The [image kernel ABI](image-sdk-kernel-abi-validation.json) passes 190 ARM
+assertions. The final image build and packaged-image verification are underway;
+physical image boot/UI/power-cycle and the currently clipped optical target
+remain separate qualification gates. The frozen 0.0.37 archive below retains
+its historical behavior until the new release is frozen and verified.
+
 **NOW:** the full SC3336 ISP group runs together on hardware: CCM, LSC,
 DPCC, BAYNR, BAY3D, YNR, CNR and SHARP, plus demosaic and live AE/AWB.
 The 600-image default-all capture passed native comparisons for all nine
@@ -26,7 +41,13 @@ constructor, prepare, BLC binding and 32 actual runtime inputs.
 [Native-initialized hardware proof](awb-native-initialization-hardware-validation.json).
 Older frozen archives remain unchanged; 0.0.36 predates the paired detector fix.
 
-**NEXT:** qualify actual optical QR scanning, physical lighting/color response,
+**OPTICAL:** one known public printed address now decodes through the real
+camera and installed SeedSigner decoder with the development 0.0.38 Python
+integration and frozen 0.0.37 executable. Its raw-first, in-memory JPEG retry
+resolved the observed raw-frame misses. [Evidence](optical-qr-hardware-validation.json).
+The frozen 0.0.37 archive is unchanged and does not contain this retry.
+
+**NEXT:** qualify broader optical scanning, physical lighting/color response,
 LCD/buttons and physical power cycling. The exact 0.0.36 kit passed a
 [controlled clean reboot](kit-0.0.36-dev-cold-reboot-validation.json). Review joined-native
 AWB controller coverage against the normal pinned profile before adding any
@@ -261,7 +282,9 @@ qualify every physical imaging condition or optional IQ mode.
 
 Still open:
 
-1. Successful optical decoding of a known public QR through the physical camera.
+1. Broader optical QR qualification (animated formats and varied framing/light).
+   One known public static address passes with the development Python retry;
+   this does not qualify every QR format or update the frozen 0.0.37 archive.
 2. Physical lighting/color changes and broader image quality, including the
    observed variable sensor-gain settling and its exposure-association implications.
 3. Actual LCD/buttons and complete application interaction; current scan-loop

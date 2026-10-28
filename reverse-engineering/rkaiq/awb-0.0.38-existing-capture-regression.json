@@ -1,0 +1,69 @@
+{
+  "kind": "development-awb-regression-existing-capture-replay",
+  "development": "0.0.38-dev",
+  "newHardwareCapture": false,
+  "sourceCaptureVersion": "0.0.37-dev",
+  "sourceCaptureBinarySha256": "127f7195e56b34d169f1c527815156855c3efbffc11a528a72cc75fbc4eec825",
+  "currentRustFixtureSha256": "82b0fad5547bb94b8595f76b06e4fc278f4bd66a2e972a2a572b90c1d6169bdc",
+  "framesCompared": 32,
+  "mismatchingFrames": 0,
+  "nativeInitializationStatus": 0,
+  "initializedSdkBytesComparedPerFrame": 1140,
+  "packedIspBytesComparedPerFrame": 11145,
+  "replayedGainsMatchOriginalLiveOwnerFrames": 32,
+  "privateFullReportSha256": "9e26b1efb76bf9f37303650315449e424f8834780b8e7b92fafd0bcd87dcebf0",
+  "scope": "Current Rust Session with dark-variance fix replays32previously captured actual inputs against full native JSON/init/prepare/BLC/reconfiguration; matches original live-source gains and next records. Not current-executable hardware qualification.",
+  "allNineIspCapturedReplay": {
+    "kind": "captured-isp-native-reference-replay",
+    "newHardwareCapture": false,
+    "ownerLogSha256": "cde5184cf67e7303151e1ca276264ba8ee834feb6ad3d8e2594bb0f8506390b7",
+    "initialParametersSha256": "ec3ad49cb242bb1f50f3977e33c2eebc6930c12acfbae4849be774503b9fb3b4",
+    "checks": {
+      "cnr": {
+        "reportSha256": "6768300097e826f75704ec55c015fbf5e6ae078e5d0d34bd7eedf433959eec4f",
+        "passed": true
+      },
+      "baynr": {
+        "reportSha256": "bde4d6b92d8e19c02cce954e1219bb3679f33c259b1bc18ea7aa4ee91294f83c",
+        "passed": true
+      },
+      "lsc": {
+        "reportSha256": "f7b630ee91415c36df2fc19f2138cc50d2f62a100cb6aa07b4813ee19bc53c1d",
+        "passed": true
+      },
+      "ccm": {
+        "reportSha256": "9206801b7f4daf433529acb668170c9190a960dfb1d12ea4905066e791ffe1e9",
+        "passed": true
+      },
+      "dpcc": {
+        "reportSha256": "08551d57a51674ef9ecda49ac3c7b036c0925c95f010c1acb96350e978724ae1",
+        "passed": true
+      },
+      "demosaic": {
+        "reportSha256": "a9b8da64518f95fe04ffade664658c407008ccb120db90a38f14ea34e6716ad2",
+        "passed": true
+      },
+      "new-blocks": {
+        "reportSha256": "e8c9bc0f1c6ae5db4b59911655f607cfd55dce6d60ab68bf63c7b01e3a5e3190",
+        "passed": true
+      },
+      "awb-translation": {
+        "reportSha256": "b01a204075fa2b89b9657e68bf6dc0365b10ce91605df85a242baef5b5e488b5",
+        "passed": true
+      }
+    },
+    "modulesCompared": [
+      "CCM",
+      "LSC",
+      "DPCC",
+      "BAYNR",
+      "BAY3D",
+      "YNR",
+      "CNR",
+      "SHARP",
+      "DEMOSAIC"
+    ],
+    "passed": true,
+    "scope": "Captured startup/runtime module outputs and converter bytes through original ARM; optional joined AWB executes current Rust fixture. This is replay of the supplied capture, not a new physical run."
+  }
+}

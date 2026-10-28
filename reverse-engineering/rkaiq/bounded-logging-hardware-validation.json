@@ -1,0 +1,24 @@
+{
+  "kind": "bounded-logging-real-camera-validation",
+  "passed": true,
+  "version": "0.0.38-dev",
+  "cameraBinarySha256": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+  "logging": {
+    "owner": "shieldsigner-managed-session-v1",
+    "finished": true,
+    "ownerExitCode": 0,
+    "fullLog": false,
+    "bytesReceived": 4391583,
+    "maxRetainedPayloadBytes": 1048576,
+    "errorType": null
+  },
+  "retainedLogBytes": 1048025,
+  "receivedFramesExamined": 241,
+  "ownerExitCode": 0,
+  "nativeQrCalls": 241,
+  "nativeQrErrors": 0,
+  "nativeWorkerExitCode": 0,
+  "scope": "Actual30secondmanagedcamera/nativeQR session; received4.39MBdiagnostics,retained~1MiB,drainerandbothworkersstoppedcleanly.",
+  "opticalScanQualified": false,
+  "opticalLimitation": "Printedtargetpartiallyoutsidetheframe; no contentmatch fromthissession."
+}

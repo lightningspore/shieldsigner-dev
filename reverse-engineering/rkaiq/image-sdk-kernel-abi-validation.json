@@ -1,0 +1,229 @@
+{
+  "kind": "image-sdk-kernel-camera-abi-validation",
+  "passed": true,
+  "sdkRevision": "0b5c1f30ca6333b7ec5af70d26511da9ef8d39af",
+  "kernelVersion": "5.10.160",
+  "actualSdkHeaderHashes": [
+    {
+      "name": "rk-isp2-config.h",
+      "sha256": "4222985137397f36ad8ed067d6b094d7e87dc07f621269ede9ff1eada8ff28c7"
+    },
+    {
+      "name": "rk-isp21-config.h",
+      "sha256": "ed7486c90504906825729d4f60d13a89d93c06bc9ea77c6af705d5d8edf8f1ca"
+    },
+    {
+      "name": "rk-isp3-config.h",
+      "sha256": "441a9722939ddcbeff8e73e2284db106d1356fc35c2e66be6c80394515f0055b"
+    },
+    {
+      "name": "rk-isp32-config.h",
+      "sha256": "dbf3e0fc8bccc4f2f7211d0c43e39f793f61ff867de8ca21a4226c6933d0353a"
+    },
+    {
+      "name": "videodev2.h",
+      "sha256": "2c69cc663e99edcfbe8891ec54e20c166e93505aca9cccda42d1d5f18269afc1"
+    },
+    {
+      "name": "v4l2-common.h",
+      "sha256": "e83918121c875b16eb13946718e34e899b42e99d3805da713c62341a585c54a3"
+    },
+    {
+      "name": "v4l2-controls.h",
+      "sha256": "21392f3c3a4c4c2c04ad06d93fa01906e9dac8c890fbc82f8456093d09250a3b"
+    },
+    {
+      "name": "media.h",
+      "sha256": "003e1ea9efcee90d8e1f7add9783b7a8b2c0a9cbc0290769d12a2a1cd23bb8dd"
+    },
+    {
+      "name": "rk-video-format.h",
+      "sha256": "9e7e6902b6815c10f0379bde057a4eb3ab6a397d4c09cd998e3411d197ecc3bf"
+    },
+    {
+      "name": "v4l2-subdev.h",
+      "sha256": "e7f20380ab9b7cbaa9b29d6bc26e69ce7397eae1385b6bd36b8bc66f4703e900"
+    },
+    {
+      "name": "rk-camera-module.h",
+      "sha256": "92da4c445c852d58e7096a6a83d343275bde6370b0c7afa9e957c121de60c93a"
+    },
+    {
+      "name": "rkcif-config.h",
+      "sha256": "9d2a145dacbe142ab53e20ded77722da2ee56758ec817cd9d5ce2088439b43ad"
+    }
+  ],
+  "armCompiledKernelAssertions": 190,
+  "parameterBytes": 11145,
+  "awbGainOffset": 4645,
+  "awbGainBytes": 32,
+  "statisticsLayout": [
+    13036,
+    13024,
+    13028,
+    13032,
+    2736,
+    4096,
+    11008,
+    12816,
+    12944,
+    12960,
+    225,
+    4,
+    8,
+    4
+  ],
+  "additionalIspBlockLayout": [
+    10345,
+    253,
+    10598,
+    162,
+    10819,
+    175
+  ],
+  "requiredKernelConfig": {
+    "CONFIG_CPU_RV1106": "y",
+    "CONFIG_VIDEO_ROCKCHIP_ISP_VERSION_V32": "y",
+    "CONFIG_COMPAT_32BIT_TIME": "y",
+    "CONFIG_MEDIA_CONTROLLER": "y",
+    "CONFIG_VIDEO_V4L2_SUBDEV_API": "y",
+    "CONFIG_VIDEO_ROCKCHIP_CIF": "m",
+    "CONFIG_VIDEO_ROCKCHIP_ISP": "m",
+    "CONFIG_VIDEO_SC3336": "m",
+    "CONFIG_PHY_ROCKCHIP_CSI2_DPHY": "m",
+    "CONFIG_ROCKCHIP_DVBM": "m"
+  },
+  "kernelConfigSha256": "4a8eb863167bb8a8a1386bd5045a55058c64f90b30e672c74d3068a783c098ce",
+  "compiledDtbSha256": "36b5404ac71d1dbff91dc15542d99bb7ee2c649cee27a5b302630a3546bc5af8",
+  "compiledDtbModel": "Luckfox Pico Mini",
+  "compiledDtbCompatible": [
+    "rockchip,rv1103g-38x38-ipc-v10",
+    "rockchip,rv1103"
+  ],
+  "compiledDtbCameraNodes": [
+    {
+      "path": "/csi2-dphy0",
+      "compatible": [
+        "rockchip,rv1106-csi2-dphy"
+      ],
+      "enabled": true
+    },
+    {
+      "path": "/csi2-dphy1",
+      "compatible": [
+        "rockchip,rv1106-csi2-dphy"
+      ],
+      "enabled": false
+    },
+    {
+      "path": "/csi2-dphy2",
+      "compatible": [
+        "rockchip,rv1106-csi2-dphy"
+      ],
+      "enabled": false
+    },
+    {
+      "path": "/rkcif-dvp",
+      "compatible": [
+        "rockchip,rkcif-dvp"
+      ],
+      "enabled": false
+    },
+    {
+      "path": "/rkcif-mipi-lvds",
+      "compatible": [
+        "rockchip,rkcif-mipi-lvds"
+      ],
+      "enabled": true
+    },
+    {
+      "path": "/rkcif-mipi-lvds-sditf",
+      "compatible": [
+        "rockchip,rkcif-sditf"
+      ],
+      "enabled": true
+    },
+    {
+      "path": "/rkcif-mipi-lvds1",
+      "compatible": [
+        "rockchip,rkcif-mipi-lvds"
+      ],
+      "enabled": false
+    },
+    {
+      "path": "/rkisp-vir0",
+      "compatible": [
+        "rockchip,rkisp-vir"
+      ],
+      "enabled": true
+    },
+    {
+      "path": "/csi2-dphy-hw@ff3e8000",
+      "compatible": [
+        "rockchip,rv1106-csi2-dphy-hw"
+      ],
+      "enabled": true
+    },
+    {
+      "path": "/i2c@ff470000/sc3336@30",
+      "compatible": [
+        "smartsens,sc3336"
+      ],
+      "enabled": true
+    },
+    {
+      "path": "/rkisp@ffa00000",
+      "compatible": [
+        "rockchip,rv1106-rkisp"
+      ],
+      "enabled": true
+    }
+  ],
+  "driverRoute": {
+    "compatible": "rockchip,rv1106-rkisp",
+    "ispVersion": "ISP_V32",
+    "litePathSelected": false,
+    "hardwareUnite": false,
+    "sensorSize": [
+      2304,
+      1296
+    ],
+    "maximumSingleIspSize": [
+      3072,
+      1728
+    ],
+    "expectedParameterBytes": 11145,
+    "expectedAlignedStatisticsBufferBytes": 13040,
+    "initialUniteMultiplier": 1,
+    "clrUnreadyDevParameterPresentIn": [
+      "video_rkcif",
+      "video_rkisp"
+    ],
+    "moduleBuildRules": {
+      "video_rkisp": "drivers/media/platform/rockchip/isp/Makefile",
+      "video_rkcif": "drivers/media/platform/rockchip/cif/Makefile",
+      "sc3336": "drivers/media/i2c/Makefile",
+      "phy-rockchip-csi2-dphy-hw": "drivers/phy/rockchip/Makefile",
+      "phy-rockchip-csi2-dphy": "drivers/phy/rockchip/Makefile"
+    }
+  },
+  "driverSourceSha256": {
+    "drivers/media/platform/rockchip/isp/hw.c": "056061ac8e5ae6b020494cc77abc1ad22fd8c268d6cdd7a580d59f539fbfe958",
+    "drivers/media/platform/rockchip/isp/isp_stats_v32.c": "19d1aef84d28611547dec241dd9b4dfff5490a78434d795ea41648fd10d42a2d",
+    "drivers/media/platform/rockchip/isp/isp_params_v32.c": "bd22b031cb402e758be25626869587290ef45af700e85de4dc6e0181a68f50ed",
+    "drivers/media/platform/rockchip/isp/rkisp.c": "39082393332549f5698921975000df360360b036495a82d51076a3292c8085c5",
+    "drivers/media/platform/rockchip/isp/rkisp.h": "db7031f428ae463bb700b17e8b776f3b012b054ba8209eabee1820af1cef3643",
+    "drivers/media/platform/rockchip/isp/dev.c": "ba184a6270665f1f315e518bfa2f46ee3a39a6f6653c24b99d9094de932e27d1",
+    "drivers/media/platform/rockchip/isp/Makefile": "3cdabec2ab8d8763295104840ef95dd3accf3db5c301b7c45fc3c868f6f0bc4d",
+    "drivers/media/platform/rockchip/cif/dev.c": "e9c7d1ff2f0b41fa1a8e3401cef0f606a1dc99d2c91c0b8189258ce8e5206305",
+    "drivers/media/platform/rockchip/cif/Makefile": "9183a558bb1067d96cd90242489dbded62a90aa446ec8ed08ef5b574bc69a129",
+    "drivers/media/i2c/Makefile": "fce30ed261ff8ea752afa4a7c900079631f7dc0d558be7c58703ea8d45a94026",
+    "drivers/phy/rockchip/Makefile": "e269e3fed25ed9b5702fdae792a7696a05ac4c8cbc68e344f65ffa8912a5c78e"
+  },
+  "probeSourceSha256": "2cc04a6838042d4bb5dc718c23566c31a9877020508fab33224ccbc2a07b5c31",
+  "limits": [
+    "Compile-time SDK UAPI and compiled DTB/config checks, not a boot of this image.",
+    "Fixed video/subdev/media entity numbers are assigned at registration time and still need a booted-image inventory/capture check.",
+    "Driver module binaries/install paths must be checked in the finished image; source/config checks alone do not prove module installation."
+  ]
+}

@@ -6,7 +6,7 @@
   "aeMeasurementMatch": true,
   "awbMeasurementReferenceCases": 2000,
   "awbMeasurementMatch": true,
-  "awbGainReferenceCases": 6000,
+  "awbGainReferenceCases": 6018,
   "awbGainMatch": true,
   "awbProbabilityReferenceCases": 2000,
   "awbProbabilityMatch": true,
@@ -61,9 +61,9 @@
   "nodeInventoryWithoutDevicePassed": true,
   "invalidVideoEndpointRejected": true,
   "binaries": {
-    "camera-probe": "127f7195e56b34d169f1c527815156855c3efbffc11a528a72cc75fbc4eec825",
-    "numeric-fixture": "f51be92050143214f48a415b728e009fede8976894a475b20e155d5b5bebd9eb",
-    "frame-preview": "db4acafff87e258547df7086595fc3aa74be36ee05effb8ba0ecb4641ae1cd10"
+    "camera-probe": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+    "numeric-fixture": "da2e13dbc82b7e9423204350e0c2126642d0f2314012f0e069503ad7a5d237d0",
+    "frame-preview": "f7ed30fab01abd812237c649da665a29dad0fb1256ead5c1220213fd52118b14"
   },
   "limitations": [
     "ARM/Linux userspace execution is verified; real camera capture and end-to-end ISP behavior are not tested."

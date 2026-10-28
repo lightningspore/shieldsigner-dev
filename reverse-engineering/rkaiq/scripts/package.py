@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Assemble a checksummed hardware-test kit, excluding vendor binaries/pseudocode."""
 from pathlib import Path
-import hashlib,json,os,platform,shutil,subprocess,tempfile,zipfile,tomllib
+import hashlib,json,os,platform,shutil,subprocess,sys,tempfile,zipfile,tomllib
 from elftools.elf.elffile import ELFFile
 ROOT=Path(__file__).resolve().parents[3]
 version=tomllib.loads((ROOT/'firmware/rkaiq-rs/Cargo.toml').read_text())['package']['version']
 revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+subprocess.run([sys.executable,str(ROOT/'reverse-engineering/rkaiq/scripts/release-preflight.py')],cwd=ROOT,check=True)
 if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip():
  raise SystemExit('Commit source and test evidence before freezing a versioned kit')
 base=ROOT/'dist/reverse-engineering';base.mkdir(parents=True,exist_ok=True)
@@ -24,6 +25,9 @@ for name in ['camera-probe','numeric-fixture','frame-preview']:
   elf=ELFFile(f);assert elf['e_machine']=='EM_ARM';assert not any(s['p_type']=='PT_INTERP' for s in elf.iter_segments())
   dynamic=elf.get_section_by_name('.dynamic');assert dynamic is None or not any(t.entry.d_tag=='DT_NEEDED' for t in dynamic.iter_tags()),'Unexpected dynamic dependency'
  copy(source,'bin/'+name).chmod(0o755)
+qr_source=ROOT/'dist/reverse-engineering/qr-native-build/cmake/shieldsigner-qr-reader'
+copy(qr_source,'bin/shieldsigner-qr-reader').chmod(0o755)
+qr_proof=json.loads((ROOT/'reverse-engineering/rkaiq/native-qr-integration-hardware-validation.json').read_text())
 for name in ['inputs.txt','expected.txt']:copy(base/'fixtures'/name,'fixtures/'+name)
 for name in ['README.md','HARDWARE-TEST.md','FUNCTIONS.md','LIFECYCLE.md','DISCOVERY.md','STATISTICS.md','AE.md','AWB.md','ISP.md','PARAMETERS.md','SENSOR.md','CALIBRATION.md','iq-calibration-equivalence.json','iq-plan-validation.json','sensor-descriptor-equivalence.json','exposure-equivalence.json','sensor-linear-equivalence.json','ae-decision-equivalence.json','ae-damping-equivalence.json','isp-pipeline-equivalence.json','isp-black-level-equivalence.json','isp-demosaic-equivalence.json','demosaic-selection-equivalence.json','parameter-queue-equivalence.json','ae-measurement-equivalence.json','awb-measurement-equivalence.json','awb-gain-equivalence.json','awb-probability-equivalence.json','awb-preparation-equivalence.json','ae-big-grid-equivalence.json','ae-histogram-equivalence.json','ae-grid-equivalence.json','statistics-equivalence.json','binding-equivalence.json','lifecycle-equivalence.json','numeric-equivalence.json','arm-smoke.json','artifacts.json']:
  copy(ROOT/'reverse-engineering/rkaiq'/name,'HARDWARE-TEST.md' if name=='HARDWARE-TEST.md' else 'research/'+name)
@@ -37,7 +41,7 @@ assert sequence['passed'] and len(automatic)==2 and all(s['imageFrames']==33 and
 copy(ROOT/'reverse-engineering/rkaiq/examples/pipeline-linear.template.json','examples/pipeline-linear.template.json')
 for name in ['pipeline-luckfox-sc3336-observed.json','public-address-qr.png']:
  copy(ROOT/'reverse-engineering/rkaiq/examples'/name,'examples/'+name)
-for name in ['verify_kit.py','configure_camera.py','optical_camera_check.py','shieldsigner_video_stream.py','shieldsigner_integration.py','stream_hardware_check.py','managed_hardware_check.py','integration_hardware_check.py','restart_hardware_check.py','scan_loop_hardware_check.py','image_artifact_hardware_check.py']:
+for name in ['verify_kit.py','configure_camera.py','optical_camera_check.py','shieldsigner_video_stream.py','shieldsigner_process_log.py','shieldsigner_camera_compat.py','shieldsigner_integration.py','shieldsigner_qr_decoder.py','native_qr_hardware_check.py','pinned_scan_loop_hardware_check.py','stream_hardware_check.py','managed_hardware_check.py','integration_hardware_check.py','restart_hardware_check.py','scan_loop_hardware_check.py','image_artifact_hardware_check.py']:
  copy(ROOT/'firmware/rkaiq-rs/python'/name,'python/'+name)
 copy(ROOT/'firmware/rkaiq-rs/python/sc3336-owner.example.json','examples/sc3336-owner.example.json')
 for name in ['server.py','index.html']:
@@ -102,7 +106,9 @@ assert smoke['aeMeasurementReferenceCases']==2000 and smoke['aeMeasurementMatch'
 for name in ['inputs.txt','expected.txt']:copy(base/'awb-measurement-fixtures'/name,'awb-measurement-fixtures/'+name)
 assert smoke['awbMeasurementReferenceCases']==2000 and smoke['awbMeasurementMatch']
 for name in ['inputs.txt','expected.txt']:copy(base/'awb-gain-fixtures'/name,'awb-gain-fixtures/'+name)
-assert smoke['awbGainReferenceCases']==6000 and smoke['awbGainMatch']
+awb_gain_proof=json.loads((ROOT/'reverse-engineering/rkaiq/awb-gain-equivalence.json').read_text())
+assert awb_gain_proof['cases']>=6000 and awb_gain_proof['mismatchCount']==0
+assert smoke['awbGainReferenceCases']==awb_gain_proof['cases'] and smoke['awbGainMatch']
 for name in ['inputs.txt','expected.txt']:copy(base/'awb-probability-fixtures'/name,'awb-probability-fixtures/'+name)
 assert smoke['awbProbabilityReferenceCases']==2000 and smoke['awbProbabilityMatch']
 for name in ['inputs.txt','expected.txt']:copy(base/'awb-preparation-fixtures'/name,'awb-preparation-fixtures/'+name)
@@ -119,6 +125,8 @@ tracked=subprocess.check_output(['git','ls-files','-z','--','firmware/rkaiq-rs']
 for name in sorted(filter(None,tracked)):
  path=ROOT/name
  if path.is_file() and path.name!='.gitignore':copy(path,'source/rkaiq-rs/'+str(path.relative_to(source)))
+for name in ['shieldsigner-qr-reader.cpp','qr-native-bench.cpp','qr-native-threshold.cpp','build-qr-native-bench.py','release-preflight.py','collect-runtime-notices.py']:
+ copy(ROOT/'reverse-engineering/rkaiq/scripts'/name,'source/qr-reader/'+name)
 if platform.system()=='Darwin' and platform.machine()=='arm64':
  for name in ['frame-preview','camera-probe']:
   host=source/'target/release'/name
@@ -126,7 +134,9 @@ if platform.system()=='Darwin' and platform.machine()=='arm64':
 readme=r'''Experimental Rust SC3336 camera kit 0.0.1
 
 Start with this quickstart, then research/HARDWARE-TEST.md for evidence and detailed scope.
-The ARM binary, managed Python adapter and opt-in application launcher are included.
+The ARM camera binary, managed Python adapter, native QR worker and opt-in
+application launcher are included. The QR worker is open-source ZXing-C++;
+the camera control/ISP replacement is Rust and does not call RKAIQ userspace.
 Development adds live ISO-dependent demosaic batches and default streaming
 without a final scene-image dump; explicit diagnostic saving remains available.
 Current development also includes live defect-pixel correction, color
@@ -140,7 +150,8 @@ Calibration, statistics and logs are still retained.
 The current source passed real AE/AWB capture, owner restart/crash cleanup,
 full-range RGB delivery and application preview/decoder integration. A controlled
 clean reboot was also tested; its separately bundled report identifies that build.
-This is not complete RKAIQ ABI parity, physical power-cycle or optical QR proof.
+The exact included evidence reports define optical qualification. This is not
+complete RKAIQ ABI parity or physical power-cycle/full-UI qualification.
 No vendor binary, full IQ profile, private scene image or device credential is bundled.
 
 Local desktop dashboard (after forwarding the owner's Unix stream socket):
@@ -162,7 +173,7 @@ loader; controlled one-boot skip helpers are documented in HARDWARE-TEST.md.
 After extracting this folder to persistent SD storage on the board:
 
   camera_kit_dir=/shieldsigner-camera-tests/rkaiq-camera-test-0.0.1
-  python3 "$camera_kit_dir/python/verify_kit.py" "$camera_kit_dir"
+  python3 "$camera_kit_dir/python/verify_kit.py" --restore-modes "$camera_kit_dir"
   chmod +x "$camera_kit_dir"/bin/*
   python3 "$camera_kit_dir/python/configure_camera.py" \
     --kit "$camera_kit_dir" \
@@ -202,7 +213,8 @@ streamed scene images are saved only with SHIELDSIGNER_CAMERA_SAVE_IMAGE=1. A ti
 For the actual app UI, with original UI/vendor services stopped:
 
   python3 "$camera_kit_dir/python/shieldsigner_integration.py" \
-    --app-root /seedsigner --config /shieldsigner-camera-tests/camera-kit.json
+    --app-root /seedsigner --config /shieldsigner-camera-tests/camera-kit.json \
+    --qr-reader "$camera_kit_dir/bin/shieldsigner-qr-reader"
 
 The launcher verifies the installed Camera source, swaps the backend and preserves
 complete rotated previews in memory. Installed Camera source and boot services
@@ -219,6 +231,13 @@ run-numeric-test.sh runs original-reference numerical corpora on-board; its PASS
 manifest.json hashes every kit file and identifies committed source. Source and
 dependency/runtime notices are included. Full research and mise tasks:
 https://github.com/lightningspore/shieldsigner-dev/tree/main/reverse-engineering/rkaiq
+
+The source/ files are review snapshots, not a standalone repository checkout.
+To rebuild, clone that repository, checkout manifest.json sourceRevision, then
+run mise run camera:rust:arm and mise run camera:qr:native-build. The pinned
+upstream QR source revision and runtime notices are in licenses/. A package
+freeze also requires exact current ARM smoke/application/native-QR evidence;
+mise run camera:release:preflight reports missing or stale release inputs.
 '''
 (kit/'README.txt').write_text(readme.replace('0.0.1',version));items.append('README.txt')
 script='''#!/bin/sh
@@ -410,18 +429,44 @@ for name in ['LICENSE-APACHE','LICENSE-MIT','COPYRIGHT.html']:
 zigroot=Path(subprocess.check_output(['mise','where','zig@0.15.2'],cwd=ROOT,text=True).strip())
 for path in [zigroot/'lib/libc/musl/COPYRIGHT',zigroot/'lib/libc/musl/COPYRIGHT.txt']:
  if path.exists():copy(path,'licenses/musl/'+path.name)
+# The QR worker statically links ZXing-C++, libc++/libc++abi and compiler runtime.
+zxing=ROOT/'.tools/zxing-cpp-3.1.1'
+zxing_revision=subprocess.check_output(['git','-C',str(zxing),'rev-parse','HEAD'],text=True).strip()
+assert zxing_revision=='287c85df6f961c8efbfb5ffd736cd9457b8b890e','Unexpected ZXing source revision'
+copy(zxing/'LICENSE','licenses/zxing-cpp/LICENSE')
+for path in sorted((zxing/'core/src/libzueci').iterdir()):
+ if path.is_file():copy(path,'licenses/zxing-cpp/libzueci/'+path.name)
+for component in ['libcxx','libcxxabi']:
+ copy(zigroot/'lib'/component/'LICENSE.TXT','licenses/'+component+'/LICENSE.TXT')
+copy(zigroot/'LICENSE','licenses/zig-runtime/LICENSE')
+qr_dependencies={'name':'ZXing-C++','version':'3.1.1','sourceRevision':zxing_revision,
+ 'sourceUrl':'https://github.com/zxing-cpp/zxing-cpp/tree/'+zxing_revision,
+ 'buildScriptSnapshot':'source/qr-reader/build-qr-native-bench.py','rebuildTask':'mise run camera:qr:native-build (from full source checkout)',
+ 'compiler':'mise Zig0.15.2 C++20 Cortex-A7/musl',
+ 'binarySha256':hashlib.sha256(qr_source.read_bytes()).hexdigest(),
+ 'notes':['No QR payload is converted to text by the worker.','libzueci notice/source headers are retained alongside its parent Apache2.0 license.','The complete upstream source is available at the pinned source URL; no vendor camera code is bundled.']}
+(kit/'licenses/qr-reader-dependencies.json').write_text(json.dumps(qr_dependencies,indent=2)+'\n');items.append('licenses/qr-reader-dependencies.json')
+subprocess.run([sys.executable,str(ROOT/'reverse-engineering/rkaiq/scripts/collect-runtime-notices.py'),
+ '--output',str(kit/'licenses')],cwd=ROOT,check=True)
+for path in sorted((kit/'licenses').rglob('*')):
+ if path.is_file():
+  relative=str(path.relative_to(kit))
+  if relative not in items:items.append(relative)
 (kit/'licenses/dependencies.json').write_text(json.dumps(licenses,indent=2)+'\n');items.append('licenses/dependencies.json')
 manifest={'sourceRevision':revision,'sourceWorktreeDirty':False,'version':version,'target':'armv7-unknown-linux-musleabihf',
- 'status':'Experimental SC3336 live AE/AWB application path; optical/full UI gates remain open',
+ 'status':'Experimental SC3336 Rust camera controls with native QR integration; physical qualification remains scoped by bundled evidence',
  'numericCases':proof['totalCases'],'fullIspReplacement':False,'linksVendorRkaiq':False,
+ 'fullRkaiqAbiReplacement':False,
+ 'fixedProfileVerification':'research/isp-'+version.removesuffix('-dev')+'-fresh-hardware-validation.json',
  'fixedFirstFrameCommand':'first-frame-sc3336','automaticExposureCommand':'auto-frame-sc3336',
  'liveAutomaticCommand':'auto-awb-frame-sc3336','continuousCommand':'stream-sc3336',
  'automaticExposureHardwareVerified':True,'automaticWhiteBalanceHardwareVerified':True,
  'whiteBalancePolicy':'FAST-to-normal seven-light AWB with exact registered configuration snapshots',
- 'automatic3A':False,'controlledCleanRebootEvidenceBundled':True,'opticalScanQualified':False,
+ 'automatic3A':False,'controlledCleanRebootEvidenceBundled':True,'opticalScanQualified':qr_proof.get('opticalScanQualified',False),
+ 'nativeQrWorkerBundled':True,'nativeQrWorkerSha256':hashlib.sha256(qr_source.read_bytes()).hexdigest(),
  'fullUiQualified':False,'fullIqBundled':False,'publicQrFixturePayload':'1BoatSLRHtKNngkdXEeobR76b53LETtpyT','files':[]}
 for name in sorted(items):
- path=kit/name;manifest['files'].append({'name':name,'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
+ path=kit/name;manifest['files'].append({'name':name,'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'mode':format(path.stat().st_mode&0o777,'04o')})
 (kit/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 archive=base/(kit.name+'.zip')
 if archive.exists():

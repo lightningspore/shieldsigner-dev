@@ -1,0 +1,181 @@
+{
+  "passed": true,
+  "opticalScanQualified": false,
+  "nativeWorkerSha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "scope": "Actual ARM worker + pinned image app DecodeQR binary/CompactSeedQR/animatedUR fixtures, and real stream/still CameraAPI sessions on existing physical rootfs. Opticalqualificationis separate.",
+  "appSourceSha256": {
+    "seedsigner/hardware/camera.py": "f5a927cdf7fd99f9c21aff793b540f59c1e9523a8945daaec96e1cb35375f6f2",
+    "seedsigner/models/decode_qr.py": "cd981f1b31144617836b1823198423fa53cc047fe251f28f6d5d7403466e2f1c"
+  },
+  "pythonSourcesSha256": {
+    "scan_loop_hardware_check.py": "453099bc6ce451e2c988107d4bed0e87858e81765041dd7944c846a5bcbe13c2",
+    "shieldsigner_video_stream.py": "cf56339060c22f3d271e09419aaeff724e62d5051a48c11561bf484d8315ba52",
+    "native_qr_hardware_check.py": "43b29c4277ba300b4c1a3440d8f593b638fba966ddd5de25e58d582b591a3180",
+    "configure_camera.py": "d1ceed60392a7a3d1df631a6990195ca132b1418e25d317d5f1fe2547af9e963",
+    "shieldsigner_camera_compat.py": "5601f04f843f9a3485a461301b450376dcc053fc00a0b7e795e5b716e70d89ee",
+    "qr_device_benchmark.py": "16247b2d3b7c97ea8942c314fdeeb25b881bee08b15adda87c9cac1885b948fd",
+    "shieldsigner_qr_decoder.py": "0085f9098601d6530b3313e64058be5bfecfd535d83105588be4f9493bc94712",
+    "shieldsigner_integration.py": "8ba817648079aab95bb8e8ee95ef96315f71623e546c2019fea0428f46c0ecfd",
+    "test_camera_compat.py": "e6fa1869ae9fa897d16ad31a105feed01eac403ca64c2d378f5dda21b05b9dff",
+    "test_qr_fallback.py": "00b9418ca23fb285e031b04071f672432bcd8c7e9481a8a3d134d7708591bfce",
+    "image_artifact_hardware_check.py": "718dadd707183d0d037cae9f2a3f16b7d5dd9e52e026a121baef3ad5847c6412",
+    "shieldsigner_process_log.py": "c0d7960dfbe58746eaf7c84788cb13fafc3d45ae3130b5b8a9df04fd8bd82456",
+    "qr_pipeline_hardware_check.py": "6ddac94debc5981b4473db3d6c3de2a057c75a3e57fcebea817f6a5fbd44aec9",
+    "integration_hardware_check.py": "beeee86cbc96265b2dfaa2bb915c05ba071c499590fc7d6478b30f56660c3f85",
+    "verify_kit.py": "8ea3f85a397bf890c8cf7014c7c9796177aa783eee0b06a7f99de7bfb4d49e70",
+    "qr_success_pipeline_benchmark.py": "72b1815e9a37557d159e44e862ead5135239dd27d4e0e1e5073feb3c0d839df8",
+    "managed_hardware_check.py": "726dd14ddaa7d879833773b6bef3840274a5b6aad9db5f346550e8801974a2f2",
+    "qr_decoder_desktop_check.py": "b17473a131ba167bb06751e866db538230549e7b34723560c103ba07bccf24b8",
+    "optical_camera_check.py": "fc2856e882480d5d0150c68f03bdb5886bdd7bc0982dda2ac6678fe3f261f212",
+    "test_process_log.py": "564c179255d6e5d817ca2187a9d3e9de75743d6ab38aea13314ff62ad65e2e6a",
+    "stream_hardware_check.py": "1135b7b6f4d6897006314a799013496da8ce2e7048a7e3bdb23b7360db45a9bc",
+    "restart_hardware_check.py": "e69c4cc5376e164f2eec55ae6c3ef88543127dbe9726cd3f6eab7952a35aaf18",
+    "test_native_qr.py": "4be22540b347243019babda22325fb4166fe043e2cecd859e5669ed02e615c26"
+  },
+  "binaryCases": [
+    {
+      "payloadBytes": 13,
+      "byteExact": true,
+      "seconds": 0.1662187910042121
+    },
+    {
+      "payloadBytes": 256,
+      "byteExact": true,
+      "seconds": 0.5358928749992629
+    },
+    {
+      "payloadBytes": 32,
+      "byteExact": true,
+      "seconds": 0.09952162500121631
+    }
+  ],
+  "compactSeedCases": [
+    {
+      "entropyBytes": 16,
+      "expectedPublicFixture": true
+    },
+    {
+      "entropyBytes": 32,
+      "expectedPublicFixture": true
+    }
+  ],
+  "animatedUr": {
+    "fragments": 5,
+    "framesSubmitted": 6,
+    "reversedOrder": true,
+    "duplicateHandled": true,
+    "duplicateStatus": 1,
+    "matchesInstalledDirectDataStatuses": true,
+    "byteExactReassembledPsbt": true
+  },
+  "cleanStopAndRestart": true,
+  "realCamera": {
+    "samples": 6,
+    "received": 8,
+    "nativeSize": [
+      640,
+      480
+    ],
+    "previewSize": [
+      480,
+      640
+    ],
+    "runtimeProfile": "luckfox_22",
+    "testProfileOverride": "luckfox_22",
+    "backendInfo": {
+      "backend": "rust-sc3336-fixed-native",
+      "nativeResolution": [
+        640,
+        480
+      ],
+      "returnedImageMode": "RGB",
+      "requestedResolution": [
+        512,
+        384
+      ],
+      "requestedFramerate": 6,
+      "requestedFormat": "bgr",
+      "requestedV4l2": true,
+      "legacyCameraConfig": {
+        "device": "/dev/video12",
+        "pixelformat": "GREY",
+        "framerate": 6,
+        "resolution": [
+          512,
+          384
+        ]
+      },
+      "resamplingPerformed": false
+    },
+    "ownerExitCode": 0,
+    "workerClosedOnCameraStop": true,
+    "logInfo": {
+      "fullLog": false,
+      "bytesReceived": 330098,
+      "maxRetainedPayloadBytes": 1048576,
+      "errorType": null
+    }
+  },
+  "realStillCapture": {
+    "returnedImageSize": [
+      480,
+      640
+    ],
+    "backendInfo": {
+      "backend": "rust-sc3336-fixed-native",
+      "nativeResolution": [
+        640,
+        480
+      ],
+      "returnedImageMode": "RGB",
+      "requestedResolution": [
+        720,
+        480
+      ],
+      "requestedFramerate": 6,
+      "requestedFormat": "bgr",
+      "requestedV4l2": true,
+      "legacyCameraConfig": {
+        "device": "/dev/video12",
+        "pixelformat": "GREY",
+        "framerate": 6,
+        "resolution": [
+          720,
+          480
+        ]
+      },
+      "resamplingPerformed": false
+    },
+    "ownerExitCode": 0,
+    "cleanStop": true
+  },
+  "installedAppUnchanged": true,
+  "nativeStats": {
+    "kind": "native-zxing-3.1.1-local-average",
+    "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+    "starts": 2,
+    "calls": 18,
+    "decoded": 12,
+    "errors": 0,
+    "lastRoundTripSeconds": 0.14040454199857777,
+    "lastExitCode": 0
+  },
+  "kind": "native-qr-and-pinned-image-app-hardware-validation",
+  "version": "0.0.38-dev",
+  "run": 167,
+  "pinnedAppCommit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+  "runtimeEnvironment": {
+    "existingRootfsPython": "3.11.6",
+    "isolatedAddedDependencies": {
+      "shamir-mnemonic": "0.3.0",
+      "pycryptodomex": "3.21.0"
+    },
+    "finalImageDependencyRequirement": "Pycryptodomex3.23.0 build pending; thisrunisnotnewimagebootqualification."
+  },
+  "limits": [
+    "Knownpublicsynthetic decoderfixtures; noopticaltargetpassfromthisreport.",
+    "Luckfox22profileexplicitlyselectedin-test;currentoldboarddevice-tree isgenericLuckfoxPico. NewimageMiniDTBautodetectionisverifiedseparately.",
+    "Native640x480RGBstream retained;compatadapterdoesnotclaimrequestedresolution/BGRresampling.",
+    "Bothinstalledappsourcefilesunchanged;newimagephysicalboot/UI/powercycle stillunqualified."
+  ]
+}

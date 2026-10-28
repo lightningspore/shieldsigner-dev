@@ -7,7 +7,7 @@
   "nativeRuntimeCalls": 5736,
   "nativeRuntimeImportedCalls": [],
   "seed": "0x41574247",
-  "cases": 6000,
+  "cases": 6018,
   "casesPerFunction": 1000,
   "mismatchCount": 0,
   "importedCalls": [],
@@ -67,11 +67,12 @@
     "statistics:4": 125,
     "statistics:5": 125,
     "statistics:6": 125,
-    "statistics:7": 125
+    "statistics:7": 125,
+    "factor:nonfinite-variance": 18
   },
   "scope": "Exact f32 gain/coefficient bits for six original AWB routines, signed weighted-count rounding and temporal context preservation",
   "limitations": [
-    "Checked finite inputs and outputs; arbitrary NaN/infinity or native pointer aliasing outside the Rust value API.",
+    "Finite gains, coefficients and calibration; damping additionally covers18 NaN/infinity variance cases matching native ordered comparisons. Native pointer aliasing remains outside the Rust value API.",
     "This is the original gain/temporal stage, not illumination classification, probability weighting, calibration loading, convergence policy or a complete AWB controller.",
     "No live sensor/ISP frame application or independent camera startup has been verified."
   ]

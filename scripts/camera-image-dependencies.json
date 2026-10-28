@@ -1,0 +1,14 @@
+{
+  "package": "python-pycryptodomex",
+  "originalRecipeSha256": "f238a14e3cc7b7a2c16fb295f43b2433a5273deea8ac429ca146e4102a95d38c",
+  "originalHashFileSha256": "a18b0bd82229e04bb438f9a7048703dda5dceb61bcf141ef354b41cceebf1f3a",
+  "version": "3.23.0",
+  "source": "pycryptodomex-3.23.0.tar.gz",
+  "site": "https://files.pythonhosted.org/packages/c9/85/e24bf90972a30b0fcd16c73009add1d7d7cd9140c2498a68252028899e41",
+  "sha256": "71909758f010c82bc99b0abf4ea12012c98962fbf0583c2164f8b84533c2e4da",
+  "licenseSha256": {
+    "LICENSE.rst": "4e04660d77c1c64e89d79537919fb8240fa21484a7e3db29f358b2c7f84ea073",
+    "Doc/LEGAL/COPYRIGHT.pycrypto": "8e563c767164faa0831a333b57d23d4311cf566eb1b15d93250f4606be4eb549"
+  },
+  "matchesApplicationRequirement": "pycryptodomex==3.23.0"
+}

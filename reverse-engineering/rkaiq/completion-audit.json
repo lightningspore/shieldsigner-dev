@@ -2,21 +2,21 @@
   "kind": "camera-replacement-completion-audit",
   "goalComplete": false,
   "frozenKit": "0.0.37-dev",
-  "development": "0.0.37-dev",
+  "development": "0.0.38-dev",
   "items": [
     {
       "requirement": "Normal SC3336 full ISP group operates without RKAIQ userspace",
       "status": "verified-with-stated-scope",
-      "evidence": "combined-isp-0.0.36-hardware-validation.json",
-      "sha256": "e788dab6cb7148df75b9875c5fd88bde56a0cf910f60f5331d55cd1faa965d8c",
-      "scope": "All nine module comparisons plus final AWB translation on actual application run109."
+      "evidence": "isp-0.0.38-fresh-hardware-validation.json",
+      "sha256": "587f55cf71d04c5a671dd17c4a076015b3cca3db46d0c9a6dc607a836ad88b48",
+      "scope": "Exact0.0.38 camera08beb38c,all9nativeISPchecks plusfullAWBtranslation onfreshactualcapture161."
     },
     {
       "requirement": "Ordered live AWB matches original native calculation and next measurement records",
       "status": "verified-with-stated-scope",
-      "evidence": "awb-ordered-trace-hardware-validation.json",
-      "sha256": "b5b54590849d21e0de8c6944a31fb406f6a00396519f9b353b2ebfb1437a683a",
-      "scope": "32 actual processed inputs; gains also match live owner logs. Native context/calibration construction remains adapted."
+      "evidence": "isp-0.0.38-fresh-hardware-validation.json",
+      "sha256": "587f55cf71d04c5a671dd17c4a076015b3cca3db46d0c9a6dc607a836ad88b48",
+      "scope": "NativeJSON/calibration/contextinit,prepare,BLCbindingand32actualfreshinputs matchfullnextSDK/ISP andeveryliveowner gain."
     },
     {
       "requirement": "Frozen kit starts after vendor camera startup is skipped",
@@ -41,8 +41,10 @@
     },
     {
       "requirement": "Successful known-public optical QR through physical camera and installed decoder",
-      "status": "unverified",
-      "needed": "Position the supplied public test QR in the camera view; run existing optical_camera_check.py. Pending user target-position question has no answer."
+      "status": "verified-with-stated-scope",
+      "evidence": "optical-qr-hardware-validation.json",
+      "sha256": "b2be5f9af8da6ab1ea0dbe87cf48ed8384504346354ef766482f1d305a0a1a18",
+      "scope": "One actual printed public address, development0.0.38 process-local raw-first JPEG retry, frozen0.0.37 camera executable. Two frames,4.44seconds; no synthetic optical input."
     },
     {
       "requirement": "Physical lighting/color changes and broader image quality",
@@ -62,8 +64,26 @@
     {
       "requirement": "Complete joined-native AWB equivalence beyond adapted context construction",
       "status": "verified-with-stated-scope",
-      "evidence": "awb-native-initialization-hardware-validation.json",
-      "scope": "Actual native JSON parse, single-camera constructor/init/prepare/binding and32actual frames compared. Explicit module lookup and clock/filesystem/memory/caller-input boundaries remain; no arbitrarymode ABI claim."
+      "evidence": "isp-0.0.38-fresh-hardware-validation.json",
+      "scope": "Fresh exact0.0.38 trajectory passes32actualframes throughoriginalnative initialization andruntime; noarbitrarymode/fullABI claim.",
+      "sha256": "587f55cf71d04c5a671dd17c4a076015b3cca3db46d0c9a6dc607a836ad88b48"
+    },
+    {
+      "requirement": "Native QR integration in pinned image application Camera/DecodeQR APIs",
+      "status": "verified-with-stated-scope",
+      "evidence": "native-qr-integration-hardware-validation.json",
+      "scope": "Byteexactbinary,CompactSeedQR,reversed/duplicateUR PSBT,realstreamandstillAPI sessions. Existingrootfs+isolateddependencies,profile22explicitin-test; notnewimageboot."
+    },
+    {
+      "requirement": "Bounded runtime diagnostics do not fill device storage",
+      "status": "verified-with-stated-scope",
+      "evidence": "bounded-logging-hardware-validation.json",
+      "scope": "Actual30secondmanagedcapture,4.39MBreceived/about1MiBretained,bothworkerscleanstop. Defaultlast3ownedsessionsretention coveredbyhosttests."
+    },
+    {
+      "requirement": "Build ShieldSigner image containing exact new Rust/native QR runtime and matching pinned app dependencies",
+      "status": "in-progress",
+      "needed": "ActualSDKbuild,finalclean-sourcebundle,packagedimagehash/content/kernelABI verification; newimagephysicalboot remainsseparate."
     }
   ],
   "hardwareObservation": {
@@ -72,6 +92,10 @@
     "framebufferObserved": false,
     "physicalWiringVerified": false
   },
-  "nextPracticalTest": "Known public optical QR; the target must actually be in view.",
-  "knownFrozenKitLimitation": "Physical optical/UI/lighting/powercycle qualification remains open; exact frozen0.0.37 controlled reboot passed."
+  "nextPracticalTest": "Finish exactruntime image build and archive verification; reposition clipped publicQR forfreshnativeoptical test; thenphysicalUI/lighting/powercycle.",
+  "knownFrozenKitLimitation": "Frozen0.0.37 remainsimmutable. Source0.0.38 passesfreshnativeISP andpinnedappAPI checks; final38archive/imagebuild inprogress; physicalqualificationremainsopen.",
+  "qrRobustnessFinding": {
+    "evidence": "qr-successful-pipeline-comparison.json",
+    "scope": "Same four real camera frames, six attempts per reader. Fixed raw/crop/local-threshold cascade passes24/24 for ZXing,ZBar,quirc default,float. ZXing median35.1ms vs49.5/54.5/174.8ms prototype totals. Shared fallback uses ZXing HybridBinarizer; app and independent-scene qualification remain open."
+  }
 }

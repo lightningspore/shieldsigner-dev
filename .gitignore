@@ -26,3 +26,6 @@ logs/
 
 # Private Telegram configuration, account session and group history.
 tools/telegram/private/
+
+# Finder metadata is not a source or release artifact.
+.DS_Store

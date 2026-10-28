@@ -222,6 +222,9 @@ pub struct DampingParameters {
 impl DampingParameters {
     /// AwbCalDampFactor (ELF 0xc9f2c): adapt the prior coefficient up/down by
     /// one step. Preserve the native ordered lower/upper-bound comparisons.
+    /// All-zero brightness history legitimately supplies a NaN variance. The
+    /// native `<` comparison is false for that input, so damping increases;
+    /// rejecting it here would stall every otherwise valid dark-frame update.
     pub fn adapt(self, prior: f32, variance: f32) -> Result<f32, InvalidInput> {
         finite(&[
             self.variance_threshold,
@@ -229,7 +232,6 @@ impl DampingParameters {
             self.minimum,
             self.maximum,
             prior,
-            variance,
         ])?;
         let candidate = if self.variance_threshold < variance {
             prior - self.step
@@ -245,6 +247,28 @@ impl DampingParameters {
         };
         finite(&[value])?;
         Ok(value)
+    }
+}
+
+#[cfg(test)]
+mod damping_tests {
+    use super::*;
+
+    #[test]
+    fn native_nonfinite_variance_uses_ordered_comparison_without_corrupting_gain() {
+        let parameters = DampingParameters {
+            variance_threshold: 0.5,
+            step: 0.1,
+            minimum: 0.,
+            maximum: 0.9,
+        };
+        for bits in [0x7fc00000, 0xffc00000, 0x7f800001, 0xff800000] {
+            assert_eq!(parameters.adapt(0.3, f32::from_bits(bits)).unwrap().to_bits(), 0x3ecccccd);
+        }
+        assert_eq!(parameters.adapt(0.3, f32::INFINITY).unwrap().to_bits(), 0x3e4cccce);
+        assert_eq!(parameters.adapt(f32::NAN, 0.), Err(InvalidInput::NonFinite));
+        assert_eq!(DampingParameters { step: f32::NAN, ..parameters }.adapt(0.3, f32::NAN),
+                   Err(InvalidInput::NonFinite));
     }
 }
 

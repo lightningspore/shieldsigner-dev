@@ -85,7 +85,7 @@ mise exec -- uv run python scripts/configure-hothmi-display.py /path/to/app/src/
 # /path/to/rootfs/opt/src/seedsigner/hardware/io_config.json
 ```
 
-The tool validates the reviewed display pins, changes only FOX_22 `display.spi_hz`, and can be run repeatedly. It refuses unexpected profiles/settings. It has been verified against the pinned public config, **not applied to an installed or rebuilt image in this audit**. The existing `os:build` wrapper does not automatically apply this patch; verify the final packaged config explicitly. A successful old OS build does not close this correction.
+The tool validates the reviewed display pins, changes only FOX_22 `display.spi_hz`, and can be run repeatedly. It refuses unexpected profiles/settings. The Rust-camera `os:build` image overlay now calls this checked tool during rootfs assembly and verifies the packaged clock; the explicit vendor baseline remains unchanged. Completed image/hardware evidence is separate from the earlier source audit. A successful old OS build does not close this correction.
 
 ## Reproduce and finish on hardware
 

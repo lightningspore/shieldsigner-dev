@@ -488,6 +488,7 @@ fn first_frame_sc3336_with_gain(
                     last_iso: None,
                     sample_directory: std::env::var_os("SHIELDSIGNER_AWB_SAMPLE_DIR").map(std::path::PathBuf::from),
                     trace_directory: std::env::var_os("SHIELDSIGNER_AWB_TRACE_DIR").map(std::path::PathBuf::from),
+                    trace_attempts: 0,
                     sampled_groups: 0,
                     gains: vec![],
                     measurements: vec![(0, sdk.unwrap())],

@@ -1,0 +1,3513 @@
+{
+  "kind": "complete-successful-read-qr-comparison",
+  "device": "Luckfox RV1106 Cortex-A7",
+  "development": "0.0.38-dev",
+  "cameraStoppedForTimedRun": true,
+  "testSet": "Same four saved real-camera VGA luminance frames as earlier raw stress test; each attempted six times per decoder. Not24distinct frames.",
+  "successBenchmark": {
+    "kind": "successful-pipeline-same-camera-frames-benchmark",
+    "input": "Same four private real-camera VGA luminance frames used in raw stress test",
+    "protocol": "Two reversed-order rounds, three attempts/frame/decoder = 24 attempts each",
+    "stages": [
+      "Full raw frame",
+      "Fixed center crop (160,120)-(480,360)",
+      "Full-frame ZXing HybridBinarizer local threshold, without QR decoding"
+    ],
+    "timing": "Includes preprocessing, native process startup, loading and temporary I/O. Source frames loaded before timer. Child CPU included.",
+    "stopRule": "Stop at any decoded symbol; known target is used only for result checking",
+    "nativeSha256": {
+      "zxing": "e75ee7716f28f26025d8f6565418d8e1fe6ced9e34d30448355b0f7e41e613ec",
+      "quirc": "8a480ef850303b805c9971b634bc587dcd7c38a3e7b093dc3a33cf49527d9124",
+      "quirc-float": "500c90260fbf79f43a8a8c64e1d543df4125eb9a89334299d49c37e1623753ed",
+      "threshold": "01eae104a694edd8c71e9a137dbc79c1191767d62e7555fa3fb5c231cae471cc"
+    },
+    "samples": [
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.24062033300288022,
+        "cpuSeconds": 0.19561499999999965,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 1.020800118567422e-05,
+            "wallSeconds": 0.08262887500313809,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0825542089951341
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.012665917005506344,
+            "wallSeconds": 0.028843792002589907,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.016098833999421913
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.048068999996758066,
+            "wallSeconds": 0.12887058399792295,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.08067966700036777
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17553345899796113,
+        "cpuSeconds": 0.1740330000000001,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 8.167000487446785e-06,
+            "wallSeconds": 0.05821141699561849,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0581387909987825
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004412917005538475,
+            "wallSeconds": 0.020423084002686664,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015928207998513244
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.035706708003999665,
+            "wallSeconds": 0.0966603750057402,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06085362500016345
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.1753809169968008,
+        "cpuSeconds": 0.1739029999999997,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 1.0791998647619039e-05,
+            "wallSeconds": 0.05798829199920874,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05791129199496936
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004449667001608759,
+            "wallSeconds": 0.02063133400224615,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0160757920020842
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.035780207996140234,
+            "wallSeconds": 0.09648683399427682,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.0606182500050636
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.09666270799789345,
+        "cpuSeconds": 0.04650899999999991,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.58399983169511e-06,
+            "wallSeconds": 0.09650083399901632,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.022483708,
+            "nativePeakRssKiB": 1504
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03649595800379757,
+        "cpuSeconds": 0.03457999999999961,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.58399983169511e-06,
+            "wallSeconds": 0.03634545900422381,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.016679542,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03511754200007999,
+        "cpuSeconds": 0.03403000000000045,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.000002369750291e-06,
+            "wallSeconds": 0.034965291000844445,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015643833,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05599475000053644,
+        "cpuSeconds": 0.05361299999999991,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.017345709005894605,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008092875,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005905666999751702,
+            "wallSeconds": 0.03847404199768789,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024172167,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.054719874999136664,
+        "cpuSeconds": 0.05247299999999955,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 8.167000487446785e-06,
+            "wallSeconds": 0.01709370900061913,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008045917,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0054352079969248734,
+            "wallSeconds": 0.03745145799621241,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024226708,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05463937499735039,
+        "cpuSeconds": 0.05211399999999955,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.708993169013411e-06,
+            "wallSeconds": 0.017119958996772766,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008104833,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005252625000139233,
+            "wallSeconds": 0.037342375006119255,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.02414125,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.049469583995232824,
+        "cpuSeconds": 0.04716499999999968,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.999995093792677e-06,
+            "wallSeconds": 0.015901374994427897,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007249666,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005479250001371838,
+            "wallSeconds": 0.033381250003003515,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.019930167,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.04941533300006995,
+        "cpuSeconds": 0.047100000000000364,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.5830030255019665e-06,
+            "wallSeconds": 0.016106708004372194,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007250833,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005561499994655605,
+            "wallSeconds": 0.03312720899702981,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.019892834,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.0498152090003714,
+        "cpuSeconds": 0.04748700000000028,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.833004252053797e-06,
+            "wallSeconds": 0.0161530830009724,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007127458,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005528542002139147,
+            "wallSeconds": 0.033484792002127506,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.020076875,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.18507445900468156,
+        "cpuSeconds": 0.17367199999999938,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.707996362820268e-06,
+            "wallSeconds": 0.05778820799605455,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0577278330019908
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0040853749960660934,
+            "wallSeconds": 0.0210265409987187,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.016871749998244923
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.0456995009953971,
+            "wallSeconds": 0.1060613759982516,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.060269415997026954
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17339175000233809,
+        "cpuSeconds": 0.17191400000000012,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.249996320344508e-06,
+            "wallSeconds": 0.05775320899556391,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05769224999676226
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004212250001728535,
+            "wallSeconds": 0.020197917001496535,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.01591858299798332
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03490375000546919,
+            "wallSeconds": 0.09524054099892965,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06025541599956341
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17309599999862257,
+        "cpuSeconds": 0.17154399999999992,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.290997018571943e-06,
+            "wallSeconds": 0.05799412499618484,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.057934916992962826
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004027040995424613,
+            "wallSeconds": 0.019879999999830034,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015781792004418094
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.0347774580004625,
+            "wallSeconds": 0.09501566599647049,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06015304200263927
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03774604200589238,
+        "cpuSeconds": 0.03463200000000022,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.999995093792677e-06,
+            "wallSeconds": 0.03759816700039664,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.016457292,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03538500000286149,
+        "cpuSeconds": 0.03417699999999968,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.035242083002231084,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.016113416,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03501254200091353,
+        "cpuSeconds": 0.03391400000000022,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.03486495799734257,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015735416,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.12781066699972143,
+        "cpuSeconds": 0.12307200000000007,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.541995051316917e-06,
+            "wallSeconds": 0.016890124999918044,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008122917,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005557125004997943,
+            "wallSeconds": 0.03761333400325384,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.024339,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03307295899867313,
+            "wallSeconds": 0.07309195899870247,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.031266667,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.12757150000106776,
+        "cpuSeconds": 0.12295000000000034,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.708003638777882e-06,
+            "wallSeconds": 0.01694845800375333,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008082375,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005305708997184411,
+            "wallSeconds": 0.03773437500058208,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.024455375,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.032793250000395346,
+            "wallSeconds": 0.0726748749948456,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.031250625,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.12757062500168104,
+        "cpuSeconds": 0.12288099999999957,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.1250029830262065e-06,
+            "wallSeconds": 0.016917834000196308,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008150916,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.00546787499479251,
+            "wallSeconds": 0.03766116699989652,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.024313042,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03274862499529263,
+            "wallSeconds": 0.07278016700001899,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.031290584,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.11754399999335874,
+        "cpuSeconds": 0.11289199999999955,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.124995707068592e-06,
+            "wallSeconds": 0.016020666000258643,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007302459,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0053888330003246665,
+            "wallSeconds": 0.03321237499767449,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.020112167,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03287987500516465,
+            "wallSeconds": 0.06810154100094223,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.026588625,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.11763733300176682,
+        "cpuSeconds": 0.11296099999999942,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.999995093792677e-06,
+            "wallSeconds": 0.016006957994250115,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0071155,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005373082996811718,
+            "wallSeconds": 0.033363458001986146,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.020145417,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03280812500452157,
+            "wallSeconds": 0.0680542920017615,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.026585417,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.11781000000337372,
+        "cpuSeconds": 0.11303000000000019,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.2920011007227e-06,
+            "wallSeconds": 0.01592966700263787,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007231875,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005536124997888692,
+            "wallSeconds": 0.03357754200260388,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.020197917,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03301229199860245,
+            "wallSeconds": 0.06808958300098311,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.026231042,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.18776070899912156,
+        "cpuSeconds": 0.1742020000000002,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.541995051316917e-06,
+            "wallSeconds": 0.05767037599434843,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05760737500531832
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004384625004604459,
+            "wallSeconds": 0.020295042006182484,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015838666004128754
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.048738084005890414,
+            "wallSeconds": 0.1095969590023742,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06077516700315755
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.21077116599917645,
+        "cpuSeconds": 0.17612000000000005,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.249996320344508e-06,
+            "wallSeconds": 0.06974799999443348,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.06968733399844496
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.006431832996895537,
+            "wallSeconds": 0.039232082999660634,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.032730541002820246
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03924841700063553,
+            "wallSeconds": 0.10158370799763361,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.062252750001789536
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17391995799698634,
+        "cpuSeconds": 0.17231799999999975,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.709000444971025e-06,
+            "wallSeconds": 0.05764908399578417,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.057585791997553315
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0040856670020730235,
+            "wallSeconds": 0.020322750002378598,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.01616562499839347
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03497112500190269,
+            "wallSeconds": 0.09574804199655773,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.060689124999044
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03566704200056847,
+        "cpuSeconds": 0.03385999999999889,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.709000444971025e-06,
+            "wallSeconds": 0.035527916996215936,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.016485292,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03489879200060386,
+        "cpuSeconds": 0.03377600000000047,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.250003596302122e-06,
+            "wallSeconds": 0.03475295800308231,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015666875,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03508574999432312,
+        "cpuSeconds": 0.03390699999999924,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.1250029830262065e-06,
+            "wallSeconds": 0.03494166699965717,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015619041,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.054369290999602526,
+        "cpuSeconds": 0.05207699999999971,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.4159976318478584e-06,
+            "wallSeconds": 0.016832665998663288,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008035125,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005503166001290083,
+            "wallSeconds": 0.037362791001214646,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.02415,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.0546875,
+        "cpuSeconds": 0.052229000000000525,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.017093417001888156,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.00796075,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005357332993298769,
+            "wallSeconds": 0.037414124999486376,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024147666,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05449120899720583,
+        "cpuSeconds": 0.05217899999999975,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.016960125001787674,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008104542,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005395833002694417,
+            "wallSeconds": 0.0373476250024396,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024209792,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.0494961250005872,
+        "cpuSeconds": 0.04725300000000132,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.01602416700188769,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007240333,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005539624995435588,
+            "wallSeconds": 0.033295499997620936,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.01998675,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.04935437499807449,
+        "cpuSeconds": 0.04690999999999956,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.4159976318478584e-06,
+            "wallSeconds": 0.016015707995393313,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007272708,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005388541001593694,
+            "wallSeconds": 0.03316104099940276,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.019919083,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.04935933300293982,
+        "cpuSeconds": 0.04713299999999965,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.4159976318478584e-06,
+            "wallSeconds": 0.01606266599992523,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007217,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.00557637499878183,
+            "wallSeconds": 0.03312020799785387,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.019870375,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.1874168330032262,
+        "cpuSeconds": 0.1740769999999996,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.709000444971025e-06,
+            "wallSeconds": 0.05900795899651712,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0589484580050339
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004138749995036051,
+            "wallSeconds": 0.020024083998578135,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015818250001757406
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.04748508300690446,
+            "wallSeconds": 0.10817683300410863,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06060891700326465
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17397274999530055,
+        "cpuSeconds": 0.17249700000000168,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.000002369750291e-06,
+            "wallSeconds": 0.05810029099666281,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0580381670006318
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0041221249994123355,
+            "wallSeconds": 0.020209000002068933,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.016016875000786968
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.034854166995501146,
+            "wallSeconds": 0.09546162500191713,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.0605217080010334
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.1749463329979335,
+        "cpuSeconds": 0.1725600000000007,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.124995707068592e-06,
+            "wallSeconds": 0.05817787499836413,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0581166249976377
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004088292000233196,
+            "wallSeconds": 0.020080957998288795,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015923833998385817
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03487604099791497,
+            "wallSeconds": 0.09648216599453008,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06151599999429891
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.034991832995729055,
+        "cpuSeconds": 0.033857000000001136,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.709000444971025e-06,
+            "wallSeconds": 0.03484454200224718,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015862,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03509158399538137,
+        "cpuSeconds": 0.03399799999999953,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.034940500001539476,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015794625,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.035257832998468075,
+        "cpuSeconds": 0.03412399999999938,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.4159976318478584e-06,
+            "wallSeconds": 0.03510820800147485,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015830208,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05445329200301785,
+        "cpuSeconds": 0.05214599999999958,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.709000444971025e-06,
+            "wallSeconds": 0.016780459001893178,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008061958,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005227250003372319,
+            "wallSeconds": 0.037490833004994784,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.025498958,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05446349999692757,
+        "cpuSeconds": 0.05228999999999928,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.2920011007227e-06,
+            "wallSeconds": 0.0168848750035977,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.00808675,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005332249995262828,
+            "wallSeconds": 0.0373951669971575,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024149125,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05435879199649207,
+        "cpuSeconds": 0.052084000000000685,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.4169944380410016e-06,
+            "wallSeconds": 0.016845207996084355,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008099,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005483624998305459,
+            "wallSeconds": 0.03733508399454877,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024119084,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.04946229200140806,
+        "cpuSeconds": 0.04708100000000037,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.875001756474376e-06,
+            "wallSeconds": 0.016005500001483597,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007258709,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.00541450000309851,
+            "wallSeconds": 0.03328587500436697,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.020052667,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.04930858399893623,
+        "cpuSeconds": 0.04704099999999922,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.708003638777882e-06,
+            "wallSeconds": 0.015937541000312194,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007284083,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005397000000812113,
+            "wallSeconds": 0.033191374997841194,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.02009175,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 0,
+        "iteration": 2,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.04955066699767485,
+        "cpuSeconds": 0.04723699999999997,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.124995707068592e-06,
+            "wallSeconds": 0.01590924999618437,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007239459,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005591833003563806,
+            "wallSeconds": 0.033459708000009414,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.019963125,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.049107625003671274,
+        "cpuSeconds": 0.0468390000000003,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.01596145800431259,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007242666,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005291417000989895,
+            "wallSeconds": 0.03296154200506862,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.019936584,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.0495025420023012,
+        "cpuSeconds": 0.047241999999999784,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.015953875001287088,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007212625,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005669999998644926,
+            "wallSeconds": 0.033367832998919766,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.020003959,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.050346625001111533,
+        "cpuSeconds": 0.04802200000000045,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.5830030255019665e-06,
+            "wallSeconds": 0.016053333005402237,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007130958,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005297250005241949,
+            "wallSeconds": 0.03411245800089091,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.01987825,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.054594166002061684,
+        "cpuSeconds": 0.0522179999999981,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.2920011007227e-06,
+            "wallSeconds": 0.01680320900049992,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007893958,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005401959002483636,
+            "wallSeconds": 0.037610125000355765,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024149125,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05443783300142968,
+        "cpuSeconds": 0.0521830000000012,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.2920011007227e-06,
+            "wallSeconds": 0.016835000002174638,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008012667,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005519792000995949,
+            "wallSeconds": 0.03742725000483915,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024188791,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05449616700207116,
+        "cpuSeconds": 0.05213399999999879,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.000002369750291e-06,
+            "wallSeconds": 0.01706512500095414,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008210125,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.00531300000147894,
+            "wallSeconds": 0.037249624998366926,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024200458,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03474741600075504,
+        "cpuSeconds": 0.033660000000000245,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.832996976096183e-06,
+            "wallSeconds": 0.034600124999997206,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015513167,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03515925000101561,
+        "cpuSeconds": 0.033992000000000466,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.000002369750291e-06,
+            "wallSeconds": 0.03501370899903122,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015667458,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03488099999958649,
+        "cpuSeconds": 0.0337879999999986,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.709000444971025e-06,
+            "wallSeconds": 0.034733125001366716,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015703334,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.1744615839998005,
+        "cpuSeconds": 0.172269,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.541995051316917e-06,
+            "wallSeconds": 0.05876383299619192,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0587043330015149
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004358375001174863,
+            "wallSeconds": 0.02022154199949,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015794040999026038
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03478212500340305,
+            "wallSeconds": 0.09527408400026616,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06040620800195029
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17560608300118474,
+        "cpuSeconds": 0.17244100000000007,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.2920011007227e-06,
+            "wallSeconds": 0.05788504200609168,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05782583299878752
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004192417000012938,
+            "wallSeconds": 0.02035891699779313,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.016096791994641535
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.036592208001820836,
+            "wallSeconds": 0.0971538750018226,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06047737500193762
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17498045800311957,
+        "cpuSeconds": 0.17277900000000024,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.05802183299965691,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0579632090011728
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004225666998536326,
+            "wallSeconds": 0.020281332996091805,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015986832993803546
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.035079916000540834,
+            "wallSeconds": 0.09646962500119116,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06130775000201538
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.11733575000107521,
+        "cpuSeconds": 0.11274400000000018,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.291993824765086e-06,
+            "wallSeconds": 0.016013959000702016,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007313833,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005376875000365544,
+            "wallSeconds": 0.03347895800106926,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.020250417,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03264974999910919,
+            "wallSeconds": 0.06762670799798798,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.026385625,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.11777091600379208,
+        "cpuSeconds": 0.11308300000000049,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.541995051316917e-06,
+            "wallSeconds": 0.016126541995618027,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007151666,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0055084159976104274,
+            "wallSeconds": 0.03341304099740228,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.020058209,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03289824999956181,
+            "wallSeconds": 0.06801520800217986,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.026432583,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.11753116700128885,
+        "cpuSeconds": 0.11284899999999976,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.016120125001179986,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007237709,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005275083000015002,
+            "wallSeconds": 0.0331692089966964,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.020083292,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03290612500131829,
+            "wallSeconds": 0.06802162500389386,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.026313292,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.1278794999961974,
+        "cpuSeconds": 0.12278400000000111,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.541995051316917e-06,
+            "wallSeconds": 0.016822166995552834,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.00812175,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0055740409952704795,
+            "wallSeconds": 0.03759029099455802,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.024341625,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03319808400556212,
+            "wallSeconds": 0.07325558400043519,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.03122,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.12779433299874654,
+        "cpuSeconds": 0.12316299999999991,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.124995707068592e-06,
+            "wallSeconds": 0.016949333999946248,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008114459,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005277708994981367,
+            "wallSeconds": 0.037751874995592516,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.024386833,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03297145800024737,
+            "wallSeconds": 0.07287991599878296,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.03122525,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.12729704199591652,
+        "cpuSeconds": 0.12265600000000099,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.124995707068592e-06,
+            "wallSeconds": 0.01680145799764432,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008077708,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005307749997882638,
+            "wallSeconds": 0.03758620799635537,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.024445166,
+            "nativePeakRssKiB": 288
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03271333299926482,
+            "wallSeconds": 0.07269383299717447,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.031332292,
+            "nativePeakRssKiB": 748
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03511054199771024,
+        "cpuSeconds": 0.03395000000000081,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.1250029830262065e-06,
+            "wallSeconds": 0.034969375003129244,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015855,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.034995916998013854,
+        "cpuSeconds": 0.03388199999999841,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.707996362820268e-06,
+            "wallSeconds": 0.03485066699795425,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015707709,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03519833400059724,
+        "cpuSeconds": 0.033926999999998486,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.000002369750291e-06,
+            "wallSeconds": 0.03505133299768204,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015692834,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17398558399872854,
+        "cpuSeconds": 0.17190699999999914,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.709000444971025e-06,
+            "wallSeconds": 0.058475958998315036,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.058412667000084184
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004186292004305869,
+            "wallSeconds": 0.02015591700182995,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015898457997536752
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.034827333998691756,
+            "wallSeconds": 0.09515362499951152,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.060243166000873316
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17368604199873516,
+        "cpuSeconds": 0.17211399999999877,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.1250029830262065e-06,
+            "wallSeconds": 0.057923833999666385,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.057863458001520485
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004046875001222361,
+            "wallSeconds": 0.020134916994720697,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.016016583002055995
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03489791700121714,
+            "wallSeconds": 0.09542108300229302,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06043829100235598
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17342266599735012,
+        "cpuSeconds": 0.1718390000000003,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.83400105824694e-06,
+            "wallSeconds": 0.057730459004233126,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05767329099762719
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.00440270800027065,
+            "wallSeconds": 0.020416374994965736,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015945999999530613
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03495070800272515,
+            "wallSeconds": 0.09506845800206065,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06003666600008728
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.049837083999591414,
+        "cpuSeconds": 0.046969999999999956,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.5830030255019665e-06,
+            "wallSeconds": 0.016694707999704406,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007951125,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005447750001621898,
+            "wallSeconds": 0.03296212499844842,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.019846166,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.04935933300293982,
+        "cpuSeconds": 0.04702600000000068,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.83400105824694e-06,
+            "wallSeconds": 0.016063542003394105,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007269792,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005410124998888932,
+            "wallSeconds": 0.033121665997896343,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.020029917,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.04932666700187838,
+        "cpuSeconds": 0.04699399999999976,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.582995749544352e-06,
+            "wallSeconds": 0.015999082999769598,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007205625,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0051916669981437735,
+            "wallSeconds": 0.03314820800005691,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.020080958,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05459475099632982,
+        "cpuSeconds": 0.05214100000000066,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.416004907805473e-06,
+            "wallSeconds": 0.01697470799990697,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0079975,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005339833995094523,
+            "wallSeconds": 0.03743950100033544,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024238083,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05439262499567121,
+        "cpuSeconds": 0.052063000000000415,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.016874667002412025,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008049417,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005402833005064167,
+            "wallSeconds": 0.03734150000673253,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024262584,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05447574999561766,
+        "cpuSeconds": 0.05212400000000095,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.708003638777882e-06,
+            "wallSeconds": 0.01701554200553801,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008091125,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005394083003920969,
+            "wallSeconds": 0.03727529200114077,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024224958,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03484133400343126,
+        "cpuSeconds": 0.033689000000000746,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.2920011007227e-06,
+            "wallSeconds": 0.03469579199736472,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015635667,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03532579199963948,
+        "cpuSeconds": 0.03416399999999875,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.707996362820268e-06,
+            "wallSeconds": 0.0351837499983958,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.016155125,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.0350011669943342,
+        "cpuSeconds": 0.03381200000000106,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.83400105824694e-06,
+            "wallSeconds": 0.03485591700155055,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.01580425,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.20712241699948208,
+        "cpuSeconds": 0.17322900000000097,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.5830030255019665e-06,
+            "wallSeconds": 0.058730875003675465,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05866845900163753
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.00430587500159163,
+            "wallSeconds": 0.02029562499956228,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015919750003376976
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.04538858299929416,
+            "wallSeconds": 0.12789145799615653,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.08241858299879823
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17416175000107614,
+        "cpuSeconds": 0.17256100000000174,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.542002327274531e-06,
+            "wallSeconds": 0.05791595900518587,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05785645899595693
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004066417001013178,
+            "wallSeconds": 0.020073957995919045,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.015938125005050097
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03489179200551007,
+            "wallSeconds": 0.09597116700024344,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.060996833999524824
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17471124999428866,
+        "cpuSeconds": 0.1724969999999999,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.417001713998616e-06,
+            "wallSeconds": 0.05774095900414977,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05768116699618986
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0043659590010065585,
+            "wallSeconds": 0.02032100000360515,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.01588445800007321
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03507991699734703,
+            "wallSeconds": 0.09643754200078547,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06127274999744259
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.049177332999533974,
+        "cpuSeconds": 0.04686799999999991,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.416004907805473e-06,
+            "wallSeconds": 0.01601745800144272,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007325208,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005373082996811718,
+            "wallSeconds": 0.03298429099959321,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.0199115,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.04946899999777088,
+        "cpuSeconds": 0.047131000000000256,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 8.458002412226051e-06,
+            "wallSeconds": 0.015905457999906503,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007223709,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005578124997555278,
+            "wallSeconds": 0.033241249999264255,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.019980625,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc-float",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.049327833999996074,
+        "cpuSeconds": 0.046962999999999866,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.83400105824694e-06,
+            "wallSeconds": 0.016192750001209788,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007233917,
+            "nativePeakRssKiB": 736
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005210916999203619,
+            "wallSeconds": 0.032953084002656396,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.019929875,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05430775000422727,
+        "cpuSeconds": 0.052082000000000406,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.542002327274531e-06,
+            "wallSeconds": 0.016874084001756273,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.007975333,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.0052975420039729215,
+            "wallSeconds": 0.03725487500196323,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.02413425,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.05449879200023133,
+        "cpuSeconds": 0.05213799999999935,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.000002369750291e-06,
+            "wallSeconds": 0.017090790999645833,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008115041,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005420624998805579,
+            "wallSeconds": 0.037229207999189384,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024131042,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "quirc",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "center-crop",
+        "wallSeconds": 0.0544492090048152,
+        "cpuSeconds": 0.05210800000000049,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.2920011007227e-06,
+            "wallSeconds": 0.01693854200129863,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.008093167,
+            "nativePeakRssKiB": 740
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.005355000001145527,
+            "wallSeconds": 0.037335665998398326,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.024291166,
+            "nativePeakRssKiB": 288
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.034982791999937035,
+        "cpuSeconds": 0.03388200000000019,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.1250029830262065e-06,
+            "wallSeconds": 0.03483754199987743,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015694292,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.03512833399872761,
+        "cpuSeconds": 0.033967999999999776,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.000002369750291e-06,
+            "wallSeconds": 0.03498804200353334,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.01591975,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zxing",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "raw",
+        "wallSeconds": 0.035379749999265186,
+        "cpuSeconds": 0.03417999999999921,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.875001756474376e-06,
+            "wallSeconds": 0.03523741599929053,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.015754958,
+            "nativePeakRssKiB": 1516
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17410429200390354,
+        "cpuSeconds": 0.1726189999999992,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 6.709000444971025e-06,
+            "wallSeconds": 0.05810262599698035,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.0580428329994902
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004243458002747502,
+            "wallSeconds": 0.02032770799996797,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.016009874998417217
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03481624999403721,
+            "wallSeconds": 0.0954724159964826,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06057100000180071
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17413083300198196,
+        "cpuSeconds": 0.1726750000000017,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 7.5830030255019665e-06,
+            "wallSeconds": 0.058117499997024424,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05805625000357395
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004079541999089997,
+            "wallSeconds": 0.020083582996448968,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.01593433400557842
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.0349501250020694,
+            "wallSeconds": 0.09572091700101737,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06068329099798575
+          }
+        ]
+      },
+      {
+        "decoder": "zbar",
+        "round": 1,
+        "iteration": 2,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2",
+        "matched": true,
+        "stoppedAt": "full-local-threshold",
+        "wallSeconds": 0.17548037500091596,
+        "cpuSeconds": 0.17314999999999792,
+        "stages": [
+          {
+            "stage": "raw",
+            "prepareSeconds": 5.542002327274531e-06,
+            "wallSeconds": 0.058230667003954295,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.05817116700200131
+          },
+          {
+            "stage": "center-crop",
+            "prepareSeconds": 0.004132916001253761,
+            "wallSeconds": 0.020357749999675434,
+            "symbols": 0,
+            "matched": false,
+            "decodeSeconds": 0.016157459001988173
+          },
+          {
+            "stage": "full-local-threshold",
+            "prepareSeconds": 0.03578487500635674,
+            "wallSeconds": 0.09668166700430447,
+            "symbols": 1,
+            "matched": true,
+            "decodeSeconds": 0.06081045899918536
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "zbar": {
+        "matches": 24,
+        "attempts": 24,
+        "medianWallSeconds": 0.17482879149611108,
+        "medianCpuSeconds": 0.17259000000000047,
+        "maxWallSeconds": 0.24062033300288022,
+        "stageCounts": {
+          "raw": 0,
+          "center-crop": 0,
+          "full-local-threshold": 24
+        },
+        "p95WallSeconds": 0.21077116599917645
+      },
+      "zxing": {
+        "matches": 24,
+        "attempts": 24,
+        "medianWallSeconds": 0.03511404199889512,
+        "medianCpuSeconds": 0.03393849999999965,
+        "maxWallSeconds": 0.09666270799789345,
+        "stageCounts": {
+          "raw": 24,
+          "center-crop": 0,
+          "full-local-threshold": 0
+        },
+        "p95WallSeconds": 0.03774604200589238
+      },
+      "quirc": {
+        "matches": 24,
+        "attempts": 24,
+        "medianWallSeconds": 0.05454647900114651,
+        "medianCpuSeconds": 0.05218100000000048,
+        "maxWallSeconds": 0.1278794999961974,
+        "stageCounts": {
+          "raw": 0,
+          "center-crop": 18,
+          "full-local-threshold": 6
+        },
+        "p95WallSeconds": 0.12781066699972143
+      },
+      "quirc-float": {
+        "matches": 24,
+        "attempts": 24,
+        "medianWallSeconds": 0.04948285449791001,
+        "medianCpuSeconds": 0.04714899999999966,
+        "maxWallSeconds": 0.11781000000337372,
+        "stageCounts": {
+          "raw": 0,
+          "center-crop": 18,
+          "full-local-threshold": 6
+        },
+        "p95WallSeconds": 0.11777091600379208
+      }
+    }
+  },
+  "rawStressBenchmark": {
+    "kind": "same-device-qr-decoder-benchmark",
+    "width": 640,
+    "height": 480,
+    "input": "Identical Pillow L luminance bytes; no JPEG or preprocessing in timed calls",
+    "scope": "Static public target, saved real camera frames; not live/animated app integration",
+    "timing": "Per-call wall time; QR-only, default search settings, ZXing LocalAverage",
+    "memory": "Current-executable /proc/self/status VmHWM, including Python for ZBar and static C++ for ZXing; not isolated library overhead",
+    "nativeSha256": "e75ee7716f28f26025d8f6565418d8e1fe6ced9e34d30448355b0f7e41e613ec",
+    "zbarLibrarySha256": "91bd8c6d6154ae28d9892f3c40d90650cab54bcc779cd7cef85b2c456c0b0829",
+    "cases": [
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.07177712499833433,
+        "medianSeconds": 0.05906541700096568,
+        "minSeconds": 0.058055666006112006,
+        "maxSeconds": 0.07177712499833433,
+        "processCpuSeconds": 1.273101,
+        "processMaxRssKiB": 11372,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015398542,
+        "medianSeconds": 0.01517075,
+        "minSeconds": 0.015127583,
+        "maxSeconds": 0.015398542,
+        "processCpuSeconds": 0.058645,
+        "processMaxRssKiB": 1528,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008078875,
+        "medianSeconds": 0.007595291,
+        "minSeconds": 0.007536375,
+        "maxSeconds": 0.008078875,
+        "processCpuSeconds": 0.025735,
+        "processMaxRssKiB": 740,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.00735525,
+        "medianSeconds": 0.006833458,
+        "minSeconds": 0.006738667,
+        "maxSeconds": 0.00735525,
+        "processCpuSeconds": 0.023327,
+        "processMaxRssKiB": 736,
+        "round": 0,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.07255091700062621,
+        "medianSeconds": 0.05803437500435393,
+        "minSeconds": 0.05766804199811304,
+        "maxSeconds": 0.07255091700062621,
+        "processCpuSeconds": 1.2220069999999998,
+        "processMaxRssKiB": 11496,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015876292,
+        "medianSeconds": 0.015331459,
+        "minSeconds": 0.015285667,
+        "maxSeconds": 0.015876292,
+        "processCpuSeconds": 0.059013,
+        "processMaxRssKiB": 1524,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.00799925,
+        "medianSeconds": 0.007703791,
+        "minSeconds": 0.007610458,
+        "maxSeconds": 0.00799925,
+        "processCpuSeconds": 0.025737,
+        "processMaxRssKiB": 740,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.00730625,
+        "medianSeconds": 0.006813042,
+        "minSeconds": 0.00673225,
+        "maxSeconds": 0.00730625,
+        "processCpuSeconds": 0.023299,
+        "processMaxRssKiB": 736,
+        "round": 0,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.07251183300104458,
+        "medianSeconds": 0.05784420899726683,
+        "minSeconds": 0.05774212599499151,
+        "maxSeconds": 0.07251183300104458,
+        "processCpuSeconds": 1.2215099999999999,
+        "processMaxRssKiB": 11552,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015814458,
+        "medianSeconds": 0.01537725,
+        "minSeconds": 0.015294125,
+        "maxSeconds": 0.015814458,
+        "processCpuSeconds": 0.058774,
+        "processMaxRssKiB": 1528,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007988167,
+        "medianSeconds": 0.007639916,
+        "minSeconds": 0.007615708,
+        "maxSeconds": 0.007988167,
+        "processCpuSeconds": 0.025764,
+        "processMaxRssKiB": 740,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007415625,
+        "medianSeconds": 0.006764333,
+        "minSeconds": 0.006726417,
+        "maxSeconds": 0.007415625,
+        "processCpuSeconds": 0.023255,
+        "processMaxRssKiB": 736,
+        "round": 0,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05907358399417717,
+        "medianSeconds": 0.0581317920004949,
+        "minSeconds": 0.05798800000047777,
+        "maxSeconds": 0.05907358399417717,
+        "processCpuSeconds": 1.2010830000000001,
+        "processMaxRssKiB": 11488,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.016119542,
+        "medianSeconds": 0.0154,
+        "minSeconds": 0.015260292,
+        "maxSeconds": 0.016119542,
+        "processCpuSeconds": 0.059194,
+        "processMaxRssKiB": 1528,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008153834,
+        "medianSeconds": 0.007591792,
+        "minSeconds": 0.007542208,
+        "maxSeconds": 0.008153834,
+        "processCpuSeconds": 0.02569,
+        "processMaxRssKiB": 740,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.00741825,
+        "medianSeconds": 0.006825583,
+        "minSeconds": 0.006787958,
+        "maxSeconds": 0.00741825,
+        "processCpuSeconds": 0.023377,
+        "processMaxRssKiB": 736,
+        "round": 0,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007200667,
+        "medianSeconds": 0.006885375,
+        "minSeconds": 0.00683375,
+        "maxSeconds": 0.007200667,
+        "processCpuSeconds": 0.023356,
+        "processMaxRssKiB": 736,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008160833,
+        "medianSeconds": 0.007574292,
+        "minSeconds": 0.007549208,
+        "maxSeconds": 0.008160833,
+        "processCpuSeconds": 0.025756,
+        "processMaxRssKiB": 740,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.0158095,
+        "medianSeconds": 0.01525825,
+        "minSeconds": 0.015079459,
+        "maxSeconds": 0.0158095,
+        "processCpuSeconds": 0.058687,
+        "processMaxRssKiB": 1528,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05831058300100267,
+        "medianSeconds": 0.05806674999621464,
+        "minSeconds": 0.05784887499612523,
+        "maxSeconds": 0.05831058300100267,
+        "processCpuSeconds": 1.204433,
+        "processMaxRssKiB": 11548,
+        "round": 1,
+        "inputSha256": "391d31a10bd1fe7a40241ab8c9ddb4b5a9fd31e0b072d80962240e38a1c15148"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007188709,
+        "medianSeconds": 0.006826459,
+        "minSeconds": 0.006762292,
+        "maxSeconds": 0.007188709,
+        "processCpuSeconds": 0.023324,
+        "processMaxRssKiB": 736,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.0081865,
+        "medianSeconds": 0.00758625,
+        "minSeconds": 0.007582459,
+        "maxSeconds": 0.0081865,
+        "processCpuSeconds": 0.025755,
+        "processMaxRssKiB": 740,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015878041,
+        "medianSeconds": 0.015414584,
+        "minSeconds": 0.015224125,
+        "maxSeconds": 0.015878041,
+        "processCpuSeconds": 0.059116,
+        "processMaxRssKiB": 1524,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05826945900480496,
+        "medianSeconds": 0.05795620899880305,
+        "minSeconds": 0.057683500002895016,
+        "maxSeconds": 0.05826945900480496,
+        "processCpuSeconds": 1.199519,
+        "processMaxRssKiB": 11420,
+        "round": 1,
+        "inputSha256": "1c22d2570eb0a6f8a7eded934a5ad4be69d013c5e124dc64cc49a109758aa0cc"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.011389,
+        "medianSeconds": 0.006897625,
+        "minSeconds": 0.006749167,
+        "maxSeconds": 0.011389,
+        "processCpuSeconds": 0.023509,
+        "processMaxRssKiB": 736,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008011792,
+        "medianSeconds": 0.007756292,
+        "minSeconds": 0.007604625,
+        "maxSeconds": 0.008011792,
+        "processCpuSeconds": 0.025755,
+        "processMaxRssKiB": 740,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.0159215,
+        "medianSeconds": 0.015258833,
+        "minSeconds": 0.015122042,
+        "maxSeconds": 0.0159215,
+        "processCpuSeconds": 0.058812,
+        "processMaxRssKiB": 1528,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.058254874995327555,
+        "medianSeconds": 0.057701290999830235,
+        "minSeconds": 0.05762749999848893,
+        "maxSeconds": 0.058254874995327555,
+        "processCpuSeconds": 1.19987,
+        "processMaxRssKiB": 11532,
+        "round": 1,
+        "inputSha256": "33b1b8497962002623e7495f8e59375253d78ca94ef11df88540ee4ecc63fb1e"
+      },
+      {
+        "decoder": "quirc-float",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.007317334,
+        "medianSeconds": 0.006829958,
+        "minSeconds": 0.006755292,
+        "maxSeconds": 0.007317334,
+        "processCpuSeconds": 0.023263,
+        "processMaxRssKiB": 736,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "quirc-default",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "candidates": 0,
+        "firstSeconds": 0.008144208,
+        "medianSeconds": 0.007713125,
+        "minSeconds": 0.007632625,
+        "maxSeconds": 0.008144208,
+        "processCpuSeconds": 0.025818,
+        "processMaxRssKiB": 740,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "zxing-cpp-3.1.1",
+        "runs": 3,
+        "matches": 3,
+        "symbols": 3,
+        "firstSeconds": 0.015703042,
+        "medianSeconds": 0.015335541,
+        "minSeconds": 0.01521625,
+        "maxSeconds": 0.015703042,
+        "processCpuSeconds": 0.05953,
+        "processMaxRssKiB": 1528,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      },
+      {
+        "decoder": "installed-zbar-pyzbar",
+        "runs": 3,
+        "matches": 0,
+        "symbols": 0,
+        "firstSeconds": 0.05872329099656781,
+        "medianSeconds": 0.058221915998728946,
+        "minSeconds": 0.058090958002139814,
+        "maxSeconds": 0.05872329099656781,
+        "processCpuSeconds": 1.200434,
+        "processMaxRssKiB": 11524,
+        "round": 1,
+        "inputSha256": "192d63b9ac619fbffa3990dd3eb1169d2e5b4128266cf9c5f3d7da433939dfe2"
+      }
+    ],
+    "nativeBinariesSha256": {
+      "zxing": "e75ee7716f28f26025d8f6565418d8e1fe6ced9e34d30448355b0f7e41e613ec",
+      "quirc": "8a480ef850303b805c9971b634bc587dcd7c38a3e7b093dc3a33cf49527d9124",
+      "quirc-float": "500c90260fbf79f43a8a8c64e1d543df4125eb9a89334299d49c37e1623753ed"
+    }
+  },
+  "binaryCompatibility": {
+    "zbar": [
+      {
+        "fixture": "nul-highbit",
+        "runs": 3,
+        "matches": 3
+      },
+      {
+        "fixture": "all-byte-values",
+        "runs": 3,
+        "matches": 3
+      },
+      {
+        "fixture": "binary32-bytes",
+        "runs": 3,
+        "matches": 3
+      }
+    ],
+    "otherReaders": "qr-native-hardware-benchmark.json and quirc-native-hardware-comparison.json:9/9each"
+  },
+  "finding": "All four fixed cascades pass24/24 on the same original frames. Common fallback sequence is fullraw, fixedcenterROI, fullframeHybridBinarizer. No perframe settings or target-dependent fallback decisions.",
+  "preprocessingDependency": "The final fallback uses ZXing3.1.1 HybridBinarizer without invoking QR decoding. Thus quirc/ZBar successful pipelines include that shared preprocessing implementation; these are not unassisted library results.",
+  "limits": [
+    "Four frames from a single static printed public target; six repetitions measure timing, not scene diversity.",
+    "Timings include preprocessing, temporary files, native process startup and loading. Source frame loading and initial Python imports precede timing.",
+    "Prototype pipeline wall times are not final SeedSigner app performance or live FPS.",
+    "Earlier standalone reader RSS excludes the parent and threshold worker; it is not total memory of these cascades.",
+    "Fresh framing/light, binary app integration and animated assembly remain open."
+  ],
+  "sourceSha256": {
+    "firmware/rkaiq-rs/python/qr_success_pipeline_benchmark.py": "72b1815e9a37557d159e44e862ead5135239dd27d4e0e1e5073feb3c0d839df8",
+    "reverse-engineering/rkaiq/scripts/qr-native-threshold.cpp": "c209fdf3277e4b3dfc6ee021d219d96cc77fd3d192b3585e58813eed48df98d0",
+    "reverse-engineering/rkaiq/scripts/build-qr-native-bench.py": "360ef60fb314d8010e7b162892560dd3c172bf475eb82471a7bc1f77330b1f2e"
+  }
+}

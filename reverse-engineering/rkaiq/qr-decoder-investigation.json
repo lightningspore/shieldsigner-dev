@@ -1,0 +1,1122 @@
+{
+  "kind": "qr-decoder-and-preprocessing-investigation",
+  "development": "0.0.38-dev",
+  "cameraBinarySha256": "7f25927aae042431ab2fa8f4b9d76f96befb091684084b72d5f27c5b6cc421b8",
+  "publicTarget": "Bundled public printed Bitcoin address",
+  "savedFrameVariants": [
+    {
+      "variant": "raw",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.07493616700230632,
+      "pixelsSha256": "ca39429eae331da4a6b8513306299d9d25814132a0bc7a816a1218b234b215de"
+    },
+    {
+      "variant": "jpeg-RGB-100",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.0707965410038014,
+      "pixelsSha256": "da2f72c32f119c8d74e3f707c3687beccbfaf4fb6238deddbe254f16b178b949"
+    },
+    {
+      "variant": "jpeg-L-100",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.062414332998741884,
+      "pixelsSha256": "99c5f714644eebef41cabe8e480f4f8c25a54170a76983c5e5879b4c42329e40"
+    },
+    {
+      "variant": "jpeg-RGB-95",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.06925537499773782,
+      "pixelsSha256": "ad4c2d7b739cc70644865058e37d8914a7d1eae2b8784f7c06e8453021f7f960"
+    },
+    {
+      "variant": "jpeg-L-95",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.06441108300350606,
+      "pixelsSha256": "88352284b66531ff79b900d9890c630b6d9c962c231f6d2e86f7fe7e6015f1cd"
+    },
+    {
+      "variant": "jpeg-RGB-90",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.06811904200003482,
+      "pixelsSha256": "959e6192b1ca0a937f391136aaf78fa91835473c843c3c8deb0b3ac255dea69a"
+    },
+    {
+      "variant": "jpeg-L-90",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.060916333000932354,
+      "pixelsSha256": "7ddd007d88fde4df1e524f02fd88352a4aa91d3a4f1e42d83546c37d89431837"
+    },
+    {
+      "variant": "jpeg-RGB-85",
+      "matched": true,
+      "count": 1,
+      "seconds": 0.09342170799936866,
+      "pixelsSha256": "84a5268ac16ee51e097b574acc56bc0d7a31714721011d5081d17375d4c34cfa"
+    },
+    {
+      "variant": "jpeg-L-85",
+      "matched": true,
+      "count": 1,
+      "seconds": 0.07458091699663782,
+      "pixelsSha256": "53f1ade6f266ac5aa6ca7ad50caa166206c11ddb3c8a42858044e0e6fca5ffd5"
+    },
+    {
+      "variant": "jpeg-RGB-75",
+      "matched": true,
+      "count": 1,
+      "seconds": 0.10645191700314172,
+      "pixelsSha256": "594d712a5c96eac2dace871d1f2f37f04274c20dd74167c45412b9faa26cdf13"
+    },
+    {
+      "variant": "jpeg-L-75",
+      "matched": true,
+      "count": 1,
+      "seconds": 0.07349212499684654,
+      "pixelsSha256": "16e4dd8dc95ce1306781ec3307e7b1201b239b08f400a188361df84dd3186138"
+    },
+    {
+      "variant": "jpeg-RGB-60",
+      "matched": true,
+      "count": 1,
+      "seconds": 0.08077358300215565,
+      "pixelsSha256": "d67a319441bb1d7e58846f68064703ab362dbb78e1ee252b6e345cb728d14677"
+    },
+    {
+      "variant": "jpeg-L-60",
+      "matched": true,
+      "count": 1,
+      "seconds": 0.07396287500159815,
+      "pixelsSha256": "74b65cac55020f21dd59c2faa417af5e2d5977cfdc6c901b692cf18775eedeba"
+    },
+    {
+      "variant": "density-1",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.06877820799854817,
+      "pixelsSha256": "ca39429eae331da4a6b8513306299d9d25814132a0bc7a816a1218b234b215de"
+    },
+    {
+      "variant": "density-2",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.048294457999872975,
+      "pixelsSha256": "ca39429eae331da4a6b8513306299d9d25814132a0bc7a816a1218b234b215de"
+    },
+    {
+      "variant": "density-3",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.04128570800094167,
+      "pixelsSha256": "ca39429eae331da4a6b8513306299d9d25814132a0bc7a816a1218b234b215de"
+    },
+    {
+      "variant": "density-4",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.03790179100178648,
+      "pixelsSha256": "ca39429eae331da4a6b8513306299d9d25814132a0bc7a816a1218b234b215de"
+    },
+    {
+      "variant": "resize-0.5",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.01674516699858941,
+      "pixelsSha256": "e5b88c3b9174e0d6dc4f4b2b09c4e014c42ad6aaff561d29d1b7d29ede428ce4"
+    },
+    {
+      "variant": "resize-0.75",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.03401970800041454,
+      "pixelsSha256": "831062084e455a13f1615f8e6c7ba9800881e37e33904cc85fcbd5b3c13010c3"
+    },
+    {
+      "variant": "resize-1.25",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.09120591700047953,
+      "pixelsSha256": "ee933145bff15b6cfa609369353a90329287fa314bff4a638cb41c3d3475fd56"
+    },
+    {
+      "variant": "resize-1.5",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.12850570799491834,
+      "pixelsSha256": "f7a97a263f2fbe6310879de2597fd92669b41f331132f62d941d1b50ef07047c"
+    },
+    {
+      "variant": "resize-2",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.401684208001825,
+      "pixelsSha256": "d64e23167e54b06a8f1358bbab723063fc9096540fd538563e931eeeaad577a9"
+    },
+    {
+      "variant": "channel-R",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.06213637499604374,
+      "pixelsSha256": "02d53401e9344251f92a5000d971fd6aa0c5d8bbff8e7b947d2c93693183dbb5"
+    },
+    {
+      "variant": "channel-G",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.060986042000877205,
+      "pixelsSha256": "3856675500cbe0689614920178c8ae1f9e30e7d8d50c1bf22c3cd479e45538a1"
+    },
+    {
+      "variant": "channel-B",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.061110583003028296,
+      "pixelsSha256": "a4c7916b42b107d04fedd5c0e6102e4709793022f2a2e4a973e80adbedd5c479"
+    },
+    {
+      "variant": "posterize-7",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.06167466600163607,
+      "pixelsSha256": "7650fed0135e0e9f1fc6427275ce396745db58a501e879842b8c5183ea8b0302"
+    },
+    {
+      "variant": "posterize-6",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.06270629199570976,
+      "pixelsSha256": "1e2718aa86eee5dcb03186fa8cae181fd71041546120b308001df22a35fc138c"
+    },
+    {
+      "variant": "posterize-5",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.06216320800012909,
+      "pixelsSha256": "a9688b14e2dda42aabb94760172045270f58a46d65b1ea138b255e1d22eca2eb"
+    },
+    {
+      "variant": "posterize-4",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.075444249996508,
+      "pixelsSha256": "677564041161fc3533f841fa7d68c4c5038d8615da41443209a5b715f558653f"
+    },
+    {
+      "variant": "crop-(160, 100, 385, 325)",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.07738733300357126,
+      "pixelsSha256": "a604824cd45a7918e2447c962d9fcf294517e49fcaa3ebc7b61ee419379501be"
+    },
+    {
+      "variant": "crop-(170, 120, 375, 315)",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.07671329200093169,
+      "pixelsSha256": "b02340ecd1443526e25e72907c7d8c356638b19059aeda307131a1d8c5ac2bd6"
+    },
+    {
+      "variant": "crop-(100, 70, 450, 380)",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.20465287499973783,
+      "pixelsSha256": "97e5ebfb1dd25ae079d5020a54bdf95a2f5984708dbb1580d1c7cde21ea3ffac"
+    },
+    {
+      "variant": "contrast-1.5",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.5572918749967357,
+      "pixelsSha256": "fe046e5f4c2b265561606d1a7a274ebd9a6c6b0065c1dffb1b4ed864a5c91700"
+    },
+    {
+      "variant": "contrast-2",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.5189986670011422,
+      "pixelsSha256": "8d1feeb72a4ee78548039e23b10ffc3d404387f778ecf45de81f7a3fa35347de"
+    },
+    {
+      "variant": "contrast-3",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.5254302090033889,
+      "pixelsSha256": "716a09f476a783fc91288a6334cbea9a3bc41577d3280ed3ccbac2487bb3af1d"
+    },
+    {
+      "variant": "contrast-4",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.5277384590008296,
+      "pixelsSha256": "a0a430d3eb3895a042f1eeb9354bf82326af95947f800d86f78d9fa0719833ea"
+    },
+    {
+      "variant": "threshold-45",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.42500324999855366,
+      "pixelsSha256": "6a2b320c8d05f602e76b3c4afe7054ff6209fbb84d60d899b4f7ded5b1b6da71"
+    },
+    {
+      "variant": "threshold-60",
+      "matched": true,
+      "count": 1,
+      "seconds": 0.5957699999999022,
+      "pixelsSha256": "220c01efd3bd382d1d0c28450a2c2985af8a44f3a3130f6c263ffdb27b5eb806"
+    },
+    {
+      "variant": "threshold-75",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.4752008340001339,
+      "pixelsSha256": "4f9d7cfa34bf40517a9a97f31721c0eaeb9c8181de6707125e885790db6e6374"
+    },
+    {
+      "variant": "threshold-90",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.49914083300245693,
+      "pixelsSha256": "ec2a3e70ba3342c4a410154de62fa610359995d20356206bcaa32c05cd70f8d6"
+    },
+    {
+      "variant": "threshold-105",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.5021703750026063,
+      "pixelsSha256": "0f107870872b3d3965cac96845a534abc48364cea3c2fdf3b1374ecf615113fc"
+    },
+    {
+      "variant": "threshold-120",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.4722027910029283,
+      "pixelsSha256": "5245b537510fac032c7d0a6e474f4c8b46cde4dc4743d1cd68519a34b782b70f"
+    },
+    {
+      "variant": "threshold-135",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.5199293750047218,
+      "pixelsSha256": "c63815b06ee096b2d6795457926364535ecda436e69cd36be7d27ca5ba89ee06"
+    },
+    {
+      "variant": "threshold-150",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.5085911249989294,
+      "pixelsSha256": "10cfee9d819aa1b94b35b55a60c07461bf6c20d089d0c29f9fbe475acb0cbdd3"
+    },
+    {
+      "variant": "adaptive-4-2",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.44765320899750805,
+      "pixelsSha256": "c37d08e783ea74ad7bdb0c687df786e60b9dcde93a487ac1fe28b11d97d554f8"
+    },
+    {
+      "variant": "adaptive-4-5",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.4524374169996008,
+      "pixelsSha256": "4b99b7203a0d16c414f157ce994fc92efbc5069e361d7e71640956c266fec5d9"
+    },
+    {
+      "variant": "adaptive-4-10",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.4882392079962301,
+      "pixelsSha256": "35a5af52176eda5c167556c095340d26e58d404740479ebb0cc7cbe7ec5983d6"
+    },
+    {
+      "variant": "adaptive-8-2",
+      "matched": true,
+      "count": 1,
+      "seconds": 0.5528168340024422,
+      "pixelsSha256": "ad9c33222891f56529174e4b0f0586f0f3960b61429d2f68bbd6f9b7336983cb"
+    },
+    {
+      "variant": "adaptive-8-5",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.5959330420009792,
+      "pixelsSha256": "17809f13ed9493ae5573b35b3df437a74a8496c450ccb1f44fc4f583ed819a16"
+    },
+    {
+      "variant": "adaptive-8-10",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.5276057500013849,
+      "pixelsSha256": "c897e21c6b4f9fffde970681b296dcc4eabaa7a813d034f2d14bd733ba096f1d"
+    },
+    {
+      "variant": "adaptive-12-2",
+      "matched": true,
+      "count": 1,
+      "seconds": 0.6662127500021597,
+      "pixelsSha256": "6c6f86a5f1c6e3859ad01033d209cc293b6e9ff4ff4f0822437fd589ab2e7081"
+    },
+    {
+      "variant": "adaptive-12-5",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.20542637500329874,
+      "pixelsSha256": "7c92f5d687d9b1de36f710134fef56e2f6647bb0430a92aee96b9a99300dd092"
+    },
+    {
+      "variant": "adaptive-12-10",
+      "matched": false,
+      "count": 0,
+      "seconds": 0.1611490409995895,
+      "pixelsSha256": "23923903cfa96335334310413286609d45d64517fb6375067af7ecfcb6fa0203"
+    }
+  ],
+  "liveBatches": [
+    {
+      "id": 136,
+      "profile": {
+        "name": "all",
+        "moduleSelection": "all",
+        "frames": [
+          {
+            "sequence": 37,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 2.333400334464386e-05,
+                "decodeSeconds": 0.39526199999818346
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 1.6723008760018274,
+                "decodeSeconds": 0.3424694589994033
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.16856554200057872,
+                "decodeSeconds": 0.29705316600302467
+              },
+              "jpeg_rgb_75": {
+                "matched": true,
+                "prepareSeconds": 0.2092623749995255,
+                "decodeSeconds": 0.4117487510011415
+              }
+            }
+          },
+          {
+            "sequence": 87,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 4.316600097808987e-05,
+                "decodeSeconds": 0.31837983400328085
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 0.20079470799828414,
+                "decodeSeconds": 0.3227714590029791
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.13771304200054146,
+                "decodeSeconds": 0.3149580000026617
+              },
+              "jpeg_rgb_75": {
+                "matched": true,
+                "prepareSeconds": 0.18596929199702572,
+                "decodeSeconds": 0.4045731669975794
+              }
+            }
+          },
+          {
+            "sequence": 115,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 1.8083002942148596e-05,
+                "decodeSeconds": 0.3803633749994333
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 0.25012954200064996,
+                "decodeSeconds": 0.3232871250002063
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.13479841699881945,
+                "decodeSeconds": 0.30696341700240737
+              },
+              "jpeg_rgb_75": {
+                "matched": true,
+                "prepareSeconds": 0.2167500419964199,
+                "decodeSeconds": 0.3838333329986199
+              }
+            }
+          },
+          {
+            "sequence": 146,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 2.508400211809203e-05,
+                "decodeSeconds": 0.3955320829991251
+              },
+              "jpeg_rgb_85": {
+                "matched": true,
+                "prepareSeconds": 0.2031391250056913,
+                "decodeSeconds": 0.3968014169950038
+              },
+              "jpeg_gray_85": {
+                "matched": true,
+                "prepareSeconds": 0.12272137500258395,
+                "decodeSeconds": 0.373304457993072
+              },
+              "jpeg_rgb_75": {
+                "matched": true,
+                "prepareSeconds": 0.20171754200418945,
+                "decodeSeconds": 0.39074320899817394
+              }
+            }
+          },
+          {
+            "sequence": 176,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 2.4790999304968864e-05,
+                "decodeSeconds": 0.3927043750009034
+              },
+              "jpeg_rgb_85": {
+                "matched": true,
+                "prepareSeconds": 0.20794374999968568,
+                "decodeSeconds": 0.39847383300366346
+              },
+              "jpeg_gray_85": {
+                "matched": true,
+                "prepareSeconds": 0.13152212500426685,
+                "decodeSeconds": 0.37994483299553394
+              },
+              "jpeg_rgb_75": {
+                "matched": true,
+                "prepareSeconds": 0.23186829200130887,
+                "decodeSeconds": 0.38877941700047813
+              }
+            }
+          },
+          {
+            "sequence": 208,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 2.858399966498837e-05,
+                "decodeSeconds": 0.37745895799889695
+              },
+              "jpeg_rgb_85": {
+                "matched": true,
+                "prepareSeconds": 0.19442762499966193,
+                "decodeSeconds": 0.3992041670062463
+              },
+              "jpeg_gray_85": {
+                "matched": true,
+                "prepareSeconds": 0.12284008400456514,
+                "decodeSeconds": 0.37885895799990976
+              },
+              "jpeg_rgb_75": {
+                "matched": true,
+                "prepareSeconds": 0.20452920899697347,
+                "decodeSeconds": 0.3989028750002035
+              }
+            }
+          },
+          {
+            "sequence": 240,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 2.5083005311898887e-05,
+                "decodeSeconds": 0.36964666699350346
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 0.19549891600036062,
+                "decodeSeconds": 0.31859887600148795
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.11820374999660999,
+                "decodeSeconds": 0.2944445009998162
+              },
+              "jpeg_rgb_75": {
+                "matched": true,
+                "prepareSeconds": 0.1893012920045294,
+                "decodeSeconds": 0.4184235419961624
+              }
+            }
+          },
+          {
+            "sequence": 269,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 2.8875001589767635e-05,
+                "decodeSeconds": 0.3288772089945269
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 0.2423012090002885,
+                "decodeSeconds": 0.32576950000657234
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.11814745900483103,
+                "decodeSeconds": 0.32513804100017296
+              },
+              "jpeg_rgb_75": {
+                "matched": true,
+                "prepareSeconds": 0.19981879200349795,
+                "decodeSeconds": 0.3969559999968624
+              }
+            }
+          }
+        ],
+        "complete": true,
+        "ownerExitCode": 0,
+        "matches": {
+          "raw": 0,
+          "jpeg_rgb_85": 3,
+          "jpeg_gray_85": 3,
+          "jpeg_rgb_75": 8
+        }
+      }
+    },
+    {
+      "id": 138,
+      "profile": {
+        "name": "all",
+        "moduleSelection": "all",
+        "frames": [
+          {
+            "sequence": 23,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 1.5165998775046319e-05,
+                "decodeSeconds": 0.6757934170018416
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 3.9463127100025304,
+                "decodeSeconds": 0.7959402509950451
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.33248599999933504,
+                "decodeSeconds": 0.714785167001537
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "prepareSeconds": 0.5506620000014664,
+                "decodeSeconds": 0.6939240009960486
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "prepareSeconds": 0.2468226249984582,
+                "decodeSeconds": 0.69770429199707
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "prepareSeconds": 0.30148154200287536,
+                "decodeSeconds": 0.6766144590001204
+              }
+            }
+          },
+          {
+            "sequence": 162,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 3.120900510111824e-05,
+                "decodeSeconds": 0.7250144999998156
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 0.5911278330022469,
+                "decodeSeconds": 0.7271492090003449
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.33300779199635144,
+                "decodeSeconds": 0.6343974590054131
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "prepareSeconds": 0.6479074590024538,
+                "decodeSeconds": 0.5521532920029131
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "prepareSeconds": 0.3288582499953918,
+                "decodeSeconds": 0.661375167001097
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "prepareSeconds": 0.30062287599866977,
+                "decodeSeconds": 0.7105259579984704
+              }
+            }
+          },
+          {
+            "sequence": 253,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 2.8583002858795226e-05,
+                "decodeSeconds": 0.763368084000831
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 0.6075256249969243,
+                "decodeSeconds": 0.7441408340018825
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.2947705829938059,
+                "decodeSeconds": 0.72470329200587
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "prepareSeconds": 0.6014630419958849,
+                "decodeSeconds": 0.7449131670000497
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "prepareSeconds": 0.29414904200530145,
+                "decodeSeconds": 0.6900661249965196
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "prepareSeconds": 0.2829714999970747,
+                "decodeSeconds": 0.6813257510002586
+              }
+            }
+          },
+          {
+            "sequence": 349,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 0.0012354999998933636,
+                "decodeSeconds": 0.7892949169981875
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 0.5996275840007002,
+                "decodeSeconds": 0.7708764580020215
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.3149580000026617,
+                "decodeSeconds": 0.7160545000006096
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "prepareSeconds": 0.6113703750015702,
+                "decodeSeconds": 0.7472975419950671
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "prepareSeconds": 0.3090327919999254,
+                "decodeSeconds": 0.6755367500009015
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "prepareSeconds": 0.3652010829973733,
+                "decodeSeconds": 0.682191125000827
+              }
+            }
+          },
+          {
+            "sequence": 448,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 2.887499431381002e-05,
+                "decodeSeconds": 0.7668823749991134
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 0.6282447510020575,
+                "decodeSeconds": 0.7704646249985672
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.29006308400130365,
+                "decodeSeconds": 0.7230186250017141
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "prepareSeconds": 0.5867236669946578,
+                "decodeSeconds": 0.7393420420048642
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "prepareSeconds": 0.2718414999981178,
+                "decodeSeconds": 0.691129833998275
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "prepareSeconds": 0.33448829199915053,
+                "decodeSeconds": 0.6780453760002274
+              }
+            }
+          },
+          {
+            "sequence": 545,
+            "results": {
+              "raw": {
+                "matched": false,
+                "prepareSeconds": 2.654200216056779e-05,
+                "decodeSeconds": 0.7476169169967761
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "prepareSeconds": 0.5545414590014843,
+                "decodeSeconds": 0.7293988329984131
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "prepareSeconds": 0.29395274999842513,
+                "decodeSeconds": 0.7473100839997642
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "prepareSeconds": 0.5988447510026162,
+                "decodeSeconds": 0.7492835000011837
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "prepareSeconds": 0.28431083399482304,
+                "decodeSeconds": 0.6437304999999469
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "prepareSeconds": 0.29193616700649727,
+                "decodeSeconds": 0.684341874999518
+              }
+            }
+          }
+        ],
+        "complete": true,
+        "ownerExitCode": 0,
+        "matches": {
+          "raw": 0,
+          "jpeg_rgb_85": 0,
+          "jpeg_gray_85": 0,
+          "jpeg_rgb_75": 0,
+          "jpeg_gray_75": 0,
+          "jpeg_gray_60": 0
+        }
+      }
+    },
+    {
+      "id": 140,
+      "profile": {
+        "name": "all",
+        "moduleSelection": "all",
+        "frames": [
+          {
+            "sequence": 35,
+            "results": {
+              "raw": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 2.68340008915402e-05,
+                "decodeSeconds": 0.3302640830006567
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.25039000100514386,
+                "decodeSeconds": 0.3133864999981597
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.14867358400078956,
+                "decodeSeconds": 0.267116499999247
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.2005701250018319,
+                "decodeSeconds": 0.3347551670012763
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.1210282499960158,
+                "decodeSeconds": 0.29103725000459235
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.1406279589937185,
+                "decodeSeconds": 0.2956756250059698
+              }
+            }
+          },
+          {
+            "sequence": 140,
+            "results": {
+              "raw": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 3.17919984809123e-05,
+                "decodeSeconds": 0.3234320830015349
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.2148743329962599,
+                "decodeSeconds": 0.31091229199955706
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.14345829100057017,
+                "decodeSeconds": 0.28278920899902005
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.21696733299904736,
+                "decodeSeconds": 0.3508131670023431
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.10895062499912456,
+                "decodeSeconds": 0.30755695900006685
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.1322827909971238,
+                "decodeSeconds": 0.2738677090019337
+              }
+            }
+          },
+          {
+            "sequence": 218,
+            "results": {
+              "raw": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 2.2167005226947367e-05,
+                "decodeSeconds": 0.3094667919940548
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.2082642920067883,
+                "decodeSeconds": 0.3267284999965341
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.13188787500257604,
+                "decodeSeconds": 0.27100091699685436
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.21046783400379354,
+                "decodeSeconds": 0.33072374999755993
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.1232195420016069,
+                "decodeSeconds": 0.28651729099510703
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.13403337500494672,
+                "decodeSeconds": 0.2943581669969717
+              }
+            }
+          },
+          {
+            "sequence": 296,
+            "results": {
+              "raw": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 2.7125002816319466e-05,
+                "decodeSeconds": 0.34694420799496584
+              },
+              "jpeg_rgb_85": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.21122062499489402,
+                "decodeSeconds": 0.3244447500037495
+              },
+              "jpeg_gray_85": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.10821941600443097,
+                "decodeSeconds": 0.29108187499514315
+              },
+              "jpeg_rgb_75": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.20688733300630702,
+                "decodeSeconds": 0.3298995009972714
+              },
+              "jpeg_gray_75": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.10226766700361622,
+                "decodeSeconds": 0.2996274170000106
+              },
+              "jpeg_gray_60": {
+                "matched": false,
+                "symbolCount": 0,
+                "prepareSeconds": 0.1273938750018715,
+                "decodeSeconds": 0.2866079999948852
+              }
+            }
+          }
+        ],
+        "complete": true,
+        "ownerExitCode": 0,
+        "matches": {
+          "raw": 0,
+          "jpeg_rgb_85": 0,
+          "jpeg_gray_85": 0,
+          "jpeg_rgb_75": 0,
+          "jpeg_gray_75": 0,
+          "jpeg_gray_60": 0
+        }
+      }
+    }
+  ],
+  "sharpComparison": {
+    "status": "inconclusive",
+    "frames": 0,
+    "failure": "AE capture received no events for 10 seconds; no image-quality conclusion. Default complete-group preview restored."
+  },
+  "sameRawFramesDesktopZxing": {
+    "kind": "desktop-raw-camera-decoder-comparison",
+    "decoder": "zxing-cpp",
+    "version": "3.1.1",
+    "scope": "Desktop decode only; not Luckfox performance or app integration",
+    "frames": [
+      {
+        "sourceSha256": "3ebfa3387a1621dccc93cdd3b2c94e18318f209fef9a6b19ae59b67b5f326651",
+        "settings": {
+          "LocalAverage": {
+            "matched": true,
+            "symbolCount": 1,
+            "desktopSeconds": 0.003156042017508298
+          },
+          "GlobalHistogram": {
+            "matched": false,
+            "symbolCount": 0,
+            "desktopSeconds": 0.0004628340248018503
+          },
+          "FixedThreshold": {
+            "matched": false,
+            "symbolCount": 0,
+            "desktopSeconds": 0.00033254100708290935
+          }
+        }
+      },
+      {
+        "sourceSha256": "1d8335e7baa5e142da4e4c6835d8b1289fc56eae0ea146a53218ee7955c900d1",
+        "settings": {
+          "LocalAverage": {
+            "matched": true,
+            "symbolCount": 1,
+            "desktopSeconds": 0.0027731250156648457
+          },
+          "GlobalHistogram": {
+            "matched": false,
+            "symbolCount": 0,
+            "desktopSeconds": 0.000453874992672354
+          },
+          "FixedThreshold": {
+            "matched": false,
+            "symbolCount": 0,
+            "desktopSeconds": 0.0003271670429967344
+          }
+        }
+      },
+      {
+        "sourceSha256": "88f8d26ec3a64814eefe1e47bd72205d7c8f3788f3e2c3c8bff680883302d2d7",
+        "settings": {
+          "LocalAverage": {
+            "matched": true,
+            "symbolCount": 1,
+            "desktopSeconds": 0.0027782500255852938
+          },
+          "GlobalHistogram": {
+            "matched": false,
+            "symbolCount": 0,
+            "desktopSeconds": 0.0004592500044964254
+          },
+          "FixedThreshold": {
+            "matched": false,
+            "symbolCount": 0,
+            "desktopSeconds": 0.0003327080048620701
+          }
+        }
+      },
+      {
+        "sourceSha256": "4e3b991e8e4c6787f54dce92cba957c15da167c14040209be22f8a118d0b7b9b",
+        "settings": {
+          "LocalAverage": {
+            "matched": true,
+            "symbolCount": 1,
+            "desktopSeconds": 0.003028790990356356
+          },
+          "GlobalHistogram": {
+            "matched": false,
+            "symbolCount": 0,
+            "desktopSeconds": 0.000450999999884516
+          },
+          "FixedThreshold": {
+            "matched": false,
+            "symbolCount": 0,
+            "desktopSeconds": 0.0003263330436311662
+          }
+        }
+      }
+    ]
+  },
+  "findings": [
+    "Stored raw RGB fails ZBar; JPEG quality100/95/90 also fail,85/75/60 pass for both RGB and grayscale JPEG.",
+    "Scan density, resizing, color channels, posterization, crop, contrast, global threshold and tested box-adaptive thresholds did not decode the stored frame.",
+    "Fresh batch136: raw0/8,RGB85 3/8,gray85 3/8,RGB75 8/8.",
+    "Fresh batch138: all six tested variants0/6; batch140: all six variants0/4. Quality75 is not a universal fix.",
+    "ZXing3.1.1 decoded the four identical raw batch140 PNGs on desktop: LocalAverage4/4,GlobalHistogram0/4,FixedThreshold0/4.",
+    "This isolates a useful decoder/binarization lead. It does not prove the ISP image is optimal or explain every ZBar internal failure."
+  ],
+  "decision": "Keep current ISP defaults and existing application fallback unchanged. Evaluate ZXing LocalAverage on ARM before replacing the decoder; do not add more JPEG guesses.",
+  "limits": [
+    "Single public static target, limited framing and lighting.",
+    "Desktop decoding timings are not Luckfox performance.",
+    "No binary/animated QR app integration tested with ZXing.",
+    "Current board uses uClibc and lacks libstdc++; the glibc Python wheel cannot simply be installed. Native build needed."
+  ],
+  "sourceSha256": {
+    "firmware/rkaiq-rs/python/qr_pipeline_hardware_check.py": "6ddac94debc5981b4473db3d6c3de2a057c75a3e57fcebea817f6a5fbd44aec9",
+    "firmware/rkaiq-rs/python/qr_decoder_desktop_check.py": "b17473a131ba167bb06751e866db538230549e7b34723560c103ba07bccf24b8"
+  }
+}

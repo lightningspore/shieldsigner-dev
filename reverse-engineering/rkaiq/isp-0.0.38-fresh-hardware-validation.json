@@ -1,0 +1,148 @@
+{
+  "kind": "development-fresh-isp-and-application-hardware-validation",
+  "version": "0.0.38-dev",
+  "run": 161,
+  "passed": true,
+  "cameraBinarySha256": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+  "qrReaderBinarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "ownerLogSha256": "527898d104413986a835c12ecae149b79209185821850c6f4057bb990fcfd090",
+  "initialParametersSha256": "ec3ad49cb242bb1f50f3977e33c2eebc6930c12acfbae4849be774503b9fb3b4",
+  "applicationReportSha256": "47bc0bf3f2e028d66ba44ac3d8719c796665f3f9a33cdd66a0bd59f495740eca",
+  "nativeReferences": {
+    "cnr": {
+      "passed": true,
+      "reportSha256": "0a2baf2c50e7e600b8febb9eb0ce769bd51e0ed7bb2d204d33779462fac21e7d",
+      "processedStatistics": 84,
+      "parameterSubmissions": 83,
+      "processedCnrFrames": 83,
+      "updatedFrames": 9
+    },
+    "baynr": {
+      "passed": true,
+      "reportSha256": "36b3af441677a1372ca02555f5c9dd99c6efee9a9cc4b090f599b0a612cd7add",
+      "processedStatistics": 84,
+      "parameterSubmissions": 83,
+      "processedBaynrFrames": 83,
+      "updatedFrames": 9
+    },
+    "lsc": {
+      "passed": true,
+      "reportSha256": "73b45a7d38da55582bc03d86ae202087f48ec62269c2705903db57c17c6256f0",
+      "processedStatistics": 84,
+      "parameterSubmissions": 83,
+      "processedLscFrames": 83,
+      "updatedFrames": 10
+    },
+    "ccm": {
+      "passed": true,
+      "reportSha256": "455ee7713c87a4fe7fb12c63ebcb31b0da3ef01edae8e201fdcf11e9318c0636",
+      "processedStatistics": 84,
+      "parameterSubmissions": 83,
+      "processedCcmFrames": 83,
+      "updatedFrames": 81
+    },
+    "dpcc": {
+      "passed": true,
+      "reportSha256": "cacbfdb4ae725f013991a3d08fac845424e717c00d5fcb41e3fd0c17a27988bc",
+      "processedStatistics": 84,
+      "parameterSubmissions": 83
+    },
+    "demosaic": {
+      "passed": true,
+      "reportSha256": "f38de9c7e352b785553fbf9d620e971f40959aadb7a2397e5009b702a81489f0",
+      "processedStatistics": 84,
+      "parameterSubmissions": 83
+    },
+    "new-blocks": {
+      "passed": true,
+      "reportSha256": "ed088ab9b8396dd3e97d1f5af983e1f5d10bc05ceedb82a13bbaf011753192ab",
+      "modules": {
+        "bay3d": {
+          "passed": true,
+          "startupCompared": true,
+          "runtimeRecordsCompared": 83,
+          "updatedRuntimeRecords": 9,
+          "heldRuntimeRecords": 74,
+          "resultBytesComparedPerRecord": 224,
+          "selectedBytesComparedPerRecord": 400,
+          "exposureBytesComparedPerRecord": 80,
+          "packedBytesComparedPerUpdate": 253
+        },
+        "ynr": {
+          "passed": true,
+          "startupCompared": true,
+          "runtimeRecordsCompared": 83,
+          "updatedRuntimeRecords": 9,
+          "heldRuntimeRecords": 74,
+          "resultBytesComparedPerRecord": 168,
+          "selectedBytesComparedPerRecord": 356,
+          "exposureBytesComparedPerRecord": 88,
+          "packedBytesComparedPerUpdate": 162
+        },
+        "sharp": {
+          "passed": true,
+          "startupCompared": true,
+          "runtimeRecordsCompared": 83,
+          "updatedRuntimeRecords": 9,
+          "heldRuntimeRecords": 74,
+          "resultBytesComparedPerRecord": 178,
+          "selectedBytesComparedPerRecord": 388,
+          "exposureBytesComparedPerRecord": 88,
+          "packedBytesComparedPerUpdate": 175
+        }
+      }
+    },
+    "awb-translation": {
+      "passed": true,
+      "reportSha256": "855d83450e199ceb0986ac0f168052a749d6264cc41673510c6becd3219581cb",
+      "bytesCompared": 7680,
+      "mismatches": 0
+    },
+    "awb-joined": {
+      "passed": true,
+      "reportSha256": "6603cbb80b4a57ff650d1bb4fed870ef9b7428d1825043b79ed0c4aac81ffd8e"
+    }
+  },
+  "enabledIspModules": [
+    "CCM",
+    "LSC",
+    "DPCC",
+    "BAYNR",
+    "BAY3D",
+    "YNR",
+    "CNR",
+    "SHARP",
+    "DEMOSAIC"
+  ],
+  "startupEnableMask": "0x19f807fc4339",
+  "processedStatistics": 84,
+  "parameterSubmissions": 83,
+  "application": {
+    "receivedFrames": 68,
+    "sampledUniqueFrames": 66,
+    "firstFrameSeconds": 0.7929392920050304,
+    "stopSeconds": 0.240136166998127,
+    "ownerExitCode": 0,
+    "installedCameraUnchanged": true,
+    "syntheticQrPositionsAndRotationsPassed": 16,
+    "nativeQrErrors": 0
+  },
+  "awbJoined": {
+    "framesCompared": 32,
+    "mismatchingFrames": 0,
+    "matchesActualLiveOwnerGains": 32,
+    "nativeCalibrationAndContextInitializationExecuted": true,
+    "nativeWbBytes": 2108,
+    "initializedSdkBytesComparedPerFrame": 1140,
+    "packedIspBytesComparedPerFrame": 11145,
+    "forcedBrightnessDiagnostic": false,
+    "rustFixtureSha256": "82b0fad5547bb94b8595f76b06e4fc278f4bd66a2e972a2a572b90c1d6169bdc"
+  },
+  "awbNonfiniteRejections": 0,
+  "limits": [
+    "Fresh actual Luckfox application run, default full selected-profile ISP group. Original ARM executes offline on these recorded real inputs; vendor userspace is not used as runtime decoder/ISP control.",
+    "Synthetic QR position/rotation success is not an optical camera scan qualification. Root performs optical testing separately.",
+    "Normal-light trajectory; does not qualify physical dark/light transitions, LCD/buttons, physical power cycle or permanent startup.",
+    "64legacy uninitialized SDK SmallRange bytes excluded from semantic SDK comparison; complete11145-byte ISP packed records match. Native initialization/oracle memory,clock,filesystem/module lookup adapters remain explicit."
+  ]
+}

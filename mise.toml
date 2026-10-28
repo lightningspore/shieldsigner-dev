@@ -62,8 +62,16 @@ description = "Build readable local documentation and hardware-only review bundl
 run = "uv run scripts/build-review.py"
 
 [tasks."os:build"]
-description = "Try the pinned upstream Luckfox Mini microSD build (requires x86_64 Docker host)"
+description = "Build pinned Luckfox Mini microSD with Rust camera/QR runtime (x86_64 Docker host)"
 run = "bash scripts/build-os.sh"
+
+[tasks."os:remote:build"]
+description = "Stage verified Rust camera runtime and launch image build on the documented Proxmox builder"
+run = "uv run --python 3.13 python scripts/build-os-remote.py"
+
+[tasks."os:camera:bundle"]
+description = "Stage an immutable camera image bundle; pass --output NEW_DIRECTORY"
+run = "uv run --python 3.13 python scripts/prepare-camera-image.py"
 
 [tasks."os:remote:status"]
 description = "Read the ShieldSigner build status on Beelink2 container 610"
@@ -86,7 +94,7 @@ description = "Preview editable TSX without imported copper on localhost:3022"
 run = "bun run dev:source"
 
 [tasks."os:prepare"]
-description = "Prepare pinned OS sources and the UR2 reader configuration; does not compile or flash"
+description = "Prepare reviewed OS Rust-camera hooks and UR2 reader configuration; no compile or flash"
 run = "SHIELDSIGNER_PREPARE_ONLY=1 bash scripts/build-os.sh"
 
 [tasks."bom:check"]
@@ -235,7 +243,23 @@ run = "uv run python reverse-engineering/rkaiq/scripts/arm-smoke.py"
 
 [tasks."camera:rust:package"]
 description = "Package verified ARM camera-test tools, original-reference fixtures, source and test guide"
-run = ["mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin frame-preview --bin camera-probe", "uv run --python 3.13 --with pyelftools==0.32 python reverse-engineering/rkaiq/scripts/package.py"]
+run = ["mise run camera:rust:arm", "mise run camera:qr:native-build", "mise exec rust@1.93.1 -- cargo build --locked --release --manifest-path firmware/rkaiq-rs/Cargo.toml --bin frame-preview --bin camera-probe", "uv run --python 3.13 --with pyelftools==0.32 python reverse-engineering/rkaiq/scripts/package.py"]
+
+[tasks."camera:release:preflight"]
+description = "Check exact release binaries, source hashes and hardware evidence without freezing a kit"
+run = "uv run --python 3.13 --with pyelftools==0.32 python reverse-engineering/rkaiq/scripts/release-preflight.py"
+
+[tasks."camera:qr:fallback"]
+description = "Check raw-first process-local QR retry contracts"
+run = "uv run --python 3.13 --with pillow python firmware/rkaiq-rs/python/test_qr_fallback.py"
+
+[tasks."camera:qr:native-build"]
+description = "Build pinned QR-only static ARM ZXing benchmark with mise Zig"
+run = "uv run --python 3.13 python reverse-engineering/rkaiq/scripts/build-qr-native-bench.py"
+
+[tasks."camera:qr:quirc-build"]
+description = "Build pinned static ARM quirc benchmarks, default and float"
+run = "uv run --python 3.13 python reverse-engineering/rkaiq/scripts/build-quirc-native-bench.py"
 
 [tasks."camera:rust:layout"]
 description = "Cross-check ISP32 Rust layout against pinned ARM kernel UAPI"

@@ -19,6 +19,9 @@ def main():
     p.add_argument("--modules", nargs="+", choices=MODULES, default=list(MODULES))
     p.add_argument("--min-submissions", type=int, default=0)
     args = p.parse_args()
+    log = Path(str(args.base) + '.log')
+    if b'[shieldsigner:' in log.read_bytes():
+        raise SystemExit('Native live proof requires a complete log: rerun with SHIELDSIGNER_CAMERA_LOG_FULL=1 into persistent diagnostic storage')
 
     def path(s):
         return Path(str(args.base) + s)

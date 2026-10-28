@@ -2666,3 +2666,24 @@ The old stop-before-reconfiguration boundary is removed in this mode. The
 calibration/context constructor remains adapted, and the two private captured
 groups are replayed cyclically; this is not complete native initialization,
 variable-policy coverage or an optical lighting-change experiment.
+
+### Actual ordered startup trace (0.0.36-dev)
+
+`SHIELDSIGNER_AWB_TRACE_DIR=/persistent/new-private-directory` retains the
+first 32 successfully translated AWB inputs in owner processing order, with
+raw statistics, translated frame, exact effective SDK record, ISO and same-frame
+AE brightness. Each file uses exclusive creation; reuse a fresh directory.
+The option is diagnostic and unset during normal streaming. Traces are private
+and must stay outside Git. Storage writes can affect timing.
+
+Replay with `awb-joined-captured.py --trace-dir DIRECTORY --hardware-reference
+--require-match --report PRIVATE_REPORT`. Each input keeps its own AE values
+and update request. There is no cyclic duplication.
+
+[The first actual 32-frame trace](awb-ordered-trace-hardware-validation.json)
+passes native gain/controller and complete next-record comparisons across
+FAST and normal time sharing. All 32 actual live-owner gain vectors also match
+the native replay bit for bit using exact frame/parameter associations. The
+application received 70 real frames and stopped cleanly. This supersedes the
+paired cyclic-input limitation for this trace, while retaining the adapted
+native context-construction and optical/physical qualification limits.

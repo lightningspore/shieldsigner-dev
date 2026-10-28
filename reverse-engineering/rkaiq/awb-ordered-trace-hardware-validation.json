@@ -1,0 +1,422 @@
+{
+  "kind": "actual-ordered-awb-hardware-trace-native-comparison",
+  "version": "0.0.36-dev",
+  "passed": true,
+  "captureRun": 109,
+  "framesCompared": 32,
+  "fastFrames": 2,
+  "normalFrames": 30,
+  "firstFrameId": 0,
+  "lastFrameId": 47,
+  "nativeGainWrapperCalls": 19,
+  "measurementBytesComparedPerFrame": 1204,
+  "mismatchingFrames": 0,
+  "actualLiveOwnerGainFramesCompared": 32,
+  "liveOwnerGainBitMismatches": 0,
+  "cameraBinarySha256": "30b7b5afb592bfca573984013ef5b39baf9819c74ed9cd04c59346d949d3d60f",
+  "ownerLogSha256": "fc738e7049f1a69047163c90f31990119189b503da13ef6f137b7f38764480a3",
+  "rustFixtureSha256": "2abcd8d16459b4d975aa96988305dba1be70689d5c2d243254a4c66efbd834f3",
+  "inputSha256": {
+    "awb-joined-captured.py": "fdbb74b827435e4e853fb470ad8e8e8822502630b32568a9cfecc5897f864e22",
+    "librkaiq.so": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "sc3336_CMK-OT2119-PC1_30IRC-F16.json": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "frame-000.json": "1d153249a607c6e376687cb8cd542be005b365bc3577b0fe6e2b2c113ebc74a1",
+    "frame-000.translated.bin": "708d96d61a584921307066cdfeb75bed46d27a94d3c3beb385a47104b8a812a3",
+    "frame-000.sdk.bin": "4c081c95fe115f1c52ca84223e7a75cf647e64d3573accdcf5fa6c9c6352ccd1",
+    "frame-000.stats.raw": "bd834bd3ad56cb7b9873da9e019f6cf27250339f0b930779bacab99035b3b939",
+    "frame-001.json": "72a2f5c10343b7303e55ea205a9180554d0693cfe5516a094c020082e84c7046",
+    "frame-001.translated.bin": "ee211d85b6aca75bb6f9f3ee0bd8dd1cdf647b1bf41ba66915bd514a38131b5e",
+    "frame-001.sdk.bin": "4c081c95fe115f1c52ca84223e7a75cf647e64d3573accdcf5fa6c9c6352ccd1",
+    "frame-001.stats.raw": "1d2e1d8e6ca901517f392cb8b4fd7479d3b98e937b51dfe4e83203890948214d",
+    "frame-002.json": "b10749c9b807bace3a70715129db819d4354bf8b1fe0c716c1b8370293ea23c9",
+    "frame-002.translated.bin": "9112824ec3290bb72e5b16daa35b4759e2c2252b52edea5c86b15dab01636f68",
+    "frame-002.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-002.stats.raw": "5ac727bf6a421300771b133d342239c3f74850ec12ad2a26c1776b0197632c75",
+    "frame-003.json": "11c1f7d0aabce1651043d28fc8b7798c796ff4301abe15deab4092969354e9c9",
+    "frame-003.translated.bin": "af5881b88eaf1f8f5c879329ab219ca4f4b3bc843b9b932608b973788ca24c51",
+    "frame-003.sdk.bin": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+    "frame-003.stats.raw": "c072eb384cc084cd8af48d72fdfe6bed8fec9459f7159e6aa77a28a4ed103272",
+    "frame-004.json": "3ca39504d8bcf8c6da5a4b78a8d2fbca07ca969502f4b6ac483b7f6bd914247a",
+    "frame-004.translated.bin": "4ee2f950fed88f8e15e6c4f1e45e0207c0d27d7917e798b1324c56feab7ab1ea",
+    "frame-004.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-004.stats.raw": "5a2bed9c49368548e94b93aa439c8df947fcfd0856efa0693fe34ee6d75bcd6b",
+    "frame-005.json": "17f69032fbe0858aa2fc1ffdda32926baaa1cf1baa054e40a77dfab23a13f0a4",
+    "frame-005.translated.bin": "d67304322312358f882132a4f86820f27b6939024b783d3a1073d8de8d908ea1",
+    "frame-005.sdk.bin": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+    "frame-005.stats.raw": "67cfa5300a12861fa6481102806159f70b362a0c2197234fd197d7c80715e806",
+    "frame-006.json": "f920bd87a8be28f9e3bdce1a8250549e5b051e64e0336184e46eda9da71b754d",
+    "frame-006.translated.bin": "86052651d5c2bf059770bdd0352de2efd8192eb979a9028d03bc6851f5472ca6",
+    "frame-006.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-006.stats.raw": "84ee322e42a57c0e2231113886242bb7282f28f8bf6074d564130a405676ef62",
+    "frame-007.json": "63b133418af990ab774c19cec8ac00aed558a33b045778dd28b00954a7780338",
+    "frame-007.translated.bin": "41d145c747b0ca6e228e98b890ca81889b36f8a331256b8ea253ebd51c870a84",
+    "frame-007.sdk.bin": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+    "frame-007.stats.raw": "8b94c43df0698d6fb22e748bce2cfb84a18ad9643da476bf9a1b73d7da363407",
+    "frame-008.json": "c95182f5b406ae26dada4ae1bc0d2d17ac18d9b2e428ff74ddc5146b9db11dcb",
+    "frame-008.translated.bin": "c500085f8647402f24fb0dde5e1f4b18e6e5ebc341298868544fb6fc0a1798c4",
+    "frame-008.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-008.stats.raw": "1e6fb355f1fbf7d3ca6f746b7d6540d8e419e9a923a5d854b5b4cdf577230aae",
+    "frame-009.json": "2f5b548c22296e9c200ad28f66a5224855c058645f2a79bce89d0849ca3c8f91",
+    "frame-009.translated.bin": "4496e9e6657c58786cf4327a269d3be3fba840e7d196ecc8b75aa805d27338e7",
+    "frame-009.sdk.bin": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+    "frame-009.stats.raw": "ac4e44a766ac1a91f30a248e0ca41bc74c43ba6280b32f7296a5f80ed0afced8",
+    "frame-010.json": "e87a361619fda16fb91497795c94044e6669ffbd957940fdf4546e0e7145cbe5",
+    "frame-010.translated.bin": "cb49342907eaf14f445e56437ab5ff54a26fa738fb6a1d86c906c0d27f521d22",
+    "frame-010.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-010.stats.raw": "8072c994115553c49f13e7e547394a24d04a49257d2a64d5833c23f93b983ea1",
+    "frame-011.json": "1c379aec3e22ff946c8ee65b3b8739bdcfb4e45ed83af4ace338206ca34e410c",
+    "frame-011.translated.bin": "8e6392cb9ef4fc9a99f3e3ada835cd21e46442d004d87c7b923cc4d5acccdd02",
+    "frame-011.sdk.bin": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+    "frame-011.stats.raw": "3908c4d90657bd4eca80b73e9da84ff9dc7e23bc0e9669e091b086487eb54252",
+    "frame-012.json": "40d4450b7a795312fe3f55f3cf5ec448bdc5aa0498a492be3b6c3fd3a68242ac",
+    "frame-012.translated.bin": "4b1138fd3ae2e30744ff961b56e21b7b6daa7d70310b689e38ba034fc755fa2f",
+    "frame-012.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-012.stats.raw": "df93564493585f2fdb560b79380886e9eb15644b5143f21e9f46dffd8a90d6d1",
+    "frame-013.json": "183beaac6e4fbb97bea3506952db1feaa246726c34d1becdf8bc57c944e02dcd",
+    "frame-013.translated.bin": "5ff0df30f61d356399e9a3b380b512231cd5eefc0bd66ebac523133fef0d7e55",
+    "frame-013.sdk.bin": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+    "frame-013.stats.raw": "99a9d6ad37a2f48143cf68b4e05755ea39880e30f213bcff44f96ab34ed020b8",
+    "frame-014.json": "e0967909f6b670f15259e309ae4cdad39008682d51faef5d2c2291c8fa8f6972",
+    "frame-014.translated.bin": "903a7eb3b2e54233177f9d97826ca28d6b0dae7ccf3bb184ce9a4f667ba50ce0",
+    "frame-014.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-014.stats.raw": "37ff5dc619ca4301f7941718d73ebc9c6a97a618f5000b04dce4a2468a475aff",
+    "frame-015.json": "9158ab48cb972dce286349621b422cd5d42a0700dae1f41a2b25b0223a2100b7",
+    "frame-015.translated.bin": "dbb5d7fb1ca69fc951f1ffa6c46bbc2026068ac629a00f6957c7ae7711f3d267",
+    "frame-015.sdk.bin": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+    "frame-015.stats.raw": "ece2b80ec6275e9d76d76059395aa30068177ac0e0cf154cdd21bff194fb945e",
+    "frame-016.json": "45f9fd76a37041af73dc97d1484425b234bfee0b66528bcafec9e026ee440982",
+    "frame-016.translated.bin": "dec09a4f8de54cb1deb9cd5d1f06a93a2524d229eb478a55b7dd2edc685be6ef",
+    "frame-016.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-016.stats.raw": "410b7b50b7e5cc71f103fe0f8d0abe7cf822750703a6e44f680ad4e16785fb61",
+    "frame-017.json": "39367b5ceaed2c8f1abfcdc4b5056fac8941e6d2e341f61b3a84d64147c75ed2",
+    "frame-017.translated.bin": "99d229f2046ac2fdc3b4f00c47251418ee64e4cc870f8a2ac1b88ac38742889a",
+    "frame-017.sdk.bin": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+    "frame-017.stats.raw": "4ba6207f959713c3f288cb46496fa33d5f797ffd4febf7c0d6060ee34791df34",
+    "frame-018.json": "da1b414fdac44d7c41b65292be5ff3d96079e9927cbad8d5c79d493e793cd688",
+    "frame-018.translated.bin": "91fa3960f788db1a9000ca0d6a0f82fe29c4cbda383f0be0899030735076d763",
+    "frame-018.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-018.stats.raw": "a05df2ecc428fe322b0e7b317c8c16b27a8c0f3be04e2a98e9ea971bf42d8307",
+    "frame-019.json": "b61477a8a3fe6fc2437c49d58f1169ca248b1dafa2f75f6b4af1a280d626924c",
+    "frame-019.translated.bin": "387cd4abbedf67269e0c7c2170fbf1a7862adc76f4387f1bd77f75e21b1a4aa6",
+    "frame-019.sdk.bin": "2d9599bd1a38897f1e9c2dad22271ed67e635c14c4834d952312864a43444cdc",
+    "frame-019.stats.raw": "23d370139f35dccb888f63b824d1f78892bf12b4102c7c2e2b1d696bed0db1c7",
+    "frame-020.json": "64ff332b628cde41557a2d1f49372eab192fe1f557c3879071bf5d2bf3fd1a29",
+    "frame-020.translated.bin": "26fb3f6c30c3001f359ea32a0175220ac55d936df77a0dacae2f62cbc5aa6bc4",
+    "frame-020.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-020.stats.raw": "5a5875223a58df8131318bae53201a11d950e5ea1f7dd9018f1ed793160676e0",
+    "frame-021.json": "829637da75f49b216a7496619137a5cc2a8f2159c9041c0886550e3b77e6296b",
+    "frame-021.translated.bin": "b3df326e72cf857c8ae9708279ef22ebd4340581e06f768f8eef6d43c842bc4e",
+    "frame-021.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-021.stats.raw": "9c630051532c6f56b49f79d6da5088fd0f77474990bc22f6d7b5ffd3bc39482b",
+    "frame-022.json": "fdac9bfb0b2b550f606bceb3147c5bcfe417da62ecd39b6b7851d1d190cbeb8e",
+    "frame-022.translated.bin": "c44d40d51c8585af93e1ed2ce45282a8ed0302210d366f4a0d6d392892402c1d",
+    "frame-022.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-022.stats.raw": "64a3e320da16eb06e18fe4304e30795e1bb80c3dbb90955f6686a5b786629c63",
+    "frame-023.json": "e75c7e175af12ba50a43f2cf5f61930003a412cfdbc4f10b3c1e87143f11c848",
+    "frame-023.translated.bin": "2157cb933508a87ff91966b8f5b0a1dd69d1cd7ac94e77dfb6a3d542d043ab5d",
+    "frame-023.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-023.stats.raw": "997525d7e00bf1b363bcb47483659bb8462076956d834026d16b138235fcd265",
+    "frame-024.json": "ab762e7e4ae9d12e6e98260a6ddc79d6b7f9cbd2a7ca782b53e50ff68df1df80",
+    "frame-024.translated.bin": "45061e64825c1efa9dcaba7cb29bc362e4b929ae748088369590351b95df41a5",
+    "frame-024.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-024.stats.raw": "2f4c38071cafd4e8dfe42b3dea5aaaf7598af42c0f489d8adacc972a3ef18e62",
+    "frame-025.json": "91efc469d850190a399fab9dd87eff521d87d8e47d16abaa2c2811e8a8216e22",
+    "frame-025.translated.bin": "b94baed466cfd0ad71ee02e3e9bf0af7cdad41a121e3e37e4ddf704c1c0d61d9",
+    "frame-025.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-025.stats.raw": "d004b8c567185d91fa0d687628b14fa2f108af234c4f4c01fef58e2963a99c77",
+    "frame-026.json": "8bbb8374323692d4734243e51cf72e285f856b860e7ec551dee9ec9a944d837d",
+    "frame-026.translated.bin": "bfbbe9df3674f748294040b01da36067dfd8c2c45a285cd29fee68240ac95144",
+    "frame-026.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-026.stats.raw": "800effb2c25d0266fe21610448f1bce6cecbbc73185632ea62281690f7d63eda",
+    "frame-027.json": "2ced72a9f1e33b1f4dbe0fe42e0a745d6592b19e38daa3013a887dc3cd71d8ec",
+    "frame-027.translated.bin": "5a479283da80122e45e7a20541832e5ae9c2647b0c56e660c5846f2af4def6d9",
+    "frame-027.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-027.stats.raw": "512ed6beb74b634413a3a2d726ae9b4921f0476a9174fb7c00c7783560447366",
+    "frame-028.json": "5dc9c18279ade52b2b092927ca3c972822f7beaa88195c21d78f76f468c74e4d",
+    "frame-028.translated.bin": "e1a81fbbed9038140053063c5a60eace6bf320536491cddf131278e7a8f98c16",
+    "frame-028.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-028.stats.raw": "cacd4d728f6e58ff0187fbc058d4e01073d391832ec114924283ad6860315118",
+    "frame-029.json": "7beec499870bb5ff96a17e3cee6ef13bf06394c1d34a232d33b2155f38cbdcfe",
+    "frame-029.translated.bin": "bc72f8152116f973e8943c89a0b03be0ed76893896e838796ca300ac20cdd936",
+    "frame-029.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-029.stats.raw": "a0f8b09248e93e962ec51d705c41ccb83c12cd3674c9a5a707118da60b2c2dc9",
+    "frame-030.json": "bb19503aac040b2f22380ca394272fc00210fcd14490389629c82b2e69098040",
+    "frame-030.translated.bin": "b524f31ecafdd8163773d805a1c7f038538dfbaebe5cb1018f4b692b70568051",
+    "frame-030.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-030.stats.raw": "0bc793787eecd81f89aaf1afbc8c598ce64e7bfa7cd4096a936b66fff37078de",
+    "frame-031.json": "cb75c9639c5e7a71c4ab7cf06a711b1e53f8ef03bc2466b6287a9400201b12a1",
+    "frame-031.translated.bin": "4d913c60cb2cd11525285c970e585df9eac669e010a9f310bd43bdf7430283f7",
+    "frame-031.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "frame-031.stats.raw": "2c67e6fe65ab74103576aa34c0cc5b7856694fb01f0ebc116774d5ea06b79f5a",
+    "awb-hardware-reference.py": "87412863c5f18590e617291fce257ce7fd36d9dc2770f01e77cec5454c78404c"
+  },
+  "application": {
+    "passed": true,
+    "integration": {
+      "sourceSha256": "7cf9c67797d5b14cfbea206e91bc5c85292ec01f36fca68edbaee13977a5809e",
+      "patchedSourceSha256": "726294bdd9d3a2b1b85a6109b9fd8db0f3761eadb1292f436f4767af19a2ff71",
+      "changes": [
+        "Rust PiVideoStream import",
+        "Preserve complete rotated preview canvas"
+      ],
+      "installedFilesModified": false
+    },
+    "opticalScanQualified": false,
+    "syntheticQrCases": [
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      }
+    ],
+    "changedSourceRejected": true,
+    "realFrameDecodeStatus": 4,
+    "capture": {
+      "directory": "/shieldsigner-camera-tests/dev036-trace109/results/camera-usw_2v0i",
+      "firstFrameSeconds": 0.6715940000000273,
+      "first": 5,
+      "last": 120,
+      "samples": 66,
+      "received": 70,
+      "stopSeconds": 0.28389900000001944,
+      "ownerExitCode": 0
+    },
+    "realFrameRotations": [
+      {
+        "setting": 0,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 90,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 180,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 270,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      }
+    ],
+    "rotationBenchmark": {
+      "croppedSecondsPerFrame": 0.05199704999999995,
+      "expandedSecondsPerFrame": 0.01243608319998657
+    },
+    "installedCameraUnchanged": true
+  },
+  "boundaries": [
+    "Calibrated fixture ABI builder plus native InitinalSwResParaCom2; complete calibration/context construction remains adapted.",
+    "Complete native ReconfigHwParaV32 executes after gain; hardware calibration graph and stable cohort signature are explicit inputs.",
+    "Actual captured frame order and per-frame AE/update inputs; capture provenance does not itself qualify optical response."
+  ],
+  "limitations": [
+    "Continuous owner-processed trace, not a claim of every physical sensor frame or optical scene-change qualification.",
+    "Calibrated native context construction is adapted; not whole native library initialization.",
+    "No physical QR/display/buttons or complete image-quality equivalence claimed.",
+    "Trace diagnostics write bounded private statistics to persistent storage and may affect timing."
+  ]
+}

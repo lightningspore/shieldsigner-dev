@@ -282,7 +282,7 @@ class Joined(controller.Original):
                         struct.unpack_from("<I", c, 0x33E4)[0] + j * 0xA0 + 0x74, 4
                     ),
                 )[0]
-                for j in range(7)
+                for j in range(cfg[0x138])
             ],
             diagnostics=dict(
                 sampled=list(struct.unpack_from("<2I", c, 0x33BC)),

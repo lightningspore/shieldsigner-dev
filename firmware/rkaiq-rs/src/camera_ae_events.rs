@@ -118,6 +118,7 @@ struct CameraAwb {
     sdk: [u8; shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES],
     last_iso: Option<f32>,
     sample_directory: Option<std::path::PathBuf>,
+    trace_directory: Option<std::path::PathBuf>,
     sampled_groups: u8,
     gains: Vec<(
         u32,
@@ -195,6 +196,24 @@ impl CameraAwb {
                     let mut file=OpenOptions::new().write(true).create_new(true).open(directory.join(format!("group-{group}.json")))?;
                     serde_json::to_writer_pretty(&mut file,&report).map_err(|e|error(e.to_string()))?;
                     self.sampled_groups |= 1 << group;
+                }
+            }
+            // Explicit private diagnostic: retain the first 32 translated
+            // inputs in owner processing order, including their exact SDK/AE
+            // association. Normal streaming performs no trace writes.
+            if self.processed < 32 {
+                if let Some(directory) = &self.trace_directory {
+                    fs::create_dir_all(directory)?;
+                    let sdk = self.measurements.iter().find(|(id, _)| *id == stats.parameters_id())
+                        .ok_or_else(|| error("Missing traced AWB configuration"))?;
+                    for (suffix, data) in [("stats.raw", bytes), ("sdk.bin", sdk.1.as_slice()), ("translated.bin", frame.as_slice())] {
+                        let path = directory.join(format!("frame-{:03}.{suffix}", self.processed));
+                        OpenOptions::new().write(true).create_new(true).open(path)?.write_all(data)?;
+                    }
+                    let metadata = json!({"index":self.processed,"frameId":stats.frame_id(),"parametersId":stats.parameters_id(),"group":group,"iso":iso,"normalizedBrightness":ae_pre.normalized_brightness,"requestedUpdate":self.processed==0,"association":"exact-registered-snapshot","order":"owner-processed-translated-statistics"});
+                    let file = OpenOptions::new().write(true).create_new(true)
+                        .open(directory.join(format!("frame-{:03}.json", self.processed)))?;
+                    serde_json::to_writer_pretty(file, &metadata).map_err(|e| error(e.to_string()))?;
                 }
             }
             let result = self

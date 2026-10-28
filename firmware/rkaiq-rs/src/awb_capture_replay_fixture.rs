@@ -113,8 +113,8 @@ pub fn run_sequence(v: &Value) -> Result<Value, String> {
     let scale = u32::try_from(v["sample_scale"].as_u64().ok_or("sample_scale")?)
         .map_err(|_| "sample_scale")?;
     let stages = v["stages"].as_array().ok_or("stages")?;
-    if stages.is_empty() || stages.len() > 16 {
-        return Err("stages must be 1..16".into());
+    if stages.is_empty() || stages.len() > 32 {
+        return Err("stages must be 1..32".into());
     }
     let mut session = Session::new(&v["iq"], [width, height], scale)?;
     // Optional measurement replay follows the same post-processing handoff as
@@ -158,6 +158,9 @@ pub fn run_sequence(v: &Value) -> Result<Value, String> {
             .map(|value| value.as_f64().ok_or("normalized brightness"))
             .transpose()?
             .map(|x| [x as f32, 0.]);
+        let requested_update = stage.get("requested_update")
+            .map(|value| value.as_bool().ok_or("requested update must be boolean"))
+            .transpose()?;
         let mut frames = Vec::new();
         for record in records {
             let text = record.as_str().ok_or("translated frame hex")?;
@@ -181,7 +184,7 @@ pub fn run_sequence(v: &Value) -> Result<Value, String> {
                     .process(
                         raw,
                         &Input {
-                            requested_update: results.is_empty(),
+                            requested_update: requested_update.unwrap_or(results.is_empty()),
                             exposure_luma: luma,
                             iso,
                             site_reference: None,

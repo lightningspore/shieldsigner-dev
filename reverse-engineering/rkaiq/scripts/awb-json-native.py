@@ -306,6 +306,41 @@ class NativeJson(OriginalAwb):
         assert status == 0, hex(status)
         return bytes(self.uc.mem_read(HEAP + 0x2E90, 1204))
 
+    def bind(self, black_level=None, digital_gain=1.0, iso=50.0):
+        """Execute AwbReCfgPregnBlc on actual native context and SDK record.
+
+        Optional black_level fields match the 32-byte BLC result ABI:
+        enabled:bool, fixed:[i16;4], stage1_enabled:bool, stage1:[i16;4],
+        offset:i16, gain:f32. Inputs are caller-owned BLS results, not derived
+        from or substituted into output bytes. Existing native remosaic,
+        software pregain and AWB offset calibration stay untouched.
+        """
+        struct.pack("<ff", iso, digital_gain)  # Validate f32 representation.
+        self.uc.mem_write(HEAP + 0x5C, struct.pack("<ff", iso, digital_gain))
+        pointer = 0
+        if black_level is not None:
+            b = black_level
+            assert isinstance(b["enabled"], bool) and isinstance(
+                b["stage1_enabled"], bool
+            )
+            assert len(b["fixed"]) == len(b["stage1"]) == 4
+            data = bytearray(32)
+            data[0] = b["enabled"]
+            data[10] = b["stage1_enabled"]
+            struct.pack_into("<4h", data, 2, *b["fixed"])
+            struct.pack_into("<4h", data, 12, *b["stage1"])
+            struct.pack_into("<h", data, 22, b["offset"])
+            struct.pack_into("<f", data, 24, b["gain"])
+            pointer = HEAP + 0x7200
+            self.uc.mem_write(pointer, bytes(data))
+        self.uc.mem_write(HEAP + 0x6C, struct.pack("<I", pointer))
+        self.uc.mem_write(HEAP + 0x7240, bytes(20))
+        symbol = next(n for n in self.symbols if "AwbReCfgPregnBlc" in n)
+        self.invoke(
+            symbol, [HEAP, 0, HEAP + 0x7240, HEAP + 0x2E90], instructions=1_000_000
+        )
+        return bytes(self.uc.mem_read(HEAP + 0x2E90, 1204))
+
     def snapshot(self):
         """Preserve native linked-list addresses for a downstream joined executor."""
         return {

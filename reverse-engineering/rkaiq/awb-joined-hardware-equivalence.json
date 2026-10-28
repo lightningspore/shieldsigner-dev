@@ -1,0 +1,60 @@
+{
+  "kind": "joined-awb-gain-and-hardware-record-comparison",
+  "version": "0.0.36-dev",
+  "passed": true,
+  "hardwareWrites": false,
+  "fullControllerQualified": false,
+  "framesCompared": 16,
+  "nativeGainWrapperCalls": 15,
+  "measurementBytesComparedPerFrame": 1204,
+  "mismatchingFrames": 0,
+  "comparisonScope": [
+    "Actual native measurement preparation and gain wrapper",
+    "Gain IEEE754 bits, selected region, density, probabilities, damping and controller state",
+    "Complete native ReconfigHwParaV32 output after each requested update",
+    "Actual native reconfiguration side effects carried into following frame"
+  ],
+  "nativeStartup": {
+    "gain353C": [
+      1069730559,
+      1065353216,
+      1065353216,
+      1071349477
+    ],
+    "gain3578": [
+      1069730559,
+      1065353216,
+      1065353216,
+      1071349477
+    ],
+    "previous352C": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "rustFixtureSha256": "f4f998109c9c8034e028237886552d303373f4b3a8698c3301fdff933de2218a",
+  "inputSha256": {
+    "awb-joined-captured.py": "a156e8026dcaf5cd4dc0427e2fb840e879ccc11bb3d7910c1e48666a9d0b02ca",
+    "librkaiq.so": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "sc3336_CMK-OT2119-PC1_30IRC-F16.json": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "group-0.json": "ac194913c5476a08fc5d15b6a7b7366d863b41542c170b81f56c31974503f8eb",
+    "group-0.translated.bin": "05128b5bd623c2a70ef570093fc85cbb340ab1401eb2c7814a33689ff8d150bb",
+    "group-1.json": "6e5f2ac588a4f634d520920f076d7ce43521172199824f89ca2652e821f2cdc0",
+    "group-1.translated.bin": "c93235cb5e18cf78cb3f83e8b0c2992b5a91821947cdb484a29cbc0f6e3c3179",
+    "group-0.sdk.bin": "3c9da59048632cdf85b1ecbec001a10c1a7c151cb5bf3f3b6fd23544acc39de3",
+    "awb-hardware-reference.py": "87412863c5f18590e617291fce257ce7fd36d9dc2770f01e77cec5454c78404c"
+  },
+  "boundaries": [
+    "Calibrated fixture ABI builder plus native InitinalSwResParaCom2; complete calibration/context construction remains adapted.",
+    "Complete native ReconfigHwParaV32 executes after gain; hardware calibration graph and stable cohort signature are explicit inputs.",
+    "Paired captured records replayed cyclically; not a continuous optical scene sequence."
+  ],
+  "limitations": [
+    "Two captured normal groups replayed cyclically; no continuous optical scene-change claim.",
+    "Native calibration/context construction is adapted; not full native library initialization.",
+    "Explicit constant cohort signature and pinned constant tables; variable policy remains outside this comparison.",
+    "Original binary executes only on host; camera uses Rust and open drivers."
+  ]
+}

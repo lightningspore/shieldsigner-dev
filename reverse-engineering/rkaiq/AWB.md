@@ -2650,3 +2650,19 @@ match original gain bits, probabilities, density, damping and controller state
 without modifying native history. The corrected executable also passed actual
 application integration with 73 real frames and clean shutdown. Native hardware
 reconfiguration remains the next joined comparison boundary.
+
+### Joined gain and full measurement reconfiguration (0.0.36-dev)
+
+`awb-joined-captured.py --hardware-reference --require-match` now continues
+through the complete original `ReconfigHwParaV32`. The helper supplies its
+hardware calibration pointers from the pinned IQ profile and an explicit
+current SDK record, then carries the native side effects into the next frame.
+The stable cohort name is explicit strategy input; a deterministic `timeString`
+adapter handles native requests for a new name. No SDK output is patched.
+
+[Sixteen-frame evidence](awb-joined-hardware-equivalence.json) matches the
+joined gains/controller state and all 1,204 measurement-record bytes per frame.
+The old stop-before-reconfiguration boundary is removed in this mode. The
+calibration/context constructor remains adapted, and the two private captured
+groups are replayed cyclically; this is not complete native initialization,
+variable-policy coverage or an optical lighting-change experiment.

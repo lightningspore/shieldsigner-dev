@@ -317,6 +317,7 @@ def main():
         type=Path,
         default=ROOT / "firmware/rkaiq-rs/target/release/numeric-fixture",
     )
+    p.add_argument("--hardware-reference", action="store_true", help="Execute native reconfiguration and compare complete next SDK records")
     p.add_argument("--report", type=Path, required=True)
     a = p.parse_args()
     assert 1 <= a.cycles <= 8
@@ -366,12 +367,31 @@ def main():
         for _ in range(a.cycles)
         for i in range(2)
     ]
-    expected = fixture("awb-captured-sequence", dict(common, stages=stages))["frames"]
+    sequence = dict(common, stages=stages)
+    record = None
+    signature = b"RUST-AWB-NORMAL" + bytes(49)
+    weights = None
+    if a.hardware_reference:
+        hardware = importlib.import_module("awb-hardware-reference")
+        record = (a.samples / "group-0.sdk.bin").read_bytes()
+        assert len(record) == 1204
+        sequence.update(initial_measurement=record.hex(), measurement_signature=signature.hex())
+    expected = fixture("awb-captured-sequence", sequence)["frames"]
     arm = Joined()
     arm.start(wb, raw[0], initial, geometry, a.seed_previous_diagnostic)
     rows = []
     for i, reference in enumerate(expected):
         actual = arm.frame(raw[i % 2], meta[i % 2], i == 0)
+        if a.hardware_reference:
+            if actual["reconfigure"]:
+                native = hardware.Reference.from_joined(arm, signature=b"RUST-AWB-NORMAL")
+                native.seed(wb, record, previous_weights=weights, strategy_signature=signature)
+                configured = native.run()
+                record = configured["record"]
+                weights = struct.unpack("<9f", configured["weight_cache"])
+                # Carry forward actual native side effects, never Rust outputs.
+                arm.uc.mem_write(HEAP, bytes(native.uc.mem_read(HEAP, 0x100000)))
+            actual["measurement"] = record.hex()
         reference = dict(
             reference,
             gainBits=[
@@ -391,6 +411,7 @@ def main():
         seedPreviousDiagnostic=a.seed_previous_diagnostic,
         fullControllerQualified=False,
         nativeStartup=arm.startup,
+        hardwareReconfigurationCompared=a.hardware_reference,
         nativeSymbol=SYMBOL,
         rustFixtureSha256=hashlib.sha256(a.fixture.read_bytes()).hexdigest(),
         provenance={
@@ -405,13 +426,14 @@ def main():
                     for i in range(2)
                     for suffix in ["json", "translated.bin"]
                 ],
+                *([a.samples / "group-0.sdk.bin", Path(__file__).with_name("awb-hardware-reference.py")] if a.hardware_reference else []),
             ]
         },
         frames=rows,
         wrapperCalls=arm.wrapper_calls,
         boundaries=[
             "Calibrated fixture ABI builder plus native InitinalSwResParaCom2; complete calibration/context construction remains adapted.",
-            "Stops at ReconfigHwParaV32 entry; SDK record generation is not executed.",
+            ("Complete native ReconfigHwParaV32 executes after gain; hardware calibration graph and stable cohort signature are explicit inputs." if a.hardware_reference else "Stops at ReconfigHwParaV32 entry; SDK record generation is not executed."),
             "Paired captured records replayed cyclically; not a continuous optical scene sequence.",
         ],
         mismatchingFrames=sum(bool(r["differences"]) for r in rows),

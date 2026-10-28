@@ -55,3 +55,24 @@ to replace the proprietary camera-control library.
 
 The optical checker compares camera-decoded content only against the bundled
 public test target; synthetic fixture success does not qualify an optical scan.
+
+### Faster desktop preview (0.0.37 development)
+
+For the desktop demo only, set `SHIELDSIGNER_CAMERA_STREAM_FORMAT=nv12` on the
+Rust owner process. It sends tightly packed full-range BT.601 NV12 using
+`SSNV12F1`; `demo/server.py` converts to RGB on the desktop. VGA payloads are
+460,800 bytes instead of 921,600 bytes. The RGB `SSRGB001` protocol remains the
+default for the Python application. Other stream-format values fail, and NV12
+mode rejects limited-range input rather than displaying incorrect levels.
+
+[Hardware comparison](../../reverse-engineering/rkaiq/nv12-preview-hardware-validation.json):
+delivered preview improved from about 4.7 to 10.6 FPS while camera sequence
+advance stayed near 15 FPS. These are short desktop delivery measurements.
+Pillow's higher-precision color conversion differed from the board's Q8
+conversion by at most one channel level in the sampled test.
+
+Run parser/color/invalid-frame checks with:
+
+```sh
+uv run --python 3.13 --with pillow python firmware/rkaiq-rs/demo/test_server.py
+```

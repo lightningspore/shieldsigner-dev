@@ -76,6 +76,15 @@ impl CameraFrameStream {
         }
         let (colorspace, encoding, quantization, _) = camera_colorimetry(fmt);
         let full_range = camera_bt601_range(colorspace, encoding, quantization)?;
+        let nv12_transport = match std::env::var("SHIELDSIGNER_CAMERA_STREAM_FORMAT") {
+            Err(std::env::VarError::NotPresent) => false,
+            Ok(value) if value == "rgb" => false,
+            Ok(value) if value == "nv12" => true,
+            _ => return Err(error("Camera stream format must be rgb or nv12")),
+        };
+        if nv12_transport && !full_range {
+            return Err(error("NV12 desktop transport requires full-range BT.601"));
+        }
         println!(
             "{}",
             serde_json::json!({"event":"application-rgb-conversion","matrix":"BT.601",
@@ -109,16 +118,18 @@ impl CameraFrameStream {
                     }
                 }
                 if let Some(stream) = &mut client {
-                    let Some(rgb) = camera_nv12_rgb(&nv12, width, height, stride, full_range)
-                    else {
-                        continue;
+                    let payload = if nv12_transport {
+                        camera_pack_nv12(&nv12, width, height, stride)
+                    } else {
+                        camera_nv12_rgb(&nv12, width, height, stride, full_range)
                     };
-                    let mut header = Vec::from(*b"SSRGB001");
-                    for value in [width as u32, height as u32, sequence, rgb.len() as u32] {
+                    let Some(payload) = payload else { continue; };
+                    let mut header = Vec::from(if nv12_transport { *b"SSNV12F1" } else { *b"SSRGB001" });
+                    for value in [width as u32, height as u32, sequence, payload.len() as u32] {
                         header.extend_from_slice(&value.to_le_bytes());
                     }
                     // A deadline/partial frame disconnects; the next client starts at a fresh header.
-                    if let Err(e) = camera_stream_write(stream, &header, &rgb, &worker_stop) {
+                    if let Err(e) = camera_stream_write(stream, &header, &payload, &worker_stop) {
                         eprintln!(
                             "camera application stream disconnected at frame {sequence}: {e}"
                         );
@@ -180,6 +191,21 @@ fn camera_bt601_range(colorspace: u32, encoding: u32, quantization: u32) -> io::
         _ => Err(error("Unsupported application stream quantization")),
     }
 }
+// Preserve raw NV12 samples while omitting driver row padding. This optional
+// desktop protocol leaves the default RGB application protocol unchanged.
+fn camera_pack_nv12(bytes: &[u8], width: usize, height: usize, stride: usize) -> Option<Vec<u8>> {
+    if width == 0 || height == 0 || width % 2 != 0 || height % 2 != 0 || stride < width {
+        return None;
+    }
+    let rows = height.checked_add(height / 2)?;
+    if bytes.len() < stride.checked_mul(rows)? { return None; }
+    let mut packed = Vec::with_capacity(width.checked_mul(rows)?);
+    for row in bytes.chunks_exact(stride).take(rows) {
+        packed.extend_from_slice(&row[..width]);
+    }
+    Some(packed)
+}
+
 fn camera_nv12_rgb(
     bytes: &[u8],
     width: usize,
@@ -223,6 +249,13 @@ fn camera_nv12_rgb(
 #[cfg(test)]
 mod camera_stream_tests {
     use super::*;
+    #[test]
+    fn nv12_transport_removes_only_row_padding() {
+        let raw = [10,20,99,99,30,40,99,99,50,60,99,99];
+        assert_eq!(camera_pack_nv12(&raw,2,2,4).unwrap(), [10,20,30,40,50,60]);
+        assert!(camera_pack_nv12(&raw[..10],2,2,4).is_none());
+        assert!(camera_pack_nv12(&raw,3,2,4).is_none());
+    }
     #[test]
     fn nv12_stride_range_and_rejection() {
         assert_eq!(

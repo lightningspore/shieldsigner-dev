@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local real-camera preview: SSRGB001 TCP input, in-memory JPEG HTTP output.
+"""Local real-camera preview: RGB or full-range NV12 TCP input, in-memory JPEG HTTP output.
 
 Run with: uv run --python 3.13 --with pillow python server.py --camera-port 8766
 Root owns the camera process and adb forwarding; this server starts neither.
@@ -38,11 +38,25 @@ def read_frame(connection):
     magic, width, height, sequence, size = HEADER.unpack(
         receive_exact(connection, HEADER.size)
     )
-    if magic != b"SSRGB001" or not (1 <= width <= 4096 and 1 <= height <= 4096):
-        raise ValueError("Invalid SSRGB001 frame header")
-    if size != width * height * 3 or size > 32 * 1024 * 1024:
-        raise ValueError("Invalid SSRGB001 RGB payload length")
-    return width, height, sequence, receive_exact(connection, size)
+    if not (1 <= width <= 4096 and 1 <= height <= 4096):
+        raise ValueError("Invalid camera frame dimensions")
+    if magic == b"SSRGB001":
+        expected = width * height * 3
+    elif magic == b"SSNV12F1" and width % 2 == 0 and height % 2 == 0:
+        expected = width * height * 3 // 2
+    else:
+        raise ValueError("Unsupported camera frame format")
+    if size != expected or size > 32 * 1024 * 1024:
+        raise ValueError("Invalid camera payload length")
+    raw = receive_exact(connection, size)
+    if magic == b"SSNV12F1":
+        pixels = width * height
+        y = Image.frombytes("L", (width, height), raw[:pixels])
+        uv = raw[pixels:]
+        u = Image.frombytes("L", (width // 2, height // 2), uv[0::2]).resize((width, height), Image.Resampling.NEAREST)
+        v = Image.frombytes("L", (width // 2, height // 2), uv[1::2]).resize((width, height), Image.Resampling.NEAREST)
+        raw = Image.merge("YCbCr", (y, u, v)).convert("RGB").tobytes()
+    return width, height, sequence, raw
 
 
 class Camera:
@@ -97,7 +111,7 @@ class Camera:
                 else "connecting"
                 if self.transport and age is None
                 else "disconnected",
-                source="Luckfox / Rust SSRGB001",
+                source="Luckfox / Rust camera",
                 frame_age_ms=None if age is None else round(age * 1000),
                 frames_received=self.received,
                 sequence=self.sequence,
@@ -291,7 +305,7 @@ def main():
     server.daemon_threads = True
     camera.thread.start()
     print(
-        f"Real camera demo: http://{args.listen_host}:{args.listen_port} (SSRGB001 from {args.camera_host}:{args.camera_port})",
+        f"Real camera demo: http://{args.listen_host}:{args.listen_port} (RGB/NV12 from {args.camera_host}:{args.camera_port})",
         flush=True,
     )
     try:

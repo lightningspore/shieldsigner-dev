@@ -1,0 +1,304 @@
+{
+  "kind": "desktop-preview-nv12-transport-hardware-comparison",
+  "version": "0.0.37-dev",
+  "passed": true,
+  "run": 114,
+  "cameraBinarySha256": "3d72b6f04f3b57d95feee7086da9b0bb8e81714194d66cfa4a443443655ade1f",
+  "rgbBaseline": {
+    "seconds": 5.549503791029565,
+    "deliveredFrames": 26,
+    "sourceSequenceAdvance": 82,
+    "deliveredFps": 4.685103565840863,
+    "payloadBytesPerFrame": 921600
+  },
+  "nv12": {
+    "seconds": 6.010773249960039,
+    "deliveredFrames": 64,
+    "sourceSequenceAdvance": 89,
+    "deliveredFps": 10.647548549668794,
+    "sourceFps": 14.806747201883168,
+    "payloadBytesPerFrame": 460800
+  },
+  "browserObservedFps": 10.5,
+  "enabledModules": {
+    "CCM": true,
+    "LSC": true,
+    "DPCC": true,
+    "BAYNR": true,
+    "BAY3D": true,
+    "YNR": true,
+    "CNR": true,
+    "SHARP": true
+  },
+  "defaultRgbApplication": {
+    "passed": true,
+    "integration": {
+      "sourceSha256": "7cf9c67797d5b14cfbea206e91bc5c85292ec01f36fca68edbaee13977a5809e",
+      "patchedSourceSha256": "726294bdd9d3a2b1b85a6109b9fd8db0f3761eadb1292f436f4767af19a2ff71",
+      "changes": [
+        "Rust PiVideoStream import",
+        "Preserve complete rotated preview canvas"
+      ],
+      "installedFilesModified": false
+    },
+    "opticalScanQualified": false,
+    "syntheticQrCases": [
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      }
+    ],
+    "changedSourceRejected": true,
+    "realFrameDecodeStatus": 4,
+    "capture": {
+      "directory": "/shieldsigner-camera-tests/dev037-results/camera-phz4pwoq",
+      "firstFrameSeconds": 0.6739923750000116,
+      "first": 6,
+      "last": 119,
+      "samples": 68,
+      "received": 73,
+      "stopSeconds": 0.24232833399997844,
+      "ownerExitCode": 0
+    },
+    "realFrameRotations": [
+      {
+        "setting": 0,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 90,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 180,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 270,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      }
+    ],
+    "rotationBenchmark": {
+      "croppedSecondsPerFrame": 0.051449708400002694,
+      "expandedSecondsPerFrame": 0.012695958400001928
+    },
+    "installedCameraUnchanged": true
+  },
+  "verification": {
+    "armTransportTestsPassed": 2,
+    "hostParserTestsPassed": 2,
+    "colorPixelsCompared": 4096,
+    "maximumChannelDifferenceFromBoardQ8": 1,
+    "snapshotVisuallyInspected": true
+  },
+  "limitations": [
+    "Short warm-board desktop-preview measurement; not a guaranteed sustained rate.",
+    "Opt-in full-range BT.601 NV12 protocol for desktop only; existing application RGB remains default.",
+    "Desktop Pillow rounding differs by at most one channel level in sampled color test.",
+    "No optical QR or new cold-reboot qualification of this development build."
+  ]
+}

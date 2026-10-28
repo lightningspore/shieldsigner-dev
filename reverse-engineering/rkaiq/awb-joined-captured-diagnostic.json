@@ -1,0 +1,37 @@
+{
+  "kind": "joined-native-awb-captured-diagnostic",
+  "passed": false,
+  "fullControllerQualified": false,
+  "hardwareWrites": false,
+  "nativeSymbol": "_Z13AwbPreProcV32PK25rk_aiq_awb_stat_res_v32_sP12awb_contex_s",
+  "framesCompared": 4,
+  "wrapperCalls": 3,
+  "mismatchingFrames": 3,
+  "differingFields": [
+    "gainBits"
+  ],
+  "matchingFields": [
+    "controllerFrame",
+    "countdown",
+    "complete",
+    "activeLights",
+    "reconfigure",
+    "calculated"
+  ],
+  "rustFixtureSha256": "bb2fb4ecc9af2fb11987e434111b06faed7c4d84bbd6bd7c17349efa18b82027",
+  "inputSha256": {
+    "awb-joined-captured.py": "f4dae26159095e5d528cc6661d98fff103c900661b837227bdce2c309302df59",
+    "librkaiq.so": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "sc3336_CMK-OT2119-PC1_30IRC-F16.json": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "group-0.json": "ac194913c5476a08fc5d15b6a7b7366d863b41542c170b81f56c31974503f8eb",
+    "group-0.translated.bin": "05128b5bd623c2a70ef570093fc85cbb340ab1401eb2c7814a33689ff8d150bb",
+    "group-1.json": "6e5f2ac588a4f634d520920f076d7ce43521172199824f89ca2652e821f2cdc0",
+    "group-1.translated.bin": "c93235cb5e18cf78cb3f83e8b0c2992b5a91821947cdb484a29cbc0f6e3c3179"
+  },
+  "boundaries": [
+    "Calibrated fixture ABI builder plus native InitinalSwResParaCom2; complete calibration/context construction remains adapted.",
+    "Stops at ReconfigHwParaV32 entry; SDK record generation is not executed.",
+    "Paired captured records replayed cyclically; not a continuous optical scene sequence."
+  ],
+  "interpretation": "Diagnostic mismatch; adapted native calibration/startup may differ. No production defect established and no firmware correction made."
+}

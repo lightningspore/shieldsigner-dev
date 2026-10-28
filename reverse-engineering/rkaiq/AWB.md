@@ -2618,3 +2618,20 @@ ARM build and six simulated adapter scenarios pass. The frozen 0.0.31-dev
 kit remains unchanged; this is development source and diagnostic evidence.
 Full hardware scene-change/gain-application timing and the remaining optical/UI
 qualification are still open work.
+
+### Joined native captured-input replay (development after 0.0.35 freeze)
+
+`awb-joined-captured.py` now executes original `AwbPreProcV32`, measurement
+preparation and the real native gain wrapper on paired hardware samples. It
+initializes once and preserves the two-group cache across frames. This removes
+the earlier substituted gain-wrapper boundary, while stopping before native
+`ReconfigHwParaV32`. Native startup calibration/context construction is still
+adapted, so this is a diagnostic comparison.
+
+[The first four-frame replay](awb-joined-captured-diagnostic.json) matches
+controller frames, countdown, completeness, active light count and calculation/
+reconfiguration decisions. Three frames differ in exact gain bits. The next
+step is to locate the first difference in prepared statistics, selected raw
+gain or damping state. This does not yet establish a production Rust defect.
+The frozen kit and running hardware remain unchanged. Paired samples are private
+local files; their cyclic replay is not an optical scene-change experiment.

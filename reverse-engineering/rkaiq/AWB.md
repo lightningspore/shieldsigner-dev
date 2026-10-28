@@ -2687,3 +2687,16 @@ the native replay bit for bit using exact frame/parameter associations. The
 application received 70 real frames and stopped cleanly. This supersedes the
 paired cyclic-input limitation for this trace, while retaining the adapted
 native context-construction and optical/physical qualification limits.
+
+### Startup assembly oracle refreshed for current ISP defaults
+
+`awb-startup-assembly.py --arm` compares the complete emitted parameter record
+against the original ARM AWB converter applied to the AE-only baseline. It
+also checks unrelated bytes, explicit SDK startup fields and IQ-derived channel
+limits, then compares complete host/ARM serialization. Old whole-record hash
+anchors described the earlier disabled-module baseline and are now provenance
+only; new ISP defaults do not weaken the AWB isolation check.
+
+[Current assembly evidence](awb-startup-assembly-validation.json) passes for
+the 0.0.37 host and ARM tools. This verifies packing/isolation and does not
+replace the separate native calibration/initialization comparison.

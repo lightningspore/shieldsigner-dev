@@ -1,14 +1,23 @@
 {
   "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
-  "parameterSha256": "4d517e61d099a909f53c29f557b0930db7e25419d156a56919f79dda19bd226b",
+  "parameterSha256": "ec3ad49cb242bb1f50f3977e33c2eebc6930c12acfbae4849be774503b9fb3b4",
   "sdkSha256": "4c081c95fe115f1c52ca84223e7a75cf647e64d3573accdcf5fa6c9c6352ccd1",
   "parameterBytes": 11145,
   "sdkBytes": 1204,
   "arm": true,
+  "armBinarySha256": "3d72b6f04f3b57d95feee7086da9b0bb8e81714194d66cfa4a443443655ade1f",
+  "binarySha256": "4f9dd432fa5fbd038b20a95fbe62e816ab19005cb9e031549b06cdb0c4d3906e",
+  "nativeBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "scriptSha256": "ae2a23d50ca94dd9a1b635077a6fa7e463ef4717b9b6e660984aad9ae41c3773",
+  "nativeAwbConverterMatches": true,
+  "nativeImportedCalls": [],
+  "unrelatedBytesPreserved": true,
+  "wholeRecordHashesAreProvenanceOnly": true,
   "preservesExistingAeAndFixedWb": true,
   "scope": "Offline composed FAST linear BayerNR/Gain1 measurement candidate",
   "limitations": [
-    "Complete original startup composition equivalence and hardware validation are pending.",
+    "Original converter equivalence covers packing of the emitted SDK record, not independent native derivation of that complete startup record; calibration fields are checked separately.",
+    "Offline serialization check only; no hardware capture or optical qualification is performed.",
     "Normal time-share/HDR/OTP startup composition remains separate; no automatic WB controller is enabled."
   ]
 }

@@ -3,17 +3,38 @@
 This is an integration check, not whole native startup equivalence.
 """
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
 import struct
 import subprocess
-import sys
 import tempfile
-from differential import ROOT
+from differential import ROOT, BINARY, HEAP, OriginalArm
+
+AWB_CONVERTER = "_ZN5RkCam11Isp32Params26convertAiqAwbToIsp32ParamsER20isp32_isp_params_cfgRK25rk_aiq_awb_stat_cfg_v32_sb"
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--binary",
+        type=Path,
+        default=ROOT / "firmware/rkaiq-rs/target/release/camera-probe",
+    )
+    parser.add_argument(
+        "--arm-directory",
+        type=Path,
+        default=ROOT
+        / "firmware/rkaiq-rs/target/armv7-unknown-linux-musleabihf/release",
+    )
+    parser.add_argument("--arm", action="store_true")
+    parser.add_argument(
+        "--report",
+        type=Path,
+        default=ROOT / "reverse-engineering/rkaiq/awb-startup-assembly-validation.json",
+    )
+    args = parser.parse_args()
     iq = (
         ROOT / ".tools/reverse-engineering/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json"
     )
@@ -21,7 +42,7 @@ def main():
     assert iq_sha == "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a"
     with tempfile.TemporaryDirectory(prefix="shieldsigner-awb-assembly-") as temp:
         out = Path(temp)
-        binary = ROOT / "firmware/rkaiq-rs/target/release/camera-probe"
+        binary = args.binary
 
         def run(name, options):
             return json.loads(
@@ -46,20 +67,48 @@ def main():
         ae = (out / "ae.bin").read_bytes()
         awb = (out / "awb.bin").read_bytes()
         sdk = (out / "sdk.bin").read_bytes()
-        assert (
-            hashlib.sha256(base).hexdigest()
-            == "b5e031ec216f3a007d6b9b6c21bcd6b726d7edda0a6b98913016b66fe91ef2cd"
-        )
-        assert (
-            hashlib.sha256(ae).hexdigest()
-            == "2ffab69fcf67ac36ea58c446352acbcc6fcdb51079ae0afdf0377adce29cdebc"
-        )
+        assert len(base) == len(ae) == 11145
+        # AE setup must preserve the existing AWB block; no whole-record
+        # digest is an oracle for unrelated enabled algorithm defaults.
+        assert base[0xF4:0x41B] == ae[0xF4:0x41B]
         assert len(awb) == 11145 and len(sdk) == 1204
         for i in (0, 8, 16):
             assert struct.unpack_from("<Q", awb, i)[0] == (
                 struct.unpack_from("<Q", ae, i)[0] | (1 << 22)
             )
         assert awb[24:0xF4] == ae[24:0xF4] and awb[0x41B:] == ae[0x41B:]
+        # Independent original ARM converter oracle for the complete composed
+        # payload, starting from the AE-only bytes rather than expected hashes.
+        manifest = json.loads(
+            (ROOT / "reverse-engineering/rkaiq/artifacts.json").read_text()
+        )
+        native_sha = hashlib.sha256(BINARY.read_bytes()).hexdigest()
+        assert native_sha == next(
+            v["sha256"] for v in manifest["binaries"] if v["name"] == BINARY.name
+        )
+        native = OriginalArm(BINARY)
+        context = bytes([0xA7]) * 1024
+        native.uc.mem_write(HEAP, context)
+        native.uc.mem_write(HEAP + 0x10000, ae)
+        native.uc.mem_write(HEAP + 0x20000, sdk)
+        native.invoke(AWB_CONVERTER, [HEAP, HEAP + 0x10000, HEAP + 0x20000, 1])
+        expected = bytes(native.uc.mem_read(HEAP + 0x10000, 11145))
+        assert awb == expected, (
+            "Composed payload differs from original ARM AWB converter"
+        )
+        assert bytes(native.uc.mem_read(HEAP, 1024)) == context
+        assert bytes(native.uc.mem_read(HEAP + 0x20000, 1204)) == sdk
+        assert not native.calls, "Native packing should require no imported adapters"
+        wb = json.loads(iq.read_text())["main_scene"][0]["sub_scene"][0]["scene_isp32"][
+            "wb_v32"
+        ]
+        limits = wb["autoPara"]["limitRange"]
+        expected_limits = tuple(
+            round(limits[key][0] * 16)
+            for key in ["maxR", "minR", "maxG", "minG", "maxB", "minB", "maxY", "minY"]
+        )
+        assert struct.unpack_from("<8H", sdk, 0x4A) == expected_limits
+        assert sdk[0] == 1
         assert sdk[0x48] == 4 and sdk[0x464:0x46F] == b"FASTAWBACT\0"
         assert struct.unpack_from("<4H", sdk, 0x40) == (0, 0, 2304, 1296)
         assert struct.unpack_from("<3H", sdk, 0x5A) == (256, 256, 256)
@@ -70,8 +119,8 @@ def main():
             report["automaticWhiteBalance"] is False
             and report["awbMeasurementsConfigured"] is True
         )
-        if "--arm" in sys.argv:
-            d = ROOT / "firmware/rkaiq-rs/target/armv7-unknown-linux-musleabihf/release"
+        if args.arm:
+            d = args.arm_directory
             command = [
                 "docker",
                 "run",
@@ -110,17 +159,31 @@ def main():
             sdkSha256=hashlib.sha256(sdk).hexdigest(),
             parameterBytes=len(awb),
             sdkBytes=len(sdk),
-            arm="--arm" in sys.argv,
+            arm=args.arm,
+            armBinarySha256=(
+                hashlib.sha256(
+                    (args.arm_directory / "camera-probe").read_bytes()
+                ).hexdigest()
+                if args.arm
+                else None
+            ),
+            binarySha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
+            nativeBinarySha256=native_sha,
+            scriptSha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            nativeAwbConverterMatches=True,
+            nativeImportedCalls=native.calls,
+            unrelatedBytesPreserved=True,
+            wholeRecordHashesAreProvenanceOnly=True,
             preservesExistingAeAndFixedWb=True,
             scope="Offline composed FAST linear BayerNR/Gain1 measurement candidate",
             limitations=[
-                "Complete original startup composition equivalence and hardware validation are pending.",
+                "Original converter equivalence covers packing of the emitted SDK record, not independent native derivation of that complete startup record; calibration fields are checked separately.",
+                "Offline serialization check only; no hardware capture or optical qualification is performed.",
                 "Normal time-share/HDR/OTP startup composition remains separate; no automatic WB controller is enabled.",
             ],
         )
-        (
-            ROOT / "reverse-engineering/rkaiq/awb-startup-assembly-validation.json"
-        ).write_text(json.dumps(result, indent=2) + "\n")
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(json.dumps(result, indent=2) + "\n")
         print(json.dumps(result, indent=2))
 
 

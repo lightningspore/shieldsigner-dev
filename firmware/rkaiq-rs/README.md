@@ -38,3 +38,20 @@ Open http://127.0.0.1:8765/ for real frames, snapshots and fullscreen. The bridg
 fans one camera connection out to browsers and retains previews in memory.
 Optional `--metadata-file` supplies recorded enable/verification telemetry;
 those indicators are not per-frame measurements.
+
+### QR decoding path
+
+The Rust owner configures the sensor/ISP, runs automatic camera controls,
+receives NV12 frames and converts them into RGB. Its `SSRGB001` Unix-socket
+stream delivers frames to `shieldsigner_video_stream.py`, which constructs
+Pillow RGB images for the installed Camera interface.
+
+SeedSigner's `DecodeQR.add_image()` passes those images to
+`pyzbar.decode(..., symbols=[ZBarSymbol.QRCODE], binary=True)`. ZBar finds and
+decodes the QR pixels; SeedSigner classifies the resulting payload and handles
+animated formats such as UR. That decoder is separate from RKAIQ and remains
+the installed application implementation. No new Rust QR decoder is required
+to replace the proprietary camera-control library.
+
+The optical checker compares camera-decoded content only against the bundled
+public test target; synthetic fixture success does not qualify an optical scan.

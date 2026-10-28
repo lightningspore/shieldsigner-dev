@@ -2,6 +2,7 @@
 
 Current development and latest frozen kit are **0.0.36-dev**.
 [Kit verification](kit-0.0.36-dev-installation-verification.json) covers all 542 files.
+The [exact0.0.36 controlled-reboot test](kit-0.0.36-dev-cold-reboot-validation.json) passed with 74 received real frames, complete preview rotation and clean shutdown; vendor camera startup was skipped and original scripts restored.
 See the [combined ISP result](ISP.md#development-0035-combined-isp-hardware-result).
 Version statements below describe historical sessions.
 The exact frozen 0.0.35 kit passed [controlled clean-reboot application integration](kit-0.0.35-dev-cold-reboot-validation.json): vendor startup skipped, open drivers loaded, 74 real frames received, clean owner shutdown. This is not a physical power-cycle test.

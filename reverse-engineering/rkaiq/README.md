@@ -24,8 +24,8 @@ all nine module comparisons and an actual ordered 32-frame joined AWB comparison
 Older frozen archives remain unchanged.
 
 **NEXT:** qualify actual optical QR scanning, physical lighting/color response,
-LCD/buttons and physical power cycling. The exact full-group kit passed a
-[controlled clean reboot](kit-0.0.35-dev-cold-reboot-validation.json). Review joined-native
+LCD/buttons and physical power cycling. The exact 0.0.36 kit passed a
+[controlled clean reboot](kit-0.0.36-dev-cold-reboot-validation.json). Review joined-native
 AWB controller coverage against the normal pinned profile before adding any
 new policy. Earlier isolated-CNR startup failures remain historical evidence;
 they do not describe the default complete-group build. The full objective
@@ -269,10 +269,11 @@ Still open:
    required by this fixed profile. The 32-frame actual trajectory now covers
    preparation, gains and full measurement reconfiguration; native calibration/
    context construction remains adapted rather than whole-library initialization.
-6. Qualify the exact new 0.0.36 frozen kit after controlled reboot, then complete
-   the physical qualification above. Its exact camera executable has passed
-   actual application integration. The older 0.0.35 kit retains its own
-   controlled-reboot result and remains unchanged.
+6. Complete the physical qualification above using the frozen 0.0.36 kit.
+   Its exact executable now passed [controlled clean-reboot application
+   integration](kit-0.0.36-dev-cold-reboot-validation.json), with all eight
+   advanced blocks enabled, 74 received frames and clean shutdown. Older kits
+   retain their own build-specific evidence and remain unchanged.
 
 Optional modes remain outside the current single-camera priority unless the
 actual QR capture path needs them. No completion claim follows from passing

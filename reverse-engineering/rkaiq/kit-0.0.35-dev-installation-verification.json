@@ -1,0 +1,19 @@
+{
+  "kind": "frozen-kit-installation-verification",
+  "version": "0.0.35-dev",
+  "passed": true,
+  "sourceRevision": "5dc93ffb134b4de1e75ba9db3dfacb922a61d995",
+  "archiveSha256": "45d5942312b93d644435f518d155e77f45e23d4aea14687b3a1821a7bf556b8d",
+  "filesVerified": 535,
+  "bytesVerified": 83191500,
+  "verifiedOn": [
+    "desktop extracted archive",
+    "Luckfox installed directory"
+  ],
+  "boardDirectory": "/shieldsigner-camera-tests/rkaiq-camera-test-0.0.35-dev",
+  "limitations": [
+    "Verifies complete manifest contents, not camera startup from the frozen directory.",
+    "Exact camera binary previously passed application run102; cold boot of this kit remains unqualified.",
+    "Live demo continued during verification."
+  ]
+}

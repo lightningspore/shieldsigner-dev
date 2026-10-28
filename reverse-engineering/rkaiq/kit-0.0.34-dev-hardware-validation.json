@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "version": "0.0.34-dev",
+  "sourceRevision": "50025ddc6671d2efa6e5a58864a8fb8016c4ed65",
+  "archiveSha256": "4c03fdf165ef58d674285f465980c1643b6f2d339a3d86c6c14d141d6df9d13b",
+  "archiveBytes": 26370869,
+  "integrity": {
+    "hostArchiveAndFileHashesPassed": true,
+    "boardVerifyKitPassed": true,
+    "filesVerified": 511,
+    "bytesVerified": 82768711
+  },
+  "applicationScan": {
+    "passed": true,
+    "opticalScanQualified": false,
+    "physicalDisplayQualified": false,
+    "physicalButtonsQualified": false,
+    "scanSourceSha256": "1955c6bd8733cb4238ec8880c5b6239abd2761f7de5ceb0e14fd64234df0dbaa",
+    "binarySha256": "162057d0e683bafacef6e4567d7eae16197cdff98f7c6343d8d66b2204399ae6",
+    "helperSha256": "453099bc6ce451e2c988107d4bed0e87858e81765041dd7944c846a5bcbe13c2",
+    "seconds": 7.185639127999821,
+    "decodedFrames": 10,
+    "renderedFrames": 26,
+    "ownerExitCode": 0,
+    "previewJoined": true,
+    "limitations": [
+      "Actual installed scan/preview code and QR decoder receive real frames.",
+      "Display sink and cancellation inputs are software substitutes.",
+      "No decoded contents are recorded and no successful optical target is claimed."
+    ],
+    "threadErrors": [],
+    "control": {
+      "success": true,
+      "processedStatistics": 116,
+      "parameterSubmissions": 115,
+      "maxParameterSnapshots": 6,
+      "error": null
+    }
+  },
+  "cnrEnabled": false,
+  "fullProfileParity": false,
+  "controlledColdRebootQualified": false,
+  "limitations": [
+    "Exact extracted frozen kit tested on warm board; no physical power-cycle or exact-kit cold-reboot qualification.",
+    "Decoder received real frames; public optical QR success and physical LCD/buttons remain unqualified.",
+    "CNR hardware startup remains unresolved and gated off. BAY3D, YNR and sharpening remain to be integrated.",
+    "Full requested camera replacement remains in progress."
+  ]
+}

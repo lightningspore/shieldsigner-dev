@@ -2635,3 +2635,18 @@ step is to locate the first difference in prepared statistics, selected raw
 gain or damping state. This does not yet establish a production Rust defect.
 The frozen kit and running hardware remain unchanged. Paired samples are private
 local files; their cyclic replay is not an optical scene-change experiment.
+
+### First computed gain damping corrected (0.0.36-dev)
+
+The joined replay isolated an actual initialization error: native damping uses
+previous gain at context `0x352C`, initially zero, while `0x3578` is the separate
+low-count gain seeded from calibration. Rust had seeded both from the initial
+gain. The corrected state lets the first computed gain bypass damping, then
+accumulates normal history. The initializer reference test now checks both
+fields independently.
+
+[Correction evidence](awb-damping-startup-correction.json): 16 replayed frames
+match original gain bits, probabilities, density, damping and controller state
+without modifying native history. The corrected executable also passed actual
+application integration with 73 real frames and clean shutdown. Native hardware
+reconfiguration remains the next joined comparison boundary.

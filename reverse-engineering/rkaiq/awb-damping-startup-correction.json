@@ -1,0 +1,315 @@
+{
+  "kind": "awb-damping-startup-correction",
+  "version": "0.0.36-dev",
+  "passed": true,
+  "cause": "Rust seeded damping history from initial gain; native initializer leaves context352C zero. Context3578 is low-count gain, not damping history.",
+  "nativeReplay": {
+    "framesCompared": 16,
+    "wrapperCalls": 15,
+    "mismatchingFrames": 0,
+    "seedPreviousDiagnostic": false,
+    "nativeStartup": {
+      "gain353C": [
+        1069730559,
+        1065353216,
+        1065353216,
+        1071349477
+      ],
+      "gain3578": [
+        1069730559,
+        1065353216,
+        1065353216,
+        1071349477
+      ],
+      "previous352C": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "rustFixtureSha256": "2cdeff52cb765c048053f953926a11218f4b0e5a087124cdda48f7472b4f13af",
+    "inputSha256": {
+      "awb-joined-captured.py": "f7ef92f1dde267ec6e0a1723fc6e06ca911e95adfaf49f0593b3317451bad647",
+      "librkaiq.so": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+      "sc3336_CMK-OT2119-PC1_30IRC-F16.json": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+      "group-0.json": "ac194913c5476a08fc5d15b6a7b7366d863b41542c170b81f56c31974503f8eb",
+      "group-0.translated.bin": "05128b5bd623c2a70ef570093fc85cbb340ab1401eb2c7814a33689ff8d150bb",
+      "group-1.json": "6e5f2ac588a4f634d520920f076d7ce43521172199824f89ca2652e821f2cdc0",
+      "group-1.translated.bin": "c93235cb5e18cf78cb3f83e8b0c2992b5a91821947cdb484a29cbc0f6e3c3179"
+    },
+    "boundaries": [
+      "Calibrated fixture ABI builder plus native InitinalSwResParaCom2; complete calibration/context construction remains adapted.",
+      "Stops at ReconfigHwParaV32 entry; SDK record generation is not executed.",
+      "Paired captured records replayed cyclically; not a continuous optical scene sequence."
+    ]
+  },
+  "hardware": {
+    "run": 107,
+    "cameraBinarySha256": "c3605218f02b5c83601e964d17917df9c9fafcb9722e6fb8a27682c407f27453",
+    "application": {
+      "passed": true,
+      "integration": {
+        "sourceSha256": "7cf9c67797d5b14cfbea206e91bc5c85292ec01f36fca68edbaee13977a5809e",
+        "patchedSourceSha256": "726294bdd9d3a2b1b85a6109b9fd8db0f3761eadb1292f436f4767af19a2ff71",
+        "changes": [
+          "Rust PiVideoStream import",
+          "Preserve complete rotated preview canvas"
+        ],
+        "installedFilesModified": false
+      },
+      "opticalScanQualified": false,
+      "syntheticQrCases": [
+        {
+          "position": [
+            12,
+            12
+          ],
+          "rotation": 0,
+          "size": [
+            480,
+            640
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            12,
+            12
+          ],
+          "rotation": 90,
+          "size": [
+            640,
+            480
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            12,
+            12
+          ],
+          "rotation": 180,
+          "size": [
+            480,
+            640
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            12,
+            12
+          ],
+          "rotation": 270,
+          "size": [
+            640,
+            480
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            406,
+            12
+          ],
+          "rotation": 0,
+          "size": [
+            480,
+            640
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            406,
+            12
+          ],
+          "rotation": 90,
+          "size": [
+            640,
+            480
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            406,
+            12
+          ],
+          "rotation": 180,
+          "size": [
+            480,
+            640
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            406,
+            12
+          ],
+          "rotation": 270,
+          "size": [
+            640,
+            480
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            12,
+            246
+          ],
+          "rotation": 0,
+          "size": [
+            480,
+            640
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            12,
+            246
+          ],
+          "rotation": 90,
+          "size": [
+            640,
+            480
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            12,
+            246
+          ],
+          "rotation": 180,
+          "size": [
+            480,
+            640
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            12,
+            246
+          ],
+          "rotation": 270,
+          "size": [
+            640,
+            480
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            406,
+            246
+          ],
+          "rotation": 0,
+          "size": [
+            480,
+            640
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            406,
+            246
+          ],
+          "rotation": 90,
+          "size": [
+            640,
+            480
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            406,
+            246
+          ],
+          "rotation": 180,
+          "size": [
+            480,
+            640
+          ],
+          "decodedExpectedPublicAddress": true
+        },
+        {
+          "position": [
+            406,
+            246
+          ],
+          "rotation": 270,
+          "size": [
+            640,
+            480
+          ],
+          "decodedExpectedPublicAddress": true
+        }
+      ],
+      "changedSourceRejected": true,
+      "realFrameDecodeStatus": 4,
+      "capture": {
+        "directory": "/shieldsigner-camera-tests/dev036-results/camera-z1ozk63n",
+        "firstFrameSeconds": 0.8488068749999798,
+        "first": 4,
+        "last": 118,
+        "samples": 70,
+        "received": 73,
+        "stopSeconds": 0.287523541999974,
+        "ownerExitCode": 0
+      },
+      "realFrameRotations": [
+        {
+          "setting": 0,
+          "size": [
+            480,
+            640
+          ],
+          "allPixelsPreserved": true
+        },
+        {
+          "setting": 90,
+          "size": [
+            640,
+            480
+          ],
+          "allPixelsPreserved": true
+        },
+        {
+          "setting": 180,
+          "size": [
+            480,
+            640
+          ],
+          "allPixelsPreserved": true
+        },
+        {
+          "setting": 270,
+          "size": [
+            640,
+            480
+          ],
+          "allPixelsPreserved": true
+        }
+      ],
+      "rotationBenchmark": {
+        "croppedSecondsPerFrame": 0.0512251249999963,
+        "expandedSecondsPerFrame": 0.012564941599998746
+      },
+      "installedCameraUnchanged": true
+    },
+    "ownerLogSha256": "1302f8be8ce896ae93933e133f7481256ddbff4c5f92a10050243cbf415e9f9d"
+  },
+  "limitations": [
+    "Native replay stops before hardware reconfiguration and uses adapted calibrated context.",
+    "Paired hardware samples are replayed cyclically, not a continuous optical scene sequence.",
+    "No physical QR, display/button, cold reboot or complete image-quality qualification of 0.0.36 claimed."
+  ]
+}

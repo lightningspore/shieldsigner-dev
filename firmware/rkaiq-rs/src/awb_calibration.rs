@@ -1725,7 +1725,10 @@ impl Scene {
         let post = awb_postprocess::State {
             raw_history: awb_gain_history::History::from_values(&[])?,
             output_history: awb_gain_history::History::from_values(&[])?,
-            previous: gain,
+            // Native InitinalSwResParaCom2 seeds the current/low-light gain,
+            // but leaves the damping history at context 0x352c empty. The
+            // first computed gain must bypass damping before history exists.
+            previous: [0.; 4],
             current: gain,
             coefficient: 0.,
             effective_coefficient: 0.,

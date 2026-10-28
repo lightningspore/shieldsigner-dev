@@ -63,6 +63,31 @@ def validate_app(root, bundle):
     return {"cameraSourceSha256": digest(camera), "cameraSource": str(camera.relative_to(root))}
 
 
+def configure_sdk_strip(sdk, bundle):
+    proof = json.loads((bundle / "payload/kernel-camera-abi.json").read_text())
+    revision = subprocess.check_output(["git", "-C", str(sdk), "rev-parse", "HEAD"], text=True).strip()
+    if revision != proof["sdkRevision"]:
+        raise ValueError("SDK strip policy revision differs from the reviewed pin")
+    relative = "project/build.sh"
+    original = subprocess.check_output(["git", "-C", str(sdk), "show", revision + ":" + relative], text=True)
+    start = original.index("function __RELEASE_FILESYSTEM_FILES() {")
+    end = original.index("\nfunction __COPY_FILES() {", start)
+    before = original[start:end]
+    after = replace_once(before, "-o -name '*.ko' \\) -print0", "-o -name '*.ko' -o -path '*/usr/lib/shieldsigner-camera/camera-probe' -o -path '*/usr/lib/shieldsigner-camera/shieldsigner-qr-reader' \\) -print0")
+    script = sdk / relative
+    current = script.read_text()
+    current_start = current.index("function __RELEASE_FILESYSTEM_FILES() {")
+    current_end = current.index("\nfunction __COPY_FILES() {", current_start)
+    if current[current_start:current_end] not in {before, after}:
+        raise ValueError("SDK filesystem strip function has unreviewed edits")
+    script.write_text(current[:current_start] + after + current[current_end:])
+    return {"kind": "preserve-verified-static-camera-binaries", "sdkRevision": revision,
+            "file": relative, "originalFunctionSha256": hashlib.sha256(before.encode()).hexdigest(),
+            "patchedFunctionSha256": hashlib.sha256(after.encode()).hexdigest(),
+            "excludedPaths": ["/usr/lib/shieldsigner-camera/camera-probe", "/usr/lib/shieldsigner-camera/shieldsigner-qr-reader"],
+            "allOtherStripBehaviorPreserved": True}
+
+
 def configure_buildroot(buildroot, bundle):
     lock = json.loads((bundle / "dependencies.json").read_text())
     recipe = buildroot / "package/python-pycryptodomex/python-pycryptodomex.mk"
@@ -85,9 +110,11 @@ def configure_buildroot(buildroot, bundle):
         raise ValueError("Unreviewed pycryptodomex Buildroot hash file")
     recipe.write_text(modified)
     hashes.write_text(content)
+    sdk = Path(os.environ["SHIELDSIGNER_CAMERA_SDK_DIR"])
     receipt = {"kind": "shieldsigner-image-python-dependency-input", "package": lock["package"],
                "version": lock["version"], "source": lock["source"], "sourceSha256": lock["sha256"],
-               "recipeSha256": digest(recipe), "hashFileSha256": digest(hashes)}
+               "recipeSha256": digest(recipe), "hashFileSha256": digest(hashes),
+               "sdkStripPolicy": configure_sdk_strip(sdk, bundle)}
     target = buildroot / "output/shieldsigner-dependency-inputs.json"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(receipt, indent=2) + "\n")
@@ -227,6 +254,8 @@ def verify(root, bundle, data):
     lock = json.loads((bundle / "dependencies.json").read_text())
     if dependency["version"] != lock["version"] or dependency["sourceSha256"] != lock["sha256"]:
         raise ValueError("Image Python dependency receipt does not match its locked source")
+    if digest(root / lock["cameraIq"]["path"]) != lock["cameraIq"]["sha256"]:
+        raise ValueError("Image IQ contents differ from the tested physical camera calibration")
     display = json.loads((root / "opt/src/seedsigner/hardware/io_config.json").read_text())
     fox22 = [model for model in display["models"] if model.get("shortname") == "FOX_22"]
     if len(fox22) != 1 or fox22[0]["display"].get("spi_hz") != 10_000_000:

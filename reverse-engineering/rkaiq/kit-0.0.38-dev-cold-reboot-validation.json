@@ -1,0 +1,314 @@
+{
+  "kind": "exact-frozen-kit-controlled-reboot-hardware-validation",
+  "version": "0.0.38-dev",
+  "passed": true,
+  "archiveSha256": "7158eda937662f4a27ca8c5e13eb6d32a1b7686c587b212f4426653838393b0f",
+  "sourceRevision": "96e48fcfe25c8e7062e9981439ff9ef440bb31f3",
+  "cameraBinarySha256": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+  "nativeWorkerSha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "controlledSoftwareReboot": {
+    "kind": "controlled-clean-reboot-pre-capture-check",
+    "passed": true,
+    "previousBootId": "b83e4b07-de13-40d2-9501-2e261c9aaa4b",
+    "bootId": "123c961f-12bd-4d14-9206-60e29dc863a5",
+    "services": {
+      "S21appinit": {
+        "bootId": "123c961f-12bd-4d14-9206-60e29dc863a5",
+        "service": "S21appinit",
+        "skipped": true,
+        "restoredSha256": "61dcd3bdb6740771b296611ab83e3238f9bc45b2ca0ec5ae78b542085be592e5"
+      },
+      "S99seedsigner": {
+        "bootId": "123c961f-12bd-4d14-9206-60e29dc863a5",
+        "service": "S99seedsigner",
+        "skipped": true,
+        "restoredSha256": "b0b93fc8486d7d54e5d9ac1c5ef439fa86087f52123607a93f48d8292a518573"
+      }
+    },
+    "vendorCameraPids": "",
+    "vendorLibraryMappings": "",
+    "rockitModuleAbsent": true,
+    "modulesBeforeManagedCapture": "",
+    "physicalPowerCycle": false,
+    "startupScriptsRestored": true,
+    "matchingTemporaryBackupsRemoved": true
+  },
+  "application": {
+    "passed": true,
+    "integration": {
+      "sourceSha256": "7cf9c67797d5b14cfbea206e91bc5c85292ec01f36fca68edbaee13977a5809e",
+      "patchedSourceSha256": "726294bdd9d3a2b1b85a6109b9fd8db0f3761eadb1292f436f4767af19a2ff71",
+      "changes": [
+        "Rust camera stream import",
+        "Preserve complete rotated preview canvas"
+      ],
+      "installedFilesModified": false,
+      "qrDecoder": {
+        "kind": "native-zxing-3.1.1-local-average",
+        "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+        "starts": 2,
+        "calls": 17,
+        "decoded": 16,
+        "errors": 0,
+        "lastRoundTripSeconds": 0.028830666000033034,
+        "lastExitCode": 0
+      }
+    },
+    "opticalScanQualified": false,
+    "syntheticQrCases": [
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      }
+    ],
+    "changedSourceRejected": true,
+    "realFrameDecodeStatus": 4,
+    "capture": {
+      "firstFrameSeconds": 0.6755239170000209,
+      "first": 4,
+      "last": 118,
+      "samples": 67,
+      "received": 71,
+      "stopSeconds": 0.24968300099999396,
+      "ownerExitCode": 0
+    },
+    "realFrameRotations": [
+      {
+        "setting": 0,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 90,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 180,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 270,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      }
+    ],
+    "rotationBenchmark": {
+      "croppedSecondsPerFrame": 0.05392998339999622,
+      "expandedSecondsPerFrame": 0.012561558400000195
+    },
+    "installedCameraUnchanged": true
+  },
+  "ownerLogSha256": "089681dda4a49690362dbbed79555ed13c166b28fc6183ca033cbb0d11fdfbcd",
+  "sceneImageSaved": false,
+  "postCheckCameraAndQrWorkerPidsAbsent": true,
+  "physicalPowerCycle": false,
+  "newImageBootQualified": false,
+  "initialOperatorCorrection": "Module-loader script is documented for sh invocation; first direct execution failed permissions, leaving camera nodes absent. Correct sh invocation loaded only the six open modules, then capture172 passed on the same clean boot.",
+  "limits": [
+    "Controlledsoftware reboot on existingtestimage, not physicalpowercycle or newimageboot.",
+    "Actual71receivedcamera framesand16syntheticQRpositions/rotations; opticaltargetqualificationseparate.",
+    "Startup originalsrestoredbyte-for-byte and temporarybackupsremoved; no permanentbootserviceinstallation."
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "kind": "sdk-strip-exact-binary-preservation-fixture",
+  "passed": true,
+  "sdkPatch": {
+    "kind": "preserve-verified-static-camera-binaries",
+    "sdkRevision": "0b5c1f30ca6333b7ec5af70d26511da9ef8d39af",
+    "file": "project/build.sh",
+    "originalFunctionSha256": "925895c5f580b6b3b555a7f6ae183394050c945f165bd0d2cf2fb61beab64012",
+    "patchedFunctionSha256": "3ed4d29a52e6fe71f42cf0dc09e3da9f25e28b73e02f40bdc8040c533f3561c0",
+    "excludedPaths": [
+      "/usr/lib/shieldsigner-camera/camera-probe",
+      "/usr/lib/shieldsigner-camera/shieldsigner-qr-reader"
+    ],
+    "allOtherStripBehaviorPreserved": true
+  },
+  "selectedNativeHashesPreserved": {
+    "camera-probe": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+    "shieldsigner-qr-reader": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44"
+  },
+  "ordinaryExecutableStillStripped": true,
+  "sameDirectoryUnexcludedExecutableStillStripped": true,
+  "scope": "ActualSDKstriptool/function oncontrolledfixture; finalimagepublicationstillrequiresfullSDKbuildverification.",
+  "interimImageBuild": {
+    "exitCode": 1,
+    "gate": "Installed camera asset changed: payload/camera-probe",
+    "stripReproducedExactUnexpectedOutput": true,
+    "originalCameraSha256": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+    "unexpectedPostStripSha256": "43f3c0901946bb6a91cbef01ade28451ab2a2540035d6262e1498bfe14ac7b62",
+    "changedBytes": 136,
+    "fileSizeUnchanged": true
+  },
+  "calibrationContents": {
+    "boardSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "assembledSdkSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "matched": true,
+    "contentsPublished": false
+  }
+}

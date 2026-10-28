@@ -1,0 +1,26 @@
+{
+  "kind": "frozen-camera-kit-installation-verification",
+  "version": "0.0.38-dev",
+  "passed": true,
+  "archiveBytes": 29656653,
+  "archiveSha256": "7158eda937662f4a27ca8c5e13eb6d32a1b7686c587b212f4426653838393b0f",
+  "sourceRevision": "96e48fcfe25c8e7062e9981439ff9ef440bb31f3",
+  "sourceWorktreeDirty": false,
+  "localVerification": {
+    "passed": true,
+    "version": "0.0.38-dev",
+    "sourceRevision": "96e48fcfe25c8e7062e9981439ff9ef440bb31f3",
+    "filesVerified": 610,
+    "bytesVerified": 93367025,
+    "fileModesVerified": 610
+  },
+  "deviceVerification": {
+    "passed": true,
+    "version": "0.0.38-dev",
+    "sourceRevision": "96e48fcfe25c8e7062e9981439ff9ef440bb31f3",
+    "filesVerified": 610,
+    "bytesVerified": 93367025,
+    "fileModesVerified": 610
+  },
+  "scope": "Full610file checksums and file modes verified locally andonLuckfox afterarchiveextraction; noimagebootqualification."
+}

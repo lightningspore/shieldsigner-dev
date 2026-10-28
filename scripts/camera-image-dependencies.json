@@ -10,5 +10,10 @@
     "LICENSE.rst": "4e04660d77c1c64e89d79537919fb8240fa21484a7e3db29f358b2c7f84ea073",
     "Doc/LEGAL/COPYRIGHT.pycrypto": "8e563c767164faa0831a333b57d23d4311cf566eb1b15d93250f4606be4eb549"
   },
-  "matchesApplicationRequirement": "pycryptodomex==3.23.0"
+  "matchesApplicationRequirement": "pycryptodomex==3.23.0",
+  "cameraIq": {
+    "path": "oem/usr/share/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json",
+    "sha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "scope": "Identical calibration contents verified on the tested board and the pinned SDK image staging tree. Hash only; full private IQ is not bundled."
+  }
 }

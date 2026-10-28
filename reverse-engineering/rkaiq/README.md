@@ -22,8 +22,18 @@ render/cancel paths. Runtime diagnostics are now
 The [image kernel ABI](image-sdk-kernel-abi-validation.json) passes 190 ARM
 assertions. The final image build and packaged-image verification are underway;
 physical image boot/UI/power-cycle and the currently clipped optical target
-remain separate qualification gates. The frozen 0.0.37 archive below retains
-its historical behavior until the new release is frozen and verified.
+remain separate qualification gates.
+
+**LATEST FROZEN: 0.0.38-dev.** [Test kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.38-dev.zip),
+SHA-256 `7158eda937662f4a27ca8c5e13eb6d32a1b7686c587b212f4426653838393b0f`,
+29,656,653 bytes, source `96e48fcfe25c8e7062e9981439ff9ef440bb31f3`.
+All [610 files/modes verified](kit-0.0.38-dev-installation-verification.json)
+locally and on Luckfox. Its exact installed binaries passed a
+[controlled reboot](kit-0.0.38-dev-cold-reboot-validation.json): 71 real
+application frames, 16 generated QR position/rotation cases, clean shutdown,
+no vendor camera userspace. This is an existing-image software reboot;
+physical power cycling and booting the new SDK image remain separate.
+The older frozen 0.0.37 archive below retains its historical behavior.
 
 **NOW:** the full SC3336 ISP group runs together on hardware: CCM, LSC,
 DPCC, BAYNR, BAY3D, YNR, CNR and SHARP, plus demosaic and live AE/AWB.

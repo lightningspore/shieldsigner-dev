@@ -1,7 +1,7 @@
 {
   "kind": "camera-replacement-completion-audit",
   "goalComplete": false,
-  "frozenKit": "0.0.37-dev",
+  "frozenKit": "0.0.38-dev",
   "development": "0.0.38-dev",
   "items": [
     {
@@ -21,16 +21,16 @@
     {
       "requirement": "Frozen kit starts after vendor camera startup is skipped",
       "status": "verified-with-stated-scope",
-      "evidence": "kit-0.0.37-dev-cold-reboot-validation.json",
-      "sha256": "5b22812965c64a365e9a443816994db03aa3f045b7883d4b9ce984ff697e0a26",
-      "scope": "Exact0.0.37 archive after controlled software reboot,75real frames,corrected paired detector flags,clean shutdown; not physicalpowercycle."
+      "evidence": "kit-0.0.38-dev-cold-reboot-validation.json",
+      "sha256": "b61df1c445f39075fbcb434895269c8c7e38ed83b77f4c6168625d13da8342de",
+      "scope": "Exactfrozen38archive aftercontrolledreboot,71realapplicationframes,16syntheticQRcases,zero nativeworkererrors,cleanstop; notphysicalpowercycle/newimageboot."
     },
     {
       "requirement": "Distributed archive contents match installed hardware files",
       "status": "verified-with-stated-scope",
-      "evidence": "kit-0.0.37-dev-installation-verification.json",
-      "sha256": "12b8ff8ca13280b256368817553e0926a22fd4ccf7109000759761d4854ff471",
-      "scope": "548 files verified locally and on Luckfox, executable mode checked."
+      "evidence": "kit-0.0.38-dev-installation-verification.json",
+      "sha256": "adb368a4e4abe51786c90a8b0d845e5a332c3e3ee9461c744ef2dd6a7383e0dd",
+      "scope": "All610files/93,367,025bytes andmodes verified locallyandonLuckfox; source96e48fc clean."
     },
     {
       "requirement": "Desktop preview improvement preserves default application RGB protocol",
@@ -93,7 +93,7 @@
     "physicalWiringVerified": false
   },
   "nextPracticalTest": "Finish exactruntime image build and archive verification; reposition clipped publicQR forfreshnativeoptical test; thenphysicalUI/lighting/powercycle.",
-  "knownFrozenKitLimitation": "Frozen0.0.37 remainsimmutable. Source0.0.38 passesfreshnativeISP andpinnedappAPI checks; final38archive/imagebuild inprogress; physicalqualificationremainsopen.",
+  "knownFrozenKitLimitation": "Frozen0.0.38 source96e48fc verified610files+controlledreboot. FixedSC3336profile completeISP checks pass. FinalSDKimagepacking verificationinprogress; newimagephysicalboot/UI/light/powercycle and fullopticaltarget remainopen.",
   "qrRobustnessFinding": {
     "evidence": "qr-successful-pipeline-comparison.json",
     "scope": "Same four real camera frames, six attempts per reader. Fixed raw/crop/local-threshold cascade passes24/24 for ZXing,ZBar,quirc default,float. ZXing median35.1ms vs49.5/54.5/174.8ms prototype totals. Shared fallback uses ZXing HybridBinarizer; app and independent-scene qualification remain open."

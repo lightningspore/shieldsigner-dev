@@ -30,6 +30,21 @@ SHIELDSIGNER_CAMERA_BUNDLE="$PWD/dist/os/my-reviewed-camera-bundle" mise run os:
 
 The bundle command expects native outputs from the two build tasks to exist. Bundles are immutable directories; select a new directory after changing code. Each bundle records file hashes, source revision/dirty status, version and upstream pins. It contains runtime assets and license notices only, without original RKAIQ binaries, reverse-engineering fixtures, camera images or private IQ/reference traces. Runtime license notices are regenerated for every staged bundle. A dirty development snapshot is identified as such and is not a frozen release.
 
+### Current diagnostic development image
+
+The clean `e69de6586b53a21bf473134f85e6c6ccdf358b08` development image completed with exit 0 on 2026-10-28 at 23:48:03 UTC (40m29s). Its immutable runtime bundle is `6b396c5dc38d6cd82af739a22f1d686b649c67fb7443c043348bd9883a6f3eab`. This is a bench image with **automatic app, display and button startup held**, not a GPIO-profile fix.
+
+Use `dist/os/remote/rust-0.0.38-dev-dev-e69de65/shieldsigner-0.0.38-dev-e69de65-adb.img.xz` for diagnostic bring-up. The raw `.img`, `SHA256SUMS`, validation receipt, bundle manifest and build log are beside it. The earlier production `dd4bd96` artifacts remain in their separate directory.
+
+| Artifact | Bytes | SHA-256 |
+|---|---:|---|
+| `shieldsigner-0.0.38-dev-e69de65-adb.img` | 361,488,384 | `d4fdfa0be754764092cfeb67c0d78336ed83186644f562952dccb6ff6ad8e0c2` |
+| `shieldsigner-0.0.38-dev-e69de65-adb.img.xz` | 62,051,124 | `090ad5f5a526da8bf2510830a42008ef48ea1b9524e8008472a38db0f8169753` |
+
+Streaming XZ decompression completed successfully and reproduced the raw image's exact hash and byte count. Packed-image readback verified the actual selected Linux FIT has USB **peripheral** mode and the reviewed development Mini DTB; the real ARM ADB daemon is executable, and `S50usbdevice` contains active noncomment ADB enable/launch commands. The exact executable `S99seedsigner` prints the diagnostic hold explanation instead of starting the app. Kernel USB gadget/configfs/functionfs support is built in.
+
+The [development image proof](../reverse-engineering/rkaiq/image-camera-development-build-validation.json) records those hashes and modes, the unchanged tested Rust/native QR binaries, all runtime/startup checks, and actual packed Python 3.12/Crypto 3.23 direct-data AES/CompactSeedQR/UR tests under userspace QEMU. **Physical boot and USB enumeration are not proven by these checks.** First boot is **ADB inspection only**: run `adb devices` and the read-only identity/inventory commands below. Leave the app/display/buttons held; do not manually launch the app or exercise buttons until the GPIO profile is reviewed. A blank display is expected while the app is held.
+
 ### What is installed
 
 | Item | Image path / behavior |
@@ -42,7 +57,7 @@ The bundle command expects native outputs from the two build tasks to exist. Bun
 | Open kernel modules | S21 loads the reviewed CIF/ISP/CSI/sensor modules without Rockit; capture starts when the app opens Camera |
 | Runtime output | `/tmp/shieldsigner-camera` on tmpfs; diagnostic full logs remain opt-in |
 | Calibration | Selected SDK SC3336 IQ JSON is retained; the Rust owner reads it directly |
-| Reader/display configuration | UR2; reviewed FOX_22 HOTHMI SPI limit of 10 MHz, validated against existing DC/reset/CS mapping |
+| Reader/display configuration | UR2 and HOTHMI 10 MHz SPI limit. Fork GPIO mapping still needs carrier review; development holds automatic app/display/button startup. |
 
 The camera source hash/profile must match the reviewed image application. The Mini build selects the Mini device tree; final compiled model/profile and hardware behavior must be verified, not inferred from its filename. A compatibility adapter explicitly reports the fixed native 640x480 RGB stream even if old V4L2 configuration requests another size/node.
 

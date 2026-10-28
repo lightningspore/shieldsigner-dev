@@ -116,6 +116,13 @@
       "evidence": "awb-dark-variance-equivalence.json",
       "sha256": "6174aca51092e0b910f7ff1b77e3e27e82809b44da20197e2d4f13f092f4d06a",
       "scope": "Identified legitimate NaN variance from all-zero rounded brightness history; original ARM ordered comparison reconstructed.18NaN/Inf damping cases plus32zero-brightness metadata replay frames match native; fresh normal-light hardware path separately passes. Not a current physical dark/light test."
+    },
+    {
+      "requirement": "Diagnostic development image builds with ADB assets and automatic app/display/button startup held",
+      "status": "verified-at-build-and-packed-readback-scope",
+      "evidence": "image-camera-development-build-validation.json",
+      "sha256": "1e705ee1e916dd1aa7414380de08b56ee6888e1f004cbb852eea6d4ed312bae7",
+      "scope": "Clean e69de65 SDK build exited0;361488384-byte raw image SHAd4fdfa0b copied byte-exactly. Independent packed readback verifies native payloads, dev kernel/DTB peripheral USB, executable ARM adbd SHA0c3ea29d, active noncomment ADB startup commands, exact held S99seedsigner and absent root main.py/boot.py. PackedPython3.12 QEMU direct-data checks and xz integrity/byte-exact decode pass. No physical boot, USB enumeration, GPIO safety or display qualification."
     }
   ],
   "hardwareObservation": {
@@ -167,7 +174,12 @@
       "status": "open",
       "passCondition": "Boot the final SDK image with its normal Rust startup; confirm DT profile, open drivers/sensor, video/subdev/media entity mappings,11145parameterqueue/fullstats and real camera/native QR without vendor camera userspace.",
       "latestEvidence": "image-sdk-kernel-abi-validation.json",
-      "limit": "Compile-time ABI/config/DTB and existing-image controlled reboot do not prove new-image boot."
+      "limit": "Compile-time ABI/config/DTB and existing-image controlled reboot do not prove new-image boot.",
+      "diagnosticImageEvidence": {
+        "evidence": "image-camera-development-build-validation.json",
+        "sha256": "1e705ee1e916dd1aa7414380de08b56ee6888e1f004cbb852eea6d4ed312bae7",
+        "scope": "Diagnostic image is built and statically verified; first boot is ADB inspection only. Keep app/display/button startup held until physical board GPIO profile is reviewed. USB enumeration and runtime inventory remain unverified."
+      }
     },
     {
       "id": "physical-lcd-buttons",

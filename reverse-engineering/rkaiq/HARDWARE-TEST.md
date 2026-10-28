@@ -3,6 +3,7 @@
 Current development is **0.0.35-dev**; latest frozen kit is **0.0.34-dev**.
 See the [combined ISP result](ISP.md#development-0035-combined-isp-hardware-result).
 Version statements below describe historical sessions.
+The exact frozen 0.0.35 kit passed [controlled clean-reboot application integration](kit-0.0.35-dev-cold-reboot-validation.json): vendor startup skipped, open drivers loaded, 74 real frames received, clean owner shutdown. This is not a physical power-cycle test.
 
 Development source is now **0.0.32-dev**; the recommended frozen kit is **0.0.31-dev**.
 The latest diagnostic work is [paired AWB sampling and controlled scene replay](#development-0032-paired-awb-samples-and-scene-change-diagnostics).

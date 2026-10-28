@@ -23,7 +23,8 @@ clean shutdown. [Application evidence](application-integration-hardware-validati
 The frozen archive remains unchanged after publication.
 
 **NEXT:** qualify actual optical QR scanning, physical lighting/color response,
-LCD/buttons and cold startup of the exact full-group kit. Review joined-native
+LCD/buttons and physical power cycling. The exact full-group kit passed a
+[controlled clean reboot](kit-0.0.35-dev-cold-reboot-validation.json). Review joined-native
 AWB controller coverage against the normal pinned profile before adding any
 new policy. Earlier isolated-CNR startup failures remain historical evidence;
 they do not describe the default complete-group build. The full objective
@@ -82,8 +83,8 @@ Recent hardware evidence:
 
 [HARDWARE-TEST.md](HARDWARE-TEST.md) is the runnable procedure. The current
 0.0.35 kit is summarized above. Earlier 0.0.31–0.0.34 kits retain their own
-build-specific evidence, including controlled clean-reboot results; those do
-not qualify cold startup of the newest full-group executable. Preserve the
+build-specific evidence, including controlled clean-reboot results; those are distinct from the new full-group kit
+controlled-reboot result linked above. Preserve the
 single-camera critical path before optional HDR/multi-camera/tuning modes.
 
 The component records below are historical implementation checkpoints.

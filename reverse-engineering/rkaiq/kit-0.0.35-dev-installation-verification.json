@@ -12,8 +12,32 @@
   ],
   "boardDirectory": "/shieldsigner-camera-tests/rkaiq-camera-test-0.0.35-dev",
   "limitations": [
-    "Verifies complete manifest contents, not camera startup from the frozen directory.",
-    "Exact camera binary previously passed application run102; cold boot of this kit remains unqualified.",
-    "Live demo continued during verification."
-  ]
+    "No cold-boot qualification of this kit.",
+    "Exact binary passed application run102 before packaging; frozen-directory live run104 remains active, so no shutdown result claimed.",
+    "Executable modes restored after Python ZIP extraction; documented chmod step is required."
+  ],
+  "frozenKitLiveRun": {
+    "run": 104,
+    "binarySha256": "904877e5c440be2dfc6d9e9a289ba7ca6f1047dc1c40bec9d208df9a093cd90a",
+    "initialParametersSha256": "ec3ad49cb242bb1f50f3977e33c2eebc6930c12acfbae4849be774503b9fb3b4",
+    "enabledModules": {
+      "CCM": true,
+      "LSC": true,
+      "DPCC": true,
+      "BAYNR": true,
+      "BAY3D": true,
+      "YNR": true,
+      "CNR": true,
+      "SHARP": true
+    },
+    "observedSequence": 368,
+    "width": 640,
+    "height": 480,
+    "desktopReceivedFramesCumulative": 3145,
+    "pairedAwbGroupsCaptured": [
+      0,
+      1
+    ],
+    "scope": "Actual frozen kit executable streaming RGB through local demo bridge; warm board, session still running."
+  }
 }

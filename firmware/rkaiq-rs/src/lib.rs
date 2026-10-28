@@ -400,3 +400,16 @@ pub mod ynr_quantize;
 pub mod ynr_calibration;
 #[cfg(feature="diagnostics")]
 pub mod ynr_frame;
+
+
+
+#[cfg(feature = "diagnostics")]
+pub mod sharp_calibration;
+#[cfg(feature = "diagnostics")]
+pub mod sharp_selection;
+#[cfg(feature = "diagnostics")]
+pub mod sharp_quantize;
+pub mod isp_sharp;
+
+#[cfg(feature = "diagnostics")]
+pub mod sharp_frame;

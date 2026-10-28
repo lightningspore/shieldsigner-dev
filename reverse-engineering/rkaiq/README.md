@@ -8,24 +8,25 @@ the launcher. Complete qualification of the requested replacement remains open.
 
 ## Current deliverable and work rules
 
-**NOW:** port the remaining ISP blocks in parallel, integrate them together, then
-perform combined hardware debugging. YNR, sharpening and temporal Bayer NR each
-have an isolated worktree; CNR is already ported. This follows the user's latest
-request to port the full set before debugging individual hardware behavior.
+**NOW:** the full SC3336 ISP group runs together on hardware: CCM, LSC,
+DPCC, BAYNR, BAY3D, YNR, CNR and SHARP, plus demosaic and live AE/AWB.
+The 600-image default-all capture passed native comparisons for all nine
+modules and final AWB translation. [Combined evidence](combined-isp-hardware-validation.json).
 
-**DELIVERED:** [0.0.34 development kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.34-dev.zip),
-verified after extraction on the Luckfox with real app frame delivery, preview
-and clean shutdown. [Exact archive evidence](kit-0.0.34-dev-hardware-validation.json).
-CNR remains gated off in this stable baseline. The kit is a usable checkpoint,
-not full profile parity or optical/UI qualification.
+**DELIVERED:** [0.0.35 development kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.35-dev.zip),
+including the desktop live-camera dashboard. All 535 manifest files were
+verified after installation on the Luckfox.
+[Installation verification](kit-0.0.35-dev-installation-verification.json).
+Its exact camera binary passed the installed application's process-local
+integration check: 73 received real frames, complete preview rotations and
+clean shutdown. [Application evidence](application-integration-hardware-validation.json).
+The frozen archive remains unchanged after publication.
 
-**CURRENT FAULT:** CNR is reconstructed but enabling it stalls first ISP
-readback. The normal build gates it off; the restored build passes a 192-image
-capture and installed scan loop. Failed experiments and the experimental binary
-are retained locally; this is an unresolved feature, not a completed milestone.
-
-**NEXT:** a combined remaining-feature build and one focused hardware-debugging
-cycle, followed by optical/UI/power-cycle qualification. The full objective
+**NEXT:** qualify actual optical QR scanning, physical lighting/color response,
+LCD/buttons and cold startup of the exact full-group kit. Review joined-native
+AWB controller coverage against the normal pinned profile before adding any
+new policy. Earlier isolated-CNR startup failures remain historical evidence;
+they do not describe the default complete-group build. The full objective
 remains the vendor-free fixed-camera replacement.
 
 Work procedure:
@@ -79,14 +80,15 @@ Recent hardware evidence:
   corrects and settles under transformed captured statistics; this is not an
   optical lighting-change test or full joined-native-controller comparison.
 
-[HARDWARE-TEST.md](HARDWARE-TEST.md) is the runnable procedure. The frozen
-0.0.33-dev kit includes live ISP tuning, default streaming without a scene-image
-dump, and current hardware/numerical checks, including a controlled clean reboot.
-[Current kit evidence](kit-0.0.33-dev-hardware-validation.json). Prior archives
-remain unchanged; exact 0.0.32 retains controlled clean-reboot evidence. Next priorities are successful
-physical QR scanning, physical lighting/color response, complete LCD/button
-interaction and power-cycle qualification. Preserve the single-camera critical
-path before adding optional HDR/multi-camera/tuning modes.
+[HARDWARE-TEST.md](HARDWARE-TEST.md) is the runnable procedure. The current
+0.0.35 kit is summarized above. Earlier 0.0.31–0.0.34 kits retain their own
+build-specific evidence, including controlled clean-reboot results; those do
+not qualify cold startup of the newest full-group executable. Preserve the
+single-camera critical path before optional HDR/multi-camera/tuning modes.
+
+The component records below are historical implementation checkpoints.
+Their original “unfinished” statements are superseded where the current
+hardware results above establish later composition.
 
 Development 0.0.33-dev connects recovered ISO-dependent demosaic frame tuning
 to live, atomic ISP batches; [two hardware runs and original comparisons](demosaic-live-validation.json) pass.

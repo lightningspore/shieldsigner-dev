@@ -392,3 +392,11 @@ pub mod bay3d_quantize;
 pub mod bay3d_calibration;
 #[cfg(feature="diagnostics")]
 pub mod bay3d_frame;
+
+pub mod isp_ynr;
+pub mod ynr_selection;
+pub mod ynr_quantize;
+#[cfg(feature="diagnostics")]
+pub mod ynr_calibration;
+#[cfg(feature="diagnostics")]
+pub mod ynr_frame;

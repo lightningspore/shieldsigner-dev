@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "sequences": 6,
+  "frames": 74,
+  "packingCases": 16,
+  "sdkArmLayoutVerified": true,
+  "sdkHeaderSha256": {
+    "ynr_uapi_head_v22.h": "abc8bc4da653b72ba65b174f9db5500f4ea4f6ce53fff01766654c90c850e5ff",
+    "rk_aiq_types_aynr_algo_int_v22.h": "ac121cd38eb7075aaa8695ac8ea447d0236d71acfc8caa3e6bb9e3b175f22d0a",
+    "rk_aiq_types_aynr_hw_v22.h": "4f7d137b9e2b6dd050f32d63783ff8cd48eff5574339a737b2ce8e0b914fc2bb",
+    "ynr_head_v22.h": "14a3fb1e172788053232b0fc5ff613a1932dead4738e573d2efe271af531505f"
+  },
+  "packingBytesComparedPerCase": 11145,
+  "updatedFrames": 59,
+  "sdkModuleOffset": "0x59b0",
+  "scope": "Complete native constructor/prepare/processing callback against focused Rust normal-path sequences plus complete native ISP32 YNR packing; no hardware claim",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "af10213ac9700115517f917524b79f771c8a137feb89d6328a11a828d725665d"
+}

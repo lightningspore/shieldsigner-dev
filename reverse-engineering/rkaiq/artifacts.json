@@ -269,6 +269,26 @@
       "name": "cnr_head_v30.h",
       "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/cnr_head_v30.h",
       "sha256": "8be2ed7f1f20fcecd95f83652ea02a95674d8a58a0bc77f91f01989f5fdf020d"
+    },
+    {
+      "name": "rk_aiq_types_aynr_hw_v22.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/aynrV22/rk_aiq_types_aynr_hw_v22.h",
+      "sha256": "4f7d137b9e2b6dd050f32d63783ff8cd48eff5574339a737b2ce8e0b914fc2bb"
+    },
+    {
+      "name": "rk_aiq_types_aynr_algo_int_v22.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/aynrV22/rk_aiq_types_aynr_algo_int_v22.h",
+      "sha256": "ac121cd38eb7075aaa8695ac8ea447d0236d71acfc8caa3e6bb9e3b175f22d0a"
+    },
+    {
+      "name": "ynr_uapi_head_v22.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/ynr_uapi_head_v22.h",
+      "sha256": "abc8bc4da653b72ba65b174f9db5500f4ea4f6ce53fff01766654c90c850e5ff"
+    },
+    {
+      "name": "ynr_head_v22.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/ynr_head_v22.h",
+      "sha256": "14a3fb1e172788053232b0fc5ff613a1932dead4738e573d2efe271af531505f"
     }
   ],
   "kernelHeaders": [

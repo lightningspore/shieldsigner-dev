@@ -117,6 +117,25 @@ pub fn run_sequence(v: &Value) -> Result<Value, String> {
         return Err("stages must be 1..16".into());
     }
     let mut session = Session::new(&v["iq"], [width, height], scale)?;
+    // Optional measurement replay follows the same post-processing handoff as
+    // the camera owner. Seed bytes are explicit; never invent SDK state.
+    fn decode<const N: usize>(value: &Value) -> Result<[u8; N], String> {
+        let text = value.as_str().ok_or("measurement hex required")?;
+        if text.len() != N * 2 {
+            return Err("measurement hex length".into());
+        }
+        let bytes = text.as_bytes().chunks_exact(2).map(|pair| {
+            let text = core::str::from_utf8(pair).map_err(|_| "non-ASCII measurement hex")?;
+            u8::from_str_radix(text, 16).map_err(|_| "invalid measurement hex")
+        }).collect::<Result<Vec<_>, _>>()?;
+        bytes.try_into().map_err(|_| "measurement length".into())
+    }
+    let mut measurement = v.get("initial_measurement")
+        .map(decode::<{shieldsigner_rkaiq::isp_awb_measurement::INPUT_BYTES}>)
+        .transpose()?;
+    let signature = if measurement.is_some() {
+        decode::<64>(v.get("measurement_signature").ok_or("measurement signature required")?)?
+    } else { [0; 64] };
     let mut results = Vec::new();
     for (stage_index, stage) in stages.iter().enumerate() {
         let records = stage["raw"].as_array().ok_or("stage raw records")?;
@@ -169,14 +188,23 @@ pub fn run_sequence(v: &Value) -> Result<Value, String> {
                         },
                     )
                     .map_err(|e| format!("session stage {stage_index} cycle {cycle}: {e:?}"))?;
-                results.push(json!({"stage":stage_index,"cycle":cycle,"record":record,
+                let mut row = json!({"stage":stage_index,"cycle":cycle,"record":record,
                 "calculated":output.action.calculated,"reconfigure":output.action.reconfigure,
                 "gain":output.current_gain,"controllerFrame":output.controller_frame,"countdown":output.countdown,
                 "complete":output.complete,"activeLights":output.active_lights,"continuation":format!("{:?}",output.continuation),
                 "preparationRequested":output.preparation_requested,"updateAfterGate":output.numeric.update,
                 "stabilityThreshold":output.numeric.smart[2],"stabilityMask":output.stability_mask,
                 "region":output.region,"density":output.density,"probabilities":output.probabilities,"dampingCoefficient":session.ccm_damping(),
-                "historyBits":output.measurement_history.map(|row|row.map(f32::to_bits))}));
+                "historyBits":output.measurement_history.map(|row|row.map(f32::to_bits))});
+                if let Some(record) = measurement.as_mut() {
+                    if output.action.reconfigure {
+                        session.next_measurement(record, &signature)
+                            .map_err(|e| format!("next measurement: {e:?}"))?;
+                    }
+                    row["measurement"] = Value::String(record.iter()
+                        .map(|b| format!("{b:02x}")).collect());
+                }
+                results.push(row);
             }
         }
     }

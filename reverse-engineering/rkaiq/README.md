@@ -13,14 +13,15 @@ DPCC, BAYNR, BAY3D, YNR, CNR and SHARP, plus demosaic and live AE/AWB.
 The 600-image default-all capture passed native comparisons for all nine
 modules and final AWB translation. [Combined evidence](combined-isp-hardware-validation.json).
 
-**DELIVERED:** [0.0.35 development kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.35-dev.zip),
-including the desktop live-camera dashboard. All 535 manifest files were
-verified after installation on the Luckfox.
-[Installation verification](kit-0.0.35-dev-installation-verification.json).
-Its exact camera binary passed the installed application's process-local
-integration check: 73 received real frames, complete preview rotations and
-clean shutdown. [Application evidence](application-integration-hardware-validation.json).
-The frozen archive remains unchanged after publication.
+**DELIVERED:** [0.0.36 development kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.36-dev.zip),
+with the corrected initial AWB damping history, bounded diagnostic trace capture
+and desktop dashboard. All 542 files were verified on the Luckfox, including
+executable permissions. [Installation evidence](kit-0.0.36-dev-installation-verification.json).
+Its exact camera binary passed application integration with 70 received frames,
+all nine module comparisons and an actual ordered 32-frame joined AWB comparison.
+[Combined evidence](combined-isp-0.0.36-hardware-validation.json),
+[AWB trajectory](awb-ordered-trace-hardware-validation.json).
+Older frozen archives remain unchanged.
 
 **NEXT:** qualify actual optical QR scanning, physical lighting/color response,
 LCD/buttons and physical power cycling. The exact full-group kit passed a
@@ -245,18 +246,15 @@ queues, automatic exposure/white balance, app frame delivery and restart have
 real hardware evidence. These do not imply that every optional IQ section or
 vendor algorithm is implemented.
 
-The [selected-profile audit](profile-module-audit.json) also identifies enabled
-profile blocks that frozen 0.0.33 startup explicitly disables: CCM, LSC, DPCC,
-spatial and temporal Bayer noise reduction, YNR, CNR and sharpening. Current
-0.0.34 development enables DPCC, CCM, LSC and BAYNR with native comparison and live capture
-([CCM evidence](ccm-live-validation.json),
-[LSC evidence](lsc-live-validation.json),
-[BAYNR evidence](baynr-live-validation.json),
-[current startup audit](profile-module-audit-0.0.34-baynr.json),
-[DPCC details](ISP.md#persistent-dpcc-and-live-submission-0034-development)).
-The other four blocks (BAY3D, YNR, CNR and SHARP) remain
-implementation gaps for full profile parity, separate from the physical tests
-below. A working QR subset is not complete vendor image-quality equivalence.
+The [selected-profile audit](profile-module-audit.json) recorded the original
+missing ISP blocks. Development 0.0.36 now runs all eight advanced blocks
+(CCM, LSC, DPCC, BAYNR, BAY3D, YNR, CNR and SHARP), plus demosaic and AE/AWB.
+[Current combined hardware comparisons](combined-isp-0.0.36-hardware-validation.json)
+pass for every module. [The actual ordered AWB trace](awb-ordered-trace-hardware-validation.json)
+compares 32 live-owner gains and full next measurement records against original
+ARM execution through gain calculation and hardware reconfiguration. These
+results supersede the earlier four-block implementation gap; they do not
+qualify every physical imaging condition or optional IQ mode.
 
 Still open:
 
@@ -268,11 +266,13 @@ Still open:
 4. Physical power-cycle testing and a reviewed permanent startup choice;
    controlled reboot and opt-in launch have been tested separately.
 5. Complete joined-native AWB controller equivalence and any remaining policy
-   required by this fixed profile. Existing comparisons cover many components
-   and the live composition, with narrower oracle scopes stated explicitly.
-6. Freeze a new kit containing the current development path and repeat controlled
-   reboot/application and remaining physical qualification with those exact bytes.
-   Frozen 0.0.33 has neither live DPCC, CCM nor LSC and remains unchanged.
+   required by this fixed profile. The 32-frame actual trajectory now covers
+   preparation, gains and full measurement reconfiguration; native calibration/
+   context construction remains adapted rather than whole-library initialization.
+6. Qualify the exact new 0.0.36 frozen kit after controlled reboot, then complete
+   the physical qualification above. Its exact camera executable has passed
+   actual application integration. The older 0.0.35 kit retains its own
+   controlled-reboot result and remains unchanged.
 
 Optional modes remain outside the current single-camera priority unless the
 actual QR capture path needs them. No completion claim follows from passing

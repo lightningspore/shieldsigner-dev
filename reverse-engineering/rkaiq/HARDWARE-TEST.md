@@ -1,6 +1,7 @@
 # First camera session
 
-Current development is **0.0.35-dev**; latest frozen kit is **0.0.34-dev**.
+Current development and latest frozen kit are **0.0.36-dev**.
+[Kit verification](kit-0.0.36-dev-installation-verification.json) covers all 542 files.
 See the [combined ISP result](ISP.md#development-0035-combined-isp-hardware-result).
 Version statements below describe historical sessions.
 The exact frozen 0.0.35 kit passed [controlled clean-reboot application integration](kit-0.0.35-dev-cold-reboot-validation.json): vendor startup skipped, open drivers loaded, 74 real frames received, clean owner shutdown. This is not a physical power-cycle test.

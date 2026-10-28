@@ -56,6 +56,43 @@ The pinned application's QR classifier imports `Cryptodome.Cipher.AES` even befo
 
 An image build and staged-rootfs checks do not prove hardware boot, LCD/buttons, smartcards, physical power cycling or secure-boot configuration. Those remain separate acceptance tests. See the [Rust-camera completion audit](../reverse-engineering/rkaiq/completion-audit.json) for current evidence.
 
+### Verified 0.0.38 image artifact
+
+The clean `dd4bd96dad3642911964786a657babf30f82ffea` source build completed on
+2026-10-28 with exit 0 in 27 minutes 9 seconds. The local artifact is
+`dist/os/remote/rust-0.0.38-dev-dd4bd96/shieldsigner-0.0.38-dev-dd4bd96.img`:
+
+- Size: **348,602,368 bytes**.
+- SHA-256: `a4d712b3ea1f56177ebd7a974cfb44b7a1a5408d4e641af9b9b3c5aebab0b431`.
+- Compressed root filesystem: **45,791,839 bytes** at offset 302,809,088.
+
+The adjacent `.img.xz` is **48,720,128 bytes** (46.46 MiB), SHA-256
+`5dc51b2a1b32e51d29982eb7ab0a7e62d6000cf758c1b953a82ecafd0675bef8`.
+Streaming decompression reproduces the exact verified image hash above;
+see [compression verification](../reverse-engineering/rkaiq/image-camera-compression-validation.json).
+This reduces transfer size without changing partitions or device contents.
+
+[Packed-image evidence](../reverse-engineering/rkaiq/image-camera-build-validation.json)
+records matching builder/local hashes, all runtime assets and startup modes,
+the selected Mini DTB, open modules, absent closed camera runtime, and packed
+Python 3.12.10/PyCryptodomex 3.23.0 AES/CompactSeedQR/UR direct-data checks under
+ARM userspace emulation. This image has **not** been flashed or booted.
+
+Repeat the extraction check on Linux with `squashfs-tools` installed; add
+`qemu-user` for the optional direct-data tests. Use the matching immutable
+bundle and a new output directory:
+
+```sh
+mise exec -- uv run --python 3.13 python scripts/verify-os-image.py \
+  --image /absolute/path/shieldsigner-0.0.38-dev-dd4bd96.img \
+  --bundle "$PWD/dist/os/image-bundles/0.0.38-dev-dd4bd96" \
+  --output /absolute/path/new-readback-directory --qemu-python
+```
+
+The helper reads and extracts the image; it does not flash hardware or register
+system-wide emulation handlers. Emulated direct-data tests do not test camera
+pixels, physical display or normal boot.
+
 ### First boot of the Rust-camera image
 
 After writing the checksum-verified image to the intended test microSD and
@@ -106,9 +143,11 @@ root filesystem, which starts at byte 302,809,088. These reservations explain
 most of the raw file size. Nonzero-block counts do not establish minimum safe
 partition sizes. See the [measured size analysis](../reverse-engineering/rkaiq/image-size-analysis.json).
 
-The failed Rust-camera packing attempt contained approximately 44 MiB of
-compressed root filesystem, not a 44 MiB complete SD image. It demonstrates
-neither a large OS reduction nor a successful image release.
+The successful Rust-camera image above is 348,602,368 bytes, 1,064,960 bytes
+(0.31%) larger than the baseline. Its compressed root filesystem is
+45,791,839 bytes (43.67 MiB). The earlier approximate 44 MiB figure described
+only that filesystem, not a complete SD image. No large OS reduction has yet
+been implemented.
 
 For a smaller download, compress the verified full image and verify its hash
 after decompression. For a smaller raw image, a future lean layout could reduce

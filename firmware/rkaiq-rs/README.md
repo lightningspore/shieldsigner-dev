@@ -28,8 +28,8 @@ The [native QR integration check](../../reverse-engineering/rkaiq/native-qr-inte
 passed binary payloads, CompactSeedQR, reversed/duplicated animated UR PSBT,
 and the pinned image app's real stream/still APIs. Actual pinned scan/preview
 rendering and software cancellation also pass on the existing rootfs. These
-are distinct from a successful final SDK image build, booting that image, or
-matching a live optical target with this exact runtime. The current target is
+are distinct from booting the new image or matching a live optical target.
+The [clean SDK image build and packed readback](../../reverse-engineering/rkaiq/image-camera-build-validation.json) now pass; userspace-QEMU checks also pass the packed Python/app direct-data APIs, without camera, QR pixels or boot qualification. The current target is
 clipped; native optical qualification remains open.
 
 [Selected-profile scope](../../reverse-engineering/rkaiq/selected-profile-runtime-scope.json)

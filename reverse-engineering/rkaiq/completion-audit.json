@@ -92,11 +92,10 @@
     },
     {
       "requirement": "Build ShieldSigner image containing exact new Rust/native QR runtime and matching pinned app dependencies",
-      "status": "in-progress",
-      "needed": "Complete a clean-source SDK build with exit0; verify all exact runtime payload/startup hashes and modes, IQ/model/dependency/kernel/module inputs, then independently extract and verify the final packed rootfs. Record image/bundle/source hashes. A newimage boot is a separate gate.",
-      "evidence": "image-camera-finalization-validation.json",
-      "sha256": "809881c0b33cb2f134b390ce73fe0df18aa57c7258e78359619139c0a09679ea",
-      "scope": "The previous completeSDKattempt failed strictpost-pack verification after vendorS21 overwrite. The reviewed last-mutation finalizer passes actual failed-root-copy and negative fixtures; this is not a successful finalimage build."
+      "status": "verified-at-build-and-packed-readback-scope",
+      "evidence": "image-camera-build-validation.json",
+      "sha256": "684c1b428b371cd16fed27f7db6eb06f816dde9925509e105407eda42ca8f90f",
+      "scope": "Clean dd4bd96 SDK build exited0;348602368-byte image SHAa4d712b3 independently copied and extracted. Packed51assets+6startup hashes/modes, selectedMiniDTB, IQ, modules/vermagic and dependency inputs verified. Actual packedPython3.12 under QEMU passes AES, CompactSeedQR16/32 and five-fragment reversed/duplicateUR direct-data APIs. No QR pixels, hardware boot or camera qualification."
     },
     {
       "requirement": "Pinned image application scan/preview loop and software cancellation",
@@ -127,8 +126,8 @@
     "physicalWiringVerified": false,
     "scope": "Last recorded test-board observations; no physical wiring/display qualification is inferred from device nodes."
   },
-  "nextPracticalTest": "Finish strict final image build and extracted-rootfs verification; obtain an unclipped public target for exact0.0.38/native optical qualification, then new-image boot/UI/lighting/power-cycle tests.",
-  "knownFrozenKitLimitation": "Frozen0.0.38 source96e48fc has610verifiedfiles/modes and an existing-image controlled-reboot pass. Its native QR app/UR checks are qualified synthetic/API tests; current native optical target, final SDKimage build/boot and physical UI/light/power-cycle remain open.",
+  "nextPracticalTest": "Obtain an unclipped public target for exact0.0.38/native optical qualification; boot the verified SDK image and complete physical UI/lighting/power-cycle gates.",
+  "knownFrozenKitLimitation": "Frozen0.0.38 source96e48fc has610verifiedfiles/modes and an existing-image controlled-reboot pass. Separate clean dd4bd96 SDK image build and packed readback now pass. Native QR app/UR checks remain qualified synthetic/API tests; current native optical target, new-image boot and physical UI/light/power-cycle remain open.",
   "qrRobustnessFinding": {
     "evidence": "qr-successful-pipeline-comparison.json",
     "scope": "Same four real camera frames, six repetitions per reader; all fixed cascades24/24. ZXing native app integration and syntheticURassembly are now separately proven. This benchmark is not24distinct optical targets, finalappFPS or physical animated acquisition."
@@ -136,10 +135,11 @@
   "acceptanceGates": [
     {
       "id": "image-build-and-content",
-      "status": "open",
+      "status": "passed-at-build-and-packed-readback-scope",
       "passCondition": "SDK build exits0 from a clean recorded source/bundle; final packed rootfs independently matches runtime/startup hashes+modes, IQ, app/dependencies, kernel/DTB/module inputs; final image hashes recorded.",
-      "latestEvidence": "image-camera-finalization-validation.json",
-      "limit": "That evidence validates the repair on a failed packed-root copy, not a final successful image."
+      "latestEvidence": "image-camera-build-validation.json",
+      "limit": "Independent packed-image readback and explicit userspace-QEMU direct-data APIs pass; not a physical boot or optical test.",
+      "sha256": "684c1b428b371cd16fed27f7db6eb06f816dde9925509e105407eda42ca8f90f"
     },
     {
       "id": "native-optical-target",
@@ -191,7 +191,6 @@
       "Drop-in librkaiq ABI compatibility or all optional IQ features.",
       "Physical LCD/buttons, final-image boot or power cycle from headless/API/reboot tests.",
       "Current native optical success from historical JPEG-fallback success.",
-      "Successful final SDK image build from a repaired failed-root-copy fixture.",
       "CPROC control, CPSL/IR/day-night/autoLED, arbitrary sensors/scenes/HDR/DCG/OTP/remosaic or prepared AUTO/ALWAYS single-color exclusion handling outside selected INITIAL mode0."
     ],
     "selectedProfileEvidence": {

@@ -1,0 +1,10 @@
+{
+  "kind": "shieldsigner-compressed-image-verification",
+  "path": "dist/os/remote/rust-0.0.38-dev-dd4bd96/shieldsigner-0.0.38-dev-dd4bd96.img.xz",
+  "compressedBytes": 48720128,
+  "compressedSha256": "5dc51b2a1b32e51d29982eb7ab0a7e62d6000cf758c1b953a82ecafd0675bef8",
+  "decompressedBytes": 348602368,
+  "decompressedSha256": "a4d712b3ea1f56177ebd7a974cfb44b7a1a5408d4e641af9b9b3c5aebab0b431",
+  "matchesVerifiedImage": true,
+  "imageBootQualified": false
+}

@@ -16,7 +16,7 @@
       "status": "verified-with-stated-scope",
       "evidence": "isp-0.0.38-fresh-hardware-validation.json",
       "sha256": "587f55cf71d04c5a671dd17c4a076015b3cca3db46d0c9a6dc607a836ad88b48",
-      "scope": "NativeJSON/calibration/contextinit,prepare,BLCbindingand32actualfreshinputs matchfullnextSDK/ISP andeveryliveowner gain."
+      "scope": "Fresh exact0.0.38 capture161: original native JSON/context initialization, prepare, BLC binding and32actualinputs match every liveowner gain,1140initializedSDKbytes and all11145packedISPbytes/frame.64legacy unused/uninitializedSmallRangeSDKbytes excluded; oracle memory/clock/filesystem/module adapters remain explicit."
     },
     {
       "requirement": "Frozen kit starts after vendor camera startup is skipped",
@@ -41,15 +41,23 @@
     },
     {
       "requirement": "Successful known-public optical QR through physical camera and installed decoder",
-      "status": "verified-with-stated-scope",
-      "evidence": "optical-qr-hardware-validation.json",
-      "sha256": "b2be5f9af8da6ab1ea0dbe87cf48ed8384504346354ef766482f1d305a0a1a18",
-      "scope": "One actual printed public address, development0.0.38 process-local raw-first JPEG retry, frozen0.0.37 camera executable. Two frames,4.44seconds; no synthetic optical input."
+      "status": "unverified-for-current-native-runtime",
+      "evidence": "native-qr-integration-hardware-validation.json",
+      "sha256": "e0c6a31eafa56ed69836da1432f9bf36ef725d1f37df1785c1553e572a1091e9",
+      "scope": "Current0.0.38/nativeZXing app integration passes synthetic binary/CompactSeedQR/UR and real Camera APIs, but opticalScanQualified is false. Current physical target is clipped; the pinned scan-loop run records8FALSE decode attempts.",
+      "needed": "Place the entire known public QR and quiet zone in view, then run optical_camera_check.py against exact0.0.38 camera/worker and require matched=true, opticalScanQualified=true, clean owner/worker shutdown.",
+      "historicalEvidence": [
+        {
+          "evidence": "optical-qr-hardware-validation.json",
+          "sha256": "b2be5f9af8da6ab1ea0dbe87cf48ed8384504346354ef766482f1d305a0a1a18",
+          "scope": "Historical public static address success with frozen0.0.37 camera binary and development JPEG fallback; two frames,4.44seconds. Does not qualify the new nativeQR stack."
+        }
+      ]
     },
     {
       "requirement": "Physical lighting/color changes and broader image quality",
       "status": "unverified",
-      "needed": "Controlled physical scene/lighting changes and observed image response; numerical or cyclic replay cannot substitute."
+      "needed": "Use exact0.0.38 camera/QR runtime for controlled real dark/light and color changes; observe AE/AWB recovery and useful images, including the former zero-brightness-history case. Native NaN/Inf oracle tests and transformed-stat replay are not physical scene tests."
     },
     {
       "requirement": "Physical LCD/buttons and complete application interaction",
@@ -59,43 +67,151 @@
     {
       "requirement": "Physical power cycle and permanent startup choice",
       "status": "unverified",
-      "needed": "A physical power cycle and explicit deployment choice; controlled reboot and opt-in launch already work."
+      "needed": "Boot and physically power-cycle the new SDK image; observe its configured Rust startup without competing vendor userspace, real frames/native QR, normal shutdown/restart. The Rust startup is implemented and statically checked; controlled reboot of the old testimage does not qualify newimage deployment."
     },
     {
       "requirement": "Complete joined-native AWB equivalence beyond adapted context construction",
       "status": "verified-with-stated-scope",
       "evidence": "isp-0.0.38-fresh-hardware-validation.json",
-      "scope": "Fresh exact0.0.38 trajectory passes32actualframes throughoriginalnative initialization andruntime; noarbitrarymode/fullABI claim.",
+      "scope": "Native calibration/context initialization is executed for32actualfreshframes with zero semantic/packed mismatches; the previously adapted construction boundary is closed for this normal-light trajectory. Explicit external-input/oracle adapters and64unuseduninitializedSDKbytes remain; no arbitrary-mode/full-ABI claim.",
       "sha256": "587f55cf71d04c5a671dd17c4a076015b3cca3db46d0c9a6dc607a836ad88b48"
     },
     {
       "requirement": "Native QR integration in pinned image application Camera/DecodeQR APIs",
       "status": "verified-with-stated-scope",
       "evidence": "native-qr-integration-hardware-validation.json",
-      "scope": "Byteexactbinary,CompactSeedQR,reversed/duplicateUR PSBT,realstreamandstillAPI sessions. Existingrootfs+isolateddependencies,profile22explicitin-test; notnewimageboot."
+      "scope": "Run167 on actualARM: exact binary payloads13/256/32bytes, CompactSeedQR16/32bytes, reversed+duplicate5-fragmentURPSBT matches direct-data statuses; real stream/still APIs, zero worker errors and clean stop/restart. Pinned app efdd1cf on existingPython3.11rootfs with isolated dependencies, explicitluckfox_22; not optical/newimageboot.",
+      "sha256": "e0c6a31eafa56ed69836da1432f9bf36ef725d1f37df1785c1553e572a1091e9"
     },
     {
       "requirement": "Bounded runtime diagnostics do not fill device storage",
       "status": "verified-with-stated-scope",
       "evidence": "bounded-logging-hardware-validation.json",
-      "scope": "Actual30secondmanagedcapture,4.39MBreceived/about1MiBretained,bothworkerscleanstop. Defaultlast3ownedsessionsretention coveredbyhosttests."
+      "scope": "Actual30secondmanagedcapture:241frame/decode calls,4,391,583log bytes received/1,048,025retained, zero QR errors, both workers exited0. Last3ownedfinished-session retention and disk-failure drain have host tests; no unbounded default logging.",
+      "sha256": "5e7facea65def2e619d7b467d6fbf3feca2ded0745455652a29d9d93acd285a1"
     },
     {
       "requirement": "Build ShieldSigner image containing exact new Rust/native QR runtime and matching pinned app dependencies",
       "status": "in-progress",
-      "needed": "ActualSDKbuild,finalclean-sourcebundle,packagedimagehash/content/kernelABI verification; newimagephysicalboot remainsseparate."
+      "needed": "Complete a clean-source SDK build with exit0; verify all exact runtime payload/startup hashes and modes, IQ/model/dependency/kernel/module inputs, then independently extract and verify the final packed rootfs. Record image/bundle/source hashes. A newimage boot is a separate gate.",
+      "evidence": "image-camera-finalization-validation.json",
+      "sha256": "809881c0b33cb2f134b390ce73fe0df18aa57c7258e78359619139c0a09679ea",
+      "scope": "The previous completeSDKattempt failed strictpost-pack verification after vendorS21 overwrite. The reviewed last-mutation finalizer passes actual failed-root-copy and negative fixtures; this is not a successful finalimage build."
+    },
+    {
+      "requirement": "Pinned image application scan/preview loop and software cancellation",
+      "status": "verified-with-stated-scope",
+      "evidence": "pinned-image-scan-loop-hardware-validation.json",
+      "sha256": "4ff68d29f0694767b752dceb871da89eb17e6067c40a7100e26c473aef0b2849",
+      "scope": "Run169 executes actual pinned Camera, ScanScreen._run, LivePreviewThread and rendering/fonts with11receivedframes/13renders/8FALSE decode attempts, software cancellation and clean cleanup. Physical display/buttons and BaseScreen construction substituted; explicitluckfox_22 and old-rootfs dependencies. No optical success or final-image boot is claimed."
+    },
+    {
+      "requirement": "Image SDK kernel ABI and configured camera model match Rust pipeline",
+      "status": "verified-at-build-input-scope",
+      "evidence": "image-sdk-kernel-abi-validation.json",
+      "sha256": "babae7dc79347dc9a61db1243396f067b2bab170d0b101487c66618177a070b8",
+      "scope": "ActualSDKheaders compile190ARMassertions,11145parameterbytes/13040alignedstats; compiledMiniDTB selects fullISP32 and enabledSC3336. Runtime device/media enumeration and finished-image boot remain unverified."
+    },
+    {
+      "requirement": "Dark-history AWB damping follows native exceptional-value semantics",
+      "status": "verified-with-stated-scope",
+      "evidence": "awb-dark-variance-equivalence.json",
+      "sha256": "6174aca51092e0b910f7ff1b77e3e27e82809b44da20197e2d4f13f092f4d06a",
+      "scope": "Identified legitimate NaN variance from all-zero rounded brightness history; original ARM ordered comparison reconstructed.18NaN/Inf damping cases plus32zero-brightness metadata replay frames match native; fresh normal-light hardware path separately passes. Not a current physical dark/light test."
     }
   ],
   "hardwareObservation": {
     "spiDevice": "/dev/spidev0.0",
     "inputDevice": "adc-keys /dev/input/event0",
     "framebufferObserved": false,
-    "physicalWiringVerified": false
+    "physicalWiringVerified": false,
+    "scope": "Last recorded test-board observations; no physical wiring/display qualification is inferred from device nodes."
   },
-  "nextPracticalTest": "Finish exactruntime image build and archive verification; reposition clipped publicQR forfreshnativeoptical test; thenphysicalUI/lighting/powercycle.",
-  "knownFrozenKitLimitation": "Frozen0.0.38 source96e48fc verified610files+controlledreboot. FixedSC3336profile completeISP checks pass. FinalSDKimagepacking verificationinprogress; newimagephysicalboot/UI/light/powercycle and fullopticaltarget remainopen.",
+  "nextPracticalTest": "Finish strict final image build and extracted-rootfs verification; obtain an unclipped public target for exact0.0.38/native optical qualification, then new-image boot/UI/lighting/power-cycle tests.",
+  "knownFrozenKitLimitation": "Frozen0.0.38 source96e48fc has610verifiedfiles/modes and an existing-image controlled-reboot pass. Its native QR app/UR checks are qualified synthetic/API tests; current native optical target, final SDKimage build/boot and physical UI/light/power-cycle remain open.",
   "qrRobustnessFinding": {
     "evidence": "qr-successful-pipeline-comparison.json",
-    "scope": "Same four real camera frames, six attempts per reader. Fixed raw/crop/local-threshold cascade passes24/24 for ZXing,ZBar,quirc default,float. ZXing median35.1ms vs49.5/54.5/174.8ms prototype totals. Shared fallback uses ZXing HybridBinarizer; app and independent-scene qualification remain open."
+    "scope": "Same four real camera frames, six repetitions per reader; all fixed cascades24/24. ZXing native app integration and syntheticURassembly are now separately proven. This benchmark is not24distinct optical targets, finalappFPS or physical animated acquisition."
+  },
+  "acceptanceGates": [
+    {
+      "id": "image-build-and-content",
+      "status": "open",
+      "passCondition": "SDK build exits0 from a clean recorded source/bundle; final packed rootfs independently matches runtime/startup hashes+modes, IQ, app/dependencies, kernel/DTB/module inputs; final image hashes recorded.",
+      "latestEvidence": "image-camera-finalization-validation.json",
+      "limit": "That evidence validates the repair on a failed packed-root copy, not a final successful image."
+    },
+    {
+      "id": "native-optical-target",
+      "status": "open",
+      "passCondition": "Entire public target and quiet zone in view; exact0.0.38 camera/ZXing installed app optical checker reports matched=true/opticalScanQualified=true, with clean shutdown.",
+      "latestEvidence": "pinned-image-scan-loop-hardware-validation.json",
+      "limit": "Current target clipped;8FALSE decode attempts. Historical0.0.37/JPEG success is separate."
+    },
+    {
+      "id": "broader-optical-qr",
+      "status": "open",
+      "passCondition": "Representative static binary/CompactSeedQR and animatedUR targets decode through actual optics/app under realistic framing; exact reassembled public-fixture bytes and no lost/duplicated-part errors.",
+      "latestEvidence": "native-qr-integration-hardware-validation.json",
+      "limit": "Pixel-generated fixture decoding and UR assembly pass; physical animated-target acquisition/throughput is unverified."
+    },
+    {
+      "id": "physical-lighting-and-color",
+      "status": "open",
+      "passCondition": "Observe AE/AWB/image response under controlled physical dark/light and color changes with current runtime, including recovery from the previous dark-history failure.",
+      "latestEvidence": "awb-dark-variance-equivalence.json",
+      "limit": "Native exceptional-value equivalence is established; replay does not substitute for changed illumination."
+    },
+    {
+      "id": "new-image-normal-boot-and-inventory",
+      "status": "open",
+      "passCondition": "Boot the final SDK image with its normal Rust startup; confirm DT profile, open drivers/sensor, video/subdev/media entity mappings,11145parameterqueue/fullstats and real camera/native QR without vendor camera userspace.",
+      "latestEvidence": "image-sdk-kernel-abi-validation.json",
+      "limit": "Compile-time ABI/config/DTB and existing-image controlled reboot do not prove new-image boot."
+    },
+    {
+      "id": "physical-lcd-buttons",
+      "status": "open",
+      "passCondition": "Use the actual HOTHMI display and physical buttons to complete a camera/QR flow with correct rendering, geometry, backlight and cancellation/cleanup.",
+      "latestEvidence": "pinned-image-scan-loop-hardware-validation.json",
+      "limit": "Headless rendering/software cancellation passed; display/buttons were substituted."
+    },
+    {
+      "id": "physical-power-cycle",
+      "status": "open",
+      "passCondition": "Physically remove/restore power on the final image and repeat the normal camera/native QR app flow without manual vendor bootstrap or stale state.",
+      "latestEvidence": "kit-0.0.38-dev-cold-reboot-validation.json",
+      "limit": "Exact frozen kit passed controlled software reboot on the existing image only."
+    }
+  ],
+  "qualificationBoundary": {
+    "camera": "Fixed single SC3336 linear color pipeline on RV1103/RV1106-family ISP32; nine explicitly compared ISPblocks plus AE/AWB and app frame transport.",
+    "nativeQr": "Open-source ZXing-C++ remains separate from Rust RKAIQ controls; actual app payload classification/UR assembly is retained.",
+    "notClaimed": [
+      "Drop-in librkaiq ABI compatibility or all optional IQ features.",
+      "Physical LCD/buttons, final-image boot or power cycle from headless/API/reboot tests.",
+      "Current native optical success from historical JPEG-fallback success.",
+      "Successful final SDK image build from a repaired failed-root-copy fixture.",
+      "CPROC control, CPSL/IR/day-night/autoLED, arbitrary sensors/scenes/HDR/DCG/OTP/remosaic or prepared AUTO/ALWAYS single-color exclusion handling outside selected INITIAL mode0."
+    ],
+    "selectedProfileEvidence": {
+      "evidence": "selected-profile-runtime-scope.json",
+      "sha256": "8c4a89354fd4e047258337221721826d747c480b8f9dcf58582f655c55e85c20"
+    },
+    "cproc": "Selected brightness/contrast/saturation/hue API values128 treated as neutral by runtime bypass. Explicit identity assumption; native CPROC-control equivalence is not proven.",
+    "cpsl": "IQ enables AutoLED/force-gray capability, but no CPSL/LED/day-night policy is activated or implemented in fixed color runtime. This is an explicit feature exclusion.",
+    "disabledOptionalRuntimeFeatures": [
+      "DRC",
+      "Dehaze",
+      "LUT3D",
+      "GIC",
+      "CAC",
+      "LDCH",
+      "Degamma",
+      "HDRgaincontrol",
+      "Autofocus",
+      "Imageeffects",
+      "ColorAsGrey"
+    ]
   }
 }

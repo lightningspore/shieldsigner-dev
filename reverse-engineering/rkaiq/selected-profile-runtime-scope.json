@@ -1,0 +1,115 @@
+{
+  "kind": "selected-fixed-camera-runtime-feature-scope",
+  "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+  "selectedScene": "/main_scene/0/sub_scene/0/scene_isp32",
+  "selectedSensorProfile": "SC3336, 2304x1296 sensor, linear/DCG disabled, constant BLC and unity optical-black predgain; native 640x480 RGB application stream",
+  "selectedValues": {
+    "/main_scene/0/sub_scene/0/scene_isp32/cproc/param/enable": 1,
+    "/main_scene/0/sub_scene/0/scene_isp32/cproc/param/brightness": 128,
+    "/main_scene/0/sub_scene/0/scene_isp32/cproc/param/contrast": 128,
+    "/main_scene/0/sub_scene/0/scene_isp32/cproc/param/saturation": 128,
+    "/main_scene/0/sub_scene/0/scene_isp32/cproc/param/hue": 128,
+    "/main_scene/0/sub_scene/0/scene_isp32/cpsl/param/enable": 1,
+    "/main_scene/0/sub_scene/0/scene_isp32/cpsl/param/mode": "RK_AIQ_OP_MODE_AUTO",
+    "/main_scene/0/sub_scene/0/scene_isp32/cpsl/param/force_gray": 1,
+    "/main_scene/0/sub_scene/0/scene_isp32/cpsl/param/light_src": "LED",
+    "/main_scene/0/sub_scene/0/scene_isp32/adrc_calib_v12/DrcTuningPara/Enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/adehaze_calib_v12/DehazeTuningPara/Enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/lut3d_calib/common/enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/agic_calib_v21/GicTuningPara/enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/cac_v11/SettingPara/enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/aldch/param/ldch_en": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/adegamma_calib/DegammaTuningPara/degamma_en": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/gain_v2/TuningPara/hdrgain_ctrl_enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/af_v31/TuningPara/contrast_af/enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/af_v31/TuningPara/video_contrast_af/enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/af_v31/TuningPara/laser_af/enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/ie/param/enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/colorAsGrey/param/enable": 0,
+    "/main_scene/0/sub_scene/0/scene_isp32/wb_v32/autoExtPara/singleColorProces/mode": "AWB_SGC_CALL_INITIAL",
+    "/sensor_calib/CISDcgSet/Linear/support_en": 0
+  },
+  "implementedDynamicIspBlocks": [
+    "CCM",
+    "LSC",
+    "DPCC",
+    "BAYNR",
+    "BAY3D",
+    "YNR",
+    "CNR",
+    "SHARP",
+    "DEMOSAIC"
+  ],
+  "implementedStartupAndControl": [
+    "Constant selected BLC",
+    "Selected 49-point gamma curve",
+    "Selected CSM/CGC",
+    "AE/histogram measurements and sensor SOF scheduling",
+    "AWB measurements/gains and FAST/normal cohorts"
+  ],
+  "freshDynamicEvidence": "isp-0.0.38-fresh-hardware-validation.json",
+  "cproc": {
+    "implemented": false,
+    "runtimeBlockEnabled": false,
+    "assessment": "Selected API brightness, contrast, saturation and hue are all 128, conventionally neutral. Runtime bypasses CPROC rather than implementing the control.",
+    "identityAssumption": true,
+    "nativeCprocControlEquivalenceProven": false,
+    "limit": "Do not claim arbitrary brightness/contrast/saturation/hue control or native CPROC parity from neutral defaults."
+  },
+  "cpsl": {
+    "configuredCapabilityEnabled": true,
+    "implemented": false,
+    "activatedInCurrentRuntime": false,
+    "assessment": "IQ contains Auto LED and force-gray capability, but the fixed color QR runtime has no CPSL/day-night/illumination controller or invocation. This is an explicit feature exclusion, not implemented all-IQ capability.",
+    "observedFreshRun": 161,
+    "recordsWithGrayFlag": 420,
+    "grayTrueRecords": 0,
+    "displayOnlyDistinction": "PinnedCamera preview=True separately converts Luckfox preview to grayscale; that is not CPSL or sensor day/night control."
+  },
+  "disabledOptionalFeatures": [
+    "DRC",
+    "Dehaze(top-levelgate)",
+    "LUT3D",
+    "GIC",
+    "CAC",
+    "LDCH",
+    "Degamma",
+    "HDRgaincontrol",
+    "Autofocuscontrast/video/laser",
+    "Imageeffects",
+    "ColorAsGrey"
+  ],
+  "awbBoundary": {
+    "selectedSingleColorMode": "AWB_SGC_CALL_INITIAL",
+    "autoAlwaysExclusionGuardRequiredBySelectedMode": false,
+    "limit": "AUTO/ALWAYS prepared Exclusion handling remains unsupported; selectedINITIAL mode0 cannot enter its guard."
+  },
+  "softwareAcceptanceRemainder": [
+    "Final image build/content verification and boot integration must match pinned app, runtime and dependencies.",
+    "Automatic runtime-profile detection is not qualified by forced-profile old-rootfs tests; compiled SDK model Luckfox Pico Mini statically matches the pinned FOX_22 regex.",
+    "Current exact native optical success needs a fully visible QR; old 0.0.37/JPEG optical success does not qualify all new-stack conditions."
+  ],
+  "generalityExcluded": [
+    "Drop-in librkaiq.so ABI and all user APIs",
+    "Arbitrary sensors, resolutions, IQ tables and scenes",
+    "HDR, multi-ISP, DCG, OTP and remosaic input modes",
+    "CPSL, IR/day-night, LED and autofocus hardware control"
+  ],
+  "physicalAcceptanceRemainder": [
+    "New image physical boot and power cycle",
+    "Actual LCD/buttons and complete UI interaction",
+    "Controlled lighting/color/exposure transitions and broader optical QR framing"
+  ],
+  "sourceSha256": {
+    "firmware/rkaiq-rs/src/initial_parameters.rs": "3f881e1109f3d9d6204f535e6c87d697009f50af0c8f337a5657fd7f38d68846",
+    "firmware/rkaiq-rs/src/camera_first_frame.rs": "d665c4d17778b631836713bcc9f18f66294624680ea38b05086b6dad269fcb99",
+    "firmware/rkaiq-rs/src/camera_ae_events.rs": "5d8454ccd80f717381698f84ced9f0d4d1639931ff82da4736a11b67aa51396c",
+    "firmware/rkaiq-rs/src/awb_gain_controller.rs": "64225f13c01026dc03ef987bb43659c77cc009534ee4659c44e038c8fe1fe605",
+    "firmware/rkaiq-rs/python/shieldsigner_camera_compat.py": "5601f04f843f9a3485a461301b450376dcc053fc00a0b7e795e5b716e70d89ee"
+  },
+  "limits": [
+    "Staticselected-IQflagreviewandactualrun161grayflagobservationonly; no new hardware run or code change.",
+    "Only boolean/mode/neutral-control subset is published; full IQ and scene/capture data remain private.",
+    "No missing mandatory processing block was identified for the declared fixed linear color QR path; this is not proof of all vendor features or full IQ behavior parity."
+  ]
+}

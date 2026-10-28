@@ -8,6 +8,15 @@ the launcher. Complete qualification of the requested replacement remains open.
 [Current completion audit](completion-audit.json) separates exact build evidence
 from the physical checks and remaining reference boundaries.
 
+The [selected runtime scope](selected-profile-runtime-scope.json) is a fixed
+linear color QR pipeline, not all-IQ parity. Nine dynamic ISP blocks and the
+listed startup/AE/AWB controls are implemented. CPROC's selected four API
+values are all 128; bypassing it as identity is an explicit neutral-setting
+assumption, without native CPROC-control equivalence proof. The IQ's CPSL
+Auto-LED/force-gray capability is not activated or implemented. Disabled DRC,
+dehaze and other optional blocks, autofocus, IR/day-night and general HDR/
+multi-camera modes are outside this runtime's declared scope.
+
 ## Current deliverable and work rules
 
 **CURRENT SOURCE: 0.0.38-dev.** The corrected dark-history damping follows the
@@ -20,9 +29,12 @@ pass binary/CompactSeedQR, animated UR, stream/still capture and headless
 render/cancel paths. Runtime diagnostics are now
 [bounded on the actual board](bounded-logging-hardware-validation.json).
 The [image kernel ABI](image-sdk-kernel-abi-validation.json) passes 190 ARM
-assertions. The final image build and packaged-image verification are underway;
-physical image boot/UI/power-cycle and the currently clipped optical target
-remain separate qualification gates.
+assertions. A successful final SDK image build is not yet proven. The previous
+attempt correctly failed verification when late SDK packing regenerated the
+vendor S21 startup script. The [reviewed finalizer](image-camera-finalization-validation.json)
+passes the actual failed-root-copy and negative fixtures; that repair test is
+not a successful image build. Physical image boot/UI/power-cycle and an
+unclipped optical target remain separate qualification gates.
 
 **LATEST FROZEN: 0.0.38-dev.** [Test kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.38-dev.zip),
 SHA-256 `7158eda937662f4a27ca8c5e13eb6d32a1b7686c587b212f4426653838393b0f`,
@@ -35,35 +47,20 @@ no vendor camera userspace. This is an existing-image software reboot;
 physical power cycling and booting the new SDK image remain separate.
 The older frozen 0.0.37 archive below retains its historical behavior.
 
-**NOW:** the full SC3336 ISP group runs together on hardware: CCM, LSC,
-DPCC, BAYNR, BAY3D, YNR, CNR and SHARP, plus demosaic and live AE/AWB.
-The 600-image default-all capture passed native comparisons for all nine
-modules and final AWB translation. [Combined evidence](combined-isp-hardware-validation.json).
+**OPTICAL:** the [historical public-target pass](optical-qr-hardware-validation.json)
+used the frozen 0.0.37 camera and development JPEG retry. It does not qualify
+the current 0.0.38/native ZXing stack. Current native app/UR fixtures pass, but
+the [real scan-loop check](pinned-image-scan-loop-hardware-validation.json)
+has a clipped physical target and eight `FALSE` decode attempts; it proves
+render/cancel/cleanup behavior, not an optical content match.
 
-**DELIVERED:** [0.0.37 development kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.37-dev.zip),
-including corrected AWB damping history, paired detector enables, bounded
-private trace capture and optional faster NV12 desktop preview. All 548 files
-were verified on the Luckfox, including executable permissions.
-[Installation evidence](kit-0.0.37-dev-installation-verification.json).
-Its exact camera executable passed application integration with 71 received
-frames and all nine ISP checks. The reference now executes native JSON parsing,
-constructor, prepare, BLC binding and 32 actual runtime inputs.
-[Native-initialized hardware proof](awb-native-initialization-hardware-validation.json).
-Older frozen archives remain unchanged; 0.0.36 predates the paired detector fix.
-
-**OPTICAL:** one known public printed address now decodes through the real
-camera and installed SeedSigner decoder with the development 0.0.38 Python
-integration and frozen 0.0.37 executable. Its raw-first, in-memory JPEG retry
-resolved the observed raw-frame misses. [Evidence](optical-qr-hardware-validation.json).
-The frozen 0.0.37 archive is unchanged and does not contain this retry.
-
-**NEXT:** qualify broader optical scanning, physical lighting/color response,
-LCD/buttons and physical power cycling. The exact 0.0.36 kit passed a
-[controlled clean reboot](kit-0.0.36-dev-cold-reboot-validation.json). Review joined-native
-AWB controller coverage against the normal pinned profile before adding any
-new policy. Earlier isolated-CNR startup failures remain historical evidence;
-they do not describe the default complete-group build. The full objective
-remains the vendor-free fixed-camera replacement.
+**NEXT:** complete the seven [explicit acceptance gates](completion-audit.json):
+strict final image build/content check, native optical target, broader optical
+QR acquisition, physical light/color response, new-image normal boot/inventory,
+physical LCD/buttons and power cycling. Earlier isolated-CNR
+failures and frozen 0.0.31–0.0.37 archives retain their historical scope. The
+current full selected-profile ISP group and joined-native AWB proof supersede
+their implementation gaps, without claiming full RKAIQ ABI or arbitrary-IQ parity.
 
 Work procedure:
 
@@ -99,7 +96,9 @@ reboot without vendor camera startup. It configures the supplied media graph,
 loads the supported calibration subset, streams VGA RGB frames, runs persistent
 AE/AWB, and owns sensor/ISP queues through shutdown. The actual application
 Camera adapter and installed scan/preview loops have received real frames.
-The default application has not been switched over permanently.
+The existing test device still uses the opt-in launcher and its original boot
+scripts were restored. The image build configures Rust startup by default;
+normal boot of that new image is not yet qualified.
 
 Recent hardware evidence:
 
@@ -117,8 +116,8 @@ Recent hardware evidence:
   optical lighting-change test or full joined-native-controller comparison.
 
 [HARDWARE-TEST.md](HARDWARE-TEST.md) is the runnable procedure. The current
-0.0.35 kit is summarized above. Earlier 0.0.31–0.0.34 kits retain their own
-build-specific evidence, including controlled clean-reboot results; those are distinct from the new full-group kit
+frozen 0.0.38 kit is summarized above. Earlier 0.0.31–0.0.37 kits retain their
+own build-specific evidence and are distinct from the exact 0.0.38
 controlled-reboot result linked above. Preserve the
 single-camera critical path before optional HDR/multi-camera/tuning modes.
 
@@ -133,6 +132,11 @@ streaming; explicit diagnostic image saving remains available.
 [Hardware behavior and scope](stream-image-artifact-validation.json).
 
 ## What is implemented
+
+This section catalogs historical component milestones. It is not the current
+remaining-work checklist: later composition is established by the exact 0.0.38
+hardware and native-reference results above. Current open requirements are
+listed in [the completion audit](completion-audit.json).
 
 - Ten recovered numerical routines in [`firmware/rkaiq-rs`](../../firmware/rkaiq-rs): scalar interpolation, saturation color-matrix interpolation, saturation-offset interpolation, 9×9×9 RGB LUT blending, defect-pixel calibration interpolation, the multiplicative gain-quantization branch, and the full linear/two-frame/three-frame gain-register conversion, ISO calibration selection, ISP32 white-balance gain serialization, and exposure digital-gain application.
 - **9,050 deterministic comparisons, zero mismatches** between compiled Rust and actual instructions from the pinned ARM library under Unicorn. Float results are compared as exact IEEE-754 output bits; LUT outputs compare all 2,187 u16 entries. [Report](numeric-equivalence.json).
@@ -206,7 +210,13 @@ The daemon links `librkaiq.so` and imports these seven RKAIQ entry points:
 - `rk_aiq_uapi2_sysctl_setListenStrmStatus`
 - `rk_aiq_uapi2_sysctl_setMulCamConc`
 
-Those initialization/stream-management obligations remain open. Additional calls from the application's temporary `rkipc` bootstrap also need to be removed or independently implemented before claiming a fully independent camera stack.
+The fixed SC3336 replacement fulfills its used initialization, start/stop,
+configuration and frame-delivery obligations through the Rust pipeline, rather
+than exporting these original ABI symbols. Its existing-image controlled
+reboot starts without the vendor bootstrap. Rust-image startup source disables
+the original `rkipc`/RKAIQ paths, with the packed-image and actual normal-boot
+gates still open. General multi-camera/HDR/ABI equivalence is outside this
+single-camera implementation scope.
 
 ## Ghidra workflow
 
@@ -281,35 +291,41 @@ real hardware evidence. These do not imply that every optional IQ section or
 vendor algorithm is implemented.
 
 The [selected-profile audit](profile-module-audit.json) recorded the original
-missing ISP blocks. Development 0.0.36 now runs all eight advanced blocks
-(CCM, LSC, DPCC, BAYNR, BAY3D, YNR, CNR and SHARP), plus demosaic and AE/AWB.
-[Current combined hardware comparisons](combined-isp-0.0.36-hardware-validation.json)
-pass for every module. [The actual ordered AWB trace](awb-ordered-trace-hardware-validation.json)
-compares 32 live-owner gains and full next measurement records against original
-ARM execution through gain calculation and hardware reconfiguration. These
-results supersede the earlier four-block implementation gap; they do not
-qualify every physical imaging condition or optional IQ mode.
+missing ISP blocks. Exact 0.0.38 [fresh hardware/native comparisons](isp-0.0.38-fresh-hardware-validation.json)
+now pass for all eight advanced blocks (CCM, LSC, DPCC, BAYNR, BAY3D, YNR, CNR
+and SHARP), demosaic, AE/AWB and full translated AWB statistics. Thirty-two
+actual ordered frames also match the native-initialized AWB trajectory,
+including every live-owner gain, all 1,140 initialized SDK bytes and all 11,145
+packed ISP bytes per frame. Sixty-four legacy uninitialized/unused SDK
+SmallRange bytes are excluded; oracle memory/clock/filesystem/module lookup
+adapters remain explicit. This closes the historical component-composition
+gaps for the tested trajectory, not every optional IQ mode or physical scene.
 
 Still open:
 
-1. Broader optical QR qualification (animated formats and varied framing/light).
-   One known public static address passes with the development Python retry;
-   this does not qualify every QR format or update the frozen 0.0.37 archive.
-2. Physical lighting/color changes and broader image quality, including the
-   observed variable sensor-gain settling and its exposure-association implications.
-3. Actual LCD/buttons and complete application interaction; current scan-loop
-   tests substitute the display and cancellation boundaries.
-4. Physical power-cycle testing and a reviewed permanent startup choice;
-   controlled reboot and opt-in launch have been tested separately.
-5. Extend software coverage if physical testing reveals another required
-   fixed-profile path. The [current native-initialized comparison](awb-native-initialization-hardware-validation.json)
-   now executes JSON parsing, constructor, prepare, binding and 32 actual runtime
-   inputs; the previous adapted-context boundary is closed for that trajectory.
-   This does not claim arbitrary mode or full-library ABI equivalence.
-6. Complete the physical qualification above with the frozen 0.0.37 kit.
-   Its [exact controlled-reboot result](kit-0.0.37-dev-cold-reboot-validation.json)
-   now passes with all eight blocks, corrected paired detector flags, 75 real
-   application frames and clean shutdown. Older kits retain their own evidence.
+1. **Final image build/content:** require SDK exit 0, a clean recorded source
+   bundle, and independent extraction/verification of the final image. The
+   late-SDK finalizer fixture passes; a successful final build is not yet proven.
+2. **Current native optical target:** show the entire public QR and quiet zone,
+   then require a content match through exact 0.0.38 camera/worker/app with clean
+   shutdown. The historical 0.0.37/JPEG pass does not satisfy this gate.
+3. **Broader optical QR acquisition:** exercise physical binary/CompactSeedQR
+   and animated UR targets under realistic framing. Generated-pixel binary and
+   reversed/duplicate UR assembly tests already pass through the installed app.
+4. **Physical light/color response:** observe current AE/AWB and useful images
+   through actual illumination changes, including recovery from dark history.
+   Native NaN variance semantics are fixed; diagnostic replay is not a changed
+   physical scene, nor proof of exact sensor exposure-frame association.
+5. **New-image normal boot/inventory:** prove the configured Rust startup,
+   actual DT profile, sensor/driver binding, fixed media/video/subdev mappings,
+   queues and camera/native QR without vendor camera userspace. Kernel ABI and
+   compiled-DTB checks do not prove registration order or a booted image.
+6. **Physical LCD/buttons:** complete a camera/QR flow on the real display and
+   controls. Actual headless scan/preview/render/cancel code passes with fonts;
+   hardware display/buttons remain substituted in that evidence.
+7. **Physical power cycle:** remove/restore power on the final image and repeat
+   normal startup and the camera/app flow. Frozen 0.0.38 passed a controlled
+   software reboot on the existing image, with original startup scripts restored.
 
 Optional modes remain outside the current single-camera priority unless the
 actual QR capture path needs them. No completion claim follows from passing

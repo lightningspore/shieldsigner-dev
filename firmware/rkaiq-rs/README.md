@@ -26,8 +26,18 @@ legacy test-board app and the pinned image app Camera APIs. Its exact Rust
 binary passed [fresh native ISP/AWB comparisons](../../reverse-engineering/rkaiq/isp-0.0.38-fresh-hardware-validation.json).
 The [native QR integration check](../../reverse-engineering/rkaiq/native-qr-integration-hardware-validation.json)
 passed binary payloads, CompactSeedQR, reversed/duplicated animated UR PSBT,
-and the pinned image app's real stream/still APIs. This is distinct from booting
-the newly built image and from a live optical target qualification.
+and the pinned image app's real stream/still APIs. Actual pinned scan/preview
+rendering and software cancellation also pass on the existing rootfs. These
+are distinct from a successful final SDK image build, booting that image, or
+matching a live optical target with this exact runtime. The current target is
+clipped; native optical qualification remains open.
+
+[Selected-profile scope](../../reverse-engineering/rkaiq/selected-profile-runtime-scope.json)
+records the boundary: CPROC's all-128 API settings are treated as neutral by
+bypassing the block, an explicit identity assumption rather than native CPROC
+control proof. CPSL Auto LED/force-gray is configured in IQ but unactivated and
+unimplemented in this fixed color pipeline. Disabled optional blocks and
+HDR/DCG/IR/autofocus/general-ABI support are not claimed.
 
 To opt in on an existing app installation:
 
@@ -78,14 +88,17 @@ receives NV12 frames and converts them into RGB. Its `SSRGB001` Unix-socket
 stream delivers frames to `shieldsigner_video_stream.py`, which constructs
 Pillow RGB images for the installed Camera interface.
 
-SeedSigner's `DecodeQR.add_image()` passes those images to
-`pyzbar.decode(..., symbols=[ZBarSymbol.QRCODE], binary=True)`. ZBar finds and
-decodes the QR pixels; SeedSigner classifies the resulting payload and handles
-animated formats such as UR. That decoder is separate from RKAIQ and remains
-the installed application implementation. No new Rust QR decoder is required
-to replace the proprietary camera-control library.
+SeedSigner's `DecodeQR.add_image()` uses the process-local extraction backend.
+With `--qr-reader`, Pillow luminance pixels go to the persistent native
+ZXing-C++ worker, which returns raw payload bytes. SeedSigner's existing
+classification and animated UR assembly remain unchanged. This open-source
+QR decoder is separate from the Rust RKAIQ camera-control replacement.
 
-The development 0.0.38 integration adds a process-local retry: if the original
+Without the native worker, the compatibility path uses
+`pyzbar.decode(..., symbols=[ZBarSymbol.QRCODE], binary=True)`. The installed
+extractor also remains the emergency path after a native worker error.
+
+That non-native compatibility path adds a process-local retry: if the original
 decoder finds no symbol in a Pillow frame, it retries an in-memory JPEG at
 quality 85 with chroma subsampling disabled. Raw successes bypass the retry;
 binary payloads and SeedSigner's format handling remain intact. No JPEG or
@@ -95,9 +108,10 @@ median filters did not help. This establishes a useful workaround, not the
 precise imaging cause. Misses incur an extra encode and ZBar pass.
 
 [Optical hardware evidence](../../reverse-engineering/rkaiq/optical-qr-hardware-validation.json)
-records a known public printed address decoded through the real camera and
-installed decoder using the new integration with the frozen 0.0.37 executable.
-This does not qualify animated QR throughput or every lighting condition.
+records a historical known public printed address decoded through the real
+camera and installed decoder using a development JPEG retry with the frozen
+0.0.37 executable. It does not qualify the exact 0.0.38/native worker optical
+path, animated camera acquisition or every lighting condition.
 
 Run the focused fallback contract checks with:
 
@@ -134,8 +148,13 @@ for the Python/ZBar harness; that is not a library-only memory comparison.
 
 The native `Barcode::bytes()` API also preserved synthetic NUL/high-bit data,
 all 256 byte values and a 32-byte payload exactly (9/9 total reads on Luckfox).
-No text conversion is used. SeedSigner integration, animated assembly and
-speed under concurrent capture remain open.
+No text conversion is used. Subsequent [actual ARM/app tests](../../reverse-engineering/rkaiq/native-qr-integration-hardware-validation.json)
+now pass byte-exact binary/CompactSeedQR and reversed/duplicate animated UR
+assembly, plus real Camera stream/still APIs. Those QR fixtures enter as
+generated pixels, not through camera optics. The actual
+[pinned scan-loop check](../../reverse-engineering/rkaiq/pinned-image-scan-loop-hardware-validation.json)
+executes render/cancel/cleanup with real frames, but its clipped target yields
+no content match and its loop counts are not a throughput benchmark.
 
 [quirc hardware comparison](../../reverse-engineering/rkaiq/quirc-native-hardware-comparison.json)
 also tested upstream quirc, default and float builds. Both preserved all binary
@@ -146,7 +165,8 @@ failure latency is not successful-read throughput. Native process peaks were
 about 0.72 MiB for quirc versus 1.49 MiB for ZXing. Local box-threshold
 preprocessing rescued only 1/4 frames at the best tested setting. This is a
 limited scene comparison, not a universal ranking. ZXing remains the current
-integration candidate. Rebuild with `mise run camera:qr:quirc-build`; retain
+native integration backend; quirc remains a measured alternative rather than
+an installed application backend. Rebuild with `mise run camera:qr:quirc-build`; retain
 the upstream ISC license if distributing the resulting quirc binary.
 
 The [successful-read pipeline comparison](../../reverse-engineering/rkaiq/qr-successful-pipeline-comparison.json)
@@ -177,7 +197,7 @@ component; they are not unassisted quirc/ZBar measurements. Reader-only RSS
 figures above exclude the Python parent and preprocessing worker, so they
 cannot be presented as total pipeline memory. The crop favors the central
 scan area; whole-frame stages remain first and last. Broader independent
-framing/lighting and animated application tests remain open.
+framing/lighting and physical animated-target acquisition remain open.
 
 `python/qr_success_pipeline_benchmark.py` reproduces the cascade on the device
 using `--directory PRIVATE_LUMA_DIRECTORY --native-directory NATIVE_DIRECTORY
@@ -209,15 +229,23 @@ For an offline decoder comparison on those private lossless PNGs:
 mise exec -- uv run --python 3.13 --with pillow --with zxing-cpp==3.1.1 python firmware/rkaiq-rs/python/qr_decoder_desktop_check.py --input-directory PRIVATE_PNG_DIRECTORY --report NEW_JSON
 ```
 
-### Faster desktop preview (0.0.37 development)
+### Dark-history AWB correction (0.0.38)
 
-Development 0.0.38 also keeps capture running if an AWB session update returns
-`NonFinite`: the transactional session retains its previous state/gains and
-retries on subsequent statistics. AE continues. On hardware, the old executable
-stopped in the dark scene; the updated executable rejected initial updates and
-then resumed successful AWB processing. [Recovery evidence](../../reverse-engineering/rkaiq/awb-nonfinite-recovery-hardware-validation.json).
-The underlying invalid arithmetic still needs investigation; this is an owner
-recovery policy, not a claim of native algorithm equivalence for the error case.
+Development 0.0.38 fixes the identified dark-history error: all-zero rounded
+brightness history legitimately produces NaN variance in the original ARM
+routine. Rust had preserved that value but incorrectly rejected it in damping
+adaptation. It now follows the original ordered comparison, while retaining
+finite checks on gains and calibrated parameters. Eighteen exceptional-value
+cases and 32 zero-brightness diagnostic replay frames match native execution.
+[Root-cause/fidelity evidence](../../reverse-engineering/rkaiq/awb-dark-variance-equivalence.json).
+
+The earlier nonfinite recovery guard also remains: rejected transactional
+updates retain previous state/gains while AE and capture continue. Its
+[historical hardware recovery](../../reverse-engineering/rkaiq/awb-nonfinite-recovery-hardware-validation.json)
+is separate from the final corrected algorithm. Physical dark/light changes
+on the exact final runtime still need qualification.
+
+### Faster desktop preview (0.0.37 development)
 
 For the desktop demo only, set `SHIELDSIGNER_CAMERA_STREAM_FORMAT=nv12` on the
 Rust owner process. It sends tightly packed full-range BT.601 NV12 using

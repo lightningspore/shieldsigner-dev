@@ -2,7 +2,9 @@
 """Diagnostic persistent native AWB replay of associated private group captures.
 
 No hardware access. Numerical helpers, preparation and gain wrapper execute ARM.
-Reconfiguration is an explicit stop boundary, NOT a complete-controller claim.
+Use --hardware-reference to compare native reconfiguration; otherwise it is an
+explicit stop boundary. --trace-dir replays up to 32 captured frames once in
+recorded order, with each frame's AE inputs and incoming update flag.
 The inherited calibrated gain fixture supplies ABI layout; startup is adapted.
 """
 
@@ -300,7 +302,14 @@ class Joined(controller.Original):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("samples", type=Path)
+    p.add_argument(
+        "samples", type=Path, nargs="?", help="Legacy paired group capture directory"
+    )
+    p.add_argument(
+        "--trace-dir",
+        type=Path,
+        help="Replay contiguous frame-NNN capture files once in actual order; overrides paired samples",
+    )
     p.add_argument("--cycles", type=int, default=2)
     p.add_argument(
         "--require-match",
@@ -317,7 +326,11 @@ def main():
         type=Path,
         default=ROOT / "firmware/rkaiq-rs/target/release/numeric-fixture",
     )
-    p.add_argument("--hardware-reference", action="store_true", help="Execute native reconfiguration and compare complete next SDK records")
+    p.add_argument(
+        "--hardware-reference",
+        action="store_true",
+        help="Execute native reconfiguration and compare complete next SDK records",
+    )
     p.add_argument("--report", type=Path, required=True)
     a = p.parse_args()
     assert 1 <= a.cycles <= 8
@@ -340,8 +353,45 @@ def main():
             / ".tools/reverse-engineering/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json"
         ).read_text()
     )["main_scene"][0]["sub_scene"][0]["scene_isp32"]["wb_v32"]
-    raw = [(a.samples / f"group-{i}.translated.bin").read_bytes() for i in range(2)]
-    meta = [json.loads((a.samples / f"group-{i}.json").read_text()) for i in range(2)]
+    if a.trace_dir:
+        paths = sorted(a.trace_dir.glob("frame-*.json"))
+        assert 1 <= len(paths) <= 32, "Trace must contain 1..32 frames"
+        assert [p.name for p in paths] == [
+            f"frame-{i:03d}.json" for i in range(len(paths))
+        ], "Trace frame indices must be contiguous from 000"
+        meta = [json.loads(p.read_text()) for p in paths]
+        raw = [p.with_suffix(".translated.bin").read_bytes() for p in paths]
+        sdk_paths = [p.with_suffix(".sdk.bin") for p in paths]
+        provenance_paths = []
+        for i, (p, m, r, sdk) in enumerate(zip(paths, meta, raw, sdk_paths)):
+            assert m["index"] == i and isinstance(m["requestedUpdate"], bool), (
+                "Invalid trace index/update metadata"
+            )
+            assert m["group"] == struct.unpack_from("<i", r, 0x1D78)[0], (
+                "Translated group disagrees with sidecar"
+            )
+            assert len(sdk.read_bytes()) == 1204, "Invalid trace SDK length"
+            provenance_paths.extend([p, p.with_suffix(".translated.bin"), sdk])
+            stats = p.with_suffix(".stats.raw")
+            if stats.exists():
+                provenance_paths.append(stats)
+        order = list(range(len(raw)))
+        incoming_updates = [m["requestedUpdate"] for m in meta]
+        initial_sdk = sdk_paths[0]
+    else:
+        assert a.samples is not None, "Provide paired samples or --trace-dir"
+        raw = [(a.samples / f"group-{i}.translated.bin").read_bytes() for i in range(2)]
+        meta = [
+            json.loads((a.samples / f"group-{i}.json").read_text()) for i in range(2)
+        ]
+        provenance_paths = [
+            a.samples / f"group-{i}.{suffix}"
+            for i in range(2)
+            for suffix in ["json", "translated.bin"]
+        ]
+        order = [i for _ in range(a.cycles) for i in range(2)]
+        incoming_updates = [index == 0 for index in range(len(order))]
+        initial_sdk = a.samples / "group-0.sdk.bin"
     assert all(len(r) == 7680 for r in raw)
     assert all(m["association"] == "exact-registered-snapshot" for m in meta)
     common = dict(iq=wb, dimensions=[2304, 1296], sample_scale=1, iso=meta[0]["iso"])
@@ -363,9 +413,9 @@ def main():
             cycles=1,
             iso=meta[i]["iso"],
             normalized_brightness=meta[i]["normalizedBrightness"],
+            requested_update=incoming_updates[index],
         )
-        for _ in range(a.cycles)
-        for i in range(2)
+        for index, i in enumerate(order)
     ]
     sequence = dict(common, stages=stages)
     record = None
@@ -373,19 +423,25 @@ def main():
     weights = None
     if a.hardware_reference:
         hardware = importlib.import_module("awb-hardware-reference")
-        record = (a.samples / "group-0.sdk.bin").read_bytes()
+        record = initial_sdk.read_bytes()
         assert len(record) == 1204
-        sequence.update(initial_measurement=record.hex(), measurement_signature=signature.hex())
+        sequence.update(
+            initial_measurement=record.hex(), measurement_signature=signature.hex()
+        )
     expected = fixture("awb-captured-sequence", sequence)["frames"]
     arm = Joined()
     arm.start(wb, raw[0], initial, geometry, a.seed_previous_diagnostic)
     rows = []
     for i, reference in enumerate(expected):
-        actual = arm.frame(raw[i % 2], meta[i % 2], i == 0)
+        actual = arm.frame(raw[order[i]], meta[order[i]], incoming_updates[i])
         if a.hardware_reference:
             if actual["reconfigure"]:
-                native = hardware.Reference.from_joined(arm, signature=b"RUST-AWB-NORMAL")
-                native.seed(wb, record, previous_weights=weights, strategy_signature=signature)
+                native = hardware.Reference.from_joined(
+                    arm, signature=b"RUST-AWB-NORMAL"
+                )
+                native.seed(
+                    wb, record, previous_weights=weights, strategy_signature=signature
+                )
                 configured = native.run()
                 record = configured["record"]
                 weights = struct.unpack("<9f", configured["weight_cache"])
@@ -403,11 +459,21 @@ def main():
             for k, v in actual.items()
             if k in reference and v != reference[k]
         }
-        rows.append(dict(index=i, native=actual, differences=differences))
+        rows.append(
+            dict(
+                index=i,
+                sourceFrameId=meta[order[i]].get("frameId"),
+                sourceParametersId=meta[order[i]].get("parametersId"),
+                requestedUpdate=incoming_updates[i],
+                native=actual,
+                differences=differences,
+            )
+        )
     assert arm.wrapper_calls > 0, "Capture never exercised native gain wrapper"
     report = dict(
         kind="joined-native-awb-captured-diagnostic",
         hardwareWrites=False,
+        inputMode="actual-frame-order" if a.trace_dir else "cyclic-paired-captures",
         seedPreviousDiagnostic=a.seed_previous_diagnostic,
         fullControllerQualified=False,
         nativeStartup=arm.startup,
@@ -421,20 +487,28 @@ def main():
                 BINARY,
                 ROOT
                 / ".tools/reverse-engineering/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json",
-                *[
-                    a.samples / f"group-{i}.{suffix}"
-                    for i in range(2)
-                    for suffix in ["json", "translated.bin"]
-                ],
-                *([a.samples / "group-0.sdk.bin", Path(__file__).with_name("awb-hardware-reference.py")] if a.hardware_reference else []),
+                *provenance_paths,
+                *(
+                    [initial_sdk, Path(__file__).with_name("awb-hardware-reference.py")]
+                    if a.hardware_reference
+                    else []
+                ),
             ]
         },
         frames=rows,
         wrapperCalls=arm.wrapper_calls,
         boundaries=[
             "Calibrated fixture ABI builder plus native InitinalSwResParaCom2; complete calibration/context construction remains adapted.",
-            ("Complete native ReconfigHwParaV32 executes after gain; hardware calibration graph and stable cohort signature are explicit inputs." if a.hardware_reference else "Stops at ReconfigHwParaV32 entry; SDK record generation is not executed."),
-            "Paired captured records replayed cyclically; not a continuous optical scene sequence.",
+            (
+                "Complete native ReconfigHwParaV32 executes after gain; hardware calibration graph and stable cohort signature are explicit inputs."
+                if a.hardware_reference
+                else "Stops at ReconfigHwParaV32 entry; SDK record generation is not executed."
+            ),
+            (
+                "Actual captured frame order and per-frame AE/update inputs; capture provenance does not itself qualify optical response."
+                if a.trace_dir
+                else "Paired captured records replayed cyclically; not a continuous optical scene sequence."
+            ),
         ],
         mismatchingFrames=sum(bool(r["differences"]) for r in rows),
     )

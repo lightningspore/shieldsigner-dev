@@ -1,0 +1,495 @@
+{
+  "kind": "native-json-initialized-awb-live-trace-comparison",
+  "version": "0.0.37-dev",
+  "run": 115,
+  "passed": true,
+  "framesCompared": 32,
+  "mismatchingFrames": 0,
+  "nativeCalibrationAndContextConstructionExecuted": true,
+  "startupSdkBytesMatched": 1204,
+  "initializedSdkBytesComparedPerFrame": 1140,
+  "packedIspParameterBytesComparedPerFrame": 11145,
+  "liveOwnerGainFramesMatched": 32,
+  "cameraBinarySha256": "127f7195e56b34d169f1c527815156855c3efbffc11a528a72cc75fbc4eec825",
+  "nativeInitialization": {
+    "status": 0,
+    "wb_pointer": "0x2008000",
+    "wb_bytes": 2108,
+    "wb_sha256": "a73bcb282c97435754cbd3e0f2592aca464e272463568e6dc836db2326b17efa",
+    "heap_highwater": 194224,
+    "live_allocations": 109,
+    "strtod_calls": 1650,
+    "module_lookups": 1,
+    "adapters": {
+      "strlen": 1,
+      "malloc": 2641,
+      "strncmp": 6052,
+      "strtod": 1650,
+      "strcmp": 5213,
+      "snprintf": 283,
+      "calloc": 68,
+      "realloc": 67,
+      "strncpy": 12,
+      "free": 2601,
+      "sqrtf": 12,
+      "__aeabi_idivmod": 18,
+      "gettimeofday": 2,
+      "localtime": 2,
+      "sprintf": 2,
+      "fopen64": 1
+    },
+    "binary_sha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "libc_sha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+    "runtime_sha256": "421df6d09247848a7f733d25ef45b726bc6366c8fc12be84751f6b408c1d92cd",
+    "syscalls": [
+      {
+        "number": 5,
+        "result": -2
+      },
+      {
+        "number": 5,
+        "result": -2
+      },
+      {
+        "adapter": "fopen64",
+        "path": "/tmp/avaSiteInfo",
+        "result": null
+      },
+      {
+        "number": 5,
+        "result": -2
+      },
+      {
+        "number": 5,
+        "result": -2
+      }
+    ]
+  },
+  "unusedSmallRangeExclusions": [
+    {
+      "offset": "0x1c4",
+      "bytes": 16,
+      "field": "SmalrangeX/Y (uninitialized, unused by ISP32)"
+    },
+    {
+      "offset": "0x1f4",
+      "bytes": 16,
+      "field": "SmalrangeX/Y (uninitialized, unused by ISP32)"
+    },
+    {
+      "offset": "0x224",
+      "bytes": 16,
+      "field": "SmalrangeX/Y (uninitialized, unused by ISP32)"
+    },
+    {
+      "offset": "0x254",
+      "bytes": 16,
+      "field": "SmalrangeX/Y (uninitialized, unused by ISP32)"
+    }
+  ],
+  "nativeGainWrapperCalls": 19,
+  "inputSha256": {
+    "awb-joined-captured.py": "2987ce90340aaa35bfe6e643b1195fa77865ea4ab4e80d9ee3f6bbe6aeb65946",
+    "librkaiq.so": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "sc3336_CMK-OT2119-PC1_30IRC-F16.json": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "frame-000.json": "8e1e3b9b17737502c8582221fb111350cc4dc1d176e2112cd4efe418ee945df1",
+    "frame-000.translated.bin": "4a4bcd0a8da10c0af6749abfd2a0967d79cafb27059b824ee6d78e6448d37fda",
+    "frame-000.sdk.bin": "4c081c95fe115f1c52ca84223e7a75cf647e64d3573accdcf5fa6c9c6352ccd1",
+    "frame-000.stats.raw": "654fc9538e617adaa3289c4bafec82a362a9f448fc393f835b517b6970a548ae",
+    "frame-001.json": "07eac1e3c72ddfa6174fbd859110e8ed51685c0fde6bdef96347a9f144f1696f",
+    "frame-001.translated.bin": "0e508612231089faee3cbeb1990e4e7de7ab8de82264f348f7f89c58bc467ee2",
+    "frame-001.sdk.bin": "4c081c95fe115f1c52ca84223e7a75cf647e64d3573accdcf5fa6c9c6352ccd1",
+    "frame-001.stats.raw": "72beb318d68443a5910f33d5888ef5fa15949e7f79389ce310704e4750bc5ef1",
+    "frame-002.json": "452f3b784694eb1fae77c0f182d87d34fa28bb243b004bfd0347f960334b3195",
+    "frame-002.translated.bin": "66a0261deaaae0d69427baa12c674fe70114814babbe798c22868e0c6443588f",
+    "frame-002.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-002.stats.raw": "0a11b6c7480ad51180565181e939fcf83876dcebb9e91c8b0ed7684df8055e44",
+    "frame-003.json": "2ff233fcc5a3df4e3a8ab1f589e20af08116d06a03aea63d095ce4f266e348af",
+    "frame-003.translated.bin": "2aa8dd4c9353dfb82e04567fdbb5c1a7109fdae26aa63308391ca5cf5d38af12",
+    "frame-003.sdk.bin": "ed9327f8550480b3e67831f6d51525cc413d01a59a414e84cad7f231f809ed3a",
+    "frame-003.stats.raw": "749dbb71364a62848e92e500eb58b0abc283398c05c9abf2a0e79a9b24ebc953",
+    "frame-004.json": "37b9b36f019d0347008b635584fb1acf819a88deb4ab7d966d6ead9247d88b12",
+    "frame-004.translated.bin": "22b8cada8248a58704434cc8761a26ccd859e64297137eaaf303a51606230503",
+    "frame-004.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-004.stats.raw": "242e227c065adbf1ebc72b2caf5484e5ef932e4994d0a747028544a2da13f089",
+    "frame-005.json": "0cf8e910f59c036dfca999a34322e600290f8f78993174175e8bd4b4121151d1",
+    "frame-005.translated.bin": "2b25c536dec7b039539c9d4283bb24ca49e4063b44aedff355551c158122355c",
+    "frame-005.sdk.bin": "ed9327f8550480b3e67831f6d51525cc413d01a59a414e84cad7f231f809ed3a",
+    "frame-005.stats.raw": "a28b8b06d08e41d9c32f9d16a6f0479ac765b3e5d4708e36f281a1fe42b99607",
+    "frame-006.json": "607d512941e852f2a24ad666dbd099e9681eb683920884119b1d56c8d809ea0e",
+    "frame-006.translated.bin": "c6f0d76d1db2755c9ed8e9f3c94496c00f47881e4becb49c447f58d730b75259",
+    "frame-006.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-006.stats.raw": "9e02be88153c15e4c4fa4b10d6024b29b4df90a413470a898744d54211db6ff2",
+    "frame-007.json": "4e378bbd22e8c3ef3339ac73a78f6fcce2bc0deb3b01cdc0785ea425b41f0fd6",
+    "frame-007.translated.bin": "788c62dd38359f1f3daf37acc336c5264fae972d2e4d4f1e344801fe7e8d0926",
+    "frame-007.sdk.bin": "ed9327f8550480b3e67831f6d51525cc413d01a59a414e84cad7f231f809ed3a",
+    "frame-007.stats.raw": "63da79ac5255e830d5ef8f5f5adc09491d4f000da5fd9df1a09b6b31944b2db0",
+    "frame-008.json": "f3a8b5654a82836bc1e7f75d5901672f01b5079b3eb876942cc4c53c570409eb",
+    "frame-008.translated.bin": "f8707c4295073bb9f3b6d9e181edac021e4d3f8a41f94513047c6cd9362c1e9e",
+    "frame-008.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-008.stats.raw": "c2af8fd67525e10648cac5dbbfdc80ec887895f4e967de079e6a7e096569ecc2",
+    "frame-009.json": "8865c95f08176041eb329bfb5132723e95c4be83a0df15ee0ad132024b65dd14",
+    "frame-009.translated.bin": "c422e59f21dba955a00a05c04416fa3855fd4b91d2f804c3c53f84fe866c6ecb",
+    "frame-009.sdk.bin": "ed9327f8550480b3e67831f6d51525cc413d01a59a414e84cad7f231f809ed3a",
+    "frame-009.stats.raw": "5775d7724115b5bdc11b58980b2c9c8e2b679d306870352dd1baea29b0e4cfd1",
+    "frame-010.json": "b8f30fba52c8f463738e09cc0772f7a25ec991cc018087b96057117a67aa020e",
+    "frame-010.translated.bin": "91d8e4f3f6cb5b61b009326cd2335980606ad0bbfcffa9d967a09f1bd50a7db7",
+    "frame-010.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-010.stats.raw": "2ca318d241410968aa7b9fb4595f7b0288d584b23239a01416458616cb833428",
+    "frame-011.json": "df7a27019f0c7747734e01a9fefcdbce6cc5ac3a6f29aa885862aee3fa2f4d1c",
+    "frame-011.translated.bin": "d3240f168fe0b2b49e70c400be35659dc0988a69728a7a25f441ea39ea147404",
+    "frame-011.sdk.bin": "ed9327f8550480b3e67831f6d51525cc413d01a59a414e84cad7f231f809ed3a",
+    "frame-011.stats.raw": "47ccff6f84a3c516a73b2175900f537cb3ca5fc98ba6d0a6ce3466924da1bbae",
+    "frame-012.json": "5877488ebae5df539f439f0c7b7c022f94227f3b9719dad0ed3f83cf926e9e47",
+    "frame-012.translated.bin": "61acd435e02535accbceb25b49725caf0f60d0eea7cc83bc03aa2916ecbd9c13",
+    "frame-012.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-012.stats.raw": "55bd3fe02a358a7512c225d5f258f667fe02bf1b8ba19cff164337cf491bb632",
+    "frame-013.json": "61c4b1e614e756d31000dad6f6c98f8f1eeac7d989ec5169acc05bd68fa0cd8b",
+    "frame-013.translated.bin": "de785a74fa2a6fc2a190d862d353f8ee0138fc478009df1f167a1edb4e101ff9",
+    "frame-013.sdk.bin": "ed9327f8550480b3e67831f6d51525cc413d01a59a414e84cad7f231f809ed3a",
+    "frame-013.stats.raw": "1597e86f960b3b1d105e77f1663946fd63b99a835b6368a270a7f0efcf47ff13",
+    "frame-014.json": "073d5ea8f157874938e127a460ab06152db4f490a24d2e868fac85e22102e459",
+    "frame-014.translated.bin": "80d329c3f14529e76f2db18edb4382f0f49fe0749b4e4fd01b5acbc4905b5a15",
+    "frame-014.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-014.stats.raw": "2ddabc20555f72fa79fc75ad94ba7e554a5ce1c0f7db1b1eb5f29dc2863a3a39",
+    "frame-015.json": "bdfa91f9da215d167e0d4df600a98151475a8c2cf2fe79c8a685cae7a56fbfcd",
+    "frame-015.translated.bin": "0f7afde38063f3a5929140c821aa069d3f26d8df683f513f35165e8b773a83aa",
+    "frame-015.sdk.bin": "ed9327f8550480b3e67831f6d51525cc413d01a59a414e84cad7f231f809ed3a",
+    "frame-015.stats.raw": "21d63f58dc8655623196ab074eef7b5e672fd716fc37c232b2c2f298e6b9e7c8",
+    "frame-016.json": "dcf49a35385b02e6c184348c1addfa5b39a85057bd373a76f31bddd7af986e35",
+    "frame-016.translated.bin": "93bc5fa01aad99f1c375bc5427f450c9b5a0389dc296a1dcebf471e94a676741",
+    "frame-016.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-016.stats.raw": "42515a804546a96cb4954203f273a2c17b70f3b3a671c61a8e85a9bf28b34d5c",
+    "frame-017.json": "f96753313e59849f4570f42bddddac47f6c040ff587457872070a92d2031f2f7",
+    "frame-017.translated.bin": "ef46782174cc044297eada32a3b9a98a297bb1f81482642ff6a4d54af47d1226",
+    "frame-017.sdk.bin": "ed9327f8550480b3e67831f6d51525cc413d01a59a414e84cad7f231f809ed3a",
+    "frame-017.stats.raw": "beb334ed3a3718329242b77f2bcdfd16019acefeb61a022f60b09e8d55df2c5b",
+    "frame-018.json": "186829ba07d5d958fbbd60334c65536a19fd115f38bc9af6f1a6d63e6da2d61e",
+    "frame-018.translated.bin": "c634ef52a6e33f357291ebedc505d8f3ce577af274203fe61517fb417a4db96f",
+    "frame-018.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-018.stats.raw": "4436fee479f327f16620e65c4586a2110e3a6f23a60c1db2a52e633e2ba0ae44",
+    "frame-019.json": "0671f54085144f53b3d13dc75133432651bf13b551da722d0aa7125d99a5a0e6",
+    "frame-019.translated.bin": "467a746f143253cde618cba3f437108eae966a9604b9c013579139516f920d70",
+    "frame-019.sdk.bin": "ed9327f8550480b3e67831f6d51525cc413d01a59a414e84cad7f231f809ed3a",
+    "frame-019.stats.raw": "2b5a775168c4195bb2fd1741e8d606845ac99a978dfe70af102495bdb3b61cda",
+    "frame-020.json": "6c3e4a68e4e3581ff36a91f9e4edc0d9268e0604ab422db6dd7a734b950300df",
+    "frame-020.translated.bin": "6edf1017f677ac4e6fe39aa8797764afba1ce448ce4cbee2f44d48b655a9a2dc",
+    "frame-020.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-020.stats.raw": "da1c2e068e1185b35e46151f39d3214ef866950e2988e2a1ca10433ce7e4790e",
+    "frame-021.json": "7b742b439449360c0f1b1d1b4cf7b0a050944eb5273f7e9325126dc0e0591786",
+    "frame-021.translated.bin": "27689054c262ab27c9d34a6b048a9db4025000c635761311dbb7c2a9873fa5d6",
+    "frame-021.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-021.stats.raw": "7aaeb57d88bc58dd4d25a8290465f297fd35d4a825e7a2b13e8706c711f5fbe4",
+    "frame-022.json": "084db87a5421fbc51cd78a18d235f22e775c33c888ccf2309ce69aa82fbbbf90",
+    "frame-022.translated.bin": "47c360652b5aa408749e9fbb4ef2f9aa2f915b9d052f04e51d35e7e248f220d5",
+    "frame-022.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-022.stats.raw": "a3e6739a204c4d259a796519d06674e2cad248824b8a5a5afe1596de0c2ffeef",
+    "frame-023.json": "76c4f35acbc705886a63aa568fb7566a528184cbc4810b6b5d26903bc0f68a8d",
+    "frame-023.translated.bin": "6c3401d3877392a5e38e6c822e26bbb63b082021250183464baa5a3b32349a43",
+    "frame-023.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-023.stats.raw": "cb95967a3685cff06c7f4786e75b4cf32f3dc3d91a4ad35d721d98940518af0c",
+    "frame-024.json": "cc962975df73d4066f53ab358226d8155d998522541208577cfa52ab560f4b8d",
+    "frame-024.translated.bin": "c56ab1ce33212c08d74851813c3530c3333196ffda072b34a3c5c4e6ecd380e8",
+    "frame-024.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-024.stats.raw": "f30f6ce2a13e01e48c51b49709872034b858f70770c31981855958dc414c7533",
+    "frame-025.json": "a161ab2bb0b17c41701c49fe446dae178303591171991d6e17c5748304c0de35",
+    "frame-025.translated.bin": "e02f28f2ce86554fccd4d17562a2b79a899751c3333cc4c9979572d752952b9a",
+    "frame-025.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-025.stats.raw": "a02157977c7f9ffcdc8cd2ea713d1b31da691a9b53f5cc58fd24e99b99a323e6",
+    "frame-026.json": "dd60b59c4b90bcd893cd5f05fafce38eaac2225c7a8d52ba40cb41e0e32b0a68",
+    "frame-026.translated.bin": "60a6b5d1f745d40cd29628c2a80b73eebb3d678e6f003596140804bc9c003463",
+    "frame-026.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-026.stats.raw": "d593a58917d259d906f76515aff0fdd03c0cd82cb96ce75a22f7819de9a62d8c",
+    "frame-027.json": "fec78b3ab37f5c362eadc922716c9ff08a99eae530f28f4c1cb4549dfbaf4061",
+    "frame-027.translated.bin": "2afd4144163dd78e66689a22e2eca713286ebe514aa147eca48b2094610eb08b",
+    "frame-027.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-027.stats.raw": "c9e6110fc6df2118b64370bbfc4d36af0b0c046c8f6a83a4727545b8bc048bb8",
+    "frame-028.json": "c02e106b7e11c2f64c34e240741438645ab4b7061810f4f547342616d0a23a5b",
+    "frame-028.translated.bin": "3d3144d75dbdaf0b1755bc2edc8b94ea51357b18dbd7231f5799d37ae8b1e1c5",
+    "frame-028.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-028.stats.raw": "bcb5e5386da1571fc69549e11fa33a837eb237c25f6f04c190843b8c223f7602",
+    "frame-029.json": "ff97b560e0fd3d93496b082104ca05f4621d7dff524340b8ffd6be02591a9de0",
+    "frame-029.translated.bin": "5ad0416c76b5416bdacc1e72833890a37b410bc6f6eaa7fe2cd0c12409b49b12",
+    "frame-029.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-029.stats.raw": "45cc1ac818b0848de582bc016041115548ad474f14734528bd9f8388cdd4941c",
+    "frame-030.json": "a8940574c5583da18f04543b0b9af7c0ba985bc6e7b1bd28277e42b48f99996a",
+    "frame-030.translated.bin": "30b305fafaf8d7dcd35762e91b63d28421d6a7f6681f372a43b4a8b750cf4af5",
+    "frame-030.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-030.stats.raw": "7acfbdbadd33e1c42821f947da5edbeed8b793865254112d8068114089c16211",
+    "frame-031.json": "608ccc5aa46f3bc959f5afcd81141fd39663e307461d079d0ab6f8eb6ed46db2",
+    "frame-031.translated.bin": "8a1c69171ca202bf5227377c1992ef6745a95086417fca298edf182003664c12",
+    "frame-031.sdk.bin": "1db4fd6d9224ca2fddfc7ccfed116be92bdccc693d1e9a8ab88ae95a16ff89b9",
+    "frame-031.stats.raw": "6d255eb76d7815a0c3887d73dc6acc1bae6974431a5cd08a1b77747c44e8424b",
+    "awb-json-native.py": "f993542275e8b70cebccb3d10bad82f84780f8087559ea2b056d88a17568f64b",
+    "awb-hardware-reference.py": "3d96006fba668f6cfd0b9d80e18ad659c89e2e9da78dd40fdee6b5714b000eea"
+  },
+  "application": {
+    "passed": true,
+    "integration": {
+      "sourceSha256": "7cf9c67797d5b14cfbea206e91bc5c85292ec01f36fca68edbaee13977a5809e",
+      "patchedSourceSha256": "726294bdd9d3a2b1b85a6109b9fd8db0f3761eadb1292f436f4767af19a2ff71",
+      "changes": [
+        "Rust PiVideoStream import",
+        "Preserve complete rotated preview canvas"
+      ],
+      "installedFilesModified": false
+    },
+    "opticalScanQualified": false,
+    "syntheticQrCases": [
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      }
+    ],
+    "changedSourceRejected": true,
+    "realFrameDecodeStatus": 4,
+    "capture": {
+      "directory": "/shieldsigner-camera-tests/dev037-big115/results/camera-hz9ahxzy",
+      "firstFrameSeconds": 0.6073754170001848,
+      "first": 4,
+      "last": 119,
+      "samples": 68,
+      "received": 71,
+      "stopSeconds": 0.2914557919998515,
+      "ownerExitCode": 0
+    },
+    "realFrameRotations": [
+      {
+        "setting": 0,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 90,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 180,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 270,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      }
+    ],
+    "rotationBenchmark": {
+      "croppedSecondsPerFrame": 0.0535182084000553,
+      "expandedSecondsPerFrame": 0.012636750000001484
+    },
+    "installedCameraUnchanged": true
+  },
+  "allNineIspChecksPassed": true,
+  "ownerLogSha256": "cde5184cf67e7303151e1ca276264ba8ee834feb6ad3d8e2594bb0f8506390b7",
+  "correction": "Native normal UV/YUV enable pairs are0x0101. Earlier Rust normal time sharing used0x0001, disabling each paired big-region flag.",
+  "normalCapturedFramesWithPairedFlagsEnabled": 30,
+  "limitations": [
+    "Selected pinned single-camera linear profile and actual32-frame trajectory; not arbitrarymode/ABI equivalence.",
+    "64named SmalrangeX/Y bytes are uninitialized by native code and unused by ISP32; exact initializedSDK fields and complete packed ISP output are compared. They are not padding.",
+    "Module lookup supplies the native-parsed selected WB pointer. Caller AE/statistics/BLS and cohort identity inputs are explicit.",
+    "Clock/filesystem/allocation adapters are explicit; JSON, numeric conversion, initialization, preparation and runtime algorithms execute original ARM instructions on host.",
+    "Optical QR, physical lighting/color changes, display/buttons and physical powercycle remain unqualified."
+  ]
+}

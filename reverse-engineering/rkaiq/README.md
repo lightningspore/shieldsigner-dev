@@ -24,6 +24,8 @@ all nine module comparisons and an actual ordered 32-frame joined AWB comparison
 [Combined evidence](combined-isp-0.0.36-hardware-validation.json),
 [AWB trajectory](awb-ordered-trace-hardware-validation.json).
 Older frozen archives remain unchanged.
+Development 0.0.37 additionally corrects paired normal UV/YUV detector flags;
+0.0.36 predates that correction. [Native initialization and hardware proof](awb-native-initialization-hardware-validation.json).
 
 **NEXT:** qualify actual optical QR scanning, physical lighting/color response,
 LCD/buttons and physical power cycling. The exact 0.0.36 kit passed a
@@ -267,10 +269,11 @@ Still open:
    tests substitute the display and cancellation boundaries.
 4. Physical power-cycle testing and a reviewed permanent startup choice;
    controlled reboot and opt-in launch have been tested separately.
-5. Complete joined-native AWB controller equivalence and any remaining policy
-   required by this fixed profile. The 32-frame actual trajectory now covers
-   preparation, gains and full measurement reconfiguration; native calibration/
-   context construction remains adapted rather than whole-library initialization.
+5. Extend software coverage if physical testing reveals another required
+   fixed-profile path. The [current native-initialized comparison](awb-native-initialization-hardware-validation.json)
+   now executes JSON parsing, constructor, prepare, binding and 32 actual runtime
+   inputs; the previous adapted-context boundary is closed for that trajectory.
+   This does not claim arbitrary mode or full-library ABI equivalence.
 6. Complete the physical qualification above using the frozen 0.0.36 kit.
    Its exact executable now passed [controlled clean-reboot application
    integration](kit-0.0.36-dev-cold-reboot-validation.json), with all eight

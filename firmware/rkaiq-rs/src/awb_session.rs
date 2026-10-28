@@ -221,7 +221,9 @@ impl Session {
         let regions = crate::awb_calibration::MeasurementRegions::from_value(wb)?;
         let enabled = |key: &str| match wb["autoPara"][key].as_u64() {
             Some(0) => Ok(0u16),
-            Some(1) => Ok(1u16),
+            // UpdateAwbCalibV2Para copies this enable into both the normal
+            // and big-region bytes consumed by ConfigHwParaTimeShare.
+            Some(1) => Ok(0x0101u16),
             _ => Err(format!("Invalid detection flag: {key}")),
         };
         let uv_enabled = enabled("uvDetectionEnable")?;

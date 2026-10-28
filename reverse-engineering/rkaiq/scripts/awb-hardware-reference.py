@@ -125,8 +125,8 @@ class Reference(OriginalAwb):
         word(cal, 4, modes.index(source["frameChooseMode"]))
         cal[8] = source["frameChoose"]
         # Existing converter refs establish these as u16 enable fields.
-        struct.pack_into("<H", cal, 0x38, int(auto["uvDetectionEnable"]))
-        struct.pack_into("<H", cal, 0x3C, int(auto["yuvDetectionEnable"]))
+        struct.pack_into("<H", cal, 0x38, int(auto["uvDetectionEnable"]) * 0x0101)
+        struct.pack_into("<H", cal, 0x3C, int(auto["yuvDetectionEnable"]) * 0x0101)
         cal[0x44] = capacity
         limits = auto["limitRange"]
         word(cal, 0xF4, self.floats(limits["lumaValue"]))

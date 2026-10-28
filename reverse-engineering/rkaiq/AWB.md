@@ -2700,3 +2700,36 @@ only; new ISP defaults do not weaken the AWB isolation check.
 [Current assembly evidence](awb-startup-assembly-validation.json) passes for
 the 0.0.37 host and ARM tools. This verifies packing/isolation and does not
 replace the separate native calibration/initialization comparison.
+
+### Complete native initialization and paired detector correction (0.0.37)
+
+The reference now executes the library's embedded J2S/cJSON parser over the
+selected WB JSON, then the actual single-camera constructor, `AwbInitV32`,
+`AwbPrepareV32` and `AwbReCfgPregnBlc`. Original ARM decimal conversion,
+formatting and square-root routines execute too. The initial 1,204-byte SDK
+record matches the actual camera startup exactly after caller BLS binding.
+
+This exposed a real normal-mode flag error: native calibration duplicates UV
+and YUV enable bytes into both normal and big-region flags (`0x0101`). Rust
+had supplied `0x0001`. The Session factory and adapted legacy reference now
+restore both flags when leaving FAST startup. The frozen 0.0.36 kit predates
+this correction; development 0.0.37 and the running demo include it.
+
+[Fresh hardware evidence](awb-native-initialization-hardware-validation.json)
+passes 32 actual frames through the native-created context. Initialized SDK
+fields, live-owner gain bits and complete packed ISP parameters match. All
+nine module checks also pass, and the app receives 71 real frames with clean
+shutdown. This removes the manually assembled native-context boundary for
+this observed pinned-profile trajectory.
+
+The SDK's four `SmalrangeX/Y` groups are named legacy fields, not padding.
+Native region allocation leaves their 64 bytes uninitialized; the ISP32
+converter and kernel program only normal/big regions. The report retains their
+raw differences separately and compares the other 1,140 SDK bytes exactly,
+plus all 11,145 bytes of the converted ISP record. No output is patched to
+force equality. Clock/filesystem/memory and selected-module lookup boundaries
+remain explicit.
+
+Use `awb-joined-captured.py --trace-dir PRIVATE_TRACE --hardware-reference
+--native-initialization --require-match --report PRIVATE_REPORT`. No original
+binary, full IQ profile or private trace is included in Git.

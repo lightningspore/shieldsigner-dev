@@ -17,7 +17,7 @@ import struct
 import subprocess
 import sys
 
-from differential import BINARY, HEAP, RETURN, ROOT, regs
+from differential import BINARY, HEAP, RETURN, ROOT, OriginalArm, regs
 from awb_reference import OriginalAwb
 
 controller = importlib.import_module("awb-gain-controller")
@@ -249,8 +249,30 @@ class Joined(controller.Original):
         self.uc.mem_write(HEAP + 0x33B8, bytes(geometry["block"]))
         self.uc.mem_write(HEAP + 0x2ED4, struct.pack("<2H", 2304, 1296))
 
+    def adopt_initialized(self, native):
+        snapshot = native.snapshot()
+        assert snapshot["context_ptr"] == HEAP and snapshot["arena"] < HEAP + 0xA0000
+        self.uc.mem_write(HEAP, snapshot["heap"])
+        self.bootstrapping = self.dispatch_active = self.initializing = False
+        self.outer_active = True
+        self.wrapper_calls = self.single_calls = self.selected_gain_calls = 0
+        self.arena = snapshot["arena"]
+        self.live = set()
+        self.startup = {
+            name: list(struct.unpack("<4I", self.uc.mem_read(HEAP + offset, 16)))
+            for name, offset in [
+                ("gain353C", 0x353C),
+                ("gain3578", 0x3578),
+                ("previous352C", 0x352C),
+            ]
+        }
+
     def frame(self, raw, metadata, first):
         self.uc.mem_write(HEAP + 0x70000, raw)
+        self.uc.mem_write(HEAP + 0x4C, struct.pack("<I", HEAP + 0x7D000))
+        # The single-camera processing callback binds the incoming metadata
+        # header at translated-frame +0x1d70 before calling AwbPreProcV32.
+        self.uc.mem_write(HEAP + 0x2DEC, struct.pack("<I", HEAP + 0x70000 + 0x1D70))
         self.uc.mem_write(
             HEAP + 0x7D000, struct.pack("<2f", metadata["normalizedBrightness"], 0.0)
         )
@@ -263,7 +285,8 @@ class Joined(controller.Original):
             "Native replay did not reach bounded return"
         )
         c = bytes(self.uc.mem_read(HEAP, 0x4000))
-        cfg = bytes(self.uc.mem_read(HEAP + 0x8000, 0x800))
+        cfg_pointer = struct.unpack_from("<I", c, 0x8C)[0]
+        cfg = bytes(self.uc.mem_read(cfg_pointer, 0x4B8))
         return dict(
             gainBits=list(struct.unpack_from("<4I", c, 0x353C)),
             controllerFrame=struct.unpack_from("<I", c, 0x33AC)[0],
@@ -330,6 +353,11 @@ def main():
         "--hardware-reference",
         action="store_true",
         help="Execute native reconfiguration and compare complete next SDK records",
+    )
+    p.add_argument(
+        "--native-initialization",
+        action="store_true",
+        help="Build native context with original JSON parser, init, prepare and BLC binding",
     )
     p.add_argument("--report", type=Path, required=True)
     a = p.parse_args()
@@ -430,7 +458,72 @@ def main():
         )
     expected = fixture("awb-captured-sequence", sequence)["frames"]
     arm = Joined()
-    arm.start(wb, raw[0], initial, geometry, a.seed_previous_diagnostic)
+    initialization = None
+    if a.native_initialization:
+        assert a.trace_dir and a.hardware_reference and not a.seed_previous_diagnostic
+        loader = importlib.import_module("awb-json-native")
+        iq = json.loads(
+            (
+                ROOT
+                / ".tools/reverse-engineering/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json"
+            ).read_text()
+        )
+        blc = iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["ablcV32_calib"]
+
+        def constant(values):
+            assert values and all(x == values[0] for x in values)
+            return values[0]
+
+        channels = lambda key: [
+            int(constant(blc[key]["BLC_Data"][channel]))
+            for channel in ["R_Channel", "Gr_Channel", "Gb_Channel", "B_Channel"]
+        ]
+        ob = blc["BlcObPara"]
+        black_level = dict(
+            enabled=bool(blc["Blc0TuningPara"]["enable"]),
+            fixed=channels("Blc0TuningPara"),
+            stage1_enabled=bool(blc["Blc1TuningPara"]["enable"]),
+            stage1=channels("Blc1TuningPara"),
+            offset=int(constant(ob["BLC_OB_Data"]["isp_ob_Offset"]))
+            if ob["enable"]
+            else 0,
+            gain=constant(ob["BLC_OB_Data"]["isp_ob_preDgain"])
+            if ob["enable"]
+            else 1.0,
+        )
+        created = loader.NativeJson()
+        created.parse(wb)
+        created.create_single()
+        created.prepare()
+        startup = created.bind(black_level, digital_gain=1.0, iso=50.0)
+        assert startup == record, (
+            "Complete native startup differs from actual initial SDK record"
+        )
+        initialization = created.summary()
+        arm.adopt_initialized(created)
+        provenance_paths.append(Path(__file__).with_name("awb-json-native.py"))
+    else:
+        arm.start(wb, raw[0], initial, geometry, a.seed_previous_diagnostic)
+    converter = OriginalArm(BINARY) if a.native_initialization else None
+
+    def pack_kernel(sdk):
+        converter.uc.mem_write(HEAP, bytes(1024))
+        converter.uc.mem_write(HEAP + 0x10000, bytes(11145))
+        converter.uc.mem_write(HEAP + 0x20000, sdk)
+        converter.invoke(
+            "_ZN5RkCam11Isp32Params26convertAiqAwbToIsp32ParamsER20isp32_isp_params_cfgRK25rk_aiq_awb_stat_cfg_v32_sb",
+            [HEAP, HEAP + 0x10000, HEAP + 0x20000, 1],
+        )
+        assert not converter.calls, (
+            "ISP32 converter unexpectedly needed imported adapters"
+        )
+        return bytes(converter.uc.mem_read(HEAP + 0x10000, 11145))
+
+    # SDK SmalrangeX/Y are named legacy fields, not padding. Native malloc
+    # leaves them uninitialized; ISP32's converter never reads these ranges.
+    unused_small_ranges = set(
+        j for start in [0x1C4, 0x1F4, 0x224, 0x254] for j in range(start, start + 16)
+    )
     rows = []
     for i, reference in enumerate(expected):
         actual = arm.frame(raw[order[i]], meta[order[i]], incoming_updates[i])
@@ -439,9 +532,24 @@ def main():
                 native = hardware.Reference.from_joined(
                     arm, signature=b"RUST-AWB-NORMAL"
                 )
-                native.seed(
-                    wb, record, previous_weights=weights, strategy_signature=signature
-                )
+                if a.native_initialization:
+                    # Native calibration graphs stay intact. Cohort names are
+                    # an explicit opaque identity input, shared with the trace.
+                    native.strategy = struct.unpack(
+                        "<I", native.uc.mem_read(HEAP + 0x8C, 4)
+                    )[0]
+                    native.calibration = struct.unpack(
+                        "<I", native.uc.mem_read(HEAP + 0x130, 4)
+                    )[0]
+                    native.timestamp = native.put(native.signature)
+                    native.uc.mem_write(native.strategy + 0x440, signature)
+                else:
+                    native.seed(
+                        wb,
+                        record,
+                        previous_weights=weights,
+                        strategy_signature=signature,
+                    )
                 configured = native.run()
                 record = configured["record"]
                 weights = struct.unpack("<9f", configured["weight_cache"])
@@ -459,8 +567,28 @@ def main():
             for k, v in actual.items()
             if k in reference and v != reference[k]
         }
+        ignored = []
+        if a.native_initialization:
+            native_record = bytes.fromhex(actual["measurement"])
+            rust_record = bytes.fromhex(reference["measurement"])
+            different = [
+                j for j, (x, y) in enumerate(zip(native_record, rust_record)) if x != y
+            ]
+            ignored = [j for j in different if j in unused_small_ranges]
+            if different and all(j in unused_small_ranges for j in different):
+                differences.pop("measurement", None)
+            native_kernel, rust_kernel = (
+                pack_kernel(native_record),
+                pack_kernel(rust_record),
+            )
+            if native_kernel != rust_kernel:
+                differences["packedIspParameters"] = {
+                    "nativeSha256": hashlib.sha256(native_kernel).hexdigest(),
+                    "rustSha256": hashlib.sha256(rust_kernel).hexdigest(),
+                }
         rows.append(
             dict(
+                uninitializedUnusedSmallRangeOffsets=ignored,
                 index=i,
                 sourceFrameId=meta[order[i]].get("frameId"),
                 sourceParametersId=meta[order[i]].get("parametersId"),
@@ -477,7 +605,22 @@ def main():
         seedPreviousDiagnostic=a.seed_previous_diagnostic,
         fullControllerQualified=False,
         nativeStartup=arm.startup,
+        nativeInitialization=initialization,
         hardwareReconfigurationCompared=a.hardware_reference,
+        packedIspBytesComparedPerFrame=11145 if a.native_initialization else 0,
+        unusedSmallRangeExclusions=(
+            [
+                {
+                    "offset": hex(start),
+                    "bytes": 16,
+                    "field": "SmalrangeX/Y (uninitialized, unused by ISP32)",
+                }
+                for start in [0x1C4, 0x1F4, 0x224, 0x254]
+            ]
+            if a.native_initialization
+            else []
+        ),
+        initializedSdkBytesComparedPerFrame=1140 if a.native_initialization else 1204,
         nativeSymbol=SYMBOL,
         rustFixtureSha256=hashlib.sha256(a.fixture.read_bytes()).hexdigest(),
         provenance={
@@ -498,7 +641,11 @@ def main():
         frames=rows,
         wrapperCalls=arm.wrapper_calls,
         boundaries=[
-            "Calibrated fixture ABI builder plus native InitinalSwResParaCom2; complete calibration/context construction remains adapted.",
+            (
+                "Complete native JSON parse, single-camera constructor, AwbInitV32, AwbPrepareV32 and caller-owned BLC binding; module lookup, clock/filesystem/memory adapters explicit."
+                if a.native_initialization
+                else "Calibrated fixture ABI builder plus native InitinalSwResParaCom2; complete calibration/context construction remains adapted."
+            ),
             (
                 "Complete native ReconfigHwParaV32 executes after gain; hardware calibration graph and stable cohort signature are explicit inputs."
                 if a.hardware_reference

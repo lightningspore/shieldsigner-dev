@@ -61,9 +61,9 @@
     },
     {
       "requirement": "Complete joined-native AWB equivalence beyond adapted context construction",
-      "status": "partial",
-      "evidence": "awb-ordered-trace-hardware-validation.json",
-      "scope": "Runtime preparation/gain/reconfiguration compared on actual ordered inputs. Whole native calibration/context initialization and arbitrary variable policy are not established."
+      "status": "verified-with-stated-scope",
+      "evidence": "awb-native-initialization-hardware-validation.json",
+      "scope": "Actual native JSON parse, single-camera constructor/init/prepare/binding and32actual frames compared. Explicit module lookup and clock/filesystem/memory/caller-input boundaries remain; no arbitrarymode ABI claim."
     }
   ],
   "hardwareObservation": {
@@ -72,5 +72,6 @@
     "framebufferObserved": false,
     "physicalWiringVerified": false
   },
-  "nextPracticalTest": "Known public optical QR; the target must actually be in view."
+  "nextPracticalTest": "Known public optical QR; the target must actually be in view.",
+  "knownFrozenKitLimitation": "Frozen0.0.36 predates paired normal UV/YUV detector enable correction; current0.0.37 development includes it."
 }

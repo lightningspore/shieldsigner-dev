@@ -41,11 +41,10 @@
     },
     {
       "requirement": "Successful known-public optical QR through physical camera and installed decoder",
-      "status": "unverified-for-current-native-runtime",
-      "evidence": "native-qr-integration-hardware-validation.json",
-      "sha256": "e0c6a31eafa56ed69836da1432f9bf36ef725d1f37df1785c1553e572a1091e9",
-      "scope": "Current0.0.38/nativeZXing app integration passes synthetic binary/CompactSeedQR/UR and real Camera APIs, but opticalScanQualified is false. Current physical target is clipped; the pinned scan-loop run records8FALSE decode attempts.",
-      "needed": "Place the entire known public QR and quiet zone in view, then run optical_camera_check.py against exact0.0.38 camera/worker and require matched=true, opticalScanQualified=true, clean owner/worker shutdown.",
+      "status": "verified-with-stated-scope",
+      "evidence": "native-optical-0.0.38-hardware-validation.json",
+      "sha256": "a6f0faefd94ad457d72c70ebc7c8a65b824ab7c4e74ed6a570e61655e65c7044",
+      "scope": "Run174: exact0.0.38 camera08beb38c/nativeQR0ac7cf through pinned image-app Camera/DecodeQR sources; physical known public address matches after5realframes/1.746s, owner+worker exit0,zero nativeerrors,sourcesunchanged. NoJPEG/synthetic input. Explicitluckfox22 and existingrootfs diagnosticdependencies; not final-imageboot or broad optical qualification.",
       "historicalEvidence": [
         {
           "evidence": "optical-qr-hardware-validation.json",
@@ -126,11 +125,11 @@
     "physicalWiringVerified": false,
     "scope": "Last recorded test-board observations; no physical wiring/display qualification is inferred from device nodes."
   },
-  "nextPracticalTest": "Obtain an unclipped public target for exact0.0.38/native optical qualification; boot the verified SDK image and complete physical UI/lighting/power-cycle gates.",
-  "knownFrozenKitLimitation": "Frozen0.0.38 source96e48fc has610verifiedfiles/modes and an existing-image controlled-reboot pass. Separate clean dd4bd96 SDK image build and packed readback now pass. Native QR app/UR checks remain qualified synthetic/API tests; current native optical target, new-image boot and physical UI/light/power-cycle remain open.",
+  "nextPracticalTest": "Complete five remaining gates: broader physical binary/animated QR acquisition, controlled light/color transitions, new-image normal boot/inventory, actual LCD/buttons and physical power cycle.",
+  "knownFrozenKitLimitation": "Frozen0.0.38 source96e48fc has610verifiedfiles/modes and an existing-image controlled-reboot pass. Separate clean dd4bd96 SDK image build and packed readback pass. Exact08/0ac now passes physical static known-public optical174 through pinned app on existingrootfs; new-image boot and broad optical/UI/light/power-cycle remain open.",
   "qrRobustnessFinding": {
     "evidence": "qr-successful-pipeline-comparison.json",
-    "scope": "Same four real camera frames, six repetitions per reader; all fixed cascades24/24. ZXing native app integration and syntheticURassembly are now separately proven. This benchmark is not24distinct optical targets, finalappFPS or physical animated acquisition."
+    "scope": "Same four real camera frames, six repetitions per reader; all fixed cascades24/24. Native app binary/UR and exact0.0.38 physical known-public optical174 now separately pass. The benchmark is not24distinct targets or finalappFPS, and one static optical address does not qualify physical animated acquisition."
   },
   "acceptanceGates": [
     {
@@ -143,10 +142,11 @@
     },
     {
       "id": "native-optical-target",
-      "status": "open",
+      "status": "passed-at-single-public-target-optical-scope",
       "passCondition": "Entire public target and quiet zone in view; exact0.0.38 camera/ZXing installed app optical checker reports matched=true/opticalScanQualified=true, with clean shutdown.",
-      "latestEvidence": "pinned-image-scan-loop-hardware-validation.json",
-      "limit": "Current target clipped;8FALSE decode attempts. Historical0.0.37/JPEG success is separate."
+      "latestEvidence": "native-optical-0.0.38-hardware-validation.json",
+      "limit": "Run174 matches exact public address through actual pinned app and native08/0ac in5realframes; clean shutdown. One static target/current scene, explicitruntimeprofile and existingrootfs only; broader physical binary/animated/light/UI/newimageboot/power remain open.",
+      "sha256": "a6f0faefd94ad457d72c70ebc7c8a65b824ab7c4e74ed6a570e61655e65c7044"
     },
     {
       "id": "broader-optical-qr",
@@ -190,7 +190,7 @@
     "notClaimed": [
       "Drop-in librkaiq ABI compatibility or all optional IQ features.",
       "Physical LCD/buttons, final-image boot or power cycle from headless/API/reboot tests.",
-      "Current native optical success from historical JPEG-fallback success.",
+      "Broad binary/animated optical or lighting qualification from one static known-public address success.",
       "CPROC control, CPSL/IR/day-night/autoLED, arbitrary sensors/scenes/HDR/DCG/OTP/remosaic or prepared AUTO/ALWAYS single-color exclusion handling outside selected INITIAL mode0."
     ],
     "selectedProfileEvidence": {

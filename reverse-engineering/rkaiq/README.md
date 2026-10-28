@@ -29,7 +29,7 @@ pass binary/CompactSeedQR, animated UR, stream/still capture and headless
 render/cancel paths. Runtime diagnostics are now
 [bounded on the actual board](bounded-logging-hardware-validation.json).
 The [image kernel ABI](image-sdk-kernel-abi-validation.json) passes 190 ARM
-assertions. The clean dd4bd96 [SDK image build and independent packed readback](image-camera-build-validation.json) now pass: exact runtime/startup hashes and modes, selected DTB, IQ, modules and dependency inputs. Actual packed Python 3.12 passes AES, CompactSeedQR and reversed/duplicate animated UR direct-data checks under userspace QEMU. This does not exercise QR pixels, camera hardware or boot the image. Physical image boot/UI/power-cycle and an unclipped optical target remain separate qualification gates.
+assertions. The clean dd4bd96 [SDK image build and independent packed readback](image-camera-build-validation.json) now pass: exact runtime/startup hashes and modes, selected DTB, IQ, modules and dependency inputs. Actual packed Python 3.12 passes AES, CompactSeedQR and reversed/duplicate animated UR direct-data checks under userspace QEMU. This does not exercise QR pixels, camera hardware or boot the image. Physical new-image boot, UI and power-cycle checks remain separate. The exact camera/native QR binaries also now pass the [physical public-target optical check](native-optical-0.0.38-hardware-validation.json) through the pinned app on the existing test image.
 
 **LATEST FROZEN: 0.0.38-dev.** [Test kit](../../dist/reverse-engineering/rkaiq-camera-test-0.0.38-dev.zip),
 SHA-256 `7158eda937662f4a27ca8c5e13eb6d32a1b7686c587b212f4426653838393b0f`,
@@ -42,16 +42,20 @@ no vendor camera userspace. This is an existing-image software reboot;
 physical power cycling and booting the new SDK image remain separate.
 The older frozen 0.0.37 archive below retains its historical behavior.
 
-**OPTICAL:** the [historical public-target pass](optical-qr-hardware-validation.json)
-used the frozen 0.0.37 camera and development JPEG retry. It does not qualify
-the current 0.0.38/native ZXing stack. Current native app/UR fixtures pass, but
-the [real scan-loop check](pinned-image-scan-loop-hardware-validation.json)
-has a clipped physical target and eight `FALSE` decode attempts; it proves
-render/cancel/cleanup behavior, not an optical content match.
+**OPTICAL:** [run 174](native-optical-0.0.38-hardware-validation.json) decoded the
+physical known-public address `1BoatSLRHtKNngkdXEeobR76b53LETtpyT` through the
+exact 0.0.38 Rust camera, native ZXing and actual pinned image-app Camera/DecodeQR.
+It matched after five real frames in 1.746 seconds; camera and worker exited
+cleanly, zero native errors, application sources unchanged. No JPEG retry or
+synthetic input was used. This qualifies one static target and current scene
+on the existing test rootfs, with an explicit `luckfox_22` profile override;
+it does not boot the new image or qualify physical animated QR/light/UI tests.
+The [historical 0.0.37/JPEG pass](optical-qr-hardware-validation.json) and earlier
+[clipped-target scan/cancel check](pinned-image-scan-loop-hardware-validation.json)
+retain their original scopes.
 
-**NEXT:** complete the six remaining [explicit acceptance gates](completion-audit.json):
-native optical target, broader optical
-QR acquisition, physical light/color response, new-image normal boot/inventory,
+**NEXT:** complete the five remaining [explicit acceptance gates](completion-audit.json):
+broader optical QR acquisition, physical light/color response, new-image normal boot/inventory,
 physical LCD/buttons and power cycling. Earlier isolated-CNR
 failures and frozen 0.0.31–0.0.37 archives retain their historical scope. The
 current full selected-profile ISP group and joined-native AWB proof supersede
@@ -296,27 +300,25 @@ SmallRange bytes are excluded; oracle memory/clock/filesystem/module lookup
 adapters remain explicit. This closes the historical component-composition
 gaps for the tested trajectory, not every optional IQ mode or physical scene.
 
-The [final image build/content gate](image-camera-build-validation.json) passes.
+The [final image build/content gate](image-camera-build-validation.json) and
+[exact native public-target optical gate](native-optical-0.0.38-hardware-validation.json) pass.
 Still open:
 
-1. **Current native optical target:** show the entire public QR and quiet zone,
-   then require a content match through exact 0.0.38 camera/worker/app with clean
-   shutdown. The historical 0.0.37/JPEG pass does not satisfy this gate.
-2. **Broader optical QR acquisition:** exercise physical binary/CompactSeedQR
+1. **Broader optical QR acquisition:** exercise physical binary/CompactSeedQR
    and animated UR targets under realistic framing. Generated-pixel binary and
    reversed/duplicate UR assembly tests already pass through the installed app.
-3. **Physical light/color response:** observe current AE/AWB and useful images
+2. **Physical light/color response:** observe current AE/AWB and useful images
    through actual illumination changes, including recovery from dark history.
    Native NaN variance semantics are fixed; diagnostic replay is not a changed
    physical scene, nor proof of exact sensor exposure-frame association.
-4. **New-image normal boot/inventory:** prove the configured Rust startup,
+3. **New-image normal boot/inventory:** prove the configured Rust startup,
    actual DT profile, sensor/driver binding, fixed media/video/subdev mappings,
    queues and camera/native QR without vendor camera userspace. Kernel ABI and
    compiled-DTB checks do not prove registration order or a booted image.
-5. **Physical LCD/buttons:** complete a camera/QR flow on the real display and
+4. **Physical LCD/buttons:** complete a camera/QR flow on the real display and
    controls. Actual headless scan/preview/render/cancel code passes with fonts;
    hardware display/buttons remain substituted in that evidence.
-6. **Physical power cycle:** remove/restore power on the final image and repeat
+5. **Physical power cycle:** remove/restore power on the final image and repeat
    normal startup and the camera/app flow. Frozen 0.0.38 passed a controlled
    software reboot on the existing image, with original startup scripts restored.
 

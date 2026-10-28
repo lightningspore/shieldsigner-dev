@@ -4,7 +4,7 @@ An experimental runnable SC3336 camera path with calibrated ISP startup,
 persistent automatic exposure/white balance, ISO-dependent demosaic tuning and
 an opt-in SeedSigner Camera adapter. It uses existing Linux camera drivers and
 does not link or call RKAIQ. It is not a complete RKAIQ ABI implementation;
-optical QR and broader physical qualification remain open. See
+one known-public static optical QR passes; broader physical qualification remains open. See
 [the investigation](../../reverse-engineering/rkaiq/README.md) and
 [hardware procedure](../../reverse-engineering/rkaiq/HARDWARE-TEST.md).
 
@@ -29,8 +29,7 @@ passed binary payloads, CompactSeedQR, reversed/duplicated animated UR PSBT,
 and the pinned image app's real stream/still APIs. Actual pinned scan/preview
 rendering and software cancellation also pass on the existing rootfs. These
 are distinct from booting the new image or matching a live optical target.
-The [clean SDK image build and packed readback](../../reverse-engineering/rkaiq/image-camera-build-validation.json) now pass; userspace-QEMU checks also pass the packed Python/app direct-data APIs, without camera, QR pixels or boot qualification. The current target is
-clipped; native optical qualification remains open.
+The [clean SDK image build and packed readback](../../reverse-engineering/rkaiq/image-camera-build-validation.json) now pass; userspace-QEMU checks also pass the packed Python/app direct-data APIs, without camera, QR pixels or boot qualification. The [exact native optical check](../../reverse-engineering/rkaiq/native-optical-0.0.38-hardware-validation.json) now matches the printed public address in five real frames (1.746 seconds), with clean camera/worker shutdown. Broader physical target and lighting qualification remain open.
 
 [Selected-profile scope](../../reverse-engineering/rkaiq/selected-profile-runtime-scope.json)
 records the boundary: CPROC's all-128 API settings are treated as neutral by

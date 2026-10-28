@@ -1,0 +1,68 @@
+{
+  "kind": "pinned-image-native-public-target-optical-check",
+  "matched": true,
+  "opticalScanQualified": true,
+  "framesExamined": 5,
+  "otherCompletedOrInvalid": 0,
+  "cameraBinarySha256": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+  "integration": {
+    "sourceSha256": "f5a927cdf7fd99f9c21aff793b540f59c1e9523a8945daaec96e1cb35375f6f2",
+    "patchedSourceSha256": "7ab2802a8ffa296b58b6357987d297dae7d1b5cb193954fe780a4e1e14719fa2",
+    "changes": [
+      "Rust camera stream import",
+      "Preserve complete rotated preview canvas"
+    ],
+    "installedFilesModified": false,
+    "qrDecoder": {
+      "kind": "native-zxing-3.1.1-local-average",
+      "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+      "starts": 1,
+      "calls": 5,
+      "decoded": 1,
+      "errors": 0,
+      "lastRoundTripSeconds": 0.1470971249991635,
+      "lastExitCode": 0
+    }
+  },
+  "scope": "One known public static address through real camera, ISP, Rust controls and installed DecodeQR; no synthetic image input",
+  "matchAfterSeconds": 1.746412209000482,
+  "ownerExitCode": 0,
+  "passed": true,
+  "durationSeconds": 2.0263748759998634,
+  "expectedPublicTarget": "1BoatSLRHtKNngkdXEeobR76b53LETtpyT",
+  "runtimeProfileOverride": "luckfox_22",
+  "nativeQrBinarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "appSourcesSha256": {
+    "seedsigner/hardware/camera.py": "f5a927cdf7fd99f9c21aff793b540f59c1e9523a8945daaec96e1cb35375f6f2",
+    "seedsigner/models/decode_qr.py": "cd981f1b31144617836b1823198423fa53cc047fe251f28f6d5d7403466e2f1c"
+  },
+  "installedSourcesUnchanged": true,
+  "nativeWorkerClosed": true,
+  "nativeQrStats": {
+    "kind": "native-zxing-3.1.1-local-average",
+    "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+    "starts": 1,
+    "calls": 5,
+    "decoded": 1,
+    "errors": 0,
+    "lastRoundTripSeconds": 0.1470971249991635,
+    "lastExitCode": 0
+  },
+  "helperSha256": "e1f06427f2e1ceab0f24f159092dafcc102a8b4d0b55eac6198f36527407bc29",
+  "strictOpticalHelperSha256": "fc2856e882480d5d0150c68f03bdb5886bdd7bc0982dda2ac6678fe3f261f212",
+  "limitations": [
+    "One physical known-public static address and current scene only; no synthetic input.",
+    "Explicit runtime-profile override does not qualify image/device-tree autodetection.",
+    "No physical LCD/buttons, image flashing, power cycle or broad lighting qualification."
+  ],
+  "version": "0.0.38-dev",
+  "run": 174,
+  "privateFullReportSha256": "bbe23b817a25ebb1f3cfa94bc7af476e2d8d6274ca26e3cdf09f54a229a05b8c",
+  "pinnedApplicationCommit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+  "sceneImagesPublished": false,
+  "diagnosticDependencyOverlay": {
+    "shamir-mnemonic": "0.3.0",
+    "pycryptodomex": "3.21.0",
+    "scope": "Existing Python3.11 rootfs with isolated diagnostic dependencies; not a booted final image. Actual app source hashes and exact camera/worker binaries are recorded."
+  }
+}

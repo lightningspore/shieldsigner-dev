@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "sdkLayoutArmCompiled": true,
+  "sequences": 4,
+  "frames": 48,
+  "updatedFrames": 40,
+  "packedCases": 4,
+  "selectedBytes": 388,
+  "tableBytes": 5184,
+  "exposureBytes": 88,
+  "resultBytes": 178,
+  "packedBytes": 175,
+  "sdkModuleOffset": "0x59d8",
+  "nativeMathCalls": 820,
+  "runtimeSha256": "b62e80f7f6c3f104548c91a02429c2ca9734dada97179938240e2075778465fb",
+  "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "hostBinarySha256": "1480eb9bccc239cd69ea61a07eb078af237c00e8d7893abafc40afc332aa9b4c",
+  "scope": "Complete native constructor, prepare/processing callback, calibration, ISO selection, fixed quantization and ISP32 packing; representative normal SC3336 sequences, both kernel modes and separate-ratio modes; original uClibc log/logf/pow execute.",
+  "sdkHeaders": [
+    {
+      "name": "rk_aiq_types_asharp_hw_v33.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/asharpV33/rk_aiq_types_asharp_hw_v33.h",
+      "sha256": "07aeb55c4f7c0a2171e8729623be07120db29327d69ce322185b21d034df7e7b"
+    },
+    {
+      "name": "rk_aiq_types_asharp_algo_int_v33.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/algos/asharpV33/rk_aiq_types_asharp_algo_int_v33.h",
+      "sha256": "36e887c0c80f9a87c6636d6ac9f8fe61c2363d21412c260de8bb5dc862e56553"
+    },
+    {
+      "name": "sharp_head_v33.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/sharp_head_v33.h",
+      "sha256": "5a8e7bb1da7afdeb2ea28f091380d808997760e06ebc8ac43efcf5ee98f1f54f"
+    },
+    {
+      "name": "sharp_uapi_head_v33.h",
+      "url": "https://raw.githubusercontent.com/LuckfoxTECH/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/include/rkaiq/iq_parser_v2/sharp_uapi_head_v33.h",
+      "sha256": "ee1cf02468a7034167c117fe8ed7dbde74f1e8a2919761a6bf86752daa7db855"
+    }
+  ],
+  "limitations": [
+    "No physical ISP test here; root owns hardware integration.",
+    "Typed SDK graph, allocation, libc strings/memory and diagnostics are explicit oracle boundaries.",
+    "Normal input assembly only; HDR/manual modes and malformed native pointers are not qualified."
+  ]
+}

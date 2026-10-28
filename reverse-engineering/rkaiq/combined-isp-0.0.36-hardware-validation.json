@@ -1,0 +1,53 @@
+{
+  "kind": "combined-isp-hardware-validation",
+  "version": "0.0.36-dev",
+  "run": 109,
+  "passed": true,
+  "cameraBinarySha256": "30b7b5afb592bfca573984013ef5b39baf9819c74ed9cd04c59346d949d3d60f",
+  "ownerLogSha256": "fc738e7049f1a69047163c90f31990119189b503da13ef6f137b7f38764480a3",
+  "initialParametersSha256": "ec3ad49cb242bb1f50f3977e33c2eebc6930c12acfbae4849be774503b9fb3b4",
+  "processedStatistics": 84,
+  "parameterSubmissions": 83,
+  "nativeComparisons": {
+    "cnr": {
+      "passed": true,
+      "reportSha256": "a5607a63c146de3c31137d8be77dd344d014de27f254fd11e00f03d04c197ee7"
+    },
+    "baynr": {
+      "passed": true,
+      "reportSha256": "25ba43017172dc6d0bd08ad6a32674aa0389a7c960809466bf396c69fd249d60"
+    },
+    "lsc": {
+      "passed": true,
+      "reportSha256": "c3364c1991353b521cf5d0ddb0003032ddb8d8b3b49a7711db6ef471d5e680df"
+    },
+    "ccm": {
+      "passed": true,
+      "reportSha256": "9844669626d89e38bc4ecad52c6195650b331752bf106cfcf429a0d790c43310"
+    },
+    "dpcc": {
+      "passed": true,
+      "reportSha256": "141859684d9d76348f810f1c61130d13ab236642f5b3fae2fd4fb9e83e60038a"
+    },
+    "demosaic": {
+      "passed": true,
+      "reportSha256": "d71df8af9b60bc02ff1910f729a2994e506fc3bdf4b053c732c3bded2a44c2dc"
+    },
+    "new-blocks": {
+      "passed": true,
+      "reportSha256": "8d7dd5014c0f45385286cfb7c285602c81b7b00aba70719165d4e2eb0791da88"
+    },
+    "awbTranslation": {
+      "passed": true,
+      "bytesCompared": 7680,
+      "mismatches": 0
+    }
+  },
+  "applicationReceivedFrames": 70,
+  "opticalScanQualified": false,
+  "limitations": [
+    "Actual application run with bounded private AWB trace enabled.",
+    "Native reference boundaries remain documented in each individual oracle.",
+    "No new cold-boot, physical display/buttons or optical target qualification."
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "testBinarySha256": "bc6f65da73b081cecd6051415a961779704352f82750dbca93aab03096ca7e8c",
+  "testBinarySha256": "660bde07bb90aeaa16bc45eedd46e5806472d66d5de11e9a132323dc6d291207",
   "platform": "linux/arm/v7",
   "passed": true,
   "summary": {
@@ -38,12 +38,12 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": false,
-      "rawFrames": 5,
+      "rawFrames": 6,
       "savedBytes": 4478976,
-      "sofEvents": 6,
+      "sofEvents": 7,
       "statisticsEnabled": true,
-      "statisticsEvents": 5,
-      "statisticsFrames": 5
+      "statisticsEvents": 6,
+      "statisticsFrames": 6
     },
     {
       "automaticAe": false,
@@ -52,9 +52,9 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 3,
       "multiPlaneTx": true,
-      "rawFrames": 6,
+      "rawFrames": 4,
       "savedBytes": 4478976,
-      "sofEvents": 7,
+      "sofEvents": 5,
       "statisticsEnabled": false,
       "statisticsEvents": 0,
       "statisticsFrames": 0
@@ -80,28 +80,28 @@
       "imageContent": "anonymous zero-filled simulated memory",
       "imageFrames": 33,
       "multiPlaneTx": false,
-      "rawFrames": 35,
+      "rawFrames": 37,
       "savedBytes": 4478976,
       "sofEvents": 0,
       "statisticsEnabled": true,
       "statisticsEvents": 0,
-      "statisticsFrames": 35,
+      "statisticsFrames": 37,
       "ae": {
         "automaticWhiteBalance": false,
         "error": null,
         "event": "automatic-ae-finished",
-        "lastSof": 35,
-        "lastSofTimestampNs": 4035000000,
-        "maxParameterSnapshots": 36,
-        "parameterSnapshots": 36,
-        "parameterSubmissions": 35,
+        "lastSof": 37,
+        "lastSofTimestampNs": 4037000000,
+        "maxParameterSnapshots": 38,
+        "parameterSnapshots": 38,
+        "parameterSubmissions": 37,
         "physicalApplicationVerified": false,
-        "processedStatistics": 35,
+        "processedStatistics": 37,
         "retiredParameterSnapshots": 0,
         "sensorTraceLimit": 256,
         "success": true,
-        "sensorWriteCount": 54,
-        "sensorQueryCount": 126
+        "sensorWriteCount": 51,
+        "sensorQueryCount": 119
       }
     },
     {

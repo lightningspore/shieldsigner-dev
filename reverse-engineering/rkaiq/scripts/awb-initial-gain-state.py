@@ -91,8 +91,9 @@ class Original(OriginalAwb):
             assert words(h, 2) == [HEAP + h] * 2
         actual = dict(
             current=words(0x353C, 4),
-            previous=words(0x3578, 4),
-            low_current=words(0x353C, 4),
+            # The gain tail damps against 0x352c; 0x3578 is low-count state.
+            previous=words(0x352C, 4),
+            low_current=words(0x3578, 4),
             temperature=words(0x3658, 3),
             frame=words(0x33AC)[0],
             countdown=struct.unpack("<i", self.uc.mem_read(HEAP + 0x144B4, 4))[0],

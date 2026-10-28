@@ -175,6 +175,7 @@ pub fn run_sequence(v: &Value) -> Result<Value, String> {
                 "complete":output.complete,"activeLights":output.active_lights,"continuation":format!("{:?}",output.continuation),
                 "preparationRequested":output.preparation_requested,"updateAfterGate":output.numeric.update,
                 "stabilityThreshold":output.numeric.smart[2],"stabilityMask":output.stability_mask,
+                "region":output.region,"density":output.density,"probabilities":output.probabilities,"dampingCoefficient":session.ccm_damping(),
                 "historyBits":output.measurement_history.map(|row|row.map(f32::to_bits))}));
             }
         }

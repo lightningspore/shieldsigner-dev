@@ -98,7 +98,7 @@ class Joined(controller.Original):
         # dispatch_active stays false: inherited dispatch hook would stop early.
         super().hook(uc, address, size, user)
 
-    def start(self, wb, raw, initial, geometry):
+    def start(self, wb, raw, initial, geometry, seed_previous=False):
         value = layout_case()
         s = value["controller"]
         s["scene_iq"] = wb
@@ -164,11 +164,14 @@ class Joined(controller.Original):
             struct.pack_into("<" + "f" * len(v), b, o, *v)
 
         for o, v in [
+            (8, 1),
             (0x28, 2),
             (0x2C, 0),
             (0x34, 0),
             (0x4C, HEAP + 0x7D000),
             (0x33AC, 0),
+            (0x33BC, geometry["sampled"][0]),
+            (0x33C0, geometry["sampled"][1]),
             (0x33B0, 0),
             (0x33D4, 0),
             (0x33E0, 0),
@@ -197,12 +200,7 @@ class Joined(controller.Original):
             regions=e["xyRegionStableSelection"]["wpNumTh"],
             interval=e["runInterval"],
         )
-        # points has two constant thresholds in this profile.
-        curves["points"] = {
-            "lumaValue": [0.0],
-            "low": [e["probCalcWp"]["wpNumPercTh"]],
-            "high": [e["probCalcWp"]["wpNumPercTh2"]],
-        }
+        curves["points"] = e["division"]["wpNumTh"]
         preprocess.Original.configure_curves(self, cfg, cal, curves)
         for o, b in [(0, c), (0x8000, cfg), (0x9000, cal)]:
             self.uc.mem_write(HEAP + o, bytes(b))
@@ -235,6 +233,19 @@ class Joined(controller.Original):
         )
         self.initializing = False
         assert status == 0, status
+        self.startup = {
+            name: list(struct.unpack("<4I", self.uc.mem_read(HEAP + offset, 16)))
+            for name, offset in [
+                ("gain353C", 0x353C),
+                ("gain3578", 0x3578),
+                ("previous352C", 0x352C),
+            ]
+        }
+        if seed_previous:
+            self.uc.mem_write(HEAP + 0x352C, struct.pack("<4I", *initial["current"]))
+        self.uc.mem_write(HEAP + 0x33BC, struct.pack("<2I", *geometry["sampled"]))
+        self.uc.mem_write(HEAP + 0x33B8, bytes(geometry["block"]))
+        self.uc.mem_write(HEAP + 0x2ED4, struct.pack("<2H", 2304, 1296))
 
     def frame(self, raw, metadata, first):
         self.uc.mem_write(HEAP + 0x70000, raw)
@@ -259,7 +270,25 @@ class Joined(controller.Original):
             activeLights=cfg[0x138],
             reconfigure=self.reconfigured,
             calculated=self.wrapper_calls > calls,
+            region=c[0x33FC],
+            density=struct.unpack_from("<f", c, 0x33CC)[0],
+            dampingCoefficient=struct.unpack_from("<f", c, 0x3484)[0],
+            probabilities=[
+                struct.unpack(
+                    "<f",
+                    self.uc.mem_read(
+                        struct.unpack_from("<I", c, 0x33E4)[0] + j * 0xA0 + 0x74, 4
+                    ),
+                )[0]
+                for j in range(7)
+            ],
             diagnostics=dict(
+                sampled=list(struct.unpack_from("<2I", c, 0x33BC)),
+                variance=struct.unpack_from("<f", c, 0x3480)[0],
+                retained=struct.unpack_from("<I", c, 0x33C8)[0],
+                regionThresholds=list(struct.unpack_from("<2f", cfg, 0x38C)),
+                countThresholds=list(struct.unpack_from("<2I", cfg, 0x1B8)),
+                absoluteRelative=list(struct.unpack_from("<2f", cfg, 0x1F0)),
                 rawGainBits=list(struct.unpack_from("<4I", c, 0x34A4)),
                 coefficientBits=struct.unpack_from("<I", c, 0x3484)[0],
                 effectiveBits=struct.unpack_from("<I", c, 0x3488)[0],
@@ -273,6 +302,16 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("samples", type=Path)
     p.add_argument("--cycles", type=int, default=2)
+    p.add_argument(
+        "--require-match",
+        action="store_true",
+        help="Exit nonzero if represented comparison differs; does not qualify excluded boundaries",
+    )
+    p.add_argument(
+        "--seed-previous-diagnostic",
+        action="store_true",
+        help="Controlled diagnostic only: replace native352C previous vector with initialgain",
+    )
     p.add_argument(
         "--fixture",
         type=Path,
@@ -329,7 +368,7 @@ def main():
     ]
     expected = fixture("awb-captured-sequence", dict(common, stages=stages))["frames"]
     arm = Joined()
-    arm.start(wb, raw[0], initial, geometry)
+    arm.start(wb, raw[0], initial, geometry, a.seed_previous_diagnostic)
     rows = []
     for i, reference in enumerate(expected):
         actual = arm.frame(raw[i % 2], meta[i % 2], i == 0)
@@ -349,7 +388,9 @@ def main():
     report = dict(
         kind="joined-native-awb-captured-diagnostic",
         hardwareWrites=False,
+        seedPreviousDiagnostic=a.seed_previous_diagnostic,
         fullControllerQualified=False,
+        nativeStartup=arm.startup,
         nativeSymbol=SYMBOL,
         rustFixtureSha256=hashlib.sha256(a.fixture.read_bytes()).hexdigest(),
         provenance={
@@ -378,6 +419,8 @@ def main():
     a.report.parent.mkdir(parents=True, exist_ok=True)
     a.report.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({k: v for k, v in report.items() if k != "frames"}, indent=2))
+    if a.require_match and report["mismatchingFrames"]:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

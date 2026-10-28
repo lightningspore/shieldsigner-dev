@@ -2,6 +2,30 @@
 
 The Rust replacement continues to use the Luckfox SDK's Linux ISP/sensor drivers and physical ISP hardware. The proprietary userspace RKAIQ library chooses calibrated parameters, configures the graph/queues, and runs the automatic control algorithms. Replacing that library requires all of those responsibilities; a frame captured from an already initialized pipeline does not establish independent startup.
 
+## Development 0.0.35: combined ISP hardware result
+
+The SC3336 path now enables CCM, LSC, DPCC, BAYNR, BAY3D, YNR, CNR and
+SHARP together, alongside demosaic and live AE/AWB. A 600-image hardware run
+processed 400 statistics records and submitted 399 parameter updates. All nine
+module comparisons and final AWB translation passed against original ARM
+instructions on the host. The board runs Rust and existing Linux drivers,
+without loading RKAIQ. See [the evidence](combined-isp-hardware-validation.json).
+
+An earlier explicit-all build passed the installed application's headless scan
+path: 12 decoder-input frames, 36 previews, clean owner and preview-thread exit.
+Optical QR decoding, physical display/buttons, cold startup of this exact new
+build and broader image-quality qualification remain open.
+
+The limited CMA pool required reserving BAY3D temporal buffers before raw-bridge
+allocation. The bridge accepts one raw buffer when granted by the driver;
+STREAMON remains the driver's authority. BAY3D is staged before BAYNR so BAYNR
+sees its effective enable bit. The complete group works on hardware; the older
+isolated-CNR failure remains historical evidence.
+
+`SHIELDSIGNER_IQ_MODULES=all` is the default for BAY3D, YNR, CNR and SHARP.
+`none` or a comma-separated subset supports diagnosis; unknown names fail.
+Frozen 0.0.34 kits retain their previous behavior and remain unchanged.
+
 ## Current functional status (0.0.31-dev)
 
 The SC3336/RV1106 Rust path now configures the graph and calibrated startup

@@ -1,3 +1,36 @@
+struct CameraBay3d {
+    calibration: serde_json::Value,
+    state: shieldsigner_rkaiq::bay3d_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_bay3d::RESULT_BYTES],
+}
+struct CameraBay3dStage {
+    state: shieldsigner_rkaiq::bay3d_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_bay3d::RESULT_BYTES],
+    information: shieldsigner_rkaiq::bay3d_frame::Information,
+    updated: bool, exposure_frame:u32, exact:bool, dcg:i32,
+}
+struct CameraYnr {
+    calibration: serde_json::Value,
+    state: shieldsigner_rkaiq::ynr_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_ynr::RESULT_BYTES],
+}
+struct CameraYnrStage {
+    state: shieldsigner_rkaiq::ynr_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_ynr::RESULT_BYTES],
+    information: shieldsigner_rkaiq::ynr_frame::Information,
+    updated: bool, exposure_frame:u32, exact:bool, dcg:i32,
+}
+struct CameraSharp {
+    calibration: serde_json::Value,
+    state: shieldsigner_rkaiq::sharp_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_sharp::RESULT_BYTES],
+}
+struct CameraSharpStage {
+    state: shieldsigner_rkaiq::sharp_frame::State,
+    result: [u8;shieldsigner_rkaiq::isp_sharp::RESULT_BYTES],
+    information: shieldsigner_rkaiq::sharp_frame::Information,
+    updated: bool, exposure_frame:u32, exact:bool, dcg:i32,
+}
 struct CameraCnr {
     calibration: serde_json::Value,
     state: shieldsigner_rkaiq::cnr_frame::State,
@@ -300,6 +333,10 @@ struct CameraAeOwner<B: shieldsigner_rkaiq::sensor::Backend> {
     lsc: Option<CameraLsc>,
     baynr: Option<CameraBaynr>,
     cnr: Option<CameraCnr>,
+    bay3d: Option<CameraBay3d>,
+    ynr: Option<CameraYnr>,
+    sharp: Option<CameraSharp>,
+
     demosaic: Option<(shieldsigner_rkaiq::demosaic_selection::Calibration, shieldsigner_rkaiq::demosaic_runtime::State)>,
 }
 impl<B: shieldsigner_rkaiq::sensor::Backend> CameraAeOwner<B>
@@ -331,6 +368,10 @@ where
             lsc: None,
             baynr: None,
             cnr: None,
+            bay3d: None,
+            ynr: None,
+            sharp: None,
+
             demosaic: None,
         }
     }
@@ -448,6 +489,15 @@ where
             if updated {shieldsigner_rkaiq::isp_lsc::apply(&mut planned,&result,&mut converter);}
             Some(CameraLscStage{state,result,converter,information,updated,exposure_frame:exposure.frame,exact,gains})
         } else {None};
+        let bay3d_staged = if let Some(bay3d)=&self.bay3d {
+            let (exposure,exact)=self.runtime.effective_exposure(frame).map_err(error)?;
+            let information=shieldsigner_rkaiq::bay3d_frame::Information::from_record(&exposure.exposure,1.).map_err(error)?;
+            let dcg=i32::from_le_bytes(exposure.exposure[20..24].try_into().unwrap());
+            let mut state=bay3d.state;let mut result=bay3d.result;
+            let updated=state.process(&bay3d.calibration,information,&mut result).map_err(error)?;
+            if updated {shieldsigner_rkaiq::isp_bay3d::apply(&mut planned,&result);}
+            Some(CameraBay3dStage{state,result,information,updated,exposure_frame:exposure.frame,exact,dcg})
+        } else {None};
         let baynr_staged = if let Some(baynr)=&self.baynr {
             let (exposure,exact)=self.runtime.effective_exposure(frame).map_err(error)?;
             let prior_enable=u64::from_le_bytes(snapshot[8..16].try_into().unwrap());
@@ -470,6 +520,24 @@ where
             if updated {shieldsigner_rkaiq::isp_cnr::apply(&mut planned,&result);}
             Some(CameraCnrStage{state,result,information,updated,exposure_frame:exposure.frame,exact,dcg})
         } else {None};
+        let ynr_staged = if let Some(ynr)=&self.ynr {
+            let (exposure,exact)=self.runtime.effective_exposure(frame).map_err(error)?;
+            let information=shieldsigner_rkaiq::ynr_frame::Information::from_record(&exposure.exposure,1.).map_err(error)?;
+            let dcg=i32::from_le_bytes(exposure.exposure[20..24].try_into().unwrap());
+            let mut state=ynr.state;let mut result=ynr.result;
+            let updated=state.process(&ynr.calibration,information,&mut result).map_err(error)?;
+            if updated {shieldsigner_rkaiq::isp_ynr::apply(&mut planned,&result);}
+            Some(CameraYnrStage{state,result,information,updated,exposure_frame:exposure.frame,exact,dcg})
+        } else {None};
+        let sharp_staged = if let Some(sharp)=&self.sharp {
+            let (exposure,exact)=self.runtime.effective_exposure(frame).map_err(error)?;
+            let information=shieldsigner_rkaiq::sharp_frame::Information::from_record(&exposure.exposure,1.).map_err(error)?;
+            let dcg=i32::from_le_bytes(exposure.exposure[20..24].try_into().unwrap());
+            let mut state=sharp.state;let mut result=sharp.result;
+            let updated=state.process(&sharp.calibration,information,&mut result).map_err(error)?;
+            if updated {shieldsigner_rkaiq::isp_sharp::apply(&mut planned,&result);}
+            Some(CameraSharpStage{state,result,information,updated,exposure_frame:exposure.frame,exact,dcg})
+        } else {None};
         let measurement = self.awb.as_ref().and_then(|awb| awb.measurement_for(frame));
         if let Some(record) = measurement {
             shieldsigner_rkaiq::isp_awb_measurement::Measurement(record).apply(&mut planned, true);
@@ -481,13 +549,17 @@ where
             if let Some(stage)=lsc_staged {self.commit_lsc(stage,frame,&planned,&mut snapshot,false);}
             if let Some(stage)=baynr_staged {self.commit_baynr(stage,frame,&planned,&mut snapshot,false);}
             if let Some(stage)=cnr_staged {self.commit_cnr(stage,frame,&planned,&mut snapshot,false);}
+            if let Some(stage)=bay3d_staged {self.commit_bay3d(stage,frame,&planned,&mut snapshot,false);}
+            if let Some(stage)=ynr_staged {self.commit_ynr(stage,frame,&planned,&mut snapshot,false);}
+            if let Some(stage)=sharp_staged {self.commit_sharp(stage,frame,&planned,&mut snapshot,false);}
+
             return Ok(None);
         }
         self.prune_histories();
         if self.parameters.len() == 128 || self.parameters.last().is_some_and(|p| p.0 >= frame) {
             return Err(error("Gain batch requires a new increasing parameter ID"));
         }
-        let index = if self.awb.is_some() || self.demosaic.is_some() || self.dpcc.is_some() || self.ccm.is_some() || self.lsc.is_some() || self.baynr.is_some() || self.cnr.is_some() {
+        let index = if self.awb.is_some() || self.demosaic.is_some() || self.dpcc.is_some() || self.ccm.is_some() || self.lsc.is_some() || self.baynr.is_some() || self.cnr.is_some() || self.bay3d.is_some() || self.ynr.is_some() || self.sharp.is_some() {
             mark_runtime_parameter_frame(&mut planned, frame);
             let index = backend.enqueue_payload(queue, &planned)?;
             cache = planned_cache;
@@ -540,6 +612,10 @@ where
         if let Some(stage)=lsc_staged {self.commit_lsc(stage,frame,&planned,&mut snapshot,true);}
         if let Some(stage)=baynr_staged {self.commit_baynr(stage,frame,&planned,&mut snapshot,true);}
             if let Some(stage)=cnr_staged {self.commit_cnr(stage,frame,&planned,&mut snapshot,true);}
+            if let Some(stage)=bay3d_staged {self.commit_bay3d(stage,frame,&planned,&mut snapshot,true);}
+            if let Some(stage)=ynr_staged {self.commit_ynr(stage,frame,&planned,&mut snapshot,true);}
+            if let Some(stage)=sharp_staged {self.commit_sharp(stage,frame,&planned,&mut snapshot,true);}
+
         self.parameters.push((frame, snapshot));
         self.parameter_submissions += 1;
         self.max_parameter_history = self.max_parameter_history.max(self.parameters.len());
@@ -558,6 +634,27 @@ where
         if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
         let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
         println!("{}",json!({"event":"automatic-cnr-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
+    }
+    fn commit_bay3d(&mut self,stage:CameraBay3dStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
+        let bay3d=self.bay3d.as_mut().unwrap();bay3d.state=stage.state;bay3d.result=stage.result;
+        use shieldsigner_rkaiq::isp_bay3d::{OFFSET,BYTES};
+        if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
+        let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+        println!("{}",json!({"event":"automatic-bay3d-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
+    }
+    fn commit_ynr(&mut self,stage:CameraYnrStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
+        let ynr=self.ynr.as_mut().unwrap();ynr.state=stage.state;ynr.result=stage.result;
+        use shieldsigner_rkaiq::isp_ynr::{OFFSET,BYTES};
+        if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
+        let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+        println!("{}",json!({"event":"automatic-ynr-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
+    }
+    fn commit_sharp(&mut self,stage:CameraSharpStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
+        let sharp=self.sharp.as_mut().unwrap();sharp.state=stage.state;sharp.result=stage.result;
+        use shieldsigner_rkaiq::isp_sharp::{OFFSET,BYTES};
+        if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
+        let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
+        println!("{}",json!({"event":"automatic-sharp-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
     }
     fn commit_lsc(&mut self,stage:CameraLscStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
         let lsc=self.lsc.as_mut().unwrap();lsc.state=stage.state;lsc.result=stage.result;lsc.converter=stage.converter;

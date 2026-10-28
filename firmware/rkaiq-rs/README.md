@@ -22,3 +22,19 @@ ARMv7/musl binaries require no target dynamic uClibc runtime. Local tests,
 original-ARM differential comparisons, hardware runs and their distinct limits
 are recorded separately. No installed app or boot change is required by the
 process-local launcher. Frozen kits retain their own versioned behavior.
+
+Development 0.0.35 enables all eight advanced ISP blocks by default. See the
+[combined hardware result](../../reverse-engineering/rkaiq/ISP.md#development-0035-combined-isp-hardware-result)
+for evidence and remaining qualification limits.
+
+The dashboard lives in `demo/`. Forward the camera owner's Unix stream socket
+to local TCP 60366, then launch from the repository root:
+
+```sh
+uv run --python 3.13 --with pillow python firmware/rkaiq-rs/demo/server.py --camera-port 60366 --listen-port 8765 --static-dir firmware/rkaiq-rs/demo --rotate 180
+```
+
+Open http://127.0.0.1:8765/ for real frames, snapshots and fullscreen. The bridge
+fans one camera connection out to browsers and retains previews in memory.
+Optional `--metadata-file` supplies recorded enable/verification telemetry;
+those indicators are not per-frame measurements.

@@ -176,8 +176,19 @@ fn first_frame_sc3336_with_gain(
     let plan: Value =
         serde_json::from_slice(&read(&args[0], 65536)?).map_err(|e| error(e.to_string()))?;
     let (sensor_path, isp, tx, rx, sof) = pipeline_configuration::linear_cif_nodes(&plan)?;
-    let iq: Value = serde_json::from_slice(&read(&args[1], 8 * 1024 * 1024)?)
+    let mut iq: Value = serde_json::from_slice(&read(&args[1], 8 * 1024 * 1024)?)
         .map_err(|e| error(e.to_string()))?;
+    if let Some(selection) = std::env::var_os("SHIELDSIGNER_IQ_MODULES") {
+        let selection=selection.into_string().map_err(|_|error("SHIELDSIGNER_IQ_MODULES must be UTF-8"))?;
+        let mut modules=json!({"bay3d":false,"ynr":false,"cnr":false,"sharp":false});
+        let names=match selection.as_str(){"all"=>vec!["bay3d","ynr","cnr","sharp"],"none"=>Vec::new(),_=>selection.split(',').collect()};
+        for name in names {
+            if !matches!(name,"bay3d"|"ynr"|"cnr"|"sharp") {return Err(error("SHIELDSIGNER_IQ_MODULES accepts all, none, or a comma-separated list of bay3d,ynr,cnr,sharp"));}
+            modules[name]=json!(true);
+        }
+        iq["_shieldsignerExperimentalModules"]=modules;
+    }
+
     let profile = SensorCalibration::from_value(&iq).map_err(error)?;
     if profile.width != 2304 || profile.height != 1296 || profile.linear_dcg_supported {
         return Err(error(
@@ -427,19 +438,43 @@ fn first_frame_sc3336_with_gain(
             lsc_calibration.validate_geometry([profile.width,profile.height]).map_err(error)?;
             let (lsc_state,lsc_result)=shieldsigner_rkaiq::lsc_frame::State::seeded(&lsc_calibration,[gain,ccm_wb[0]/ccm_wb[1],ccm_wb[3]/ccm_wb[2]]).map_err(|e|error(format!("LSC owner startup: {e:?}")))?;
             owner.lsc=Some(CameraLsc{calibration:lsc_calibration,state:lsc_state,result:lsc_result,converter:shieldsigner_rkaiq::isp_lsc::State{enabled:lsc_result[2440]!=0},seed:owner.ccm.as_ref().unwrap().seed});
+            if shieldsigner_rkaiq::initial_parameters::experimental_enabled(&iq,"bay3d") {
+            let bay3d_calibration=iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["bayertnr_v23"].clone();
+            let bay3d_information=shieldsigner_rkaiq::bay3d_frame::Information::from_record(&initial_record,1.).map_err(error)?;
+            let (bay3d_state,bay3d_result)=shieldsigner_rkaiq::bay3d_frame::State::seeded(&bay3d_calibration,bay3d_information,[profile.width,profile.height]).map_err(error)?;
+            if initial["bay3dStartup"]["result"].as_str()!=Some(&bay3d_result.iter().map(|v|format!("{v:02x}")).collect::<String>()) {return Err(error("BAY3D owner/startup result differs"));}
+            println!("{}",json!({"event":"bay3d-controller-startup","geometry":[profile.width,profile.height],"seconds":bay3d_information.seconds,"gains":bay3d_information.gains,"blc":bay3d_information.blc_predgain,"snr":bay3d_information.snr_mode,"dcg":i32::from_le_bytes(initial_record[20..24].try_into().unwrap()),"gray":bay3d_information.gray,"force":bay3d_information.force,"result":bay3d_result.iter().map(|v|format!("{v:02x}")).collect::<String>(),"exposure":bay3d_state.exposure.iter().map(|v|format!("{v:02x}")).collect::<String>(),"selected":bay3d_state.selected.iter().map(|v|format!("{v:02x}")).collect::<String>(),"matchesInitialRegisters":true}));
+            owner.bay3d=Some(CameraBay3d{calibration:bay3d_calibration,state:bay3d_state,result:bay3d_result});
+            }
             let baynr_calibration=iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["bayer2dnr_v23"].clone();
             let baynr_information=shieldsigner_rkaiq::baynr_frame::Information::from_record(&initial_record,1.,u64::from_le_bytes(parameters[8..16].try_into().unwrap())&(1u64<<37)!=0).map_err(error)?;
             let (baynr_state,baynr_result)=shieldsigner_rkaiq::baynr_frame::State::seeded(&baynr_calibration,baynr_information).map_err(error)?;
             if initial["baynrStartup"]["result"].as_str()!=Some(&baynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>()) {return Err(error("BAYNR owner/startup result differs"));}
             println!("{}",json!({"event":"baynr-controller-startup","seconds":baynr_information.seconds,"gains":baynr_information.gains,"blc":baynr_information.blc_predgain,"snr":baynr_information.snr_mode,"dcg":i32::from_le_bytes(initial_record[20..24].try_into().unwrap()),"gray":baynr_information.gray,"bay3d":baynr_information.bay3d_enabled,"force":baynr_information.force,"result":baynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>(),"exposure":baynr_state.exposure.iter().map(|v|format!("{v:02x}")).collect::<String>(),"selected":baynr_state.selected.iter().map(|v|format!("{v:02x}")).collect::<String>(),"matchesInitialRegisters":true}));
             owner.baynr=Some(CameraBaynr{calibration:baynr_calibration,state:baynr_state,result:baynr_result});
-            if shieldsigner_rkaiq::initial_parameters::LIVE_CNR_ENABLED {
+            if shieldsigner_rkaiq::initial_parameters::experimental_enabled(&iq,"cnr") {
             let cnr_calibration=iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["cnr_v30"].clone();
             let cnr_information=shieldsigner_rkaiq::cnr_frame::Information::from_record(&initial_record,1.).map_err(error)?;
             let (cnr_state,cnr_result)=shieldsigner_rkaiq::cnr_frame::State::seeded(&cnr_calibration,cnr_information,[profile.width,profile.height]).map_err(error)?;
             if initial["cnrStartup"]["result"].as_str()!=Some(&cnr_result.iter().map(|v|format!("{v:02x}")).collect::<String>()) {return Err(error("CNR owner/startup result differs"));}
             println!("{}",json!({"event":"cnr-controller-startup","geometry":[profile.width,profile.height],"seconds":cnr_information.seconds,"gains":cnr_information.gains,"blc":cnr_information.blc_predgain,"snr":cnr_information.snr_mode,"dcg":i32::from_le_bytes(initial_record[20..24].try_into().unwrap()),"gray":cnr_information.gray,"force":cnr_information.force,"result":cnr_result.iter().map(|v|format!("{v:02x}")).collect::<String>(),"exposure":cnr_state.exposure.iter().map(|v|format!("{v:02x}")).collect::<String>(),"selected":cnr_state.selected.iter().map(|v|format!("{v:02x}")).collect::<String>(),"matchesInitialRegisters":true}));
             owner.cnr=Some(CameraCnr{calibration:cnr_calibration,state:cnr_state,result:cnr_result});
+            }
+            if shieldsigner_rkaiq::initial_parameters::experimental_enabled(&iq,"ynr") {
+            let ynr_calibration=iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["ynr_v22"].clone();
+            let ynr_information=shieldsigner_rkaiq::ynr_frame::Information::from_record(&initial_record,1.).map_err(error)?;
+            let (ynr_state,ynr_result)=shieldsigner_rkaiq::ynr_frame::State::seeded(&ynr_calibration,ynr_information,[profile.width,profile.height]).map_err(error)?;
+            if initial["ynrStartup"]["result"].as_str()!=Some(&ynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>()) {return Err(error("YNR owner/startup result differs"));}
+            println!("{}",json!({"event":"ynr-controller-startup","geometry":[profile.width,profile.height],"seconds":ynr_information.seconds,"gains":ynr_information.gains,"blc":ynr_information.blc_predgain,"snr":ynr_information.snr_mode,"dcg":i32::from_le_bytes(initial_record[20..24].try_into().unwrap()),"gray":ynr_information.gray,"force":ynr_information.force,"result":ynr_result.iter().map(|v|format!("{v:02x}")).collect::<String>(),"exposure":ynr_state.exposure.iter().map(|v|format!("{v:02x}")).collect::<String>(),"selected":ynr_state.selected.iter().map(|v|format!("{v:02x}")).collect::<String>(),"matchesInitialRegisters":true}));
+            owner.ynr=Some(CameraYnr{calibration:ynr_calibration,state:ynr_state,result:ynr_result});
+            }
+            if shieldsigner_rkaiq::initial_parameters::experimental_enabled(&iq,"sharp") {
+            let sharp_calibration=iq["main_scene"][0]["sub_scene"][0]["scene_isp32"]["sharp_v33"].clone();
+            let sharp_information=shieldsigner_rkaiq::sharp_frame::Information::from_record(&initial_record,1.).map_err(error)?;
+            let (sharp_state,sharp_result)=shieldsigner_rkaiq::sharp_frame::State::seeded(&sharp_calibration,sharp_information,[profile.width,profile.height]).map_err(error)?;
+            if initial["sharpStartup"]["result"].as_str()!=Some(&sharp_result.iter().map(|v|format!("{v:02x}")).collect::<String>()) {return Err(error("SHARP owner/startup result differs"));}
+            println!("{}",json!({"event":"sharp-controller-startup","geometry":[profile.width,profile.height],"seconds":sharp_information.seconds,"gains":sharp_information.gains,"blc":sharp_information.blc_predgain,"snr":sharp_information.snr_mode,"dcg":i32::from_le_bytes(initial_record[20..24].try_into().unwrap()),"gray":sharp_information.gray,"force":sharp_information.force,"result":sharp_result.iter().map(|v|format!("{v:02x}")).collect::<String>(),"exposure":sharp_state.exposure.iter().map(|v|format!("{v:02x}")).collect::<String>(),"selected":sharp_state.selected.iter().map(|v|format!("{v:02x}")).collect::<String>(),"matchesInitialRegisters":true}));
+            owner.sharp=Some(CameraSharp{calibration:sharp_calibration,state:sharp_state,result:sharp_result});
             }
             if live_awb {
                 owner.awb = Some(CameraAwb {

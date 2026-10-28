@@ -1,5 +1,9 @@
 # First camera session
 
+Current development is **0.0.35-dev**; latest frozen kit is **0.0.34-dev**.
+See the [combined ISP result](ISP.md#development-0035-combined-isp-hardware-result).
+Version statements below describe historical sessions.
+
 Development source is now **0.0.32-dev**; the recommended frozen kit is **0.0.31-dev**.
 The latest diagnostic work is [paired AWB sampling and controlled scene replay](#development-0032-paired-awb-samples-and-scene-change-diagnostics).
 

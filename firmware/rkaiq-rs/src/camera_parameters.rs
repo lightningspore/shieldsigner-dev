@@ -373,6 +373,18 @@ fn capture_cif_with_parameters_observed(
 ) -> io::Result<()> {
     capture_cif_with_parameters_controlled(args, observer, None)
 }
+// Parameter QBUF allocates the ISP's temporal-NR buffers. Defer the large
+// CIF raw pool until that allocation has completed, avoiding CMA starvation
+// when the Python application is resident.
+struct PendingRawBridge {
+    tx: String, rx: String, isp: String, sof: Option<String>,
+    step: Option<raw_bridge::ExposureStep>, observer: Option<CameraAeSender>,
+}
+impl PendingRawBridge {
+    fn prepare(self) -> io::Result<raw_bridge::Bridge> {
+        Ok(raw_bridge::Bridge::prepare(&self.tx,&self.rx,&self.isp,self.sof.as_deref(),self.step)?.observe_ae(self.observer))
+    }
+}
 fn capture_cif_with_parameters_controlled(
     args: &[String],
     observer: Option<CameraAeSender>,
@@ -428,8 +440,7 @@ fn capture_cif_with_parameters_controlled(
             ));
         }
     }
-    let bridge =
-        raw_bridge::Bridge::prepare(&args[2], &args[3], &args[4], sof, step)?.observe_ae(observer);
+    let bridge = PendingRawBridge {tx:args[2].clone(),rx:args[3].clone(),isp:args[4].clone(),sof:sof.map(str::to_owned),step,observer};
     let mut combined = args[..2].to_vec();
     combined.extend_from_slice(&args[separator..]);
     capture_with_parameters_controlled(&combined, Some(bridge), control)
@@ -439,13 +450,13 @@ fn capture_with_parameters(args: &[String]) -> io::Result<()> {
 }
 fn capture_with_parameters_using(
     args: &[String],
-    raw: Option<raw_bridge::Bridge>,
+    raw: Option<PendingRawBridge>,
 ) -> io::Result<()> {
     capture_with_parameters_controlled(args, raw, None)
 }
 fn capture_with_parameters_controlled(
     args: &[String],
-    raw: Option<raw_bridge::Bridge>,
+    raw: Option<PendingRawBridge>,
     control: Option<AutomaticCapture>,
 ) -> io::Result<()> {
     use std::os::unix::fs::{FileTypeExt, MetadataExt};
@@ -482,6 +493,7 @@ fn capture_with_parameters_controlled(
     let mut parameter_args = args[..2].to_vec();
     parameter_args.extend(["--hold-ms".into(), "0".into()]);
     submit_parameters_then_with_backend(&parameter_args, |backend, queue| {
+        let raw=raw.map(PendingRawBridge::prepare).transpose()?;
         println!(
             "{}",
             json!({"event":"image-capture-starting","parameterQueueHeldOpen":true,"device":image[0],"output":image[1],"coldStartProven":false})

@@ -42,7 +42,10 @@ mod raw_bridge {
             };
             ioctl(self.file.as_raw_fd(), REQBUFS, &mut request)?;
             self.allocated = true;
-            if request.count < 2 || request.count > 16 {
+            // CIF permits one buffer when its dummy-buffer path is enabled;
+            // STREAMON remains the driver's authority for its actual minimum.
+            // A one-buffer ring serializes capture/readback under CMA pressure.
+            if request.count == 0 || request.count > 16 {
                 return Err(error(format!("Raw buffer allocation outside requested bounds: type={} memory={} requested={} returned={}", self.kind, self.memory, count, request.count)));
             }
             Ok(request.count)

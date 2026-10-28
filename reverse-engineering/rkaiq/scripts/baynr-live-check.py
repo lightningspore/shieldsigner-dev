@@ -76,7 +76,7 @@ def main():
         struct.pack_into("<i", raw, 20, r["dcg"])
         actual = cis.run(dict(noise=None, records=[raw.hex()], header=bytes(24).hex()))
         assert bytes.fromhex(actual[0])[240] == r["snr"]
-        assert not r["bay3d"] and not r["gray"]
+        assert not r["gray"]
         if "frame" in r:
             assert r["exposureFrame"] <= r["frame"]
             assert r["queuedBatch"] or not r["updated"]
@@ -105,7 +105,6 @@ def main():
     initial = path(".initial.bin").read_bytes()
     assert len(initial) == 11145
     assert struct.unpack_from("<Q", initial, 8)[0] & (1 << 36)
-    assert not struct.unpack_from("<Q", initial, 8)[0] & (1 << 37)
     assert initial[0x27D3:0x2869].hex() == packed(expected[0]["result"])
     for r, w in zip(records, expected[1:], strict=True):
         assert r["updated"] == w["updated"] and r["result"] == w["result"], r["frame"]
@@ -135,7 +134,7 @@ def main():
         allInputsUseAssociatedAe=True,
         nativeCisDcgFallbackChecked=True,
         nrSwitchUnsupportedChecked=True,
-        bay3dDisabled=True,
+        bay3dDisabled=not bool(struct.unpack_from("<Q", initial, 8)[0] & (1 << 37)),
         originalBinarySha256=hashlib.sha256(BINARY.read_bytes()).hexdigest(),
         ownerLogSha256=hashlib.sha256(path(".log").read_bytes()).hexdigest(),
         initialParametersSha256=hashlib.sha256(initial).hexdigest(),
@@ -143,7 +142,7 @@ def main():
         limitations=[
             "General JSON parsing and C++ scheduling framework not executed; SDK calibration/AE/BLC records, allocation, strings and diagnostics are explicit boundaries.",
             "Associated AE records are scheduler reports, not independent physical sensor timing proof; QBUF acceptance does not prove final proposals applied before shutdown.",
-            "Normal no-NR-switch/DCG-disabled profile with BAY3D disabled; manual/HDR/optional sensor switching and optical QR/image-quality qualification remain open.",
+            "Normal no-NR-switch/DCG-disabled profile; actual BAY3D enable is recorded; manual/HDR/optional sensor switching and optical QR/image-quality qualification remain open.",
         ],
     )
     args.report.write_text(json.dumps(report, indent=2) + "\n")

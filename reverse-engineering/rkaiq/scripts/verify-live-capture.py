@@ -9,13 +9,14 @@ import subprocess
 import sys
 
 SCRIPTS = Path(__file__).resolve().parent
-MODULES = ("cnr", "baynr", "lsc", "ccm", "dpcc", "demosaic")
+MODULES = ("bay3d", "ynr", "cnr", "sharp", "baynr", "lsc", "ccm", "dpcc", "demosaic")
+NEW_MODULES = ("bay3d", "ynr", "sharp")
 
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("base", type=Path)
-    p.add_argument("--modules", nargs="+", choices=MODULES, default=[m for m in MODULES if m != "cnr"])
+    p.add_argument("--modules", nargs="+", choices=MODULES, default=list(MODULES))
     p.add_argument("--min-submissions", type=int, default=0)
     args = p.parse_args()
 
@@ -40,13 +41,23 @@ def main():
         return json.loads(report.read_text())
 
     summaries = {}
-    for module in args.modules:
+    for module in [m for m in args.modules if m not in NEW_MODULES]:
         report = path(".native-" + module + ".json")
         source = path(".log") if module == "demosaic" else args.base
         summary = run(module + "-live-check.py", [source], report)
         assert summary["passed"]
         summaries[module] = str(report)
         print("PASS:", module, flush=True)
+    added = [m for m in args.modules if m in NEW_MODULES]
+    if added:
+        report = path(".native-new-blocks.json")
+        summary = run(
+            "new-blocks-live-check.py", [args.base, "--modules", *added], report
+        )
+        assert summary["passed"] and summary["liveCaptureQualified"]
+        summaries["newBlocks"] = str(report)
+        for module in added:
+            print("PASS:", module, flush=True)
     raw = path(".stats.raw").read_bytes()
     assert len(raw) in (13036, 13040)
     configuration = struct.unpack_from("<I", raw, 0x32E8)[0]

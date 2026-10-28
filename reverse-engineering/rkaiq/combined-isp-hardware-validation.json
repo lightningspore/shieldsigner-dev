@@ -1,0 +1,106 @@
+{
+  "version": "0.0.35-dev",
+  "date": "2026-10-27",
+  "passed": true,
+  "capture": {
+    "images": 600,
+    "processedStatistics": 400,
+    "parameterSubmissions": 399,
+    "linksRkaiq": false,
+    "vendorProcessesBefore": [],
+    "vendorProcessesAfter": []
+  },
+  "nativeComparisons": {
+    "cnr": {
+      "passed": true,
+      "reportSha256": "75e3a58c6fbd39cf1fc1c49e0e5e594b7b6aa644dfa6c94946a4c1c4079007c9"
+    },
+    "baynr": {
+      "passed": true,
+      "reportSha256": "5791fc677c0703478afcd7493faf8782b782e07898b58633e1d6df17525d4a15"
+    },
+    "lsc": {
+      "passed": true,
+      "reportSha256": "f221c0c1e8a08f021c3ed3caece8c74a8f51871c7d57a4207d18009f7d9525af"
+    },
+    "ccm": {
+      "passed": true,
+      "reportSha256": "ec5e9d715b9d796943081977afb53246ce6b1560b9b20780d22dcf7257bfdae7"
+    },
+    "dpcc": {
+      "passed": true,
+      "reportSha256": "1064426f17670b0773f896f2a712566bb62df113069a2794850381550c634675"
+    },
+    "demosaic": {
+      "passed": true,
+      "reportSha256": "5abbd4cddb1eacda2986f0456231d02ad8b169feb248ac5c10a9ddc9ac65f332"
+    },
+    "new-blocks": {
+      "passed": true,
+      "reportSha256": "dfe3c1d574fc4de9f16a3a3e9bb257e16de4cd596b49689f8cc919a36f96f1f6"
+    },
+    "awb": {
+      "passed": true,
+      "reportSha256": "34719c1f703e75952191d86807f239d662754c78aa74e70bb414305b48d154ee"
+    }
+  },
+  "newModules": {
+    "bay3d": {
+      "passed": true,
+      "startupCompared": true,
+      "runtimeRecordsCompared": 399,
+      "updatedRuntimeRecords": 11,
+      "heldRuntimeRecords": 388,
+      "resultBytesComparedPerRecord": 224,
+      "selectedBytesComparedPerRecord": 400,
+      "exposureBytesComparedPerRecord": 80,
+      "packedBytesComparedPerUpdate": 253
+    },
+    "ynr": {
+      "passed": true,
+      "startupCompared": true,
+      "runtimeRecordsCompared": 399,
+      "updatedRuntimeRecords": 11,
+      "heldRuntimeRecords": 388,
+      "resultBytesComparedPerRecord": 168,
+      "selectedBytesComparedPerRecord": 356,
+      "exposureBytesComparedPerRecord": 88,
+      "packedBytesComparedPerUpdate": 162
+    },
+    "sharp": {
+      "passed": true,
+      "startupCompared": true,
+      "runtimeRecordsCompared": 399,
+      "updatedRuntimeRecords": 11,
+      "heldRuntimeRecords": 388,
+      "resultBytesComparedPerRecord": 178,
+      "selectedBytesComparedPerRecord": 388,
+      "exposureBytesComparedPerRecord": 88,
+      "packedBytesComparedPerUpdate": 175
+    }
+  },
+  "provenance": {
+    "originalBinarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+    "iqSha256": "8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a",
+    "ownerLogSha256": "85379e19812ee42d71f380adf18a6b8566ac82fd2efe6b109fd55da11b5904a5",
+    "initialParametersSha256": "ec3ad49cb242bb1f50f3977e33c2eebc6930c12acfbae4849be774503b9fb3b4"
+  },
+  "applicationScan": {
+    "passed": true,
+    "binarySha256": "37de24939754ec630d6580aa9eb516a8aabba742e71eff8af864ed268d5a21a9",
+    "decodedFrames": 12,
+    "renderedFrames": 36,
+    "ownerExitCode": 0,
+    "previewJoined": true,
+    "opticalScanQualified": false,
+    "physicalDisplayQualified": false,
+    "physicalButtonsQualified": false
+  },
+  "limitations": [
+    "Scan used earlier explicit-all build; final capture used default-all source.",
+    "Decoder-input frames do not establish optical QR decoding.",
+    "No new cold-boot, physical display/button or frozen-kit qualification.",
+    "Native helper comparison does not prove complete image-quality equivalence.",
+    "Private scene images, IQ and raw statistics excluded from Git."
+  ]
+}

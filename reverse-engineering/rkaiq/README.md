@@ -273,10 +273,10 @@ Still open:
    now executes JSON parsing, constructor, prepare, binding and 32 actual runtime
    inputs; the previous adapted-context boundary is closed for that trajectory.
    This does not claim arbitrary mode or full-library ABI equivalence.
-6. Test the frozen 0.0.37 kit after controlled reboot, then complete the
-   physical qualification above. The older 0.0.36 exact executable passed
-   [controlled clean-reboot integration](kit-0.0.36-dev-cold-reboot-validation.json);
-   that report retains its own build-specific scope.
+6. Complete the physical qualification above with the frozen 0.0.37 kit.
+   Its [exact controlled-reboot result](kit-0.0.37-dev-cold-reboot-validation.json)
+   now passes with all eight blocks, corrected paired detector flags, 75 real
+   application frames and clean shutdown. Older kits retain their own evidence.
 
 Optional modes remain outside the current single-camera priority unless the
 actual QR capture path needs them. No completion claim follows from passing

@@ -1,0 +1,323 @@
+{
+  "kind": "frozen-kit-controlled-clean-reboot-hardware-validation",
+  "version": "0.0.37-dev",
+  "run": 117,
+  "passed": true,
+  "sourceRevision": "2b7e396dbcc19db85a042958332eb8982c1c1ab0",
+  "cameraBinarySha256": "127f7195e56b34d169f1c527815156855c3efbffc11a528a72cc75fbc4eec825",
+  "archiveSha256": "bf7a3c9f3666c5738b27542aff43c17de5406f9e9125d72138833b65b3c09a72",
+  "boot": {
+    "kind": "controlled-clean-reboot-pre-capture-check",
+    "passed": true,
+    "previousBootId": "efaa0afa-1252-4e9b-b0d9-6f4debe3d7e8",
+    "bootId": "b83e4b07-de13-40d2-9501-2e261c9aaa4b",
+    "services": {
+      "S21appinit": {
+        "bootId": "b83e4b07-de13-40d2-9501-2e261c9aaa4b",
+        "service": "S21appinit",
+        "skipped": true,
+        "restoredSha256": "61dcd3bdb6740771b296611ab83e3238f9bc45b2ca0ec5ae78b542085be592e5"
+      },
+      "S99seedsigner": {
+        "bootId": "b83e4b07-de13-40d2-9501-2e261c9aaa4b",
+        "service": "S99seedsigner",
+        "skipped": true,
+        "restoredSha256": "b0b93fc8486d7d54e5d9ac1c5ef439fa86087f52123607a93f48d8292a518573"
+      }
+    },
+    "vendorCameraPids": "",
+    "vendorLibraryMappings": "",
+    "rockitModuleAbsent": true,
+    "modulesBeforeManagedCapture": "",
+    "physicalPowerCycle": false,
+    "startupScriptsRestored": true,
+    "matchingTemporaryBackupsRemoved": true
+  },
+  "enabledModules": {
+    "CCM": true,
+    "LSC": true,
+    "DPCC": true,
+    "BAYNR": true,
+    "BAY3D": true,
+    "YNR": true,
+    "CNR": true,
+    "SHARP": true
+  },
+  "effectiveNormalPairedDetectorFlags": {
+    "uvNormal": 1,
+    "uvBig": 1,
+    "yuvNormal": 1,
+    "yuvBig": 1
+  },
+  "application": {
+    "passed": true,
+    "integration": {
+      "sourceSha256": "7cf9c67797d5b14cfbea206e91bc5c85292ec01f36fca68edbaee13977a5809e",
+      "patchedSourceSha256": "726294bdd9d3a2b1b85a6109b9fd8db0f3761eadb1292f436f4767af19a2ff71",
+      "changes": [
+        "Rust PiVideoStream import",
+        "Preserve complete rotated preview canvas"
+      ],
+      "installedFilesModified": false
+    },
+    "opticalScanQualified": false,
+    "syntheticQrCases": [
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          12
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          12,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 0,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 90,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 180,
+        "size": [
+          480,
+          640
+        ],
+        "decodedExpectedPublicAddress": true
+      },
+      {
+        "position": [
+          406,
+          246
+        ],
+        "rotation": 270,
+        "size": [
+          640,
+          480
+        ],
+        "decodedExpectedPublicAddress": true
+      }
+    ],
+    "changedSourceRejected": true,
+    "realFrameDecodeStatus": 4,
+    "capture": {
+      "directory": "/shieldsigner-camera-tests/kit037-cold117-results/camera-ao40twke",
+      "firstFrameSeconds": 0.7227386260000017,
+      "first": 4,
+      "last": 118,
+      "samples": 71,
+      "received": 75,
+      "stopSeconds": 0.17690487499999819,
+      "ownerExitCode": 0
+    },
+    "realFrameRotations": [
+      {
+        "setting": 0,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 90,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 180,
+        "size": [
+          480,
+          640
+        ],
+        "allPixelsPreserved": true
+      },
+      {
+        "setting": 270,
+        "size": [
+          640,
+          480
+        ],
+        "allPixelsPreserved": true
+      }
+    ],
+    "rotationBenchmark": {
+      "croppedSecondsPerFrame": 0.0520663502000005,
+      "expandedSecondsPerFrame": 0.012642524999999693
+    },
+    "installedCameraUnchanged": true
+  },
+  "control": {
+    "success": true,
+    "processedStatistics": 82,
+    "parameterSubmissions": 81,
+    "maxParameterSnapshots": 2
+  },
+  "ownerLogSha256": "a7cf9c71fd98dd7fbb22b18aecbbf53799c060fc70a244b99f4a3a00f4bea72b",
+  "initialParametersSha256": "ec3ad49cb242bb1f50f3977e33c2eebc6930c12acfbae4849be774503b9fb3b4",
+  "limitations": [
+    "Controlled software reboot, not a physical power cycle.",
+    "Synthetic QR fixtures do not qualify a physical optical target.",
+    "Physical display/buttons and full image-quality equivalence remain unqualified."
+  ]
+}

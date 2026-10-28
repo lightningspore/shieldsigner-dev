@@ -21,9 +21,9 @@
     {
       "requirement": "Frozen kit starts after vendor camera startup is skipped",
       "status": "verified-with-stated-scope",
-      "evidence": "kit-0.0.36-dev-cold-reboot-validation.json",
-      "sha256": "160a6cb2582b130a11800f1d5a2c29ca68dcd48b0b5a67c570863ac48acc7f80",
-      "scope": "Exact0.0.36 archive after controlled software reboot,74 real frames,clean shutdown; not physical power cycle."
+      "evidence": "kit-0.0.37-dev-cold-reboot-validation.json",
+      "sha256": "5b22812965c64a365e9a443816994db03aa3f045b7883d4b9ce984ff697e0a26",
+      "scope": "Exact0.0.37 archive after controlled software reboot,75real frames,corrected paired detector flags,clean shutdown; not physicalpowercycle."
     },
     {
       "requirement": "Distributed archive contents match installed hardware files",
@@ -73,5 +73,5 @@
     "physicalWiringVerified": false
   },
   "nextPracticalTest": "Known public optical QR; the target must actually be in view.",
-  "knownFrozenKitLimitation": "Exact0.0.37 frozen-directory controlled reboot is pending; earlier0.0.36 has its own successful reboot record."
+  "knownFrozenKitLimitation": "Physical optical/UI/lighting/powercycle qualification remains open; exact frozen0.0.37 controlled reboot passed."
 }

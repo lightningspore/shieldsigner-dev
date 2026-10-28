@@ -40,6 +40,8 @@ for name in ['pipeline-luckfox-sc3336-observed.json','public-address-qr.png']:
 for name in ['verify_kit.py','configure_camera.py','optical_camera_check.py','shieldsigner_video_stream.py','shieldsigner_integration.py','stream_hardware_check.py','managed_hardware_check.py','integration_hardware_check.py','restart_hardware_check.py','scan_loop_hardware_check.py','image_artifact_hardware_check.py']:
  copy(ROOT/'firmware/rkaiq-rs/python'/name,'python/'+name)
 copy(ROOT/'firmware/rkaiq-rs/python/sc3336-owner.example.json','examples/sc3336-owner.example.json')
+for name in ['server.py','index.html']:
+ copy(ROOT/'firmware/rkaiq-rs/demo'/name,'demo/'+name)
 for name in ['cold-camera-modules.sh','prepare-cold-boot.py','verify-cold-boot.py']:
  copy(ROOT/'reverse-engineering/rkaiq/scripts'/name,'tools/'+name)
 for name in ['awb-live-hardware-validation.json','managed-camera-hardware-validation.json','clean-reboot-camera-hardware-validation.json','rgb-colorimetry-hardware-validation.json','application-integration-hardware-validation.json']:
@@ -128,16 +130,24 @@ The ARM binary, managed Python adapter and opt-in application launcher are inclu
 Development adds live ISO-dependent demosaic batches and default streaming
 without a final scene-image dump; explicit diagnostic saving remains available.
 Current development also includes live defect-pixel correction, color
-correction, lens shading and Bayer spatial noise reduction. CNR is reconstructed
-but disabled by its hardware qualification gate: enabling it stalls readback.
-Temporal Bayer NR, luma NR and sharpening remain unfinished. These limitations
-are recorded in research/cnr-live-startup-investigation.json and research/README.md.
+correction, lens shading, Bayer spatial and temporal noise reduction, luma and
+chroma noise reduction, and sharpening. All eight advanced blocks run together
+on SC3336 hardware with live AE/AWB and demosaic. The combined result and its
+scope are recorded in research/combined-isp-hardware-validation.json.
+Earlier isolated-CNR startup failures remain historical diagnostic evidence;
+they do not describe the default full-group configuration.
 Calibration, statistics and logs are still retained.
 The current source passed real AE/AWB capture, owner restart/crash cleanup,
 full-range RGB delivery and application preview/decoder integration. A controlled
 clean reboot was also tested; its separately bundled report identifies that build.
 This is not complete RKAIQ ABI parity, physical power-cycle or optical QR proof.
 No vendor binary, full IQ profile, private scene image or device credential is bundled.
+
+Local desktop dashboard (after forwarding the owner's Unix stream socket):
+  uv run --python 3.13 --with pillow python demo/server.py --camera-port 60366
+Open http://127.0.0.1:8765/ on that desktop for live preview and snapshots.
+The bridge uses one camera connection and fans frames out to browser clients.
+Optional recorded telemetry is not a per-frame measurement.
 
 Prerequisites on the Luckfox:
 - Matching installed SeedSigner application and its Python/Pillow/QR dependencies.

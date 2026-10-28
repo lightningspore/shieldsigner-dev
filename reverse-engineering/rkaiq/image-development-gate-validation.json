@@ -1,0 +1,15 @@
+{
+  "kind": "shieldsigner-development-image-gate-validation",
+  "passed": true,
+  "scope": "Structural fixture using copied packed production root and synthetic ARM ELF for daemon gate; not a built or booted development image or ADB test",
+  "devStubRejected": true,
+  "devAppAutostartRejectedEvenWithUpdatedReceipt": true,
+  "productionBundleMismatchRejectedBeforeSSH": true,
+  "devKernelProbe": {
+    "exitCode": 0,
+    "rootfsBuilt": false,
+    "armAssertions": 190,
+    "compiledUsbMode": "peripheral"
+  },
+  "imageBootQualified": false
+}

@@ -34,7 +34,7 @@ def validate_static_arm(path):
                     raise ValueError("Camera runtime has a dynamic library dependency")
 
 
-def stage(output):
+def stage(output, variant="production", kernel_probe=False):
     if output.exists():
         raise ValueError("Choose a new immutable bundle directory: " + str(output))
     version = re.search(r'^version = "([^"]+)"', (ROOT / "firmware/rkaiq-rs/Cargo.toml").read_text(), re.M).group(1)
@@ -63,7 +63,9 @@ def stage(output):
                      "shieldsigner_process_log.py"]:
             add("payload/python/" + name, (ROOT / "firmware/rkaiq-rs/python" / name).read_bytes())
         add("payload/pipeline.json", (ROOT / "reverse-engineering/rkaiq/examples/pipeline-luckfox-sc3336-observed.json").read_bytes())
-        add("payload/kernel-camera-abi.json", (ROOT / "reverse-engineering/rkaiq/image-sdk-kernel-abi-validation.json").read_bytes())
+        proof_name = "image-sdk-kernel-abi-development-validation.json" if variant == "dev" and not kernel_probe else "image-sdk-kernel-abi-validation.json"
+        add("payload/kernel-camera-abi.json", (ROOT / "reverse-engineering/rkaiq" / proof_name).read_bytes())
+        add("collect-kernel-probe.py", (ROOT / "scripts/collect-image-kernel-probe.py").read_bytes())
         owner = {"binary": INSTALL + "/camera-probe", "plan": INSTALL + "/pipeline.json",
                  "iq": "/oem/usr/share/iqfiles/sc3336_CMK-OT2119-PC1_30IRC-F16.json",
                  "parameters": "/dev/video20", "image": "/dev/video11", "statistics": "/dev/video19",
@@ -98,6 +100,7 @@ fi''')
         source_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
         dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip())
         manifest = {"kind": "shieldsigner-camera-image-bundle", "version": version,
+                    "imageVariant": variant, "kernelProofPending": kernel_probe,
                     "sourceCommit": source_commit, "sourceDirty": dirty,
                     "applicationCommit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
                     "osCommit": "e7589465aff172f4f510ad46d18776ccc8d2c203",
@@ -127,5 +130,7 @@ if __name__ == "__main__":
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--output", type=Path)
     group.add_argument("--verify", type=Path)
+    parser.add_argument("--variant", choices=["production", "dev"], default="production")
+    parser.add_argument("--kernel-probe", action="store_true")
     args = parser.parse_args()
-    print(json.dumps(stage(args.output.resolve()) if args.output else verify(args.verify.resolve()), indent=2))
+    print(json.dumps(stage(args.output.resolve(), args.variant, args.kernel_probe) if args.output else verify(args.verify.resolve()), indent=2))

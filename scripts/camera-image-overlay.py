@@ -31,6 +31,7 @@ case "${1:-start}" in
   *) exit 1 ;;
 esac
 '''
+DEV_APP_HOLD_INIT = '#!/bin/sh\n# Diagnostic bench image: GPIO/display mapping must be reviewed before app use.\necho "ShieldSigner diagnostic image: app/display/button startup held."\necho "Use ADB for inspection. Run /usr/bin/shieldsigner-launch manually only after the board profile is reviewed."\nexit 0\n'
 SDK_VENDOR_INIT_SHA256 = "61dcd3bdb6740771b296611ab83e3238f9bc45b2ca0ec5ae78b542085be592e5"
 
 
@@ -178,6 +179,9 @@ def configure_buildroot(buildroot, bundle):
 
 def kernel_inputs(bundle):
     proof = json.loads((bundle / "payload/kernel-camera-abi.json").read_text())
+    image_variant = json.loads((bundle / "manifest.json").read_text()).get("imageVariant", "production")
+    if proof.get("imageVariant", "production") != image_variant:
+        raise ValueError("Kernel proof image variant differs from requested bundle")
     sdk = Path(os.environ["SHIELDSIGNER_CAMERA_SDK_DIR"])
     revision = subprocess.check_output(["git", "-C", str(sdk), "rev-parse", "HEAD"], text=True).strip()
     config = sdk / "sysdrv/source/objs_kernel/.config"
@@ -253,7 +257,13 @@ exec python3 -u /usr/lib/shieldsigner-camera/python/shieldsigner_integration.py 
     launcher.chmod(0o755)
     removed = strip_vendor(root)
     changes = [startup, init, launcher, marker, display_config, os_release]
+    if data.get("imageVariant", "production") == "dev":
+        app_init = root / "etc/init.d/S99seedsigner"
+        app_init.write_text(DEV_APP_HOLD_INIT)
+        app_init.chmod(0o755)
+        changes.extend([app_init, root / "etc/init.d/S50usbdevice"])
     record = {"kind": "shieldsigner-rust-camera-rootfs-install", "version": data["version"],
+              "imageVariant": data.get("imageVariant", "production"),
               "bundleManifestSha256": digest(bundle / "manifest.json"), **app,
               "kernelInputs": kernel_inputs(bundle),
               "startupSha256": {str(path.relative_to(root)): digest(path) for path in changes},
@@ -266,6 +276,26 @@ exec python3 -u /usr/lib/shieldsigner-camera/python/shieldsigner_integration.py 
 def verify(root, bundle, data):
     record = json.loads((root / INSTALL / "image-installation.json").read_text())
     proof = json.loads((bundle / "payload/kernel-camera-abi.json").read_text())
+    image_variant = data.get("imageVariant", "production")
+    if record.get("imageVariant", "production") != image_variant or proof.get("imageVariant", "production") != image_variant:
+        raise ValueError("Image/bundle/kernel proof variant mismatch")
+    adbd = (root / "usr/bin/adbd").read_bytes()
+    if image_variant == "dev":
+        if adbd[:6] != b"\x7fELF\x01\x01" or struct.unpack_from("<H", adbd, 18)[0] != 40:
+            raise ValueError("Development image does not contain the real ARM ADB daemon")
+        if not ((root / "usr/bin/adbd").stat().st_mode & 0o111):
+            raise ValueError("Development ADB daemon is not executable")
+        usb_startup = (root / "etc/init.d/S50usbdevice").read_text()
+        if "ADB_EN=on" not in usb_startup or "--exec /usr/bin/adbd" not in usb_startup:
+            raise ValueError("Development USB startup does not enable the ADB daemon")
+        if any((root / "root" / name).exists() for name in ["main.py", "boot.py"]):
+            raise ValueError("Unreviewed secondary Python autostart in diagnostic image")
+        if (root / "etc/init.d/S99seedsigner").read_text() != DEV_APP_HOLD_INIT:
+            raise ValueError("Diagnostic development image must hold automatic app/display startup")
+        if proof.get("compiledUsbMode") != "peripheral":
+            raise ValueError("Development image proof does not select USB peripheral mode")
+    elif adbd != b"#!/bin/sh\nexit 0\n":
+        raise ValueError("Production image does not contain the reviewed disabled ADB stub")
     for field in ["sdkRevision", "kernelVersion", "kernelConfigSha256", "compiledDtbSha256", "compiledDtbModel"]:
         if record["kernelInputs"][field] != proof[field]:
             raise ValueError("Installed kernel provenance differs from reviewed SDK proof: " + field)
@@ -317,6 +347,7 @@ def verify(root, bundle, data):
         raise ValueError("Reviewed HOTHMI SPI clock missing from image")
     validate_app(root, bundle)
     return {"kind": "shieldsigner-rust-camera-rootfs-verified", "version": data["version"],
+            "imageVariant": image_variant, "automaticAppStartupHeld": image_variant == "dev",
             "bundleManifestSha256": digest(bundle / "manifest.json"), "closedCameraRuntimeAbsent": True,
             "selectedIqPresent": True, "openKernelModulesPresent": True,
             "moduleFiles": modules, "imageBootQualified": False}

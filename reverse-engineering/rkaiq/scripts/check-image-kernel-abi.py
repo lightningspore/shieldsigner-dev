@@ -55,6 +55,7 @@ def main():
                         help='Read-only SDK source snapshot, including generated utsrelease.h and camera drivers')
     parser.add_argument('--sdk-revision', required=True)
     parser.add_argument('--report', type=Path, required=True)
+    parser.add_argument("--image-variant", choices=["production", "dev"], default="production")
     args = parser.parse_args()
     if args.report.exists():
         parser.error('Choose a new report filename')
@@ -115,6 +116,8 @@ const unsigned int image_extra_layout[]={offsetof(struct isp32_isp_params_cfg,ot
     assert all(config.get(key) == value for key, value in required.items()), 'Unexpected camera kernel configuration'
     dtb = fdt_properties(args.dtb.read_bytes())
     root = dtb['/']
+    usb_mode = strings(dtb['/usbdrd/usb@ffb00000']['dr_mode'])[0]
+    assert usb_mode == ('peripheral' if args.image_variant == 'dev' else 'host'), 'Unexpected USB role for image variant'
     media = []
     for path, properties in dtb.items():
         compatible = strings(properties.get('compatible', b''))
@@ -162,7 +165,7 @@ const unsigned int image_extra_layout[]={offsetof(struct isp32_isp_params_cfg,ot
     for name in ['isp','cif']:
         assert 'module_param_call(clr_unready_dev,' in drivers['drivers/media/platform/rockchip/'+name+'/dev.c']
     report = {'kind':'image-sdk-kernel-camera-abi-validation','passed':True,'sdkRevision':args.sdk_revision,
-              'kernelVersion':kernel_version,'actualSdkHeaderHashes':headers,
+              'kernelVersion':kernel_version,'imageVariant':args.image_variant,'compiledUsbMode':usb_mode,'actualSdkHeaderHashes':headers,
               'armCompiledKernelAssertions':len(re.findall(r'_Static_assert\(', source.read_text()))+6,
               'parameterBytes':parameters[0],'awbGainOffset':parameters[1],'awbGainBytes':parameters[2],
               'statisticsLayout':statistics,'additionalIspBlockLayout':extra,'requiredKernelConfig':required,

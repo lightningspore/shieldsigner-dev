@@ -1,0 +1,149 @@
+{
+  "scope": "Read-only source mapping audit; no GPIO driven, no image or runtime changes, no physical wiring verified.",
+  "source_revisions": {
+    "0.8.5-luckfox": "228ebc0fa94251132d50adcf3db473ac48c293c5",
+    "0.8.5-luckfox-lcdpwm": "3eeafd925d574d14f54844b8ef980657f3e0bf32",
+    "pinned_image_app": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "mappings_global_gpio": {
+    "base": {
+      "LCD_DC": 56,
+      "LCD_RST": 57,
+      "UP": 58,
+      "DOWN": 53,
+      "LEFT": 59,
+      "RIGHT": 54,
+      "PRESS": 52,
+      "KEY1": 55,
+      "KEY2": 43,
+      "KEY3": 42
+    },
+    "lcdpwm": {
+      "LCD_DC": 52,
+      "LCD_RST": 51,
+      "UP": 57,
+      "DOWN": 59,
+      "LEFT": 56,
+      "RIGHT": 54,
+      "PRESS": 58,
+      "KEY1": 55,
+      "KEY2": 4,
+      "KEY3": 53
+    },
+    "pinned_FOX_22": {
+      "LCD_DC": 52,
+      "LCD_RST": 51,
+      "UP": 57,
+      "DOWN": 55,
+      "LEFT": 56,
+      "RIGHT": 4,
+      "PRESS": 54,
+      "KEY1": 144,
+      "KEY2": 145,
+      "KEY3": 53
+    }
+  },
+  "bank_offsets": {
+    "4": {
+      "gpio_bank": 0,
+      "offset": 4,
+      "volts": 3.3
+    },
+    "42": {
+      "gpio_bank": 1,
+      "offset": 10,
+      "volts": 3.3
+    },
+    "43": {
+      "gpio_bank": 1,
+      "offset": 11,
+      "volts": 3.3
+    },
+    "51": {
+      "gpio_bank": 1,
+      "offset": 19,
+      "volts": 3.3
+    },
+    "52": {
+      "gpio_bank": 1,
+      "offset": 20,
+      "volts": 3.3
+    },
+    "53": {
+      "gpio_bank": 1,
+      "offset": 21,
+      "volts": 3.3
+    },
+    "54": {
+      "gpio_bank": 1,
+      "offset": 22,
+      "volts": 3.3
+    },
+    "55": {
+      "gpio_bank": 1,
+      "offset": 23,
+      "volts": 3.3
+    },
+    "56": {
+      "gpio_bank": 1,
+      "offset": 24,
+      "volts": 3.3
+    },
+    "57": {
+      "gpio_bank": 1,
+      "offset": 25,
+      "volts": 3.3
+    },
+    "58": {
+      "gpio_bank": 1,
+      "offset": 26,
+      "volts": 3.3
+    },
+    "59": {
+      "gpio_bank": 1,
+      "offset": 27,
+      "volts": 3.3
+    },
+    "144": {
+      "gpio_bank": 4,
+      "offset": 16,
+      "volts": 1.8
+    },
+    "145": {
+      "gpio_bank": 4,
+      "offset": 17,
+      "volts": 1.8
+    }
+  },
+  "numbering_scope": "Bank offsets calculated from Rockchip bank*32+offset; actual /dev/gpiochip identity must be confirmed at runtime before driving pins.",
+  "source_sha256": {
+    ".tools/display-pin-audit/base/buttons.py": "7df90a1f2e4e7618df545474061238c2e808facd4fb4b3a367143523d0bbf598",
+    ".tools/display-pin-audit/base/ST7789.py": "ac9b4a690e859a5a065f528b0a693ea6fba1d17f2e3d7c2ad595c2c5fa68a84b",
+    ".tools/display-pin-audit/pwm/buttons.py": "9fca7cf84f2ba18a1497229e1baa928441faa204dd36644fdf6ea80327ce611e",
+    ".tools/display-pin-audit/pwm/ST7789.py": "bc7c83d075c8a0b634027477126ad56ab1ac0d198f6f9d73da4c69fc90fddb6f",
+    "dist/os/camera-review/pinned-app-src/seedsigner/hardware/buttons.py": "951c7106064fc4f352de583a061d535b22686f7d2aed03f2b839df48d8450e3e",
+    "dist/os/camera-review/pinned-app-src/seedsigner/hardware/io_config.json": "6444ae780d74e346c5a52b239fb3871c95a05f5f4fd609a9bb11bdb00f6f472a"
+  },
+  "findings": [
+    "Actual bottom HardwareButtonsConstants and matching GPIO dictionary used; misleading inline comments ignored.",
+    "Base LCD DC56/RST57 conflicts with current52/51 configuration; base PRESS52 would ground current LCD DC output when pressed.",
+    "lcdpwm LCD matches current image but five button semantics differ: DOWN, RIGHT, PRESS, KEY1, KEY2.",
+    "Both old LCD drivers use SPI0.0 at40MHz with no backlight GPIO; reviewed image override uses10MHz.",
+    "Base KEY2/KEY3 useUART2 pins43/42; require GPIO pinmux and no UART2 owner.",
+    "Only current FOX22 uses1.8V GPIO4_C0/C1 for buttons; switch-to-ground and correct-domain internal pulls are appropriate,3.3V pulls are not.",
+    "Pinned button opener may retry without pull_up after EINVAL/EBUSY; verify released/pressed readings and effective pulls on target.",
+    "Prior board installed button source unavailable in local cache; actual connected wiring remains unverified."
+  ],
+  "electrical_source": [
+    "docs/LUCKFOX-PINOUT.md",
+    "docs/MODULE-PINOUT-AUDIT.md",
+    "docs/luckfox-mini-pinout.json"
+  ],
+  "source_urls": [
+    "https://github.com/lightningspore/seedsigner/blob/228ebc0fa94251132d50adcf3db473ac48c293c5/src/seedsigner/hardware/buttons.py",
+    "https://github.com/lightningspore/seedsigner/blob/228ebc0fa94251132d50adcf3db473ac48c293c5/src/seedsigner/hardware/ST7789.py",
+    "https://github.com/lightningspore/seedsigner/blob/3eeafd925d574d14f54844b8ef980657f3e0bf32/src/seedsigner/hardware/buttons.py",
+    "https://github.com/lightningspore/seedsigner/blob/3eeafd925d574d14f54844b8ef980657f3e0bf32/src/seedsigner/hardware/ST7789.py",
+    "https://github.com/lightningspore/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/src/seedsigner/hardware/io_config.json"
+  ]
+}

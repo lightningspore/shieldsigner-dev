@@ -2,11 +2,11 @@
 
 ## Current carrier build command
 
-The wrapper now defaults to `SHIELDSIGNER_READER_VARIANT=UR2` and `SHIELDSIGNER_CAMERA_BACKEND=rust`. It prepares reviewed camera/image hooks in the pinned Luckfox OS checkout, configures SEC1210 UR2, and installs the Rust SC3336 owner plus the native open-source QR reader. `mise run os:prepare` applies only reviewed source preparation without compiling or flashing. Unknown checkout edits are rejected.
+The wrapper defaults to `SHIELDSIGNER_IMAGE_VARIANT=production`, `SHIELDSIGNER_READER_VARIANT=UR2` and `SHIELDSIGNER_CAMERA_BACKEND=rust`. It prepares reviewed camera/image hooks in the pinned Luckfox OS checkout, configures SEC1210 UR2, and installs the Rust SC3336 owner plus the native open-source QR reader. `mise run os:prepare` applies only reviewed source preparation without compiling or flashing. Unknown checkout edits are rejected.
 
 The historical two successful builds and matching hashes below used unchanged upstream **URT/vendor camera**; they remain baseline evidence. They do not qualify the new Rust image. Use `SHIELDSIGNER_CAMERA_BACKEND=vendor SHIELDSIGNER_READER_VARIANT=URT mise run os:build` only for that explicit baseline or matching hardware.
 
-Local output defaults to `dist/os/<reader-variant>/<camera-backend>/`, with `build.log`, `reader-config.json`, `camera-hooks.json` and `camera-bundle.json`. Keep these input manifests with image/checksum files. New image checksums are expected to differ from the historical URT/vendor baseline.
+Production local output defaults to `dist/os/<reader-variant>/<camera-backend>/`; development adds `/dev/`, with `build.log`, `reader-config.json`, `camera-hooks.json` and `camera-bundle.json`. Keep these input manifests with image/checksum files. New image checksums are expected to differ from the historical URT/vendor baseline.
 
 ## Build the Rust-camera image
 
@@ -93,7 +93,17 @@ The helper reads and extracts the image; it does not flash hardware or register
 system-wide emulation handlers. Emulated direct-data tests do not test camera
 pixels, physical display or normal boot.
 
-### First boot of the Rust-camera image
+### Image variants and diagnostic access
+
+`production` preserves upstream hardened non-dev behavior: USB host mode, a disabled ADB stub, and no network or serial login. The successful `dd4bd96` image uses this policy. A production board does **not** enumerate as an ADB USB device; USB absence alone cannot establish a boot failure.
+
+`SHIELDSIGNER_IMAGE_VARIANT=dev` (or remote `--variant dev`) selects upstream development behavior with explicit USB gadget mode and read-only squashfs. UART2 console remains disabled because it shares the smartcard reader's UART. Development retains the real ARM ADB daemon. Its `S99seedsigner` deliberately holds automatic app/display/button startup while hardware GPIO mapping is reviewed; it prints an explanation and leaves inspection to ADB. Do not run `/usr/bin/shieldsigner-launch` until the board profile has been checked. This development image needs its own exact compiled kernel/DTB ABI receipt and immutable bundle; a production bundle cannot be silently reused.
+
+A kernel-only `--kernel-probe` job stops after the existing upstream kernel boundary, before Buildroot/rootfs compilation, and captures the fixed ABI sources plus actual configuration/DTB. It is not an image build or boot proof. Probe-only bundles cannot build images.
+
+### First boot of a diagnostic development Rust-camera image
+
+The ADB commands below apply only to a checksum-verified **development** image whose packed readback confirms USB peripheral mode, a real executable ARM `adbd`, and the diagnostic app hold. They do not apply to the production `dd4bd96` image.
 
 After writing the checksum-verified image to the intended test microSD and
 booting it, retain the board's own identity and read-only camera inventory:
@@ -116,7 +126,7 @@ native startup in place; the kit's one-boot skip/restore tools target the older
 test image's pinned vendor startup scripts. The new launcher starts capture
 when a camera screen opens and uses the native QR worker.
 
-With other camera screens closed, copy the kit's
+Only after the board GPIO/display/button profile has been reviewed, with other camera screens closed, copy the kit's
 `native_qr_hardware_check.py` to `/tmp` and exercise the image's installed
 runtime and naturally detected profile:
 

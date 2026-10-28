@@ -23,6 +23,17 @@ CAMERA_MODULES = ("rk_dvbm", "video_rkcif", "video_rkisp", "sc3336",
                   "phy-rockchip-csi2-dphy-hw", "phy-rockchip-csi2-dphy")
 
 
+RUST_INIT = '''#!/bin/sh
+# Open kernel camera drivers only. Capture/AE/AWB starts when the app opens Camera.
+case "${1:-start}" in
+  start|restart) /usr/lib/shieldsigner-camera/cold-camera-modules.sh ;;
+  stop) : ;;
+  *) exit 1 ;;
+esac
+'''
+SDK_VENDOR_INIT_SHA256 = "61dcd3bdb6740771b296611ab83e3238f9bc45b2ca0ec5ae78b542085be592e5"
+
+
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -88,6 +99,49 @@ def configure_sdk_strip(sdk, bundle):
             "allOtherStripBehaviorPreserved": True}
 
 
+def configure_sdk_finalization(sdk):
+    relative = "project/build.sh"
+    revision = subprocess.check_output(["git", "-C", str(sdk), "rev-parse", "HEAD"], text=True).strip()
+    original = subprocess.check_output(["git", "-C", str(sdk), "show", revision + ":" + relative], text=True)
+    start = original.index("function build_mkimg() {")
+    end = original.index("\nfunction ", start+1)
+    before = original[start:end]
+    anchor = '\t\t__RELEASE_FILESYSTEM_FILES $src\n\tfi\n'
+    hook = anchor + '''
+    # ShieldSigner: all SDK copies, overlays and stripping are finished. Preserve
+    # the reviewed Rust init instead of the SDK's regenerated vendor launcher.
+    if [ -f /build/shieldsigner-camera/manifest.json ] && [ "$src" = "$RK_PROJECT_PACKAGE_ROOTFS_DIR" ]; then
+        python3 /build/shieldsigner-camera/image-overlay.py --finalize-rootfs "$src" || exit $?
+    fi
+'''
+    after = replace_once(before, anchor, hook)
+    script = sdk / relative
+    current = script.read_text()
+    current_start = current.index("function build_mkimg() {")
+    current_end = current.index("\nfunction ", current_start+1)
+    if current[current_start:current_end] not in {before, after}:
+        raise ValueError("SDK filesystem packing function has unreviewed edits")
+    script.write_text(current[:current_start] + after + current[current_end:])
+    return {"kind": "verify-rust-runtime-after-sdk-copies-and-strip-before-mkfs",
+            "file": relative, "originalFunctionSha256": hashlib.sha256(before.encode()).hexdigest(),
+            "patchedFunctionSha256": hashlib.sha256(after.encode()).hexdigest(),
+            "vendorInitSha256": SDK_VENDOR_INIT_SHA256,
+            "rustInitSha256": hashlib.sha256(RUST_INIT.encode()).hexdigest()}
+
+
+def finalize_rootfs(root, bundle, data):
+    record = json.loads((root / INSTALL / "image-installation.json").read_text())
+    init = root / "etc/init.d/S21appinit"
+    expected = hashlib.sha256(RUST_INIT.encode()).hexdigest()
+    if record["startupSha256"]["etc/init.d/S21appinit"] != expected:
+        raise ValueError("Installed init receipt does not match reviewed Rust startup")
+    if digest(init) not in {SDK_VENDOR_INIT_SHA256, expected}:
+        raise ValueError("SDK regenerated init has unreviewed contents")
+    init.write_text(RUST_INIT)
+    init.chmod(0o755)
+    return verify(root, bundle, data)
+
+
 def configure_buildroot(buildroot, bundle):
     lock = json.loads((bundle / "dependencies.json").read_text())
     recipe = buildroot / "package/python-pycryptodomex/python-pycryptodomex.mk"
@@ -114,7 +168,8 @@ def configure_buildroot(buildroot, bundle):
     receipt = {"kind": "shieldsigner-image-python-dependency-input", "package": lock["package"],
                "version": lock["version"], "source": lock["source"], "sourceSha256": lock["sha256"],
                "recipeSha256": digest(recipe), "hashFileSha256": digest(hashes),
-               "sdkStripPolicy": configure_sdk_strip(sdk, bundle)}
+               "sdkStripPolicy": configure_sdk_strip(sdk, bundle),
+               "sdkFinalizationPolicy": configure_sdk_finalization(sdk)}
     target = buildroot / "output/shieldsigner-dependency-inputs.json"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(receipt, indent=2) + "\n")
@@ -178,14 +233,7 @@ def install(root, bundle, data):
     identity += 'SHIELDSIGNER_CAMERA_BUNDLE_SHA256="' + digest(bundle / "manifest.json") + '"\n'
     os_release.write_text(identity)
     init = root / "etc/init.d/S21appinit"
-    init.write_text('''#!/bin/sh
-# Open kernel camera drivers only. Capture/AE/AWB starts when the app opens Camera.
-case "${1:-start}" in
-  start|restart) /usr/lib/shieldsigner-camera/cold-camera-modules.sh ;;
-  stop) : ;;
-  *) exit 1 ;;
-esac
-''')
+    init.write_text(RUST_INIT)
     init.chmod(0o755)
     launcher = root / "usr/bin/shieldsigner-launch"
     launcher.parent.mkdir(parents=True, exist_ok=True)
@@ -209,6 +257,7 @@ exec python3 -u /usr/lib/shieldsigner-camera/python/shieldsigner_integration.py 
               "bundleManifestSha256": digest(bundle / "manifest.json"), **app,
               "kernelInputs": kernel_inputs(bundle),
               "startupSha256": {str(path.relative_to(root)): digest(path) for path in changes},
+              "startupModes": {str(path.relative_to(root)): path.stat().st_mode & 0o777 for path in changes},
               "removedVendorRuntime": removed, "displaySpiHz": 10_000_000, "imageBootQualified": False}
     (destination / "image-installation.json").write_text(json.dumps(record, indent=2) + "\n")
     return record
@@ -226,9 +275,15 @@ def verify(root, bundle, data):
         if name.startswith("payload/"):
             if digest(root / INSTALL / name[len("payload/"):]) != info["sha256"]:
                 raise ValueError("Installed camera asset changed: " + name)
+            if (root / INSTALL / name[len("payload/"):]).stat().st_mode & 0o777 != info["mode"]:
+                raise ValueError("Installed camera asset mode changed: " + name)
+    if set(record["startupModes"]) != set(record["startupSha256"]):
+        raise ValueError("Installed startup mode receipt incomplete")
     for name, expected in record["startupSha256"].items():
         if digest(root / name) != expected:
             raise ValueError("Installed Rust startup changed: " + name)
+        if (root / name).stat().st_mode & 0o777 != record["startupModes"][name]:
+            raise ValueError("Installed Rust startup mode changed: " + name)
     leftovers = [str(path.relative_to(root)) for pattern in FORBIDDEN for path in root.rglob(pattern)
                  if path.is_file() or path.is_symlink()]
     if leftovers:
@@ -274,10 +329,13 @@ if __name__ == "__main__":
     group.add_argument("--oem", type=Path)
     group.add_argument("--verify", type=Path)
     group.add_argument("--buildroot", type=Path)
+    group.add_argument("--finalize-rootfs", type=Path)
     args = parser.parse_args()
     bundle = Path(__file__).resolve().parent
     data = manifest(bundle)
-    if args.buildroot:
+    if args.finalize_rootfs:
+        result = finalize_rootfs(args.finalize_rootfs.resolve(), bundle, data)
+    elif args.buildroot:
         result = configure_buildroot(args.buildroot.resolve(), bundle)
     elif args.oem:
         result = {"kind": "shieldsigner-rust-camera-oem-cleanup", "removed": strip_vendor(args.oem.resolve())}

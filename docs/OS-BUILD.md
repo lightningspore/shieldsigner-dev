@@ -56,6 +56,46 @@ The pinned application's QR classifier imports `Cryptodome.Cipher.AES` even befo
 
 An image build and staged-rootfs checks do not prove hardware boot, LCD/buttons, smartcards, physical power cycling or secure-boot configuration. Those remain separate acceptance tests. See the [Rust-camera completion audit](../reverse-engineering/rkaiq/completion-audit.json) for current evidence.
 
+### First boot of the Rust-camera image
+
+After writing the checksum-verified image to the intended test microSD and
+booting it, retain the board's own identity and read-only camera inventory:
+
+```sh
+adb shell 'cat /etc/seedsigner-os-release; uname -r; cat /proc/device-tree/model'
+adb shell '/usr/lib/shieldsigner-camera/camera-probe list' > /tmp/shieldsigner-image-camera-inventory.json
+```
+
+The identity should record camera `0.0.38-dev` and the built bundle hash; the
+Mini model should be `Luckfox Pico Mini` with kernel `5.10.160`. Compare the
+actual sensor/CIF/ISP image, metadata and subdevice nodes against
+`/usr/lib/shieldsigner-camera/pipeline.json` and `owner.json`. SDK header and
+DTB checks establish compatibility but cannot establish boot-time device or
+media-entity numbering. The inventory must show the SC3336 and the expected
+full-ISP32 graph before capture is accepted.
+
+The new image's S21 already loads only the open camera modules. Keep that
+native startup in place; the kit's one-boot skip/restore tools target the older
+test image's pinned vendor startup scripts. The new launcher starts capture
+when a camera screen opens and uses the native QR worker.
+
+With other camera screens closed, copy the kit's
+`native_qr_hardware_check.py` to `/tmp` and exercise the image's installed
+runtime and naturally detected profile:
+
+```sh
+adb shell 'PYTHONPATH=/usr/lib/shieldsigner-camera/python python3 /tmp/native_qr_hardware_check.py --app-root /opt/src --reader /usr/lib/shieldsigner-camera/shieldsigner-qr-reader --camera-config /usr/lib/shieldsigner-camera/owner.json --report /tmp/shieldsigner-image-native-qr.json'
+```
+
+Its `realCamera.runtimeProfile` should be `luckfox_22` without a test override.
+The synthetic binary, CompactSeedQR and UR cases check application integration;
+then scan the complete printed public target through the actual camera screen.
+Keep the entire QR and its white border in view. Finally observe the physical
+LCD, each button, live exposure/white-balance response under changed lighting,
+and a physical power cycle. Record those observations separately from image
+file checks and synthetic fixture results. No new image has been flashed by
+the build or verification tools.
+
 
 ## Notes: faster iteration and a possible Linux-free variant
 

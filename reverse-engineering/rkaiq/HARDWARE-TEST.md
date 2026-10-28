@@ -1,12 +1,18 @@
 # First camera session
 
-Current development is **0.0.38-dev**; the latest frozen kit is **0.0.37-dev**.
+Current development and the latest frozen kit are **0.0.38-dev**.
 Use the [current completion audit](completion-audit.json) and
 [current development README](../../firmware/rkaiq-rs/README.md) for current scope.
 The dated version statements and isolated-module failures later in this file
 are historical sessions, not instructions to disable blocks in today's
 complete-group configuration.
-[Kit verification](kit-0.0.37-dev-installation-verification.json) covers all 548 files.
+[Kit verification](kit-0.0.38-dev-installation-verification.json) covers all 610 files and their modes.
+The [exact 0.0.38 controlled-reboot test](kit-0.0.38-dev-cold-reboot-validation.json)
+passed with 71 real application frames, 16 generated QR position/rotation cases,
+zero native QR-worker errors and clean shutdown. Open camera drivers were
+loaded with `sh tools/cold-camera-modules.sh`; the tool is a shell input in the
+kit, while image installation gives its startup copy executable permissions.
+This existing-image reboot is separate from booting the newly generated image.
 The [exact0.0.37 controlled-reboot test](kit-0.0.37-dev-cold-reboot-validation.json) passed with vendor camera startup skipped, 75 real application frames, corrected paired detector flags and clean shutdown. Original startup scripts were restored.
 The [exact0.0.36 controlled-reboot test](kit-0.0.36-dev-cold-reboot-validation.json) passed with 74 received real frames, complete preview rotation and clean shutdown; vendor camera startup was skipped and original scripts restored.
 See the [combined ISP result](ISP.md#development-0035-combined-isp-hardware-result).

@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "sdkFunctionPolicy": {
+    "kind": "verify-rust-runtime-after-sdk-copies-and-strip-before-mkfs",
+    "file": "project/build.sh",
+    "originalFunctionSha256": "7e9e3e6c96073c2080364febe5039bd18603adc9c92a62e4d93ba16a516262f6",
+    "patchedFunctionSha256": "0c50eab76055a9aedb2671dad983170a9209513211f7d151793af5dbbabf310a",
+    "vendorInitSha256": "61dcd3bdb6740771b296611ab83e3238f9bc45b2ca0ec5ae78b542085be592e5",
+    "rustInitSha256": "fbd74bdc3b788515223dccb52b9e1974aaa8035032a73e9531186fdea5609f5e"
+  },
+  "sdkIdempotence": true,
+  "sdkUnknownFunctionRejected": true,
+  "actualPackedRootFullVerification": {
+    "kind": "shieldsigner-rust-camera-rootfs-verified",
+    "version": "0.0.38-dev",
+    "bundleManifestSha256": "aa2ef84728cb714c3ff7ee49b4fdc69d15ce45088621b93b0918c6e023b50461",
+    "closedCameraRuntimeAbsent": true,
+    "selectedIqPresent": true,
+    "openKernelModulesPresent": true,
+    "moduleFiles": [
+      {
+        "name": "rk_dvbm",
+        "sha256": "98228b36ca8d6ac51e7e906b70daa802e2006a732b68557d6b38b64a694441f8",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "video_rkcif",
+        "sha256": "756eabb2ca9f13015cd129d4a6a15985f4eff2add1d810995e928a15d3bb3d51",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "video_rkisp",
+        "sha256": "63a0748f2e371c5cc95deb4687766cfb721e1224ffcfde7b50e0d1a98d47a148",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "sc3336",
+        "sha256": "24b86479ff48059eae999ccc4b9a22c146daa7f854e129abcdacb3c4b09d9650",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "phy-rockchip-csi2-dphy-hw",
+        "sha256": "4dce3a669ec7d6e747d93387974ded8f41891b4b3c1e343e46a643efd0dcabba",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "phy-rockchip-csi2-dphy",
+        "sha256": "0c0f994dfcb3f1a731c61112882294d0d5fb5ffc82d72cc2060bc01f8f657e0b",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      }
+    ],
+    "imageBootQualified": false
+  },
+  "unknownInitRejected": true,
+  "unexecutableStartupRejected": true,
+  "finalGateRequiresBundleAndActualRootfsNotMarker": true,
+  "rustInitMode": "0755",
+  "imageBootQualified": false,
+  "kind": "shieldsigner-image-finalization-validation",
+  "scope": "Guarded pinned SDK packing-function transform and actual failed packed-root copy fixture; not a successful final image build or hardware boot",
+  "sourceSha256": {
+    "scripts/camera-image-overlay.py": "f81cf93152dfc39baf4b4531da594ff38d9ae7cf4d3511cca2c6e4b2bb6695d8"
+  },
+  "packedPythonBoundarySmoke": {
+    "passed": true,
+    "pythonVersion": "3.12.10 (main, Jan  1 1970, 00:00:00) [GCC 8.3.0]",
+    "cryptodomeVersion": "3.23.0",
+    "aesKnownVector": true,
+    "compactSeedEntropyBytes": [
+      16,
+      32
+    ],
+    "animatedUr": {
+      "fragments": 5,
+      "reversedOrder": true,
+      "duplicateHandled": true,
+      "byteExactPsbt": true
+    },
+    "scope": "Actual packed Python/app direct-data APIs under explicit userspace QEMU, no QR pixels or camera",
+    "imageBootQualified": false
+  }
+}

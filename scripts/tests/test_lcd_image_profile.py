@@ -38,11 +38,25 @@ class LcdImageTests(unittest.TestCase):
         for name in ['.config','configs/luckfox_pico_defconfig','configs/luckfox_pico_w_defconfig']:put(self.br/name,'BR2_TOOLCHAIN_USES_UCLIBC=y\n')
         lcd.configure(self.br,self.bundle,self.data);first=(self.br/'.config').read_text();lcd.configure(self.br,self.bundle,self.data)
         self.assertEqual(first,(self.br/'.config').read_text());self.assertIn('BR2_PACKAGE_SHIELDSIGNER_LCD=y',first)
+        for name in ['.config','configs/luckfox_pico_defconfig','configs/luckfox_pico_w_defconfig']:
+            self.assertIn('BR2_STRIP_EXCLUDE_FILES="shieldsigner_lcd.abi3.so"',(self.br/name).read_text())
         text=(self.br/'package/shieldsigner-lcd/shieldsigner-lcd.mk').read_text()
         self.assertIn('--locked --offline',text);self.assertIn('host-rust python3',text);self.assertIn('PYO3_NO_PYTHON=1',text)
         self.assertIn('SHIELDSIGNER_LCD_VERSION = '+'b'*64,text);self.assertNotIn('--rootfs $(TARGET_DIR) --buildroot',text)
+        self.data['lcdInputs']=dict(self.inputs,buildRecipeSha256='d'*64)
+        lcd.configure(self.br,self.bundle,self.data)
+        self.assertIn('SHIELDSIGNER_LCD_VERSION = '+'d'*64,(self.br/'package/shieldsigner-lcd/shieldsigner-lcd.mk').read_text())
         put(self.br/'package/shieldsigner-lcd/Config.in','# foreign\n')
         with self.assertRaises(ValueError):lcd.configure(self.br,self.bundle,self.data)
+
+    def test_buildroot_strip_exclusion_preserves_other_files(self):
+        for name in ['Config.in','shieldsigner-lcd.mk']:put(self.bundle/'lcd-package'/name,(ROOT/'scripts/image-profiles/lcd-package'/name).read_text())
+        put(self.br/'package/Config.in','')
+        for name in ['.config','configs/luckfox_pico_defconfig','configs/luckfox_pico_w_defconfig']:
+            put(self.br/name,'BR2_STRIP_EXCLUDE_FILES="other.so"\n')
+        lcd.configure(self.br,self.bundle,self.data)
+        lcd.configure(self.br,self.bundle,self.data)
+        self.assertIn('BR2_STRIP_EXCLUDE_FILES="other.so shieldsigner_lcd.abi3.so"',(self.br/'.config').read_text())
 
     def install_fixture(self):
         so=self.root/lcd.INSTALL/'python/shieldsigner_lcd.abi3.so';so.parent.mkdir(parents=True);so.write_bytes(library())

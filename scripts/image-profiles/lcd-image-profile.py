@@ -27,7 +27,13 @@ def configure(buildroot,bundle,data):
         desired=(bundle/'lcd-package'/name).read_text().replace('@LCD_SOURCE_SHA256@',inputs['buildRecipeSha256'])
         path=package/name
         if path.is_symlink():raise ValueError('Foreign LCD package symlink')
-        if path.exists() and path.read_text()!=desired:raise ValueError('Foreign LCD package contents')
+        if path.exists() and path.read_text()!=desired:
+            prior=path.read_text()
+            # A new immutable recipe gets a new Buildroot package version.
+            # Accept only the same reviewed recipe with an older hash.
+            normalized=re.sub(r'(?m)^SHIELDSIGNER_LCD_VERSION = [0-9a-f]{64}$',
+                              'SHIELDSIGNER_LCD_VERSION = '+inputs['buildRecipeSha256'],prior)
+            if name!='shieldsigner-lcd.mk' or normalized!=desired:raise ValueError('Foreign LCD package contents')
         path.write_text(desired)
     config_in=buildroot/'package/Config.in';text=config_in.read_text();source='source "package/shieldsigner-lcd/Config.in"'
     if text.count(source)>1:raise ValueError('Duplicate LCD Config.in source')
@@ -37,6 +43,16 @@ def configure(buildroot,bundle,data):
         path=buildroot/relative
         if not path.is_file():raise ValueError('Missing expected Buildroot defconfig: '+relative)
         lines=path.read_text().splitlines()
+        # Buildroot strips shared objects during target-finalize, after our
+        # package receipt. Preserve this exact module just as the later SDK
+        # strip pass does; never refresh a receipt to accept changed bytes.
+        strip_key='BR2_STRIP_EXCLUDE_FILES'
+        strip_lines=[line for line in lines if line.startswith(strip_key+'=')]
+        if len(strip_lines)>1:raise ValueError('Duplicate Buildroot strip exclusions')
+        exclusions=json.loads(strip_lines[0].split('=',1)[1]).split() if strip_lines else []
+        if 'shieldsigner_lcd.abi3.so' not in exclusions:exclusions.append('shieldsigner_lcd.abi3.so')
+        lines=[line for line in lines if line not in strip_lines]
+        lines.append(strip_key+'='+json.dumps(' '.join(exclusions)))
         for key,value in options.items():
             matches=[line for line in lines if re.match(r'^(?:# )?'+key+r'(?:=| is not set$)',line)]
             if len(matches)>1:raise ValueError('Duplicate Buildroot option: '+key)

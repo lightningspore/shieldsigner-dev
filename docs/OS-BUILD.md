@@ -133,6 +133,30 @@ A kernel-only `--kernel-probe` job stops after the existing upstream kernel boun
 
 ### First boot of a diagnostic development Rust-camera image
 
+For Sam's standard display/button board, use the existing
+[`0.8.5-luckfox` fork mapping](https://github.com/lightningspore/seedsigner/tree/228ebc0fa94251132d50adcf3db473ac48c293c5),
+stored as [an app-format configuration](../firmware/bench-profiles/base-fork-io-config.json).
+This bench wiring uses LCD DC56/reset57 and button GPIOs
+58/53/59/54/52/55/43/42 (up/down/left/right/press/1/2/3).
+The normal ST7789 app driver handles color inversion; no replacement display
+driver is needed. The bench configuration uses 10 MHz SPI.
+
+With the app stopped, apply it for the current diagnostic boot using the app's
+existing `io_config.json` mechanism. UART2 must be released because GPIO42/43
+are buttons on this board, rather than the carrier's smartcard UART:
+
+```sh
+adb push firmware/bench-profiles/base-fork-io-config.json /tmp/base-fork-io-config.json
+adb shell '/etc/init.d/S60pcscd stop; if test -e /sys/bus/platform/drivers/dw-apb-uart/ff4c0000.serial; then echo ff4c0000.serial > /sys/bus/platform/drivers/dw-apb-uart/unbind; fi; mount -o bind /tmp/base-fork-io-config.json /opt/src/seedsigner/hardware/io_config.json'
+adb shell '/usr/bin/shieldsigner-launch -- --iotest'
+```
+
+This opens the app's built-in I/O test. The configuration bind and UART release
+are temporary for this boot, and do not rewrite the read-only image or change
+the carrier's default mapping. Stop the app before changing profiles. Reboot
+restores the image's held-app startup and original configuration. Camera tests
+still require the CMA-corrected image described above.
+
 The ADB commands below apply only to a checksum-verified **development** image whose packed readback confirms USB peripheral mode, a real executable ARM `adbd`, and the diagnostic app hold. They do not apply to the production `dd4bd96` image.
 
 After writing the checksum-verified image to the intended test microSD and

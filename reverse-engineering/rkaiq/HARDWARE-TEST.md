@@ -1911,3 +1911,37 @@ five existing live IQ blocks/final AWB, and installed scan/preview loops. Full
 CNR live checking intentionally fails on the stalled run; `--startup-only`
 checks only its mathematically matching initialization and labels capture as
 failed. Keep CNR disabled in a runnable kit until a real capture passes.
+
+## Confirmed base-fork display bench
+
+The connected 240×240 ST7789 board uses the base `0.8.5-luckfox` wiring:
+LCD DC = GPIO56 (`gpiochip1`, line24), reset = GPIO57 (line25), SPI0.0.
+This differs from the image's FOX_22 carrier mapping. Its center button is
+GPIO52, so do not start the FOX_22 LCD DC52 output on this board.
+See the [source mapping audit](fork-display-button-map-audit.json).
+
+The user confirmed correct visible RGBW colors with the
+[prototype](base-fork-display-hardware-validation.json), at 1MHz and raw
+`INVON`. `invert(False)` means raw `INVOFF`, which produced complementary
+colors. The pinned driver's user-facing `set_color_inversion(False)` correctly
+sends `INVON` for normal colors. RGB565 packing is unchanged.
+
+A repeatable display-only helper and its explicit JSON profile are in
+`firmware/rkaiq-rs/python/base_fork_display_bench.py` and
+`base-fork-display-bench-profile.json`. Copy both into `/tmp`, then run only
+after the current display owner has exited:
+
+```sh
+python3 /tmp/base_fork_display_bench.py \
+  --app-root /opt/src --profile /tmp/base-fork-display-bench-profile.json \
+  --hold-seconds 30 --report /tmp/base-display-bench.json
+```
+
+This initializes only the LCD driver, labels red/green/blue/white regions and
+leaves a black lower strip. It holds handles for at most120seconds, then closes
+them. It does not initialize buttons, camera, Renderer or backlight outputs,
+and does not edit installed configuration. A successful SPI write is not a
+physical color check. The new helper has been syntax-checked but has not yet
+been rerun on hardware; the recorded physical confirmation applies to the
+prototype hash, not automatically to this reproduction. Broader UI, all-button,
+backlight and higher-speed qualification remain open.

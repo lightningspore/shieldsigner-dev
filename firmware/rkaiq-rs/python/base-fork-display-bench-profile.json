@@ -1,0 +1,18 @@
+{
+  "name": "confirmed-base-fork-display-bench",
+  "display": {
+    "dc": [
+      "/dev/gpiochip1",
+      24
+    ],
+    "rst": [
+      "/dev/gpiochip1",
+      25
+    ],
+    "bl": "disabled",
+    "spi_bus": 0,
+    "spi_device": 0,
+    "spi_hz": 1000000
+  },
+  "scope": "240x240 ST7789, base 0.8.5-luckfox wiring only; not lcdpwm/FOX_22. Exclusive owner required. No button configuration."
+}

@@ -1,0 +1,29 @@
+{
+  "kind": "base-fork-display-prototype-physical-observation",
+  "passed": true,
+  "prototypeSha256": "9c42aacd2369e02f513e4792f7ee2ad21ba2191abd47b24c33783d56a95106ef",
+  "display": {
+    "dc": [
+      "/dev/gpiochip1",
+      24
+    ],
+    "rst": [
+      "/dev/gpiochip1",
+      25
+    ],
+    "bl": "disabled",
+    "spi_bus": 0,
+    "spi_device": 0,
+    "spi_hz": 1000000
+  },
+  "observations": [
+    "User confirmed displayed colors correct after raw INVON enabled.",
+    "Earlier raw INVOFF produced red as cyan and white as black.",
+    "Center button GPIO52 active-low independently confirmed base-fork wiring."
+  ],
+  "qualificationScope": "Current prototype and observed RGBW chart only; no full UI, all-button map, higher SPI speed, image configuration or reproduction-helper physical qualification.",
+  "reproductionHelper": "firmware/rkaiq-rs/python/base_fork_display_bench.py",
+  "reproductionHelperPhysicallyRetested": false,
+  "normalColorBaseline": "set_color_inversion(False) sends INVON because pinned driver NORMAL_COLORS_REQUIRE_INVERSION=True",
+  "reproductionHelperSha256": "810bbea40aebc0baf6610f1b87c21f493024ee1999ae586bce853cb540060c1b"
+}

@@ -61,7 +61,12 @@
     {
       "requirement": "Physical LCD/buttons and complete application interaction",
       "status": "unverified",
-      "needed": "Confirm hardware wiring and observe display/button behavior; SPI/input device nodes alone are insufficient."
+      "needed": "Confirm hardware wiring and observe display/button behavior; SPI/input device nodes alone are insufficient.",
+      "partialEvidence": {
+        "evidence": "base-fork-display-hardware-validation.json",
+        "sha256": "26e26572e78590340541ae621c5e8b70bccac9cea7cf694e3fa6222ed4cba357",
+        "scope": "Base-fork DC56/RST57 display-only RGBW chart visually confirmed at1MHz with rawINVON. CenterbuttonGPIO52 active-low observed. No fullUI/allbuttons qualification; carrierFOX22 profile is different."
+      }
     },
     {
       "requirement": "Physical power cycle and permanent startup choice",

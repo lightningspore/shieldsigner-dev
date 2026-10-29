@@ -20,7 +20,7 @@ t=[r['elapsed'] for r in active]
 for name,color in [('python3','#2979b8'),('camera-probe','#d36b23'),('shieldsigner-qr','#8154a0')]:
  axes[1].plot(t,[sum(p.get('Pss',0) for p in r['processes'].values() if p['name']==name)/1024 for r in active],label=name+' PSS',color=color)
  axes[1].plot(t,[sum(p.get('Swap',0) for p in r['processes'].values() if p['name']==name)/1024 for r in active],label=name+' swapped (logical)',color=color,linestyle=':')
- axes[1].plot(t,[sum(p.get('Pss_Anon',0) for p in r['processes'].values() if p['name']==name)/1024 for r in active],label=name+' private anonymous',color=color,linestyle='--')
+ axes[1].plot(t,[sum(p.get('Pss_Anon',0) for p in r['processes'].values() if p['name']==name)/1024 for r in active],label=name+' anonymous PSS',color=color,linestyle='--')
 if any('zram' in r for r in active):
  axes[2].plot(t,[r.get('zram',{}).get('allocatedBytes',0)/1048576 for r in active],label='zram physical RAM',linestyle='--')
 if any(r.get('zram',{}).get('originalBytes',0) for r in active):

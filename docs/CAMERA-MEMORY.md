@@ -102,3 +102,16 @@ The latest `0.0.39-dev` native binary (`3da849d8…`, including the READY-before
 The `2663ac8` image build completed and passed packed readback plus ARM Python/LCD QEMU checks. Local artifacts are under `dist/os/verified/mini-0.0.39-2663ac8/` (ignored build outputs). The raw image SHA256 is `337f99eb707614bd2b5e169adeb3592417ef1bc9f640b208661cfd060c250f97`; the compressed image SHA256 is `3a8e118f0173fbe15d6d264ed4c1a5540dd32d80b26c4dd68a06adeca6ab9241`. Both were verified after transfer. Public packed report: `reverse-engineering/rkaiq/memory/image-0.0.39-2663ac8-packed-verification.json`.
 
 A read-only mount of that exact image's SquashFS supplied the app, camera runtime and newly built LCD extension for a real-board 60-second GUI test: 709 frames, 231 renders, 285 QR calls, zero errors/reconnects and clean owner/DMA teardown. The LCD extension hash is `77d2fb008e5df1f38c169d4f9df37174037d58faf0c05d7fa66d95ee03901ff3`. The existing kernel, Python runtime and bench zram setup were retained, so this does not qualify a cold boot. Result: `reverse-engineering/rkaiq/memory/gui-packed-image-60-result.json`.
+
+
+## Packaged-runtime 20-minute soak
+
+![Memory throughout the packaged-runtime hardware soak](../reverse-engineering/rkaiq/memory/memory-packed-image-1200.png)
+
+The detached 1,200-second run completed with exit status 0: **17,811 camera frames, 5,929 renders and 7,042 QR calls; zero reader/render/decoder errors and zero reconnects**. Duration cleanup completed without errors; camera/QR owners exited and allocated camera DMA returned to zero. An earlier desktop-session-bound attempt was interrupted at about 210 seconds and is excluded from this result.
+
+Across 871 complete steady camera-phase samples, available RAM was **7.79–11.70 MiB (median 10.36 MiB)**. Median resident PSS was **14.73 MiB app, 5.69 MiB camera native, and 0.52 MiB QR worker**. Camera DMA was 10.61 MiB; compressed-swap allocation was **6.73–6.93 MiB**. PSS, DMA and swap are separate measurements; logical swapped bytes are not additional physical RAM. The trace shows no sustained upward resident-memory trend during this run, not a proof against every possible leak.
+
+Public counters/provenance: `reverse-engineering/rkaiq/memory/gui-packed-image-1200-result.json`. Reduced metadata-only samples: `gui-packed-image-1200-measurements.jsonl` in that directory. Regenerate using `mise run camera:memory:chart reverse-engineering/rkaiq/memory/gui-packed-image-1200-measurements.jsonl reverse-engineering/rkaiq/memory/memory-packed-image-1200.png`.
+
+This tested the exact packaged app/camera/QR/LCD files from a read-only compressed rootfs mount, with the existing board kernel/Python/bench zram. It did not flash or cold-boot the new image, decode an optical QR, or qualify physical Back/button navigation. Those acceptance checks remain pending.

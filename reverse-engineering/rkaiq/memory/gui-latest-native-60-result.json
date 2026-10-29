@@ -1,0 +1,77 @@
+{
+  "kind": "latest-native-real-gui-hardware-check",
+  "date": "2026-10-29",
+  "nativeSha256": "3da849d8dcfb4fe292196f94844c82240f52f1445f91cd0c17b344081d4523eb",
+  "nativeVersion": "0.0.39-dev",
+  "lcdSha256": "a3d81514236566f077aaf558d20a169631f9271b43f85ecf1819b5e84c864de2",
+  "environment": {
+    "kernel": "5.10.160",
+    "persistentImageTest": false,
+    "zramLogicalMiB": 16,
+    "zramAllocationLimitMiB": 8,
+    "memlockLimitKiB": 4096,
+    "nativeReadOnlyCodeLock": true,
+    "ioProfile": "base-fork"
+  },
+  "benchmark": {
+    "kind": "real-scanview-benchmark",
+    "pid": 770,
+    "elapsedSeconds": 67.38114748999942,
+    "phase": "process-exit",
+    "rustLcd": true,
+    "smallRam": true,
+    "renderer": {
+      "successfulCalls": 242,
+      "errors": 0
+    },
+    "streams": [
+      {
+        "fullFrames": 740,
+        "reconnects": 1,
+        "readerErrors": 0,
+        "stopped": true
+      }
+    ],
+    "qr": {
+      "starts": 1,
+      "calls": 294,
+      "decoded": 0,
+      "errors": 0,
+      "lastRoundTripSeconds": 0.06897187499998836
+    },
+    "retiredCounters": {
+      "frames": 0,
+      "reconnects": 0,
+      "readerErrors": 0
+    },
+    "termination": {
+      "reason": "duration",
+      "isUiCancellationClaim": false,
+      "controllerFinallyClaimed": false,
+      "processExitRequested": true,
+      "ownerCleanupTimedOut": false,
+      "cameraCleanupErrors": []
+    },
+    "uiCancellationQualified": false,
+    "terminationPolicy": {
+      "durationSeconds": 60.0,
+      "cleanupBudgetSeconds": 8,
+      "hardFallback": "with --duration: default SIGALRM at duration + cleanup budget + 1 second; final telemetry may be absent"
+    },
+    "containsImagesOrDecodedQr": false
+  },
+  "memoryAvailableKiB": {
+    "minimumObserved": 8120,
+    "maximumObserved": 19392
+  },
+  "afterExit": {
+    "cameraAndQrOwnersAbsent": true,
+    "cmaAllocatedKiB": 0
+  },
+  "qualificationLimits": [
+    "No optical QR was decoded in this run.",
+    "Duration cleanup is not physical Back/button navigation.",
+    "Runtime overlay on the existing image; not a cold boot of the new packaged image.",
+    "Native executable used an alternate filename; host process-name sampler did not collect its PSS."
+  ]
+}

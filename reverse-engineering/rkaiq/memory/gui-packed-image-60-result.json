@@ -1,0 +1,63 @@
+{
+  "kind": "packed-squashfs-runtime-hardware-check",
+  "date": "2026-10-29",
+  "imageSha256": "337f99eb707614bd2b5e169adeb3592417ef1bc9f640b208661cfd060c250f97",
+  "compressedImageSha256": "3a8e118f0173fbe15d6d264ed4c1a5540dd32d80b26c4dd68a06adeca6ab9241",
+  "nativeSha256": "3da849d8dcfb4fe292196f94844c82240f52f1445f91cd0c17b344081d4523eb",
+  "lcdSha256": "77d2fb008e5df1f38c169d4f9df37174037d58faf0c05d7fa66d95ee03901ff3",
+  "benchmark": {
+    "kind": "real-scanview-benchmark",
+    "pid": 2564,
+    "elapsedSeconds": 67.79628773999866,
+    "phase": "process-exit",
+    "rustLcd": true,
+    "smallRam": true,
+    "renderer": {
+      "successfulCalls": 231,
+      "errors": 0
+    },
+    "streams": [
+      {
+        "fullFrames": 709,
+        "reconnects": 0,
+        "readerErrors": 0,
+        "stopped": true
+      }
+    ],
+    "qr": {
+      "starts": 1,
+      "calls": 285,
+      "decoded": 0,
+      "errors": 0,
+      "lastRoundTripSeconds": 0.14106458400056
+    },
+    "retiredCounters": {
+      "frames": 0,
+      "reconnects": 0,
+      "readerErrors": 0
+    },
+    "termination": {
+      "reason": "duration",
+      "isUiCancellationClaim": false,
+      "controllerFinallyClaimed": false,
+      "processExitRequested": true,
+      "ownerCleanupTimedOut": false,
+      "cameraCleanupErrors": []
+    },
+    "uiCancellationQualified": false,
+    "terminationPolicy": {
+      "durationSeconds": 60.0,
+      "cleanupBudgetSeconds": 8,
+      "hardFallback": "with --duration: default SIGALRM at duration + cleanup budget + 1 second; final telemetry may be absent"
+    },
+    "containsImagesOrDecodedQr": false
+  },
+  "afterExit": {
+    "cameraAndQrOwnersAbsent": true,
+    "cmaAllocatedKiB": 0
+  },
+  "scope": "App, camera Python/native/QR and Rust LCD from a read-only mount of the exact image SquashFS; existing board kernel and Python runtime, existing bench zram setup.",
+  "imageBootQualified": false,
+  "opticalQrQualified": false,
+  "physicalNavigationQualified": false
+}

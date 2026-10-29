@@ -1,0 +1,104 @@
+{
+  "helperSha256": "adb0c551ba5c31f5b710defe3ce8e110101ca5bdde455998d4825ed871b792af",
+  "imageSha256": "337f99eb707614bd2b5e169adeb3592417ef1bc9f640b208661cfd060c250f97",
+  "imageBytes": 361709568,
+  "imageBootQualified": false,
+  "scope": "Packed image static readback, not boot validation",
+  "bootCmaSize": "12M",
+  "bootEnvironmentCrc32": "0xd2331b41",
+  "rootfs": {
+    "offset": 302809088,
+    "bytesUsed": 58899318
+  },
+  "linuxBootFits": [
+    {
+      "fitOffset": 819200,
+      "defaultConfiguration": "conf",
+      "dtbSha256": "02716ec3f70548af9e057a937135a91ea8629e8a76e0cedfd9832b1cbb2ca32d",
+      "model": "Luckfox Pico Mini"
+    }
+  ],
+  "rootfsVerification": {
+    "kind": "shieldsigner-rust-camera-rootfs-verified",
+    "version": "0.0.39-dev",
+    "imageVariant": "dev",
+    "ioProfile": "base-fork",
+    "appStartup": "automatic",
+    "automaticAppStartupHeld": false,
+    "bundleManifestSha256": "c3d559f3a2e2e146a369b9806914a29735636aa28d39d96d06cd44205301ce89",
+    "closedCameraRuntimeAbsent": true,
+    "selectedIqPresent": true,
+    "openKernelModulesPresent": true,
+    "moduleFiles": [
+      {
+        "name": "rk_dvbm",
+        "sha256": "d1c2691a6da10abe1133fa88cfd30391ee9ba7c8937c1aaadf60ee3ccf229134",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "video_rkcif",
+        "sha256": "157b29875cd6a81188946d192174d1fbb0f3a1a8d77219edc0ed6a8a527425a0",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "video_rkisp",
+        "sha256": "e74ecc37c0db9c05b0a37f2eb03adeb7ab479a4e863f23ee7ce6d1961fad4f2c",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "sc3336",
+        "sha256": "9c904ccff992c11bda9f754e19bee9866ca5eefb1f3a6a88606dca465b3970d8",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "phy-rockchip-csi2-dphy-hw",
+        "sha256": "8d547dc5542a3b2841a52bf6e8cb2c24be4a494e1363e40452ce8c7a9527429e",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      },
+      {
+        "name": "phy-rockchip-csi2-dphy",
+        "sha256": "4561479feb0bb369e2cf4788d73c26e6ec4827b28f4dda405197705ec610cc76",
+        "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      }
+    ],
+    "imageBootQualified": false
+  },
+  "memoryProfileVerification": {
+    "memoryProfile": "zram16-lzo",
+    "filesVerified": 4,
+    "bootQualified": false
+  },
+  "lcdProfileVerification": {
+    "lcdBackend": "rust",
+    "verified": true,
+    "hardwareQualified": false
+  },
+  "qemuPythonDirectDataSmoke": {
+    "passed": true,
+    "pythonVersion": "3.12.10 (main, Jan  1 1970, 00:00:00) [GCC 8.3.0]",
+    "cryptodomeVersion": "3.23.0",
+    "aesKnownVector": true,
+    "compactSeedEntropyBytes": [
+      16,
+      32
+    ],
+    "animatedUr": {
+      "fragments": 5,
+      "reversedOrder": true,
+      "duplicateHandled": true,
+      "byteExactPsbt": true
+    },
+    "scope": "Actual packed Python/app direct-data APIs under explicit userspace QEMU, no QR pixels or camera",
+    "imageBootQualified": false
+  },
+  "qemuRustLcdSmoke": {
+    "passed": true,
+    "nativeAbiImport": true,
+    "originalPillowRgb565EquivalentPixels": 256,
+    "primaryColors": true,
+    "malformedBufferRejected": true,
+    "reviewedShimRegistration": true,
+    "scope": "Packed ARM extension and shim; no display driver instantiated",
+    "imageBootQualified": false
+  }
+}

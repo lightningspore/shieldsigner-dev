@@ -1,0 +1,37 @@
+{
+  "kind": "read-only-original-arm-thread-scheduling-audit",
+  "originalLibrarySha256": "ff4cb39532e145c2317ac426038a2d57c629940a91d0d8812014e12c9a3c4dc9",
+  "tool": "Homebrew LLVM llvm-objdump; ELF virtual addresses (Ghidra historical image uses +0x10000)",
+  "findings": [
+    {
+      "symbol": "XCam::Thread::Thread(char const*)",
+      "elfAddress": "0x59d68",
+      "evidence": "0x59dba\u20130x59dbe initializes fields0x6c/0x70 to-1 (unspecified policy/priority)."
+    },
+    {
+      "symbol": "XCam::Thread::start()",
+      "elfAddress": "0x59e28",
+      "evidence": "0x59ece calls pthread_attr_setschedpolicy usingfield0x6c;0x59ee8 calls pthread_attr_setschedparam usingfield0x70 when policy/priority specified;0x59eec\u20130x59ef0 setsinheritsched=1 (PTHREAD_EXPLICIT_SCHED)."
+    },
+    {
+      "symbol": "RkCam::RKStream::start() / startThreadOnly()",
+      "elfAddresses": [
+        "0x31ef2",
+        "0x31f38"
+      ],
+      "evidence": "Streamtypes9/10 setpolicy2(SCHED_RR),priority20 inthreadfields0x6c/0x70 at0x31f26\u20130x31f2a and0x31f4a\u20130x31f4e."
+    },
+    {
+      "symbol": "RkCam::RawStreamProcUnit::start(int)",
+      "elfAddress": "0x35422",
+      "evidence": "0x354c8\u20130x354cc setsworkerpolicy2(SCHED_RR),priority20 beforeThread::start."
+    },
+    {
+      "symbol": "RkCam::RkAiqAnalyzeGroupMsgHdlThread constructor",
+      "elfAddress": "0x82bfc",
+      "evidence": "Inspected constructor invokes defaultThread constructor; no schedulingoverride observed in this constructor. This does not establish every later callsite."
+    }
+  ],
+  "rustCurrentBehavior": "No sched_setscheduler/pthread_setschedparam/setpriority/nice call found in camera Rust source; owner/workers inherit scheduler settings from launcher.",
+  "scope": "Supports a bounded scheduler-priority isolation trial; not proof that changing AE policy fixes full GUI failure. No binary/runtime/GPIO mutation; no recommendation to blindly elevate every thread realtime."
+}

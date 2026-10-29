@@ -1945,3 +1945,22 @@ physical color check. The new helper has been syntax-checked but has not yet
 been rerun on hardware; the recorded physical confirmation applies to the
 prototype hash, not automatically to this reproduction. Broader UI, all-button,
 backlight and higher-speed qualification remain open.
+
+### New dev image camera API with 12MiB CMA
+
+The [booted-image check](new-image-cma12-camera-api-validation.json) passed on
+boot `88e5bf8b-1ae8-4fd9-953a-4d923331acd5`, with actual CMA12288KiB.
+The installed app automatically selected `luckfox_22`; no profile override was
+used. Its real Camera API returned six640×480RGB stream samples and a still,
+with clean owner shutdown. Installed native QR integration passed binary,
+CompactSeed and reordered/duplicate animated UR fixtures with18calls, zero
+errors. This is headless camera/API qualification, not optical decoding or UI.
+
+The direct helper created `/tmp/shieldsigner-camera` before using the installed
+client (the normal image launcher already creates it). A separate `/tmp` copy
+of the replacement client, SHA448870e7…, created a previously absent nested
+parent itself and passed two real six-frame sessions with clean exit and socket
+removal. Installed client SHA cf563390… was unchanged. The
+[earlier1MiB-CMA failure](new-image-boot-camera-api-validation.json) remains
+recorded separately. After all tests, no camera/QR/vendor owner remained and
+CMAAllocated returned to zero.

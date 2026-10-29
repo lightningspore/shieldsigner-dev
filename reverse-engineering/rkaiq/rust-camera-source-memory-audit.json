@@ -1,0 +1,43 @@
+{
+  "kind": "read-only-source-memory-budget",
+  "scope": "Source payload sizes, not measured allocated heap/RSS and not summed with shared mappings/kernel CMA. No board commands or runtime changes. No equivalent vendor run exists for comparison.",
+  "payloadsBytes": {
+    "vga_nv12": 460800,
+    "vga_rgb": 921600,
+    "shared_event_queue_64_all_statistics_upper_payload": 834560,
+    "pending_statistics_16_upper_payload": 208640,
+    "one_parameter_snapshot": 11145,
+    "four_parameter_snapshots_observed_in_prior_gui_failure": 44580,
+    "one_awb_measurement_snapshot": 1204,
+    "awb_preparation_frame": 7680
+  },
+  "publication": "Capacity1 queue; active conversion also owns oneNV12 and RGB buffer. Producer copiesNV12 before try_send, even when rejected asFull. Temporary payload counts are not simultaneous RSS measurements.",
+  "calibration": {
+    "fullIQFileBytes": 432259,
+    "fullIQJsonValueNodes": 42655,
+    "fiveClonedNRSubtreesCompactJSONBytes": 122322,
+    "fiveClonedNRSubtreesJsonValueNodes": 12661,
+    "clonedNames": [
+      "bayertnr_v23",
+      "bayer2dnr_v23",
+      "cnr_v30",
+      "ynr_v22",
+      "sharp_v33"
+    ],
+    "retention": "Full IQ serde tree remains in first_frame scope while typedCCM/LSC/AWB and clonedrawNR calibrations are owned separately. Source serialized sizes are not heap estimates."
+  },
+  "histories": "Parameter/measurement snapshots prune based on referenced effective IDs; pendingstatistics16 and shared eventqueue64 are fail-closed bounds. Raw frame/history diagnostics retain256records.",
+  "futureCandidates": [
+    "Explicitly release full IQ tree after ownedcalibrations are extracted; no calibration/math change.",
+    "Extract remaining initialTargetLuma scalar and release startup diagnosticJSON after comparisons/report.",
+    "Avoid rejected-publication NV12 allocation or reuse boundedbuffers preserving current drop semantics.",
+    "Parse retained NR calibration into ownedtyped structs; larger separatelyverified change."
+  ],
+  "sources": [
+    "firmware/rkaiq-rs/src/camera_first_frame.rs",
+    "firmware/rkaiq-rs/src/camera_stream.rs",
+    "firmware/rkaiq-rs/src/camera_ae_events.rs",
+    "firmware/rkaiq-rs/src/camera_statistics_session.rs",
+    "firmware/rkaiq-rs/src/camera_raw_bridge.rs"
+  ]
+}

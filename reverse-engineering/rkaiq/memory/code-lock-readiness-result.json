@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "binarySha256": "3da849d8dcfb4fe292196f94844c82240f52f1445f91cd0c17b344081d4523eb",
+  "readyAcknowledged": true,
+  "exitCode": 1,
+  "codeLock": {
+    "capBytes": 4194304,
+    "errno": null,
+    "error": "Executable lock bytes exceed RLIMIT_MEMLOCK hard limit",
+    "event": "executable-code-lock",
+    "hardLimitBytes": 65536,
+    "mappingCount": 2,
+    "partialLocksRolledBack": true,
+    "requestedBytes": 1560576,
+    "scope": "Only own-executable device/inode matched file mappings with no write permission; no heap/DMA/other libraries",
+    "softLimitBytes": 65536,
+    "success": false
+  },
+  "seconds": 0.2635520420008106,
+  "stderr": "camera-probe: Executable lock bytes exceed RLIMIT_MEMLOCK hard limit\n",
+  "scope": "Invalid paths and rejected memory lock; no camera capture or UI qualification."
+}

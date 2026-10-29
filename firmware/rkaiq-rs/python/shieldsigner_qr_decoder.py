@@ -18,7 +18,13 @@ class NativeQrReader:
         self.timeout = timeout
         self._lock = threading.RLock()
         self._process = self._socket = None
-        self.stats = {"kind": "native-zxing-3.1.1-local-average", "binarySha256": hashlib.sha256(self.binary.read_bytes()).hexdigest(),
+        # The ARM worker is several MiB. Hash incrementally so startup does
+        # not allocate a worker-sized Python bytes object on the 64 MiB Mini.
+        digest = hashlib.sha256()
+        with self.binary.open("rb") as worker:
+            for chunk in iter(lambda: worker.read(65536), b""):
+                digest.update(chunk)
+        self.stats = {"kind": "native-zxing-3.1.1-local-average", "binarySha256": digest.hexdigest(),
                       "starts": 0, "calls": 0, "decoded": 0, "errors": 0, "lastRoundTripSeconds": None,
                       "lastExitCode": None}
         atexit.register(self.close)

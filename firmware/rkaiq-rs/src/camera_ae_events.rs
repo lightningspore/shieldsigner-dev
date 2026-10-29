@@ -92,9 +92,17 @@ enum CameraAeEvent {
     Statistics { bytes: Vec<u8> },
 }
 type CameraAeSender = std::sync::mpsc::SyncSender<CameraAeEvent>;
+fn camera_event_key(event: &CameraAeEvent) -> (usize,u32) {
+    match event {
+        CameraAeEvent::Sof{frame,..}=>(0,*frame),
+        CameraAeEvent::Statistics{bytes}=>(1,shieldsigner_rkaiq::statistics::Statistics::parse(bytes).map(|s|s.frame_id()).unwrap_or(u32::MAX)),
+    }
+}
+
 fn emit_camera_ae_event(sender: &Option<CameraAeSender>, event: CameraAeEvent) -> io::Result<()> {
     if let Some(sender) = sender {
-        sender.try_send(event).map_err(|e| match e {
+        let (kind,frame)=camera_event_key(&event);
+        super::camera_event_metrics::enqueue(kind,frame,||sender.try_send(event)).map_err(|e| match e {
             std::sync::mpsc::TrySendError::Full(_) => {
                 error("AE event owner fell behind; event queue is full")
             }
@@ -253,7 +261,7 @@ impl CameraAwb {
             self.last_iso = Some(iso);
             self.processed += 1;
             self.last = Some((stats.frame_id(), stats.parameters_id(), frame.to_vec()));
-            println!(
+            camera_observed_println!(
                 "{}",
                 json!({"event":"automatic-awb-statistics","frame":stats.frame_id(),"parametersId":stats.parameters_id(),"gain":result.current_gain,"ccmDamping":self.session.ccm_damping(),"calculated":result.action.calculated,"controllerFrame":result.controller_frame,"countdown":result.countdown,"region":result.region,"retained":result.retained,"complete":result.complete,"activeLights":result.active_lights,"group":i32::from_le_bytes(frame[0x1d78..0x1d7c].try_into().unwrap()),"physicalLights":frame[0x1d74],"exposureMetadata":"same-frame-AE-normalized-brightness","aeNormalizedBrightness":ae_pre.normalized_brightness,"brightness":result.numeric.luma,"iso":iso,"isoSource":"same-frame-associated-real-gains","measurementConfiguration":"FAST-to-normal-timeshare"})
             );
@@ -451,6 +459,7 @@ where
         frame: u32,
         white_balance: Option<shieldsigner_rkaiq::isp32::WhiteBalanceGain>,
     ) -> io::Result<Option<usize>> {
+        let _isp_phase=super::camera_event_metrics::Phase::start("isp-prepare-submit",Some(frame));
         use shieldsigner_rkaiq::isp32;
         // One drain is bounded by the driver's maximum pool size.
         for _ in 0..8 {
@@ -621,7 +630,7 @@ where
                 use shieldsigner_rkaiq::isp_demosaic::{OFFSET, BYTES};
                 snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);
                 let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
-                println!("{}",json!({"event":"automatic-demosaic-submitted","frame":frame,"iso":next.iso,"gains":gains,"exposureFrame":exposure_frame,"exactExposureLookup":exact,"hardware":hex(&hardware),"packed":hex(&planned[OFFSET..OFFSET+BYTES]),"physicalApplicationVerified":false}));
+                camera_observed_println!("{}",json!({"event":"automatic-demosaic-submitted","frame":frame,"iso":next.iso,"gains":gains,"exposureFrame":exposure_frame,"exactExposureLookup":exact,"hardware":hex(&hardware),"packed":hex(&planned[OFFSET..OFFSET+BYTES]),"physicalApplicationVerified":false}));
             }
         }
         if let Some((next, result, changed, exposure_frame, exact, gains)) = dpcc_staged {
@@ -632,7 +641,7 @@ where
                 use shieldsigner_rkaiq::isp_dpcc::{OFFSET, BYTES};
                 snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);
                 let hex = |b: &[u8]| b.iter().map(|v| format!("{v:02x}")).collect::<String>();
-                println!("{}",json!({"event":"automatic-dpcc-submitted","frame":frame,"iso":next.iso,"gains":gains,"exposureFrame":exposure_frame,"exactExposureLookup":exact,"result":hex(&result),"packed":hex(&planned[OFFSET..OFFSET+BYTES]),"physicalApplicationVerified":false}));
+                camera_observed_println!("{}",json!({"event":"automatic-dpcc-submitted","frame":frame,"iso":next.iso,"gains":gains,"exposureFrame":exposure_frame,"exactExposureLookup":exact,"result":hex(&result),"packed":hex(&planned[OFFSET..OFFSET+BYTES]),"physicalApplicationVerified":false}));
             }
         }
         if let Some(stage)=ccm_staged {self.commit_ccm(stage,frame,&planned,&mut snapshot,true);}
@@ -653,49 +662,49 @@ where
         use shieldsigner_rkaiq::isp_baynr::{OFFSET,BYTES};
         if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
         let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
-        println!("{}",json!({"event":"automatic-baynr-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"bay3d":stage.information.bay3d_enabled,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[68..72].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
+        camera_observed_println!("{}",super::camera_runtime_log::select(super::camera_runtime_log::enabled(CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed),super::camera_runtime_log::full_enabled()), || json!({"event":"automatic-baynr-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"bay3d":stage.information.bay3d_enabled,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[68..72].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}), || json!({"event":"automatic-baynr-processed","frame":frame,"updated":stage.updated,"queuedBatch":queued,"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"diagnosticPayloadOmitted":true,"physicalApplicationVerified":false})));
     }
     fn commit_cnr(&mut self,stage:CameraCnrStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
         let cnr=self.cnr.as_mut().unwrap();cnr.state=stage.state;cnr.result=stage.result;
         use shieldsigner_rkaiq::isp_cnr::{OFFSET,BYTES};
         if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
         let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
-        println!("{}",json!({"event":"automatic-cnr-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
+        camera_observed_println!("{}",super::camera_runtime_log::select(super::camera_runtime_log::enabled(CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed),super::camera_runtime_log::full_enabled()), || json!({"event":"automatic-cnr-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}), || json!({"event":"automatic-cnr-processed","frame":frame,"updated":stage.updated,"queuedBatch":queued,"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"diagnosticPayloadOmitted":true,"physicalApplicationVerified":false})));
     }
     fn commit_bay3d(&mut self,stage:CameraBay3dStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
         let bay3d=self.bay3d.as_mut().unwrap();bay3d.state=stage.state;bay3d.result=stage.result;
         use shieldsigner_rkaiq::isp_bay3d::{OFFSET,BYTES};
         if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
         let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
-        println!("{}",json!({"event":"automatic-bay3d-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
+        camera_observed_println!("{}",super::camera_runtime_log::select(super::camera_runtime_log::enabled(CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed),super::camera_runtime_log::full_enabled()), || json!({"event":"automatic-bay3d-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}), || json!({"event":"automatic-bay3d-processed","frame":frame,"updated":stage.updated,"queuedBatch":queued,"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"diagnosticPayloadOmitted":true,"physicalApplicationVerified":false})));
     }
     fn commit_ynr(&mut self,stage:CameraYnrStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
         let ynr=self.ynr.as_mut().unwrap();ynr.state=stage.state;ynr.result=stage.result;
         use shieldsigner_rkaiq::isp_ynr::{OFFSET,BYTES};
         if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
         let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
-        println!("{}",json!({"event":"automatic-ynr-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
+        camera_observed_println!("{}",super::camera_runtime_log::select(super::camera_runtime_log::enabled(CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed),super::camera_runtime_log::full_enabled()), || json!({"event":"automatic-ynr-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}), || json!({"event":"automatic-ynr-processed","frame":frame,"updated":stage.updated,"queuedBatch":queued,"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"diagnosticPayloadOmitted":true,"physicalApplicationVerified":false})));
     }
     fn commit_sharp(&mut self,stage:CameraSharpStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
         let sharp=self.sharp.as_mut().unwrap();sharp.state=stage.state;sharp.result=stage.result;
         use shieldsigner_rkaiq::isp_sharp::{OFFSET,BYTES};
         if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
         let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
-        println!("{}",json!({"event":"automatic-sharp-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}));
+        camera_observed_println!("{}",super::camera_runtime_log::select(super::camera_runtime_log::enabled(CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed),super::camera_runtime_log::full_enabled()), || json!({"event":"automatic-sharp-processed","frame":frame,"exposure":hex(&stage.state.exposure),"selected":hex(&stage.state.selected),"seconds":stage.information.seconds,"gains":stage.information.gains,"blc":stage.information.blc_predgain,"snr":stage.information.snr_mode,"dcg":stage.dcg,"gray":stage.information.gray,"force":stage.information.force,"iso":i32::from_le_bytes(stage.state.exposure[60..64].try_into().unwrap()),"updated":stage.updated,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"queuedBatch":queued,"snrSource":"associated signed DCG fallback; NR switch unavailable","physicalApplicationVerified":false}), || json!({"event":"automatic-sharp-processed","frame":frame,"updated":stage.updated,"queuedBatch":queued,"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"diagnosticPayloadOmitted":true,"physicalApplicationVerified":false})));
     }
     fn commit_lsc(&mut self,stage:CameraLscStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
         let lsc=self.lsc.as_mut().unwrap();lsc.state=stage.state;lsc.result=stage.result;lsc.converter=stage.converter;
         use shieldsigner_rkaiq::isp_lsc::{OFFSET,BYTES};
         if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
         let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
-        println!("{}",json!({"event":"automatic-lsc-processed","frame":frame,"current":stage.information.current,"damping":stage.information.damping,"updated":stage.updated,"converged":stage.state.converged,"controllerFrames":stage.state.frame_count,"illuminant":stage.state.illuminant,"vignetting":stage.state.vignetting,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"gains":stage.gains,"queuedBatch":queued,"physicalApplicationVerified":false}));
+        camera_observed_println!("{}",super::camera_runtime_log::select(super::camera_runtime_log::enabled(CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed),super::camera_runtime_log::full_enabled()), || json!({"event":"automatic-lsc-processed","frame":frame,"current":stage.information.current,"damping":stage.information.damping,"updated":stage.updated,"converged":stage.state.converged,"controllerFrames":stage.state.frame_count,"illuminant":stage.state.illuminant,"vignetting":stage.state.vignetting,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"gains":stage.gains,"queuedBatch":queued,"physicalApplicationVerified":false}), || json!({"event":"automatic-lsc-processed","frame":frame,"updated":stage.updated,"queuedBatch":queued,"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"diagnosticPayloadOmitted":true,"physicalApplicationVerified":false})));
     }
     fn commit_ccm(&mut self,stage:CameraCcmStage,frame:u32,planned:&[u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],snapshot:&mut [u8;shieldsigner_rkaiq::isp32::PARAMETER_BYTES],queued:bool) {
         let ccm=self.ccm.as_mut().unwrap();ccm.state=stage.state;ccm.result=stage.result;
         use shieldsigner_rkaiq::isp_ccm::{OFFSET,BYTES};
         if stage.updated {snapshot[OFFSET..OFFSET+BYTES].copy_from_slice(&planned[OFFSET..OFFSET+BYTES]);}
         let hex=|b:&[u8]|b.iter().map(|v|format!("{v:02x}")).collect::<String>();
-        println!("{}",json!({"event":"automatic-ccm-processed","frame":frame,"current":stage.information.current,"damping":stage.information.damping,"updated":stage.updated,"informationConverged":stage.information.converged,"converged":stage.state.automatic.converged,"controllerFrames":stage.state.automatic.frames,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"gains":stage.gains,"queuedBatch":queued,"physicalApplicationVerified":false}));
+        camera_observed_println!("{}",super::camera_runtime_log::select(super::camera_runtime_log::enabled(CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed),super::camera_runtime_log::full_enabled()), || json!({"event":"automatic-ccm-processed","frame":frame,"current":stage.information.current,"damping":stage.information.damping,"updated":stage.updated,"informationConverged":stage.information.converged,"converged":stage.state.automatic.converged,"controllerFrames":stage.state.automatic.frames,"result":hex(&stage.result),"packed":if stage.updated {Some(hex(&planned[OFFSET..OFFSET+BYTES]))} else {None},"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"gains":stage.gains,"queuedBatch":queued,"physicalApplicationVerified":false}), || json!({"event":"automatic-ccm-processed","frame":frame,"updated":stage.updated,"queuedBatch":queued,"exposureFrame":stage.exposure_frame,"exactExposureLookup":stage.exact,"diagnosticPayloadOmitted":true,"physicalApplicationVerified":false})));
     }
     /// Statistics can overtake their SOF producer. Retain at most 16 complete
     /// owned payloads until SOF reaches their frame. Never guess a future map.
@@ -713,10 +722,12 @@ where
                     return Err(error("Regressing AE SOF frame"));
                 }
                 let write_start_ns = camera_monotonic_ns().ok();
+                let sof_phase=super::camera_event_metrics::Phase::start("sof-sensor",Some(frame));
                 let out = self.runtime.on_sof(frame, &mut self.sensor);
+                drop(sof_phase);
                 let write_end_ns = camera_monotonic_ns().ok();
                 if out.scheduled.written.is_some() {
-                    println!("{}",json!({"event":"automatic-ae-sof-write","sofFrameId":frame,"sofTimestampNs":timestamp_ns,
+                    camera_observed_println!("{}",json!({"event":"automatic-ae-sof-write","sofFrameId":frame,"sofTimestampNs":timestamp_ns,
                         "writeStartNs":write_start_ns,"writeEndNs":write_end_ns,"clock":"CLOCK_MONOTONIC",
                         "schedulerEffectiveFrame":out.scheduled.effective_frame,"success":out.driver_error.is_none() && out.scheduled.status==0,"physicalApplicationVerified":false}));
                 }
@@ -761,6 +772,7 @@ where
             if !self.last_sof.is_some_and(|frame| frame >= stats.frame_id()) {
                 break;
             }
+            let analysis_frame=stats.frame_id();
             let bytes = self.pending.pop_front().unwrap();
             let parameters = self
                 .parameters
@@ -772,12 +784,13 @@ where
                     },
                 )
                 .collect::<Vec<_>>();
-            if let Some(out) = self
-                .runtime
-                .step_statistics(&bytes, &parameters)
-                .map_err(error)?
+            let ae_phase=super::camera_event_metrics::Phase::start("ae-statistics",Some(analysis_frame));
+            let ae_result=self.runtime.step_statistics(&bytes,&parameters);
+            drop(ae_phase);
+            if let Some(out) = ae_result.map_err(error)?
             {
                 if let Some(awb) = self.awb.as_mut() {
+                    let _awb_phase=super::camera_event_metrics::Phase::start("awb-statistics",Some(out.frame));
                     awb.step(&bytes, &self.runtime.session.preprocessing)?;
                 }
                 self.processed += 1;
@@ -788,7 +801,7 @@ where
                         "ispGain":c.point.isp_gain,"relativeError":c.relative_error,
                         "held":c.held})
                 });
-                println!(
+                camera_observed_println!(
                     "{}",
                     json!({"event":"automatic-ae-statistics",
                     "frame":out.frame,"parametersId":out.parameters,
@@ -877,6 +890,10 @@ where
                         }
                     };
                     if let Some(event) = event {
+                        let (event_kind,event_frame)=camera_event_key(&event);
+                        super::camera_event_metrics::dequeue(event_kind,event_frame);
+                        let handling_started=Instant::now();
+                        let handling_result=(|| ->io::Result<()> {
                         let processed = self.handle(event)?;
                         for output in processed {
                             // Frame zero already has the initial parameter ID.
@@ -885,11 +902,20 @@ where
                                     Some(awb) => Some(awb.gain_for(output.frame)?),
                                     None => fixed_wb,
                                 };
-                                if backend.wait_runtime_slot(queue, || worker.is_finished() || camera_stream_cancelled())? {
+                                let slot_started=Instant::now();
+                                let slot_phase=super::camera_event_metrics::Phase::start("parameter-slot-wait",Some(output.frame));
+                                let slot=backend.wait_runtime_slot(queue, || worker.is_finished() || camera_stream_cancelled());
+                                drop(slot_phase);
+                                super::camera_event_metrics::parameter_wait(slot_started);
+                                if slot? {
                                     self.submit_gain(backend, queue, output.frame, wb)?;
                                 }
                             }
                         }
+                        Ok(())
+                        })();
+                        super::camera_event_metrics::handled(event_kind,handling_started);
+                        handling_result?;
                         progress = Instant::now();
                     } else {
                         for _ in 0..8 {
@@ -908,6 +934,9 @@ where
             let captured = worker
                 .join()
                 .map_err(|_| error("AE capture task panicked"))?;
+            if !CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed) || super::camera_runtime_log::full_enabled() {
+            println!("{}",json!({"event":"ae-event-channel-metrics","runtimeTraceSuppressed":super::camera_runtime_log::suppressed_count(),"metrics":super::camera_event_metrics::summary()}));
+            }
             control.and(captured)
         })
     }

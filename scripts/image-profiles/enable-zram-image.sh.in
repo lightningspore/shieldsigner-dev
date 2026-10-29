@@ -1,0 +1,66 @@
+#!/bin/sh
+# Runtime-only bench setup. Never reset, swapoff, unload, or configure SD swap.
+set -eu
+fail() { echo "enable-zram: $* (existing devices left intact)" >&2; exit 1; }
+[ "$#" -le 1 ] || fail 'usage: enable-zram.sh [MODULE_DIRECTORY]'
+module_dir=${1:-/usr/lib/shieldsigner-camera/zram}
+[ "$(id -u)" = 0 ] || fail 'root is required'
+[ "$(uname -r)" = 5.10.160 ] || fail 'only the reviewed kernel5.10.160 is supported'
+for tool in awk grep sha256sum insmod mkswap swapon sleep; do
+    command -v "$tool" >/dev/null 2>&1 || fail "missing tool: $tool"
+done
+kernel_proof=/usr/lib/shieldsigner-camera/kernel-camera-abi.json
+[ -f "$kernel_proof" ] && grep -q '"kernelConfigSha256": "@KERNEL_CONFIG_SHA256@"' "$kernel_proof" || fail 'reviewed development-image kernel proof missing/different'
+for name in zsmalloc zram; do
+    [ -f "$module_dir/$name.ko" ] && [ ! -L "$module_dir/$name.ko" ] || fail "missing/nonregular module: $name"
+done
+[ "$(sha256sum "$module_dir/zsmalloc.ko" | awk '{print $1}')" = @ZSMALLOC_SHA256@ ] || fail 'zsmalloc module checksum mismatch'
+[ "$(sha256sum "$module_dir/zram.ko" | awk '{print $1}')" = @ZRAM_SHA256@ ] || fail 'zram module checksum mismatch'
+
+# Refuse concurrent setup; do not remove a lock owned by another invocation.
+lock=/run/shieldsigner-zram-setup.lock
+mkdir "$lock" 2>/dev/null || fail 'another setup or a stale setup lock exists'
+trap 'rmdir "$lock" 2>/dev/null || :' EXIT
+trap 'exit 1' HUP INT TERM
+# No existing swap device/file is modified, including any foreign SD swap.
+awk 'NR > 1 && $1 != "/dev/zram0" { bad=1 } END { exit bad }' /proc/swaps || fail 'foreign swap is active; this bench requires only /dev/zram0'
+for device in /sys/block/zram*; do
+    [ -e "$device" ] || continue
+    [ "$device" = /sys/block/zram0 ] || fail 'foreign additional zram device exists'
+done
+[ -d /sys/module/zsmalloc ] || insmod "$module_dir/zsmalloc.ko"
+[ -d /sys/module/zram ] || insmod "$module_dir/zram.ko" num_devices=1
+attempt=0
+while [ ! -d /sys/block/zram0 ] || [ ! -b /dev/zram0 ]; do
+    attempt=$((attempt + 1))
+    [ "$attempt" -lt 20 ] || fail 'zram0 block device did not appear'
+    sleep 0.1
+done
+for holder in /sys/block/zram0/holders/*; do
+    [ ! -e "$holder" ] || fail 'zram0 has a foreign holder'
+done
+size=$(cat /sys/block/zram0/disksize)
+limit=$(awk '{print $4}' /sys/block/zram0/mm_stat)
+algorithm=$(cat /sys/block/zram0/comp_algorithm)
+if awk 'NR > 1 && $1 == "/dev/zram0" { found=1 } END { exit !found }' /proc/swaps; then
+    [ "$size" = 16777216 ] && [ "$limit" = 8388608 ] || fail 'active zram0 has different size/limit'
+    case " $algorithm " in *' [lzo] '*) ;; *) fail 'active zram0 has a different algorithm' ;; esac
+    awk 'NR > 1 && $1 == "/dev/zram0" { good=($2 == "partition" && $3 == 16380) } END { exit !good }' /proc/swaps || fail 'active zram0 swap geometry differs'
+    echo 'enable-zram: exact LZO16MiB/8MiB zram0 swap already active; no change'
+    exit 0
+fi
+# A configured but inactive block device may contain somebody else's data.
+[ "$size" = 0 ] && [ "$(cat /sys/block/zram0/initstate)" = 0 ] && [ "$limit" = 0 ] || fail 'inactive zram0 is already configured; refusing to format/reset it'
+# The SDK default lzo-rle is not registered in this kernel. Select lzo BEFORE
+# disksize initializes the compressor. mem_limit is write-only; mm_stat field4
+# is its authoritative readback in this reviewed5.10 driver.
+printf 'lzo\n' > /sys/block/zram0/comp_algorithm
+printf '8388608\n' > /sys/block/zram0/mem_limit
+printf '16777216\n' > /sys/block/zram0/disksize
+[ "$(cat /sys/block/zram0/disksize)" = 16777216 ] || fail 'disksize readback mismatch'
+[ "$(awk '{print $4}' /sys/block/zram0/mm_stat)" = 8388608 ] || fail 'memory limit readback mismatch'
+case " $(cat /sys/block/zram0/comp_algorithm) " in *' [lzo] '*) ;; *) fail 'algorithm readback mismatch' ;; esac
+mkswap /dev/zram0
+swapon /dev/zram0
+awk 'NR > 1 && $1 == "/dev/zram0" { good=($2 == "partition" && $3 == 16380) } END { exit !good }' /proc/swaps || fail 'zram0 swap did not activate with expected geometry'
+echo 'enable-zram: LZO16MiB logical swap,8MiB compressed allocation limit; RAM only'

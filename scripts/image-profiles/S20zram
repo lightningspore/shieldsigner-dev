@@ -1,0 +1,7 @@
+#!/bin/sh
+# Required memory profile; stop never swaps off/reset/unloads a live device.
+case "${1:-start}" in
+    start|restart) /usr/lib/shieldsigner-camera/enable-zram-image.sh ;;
+    stop) : ;;
+    *) exit 1 ;;
+esac

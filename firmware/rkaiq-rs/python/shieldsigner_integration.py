@@ -3,6 +3,7 @@ import argparse
 import difflib
 import hashlib
 import importlib
+import importlib.util
 import io
 import json
 import linecache
@@ -23,6 +24,10 @@ IMAGE_CAMERA_SOURCE_SHA256 = "f5a927cdf7fd99f9c21aff793b540f59c1e9523a8945daaec9
 CAMERA_PROFILES = {
     CAMERA_SOURCE_SHA256: [(before, after, 1) for before, after in REPLACEMENTS],
     IMAGE_CAMERA_SOURCE_SHA256: [
+        ("        if self._video_stream is not None:\n            self._video_stream.stop()\n            self._video_stream = None\n",
+         "        stream = self._video_stream\n        if stream is not None:\n            try:\n                stream.stop()\n            finally:\n                if self._video_stream is stream:\n                    self._video_stream = None\n", 1),
+        ("self._capture = VideoStream(\n                resolution=luckfox_config[\"resolution\"],",
+         "self._capture = VideoStream(\n                for_still=True,\n                resolution=luckfox_config[\"resolution\"],", 1),
         ("from seedsigner.hardware.pivideostream import VideoStream",
          "from shieldsigner_camera_compat import VideoStream", 2),
         ("return image.rotate(90 + self._camera_rotation)",
@@ -118,6 +123,25 @@ def camera_source(app_root):
     return path, source, patched
 
 
+
+def ensure_app_import_root(app_root):
+    """Make script-launched app imports explicit without accepting foreign packages."""
+    root = Path(app_root).resolve()
+    for name in ("seedsigner", "seedsigner.hardware", "seedsigner.hardware.displays"):
+        existing = sys.modules.get(name)
+        if existing is None:
+            continue
+        expected = root.joinpath(*name.split("."))
+        paths = {Path(value).resolve() for value in getattr(existing, "__path__", ())}
+        if paths != {expected}:
+            raise RuntimeError("Imported application package differs from requested root: " + name)
+    value = str(root)
+    # Script execution sets sys.path[0] to the runtime helper directory, not
+    # necessarily cwd. Put the validated app first before native LCD imports.
+    sys.path[:] = [value] + [entry for entry in sys.path if entry != value]
+    return root
+
+
 def install_camera_backend(app_root):
     path, original, patched = camera_source(app_root)
     name = "seedsigner.hardware.camera"
@@ -127,7 +151,7 @@ def install_camera_backend(app_root):
             install_qr_backend(existing)
             return existing
         raise RuntimeError("Install the Rust camera backend before importing the application Camera")
-    sys.path.insert(0, str(Path(app_root).resolve()))
+    ensure_app_import_root(app_root)
     parent = importlib.import_module("seedsigner.hardware")
     if str(path.parent) not in {str(Path(value).resolve()) for value in parent.__path__}:
         raise RuntimeError("Imported hardware package does not match the requested application root")
@@ -153,14 +177,189 @@ def install_camera_backend(app_root):
     return module
 
 
+
+def import_memory_snapshot(phase):
+    """Public module metadata only: no object walk, seeds, frames or settings."""
+    if phase not in ("startup", "scan-start", "capture", "shutdown"):
+        raise ValueError("Use a public diagnostic phase name")
+    prefixes = ("seedsigner", "pysatochip", "smartcard", "Cryptodome",
+                "cryptography", "pgpy", "PIL", "embit", "shamir_mnemonic")
+    module_map = sys.modules.copy()
+    modules = tuple(name for name, module in module_map.items() if module is not None)
+    selected = ("seedsigner.views.scan_views", "seedsigner.views.seed_views",
+                "seedsigner.views.tools_views", "seedsigner.views.smartcard_views",
+                "seedsigner.gui.screens.seed_screens", "seedsigner.helpers.seedkeeper_utils",
+                "seedsigner.helpers.keycard_connector", "pysatochip.CardConnector",
+                "seedsigner.models.seed", "seedsigner.models.aezeed",
+                "seedsigner.models.encryptedqr", "seedsigner.helpers.kef",
+                "seedsigner.models.psbt_parser", "seedsigner.models.encode_qr",
+                "seedsigner.models.decode_qr", "Cryptodome.Cipher.AES", "pgpy",
+                "numpy", "cv2")
+    scan = module_map.get("seedsigner.views.scan_views")
+    controller = module_map.get("seedsigner.controller")
+    return {"kind": "small-ram-import-presence", "phase": phase,
+            "moduleCount": len(modules),
+            "prefixCounts": {prefix: sum(name == prefix or name.startswith(prefix + ".") for name in modules)
+                             for prefix in prefixes},
+            "present": {name: name in modules for name in selected},
+            "lazyScanHookRegistered": any(getattr(finder, "_shieldsigner_lazy_scan_path", None) is not None
+                                          for finder in sys.meta_path),
+            "loadedScanModulePatched": bool(getattr(scan, "__shieldsigner_lazy_scan__", None)),
+            "controllerPreloadPatched": bool(getattr(controller, "__shieldsigner_small_ram_profile__", None)),
+            "containsUserObjectsOrPayloads": False}
+
+
+SCAN_VIEWS_SOURCE_SHA256 = "ad151a5b572c5cc5564f94163a3060e6f9abc5bcc63ab7a0ae69eac069ef7f0c"
+
+
+def lazy_scan_source(app_root):
+    path = Path(app_root).resolve() / "seedsigner/views/scan_views.py"
+    original = path.read_bytes()
+    if hashlib.sha256(original).hexdigest() != SCAN_VIEWS_SOURCE_SHA256:
+        raise ValueError("Unsupported scan_views.py for lazy SLIP39 imports")
+    source = original.decode()
+    replacements = [
+        ("from seedsigner.views.seed_views import SeedSlip39MoreSharesView, SeedSlip39ShareInvalidView\n", "", 1),
+        ("Destination(SeedSlip39MoreSharesView)", 'Destination(_shieldsigner_slip39_view("SeedSlip39MoreSharesView"))', 2),
+        ("                    SeedSlip39ShareInvalidView,", '                    _shieldsigner_slip39_view("SeedSlip39ShareInvalidView"),', 1),
+        ("                SeedSlip39ShareInvalidView,", '                _shieldsigner_slip39_view("SeedSlip39ShareInvalidView"),', 1),
+    ]
+    for before, after, count in replacements:
+        if source.count(before) != count:
+            raise ValueError("Lazy SLIP39 replacement count differs from reviewed source")
+        source = source.replace(before, after)
+    source += '''
+
+def _shieldsigner_slip39_view(name):
+    # Resolve the original classes only when a SLIP39 routing branch uses them.
+    from importlib import import_module
+    if name not in ("SeedSlip39MoreSharesView", "SeedSlip39ShareInvalidView"):
+        raise ValueError("Unreviewed SLIP39 destination")
+    return getattr(import_module("seedsigner.views.seed_views"), name)
+'''
+    return path, original.decode(), source
+
+
+def install_lazy_scan_views(app_root):
+    """Register only the pinned scan module; leave normal/default imports intact."""
+    path, _, patched = lazy_scan_source(app_root)
+    name = "seedsigner.views.scan_views"
+    existing = sys.modules.get(name)
+    if existing is not None:
+        info = getattr(existing, "__shieldsigner_lazy_scan__", None)
+        if info and Path(existing.__file__).resolve() == path:
+            return info
+        raise RuntimeError("Install lazy scan imports before scan_views is imported")
+    for finder in sys.meta_path:
+        if getattr(finder, "_shieldsigner_lazy_scan_path", None) == path:
+            return finder.info
+    parent = importlib.import_module("seedsigner.views")
+    if str(path.parent) not in {str(Path(value).resolve()) for value in parent.__path__}:
+        raise RuntimeError("Imported views package differs from requested application root")
+    info = {"kind": "slip39-scan-destinations-imported-on-demand",
+            "sourceSha256": SCAN_VIEWS_SOURCE_SHA256,
+            "patchedSourceSha256": hashlib.sha256(patched.encode()).hexdigest(),
+            "installedFilesModified": False, "featuresRemoved": False}
+
+    class ScanLoader:
+        _shieldsigner_lazy_scan_path = path
+
+        def create_module(self, spec):
+            return None
+
+        def exec_module(self, module):
+            # Recheck at execution, rather than trusting a previously read file.
+            checked_path, _, checked = lazy_scan_source(app_root)
+            if checked_path != path or checked != patched:
+                raise RuntimeError("Reviewed scan source changed before import")
+            filename = str(path) + " [small-RAM lazy scan imports]"
+            linecache.cache[filename] = (len(patched), None, patched.splitlines(True), filename)
+            exec(compile(patched, filename, "exec"), module.__dict__)
+            module.__shieldsigner_lazy_scan__ = info
+
+        def find_spec(self, fullname, package_path=None, target=None):
+            if fullname != name:
+                return None
+            spec = importlib.util.spec_from_loader(fullname, self, origin=str(path))
+            spec.has_location = True
+            return spec
+
+    finder = ScanLoader()
+    finder.info = info
+    sys.meta_path.insert(0, finder)
+    return info
+
+
+SMALL_RAM_CONTROLLER_SHA256 = "2c080563d12cef837f25799a7139277ad7c3756a05329822f81d961c2e7e031e"
+
+
+def install_small_ram_profile(app_root):
+    """Skip optional preloading; preserve both mandatory storage initializers.
+
+    Existing destination handlers retain their local imports. This does not
+    unload modules, remove features or promise a particular memory saving.
+    Must run before Controller.configure_instance starts background imports.
+    """
+    path = Path(app_root).resolve() / "seedsigner/controller.py"
+    source = path.read_bytes()
+    if hashlib.sha256(source).hexdigest() != SMALL_RAM_CONTROLLER_SHA256:
+        raise ValueError("Unsupported controller.py for small-RAM profile")
+    module = importlib.import_module("seedsigner.controller")
+    if Path(module.__file__).resolve() != path:
+        raise RuntimeError("Imported controller does not match requested app root")
+    marker = "__shieldsigner_small_ram_profile__"
+    if hasattr(module, marker):
+        return getattr(module, marker)
+    if getattr(module.Controller, "_instance", None) is not None:
+        raise RuntimeError("Small-RAM profile must be installed before Controller initialization")
+
+    def initialize_storage(self):
+        controller = module.Controller.get_instance()
+        # Keep the original initialization ordering and both independent stores;
+        # storage/storage2 properties otherwise wait forever for this thread.
+        controller._storage = module.SeedStorage()
+        controller._storage2 = module.EncryptedQRStorage()
+
+    module.BackgroundImportThread.run = initialize_storage
+    info = {"kind": "optional-background-preloads-disabled",
+            "controllerSourceSha256": SMALL_RAM_CONTROLLER_SHA256,
+            "mandatoryStorageInitializers": ["SeedStorage", "EncryptedQRStorage"],
+            "optionalViewsRemainOnDemand": True,
+            "installedFilesModified": False}
+    setattr(module, marker, info)
+    return info
+
+
+
+def configure_lcd_backend(app_root, backend):
+    """Explicit process-local selection before any Controller/display creation."""
+    if backend not in ("python", "rust"):
+        raise ValueError("LCD backend must be python or rust")
+    if backend == "python":
+        return {"lcdBackend": "python", "nativeLcdInstallRequested": False}
+    try:
+        driver = importlib.import_module("shieldsigner_lcd_driver")
+    except ImportError as exc:
+        raise RuntimeError("Rust LCD requested but its runtime Python shim is unavailable") from exc
+    # The reviewed shim validates source/path and is idempotent when a harness
+    # already selected the same native class. Never silently fall back on errors.
+    info = driver.install(app_root)
+    return {"lcdBackend": "rust", "nativeLcdInstallRequested": True, "driver": info}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--app-root", required=True)
     parser.add_argument("--config", help="Absolute-path owner JSON configuration")
     parser.add_argument("--print-patch", action="store_true")
     parser.add_argument("--qr-reader", help="Absolute path to the optional native QR worker")
+    parser.add_argument("--lcd-backend", choices=("python", "rust"),
+                        default=os.environ.get("SHIELDSIGNER_LCD_BACKEND", "python"),
+                        help="Display transport (default python; Rust must be explicitly selected)")
     parser.add_argument("application_args", nargs=argparse.REMAINDER)
     args = parser.parse_args()
+    if args.lcd_backend not in ("python", "rust"):
+        parser.error("SHIELDSIGNER_LCD_BACKEND must be python or rust")
     root = Path(args.app_root).resolve()
     _, original, patched = camera_source(root)
     if args.print_patch:
@@ -180,7 +379,12 @@ def main():
     os.environ["SHIELDSIGNER_CAMERA_CONFIG"] = str(config_path)
     if args.qr_reader:
         os.environ["SHIELDSIGNER_QR_READER"] = args.qr_reader
+    ensure_app_import_root(root)
+    print(json.dumps(configure_lcd_backend(root, args.lcd_backend)), file=sys.stderr)
     module = install_camera_backend(root)
+    if os.environ.get("SHIELDSIGNER_SMALL_RAM") == "1":
+        print(json.dumps(install_small_ram_profile(root)), file=sys.stderr)
+        print(json.dumps(install_lazy_scan_views(root)), file=sys.stderr)
     print(json.dumps(module.__shieldsigner_camera_patch__), file=sys.stderr)
     app_args = args.application_args[1:] if args.application_args[:1] == ["--"] else args.application_args
     old_argv, old_cwd = sys.argv, os.getcwd()

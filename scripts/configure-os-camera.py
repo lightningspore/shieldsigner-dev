@@ -17,7 +17,7 @@ def replace_once(text, before, after):
     return text.replace(before, after, 1)
 
 
-def patched(name, text, dependencies=True, probe=True, cma=True):
+def patched(name, text, dependencies=True, probe=True, cma=True, memory=True, lcd=True, io=True):
     if name.endswith("/build.sh"):
         text = replace_once(text, '    local docker_args="$PLATFORM_ARGS', '''    local camera_bundle_arg=""
     if [[ -n "${SHIELDSIGNER_CAMERA_BUNDLE:-}" ]]; then
@@ -61,6 +61,41 @@ if [ -f /build/shieldsigner-camera/image-overlay.py ]; then
     python3 /build/shieldsigner-camera/image-overlay.py --oem "$OEM_DIR"
 fi
 '''
+    if memory and name.endswith("/os-build.sh"):
+        text = replace_once(text, '    print_step "Building Kernel"\n    sdk_build kernel', '''    if [[ -f /build/shieldsigner-camera/zram-image-profile.py ]]; then
+        python3 /build/shieldsigner-camera/zram-image-profile.py --kernel "$LUCKFOX_SDK_DIR"
+    fi
+    print_step "Building Kernel"
+    sdk_build kernel''')
+        text = replace_once(text, '        python3 /build/shieldsigner-camera/image-overlay.py --rootfs "$ROOTFS_DIR"', '''        python3 /build/shieldsigner-camera/image-overlay.py --rootfs "$ROOTFS_DIR"
+        if [[ -f /build/shieldsigner-camera/zram-image-profile.py ]]; then
+            python3 /build/shieldsigner-camera/zram-image-profile.py --rootfs "$ROOTFS_DIR" --sdk "$LUCKFOX_SDK_DIR"
+        fi''')
+        text = replace_once(text, '        python3 /build/shieldsigner-camera/image-overlay.py --verify "$ROOTFS_DIR"', '''        python3 /build/shieldsigner-camera/image-overlay.py --verify "$ROOTFS_DIR"
+        if [[ -f /build/shieldsigner-camera/zram-image-profile.py ]]; then
+            python3 /build/shieldsigner-camera/zram-image-profile.py --verify "$ROOTFS_DIR"
+        fi''')
+    if lcd and name.endswith("/os-build.sh"):
+        text = replace_once(text, '        python3 /build/shieldsigner-camera/image-overlay.py --buildroot "$SHIELDSIGNER_CAMERA_BUILDROOT_DIR"', '''        python3 /build/shieldsigner-camera/image-overlay.py --buildroot "$SHIELDSIGNER_CAMERA_BUILDROOT_DIR"
+        if [[ -f /build/shieldsigner-camera/lcd-image-profile.py ]]; then
+            python3 /build/shieldsigner-camera/lcd-image-profile.py --buildroot "$SHIELDSIGNER_CAMERA_BUILDROOT_DIR"
+        fi''')
+        text = replace_once(text, '        python3 /build/shieldsigner-camera/image-overlay.py --rootfs "$ROOTFS_DIR"', '''        python3 /build/shieldsigner-camera/image-overlay.py --rootfs "$ROOTFS_DIR"
+        if [[ -f /build/shieldsigner-camera/lcd-image-profile.py ]]; then
+            python3 /build/shieldsigner-camera/lcd-image-profile.py --install "$ROOTFS_DIR"
+        fi''')
+        text = replace_once(text, '        python3 /build/shieldsigner-camera/image-overlay.py --verify "$ROOTFS_DIR"', '''        python3 /build/shieldsigner-camera/image-overlay.py --verify "$ROOTFS_DIR"
+        if [[ -f /build/shieldsigner-camera/lcd-image-profile.py ]]; then
+            python3 /build/shieldsigner-camera/lcd-image-profile.py --verify "$ROOTFS_DIR"
+        fi''')
+    if io and name.endswith("/os-build.sh"):
+        text = replace_once(text, '    print_step "Building Kernel"\n    sdk_build kernel', '''    if [[ -f /build/shieldsigner-camera/configure-image-io-profile.py ]]; then
+        export SHIELDSIGNER_IO_KERNEL_RECEIPT=/build/output/io-kernel-policy.json
+        io_profile=$(python3 -c 'import json; print(json.load(open("/build/shieldsigner-camera/manifest.json")).get("ioProfile", "carrier"))')
+        python3 /build/shieldsigner-camera/configure-image-io-profile.py --kernel-sdk "$LUCKFOX_SDK_DIR" --profile "$io_profile" --receipt "$SHIELDSIGNER_IO_KERNEL_RECEIPT"
+    fi
+    print_step "Building Kernel"
+    sdk_build kernel''')
     if not cma:
         text = text.replace(' -e MINI_CMA_SIZE=${MINI_CMA_SIZE:-12M}', '')
     if not probe:
@@ -78,10 +113,13 @@ def configure(checkout, mode):
         original = subprocess.check_output(["git", "-C", str(checkout), "show", PIN + ":" + name]).decode()
         desired = patched(name, original)
         path = checkout / name
-        prior_desired = patched(name, original, probe=False, cma=False)
-        prior_probe_desired = patched(name, original, cma=False)
+        prior_io_desired = patched(name, original, io=False)
+        prior_lcd_desired = patched(name, original, lcd=False, io=False)
+        prior_memory_desired = patched(name, original, memory=False, lcd=False, io=False)
+        prior_desired = patched(name, original, probe=False, cma=False, memory=False, lcd=False, io=False)
+        prior_probe_desired = patched(name, original, cma=False, memory=False, lcd=False, io=False)
         previous_dependency_hook = desired.replace('        export SHIELDSIGNER_CAMERA_SDK_DIR="$LUCKFOX_SDK_DIR"\n', '')
-        if path.read_text() not in {original, desired, prior_desired, prior_probe_desired, previous_dependency_hook, patched(name, original, dependencies=False)}:
+        if path.read_text() not in {original, desired, prior_io_desired, prior_lcd_desired, prior_memory_desired, prior_desired, prior_probe_desired, previous_dependency_hook, patched(name, original, dependencies=False, memory=False, lcd=False, io=False)}:
             raise ValueError("OS camera hook has unreviewed edits: " + name)
         data = desired if mode == "rust" else original
         changes.append((path, data))

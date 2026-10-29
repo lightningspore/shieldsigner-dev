@@ -16,5 +16,5 @@ for name in files+list(fixed):
  src=a.sdk/name; sha=hashlib.sha256(src.read_bytes()).hexdigest()
  if name in fixed and sha!=fixed[name]: raise ValueError('Probe ABI source changed:'+name)
  dst=a.output/name; dst.parent.mkdir(parents=True,exist_ok=True); shutil.copyfile(src,dst); rows[name]=sha
-record={'kind':'shieldsigner-compiled-kernel-probe','imageVariant':manifest['imageVariant'],'imageBuilt':False,'sdkRevision':revision,'files':rows}
+record={'kind':'shieldsigner-compiled-kernel-probe','imageVariant':manifest['imageVariant'],'memoryProfile':manifest.get('memoryProfile','none'),'ioProfile':manifest.get('ioProfile','carrier'),'imageBuilt':False,'sdkRevision':revision,'files':rows}
 (a.output/'probe.json').write_text(json.dumps(record,indent=2)+'\n'); print(json.dumps(record,indent=2))

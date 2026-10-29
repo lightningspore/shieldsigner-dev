@@ -1,0 +1,625 @@
+{
+  "kind": "full-gui-camera-trial-ledger",
+  "status": "bounded real GUI trials pass with zram + PyO3 LCD; release and physical interaction qualification pending",
+  "scope": "Factual ledger of saved metadata traces and explicit coordinator reports; not a release proof or complete chronology",
+  "trials": [
+    {
+      "id": "gate-only",
+      "title": "Frame publication gating",
+      "intervention": "Gate publication/conversion while retaining native ISP processing",
+      "privateTrace": "gate-only-01.private.txt",
+      "verifiedObservation": "Native RSS3052\u20137688KiB; waits include pipe_write, squashfs_cache_get and teardown; process later absent",
+      "operatorReportedOutcome": "Operator reports full GUI Scan did not remain functional",
+      "terminalNativeError": null,
+      "terminalErrorEvidence": "unknown: no terminal owner-log evidence mapped",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "compact-logging",
+      "title": "Compact native runtime logging",
+      "intervention": "Suppress construction/output of large diagnostic records",
+      "privateTrace": "compact-02.private.txt",
+      "verifiedObservation": "Saved trace is empty; it cannot establish behavior",
+      "operatorReportedOutcome": "Operator reports full GUI Scan did not remain functional",
+      "terminalNativeError": null,
+      "terminalErrorEvidence": "unknown: no terminal owner-log evidence mapped",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "discard-logging",
+      "title": "Discard owner log output",
+      "intervention": "Remove log-consumer/backpressure as an isolation variable",
+      "privateTrace": null,
+      "verifiedObservation": null,
+      "operatorReportedOutcome": "Operator reports full GUI Scan did not remain functional",
+      "terminalNativeError": null,
+      "terminalErrorEvidence": "unknown: no terminal owner-log evidence mapped",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "nice",
+      "title": "Process nice -10",
+      "intervention": "Raise native owner scheduling weight",
+      "privateTrace": null,
+      "verifiedObservation": null,
+      "operatorReportedOutcome": "Operator reports full GUI Scan did not remain functional",
+      "terminalNativeError": null,
+      "terminalErrorEvidence": "unknown: no terminal owner-log evidence mapped",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "static-spinner",
+      "title": "Static/prewarmed loading spinner",
+      "intervention": "Avoid animated startup rendering/import work",
+      "privateTrace": "static-loading-05.private.txt",
+      "verifiedObservation": "Saved trace is empty; it cannot establish behavior",
+      "operatorReportedOutcome": "Operator reports full GUI Scan did not remain functional",
+      "terminalNativeError": null,
+      "terminalErrorEvidence": "unknown: no terminal owner-log evidence mapped",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "requested-6fps",
+      "title": "Requested6FPS",
+      "intervention": "Lower requested Python-side frame cadence",
+      "privateTrace": null,
+      "verifiedObservation": null,
+      "operatorReportedOutcome": "Operator reports full GUI Scan still failed; actual sensor/publication rates not established by saved trace",
+      "terminalNativeError": null,
+      "terminalErrorEvidence": "unknown: no terminal owner-log evidence mapped",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "eager-gui-oom",
+      "title": "Eager GUI co-residency OOM",
+      "intervention": "Keep idle GUI resident while external native RGB consumer runs",
+      "privateTrace": null,
+      "verifiedObservation": "Kernel definitively killed GUI PID2951; see separate unchanged OOM proof",
+      "operatorReportedOutcome": "Confirmed OOM; native104frames afterGUIdeath and separate headless106frames20sec are not concurrentGUI passes",
+      "terminalNativeError": "kernel OOM killed GUI (direct dmesg evidence in separate proof)",
+      "terminalErrorEvidence": "direct kernel dmesg in gui-camera-memory-pressure-validation.json",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "small-ram-drop-iq",
+      "title": "Small-RAM UI and full-IQ release",
+      "intervention": "Reduce Python imports/cache retention and release full native IQ serde tree after ownedcalibration extraction",
+      "privateTrace": "low-memory-09.private.txt",
+      "verifiedObservation": "Native RSS8272\u20138424KiB; observedavailable2740\u20134104KiB beforezombie",
+      "operatorReportedOutcome": "Operator reports full GUI Scan did not remain functional",
+      "terminalNativeError": "Operator reports nativeevent/pool failure; exact terminal log not mapped",
+      "terminalErrorEvidence": "operator report only; no saved owner-log mapping in this ledger",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "small-preview",
+      "title": "Small preview attempt",
+      "intervention": "Smaller preview/processing allocation path",
+      "privateTrace": "small-preview-10.private.txt",
+      "verifiedObservation": "Native running snapshot thenzombie1.78s later; available9424\u219231156KiB",
+      "operatorReportedOutcome": "Operator reports OOM; this trace alone does not contain an OOMkill record or identify victim",
+      "terminalNativeError": null,
+      "terminalErrorEvidence": "unknown: no terminal owner-log evidence mapped",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "luma",
+      "title": "Luma transport plus Small-RAM",
+      "intervention": "Luma/low-memory transport and GUI profile",
+      "privateTrace": "luma-11.private.txt",
+      "verifiedObservation": "Native RSS5548\u20138804KiB; available4020\u20138892KiB, thenaround6030KiB beforezombie",
+      "operatorReportedOutcome": "Operator reports full GUI Scan did not remain functional",
+      "terminalNativeError": "Operator reports nativeevent/pool failure, not proven by memorytrace",
+      "terminalErrorEvidence": "operator report only; no saved owner-log mapping in this ledger",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    },
+    {
+      "id": "rr20",
+      "title": "SCHED_RR priority20 plus Luma/Small-RAM",
+      "intervention": "Real-time scheduling isolation with same camera functionality",
+      "privateTrace": "realtime-12.private.txt",
+      "verifiedObservation": "Mainnative stat proves policy2(SCHED_RR),priority20; available5784\u20136340KiB; nativeRSS7204\u20138132KiB; zombieafter14.20s",
+      "operatorReportedOutcome": "Operator reports no OOM in this trial but Scan still failed",
+      "terminalNativeError": "Operator reports AEeventqueue/parameterpool failure; exact owner log not archived in ledger",
+      "terminalErrorEvidence": "operator report only; no saved owner-log mapping in this ledger",
+      "nativeBinarySha256": "unknown unless explicitly identified in separate proof",
+      "fullGuiScanQualified": false
+    }
+  ],
+  "additionalUnmappedTrace": {
+    "trace": "compact-direct-03.private.txt",
+    "verified": "NativeRSS8988\u21926800KiB, MemAvailable3136\u21929196KiB, pipe_write then do_task_dead; intervention association not established",
+    "terminalError": "unknown"
+  },
+  "privateTraceEvidence": {
+    "gate-only-01.private.txt": {
+      "privatePath": "dist/reverse-engineering/hardware-cma12-ui/gate-only-01.private.txt",
+      "sha256": "5a4afb4bf93fac419e13f675cf8006ebd7f81ec5451efe77e26d02204accae3b",
+      "bytes": 1900,
+      "lineCount": 61,
+      "samples": [
+        {
+          "line": 2,
+          "uptimeSeconds": 650.66,
+          "state": "R",
+          "VmRSSKiB": 3052,
+          "waitChannels": [
+            "0"
+          ],
+          "MemAvailableKiB": 8040
+        },
+        {
+          "line": 8,
+          "uptimeSeconds": 651.84,
+          "state": "S",
+          "VmRSSKiB": 7688,
+          "waitChannels": [
+            "pipe_write",
+            "poll_schedule_timeout.constprop.3",
+            "hrtimer_nanosleep",
+            "hrtimer_nanosleep",
+            "futex_wait_queue_me"
+          ],
+          "MemAvailableKiB": 5276
+        },
+        {
+          "line": 18,
+          "uptimeSeconds": 653.82,
+          "state": "S",
+          "VmRSSKiB": 7308,
+          "waitChannels": [
+            "pipe_write",
+            "poll_schedule_timeout.constprop.3",
+            "hrtimer_nanosleep",
+            "hrtimer_nanosleep",
+            "futex_wait_queue_me"
+          ],
+          "MemAvailableKiB": 5048
+        },
+        {
+          "line": 28,
+          "uptimeSeconds": 656.25,
+          "state": "S",
+          "VmRSSKiB": 7664,
+          "waitChannels": [
+            "squashfs_cache_get",
+            "poll_schedule_timeout.constprop.3",
+            "hrtimer_nanosleep",
+            "hrtimer_nanosleep",
+            "futex_wait_queue_me"
+          ],
+          "MemAvailableKiB": 4488
+        },
+        {
+          "line": 38,
+          "uptimeSeconds": 660.68,
+          "state": "S",
+          "VmRSSKiB": 6184,
+          "waitChannels": [
+            "futex_wait_queue_me",
+            "futex_wait_queue_me",
+            "hrtimer_nanosleep",
+            "rkcif_do_stop_stream"
+          ],
+          "MemAvailableKiB": 4868
+        },
+        {
+          "line": 47,
+          "uptimeSeconds": 661.92,
+          "state": "S",
+          "VmRSSKiB": 5288,
+          "waitChannels": [
+            "futex_wait_queue_me",
+            "futex_wait_queue_me",
+            "hrtimer_nanosleep",
+            "pipe_write"
+          ],
+          "MemAvailableKiB": 4788
+        },
+        {
+          "line": 56,
+          "uptimeSeconds": 663.45,
+          "waitChannels": [
+            "directory"
+          ],
+          "MemAvailableKiB": 10000
+        }
+      ],
+      "observedMemAvailableKiBRange": [
+        4488,
+        8040
+      ],
+      "observedNativeRssKiBRange": [
+        3052,
+        7688
+      ],
+      "terminalOwnerLogIncluded": false,
+      "limits": [
+        "Memory/status/wait-channel snapshots do not establish terminal native error or QR decode result",
+        "Snapshot ranges may include initialization or teardown; not steady-state allocation estimates"
+      ]
+    },
+    "compact-02.private.txt": {
+      "privatePath": "dist/reverse-engineering/hardware-cma12-ui/compact-02.private.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "lineCount": 0,
+      "samples": [],
+      "observedMemAvailableKiBRange": null,
+      "observedNativeRssKiBRange": null,
+      "terminalOwnerLogIncluded": false,
+      "limits": [
+        "Memory/status/wait-channel snapshots do not establish terminal native error or QR decode result",
+        "Snapshot ranges may include initialization or teardown; not steady-state allocation estimates"
+      ]
+    },
+    "compact-direct-03.private.txt": {
+      "privatePath": "dist/reverse-engineering/hardware-cma12-ui/compact-direct-03.private.txt",
+      "sha256": "717a81df589d55e40e739d43542ea450f9263295cc53568edbbb3d57eb8c9709",
+      "bytes": 681,
+      "lineCount": 21,
+      "samples": [
+        {
+          "line": 2,
+          "uptimeSeconds": 1038.82,
+          "state": "S",
+          "VmRSSKiB": 8988,
+          "waitChannels": [
+            "pipe_write",
+            "poll_schedule_timeout.constprop.3",
+            "hrtimer_nanosleep",
+            "hrtimer_nanosleep",
+            "futex_wait_queue_me"
+          ],
+          "MemAvailableKiB": 3136
+        },
+        {
+          "line": 12,
+          "uptimeSeconds": 1042.12,
+          "state": "S",
+          "VmRSSKiB": 6800,
+          "waitChannels": [
+            "do_task_dead",
+            "directory",
+            "directory"
+          ],
+          "MemAvailableKiB": 9196
+        }
+      ],
+      "observedMemAvailableKiBRange": [
+        3136,
+        9196
+      ],
+      "observedNativeRssKiBRange": [
+        6800,
+        8988
+      ],
+      "terminalOwnerLogIncluded": false,
+      "limits": [
+        "Memory/status/wait-channel snapshots do not establish terminal native error or QR decode result",
+        "Snapshot ranges may include initialization or teardown; not steady-state allocation estimates"
+      ]
+    },
+    "static-loading-05.private.txt": {
+      "privatePath": "dist/reverse-engineering/hardware-cma12-ui/static-loading-05.private.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "lineCount": 0,
+      "samples": [],
+      "observedMemAvailableKiBRange": null,
+      "observedNativeRssKiBRange": null,
+      "terminalOwnerLogIncluded": false,
+      "limits": [
+        "Memory/status/wait-channel snapshots do not establish terminal native error or QR decode result",
+        "Snapshot ranges may include initialization or teardown; not steady-state allocation estimates"
+      ]
+    },
+    "low-memory-09.private.txt": {
+      "privatePath": "dist/reverse-engineering/hardware-cma12-ui/low-memory-09.private.txt",
+      "sha256": "79eb3f7b480ea26113362a5100ea6f17848d6940c81e743f5e83ed7f7791fc35",
+      "bytes": 636,
+      "lineCount": 27,
+      "samples": [
+        {
+          "line": 2,
+          "uptimeSeconds": 2633.76,
+          "state": "S",
+          "VmRSSKiB": 8272,
+          "RssAnonKiB": 4908,
+          "MemAvailableKiB": 4104
+        },
+        {
+          "line": 9,
+          "uptimeSeconds": 2637.4,
+          "state": "S",
+          "VmRSSKiB": 8424,
+          "RssAnonKiB": 5060,
+          "MemAvailableKiB": 2740
+        },
+        {
+          "line": 16,
+          "uptimeSeconds": 2642.44,
+          "state": "S",
+          "VmRSSKiB": 8424,
+          "RssAnonKiB": 5060,
+          "MemAvailableKiB": 2904
+        },
+        {
+          "line": 23,
+          "uptimeSeconds": 2648.16,
+          "state": "Z",
+          "MemAvailableKiB": 7872
+        }
+      ],
+      "observedMemAvailableKiBRange": [
+        2740,
+        4104
+      ],
+      "observedNativeRssKiBRange": [
+        8272,
+        8424
+      ],
+      "terminalOwnerLogIncluded": false,
+      "limits": [
+        "Memory/status/wait-channel snapshots do not establish terminal native error or QR decode result",
+        "Snapshot ranges may include initialization or teardown; not steady-state allocation estimates"
+      ]
+    },
+    "small-preview-10.private.txt": {
+      "privatePath": "dist/reverse-engineering/hardware-cma12-ui/small-preview-10.private.txt",
+      "sha256": "aeb0230176213418b5aeb9e1fd9c85c0e38d088b65d24a714a48862878dca1e6",
+      "bytes": 301,
+      "lineCount": 13,
+      "samples": [
+        {
+          "line": 2,
+          "uptimeSeconds": 2866.76,
+          "state": "R",
+          "VmRSSKiB": 1864,
+          "RssAnonKiB": 1000,
+          "MemAvailableKiB": 9424
+        },
+        {
+          "line": 9,
+          "uptimeSeconds": 2868.54,
+          "state": "Z",
+          "MemAvailableKiB": 31156
+        }
+      ],
+      "observedMemAvailableKiBRange": [
+        9424,
+        9424
+      ],
+      "observedNativeRssKiBRange": [
+        1864,
+        1864
+      ],
+      "terminalOwnerLogIncluded": false,
+      "limits": [
+        "Memory/status/wait-channel snapshots do not establish terminal native error or QR decode result",
+        "Snapshot ranges may include initialization or teardown; not steady-state allocation estimates"
+      ]
+    },
+    "luma-11.private.txt": {
+      "privatePath": "dist/reverse-engineering/hardware-cma12-ui/luma-11.private.txt",
+      "sha256": "5a1d66c60dc31793a27f64cca21ab7789453d875942034531b70d6a75b8722ec",
+      "bytes": 1138,
+      "lineCount": 48,
+      "samples": [
+        {
+          "line": 2,
+          "uptimeSeconds": 3396.13,
+          "state": "S",
+          "VmRSSKiB": 5548,
+          "RssAnonKiB": 4052,
+          "MemAvailableKiB": 8892
+        },
+        {
+          "line": 9,
+          "uptimeSeconds": 3398.51,
+          "state": "S",
+          "VmRSSKiB": 8804,
+          "RssAnonKiB": 6248,
+          "MemAvailableKiB": 4020
+        },
+        {
+          "line": 16,
+          "uptimeSeconds": 3400.41,
+          "state": "S",
+          "VmRSSKiB": 7276,
+          "RssAnonKiB": 4920,
+          "MemAvailableKiB": 5504
+        },
+        {
+          "line": 23,
+          "uptimeSeconds": 3402.43,
+          "state": "S",
+          "VmRSSKiB": 7500,
+          "RssAnonKiB": 5068,
+          "MemAvailableKiB": 6028
+        },
+        {
+          "line": 30,
+          "uptimeSeconds": 3404.21,
+          "state": "S",
+          "VmRSSKiB": 7456,
+          "RssAnonKiB": 5068,
+          "MemAvailableKiB": 6044
+        },
+        {
+          "line": 37,
+          "uptimeSeconds": 3406.01,
+          "state": "S",
+          "VmRSSKiB": 7456,
+          "RssAnonKiB": 5068,
+          "MemAvailableKiB": 6036
+        },
+        {
+          "line": 44,
+          "uptimeSeconds": 3407.65,
+          "state": "Z",
+          "MemAvailableKiB": 10748
+        }
+      ],
+      "observedMemAvailableKiBRange": [
+        4020,
+        8892
+      ],
+      "observedNativeRssKiBRange": [
+        5548,
+        8804
+      ],
+      "terminalOwnerLogIncluded": false,
+      "limits": [
+        "Memory/status/wait-channel snapshots do not establish terminal native error or QR decode result",
+        "Snapshot ranges may include initialization or teardown; not steady-state allocation estimates"
+      ]
+    },
+    "realtime-12.private.txt": {
+      "privatePath": "dist/reverse-engineering/hardware-cma12-ui/realtime-12.private.txt",
+      "sha256": "be1c3a0aa7fe29e5d8eca35d905acbbe24a2ac298ed93afdf8f7aaf380731c2c",
+      "bytes": 2299,
+      "lineCount": 47,
+      "samples": [
+        {
+          "line": 2,
+          "uptimeSeconds": 3617.95,
+          "state": "S",
+          "VmRSSKiB": 7356,
+          "RssAnonKiB": 4068,
+          "nativeScheduling": {
+            "rtPriority": 20,
+            "policy": 2
+          },
+          "MemAvailableKiB": 6332
+        },
+        {
+          "line": 10,
+          "uptimeSeconds": 3621.21,
+          "state": "S",
+          "VmRSSKiB": 7316,
+          "RssAnonKiB": 4896,
+          "nativeScheduling": {
+            "rtPriority": 20,
+            "policy": 2
+          },
+          "MemAvailableKiB": 6340
+        },
+        {
+          "line": 18,
+          "uptimeSeconds": 3624.83,
+          "state": "S",
+          "VmRSSKiB": 7480,
+          "RssAnonKiB": 5096,
+          "nativeScheduling": {
+            "rtPriority": 20,
+            "policy": 2
+          },
+          "MemAvailableKiB": 5876
+        },
+        {
+          "line": 26,
+          "uptimeSeconds": 3627.91,
+          "state": "S",
+          "VmRSSKiB": 7204,
+          "RssAnonKiB": 5160,
+          "nativeScheduling": {
+            "rtPriority": 20,
+            "policy": 2
+          },
+          "MemAvailableKiB": 5784
+        },
+        {
+          "line": 34,
+          "uptimeSeconds": 3629.86,
+          "state": "S",
+          "VmRSSKiB": 8132,
+          "RssAnonKiB": 5396,
+          "nativeScheduling": {
+            "rtPriority": 20,
+            "policy": 2
+          },
+          "MemAvailableKiB": 6116
+        },
+        {
+          "line": 42,
+          "uptimeSeconds": 3632.15,
+          "state": "Z",
+          "MemAvailableKiB": 10796
+        }
+      ],
+      "observedMemAvailableKiBRange": [
+        5784,
+        6340
+      ],
+      "observedNativeRssKiBRange": [
+        7204,
+        8132
+      ],
+      "terminalOwnerLogIncluded": false,
+      "limits": [
+        "Memory/status/wait-channel snapshots do not establish terminal native error or QR decode result",
+        "Snapshot ranges may include initialization or teardown; not steady-state allocation estimates"
+      ]
+    }
+  },
+  "confirmedSeparateProofs": {
+    "oom": "reverse-engineering/rkaiq/gui-camera-memory-pressure-validation.json",
+    "cameraApiCma12": "reverse-engineering/rkaiq/new-image-cma12-camera-api-validation.json",
+    "sourceMemoryAudit": "reverse-engineering/rkaiq/rust-camera-source-memory-audit.json",
+    "originalSchedulingAudit": "reverse-engineering/rkaiq/native-camera-thread-scheduling-audit.json"
+  },
+  "diagnosticSetupChanges": [
+    {
+      "change": "Archived and removed exactowned4 B/C tmpfsdirectories",
+      "measuredShmemFreedKiB": 1620,
+      "source": "owned cleanup task, hostarchive all36files SHAverified",
+      "codeHeapImprovement": false
+    },
+    {
+      "change": "Root archived/SHAverified22client-parent-proof files and removed exactinactiveowned directory",
+      "source": "coordinator report; privatearchive-manifest retained",
+      "codeHeapImprovement": false
+    },
+    {
+      "change": "Root moved verified1c10 candidateELF fromtmpfs to/userdata/shieldsigner-runtime and exposedreadonly/nosuid/nodev execbind only at installednativepath; userdata base remainsnoexec",
+      "source": "coordinator report",
+      "reportedShmemAfterKiBApprox": 1024,
+      "codeHeapImprovement": false
+    }
+  ],
+  "nextBoundedWork": "Package the tested configuration reproducibly; qualify physical QR acquisition, visual output and user-driven navigation.",
+  "publicationPolicy": "Only selected non-payload metadata and hashes published. Private traces/frames/decoded payloads are not copied into public proof.",
+  "hardwareOperationsByLedgerTask": false,
+  "currentResults": {
+    "threeMinuteResult": "memory/gui-zram-180s-result.json",
+    "freshOneMinuteResults": [
+      "memory/gui-zram-restart-1.json",
+      "memory/gui-zram-restart-2.json",
+      "memory/gui-zram-restart-3.json"
+    ],
+    "ownerKillAndReopen": "memory/camera-fault-recovery.json",
+    "physicalQrAcquisitionQualified": false,
+    "userDrivenNavigationQualified": false,
+    "persistentImageQualified": false,
+    "tenMinuteResult": "memory/gui-zram-600s-result.json",
+    "warmWalletViewModulesResult": "memory/gui-zram-warm-wallet-views.json",
+    "twentyThreeMinuteResult": "memory/gui-zram-23min-result.json"
+  },
+  "earlierInterpretation": [
+    "An actual GUI+camera OOM is proven; ordinary availableRAM alone and scheduler priority did not establish stablefullGUI operation in laterreportedtrials",
+    "Do not infer every nativeexit was OOM or that every trial had identicalevent/poolfailure",
+    "Headless20sec106frame nativepass does not qualify fullGUI",
+    "Recent memory/scheduler work remains diagnostic; source changes are not hardware-qualified simplybecause hosttests pass"
+  ]
+}

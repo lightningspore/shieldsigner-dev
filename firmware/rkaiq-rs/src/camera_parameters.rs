@@ -122,7 +122,7 @@ impl ParameterBackend {
             }
             std::thread::sleep(Duration::from_millis(1));
         }
-        if waited { println!("{}",json!({"event":"parameter-pool-backpressure","waitUs":started.elapsed().as_micros()})); }
+        if waited { camera_observed_println!("{}",json!({"event":"parameter-pool-backpressure","waitUs":started.elapsed().as_micros()})); }
         Ok(true)
     }
     /// Build and submit an ordinary linear gain batch from the runtime's actual

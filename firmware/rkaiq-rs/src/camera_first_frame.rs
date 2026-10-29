@@ -28,8 +28,18 @@ fn stream_sc3336(args: &[String]) -> io::Result<()> {
         let mut ready = unsafe { File::from_raw_fd(fd) };
         ready.write_all(b"1")?;
     }
+    // Readiness means shutdown is armed, not that graph/capture is running.
+    // mlock prefaults may involve slow SquashFS reads; keep that work after
+    // the managed readiness acknowledgement but before any camera setup.
+    let _code_lock = super::camera_code_lock::from_env()?;
     std::env::set_var("SHIELDSIGNER_CAMERA_SOCKET", &args[6]);
-    auto_awb_frame_sc3336(&args[..6])
+    let result = auto_awb_frame_sc3336(&args[..6]);
+    // Emit after all capture teardown/final reports, so bounded small-RAM log
+    // tails retain the metrics. Finite/FULL diagnostics keep their old location.
+    if !super::camera_runtime_log::full_enabled() {
+        println!("{}",json!({"event":"ae-event-channel-metrics","runtimeTraceSuppressed":super::camera_runtime_log::suppressed_count(),"metrics":super::camera_event_metrics::summary()}));
+    }
+    result
 }
 // Included in camera-probe's Linux module. Fixed initial checkpoint, not 3A.
 fn first_frame_sc3336(args: &[String]) -> io::Result<()> {
@@ -321,6 +331,7 @@ fn first_frame_sc3336_with_gain(
         "{}",
         json!({"event":"first-frame-starting","sensor":sensor_path,"parameters":parameter_path,"initialReport":report_path,"automatic3A":false,"automaticExposure":automatic,"awbMeasurementsConfigured":awb_sample_scale.is_some(),"automaticWhiteBalance":live_awb,"coldStartProven":false})
     );
+    let initial_target = initial["initialTargetLuma"].as_f64().map(|value| value as f32);
     let outcome = (|| -> io::Result<()> {
         pipeline_configuration::run_lsc(&[args[0].clone()],[profile.width,profile.height])?;
         let mut device = SensorDevice {
@@ -411,6 +422,7 @@ fn first_frame_sc3336_with_gain(
                 bus: None,
                 writes: vec![],
             };
+            super::camera_event_metrics::reset();
             let (sender, events) = std::sync::mpsc::sync_channel(64);
             let mut owner = CameraAeOwner::new(runtime, sensor, 0, parameters);
             owner.demosaic = Some((
@@ -503,13 +515,18 @@ fn first_frame_sc3336_with_gain(
                 statistics_node: statistics.unwrap().clone(),
                 statistics_output: format!("{}.stats.raw", args[4]),
                 initial_parameters: parameters,
-                target: initial["initialTargetLuma"]
-                    .as_f64()
-                    .ok_or_else(|| error("Missing AE target"))? as f32,
+                target: initial_target.ok_or_else(|| error("Missing AE target"))?,
             })
         } else {
             None
         };
+        // Runtime calibrations above own their data (typed or cloned); keeping
+        // the source IQ tree and startup hex report during continuous capture
+        // duplicates allocations on the 64 MiB board. Preserve the only scalar
+        // needed by the finite statistics path, then release both trees before
+        // starting workers. No calibration/result/log record is changed.
+        drop(iq);
+        drop(initial);
         let capture_observer = control
             .as_ref()
             .map(|c| c.sender.clone())
@@ -570,10 +587,7 @@ fn first_frame_sc3336_with_gain(
                 node,
                 &format!("{}.stats.raw", args[4]),
                 &parameters,
-                initial["initialTargetLuma"]
-                    .as_f64()
-                    .ok_or_else(|| error("Missing calibrated initial AE target"))?
-                    as f32,
+                initial_target.ok_or_else(|| error("Missing calibrated initial AE target"))?,
                 observer.clone(),
                 capture,
             ),

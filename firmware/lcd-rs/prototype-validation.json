@@ -1,0 +1,97 @@
+{
+  "kind": "shieldsigner-lcd-pyo3-prototype-validation",
+  "version": "0.0.1-dev",
+  "artifact": {
+    "path": "dist/lcd/shieldsigner_lcd.abi3.so",
+    "sha256": "a3d81514236566f077aaf558d20a169631f9271b43f85ecf1819b5e84c864de2",
+    "bytes": 399160,
+    "target": "armv7-unknown-linux-uclibceabihf",
+    "pythonAbi": "abi3-py311; actualtargetPython3.12",
+    "needed": [
+      "libgcc_s.so.1",
+      "libc.so.0",
+      "ld-uClibc.so.1"
+    ]
+  },
+  "build": {
+    "rustVersion": "1.82.0",
+    "gccVersion": "8.3.0",
+    "sdkRevision": "0b5c1f30ca6333b7ec5af70d26511da9ef8d39af",
+    "isolatedBuildDirectory": true,
+    "sdkMountedReadOnly": true,
+    "noSdkOrHardwareMutation": true
+  },
+  "hostValidation": {
+    "rustCoreTestsPassed": 5,
+    "pythonShimTestsPassed": 2,
+    "macosExtensionImportPassed": true,
+    "primaryWireColorsPassed": true,
+    "scope": "Packing vectors, allchannelvalues, errors/shortwrites, EMSGSIZEboundedretry, GPIO/windowordering through doubles, preservedinversionbaseline, closedlifecycle rejection. NoactualSPI fromhosttests."
+  },
+  "earlierBoardTrial": {
+    "source": "Root-coordinated actual board trial; final artifact requires its own readback/trial",
+    "artifactSha256": "309002c1c8284bc2992dc9e1d8db276376f679b887a3a3d4a687399208c6bd2e",
+    "python312ImportPassed": true,
+    "primaryPackingHexPassed": true,
+    "spiFrames": 60,
+    "rustMedianMs": 110.614,
+    "rustMaxMs": 116.256,
+    "oldPythonFrames": 60,
+    "oldPythonMedianMs": 119.916,
+    "oldPythonMaxMs": 121.268,
+    "spiHz": 10000000,
+    "spiMode": 0,
+    "chipSelect": "kernel-managed",
+    "dc": 56,
+    "reset": 57,
+    "normalColorsRawInversion": "INVON",
+    "visualHumanConfirmation": false,
+    "spiReadbackAvailable": false
+  },
+  "sourceSha256": {
+    "Cargo.toml": "04d60a16d06cea8dc0c975d3bca3181bdea90587a93c5b25aeee4ac51ec04e26",
+    "Cargo.lock": "a648cd4135c6a2db637900eddc634a96fac6181385f1999d5704c340587e1d8e",
+    "build.rs": "e63cce50dcd0384fc2d497c892f2dfe9dc68708717d147b165b25ab479ed73a1",
+    "build-uclibc.sh": "5bdfeb5a86b8c943ae2d593248d91a2e73b8bc030b2929747f441b65af741392",
+    "src/lib.rs": "9bfe982e5fc7306f786d4d03aa142ca2f8c3084fe6121a3e0e5ee0c8131471f2",
+    "python/shieldsigner_lcd_driver.py": "0940ccaff73e6a2ecafa495c8b39df8be293ca7b516ab7613c77886c84bbb807",
+    "python/bench_lcd.py": "38c0af158339ac25b15a8cc26216441141cd1cd6ee032b66a811a68e93dc6ba8",
+    "python/test_lcd_driver.py": "243f78fa71e1eb2e11eecf77c14384d035c7bd724cbaf3325461f2b39a5d0cca"
+  },
+  "qualification": {
+    "finalArtifactHardwareTested": true,
+    "combinedGuiCameraReliable": false,
+    "limits": [
+      "SuccessfulSPIIOCTLwrites do not establish visuallycorrectpixels or absenceofsignalerrors.",
+      "NoSPIreadback; existingGPIO/reset/registerinit andnormalINVONpolicy remaininPython.",
+      "Fullcamera/UI memory, sustainedcontrolprogress, QR acquisition, cancellation/restart stillrequirehardwarequalification."
+    ],
+    "finalArtifactHardwareScope": "Python ABI import and 1000 successful real SPI frame transfers; no visual/optical/full GUI reliability inference."
+  },
+  "finalBoardTrial": {
+    "artifactSha256": "a3d81514236566f077aaf558d20a169631f9271b43f85ecf1819b5e84c864de2",
+    "source": "Root-coordinated actual Python3.12 board SPI soak",
+    "frames": 1000,
+    "passed": true,
+    "medianMs": 110.448,
+    "maxMs": 259.666,
+    "rssStartKiB": 19952,
+    "rssEndKiB": 19964,
+    "memoryScope": "Timing sample list grows during the trial; this is not an isolated native heap leak test.",
+    "spiHz": 10000000,
+    "spiMode": 0,
+    "dc": 56,
+    "reset": 57,
+    "normalColorsRawInversion": "INVON",
+    "humanVisualConfirmation": false,
+    "spiReadbackAvailable": false
+  },
+  "onBoardReferencePackingComparison": {
+    "passed": true,
+    "pixels": 256,
+    "reference": "Original Pillow BGR;16 conversion plus native array byteswap",
+    "coversEveryChannelValue": true,
+    "hardwareIoRequested": false,
+    "artifactSha256": "a3d81514236566f077aaf558d20a169631f9271b43f85ecf1819b5e84c864de2"
+  }
+}

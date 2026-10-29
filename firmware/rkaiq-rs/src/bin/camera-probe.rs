@@ -4,6 +4,27 @@ use std::env;
 #[cfg(any(target_os = "linux", test))]
 #[path = "../camera_awb_trace.rs"]
 mod camera_awb_trace;
+#[cfg(any(target_os = "linux", test))]
+#[path = "../camera_runtime_log.rs"]
+mod camera_runtime_log;
+#[cfg(any(target_os = "linux", test))]
+#[path = "../camera_event_metrics.rs"]
+mod camera_event_metrics;
+#[cfg(any(target_os = "linux", test))]
+#[path = "../camera_code_lock.rs"]
+mod camera_code_lock;
+#[cfg(target_os="linux")]
+macro_rules! camera_observed_println {
+    ($($arg:tt)*) => {{
+        crate::camera_runtime_log::emit(
+            CAMERA_CONTINUOUS.load(std::sync::atomic::Ordering::Relaxed),
+            crate::camera_runtime_log::full_enabled(), || {
+                let _log_phase = crate::camera_event_metrics::Phase::start("logging", None);
+                println!($($arg)*);
+            });
+    }};
+}
+
 const HELP:&str=concat!("camera-probe ", env!("CARGO_PKG_VERSION"), " — experimental Rust camera diagnostic\n\nCommands:\n  camera-probe stream-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SOCKET\n  camera-probe auto-awb-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE [--frames 33..3600]\n  camera-probe awb-gain-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE R GR GB B\n  camera-probe awb-measurement-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE SAMPLE_SCALE\n  camera-probe auto-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT STATS_NODE\n  camera-probe first-frame-sc3336 PLAN.json IQ.json PARAM_NODE IMAGE_NODE OUT [STATS_NODE [--step-at FRAME (--step-seconds SECONDS | --step-gain GAIN)]]\n  camera-probe list\n  camera-probe sensor-info /dev/v4l-subdevN\n  camera-probe configure-pipeline PLAN.json [--dry-run]\n  camera-probe apply-linear /dev/v4l-subdevN FRAME_LINES ANALOGUE_CODE DIGITAL_CODE SHUTTER_CODE [DCG_MODE]\n  camera-probe make-initial-parameters IQ.json OUT.bin [--ae-measurements | --awb-measurements SDK.bin SAMPLE_SCALE]\n  camera-probe self-test\n  camera-probe exposure-plan IQ.json SENSOR.json SECONDS GAIN [FRAME_LINES]\n  camera-probe stats /tmp/isp-statistics.raw\n  camera-probe capture-statistics /dev/videoN /tmp/isp-statistics.raw [options]\n  camera-probe capture-cif-with-parameters PARAM_NODE PARAM.bin RAW_TX RAW_RX ISP_NODE [--sof-node NODE] [--exposure-step SENSOR FRAME CODE | --gain-step SENSOR FRAME CODE] -- IMAGE_NODE OUT [capture options]\n  camera-probe capture-with-parameters PARAM_NODE PARAM.bin -- IMAGE_NODE OUT [capture options]\n  camera-probe submit-parameters /dev/videoN FULL_PARAMETERS.bin [--timeout-ms 3000] [--hold-ms 30000]\n  camera-probe events /dev/videoN [--timeout-ms 10000] [--count 8]\n  camera-probe capture /dev/videoN /tmp/frame.raw [options]\n\nOptions:\n  --width N --height N --fourcc NV12   Explicitly request a format (otherwise retain current)\n  --buffers N                         MMAP buffers: image 1–4 (default 1), statistics 2–4 (default 2)\n  --timeout-ms N                      Per-frame deadline (default 3000)\n  --warmup N                          Frames to discard before saving (default 2)\n  --require-no-rkaiq                  Refuse capture if rkaiq_3A_server/rkipc is running (always for statistics)\n\nWrites the last frame plus OUT.json metadata. Single-plane and multi-plane MMAP.\nThe existing kernel media graph, sensor driver, sensor settings and CMA memory\nmust already support capture. Does not start vendor software or modify boot.\n");
 fn self_test() -> Result<(), String> {
     use shieldsigner_rkaiq::*;
@@ -199,6 +220,13 @@ fn platform(_: &[String]) -> Result<(), String> {
 }
 #[cfg(target_os = "linux")]
 fn platform(args: &[String]) -> Result<(), String> {
+    // Managed streaming acknowledges armed shutdown before potentially slow
+    // file-backed code prefaulting. Other command behavior stays unchanged.
+    let _code_lock = if args.first().map(String::as_str) == Some("stream-sc3336") {
+        None
+    } else {
+        camera_code_lock::from_env().map_err(|e| e.to_string())?
+    };
     linux::run(args).map_err(|e| e.to_string())
 }
 

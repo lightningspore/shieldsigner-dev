@@ -128,11 +128,43 @@ root = a.output / 'rootfs'
 subprocess.run(['unsquashfs', '-no-xattrs', '-d', str(root), str(sq)], check=True, stdout=subprocess.DEVNULL)
 result = subprocess.run(['python3', str(a.bundle / 'image-overlay.py'), '--verify', str(root)], check=True, text=True, stdout=subprocess.PIPE)
 report['rootfsVerification'] = json.loads(result.stdout)
+profile_manifest = json.loads((a.bundle / 'manifest.json').read_text())
+for key, value, helper, field in [
+    ('memoryProfile', 'zram16-lzo', 'zram-image-profile.py', 'memoryProfileVerification'),
+    ('lcdBackend', 'rust', 'lcd-image-profile.py', 'lcdProfileVerification'),
+]:
+    if profile_manifest.get(key) == value:
+        checked = subprocess.run(['python3', str(a.bundle / helper), '--verify', str(root)], check=True, text=True, stdout=subprocess.PIPE)
+        report[field] = json.loads(checked.stdout)
 if a.qemu_python:
     smoke = a.output / 'public-python-api-smoke.py'
     smoke.write_text('"""Public direct-data API smoke; no pixels, worker, camera, or boot claim."""\nimport hashlib,json,sys\nfrom pathlib import Path\nroot=Path(sys.argv[1]); sys.path.insert(0,str(root/\'opt/src\'))\nimport Cryptodome\nfrom Cryptodome.Cipher import AES\nassert Cryptodome.__version__==\'3.23.0\'\nassert AES.new(bytes(16),AES.MODE_ECB).encrypt(bytes(16)).hex()==\'66e94bd4ef8a2c3b884cfa59ca342b2e\'\nfrom seedsigner.models.decode_qr import DecodeQR,DecodeQRStatus\nfrom seedsigner.helpers.ur2.ur import UR\nfrom seedsigner.helpers.ur2.ur_encoder import UREncoder\nfrom urtypes.crypto import PSBT as UR_PSBT\nfrom embit import bip39,psbt,transaction,script\nfor length in (16,32):\n entropy=bytes(range(length)); decoder=DecodeQR()\n assert decoder.add_data(entropy)==DecodeQRStatus.COMPLETE\n assert decoder.get_seed_phrase()==bip39.mnemonic_from_bytes(entropy).split()\ntx=transaction.Transaction(vin=[transaction.TransactionInput(bytes(32),0)],vout=[transaction.TransactionOutput(0,script.Script(b\'\\x6a\\x4c\\xc8\'+bytes(range(200))))])\npayload=psbt.PSBT(tx).serialize(); encoder=UREncoder(UR(\'crypto-psbt\',UR_PSBT(payload).to_cbor()),max_fragment_len=60)\nfragments=[]\nfor _ in range(20):\n fragments.append(encoder.next_part())\n if encoder.is_complete(): break\nassert len(fragments)>1\nframes=list(reversed(fragments)); decoder=DecodeQR()\nfor part in [frames[0],*frames]: decoder.add_data(part.encode(\'ascii\'))\nassert decoder.complete and decoder.get_data_psbt()==payload\nprint(json.dumps({\'passed\':True,\'pythonVersion\':sys.version,\'cryptodomeVersion\':Cryptodome.__version__,\'aesKnownVector\':True,\'compactSeedEntropyBytes\':[16,32],\'animatedUr\':{\'fragments\':len(fragments),\'reversedOrder\':True,\'duplicateHandled\':True,\'byteExactPsbt\':True},\'scope\':\'Actual packed Python/app direct-data APIs under explicit userspace QEMU, no QR pixels or camera\',\'imageBootQualified\':False}))\n')
     command = ['qemu-arm', '-cpu', 'cortex-a7', '-L', str(root), '-E', 'PYTHONHOME=' + str(root / 'usr'), '-E', 'PYTHONPATH=' + str(root / 'usr/lib/python3.12/site-packages'), '-E', 'LD_LIBRARY_PATH=' + str(root / 'lib') + ':' + str(root / 'usr/lib'), '-E', 'PYTHONDONTWRITEBYTECODE=1', str(root / 'usr/bin/python3.12'), str(smoke), str(root)]
     result = subprocess.run(command, check=True, text=True, stdout=subprocess.PIPE)
     report['qemuPythonDirectDataSmoke'] = json.loads(result.stdout)
+    if profile_manifest.get('lcdBackend') == 'rust':
+        lcd_smoke = a.output / 'public-rust-lcd-smoke.py'
+        lcd_smoke.write_text("""import array,json,sys
+from pathlib import Path
+root=Path(sys.argv[1])
+sys.path[:0]=[str(root/'usr/lib/shieldsigner-camera/python'),str(root/'opt/src')]
+import shieldsigner_lcd as native
+from PIL import Image
+rgb=bytes(channel for n in range(256) for channel in (n,n*7%256,255-n))
+image=Image.frombytes('RGB',(256,1),rgb)
+legacy=array.array('H',image.convert('BGR;16').tobytes());legacy.byteswap()
+assert native.pack_rgb(rgb)==legacy.tobytes()
+assert native.pack_rgb(bytes([255,0,0,0,255,0,0,0,255])).hex()=='f80007e0001f'
+try:native.pack_rgb(b'x')
+except ValueError:pass
+else:raise AssertionError('Malformed pixel buffer accepted')
+from shieldsigner_lcd_driver import install
+info=install(root/'opt/src')
+assert info['kind']=='rust-pyo3-lcd-frame-transport'
+print(json.dumps({'passed':True,'nativeAbiImport':True,'originalPillowRgb565EquivalentPixels':256,'primaryColors':True,'malformedBufferRejected':True,'reviewedShimRegistration':True,'scope':'Packed ARM extension and shim; no display driver instantiated','imageBootQualified':False}))
+""")
+        lcd_command = command[:-2] + [str(lcd_smoke), str(root)]
+        checked = subprocess.run(lcd_command, check=True, text=True, stdout=subprocess.PIPE)
+        report['qemuRustLcdSmoke'] = json.loads(checked.stdout)
 (a.output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
 print(json.dumps(report, indent=2))

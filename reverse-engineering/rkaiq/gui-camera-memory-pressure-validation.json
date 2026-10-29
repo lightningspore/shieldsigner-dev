@@ -1,0 +1,173 @@
+{
+  "kind": "gui-camera-concurrent-memory-pressure-hardware-validation",
+  "passed": true,
+  "scope": "Diagnostic isolation, not successful concurrent GUI/camera qualification",
+  "bootId": "88e5bf8b-1ae8-4fd9-953a-4d923331acd5",
+  "nativeBinarySha256": "101c7cf6918546a6f00b509f6a6e049bcc68097b2faba5604f07491701a824d6",
+  "allIspFeaturesEnabled": true,
+  "nativeConsumer": "RGB frames drained on desktop over adb forwarded Unix socket; no onboard Python consumer; no scene frames saved",
+  "guiInitialPid": 2951,
+  "guiInitialScript": "/tmp/shieldsigner-static-loading-scan.py",
+  "caseB": {
+    "requested": "GUI idle error screen resident/running plus external native RGB20sec",
+    "before": {
+      "MemTotalKiB": 46028,
+      "MemFreeKiB": 1512,
+      "MemAvailableKiB": 6492,
+      "CachedKiB": 8768,
+      "AnonPagesKiB": 25192,
+      "SlabKiB": 7564,
+      "CmaTotalKiB": 12288,
+      "CmaAllocatedKiB": 0,
+      "CmaReleasedKiB": 12288,
+      "CmaFreeKiB": 0,
+      "VmRSSKiB": 26552,
+      "RssAnonKiB": 23696,
+      "RssFileKiB": 2856,
+      "guiPresent": true
+    },
+    "after": {
+      "MemTotalKiB": 46028,
+      "MemFreeKiB": 28064,
+      "MemAvailableKiB": 29872,
+      "CachedKiB": 6344,
+      "AnonPagesKiB": 1496,
+      "SlabKiB": 7344,
+      "CmaTotalKiB": 12288,
+      "CmaAllocatedKiB": 0,
+      "CmaReleasedKiB": 12288,
+      "CmaFreeKiB": 0,
+      "guiPresent": false
+    },
+    "capture": {
+      "case": "B2-idle-resident",
+      "guiPaused": false,
+      "elapsedSeconds": 22.918139083019923,
+      "frames": 104,
+      "firstSequence": 12,
+      "lastSequence": 308,
+      "consumerError": null,
+      "ownerExitCode": "0",
+      "binarySha256": "101c7cf6918546a6f00b509f6a6e049bcc68097b2faba5604f07491701a824d6",
+      "allIspFeatures": true,
+      "desktopRgbConsumer": true,
+      "onboardPythonConsumer": false
+    },
+    "interpretation": "104 native frames are NOT a GUI co-residency pass: kernel OOM-killed GUI during startup"
+  },
+  "caseC": {
+    "requested": "Same GUI paused retaining RSS plus external native RGB20sec",
+    "actual": "GUI already killed by B OOM; this is headless case A, not paused-GUI case C",
+    "before": {
+      "MemTotalKiB": 46028,
+      "MemFreeKiB": 28060,
+      "MemAvailableKiB": 29868,
+      "CachedKiB": 6352,
+      "AnonPagesKiB": 1496,
+      "SlabKiB": 7340,
+      "CmaTotalKiB": 12288,
+      "CmaAllocatedKiB": 0,
+      "CmaReleasedKiB": 12288,
+      "CmaFreeKiB": 0,
+      "guiPresent": false
+    },
+    "after": {
+      "MemTotalKiB": 46028,
+      "MemFreeKiB": 26896,
+      "MemAvailableKiB": 29100,
+      "CachedKiB": 7516,
+      "AnonPagesKiB": 1496,
+      "SlabKiB": 7340,
+      "CmaTotalKiB": 12288,
+      "CmaAllocatedKiB": 0,
+      "CmaReleasedKiB": 12288,
+      "CmaFreeKiB": 0,
+      "guiPresent": false
+    },
+    "capture": {
+      "case": "C2-paused-resident",
+      "guiPaused": false,
+      "elapsedSeconds": 21.36999591696076,
+      "frames": 106,
+      "firstSequence": 5,
+      "lastSequence": 299,
+      "consumerError": null,
+      "ownerExitCode": "0",
+      "binarySha256": "101c7cf6918546a6f00b509f6a6e049bcc68097b2faba5604f07491701a824d6",
+      "allIspFeatures": true,
+      "desktopRgbConsumer": true,
+      "onboardPythonConsumer": false,
+      "pauseRequested": true
+    },
+    "interpretation": "Native all-ISP pipeline alone produced106frames over20sec without error; fair-duration headless baseline"
+  },
+  "oomEvidence": [
+    "[ 1978.852740] adbd invoked oom-killer: gfp_mask=0x1100cca(GFP_HIGHUSER_MOVABLE), order=0, oom_score_adj=0",
+    "[ 1978.853923] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),task=python3,pid=2951,uid=0",
+    "[ 1978.853980] Out of memory: Killed process 2951 (python3) total-vm:56368kB, anon-rss:23580kB, file-rss:0kB, shmem-rss:0kB, UID:0 pgtables:62kB oom_score_adj:0",
+    "[ 1978.888516] oom_reaper: reaped process 2951 (python3), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB"
+  ],
+  "initialInvalidHarnessAttemptsExcluded": "Initial socket-forward readiness race produced zero frames and clean managed shutdown; not classified as hardware failure",
+  "squashfsSourceAudit": {
+    "sdkRevision": "0b5c1f30ca6333b7ec5af70d26511da9ef8d39af",
+    "config": [
+      "CONFIG_SQUASHFS_FILE_CACHE=y",
+      "CONFIG_SQUASHFS_DECOMP_SINGLE=y",
+      "CONFIG_SQUASHFS_XZ=y"
+    ],
+    "rootfsBlockBytes": 131072,
+    "dataCacheEntries": 1,
+    "decompressorSerializedByMutex": true,
+    "paths": [
+      "fs/squashfs/super.c:203",
+      "fs/squashfs/decompressor_single.c:61",
+      "fs/squashfs/cache.c:74"
+    ],
+    "meaning": "squashfs_cache_get wait can mean cache-slot/pending-decompression contention; alone it is not proof of OOM"
+  },
+  "oldHeadlessEvidence": {
+    "path": "reverse-engineering/rkaiq/camera-restart-hardware-validation.json",
+    "initialMemAvailableKiB": 27132,
+    "afterStopMemAvailableKiBRange": [
+      24360,
+      24620
+    ],
+    "CmaTotalKiB": 12288,
+    "scope": "Previously successful headless capture/restart; not evidence that old full GUI ran within this memory budget"
+  },
+  "conclusions": [
+    "Concurrent resident GUI and native camera hit an actual system OOM with no swap; GUI anonymous RSS alone was about23MiB",
+    "Remaining file-cache/decompression pressure can explain latency before OOM, but exact UI deadline contribution remains separately testable",
+    "Native all-ISP continuous20sec capture is stable once GUI RSS is absent",
+    "Do not classify B as concurrent success or C as a paused-GUI comparison",
+    "At OOM file LRU had only60KiB left and normalfree exactly minimum856KiB; reclaimable file pages were exhausted while34,508KiB remained on anonymous LRU"
+  ],
+  "finalState": {
+    "cameraFree": true,
+    "managedOwnersExitedCleanly": true,
+    "guiKilledByKernelOom": true,
+    "manualDisplayGpioWritesByHarness": false
+  },
+  "limits": [
+    "No paused-resident-GUI comparison survived: GUI was already OOM-killed",
+    "No native or Python runtime source changes made by this isolation harness",
+    "No conclusion that memory is the only possible cause of every active-UI deadline failure"
+  ],
+  "oomMemoryInfoKiB": {
+    "normalManaged": 46028,
+    "normalFree": 856,
+    "normalMinWatermark": 856,
+    "activeAnon": 2696,
+    "inactiveAnon": 31812,
+    "activeFile": 4,
+    "inactiveFile": 56,
+    "shmem": 3628,
+    "totalSwap": 0
+  },
+  "diagnosticTmpfsObservation": {
+    "ShmemKiBCameraFree": 5036,
+    "compactNativeBindMountedFromTmpfs": true,
+    "multiplePythonOverridesBindMountedFromTmpfs": true,
+    "scope": "Read-only mount observation after trials; not attribution of every byte of Shmem"
+  }
+}

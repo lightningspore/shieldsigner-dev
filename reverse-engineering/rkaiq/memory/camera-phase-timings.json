@@ -1,0 +1,330 @@
+[
+  {
+    "label": "Verbose phase timing",
+    "metrics": {
+      "capacity": 64,
+      "depthScope": "enqueued events not yet acknowledged by owner; may include an event just removed from mpsc before acknowledgement",
+      "highWater": 64,
+      "kinds": [
+        {
+          "dequeued": 69,
+          "enqueued": 69,
+          "handled": 69,
+          "handlingMaxUs": 112945,
+          "handlingTotalUs": 683485,
+          "kind": "sof",
+          "queueAgeMaxUs": 4095411,
+          "queueAgeTotalUs": 141026215,
+          "rejected": 1
+        },
+        {
+          "dequeued": 45,
+          "enqueued": 45,
+          "handled": 45,
+          "handlingMaxUs": 3625796,
+          "handlingTotalUs": 6366630,
+          "kind": "statistics",
+          "queueAgeMaxUs": 3995518,
+          "queueAgeTotalUs": 89045338,
+          "rejected": 1
+        }
+      ],
+      "parameterSlotWaitCalls": 44,
+      "parameterSlotWaitMaxUs": 120320,
+      "parameterSlotWaitTotalUs": 163240,
+      "pendingAtFinish": 0,
+      "phaseTimingScope": "RUSAGE_THREAD on Linux; nested spans overlap and totals must not be summed. Faults are per-thread deltas, not bytes; non-Linux counters are zero.",
+      "phases": [
+        {
+          "calls": 69,
+          "majorFaults": 7,
+          "minorFaults": 192,
+          "name": "sof-sensor",
+          "threadCpuTotalUs": 60985,
+          "wallTotalUs": 637218,
+          "worstFrame": 8,
+          "worstMajorFaults": 3,
+          "worstMinorFaults": 24,
+          "worstThreadCpuUs": 1878,
+          "worstWallUs": 112754
+        },
+        {
+          "calls": 45,
+          "majorFaults": 16,
+          "minorFaults": 243,
+          "name": "ae-statistics",
+          "threadCpuTotalUs": 22675,
+          "wallTotalUs": 359049,
+          "worstFrame": 8,
+          "worstMajorFaults": 7,
+          "worstMinorFaults": 18,
+          "worstThreadCpuUs": 3143,
+          "worstWallUs": 211307
+        },
+        {
+          "calls": 344,
+          "majorFaults": 31,
+          "minorFaults": 357,
+          "name": "logging",
+          "threadCpuTotalUs": 54749,
+          "wallTotalUs": 4673578,
+          "worstFrame": null,
+          "worstMajorFaults": 5,
+          "worstMinorFaults": 6,
+          "worstThreadCpuUs": 1617,
+          "worstWallUs": 3532480
+        },
+        {
+          "calls": 45,
+          "majorFaults": 16,
+          "minorFaults": 379,
+          "name": "awb-statistics",
+          "threadCpuTotalUs": 61443,
+          "wallTotalUs": 631872,
+          "worstFrame": 8,
+          "worstMajorFaults": 11,
+          "worstMinorFaults": 38,
+          "worstThreadCpuUs": 4296,
+          "worstWallUs": 256746
+        },
+        {
+          "calls": 44,
+          "majorFaults": 1,
+          "minorFaults": 12,
+          "name": "parameter-slot-wait",
+          "threadCpuTotalUs": 4321,
+          "wallTotalUs": 162619,
+          "worstFrame": 34,
+          "worstMajorFaults": 0,
+          "worstMinorFaults": 0,
+          "worstThreadCpuUs": 1142,
+          "worstWallUs": 120298
+        },
+        {
+          "calls": 21,
+          "majorFaults": 48,
+          "minorFaults": 401,
+          "name": "isp-prepare-submit",
+          "threadCpuTotalUs": 73950,
+          "wallTotalUs": 5126529,
+          "worstFrame": 29,
+          "worstMajorFaults": 9,
+          "worstMinorFaults": 16,
+          "worstThreadCpuUs": 6789,
+          "worstWallUs": 3599513
+        }
+      ],
+      "untrackedDequeues": 0
+    }
+  },
+  {
+    "label": "Quiet logs + Rust LCD",
+    "metrics": {
+      "capacity": 64,
+      "depthScope": "enqueued events not yet acknowledged by owner; may include an event just removed from mpsc before acknowledgement",
+      "highWater": 64,
+      "kinds": [
+        {
+          "dequeued": 577,
+          "enqueued": 611,
+          "handled": 577,
+          "handlingMaxUs": 26649,
+          "handlingTotalUs": 108515,
+          "kind": "sof",
+          "queueAgeMaxUs": 3868141,
+          "queueAgeTotalUs": 37227636,
+          "rejected": 1
+        },
+        {
+          "dequeued": 384,
+          "enqueued": 406,
+          "handled": 384,
+          "handlingMaxUs": 1247877,
+          "handlingTotalUs": 7839052,
+          "kind": "statistics",
+          "queueAgeMaxUs": 3777530,
+          "queueAgeTotalUs": 22783665,
+          "rejected": 1
+        }
+      ],
+      "parameterSlotWaitCalls": 383,
+      "parameterSlotWaitMaxUs": 385283,
+      "parameterSlotWaitTotalUs": 848926,
+      "pendingAtFinish": 56,
+      "phaseTimingScope": "RUSAGE_THREAD on Linux; nested spans overlap and totals must not be summed. Faults are per-thread deltas, not bytes; non-Linux counters are zero.",
+      "phases": [
+        {
+          "calls": 577,
+          "majorFaults": 0,
+          "minorFaults": 300,
+          "name": "sof-sensor",
+          "threadCpuTotalUs": 7055,
+          "wallTotalUs": 58481,
+          "worstFrame": 6,
+          "worstMajorFaults": 0,
+          "worstMinorFaults": 19,
+          "worstThreadCpuUs": 815,
+          "worstWallUs": 26581
+        },
+        {
+          "calls": 383,
+          "majorFaults": 6,
+          "minorFaults": 227,
+          "name": "parameter-slot-wait",
+          "threadCpuTotalUs": 14979,
+          "wallTotalUs": 845610,
+          "worstFrame": 576,
+          "worstMajorFaults": 2,
+          "worstMinorFaults": 25,
+          "worstThreadCpuUs": 3748,
+          "worstWallUs": 385249
+        },
+        {
+          "calls": 382,
+          "majorFaults": 87,
+          "minorFaults": 3762,
+          "name": "isp-prepare-submit",
+          "threadCpuTotalUs": 292276,
+          "wallTotalUs": 3692506,
+          "worstFrame": 568,
+          "worstMajorFaults": 12,
+          "worstMinorFaults": 24,
+          "worstThreadCpuUs": 4412,
+          "worstWallUs": 513864
+        },
+        {
+          "calls": 384,
+          "majorFaults": 42,
+          "minorFaults": 3081,
+          "name": "awb-statistics",
+          "threadCpuTotalUs": 131466,
+          "wallTotalUs": 1734900,
+          "worstFrame": 571,
+          "worstMajorFaults": 11,
+          "worstMinorFaults": 18,
+          "worstThreadCpuUs": 3499,
+          "worstWallUs": 540355
+        },
+        {
+          "calls": 384,
+          "majorFaults": 31,
+          "minorFaults": 1850,
+          "name": "ae-statistics",
+          "threadCpuTotalUs": 30669,
+          "wallTotalUs": 1310003,
+          "worstFrame": 539,
+          "worstMajorFaults": 8,
+          "worstMinorFaults": 6,
+          "worstThreadCpuUs": 2200,
+          "worstWallUs": 267855
+        }
+      ],
+      "untrackedDequeues": 0
+    }
+  },
+  {
+    "label": "Code pinned + streamed hash",
+    "metrics": {
+      "capacity": 64,
+      "depthScope": "enqueued events not yet acknowledged by owner; may include an event just removed from mpsc before acknowledgement",
+      "highWater": 1,
+      "kinds": [
+        {
+          "dequeued": 664,
+          "enqueued": 664,
+          "handled": 664,
+          "handlingMaxUs": 27085,
+          "handlingTotalUs": 136003,
+          "kind": "sof",
+          "queueAgeMaxUs": 37735,
+          "queueAgeTotalUs": 217156,
+          "rejected": 0
+        },
+        {
+          "dequeued": 442,
+          "enqueued": 442,
+          "handled": 442,
+          "handlingMaxUs": 38644,
+          "handlingTotalUs": 1127221,
+          "kind": "statistics",
+          "queueAgeMaxUs": 21573,
+          "queueAgeTotalUs": 272813,
+          "rejected": 0
+        }
+      ],
+      "parameterSlotWaitCalls": 441,
+      "parameterSlotWaitMaxUs": 4569,
+      "parameterSlotWaitTotalUs": 12975,
+      "pendingAtFinish": 0,
+      "phaseTimingScope": "RUSAGE_THREAD on Linux; nested spans overlap and totals must not be summed. Faults are per-thread deltas, not bytes; non-Linux counters are zero.",
+      "phases": [
+        {
+          "calls": 664,
+          "majorFaults": 0,
+          "minorFaults": 6,
+          "name": "sof-sensor",
+          "threadCpuTotalUs": 13035,
+          "wallTotalUs": 117328,
+          "worstFrame": 14,
+          "worstMajorFaults": 0,
+          "worstMinorFaults": 0,
+          "worstThreadCpuUs": 452,
+          "worstWallUs": 27031
+        },
+        {
+          "calls": 442,
+          "majorFaults": 0,
+          "minorFaults": 49,
+          "name": "awb-statistics",
+          "threadCpuTotalUs": 95626,
+          "wallTotalUs": 178588,
+          "worstFrame": 346,
+          "worstMajorFaults": 0,
+          "worstMinorFaults": 0,
+          "worstThreadCpuUs": 358,
+          "worstWallUs": 22016
+        },
+        {
+          "calls": 441,
+          "majorFaults": 0,
+          "minorFaults": 29,
+          "name": "isp-prepare-submit",
+          "threadCpuTotalUs": 296511,
+          "wallTotalUs": 757332,
+          "worstFrame": 50,
+          "worstMajorFaults": 0,
+          "worstMinorFaults": 0,
+          "worstThreadCpuUs": 792,
+          "worstWallUs": 31533
+        },
+        {
+          "calls": 442,
+          "majorFaults": 0,
+          "minorFaults": 16,
+          "name": "ae-statistics",
+          "threadCpuTotalUs": 16231,
+          "wallTotalUs": 127551,
+          "worstFrame": 308,
+          "worstMajorFaults": 0,
+          "worstMinorFaults": 0,
+          "worstThreadCpuUs": 207,
+          "worstWallUs": 8893
+        },
+        {
+          "calls": 441,
+          "majorFaults": 0,
+          "minorFaults": 1,
+          "name": "parameter-slot-wait",
+          "threadCpuTotalUs": 2024,
+          "wallTotalUs": 5642,
+          "worstFrame": 2,
+          "worstMajorFaults": 0,
+          "worstMinorFaults": 1,
+          "worstThreadCpuUs": 0,
+          "worstWallUs": 55
+        }
+      ],
+      "untrackedDequeues": 0
+    }
+  }
+]

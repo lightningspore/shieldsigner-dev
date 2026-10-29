@@ -1,0 +1,9 @@
+{
+  "test": "managed-camera-owner-SIGKILL-and-reopen",
+  "imageOrQrSaved": false,
+  "failureReported": "RuntimeError",
+  "failedReferenceDetached": true,
+  "freshFrames": 11,
+  "freshStopClean": true,
+  "success": true
+}

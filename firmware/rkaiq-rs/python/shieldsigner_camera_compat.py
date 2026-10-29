@@ -1,32 +1,50 @@
 """Pinned cross-platform Camera adapter for the single SC3336 Rust pipeline.
 
 The application may request another resolution, frame rate or a legacy V4L2
-node. This backend explicitly publishes the native 640x480 RGB stream; it does
+node. This backend publishes native 640x480 pixels (RGB, or opt-in small-RAM video
+luma); it does
 not claim to reconfigure the fixed sensor/ISP graph or synthesize a BGR array.
 Camera handles display rotation/preview conversion after read().
 """
+import os
+from PIL import Image
 from shieldsigner_video_stream import PiVideoStream
 
 
 class VideoStream(PiVideoStream):
     def __init__(self, resolution=(512, 384), framerate=12, format="bgr",
-                 device_index=0, camera_config=None, prefer_v4l2=False):
+                 device_index=0, camera_config=None, prefer_v4l2=False, for_still=False):
         if device_index not in (0, None):
             raise ValueError("Rust camera backend supports only the fixed SC3336 camera (index 0)")
+        self._small_ram_preview = os.environ.get("SHIELDSIGNER_SMALL_RAM") == "1" and not for_still
+        transport = "nv12" if self._small_ram_preview else "rgb"
         self.backend_info = {
             "backend": "rust-sc3336-fixed-native",
             "nativeResolution": [640, 480],
-            "returnedImageMode": "RGB",
+            "returnedImageMode": "L" if transport == "nv12" else "RGB",
+            "transport": transport,
+            "forStill": bool(for_still),
             "requestedResolution": list(resolution),
             "requestedFramerate": framerate,
             "requestedFormat": format,
             "requestedV4l2": prefer_v4l2,
             "legacyCameraConfig": dict(camera_config or {}),
             "resamplingPerformed": False,
+            "consumerFramerateLimit": framerate,
+            "sensorFramerateChanged": False,
+            "previewResolutionBeforeRotation": [240, 180] if self._small_ram_preview else [640, 480],
+            "previewOnlyResampling": self._small_ram_preview,
+            "decodeResolution": [640, 480],
         }
-        super().__init__(width=640, height=480)
+        super().__init__(width=640, height=480, consumer_framerate=framerate, transport=transport)
 
     def read(self, preview=False, display=False):
         # Both flags are accepted for the pinned application's VideoStream API.
-        # Pixel conversions belong to Camera; keep scan pixels unmodified here.
-        return super().read()
+        # Only the optional display preview is reduced. The pinned Camera
+        # performs grayscale/rotation next; decoding and still reads retain the
+        # full native pixels. Still captures explicitly retain RGB. This is
+        # separate from requested FPS pacing.
+        frame = super().read(preview=preview, display=display)
+        if self._small_ram_preview and preview and frame is not None:
+            return frame.resize((240, 180), resample=Image.Resampling.NEAREST)
+        return frame

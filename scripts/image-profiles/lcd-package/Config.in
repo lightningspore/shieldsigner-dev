@@ -1,0 +1,8 @@
+config BR2_PACKAGE_SHIELDSIGNER_LCD
+	bool "ShieldSigner Rust LCD Python extension"
+	depends on BR2_arm && BR2_TOOLCHAIN_USES_UCLIBC
+	depends on BR2_PACKAGE_PYTHON3
+	depends on BR2_PACKAGE_HOST_RUST
+	help
+	  ABI3 Python extension using the reviewed SDK uClibc Rust target.
+	  GPIO/display class selection remains an explicit runtime choice.

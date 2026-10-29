@@ -1,0 +1,99 @@
+{
+  "kind": "isolated-zram-module-build",
+  "buildPassed": true,
+  "hardwareLoaded": true,
+  "hardwareSwapEnabled": true,
+  "kernelRelease": "5.10.160",
+  "kernelConfigSha256": "a1d37e5c65b186c6bcec65bdeff7ef151874bf0fc00535d1cdaecbf3303f427e",
+  "kernelModuleSymversSha256": "249b7c89d6a5c51ea245d47e1734900aed71b037e73b0193f3015215a4c7dd00",
+  "builderImage": "sha256:4625c05758dbb9cb6649bb0b3fef5c0a5e1c6a3678b2e199e92cd2f890ab79c4",
+  "compiler": "arm-rockchip830-linux-uclibcgnueabihf-gcc (crosstool-NG1.24.0)8.3.0",
+  "buildMode": "External modules only; complete SDK/cache mounted read-only, network disabled, unique writable output. No OS/kernel rebuild or .config mutation.",
+  "cacheHashVerification": [
+    "/var/lib/docker/volumes/seedsigner-repos/_data/luckfox-pico/sysdrv/source/objs_kernel/.config: OK",
+    "/var/lib/docker/volumes/seedsigner-repos/_data/luckfox-pico/sysdrv/source/objs_kernel/Module.symvers: OK"
+  ],
+  "configuration": {
+    "CONFIG_SWAP": "y",
+    "CONFIG_ZSMALLOC": "n in original kernel; compiled as external module",
+    "CONFIG_ZRAM": "not enabled in original kernel; external module",
+    "CONFIG_CRYPTO_LZO": "y",
+    "CONFIG_ZRAM_WRITEBACK": false,
+    "CONFIG_ZPOOL": "n, not required",
+    "CONFIG_MODVERSIONS": false,
+    "CONFIG_MODULE_SIG": false
+  },
+  "modules": [
+    {
+      "name": "zsmalloc",
+      "sha256": "7deeafeebbee6c4669ca7ca766a464f2831436e9e5aa128ad666873b313c3ada",
+      "fileBytes": 348100,
+      "allocatedElfSectionBytes": 6395,
+      "allocatedSizeScope": "Section payload sum, not runtime module allocation/page alignment or zram backing memory",
+      "modinfo": [
+        "author=Nitin Gupta <ngupta@vflare.org>",
+        "license=Dual BSD/GPL",
+        "depends=",
+        "name=zsmalloc",
+        "vermagic=5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      ],
+      "undefinedSymbols": 48,
+      "unresolvedExports": []
+    },
+    {
+      "name": "zram",
+      "sha256": "57aafba3c2931eba924ee0c6661d25d96387a80f620069bd7a326845bfe7ab77",
+      "fileBytes": 403816,
+      "allocatedElfSectionBytes": 7367,
+      "allocatedSizeScope": "Section payload sum, not runtime module allocation/page alignment or zram backing memory",
+      "modinfo": [
+        "description=Compressed RAM Block Device",
+        "author=Nitin Gupta <ngupta@vflare.org>",
+        "license=Dual BSD/GPL",
+        "parm=num_devices:Number of pre-created zram devices",
+        "parmtype=num_devices:uint",
+        "depends=zsmalloc",
+        "name=zram",
+        "vermagic=5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+      ],
+      "undefinedSymbols": 90,
+      "unresolvedExports": []
+    }
+  ],
+  "runtimePreparationRequirement": "After root-authorized module loading, explicitly select lzo in comp_algorithm BEFORE setting disksize; SDK zram default lzo-rle is not registered by current kernel crypto/lzo.c. No swap backing device; WRITEBACK compiled out.",
+  "dependencies": "zsmalloc loaded before zram. Allundefinedsymbols resolved against exactkernel/moduleexports; modpost andactual5.10.160insmod passed. Allocator+compressedRAMswap activated; fullGUI stability remains separate.",
+  "localArtifactDirectory": "dist/zram/20261029T180502Z",
+  "reproduce": "mise exec -- uv run --python 3.13 python reverse-engineering/rkaiq/scripts/build-zram-modules.py",
+  "sourceSha256": {
+    "zcomp.h": "822bdf8911fe5fa4b06898d805681c4fe1c306137293fac63657de4e0200879d",
+    "zram_drv.c": "88cb227a42c1149f620f15a4388971529a188f3322bf190e7cc87c45f13d951d",
+    "zsmalloc.c": "000d8c6c47035388933f4208aca33a22dacd3896f885bf5b2186dfa2fbe5b393",
+    "zcomp.c": "fb7f38209205ae33ebaf8ca2e7db44575e6767ff44d74d36b85070f640c04ced",
+    "zram_drv.h": "4bf2fb898ea22cea78589263616c25461dee370fdcfb790e6d81837112411c4d"
+  },
+  "hardwareRuntime": {
+    "evidenceSource": "Coordinator actual-board insmod/sysfs/swapon report,2026-10-29",
+    "kernelRelease": "5.10.160",
+    "insmodOrder": [
+      "zsmalloc",
+      "zram"
+    ],
+    "insmodSuccess": true,
+    "compressionAlgorithm": "lzo",
+    "logicalDiskBytes": 16777216,
+    "memoryLimitBytes": 8388608,
+    "swapDevices": [
+      "/dev/zram0"
+    ],
+    "procSwapsSizeKiB": 16380,
+    "procSwapsUsedKiBAtEnable": 0,
+    "initialMmStatFields": [
+      4096,
+      62,
+      4096,
+      8388608
+    ],
+    "sdSwapEnabled": false,
+    "fullGuiQualification": "Not established by successful module loading/swap activation; controlled GUI trial pending."
+  }
+}

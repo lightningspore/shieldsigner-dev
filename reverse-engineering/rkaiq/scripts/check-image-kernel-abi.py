@@ -56,6 +56,8 @@ def main():
     parser.add_argument('--sdk-revision', required=True)
     parser.add_argument('--report', type=Path, required=True)
     parser.add_argument("--image-variant", choices=["production", "dev"], default="production")
+    parser.add_argument("--memory-profile", choices=["none", "zram16-lzo"], default="none")
+    parser.add_argument("--io-profile", choices=["carrier", "base-fork"], default="carrier")
     args = parser.parse_args()
     if args.report.exists():
         parser.error('Choose a new report filename')
@@ -109,15 +111,31 @@ const unsigned int image_extra_layout[]={offsetof(struct isp32_isp_params_cfg,ot
             assert extra[index*2:index*2+2] == (offset, size), module
     config_text = args.kernel_config.read_text()
     config = dict(re.findall(r'^(CONFIG_\w+)=(\S+)$', config_text, re.M))
+    for key in re.findall(r'^# (CONFIG_\w+) is not set$', config_text, re.M):
+        assert key not in config, 'Conflicting kernel configuration: ' + key
+        config[key] = 'n'
     required = {'CONFIG_CPU_RV1106':'y', 'CONFIG_VIDEO_ROCKCHIP_ISP_VERSION_V32':'y', 'CONFIG_COMPAT_32BIT_TIME':'y',
                 'CONFIG_MEDIA_CONTROLLER':'y', 'CONFIG_VIDEO_V4L2_SUBDEV_API':'y',
                 'CONFIG_VIDEO_ROCKCHIP_CIF':'m', 'CONFIG_VIDEO_ROCKCHIP_ISP':'m',
                 'CONFIG_VIDEO_SC3336':'m', 'CONFIG_PHY_ROCKCHIP_CSI2_DPHY':'m', 'CONFIG_ROCKCHIP_DVBM':'m'}
-    assert all(config.get(key) == value for key, value in required.items()), 'Unexpected camera kernel configuration'
+    if args.memory_profile == 'zram16-lzo':
+        required.update({'CONFIG_SWAP':'y', 'CONFIG_ZSMALLOC':'m', 'CONFIG_ZRAM':'m',
+                         'CONFIG_CRYPTO_LZO':'y', 'CONFIG_ZRAM_WRITEBACK':'n',
+                         'CONFIG_ZRAM_MEMORY_TRACKING':'n', 'CONFIG_ZSMALLOC_STAT':'n'})
+    assert all(config.get(key, 'n') == value for key, value in required.items()), 'Unexpected camera/memory kernel configuration'
     dtb = fdt_properties(args.dtb.read_bytes())
     root = dtb['/']
     usb_mode = strings(dtb['/usbdrd/usb@ffb00000']['dr_mode'])[0]
     assert usb_mode == ('peripheral' if args.image_variant == 'dev' else 'host'), 'Unexpected USB role for image variant'
+    uart2 = []
+    for path, properties in dtb.items():
+        if path.rsplit('/', 1)[-1] != 'serial@ff4c0000':
+            continue
+        parts = path.strip('/').split('/')
+        enabled = all(strings(dtb.get('/' + '/'.join(parts[:index]), {}).get('status', b'okay\0'))[0] in ('okay', 'ok') for index in range(len(parts)+1))
+        uart2.append({'path': path, 'status': strings(properties.get('status', b'okay\0'))[0], 'enabled': enabled})
+    if args.io_profile == 'base-fork':
+        assert len(uart2) == 1 and not uart2[0]['enabled'], 'Base-fork buttons require UART2 disabled in the actual compiled DTB'
     media = []
     for path, properties in dtb.items():
         compatible = strings(properties.get('compatible', b''))
@@ -165,7 +183,7 @@ const unsigned int image_extra_layout[]={offsetof(struct isp32_isp_params_cfg,ot
     for name in ['isp','cif']:
         assert 'module_param_call(clr_unready_dev,' in drivers['drivers/media/platform/rockchip/'+name+'/dev.c']
     report = {'kind':'image-sdk-kernel-camera-abi-validation','passed':True,'sdkRevision':args.sdk_revision,
-              'kernelVersion':kernel_version,'imageVariant':args.image_variant,'compiledUsbMode':usb_mode,'actualSdkHeaderHashes':headers,
+              'kernelVersion':kernel_version,'memoryProfile':args.memory_profile,'ioProfile':args.io_profile,'compiledUart2':uart2,'imageVariant':args.image_variant,'compiledUsbMode':usb_mode,'actualSdkHeaderHashes':headers,
               'armCompiledKernelAssertions':len(re.findall(r'_Static_assert\(', source.read_text()))+6,
               'parameterBytes':parameters[0],'awbGainOffset':parameters[1],'awbGainBytes':parameters[2],
               'statisticsLayout':statistics,'additionalIspBlockLayout':extra,'requiredKernelConfig':required,

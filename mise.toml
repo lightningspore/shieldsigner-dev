@@ -748,3 +748,15 @@ run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python
 [tasks."camera:rust:cnr-live-check"]
 description = "Compare live chroma NR startup, controller state and accepted packed updates with native ARM"
 run = "uv run --python 3.13 --with pyelftools==0.32 --with unicorn==2.1.4 python reverse-engineering/rkaiq/scripts/cnr-live-check.py"
+
+[tasks."camera:memory:collect"]
+description = "Sample board OS/app/camera memory through ADB; pass --label, --seconds and --output"
+run = "uv run --python 3.11 python scripts/camera-memory/collect.py"
+
+[tasks."camera:memory:chart"]
+description = "Render sampled memory; pass input JSONL, output PNG and optional --phase"
+run = "uv run --python 3.11 --with matplotlib==3.11.2 python scripts/camera-memory/chart.py"
+
+[tasks."lcd:rust:test"]
+description = "Check Rust LCD frame encoding, SPI failures and Python shim lifecycle"
+run = ["cargo test --locked --manifest-path firmware/lcd-rs/Cargo.toml", "uv run --python 3.11 --with pillow python -m unittest discover -s firmware/lcd-rs/python -p 'test_*.py'"]

@@ -1,0 +1,186 @@
+{
+  "passed": true,
+  "opticalScanQualified": false,
+  "nativeWorkerSha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "scope": "Installed image-owned camera/nativeQR binaries and /opt/src Camera/DecodeQR with automatic Mini profile. Live stream and still; public synthetic binary/CompactSeed/UR integration. No renderer/buttons/GPIO, optical-target, fullUI, lighting or powercycle qualification.",
+  "appSourceSha256": {
+    "seedsigner/hardware/camera.py": "f5a927cdf7fd99f9c21aff793b540f59c1e9523a8945daaec96e1cb35375f6f2",
+    "seedsigner/models/decode_qr.py": "cd981f1b31144617836b1823198423fa53cc047fe251f28f6d5d7403466e2f1c"
+  },
+  "pythonSourcesSha256": {
+    "new_image_camera_check.py": "aa79d0cc2d6cc3f112e26971e07d003628c43d69a5780ffba8537ce7110c57d5"
+  },
+  "binaryCases": [
+    {
+      "payloadBytes": 13,
+      "byteExact": true,
+      "seconds": 0.37383937500000286
+    },
+    {
+      "payloadBytes": 256,
+      "byteExact": true,
+      "seconds": 0.562712501
+    },
+    {
+      "payloadBytes": 32,
+      "byteExact": true,
+      "seconds": 0.10500233399999814
+    }
+  ],
+  "compactSeedCases": [
+    {
+      "entropyBytes": 16,
+      "expectedPublicFixture": true
+    },
+    {
+      "entropyBytes": 32,
+      "expectedPublicFixture": true
+    }
+  ],
+  "animatedUr": {
+    "fragments": 5,
+    "framesSubmitted": 6,
+    "reversedOrder": true,
+    "duplicateHandled": true,
+    "duplicateStatus": 1,
+    "matchesInstalledDirectDataStatuses": true,
+    "byteExactReassembledPsbt": true
+  },
+  "cleanStopAndRestart": true,
+  "realCamera": {
+    "samples": 6,
+    "received": 7,
+    "nativeSize": [
+      640,
+      480
+    ],
+    "previewSize": [
+      640,
+      480
+    ],
+    "runtimeProfile": "luckfox_22",
+    "testProfileOverride": null,
+    "backendInfo": {
+      "backend": "rust-sc3336-fixed-native",
+      "nativeResolution": [
+        640,
+        480
+      ],
+      "returnedImageMode": "RGB",
+      "requestedResolution": [
+        512,
+        384
+      ],
+      "requestedFramerate": 6,
+      "requestedFormat": "bgr",
+      "requestedV4l2": true,
+      "legacyCameraConfig": {
+        "device": "/dev/video12",
+        "pixelformat": "GREY",
+        "framerate": 6,
+        "resolution": [
+          512,
+          384
+        ]
+      },
+      "resamplingPerformed": false
+    },
+    "ownerExitCode": 0,
+    "workerClosedOnCameraStop": true,
+    "logInfo": {
+      "fullLog": false,
+      "bytesReceived": 274046,
+      "maxRetainedPayloadBytes": 1048576,
+      "errorType": null
+    }
+  },
+  "realStillCapture": {
+    "returnedImageSize": [
+      640,
+      480
+    ],
+    "backendInfo": {
+      "backend": "rust-sc3336-fixed-native",
+      "nativeResolution": [
+        640,
+        480
+      ],
+      "returnedImageMode": "RGB",
+      "requestedResolution": [
+        720,
+        480
+      ],
+      "requestedFramerate": 6,
+      "requestedFormat": "bgr",
+      "requestedV4l2": true,
+      "legacyCameraConfig": {
+        "device": "/dev/video12",
+        "pixelformat": "GREY",
+        "framerate": 6,
+        "resolution": [
+          720,
+          480
+        ]
+      },
+      "resamplingPerformed": false
+    },
+    "ownerExitCode": 0,
+    "cleanStop": true
+  },
+  "installedAppUnchanged": true,
+  "nativeStats": {
+    "kind": "native-zxing-3.1.1-local-average",
+    "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+    "starts": 2,
+    "calls": 18,
+    "decoded": 12,
+    "errors": 0,
+    "lastRoundTripSeconds": 0.12727050000000162,
+    "lastExitCode": 0
+  },
+  "kind": "booted-dev-image-cma12-camera-native-qr-api-check",
+  "bootId": "88e5bf8b-1ae8-4fd9-953a-4d923331acd5",
+  "bundleManifestSha256": "6b396c5dc38d6cd82af739a22f1d686b649c67fb7443c043348bd9883a6f3eab",
+  "cameraBinarySha256": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+  "installedClientSha256": "cf56339060c22f3d271e09419aaeff724e62d5051a48c11561bf484d8315ba52",
+  "CmaTotalKiB": 12288,
+  "CmaAllocatedAfterStopKiB": 0,
+  "runtimeDirectoryPreparation": "mkdir -p /tmp/shieldsigner-camera; direct helper bypassed normal launcher directory creation",
+  "freshParentPatchedClient": {
+    "passed": true,
+    "patchedClientSha256": "448870e71091429ed5626695cb89d116063e6baf9f973b087bd956bf3ab1cf2b",
+    "freshParentInitiallyAbsent": true,
+    "sessions": [
+      {
+        "frames": 6,
+        "ownerExitCode": 0,
+        "socketRemoved": true,
+        "log": {
+          "fullLog": false,
+          "bytesReceived": 177151,
+          "maxRetainedPayloadBytes": 1048576,
+          "errorType": null
+        }
+      },
+      {
+        "frames": 6,
+        "ownerExitCode": 0,
+        "socketRemoved": true,
+        "log": {
+          "fullLog": false,
+          "bytesReceived": 199153,
+          "maxRetainedPayloadBytes": 1048576,
+          "errorType": null
+        }
+      }
+    ],
+    "parentCreated": true
+  },
+  "cleanup": {
+    "cameraOwnerRunning": false,
+    "nativeQrWorkerRunning": false,
+    "vendorRkaiqOwnerRunning": false,
+    "sensorStreamOffInKernelLog": true
+  },
+  "historicalFailureRetained": "new-image-boot-camera-api-validation.json"
+}

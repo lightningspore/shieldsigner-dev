@@ -32,6 +32,30 @@ case "${1:-start}" in
 esac
 '''
 DEV_APP_HOLD_INIT = '#!/bin/sh\n# Diagnostic bench image: GPIO/display mapping must be reviewed before app use.\necho "ShieldSigner diagnostic image: app/display/button startup held."\necho "Use ADB for inspection. Run /usr/bin/shieldsigner-launch manually only after the board profile is reviewed."\nexit 0\n'
+# Exact opt/luckfox/files/S99seedsigner from pinned OS e7589465.
+AUTOMATIC_APP_INIT = b'#!/bin/bash\n/start-seedsigner.sh\n\nexit 0'
+AUTOMATIC_APP_INIT_SHA256 = "b0b93fc8486d7d54e5d9ac1c5ef439fa86087f52123607a93f48d8292a518573"
+
+def app_startup(data):
+    policy = data.get("appStartup", "held" if data.get("imageVariant", "production") == "dev" else "automatic")
+    if policy not in ("automatic", "held"):
+        raise ValueError("Unknown app startup policy")
+    return policy
+
+def install_app_startup(root, data):
+    path = root / "etc/init.d/S99seedsigner"
+    if path.is_symlink() or digest(path) != AUTOMATIC_APP_INIT_SHA256:
+        raise ValueError("Unreviewed upstream app startup template")
+    path.write_bytes(DEV_APP_HOLD_INIT.encode() if app_startup(data) == "held" else AUTOMATIC_APP_INIT)
+    path.chmod(0o755)
+    return path
+
+def verify_app_startup(root, data):
+    path = root / "etc/init.d/S99seedsigner"
+    expected = DEV_APP_HOLD_INIT.encode() if app_startup(data) == "held" else AUTOMATIC_APP_INIT
+    if path.is_symlink() or path.read_bytes() != expected or path.stat().st_mode & 0o777 != 0o755:
+        raise ValueError("App startup bytes/mode differ from selected policy")
+
 SDK_VENDOR_INIT_SHA256 = "61dcd3bdb6740771b296611ab83e3238f9bc45b2ca0ec5ae78b542085be592e5"
 
 
@@ -75,6 +99,16 @@ def validate_app(root, bundle):
     return {"cameraSourceSha256": digest(camera), "cameraSource": str(camera.relative_to(root))}
 
 
+
+def image_io_module(bundle):
+    path = bundle / "configure-image-io-profile.py"
+    if not path.is_file():
+        return None
+    spec = importlib.util.spec_from_file_location("image_io_profile", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
 def configure_sdk_strip(sdk, bundle):
     proof = json.loads((bundle / "payload/kernel-camera-abi.json").read_text())
     revision = subprocess.check_output(["git", "-C", str(sdk), "rev-parse", "HEAD"], text=True).strip()
@@ -86,17 +120,23 @@ def configure_sdk_strip(sdk, bundle):
     end = original.index("\nfunction __COPY_FILES() {", start)
     before = original[start:end]
     after = replace_once(before, "-o -name '*.ko' \\) -print0", "-o -name '*.ko' -o -path '*/usr/lib/shieldsigner-camera/camera-probe' -o -path '*/usr/lib/shieldsigner-camera/shieldsigner-qr-reader' \\) -print0")
+    base_after = after
+    lcd = json.loads((bundle / "manifest.json").read_text()).get("lcdBackend", "python") == "rust"
+    lcd_path = "/usr/lib/shieldsigner-camera/python/shieldsigner_lcd.abi3.so"
+    if lcd:
+        after = replace_once(after, " -o -path '*/usr/lib/shieldsigner-camera/shieldsigner-qr-reader'",
+                             " -o -path '*/usr/lib/shieldsigner-camera/shieldsigner-qr-reader' -o -path '*" + lcd_path + "'")
     script = sdk / relative
     current = script.read_text()
     current_start = current.index("function __RELEASE_FILESYSTEM_FILES() {")
     current_end = current.index("\nfunction __COPY_FILES() {", current_start)
-    if current[current_start:current_end] not in {before, after}:
+    if current[current_start:current_end] not in {before, base_after, after}:
         raise ValueError("SDK filesystem strip function has unreviewed edits")
     script.write_text(current[:current_start] + after + current[current_end:])
     return {"kind": "preserve-verified-static-camera-binaries", "sdkRevision": revision,
             "file": relative, "originalFunctionSha256": hashlib.sha256(before.encode()).hexdigest(),
             "patchedFunctionSha256": hashlib.sha256(after.encode()).hexdigest(),
-            "excludedPaths": ["/usr/lib/shieldsigner-camera/camera-probe", "/usr/lib/shieldsigner-camera/shieldsigner-qr-reader"],
+            "excludedPaths": ["/usr/lib/shieldsigner-camera/camera-probe", "/usr/lib/shieldsigner-camera/shieldsigner-qr-reader"] + ([lcd_path] if lcd else []),
             "allOtherStripBehaviorPreserved": True}
 
 
@@ -179,7 +219,15 @@ def configure_buildroot(buildroot, bundle):
 
 def kernel_inputs(bundle):
     proof = json.loads((bundle / "payload/kernel-camera-abi.json").read_text())
-    image_variant = json.loads((bundle / "manifest.json").read_text()).get("imageVariant", "production")
+    bundle_data = json.loads((bundle / "manifest.json").read_text())
+    image_variant = bundle_data.get("imageVariant", "production")
+    io_profile = bundle_data.get("ioProfile", "carrier")
+    if proof.get("ioProfile", "carrier") != io_profile:
+        raise ValueError("Kernel proof IO profile differs from requested bundle")
+    if io_profile == "base-fork":
+        uart = proof.get("compiledUart2", [])
+        if len(uart) != 1 or uart[0].get("path") != "/serial@ff4c0000" or uart[0].get("status") != "disabled" or uart[0].get("enabled") is not False:
+            raise ValueError("Base-fork compiled UART2 disable proof missing")
     if proof.get("imageVariant", "production") != image_variant:
         raise ValueError("Kernel proof image variant differs from requested bundle")
     sdk = Path(os.environ["SHIELDSIGNER_CAMERA_SDK_DIR"])
@@ -199,11 +247,24 @@ def kernel_inputs(bundle):
 
 def install(root, bundle, data):
     app = validate_app(root, bundle)
-    display_spec = importlib.util.spec_from_file_location("image_display_config", bundle / "configure-hothmi-display.py")
-    display_module = importlib.util.module_from_spec(display_spec)
-    display_spec.loader.exec_module(display_module)
     display_config = root / "opt/src/seedsigner/hardware/io_config.json"
-    display_module.configure(display_config)
+    io_profile = data.get("ioProfile", "carrier")
+    io = image_io_module(bundle)
+    io_config_receipt = io_resource_receipt = io_kernel_receipt = None
+    if io is not None:
+        template = bundle / "base-fork-io-config.json" if io_profile == "base-fork" else None
+        io_config_receipt = io.configure(display_config, io_profile, template)
+        io_resource_receipt = io.configure_resources(root, io_profile)
+        if io_profile == "base-fork":
+            io_kernel_receipt = json.loads(Path(os.environ["SHIELDSIGNER_IO_KERNEL_RECEIPT"]).read_text())
+            io.verify_kernel(Path(os.environ["SHIELDSIGNER_CAMERA_SDK_DIR"]), io_kernel_receipt, io_profile)
+    elif io_profile == "carrier":
+        display_spec = importlib.util.spec_from_file_location("image_display_config", bundle / "configure-hothmi-display.py")
+        display_module = importlib.util.module_from_spec(display_spec)
+        display_spec.loader.exec_module(display_module)
+        display_module.configure(display_config)
+    else:
+        raise ValueError("Selected IO profile helper missing")
     destination = root / INSTALL
     destination.mkdir(parents=True, exist_ok=True)
     for name, info in data["files"].items():
@@ -257,13 +318,15 @@ exec python3 -u /usr/lib/shieldsigner-camera/python/shieldsigner_integration.py 
     launcher.chmod(0o755)
     removed = strip_vendor(root)
     changes = [startup, init, launcher, marker, display_config, os_release]
+    changes.append(install_app_startup(root, data))
     if data.get("imageVariant", "production") == "dev":
-        app_init = root / "etc/init.d/S99seedsigner"
-        app_init.write_text(DEV_APP_HOLD_INIT)
-        app_init.chmod(0o755)
-        changes.extend([app_init, root / "etc/init.d/S50usbdevice"])
+        changes.append(root / "etc/init.d/S50usbdevice")
+    if io_profile == "base-fork":
+        changes.append(root / "etc/init.d/S60pcscd")
     record = {"kind": "shieldsigner-rust-camera-rootfs-install", "version": data["version"],
-              "imageVariant": data.get("imageVariant", "production"),
+              "imageVariant": data.get("imageVariant", "production"), "appStartup": app_startup(data),
+              "ioProfile": io_profile, "ioConfigReceipt": io_config_receipt,
+              "ioResourceReceipt": io_resource_receipt, "ioKernelReceipt": io_kernel_receipt,
               "bundleManifestSha256": digest(bundle / "manifest.json"), **app,
               "kernelInputs": kernel_inputs(bundle),
               "startupSha256": {str(path.relative_to(root)): digest(path) for path in changes},
@@ -277,6 +340,24 @@ def verify(root, bundle, data):
     record = json.loads((root / INSTALL / "image-installation.json").read_text())
     proof = json.loads((bundle / "payload/kernel-camera-abi.json").read_text())
     image_variant = data.get("imageVariant", "production")
+    if record.get("appStartup", None if "appStartup" in data else app_startup(data)) != app_startup(data):
+        raise ValueError("Installed app startup policy differs from bundle")
+    verify_app_startup(root, data)
+    io_profile = data.get("ioProfile", "carrier")
+    if record.get("ioProfile", "carrier") != io_profile or proof.get("ioProfile", "carrier") != io_profile:
+        raise ValueError("Installed IO profile differs from bundle/kernel proof")
+    io = image_io_module(bundle)
+    if io is not None:
+        io.verify(root / "opt/src/seedsigner/hardware/io_config.json", record["ioConfigReceipt"], io_profile)
+        io.verify_resources(root, record["ioResourceReceipt"], io_profile)
+        if io_profile == "base-fork":
+            uart = proof.get("compiledUart2", [])
+            if len(uart) != 1 or uart[0].get("path") != "/serial@ff4c0000" or uart[0].get("status") != "disabled" or uart[0].get("enabled") is not False:
+                raise ValueError("Installed base-fork lacks UART2-disabled compiled proof")
+            if os.environ.get("SHIELDSIGNER_CAMERA_SDK_DIR"):
+                io.verify_kernel(Path(os.environ["SHIELDSIGNER_CAMERA_SDK_DIR"]), record["ioKernelReceipt"], io_profile)
+    elif io_profile != "carrier":
+        raise ValueError("Selected IO profile helper missing")
     if record.get("imageVariant", "production") != image_variant or proof.get("imageVariant", "production") != image_variant:
         raise ValueError("Image/bundle/kernel proof variant mismatch")
     adbd = (root / "usr/bin/adbd").read_bytes()
@@ -290,8 +371,6 @@ def verify(root, bundle, data):
             raise ValueError("Development USB startup does not enable the ADB daemon")
         if any((root / "root" / name).exists() for name in ["main.py", "boot.py"]):
             raise ValueError("Unreviewed secondary Python autostart in diagnostic image")
-        if (root / "etc/init.d/S99seedsigner").read_text() != DEV_APP_HOLD_INIT:
-            raise ValueError("Diagnostic development image must hold automatic app/display startup")
         if proof.get("compiledUsbMode") != "peripheral":
             raise ValueError("Development image proof does not select USB peripheral mode")
     elif adbd != b"#!/bin/sh\nexit 0\n":
@@ -347,7 +426,7 @@ def verify(root, bundle, data):
         raise ValueError("Reviewed HOTHMI SPI clock missing from image")
     validate_app(root, bundle)
     return {"kind": "shieldsigner-rust-camera-rootfs-verified", "version": data["version"],
-            "imageVariant": image_variant, "automaticAppStartupHeld": image_variant == "dev",
+            "imageVariant": image_variant, "ioProfile": io_profile, "appStartup": app_startup(data), "automaticAppStartupHeld": app_startup(data) == "held",
             "bundleManifestSha256": digest(bundle / "manifest.json"), "closedCameraRuntimeAbsent": True,
             "selectedIqPresent": True, "openKernelModulesPresent": True,
             "moduleFiles": modules, "imageBootQualified": False}

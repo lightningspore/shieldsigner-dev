@@ -1,0 +1,27 @@
+[package]
+name = "shieldsigner-lcd"
+version = "0.0.1-dev"
+edition = "2021"
+publish = false
+
+[lib]
+name = "shieldsigner_lcd"
+crate-type = ["rlib", "cdylib"]
+
+[features]
+default = []
+python = ["dep:pyo3", "dep:libc"]
+
+[dependencies]
+pyo3 = { version = "=0.23.5", optional = true, features = ["extension-module", "abi3-py311"] }
+libc = { version = "=0.2.191", optional = true }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[build-dependencies]
+pyo3-build-config = "=0.23.5"

@@ -29,6 +29,7 @@ if [[ "$camera_backend" == rust ]]; then
 fi
 [[ "${SHIELDSIGNER_PREPARE_ONLY:-0}" == 1 ]] && exit 0
 if [[ "$camera_backend" == rust ]]; then
+  export MINI_CMA_SIZE=12M
   if [[ -z "${SHIELDSIGNER_CAMERA_BUNDLE:-}" ]]; then
     mise run camera:rust:arm
     mise run camera:qr:native-build

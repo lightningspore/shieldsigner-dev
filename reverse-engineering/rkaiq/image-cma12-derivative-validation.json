@@ -1,0 +1,124 @@
+{
+  "kind": "shieldsigner-unsigned-cma12-image-derivative",
+  "sourceArtifactId": "e69de65-unsigned-diagnostic-dev-cma1",
+  "sourceSha256": "d4fdfa0be754764092cfeb67c0d78336ed83186644f562952dccb6ff6ad8e0c2",
+  "patchToolSha256": "08737a01585a610923d092e2434e1ff262552153c5b8b1f79a21460814f72c1f",
+  "outputSha256": "46b1cfc4e1011dca3d57937bbadae51011b00e1d156db0f1e7f6260d9200ed15",
+  "bytes": 361488384,
+  "environmentOffset": 0,
+  "environmentBytes": 32768,
+  "originalEnvironmentCrc32": "0x3eacc272",
+  "patchedEnvironmentCrc32": "0xd2331b41",
+  "sysBootargsBefore": "sys_bootargs= root=/dev/mmcblk1p6 rootfstype=squashfs rk_dma_heap_cma=1M",
+  "sysBootargsAfter": "sys_bootargs= root=/dev/mmcblk1p6 rootfstype=squashfs rk_dma_heap_cma=12M",
+  "onlyLogicalEnvironmentChange": "rk_dma_heap_cma=1M -> rk_dma_heap_cma=12M",
+  "allBytesAfterEnvironmentSha256": "3e0ca718975622928fe01ea3320db0adef27c81d9b54d55c2b27989ac99e74c7",
+  "allBytesAfterEnvironmentUnchanged": true,
+  "kernelRootfsRuntimeUnchanged": true,
+  "unsignedOnly": true,
+  "cardModified": false,
+  "imageBootQualified": false,
+  "negativeGuards": {
+    "unallowlistedShaRejected": true,
+    "wrongSourceHashRejected": true,
+    "danglingReportSymlinkRejected": true
+  },
+  "compressedDistribution": {
+    "path": "dist/os/remote/rust-0.0.38-dev-dev-e69de65/shieldsigner-0.0.38-dev-e69de65-adb-cma12.img.xz",
+    "sha256": "e46f5c77b2b1009bbf30f0c6f0c7bda163a4214c13cd3ae3b108caf50803479e",
+    "bytes": 62051116,
+    "decodedRawSha256": "46b1cfc4e1011dca3d57937bbadae51011b00e1d156db0f1e7f6260d9200ed15",
+    "decodedRawBytes": 361488384,
+    "xzIntegrityAndByteExactDecodePassed": true
+  },
+  "baseImageBuildProof": "reverse-engineering/rkaiq/image-camera-development-build-validation.json",
+  "workingPreviousHardwareCmaEvidence": "reverse-engineering/rkaiq/camera-restart-hardware-validation.json",
+  "limits": [
+    "Offline unsigned boot-environment derivative only; no card modified",
+    "Physical12MiB boot and camera capture still pending",
+    "Kernel/rootfs/app hold/ADB/native camera assets byte-identical to verified development base"
+  ],
+  "packedImageReadback": {
+    "helperSha256": "78b89f419cb77deed227884b2683821c6f62f6e689f2210eaac6c327c3bf4650",
+    "imageSha256": "46b1cfc4e1011dca3d57937bbadae51011b00e1d156db0f1e7f6260d9200ed15",
+    "imageBytes": 361488384,
+    "imageBootQualified": false,
+    "scope": "Packed image static readback, not boot validation",
+    "bootCmaSize": "12M",
+    "bootEnvironmentCrc32": "0xd2331b41",
+    "rootfs": {
+      "offset": 302809088,
+      "bytesUsed": 58678428
+    },
+    "linuxBootFits": [
+      {
+        "fitOffset": 819200,
+        "defaultConfiguration": "conf",
+        "dtbSha256": "01bcf3b2bdcdc8835a190053c5415d047e7ded17385fe375f029ea32c9cb7557",
+        "model": "Luckfox Pico Mini"
+      }
+    ],
+    "rootfsVerification": {
+      "kind": "shieldsigner-rust-camera-rootfs-verified",
+      "version": "0.0.38-dev",
+      "imageVariant": "dev",
+      "automaticAppStartupHeld": true,
+      "bundleManifestSha256": "6b396c5dc38d6cd82af739a22f1d686b649c67fb7443c043348bd9883a6f3eab",
+      "closedCameraRuntimeAbsent": true,
+      "selectedIqPresent": true,
+      "openKernelModulesPresent": true,
+      "moduleFiles": [
+        {
+          "name": "rk_dvbm",
+          "sha256": "d1c2691a6da10abe1133fa88cfd30391ee9ba7c8937c1aaadf60ee3ccf229134",
+          "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+        },
+        {
+          "name": "video_rkcif",
+          "sha256": "157b29875cd6a81188946d192174d1fbb0f3a1a8d77219edc0ed6a8a527425a0",
+          "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+        },
+        {
+          "name": "video_rkisp",
+          "sha256": "e74ecc37c0db9c05b0a37f2eb03adeb7ab479a4e863f23ee7ce6d1961fad4f2c",
+          "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+        },
+        {
+          "name": "sc3336",
+          "sha256": "9c904ccff992c11bda9f754e19bee9866ca5eefb1f3a6a88606dca465b3970d8",
+          "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+        },
+        {
+          "name": "phy-rockchip-csi2-dphy-hw",
+          "sha256": "8d547dc5542a3b2841a52bf6e8cb2c24be4a494e1363e40452ce8c7a9527429e",
+          "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+        },
+        {
+          "name": "phy-rockchip-csi2-dphy",
+          "sha256": "4561479feb0bb369e2cf4788d73c26e6ec4827b28f4dda405197705ec610cc76",
+          "vermagic": "5.10.160 mod_unload ARMv7 thumb2 p2v8 "
+        }
+      ],
+      "imageBootQualified": false
+    },
+    "qemuPythonDirectDataSmoke": {
+      "passed": true,
+      "pythonVersion": "3.12.10 (main, Jan  1 1970, 00:00:00) [GCC 8.3.0]",
+      "cryptodomeVersion": "3.23.0",
+      "aesKnownVector": true,
+      "compactSeedEntropyBytes": [
+        16,
+        32
+      ],
+      "animatedUr": {
+        "fragments": 5,
+        "reversedOrder": true,
+        "duplicateHandled": true,
+        "byteExactPsbt": true
+      },
+      "scope": "Actual packed Python/app direct-data APIs under explicit userspace QEMU, no QR pixels or camera",
+      "imageBootQualified": false
+    }
+  },
+  "futureBundleCmaMismatchRejected": true
+}

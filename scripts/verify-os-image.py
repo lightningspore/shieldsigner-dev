@@ -1,5 +1,7 @@
 """Verify immutable camera files and selected Linux DTB by packed SD-image readback. Linux squashfs-tools required. This does not boot or flash the image."""
 import shutil
+import re
+import zlib
 import argparse, hashlib, json, mmap, pathlib, struct, subprocess
 
 def fdt_properties(data):
@@ -51,6 +53,20 @@ with a.image.open('rb') as f:
         size += len(chunk)
 report = {'helperSha256': hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(), 'imageSha256': sha.hexdigest(), 'imageBytes': size, 'imageBootQualified': False, 'scope': 'Packed image static readback, not boot validation'}
 with a.image.open('rb') as f, mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as mm:
+    environment = bytes(mm[:32768])
+    if len(environment) != 32768 or struct.unpack_from('<I', environment)[0] != zlib.crc32(environment[4:]) & 0xffffffff:
+        raise ValueError('Invalid fixed32KiB U-Boot environment CRC')
+    payload = environment[4:]
+    end = payload.find(b'\0\0')
+    if end < 0 or any(payload[end+2:]):
+        raise ValueError('Unexpected U-Boot environment termination/padding')
+    entries = [entry for entry in payload[:end].split(b'\0') if entry.startswith(b'sys_bootargs=')]
+    values = re.findall(rb'(?:^|\s)rk_dma_heap_cma=(\S+)', entries[0]) if len(entries) == 1 else []
+    expected_cma = json.loads((a.bundle / 'manifest.json').read_text()).get('cameraCmaSize')
+    if expected_cma is not None and (len(entries) != 1 or values != [expected_cma.encode()]):
+        raise ValueError('Packed boot CMA differs from requested camera bundle')
+    report['bootCmaSize'] = values[0].decode() if len(values) == 1 else None
+    report['bootEnvironmentCrc32'] = hex(struct.unpack_from('<I', environment)[0])
     squashes = []
     pos = 0
     while (pos := mm.find(b'hsqs', pos)) >= 0:

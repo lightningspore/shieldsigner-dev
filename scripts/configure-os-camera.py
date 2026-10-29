@@ -17,13 +17,13 @@ def replace_once(text, before, after):
     return text.replace(before, after, 1)
 
 
-def patched(name, text, dependencies=True, probe=True):
+def patched(name, text, dependencies=True, probe=True, cma=True):
     if name.endswith("/build.sh"):
         text = replace_once(text, '    local docker_args="$PLATFORM_ARGS', '''    local camera_bundle_arg=""
     if [[ -n "${SHIELDSIGNER_CAMERA_BUNDLE:-}" ]]; then
         [[ -f "$SHIELDSIGNER_CAMERA_BUNDLE/manifest.json" ]] || { print_error "Camera bundle manifest missing"; exit 1; }
         case "$SHIELDSIGNER_CAMERA_BUNDLE" in *[[:space:]]*) print_error "Camera bundle path must not contain whitespace"; exit 1 ;; esac
-        camera_bundle_arg="-v $SHIELDSIGNER_CAMERA_BUNDLE:/build/shieldsigner-camera:ro -e SHIELDSIGNER_KERNEL_PROBE_ONLY=${SHIELDSIGNER_KERNEL_PROBE_ONLY:-0}"
+        camera_bundle_arg="-v $SHIELDSIGNER_CAMERA_BUNDLE:/build/shieldsigner-camera:ro -e SHIELDSIGNER_KERNEL_PROBE_ONLY=${SHIELDSIGNER_KERNEL_PROBE_ONLY:-0} -e MINI_CMA_SIZE=${MINI_CMA_SIZE:-12M}"
     fi
     local docker_args="$PLATFORM_ARGS''')
         text = replace_once(text, '                       $env_args"', '                       $env_args $camera_bundle_arg"')
@@ -61,6 +61,8 @@ if [ -f /build/shieldsigner-camera/image-overlay.py ]; then
     python3 /build/shieldsigner-camera/image-overlay.py --oem "$OEM_DIR"
 fi
 '''
+    if not cma:
+        text = text.replace(' -e MINI_CMA_SIZE=${MINI_CMA_SIZE:-12M}', '')
     if not probe:
         text = text.replace(' -e SHIELDSIGNER_KERNEL_PROBE_ONLY=${SHIELDSIGNER_KERNEL_PROBE_ONLY:-0}', '')
         text = text.replace('        if [[ "${SHIELDSIGNER_KERNEL_PROBE_ONLY:-0}" == 1 ]]; then\n            python3 /build/shieldsigner-camera/collect-kernel-probe.py "$LUCKFOX_SDK_DIR" /build/output/kernel-probe\n            exit 0\n        fi\n', '')
@@ -76,9 +78,10 @@ def configure(checkout, mode):
         original = subprocess.check_output(["git", "-C", str(checkout), "show", PIN + ":" + name]).decode()
         desired = patched(name, original)
         path = checkout / name
-        prior_desired = patched(name, original, probe=False)
+        prior_desired = patched(name, original, probe=False, cma=False)
+        prior_probe_desired = patched(name, original, cma=False)
         previous_dependency_hook = desired.replace('        export SHIELDSIGNER_CAMERA_SDK_DIR="$LUCKFOX_SDK_DIR"\n', '')
-        if path.read_text() not in {original, desired, prior_desired, previous_dependency_hook, patched(name, original, dependencies=False)}:
+        if path.read_text() not in {original, desired, prior_desired, prior_probe_desired, previous_dependency_hook, patched(name, original, dependencies=False)}:
             raise ValueError("OS camera hook has unreviewed edits: " + name)
         data = desired if mode == "rust" else original
         changes.append((path, data))

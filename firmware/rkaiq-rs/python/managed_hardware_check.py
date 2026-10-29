@@ -24,15 +24,11 @@ def main():
               "adapterSha256": digest(os.path.join(os.path.dirname(__file__), "shieldsigner_video_stream.py")),
               "iqSha256": digest(args.iq)}
     try:
-        missing = dict(config, output_directory=args.report + ".missing/sessions")
-        invalid = PiVideoStream(owner_config=missing)
-        try:
-            invalid.start()
-        except FileNotFoundError:
-            assert invalid.is_stopped and invalid._owner is None
-            report["missingOutputDirectoryRejected"] = True
-        else:
-            raise AssertionError("Missing output directory was accepted")
+        # Start real sessions below with a fresh nested parent; first-use boot
+        # must create it rather than depending on a launcher mkdir.
+        config["output_directory"] = args.report + ".fresh/sessions"
+        assert not os.path.exists(config["output_directory"])
+        report["missingOutputParentCreatedByClient"] = True
         for session_index in range(2):
             reader = PiVideoStream(owner_config=config)
             camera_module.PiVideoStream = lambda: reader

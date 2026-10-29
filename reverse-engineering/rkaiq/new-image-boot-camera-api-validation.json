@@ -1,0 +1,86 @@
+{
+  "passed": false,
+  "opticalScanQualified": false,
+  "nativeWorkerSha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "scope": "Actual installed image app and image-owned camera/native QR binaries; automatic Mini profile, no renderer/buttons/GPIO. Public synthetic decoder fixtures passed, real camera blocked before first frame. No physical optical/UI qualification.",
+  "appSourceSha256": {
+    "seedsigner/hardware/camera.py": "f5a927cdf7fd99f9c21aff793b540f59c1e9523a8945daaec96e1cb35375f6f2",
+    "seedsigner/models/decode_qr.py": "cd981f1b31144617836b1823198423fa53cc047fe251f28f6d5d7403466e2f1c"
+  },
+  "pythonSourcesSha256": {
+    "new_image_camera_check.py": "aa79d0cc2d6cc3f112e26971e07d003628c43d69a5780ffba8537ce7110c57d5"
+  },
+  "binaryCases": [
+    {
+      "payloadBytes": 13,
+      "byteExact": true,
+      "seconds": 0.11922195799999713
+    },
+    {
+      "payloadBytes": 256,
+      "byteExact": true,
+      "seconds": 0.5606445840000163
+    },
+    {
+      "payloadBytes": 32,
+      "byteExact": true,
+      "seconds": 0.10461324999999988
+    }
+  ],
+  "compactSeedCases": [
+    {
+      "entropyBytes": 16,
+      "expectedPublicFixture": true
+    },
+    {
+      "entropyBytes": 32,
+      "expectedPublicFixture": true
+    }
+  ],
+  "animatedUr": {
+    "fragments": 5,
+    "framesSubmitted": 6,
+    "reversedOrder": true,
+    "duplicateHandled": true,
+    "duplicateStatus": 1,
+    "matchesInstalledDirectDataStatuses": true,
+    "byteExactReassembledPsbt": true
+  },
+  "cleanStopAndRestart": true,
+  "nativeStats": {
+    "kind": "native-zxing-3.1.1-local-average",
+    "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+    "starts": 2,
+    "calls": 12,
+    "decoded": 12,
+    "errors": 0,
+    "lastRoundTripSeconds": 0.0087106250000204,
+    "lastExitCode": 0
+  },
+  "kind": "booted-dev-image-camera-native-qr-api-check",
+  "bootId": "2ac0d63c-dfd3-4864-921f-f46da60aae4b",
+  "bundleManifestSha256": "6b396c5dc38d6cd82af739a22f1d686b649c67fb7443c043348bd9883a6f3eab",
+  "cameraBinarySha256": "08beb38c7e6c99eceebcc5171d5ce09f322cc5fb6c200e885b5fc874374e7fa2",
+  "model": "Luckfox Pico Mini",
+  "kernel": "5.10.160",
+  "runtimeProfileOverride": null,
+  "realStreamPassed": false,
+  "realStillPassed": false,
+  "initialFailure": "Missing /tmp/shieldsigner-camera parent; FileNotFoundError before owner launch",
+  "retryWorkaround": "mkdir -p /tmp/shieldsigner-camera (volatile only)",
+  "retryFailure": "Camera owner Out of memory (errno12) before socket ready",
+  "kernelEvidence": [
+    "rk_dma_heap_cma=1M",
+    "CmaTotal:1024kB",
+    "MemAvailable:44720kB",
+    "vb2_cma_sg_alloc_contiguous: cma_en:1 alloc pages fail",
+    "rkisp_alloc_buffer failed ret:-12",
+    "alloc bay3d iir buf fail:-12"
+  ],
+  "sensorEvidence": "sc3336 detected OV00cc41 and CSI/ISP notifier completed",
+  "cleanup": {
+    "cameraOwnerRunning": false,
+    "nativeQrWorkerRunning": false,
+    "vendorRkaiqOwnerRunning": false
+  }
+}

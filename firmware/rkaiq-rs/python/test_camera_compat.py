@@ -1,9 +1,12 @@
 """Fixed-native geometry and pixel contracts for the pinned Camera API adapter."""
 import os
+import tempfile
+from pathlib import Path
 import unittest
 from unittest.mock import patch
 from PIL import Image
 from shieldsigner_camera_compat import VideoStream
+from shieldsigner_video_stream import PiVideoStream
 
 
 class CameraCompatibilityTests(unittest.TestCase):
@@ -22,6 +25,26 @@ class CameraCompatibilityTests(unittest.TestCase):
             self.assertIs(stream.read(**flags), frame)
             self.assertEqual(stream.read(**flags).getpixel((0, 0)), (7, 83, 231))
         stream.stop()
+
+    def test_first_use_creates_output_parent_and_preserves_filesystem_errors(self):
+        with tempfile.TemporaryDirectory() as temp:
+            parent = Path(temp) / "missing" / "sessions"
+            config = dict(output_directory=str(parent), binary="/nonexistent-camera-owner",
+                          plan="plan", iq="iq", parameters="params", image="image", statistics="stats")
+            stream = PiVideoStream(owner_config=config)
+            # Reaching the owner launch proves first-use session creation worked;
+            # no camera hardware or fabricated live frames are involved.
+            with self.assertRaises(FileNotFoundError):
+                stream.start()
+            self.assertTrue(Path(stream.session_directory).is_dir())
+            self.assertTrue(parent.is_dir())
+            self.assertIsNone(stream._owner)
+            blocker = Path(temp) / "regular-file"
+            blocker.write_text("not a directory")
+            rejected = PiVideoStream(owner_config=dict(config, output_directory=str(blocker)))
+            with self.assertRaises(FileExistsError):
+                rejected.start()
+            self.assertIsNone(rejected._owner)
 
     def test_another_camera_is_not_silently_selected(self):
         with self.assertRaisesRegex(ValueError, "index 0"):

@@ -62,6 +62,7 @@ class PiVideoStream:
         self.frames_received = 0
         if self.owner_config is not None:
             config = self.owner_config
+            os.makedirs(config["output_directory"], exist_ok=True)
             self.session_directory = tempfile.mkdtemp(prefix="camera-", dir=config["output_directory"])
             self.socket_path = os.path.join(self.session_directory, "camera.sock")
             self.owner_exit_code = None

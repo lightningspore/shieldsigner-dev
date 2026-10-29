@@ -100,7 +100,7 @@ fi''')
         source_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
         dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip())
         manifest = {"kind": "shieldsigner-camera-image-bundle", "version": version,
-                    "imageVariant": variant, "kernelProofPending": kernel_probe,
+                    "imageVariant": variant, "kernelProofPending": kernel_probe, "cameraCmaSize": "12M",
                     "sourceCommit": source_commit, "sourceDirty": dirty,
                     "applicationCommit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
                     "osCommit": "e7589465aff172f4f510ad46d18776ccc8d2c203",

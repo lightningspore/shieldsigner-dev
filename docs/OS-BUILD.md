@@ -30,6 +30,21 @@ SHIELDSIGNER_CAMERA_BUNDLE="$PWD/dist/os/my-reviewed-camera-bundle" mise run os:
 
 The bundle command expects native outputs from the two build tasks to exist. Bundles are immutable directories; select a new directory after changing code. Each bundle records file hashes, source revision/dirty status, version and upstream pins. It contains runtime assets and license notices only, without original RKAIQ binaries, reverse-engineering fixtures, camera images or private IQ/reference traces. Runtime license notices are regenerated for every staged bundle. A dirty development snapshot is identified as such and is not a frozen release.
 
+### CMA12 diagnostic correction (current reflash artifact)
+
+Use `dist/os/remote/rust-0.0.38-dev-dev-e69de65/shieldsigner-0.0.38-dev-e69de65-adb-cma12.img.xz` for the next diagnostic boot. The earlier `adb.img.xz` booted and provided ADB with the app held, but inherited upstream's **1 MiB CMA** default; headless capture failed RKISP/BAY3D buffer allocation with `-12` despite general free RAM. Earlier successful camera/restart tests used 12 MiB CMA.
+
+The bounded unsigned derivative changes only `rk_dma_heap_cma=1M` to `rk_dma_heap_cma=12M` in the first 32 KiB U-Boot environment and updates its CRC. Every byte after that environment—including kernel, DTB, rootfs, ADB and app hold—is unchanged. `scripts/patch-image-cma.py` accepts only the exact allowlisted development base hash and new regular-file outputs; it never writes a card. See the [derivative proof](../reverse-engineering/rkaiq/image-cma12-derivative-validation.json).
+
+| Artifact | Bytes | SHA-256 |
+|---|---:|---|
+| `shieldsigner-0.0.38-dev-e69de65-adb-cma12.img` | 361,488,384 | `46b1cfc4e1011dca3d57937bbadae51011b00e1d156db0f1e7f6260d9200ed15` |
+| `shieldsigner-0.0.38-dev-e69de65-adb-cma12.img.xz` | 62,051,116 | `e46f5c77b2b1009bbf30f0c6f0c7bda163a4214c13cd3ae3b108caf50803479e` |
+
+XZ streaming decode reproduced the raw checksum. The CMA12 derivative still needs its own physical boot and camera test. After boot, inspect `adb shell 'cat /proc/cmdline; grep Cma /proc/meminfo'` and require an effective `rk_dma_heap_cma=12M` / `CmaTotal: 12288 kB` before capture. Keep the app/display/buttons held while the board GPIO profile is reviewed. The [first development boot receipt](../reverse-engineering/rkaiq/image-development-boot-validation.json) verifies working ADB, 67 installed file hashes/modes, open modules/device nodes, read-only squashfs and tmpfs on the earlier CMA1 boot; it explicitly records that capture remained blocked.
+
+Future Rust-image builds export `MINI_CMA_SIZE=12M` and explicitly forward it into Docker. New bundles record `cameraCmaSize`; packed-image verification validates environment CRC and requires a unique matching CMA token. Existing historical bundles without that field retain their earlier validation scope.
+
 ### Current diagnostic development image
 
 The clean `e69de6586b53a21bf473134f85e6c6ccdf358b08` development image completed with exit 0 on 2026-10-28 at 23:48:03 UTC (40m29s). Its immutable runtime bundle is `6b396c5dc38d6cd82af739a22f1d686b649c67fb7443c043348bd9883a6f3eab`. This is a bench image with **automatic app, display and button startup held**, not a GPIO-profile fix.

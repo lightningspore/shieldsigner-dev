@@ -1,0 +1,21 @@
+{
+  "kind": "actual-native-RGB-still-check",
+  "passed": true,
+  "imageSaved": false,
+  "extensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+  "samples": 3,
+  "returnedMode": "RGB",
+  "returnedSize": [
+    640,
+    480
+  ],
+  "ownerExitCode": 0,
+  "captureReferenceCleared": true,
+  "runtimeProfile": "luckfox_22",
+  "runtimeSourceRevision": "cf4c428",
+  "diagnosticSourceSha256": "03c8d956129fe7431a406886cf1ced8e56da348a8dbccb6053abcf368567ab07",
+  "finalCameraAndQrProcesses": 0,
+  "finalDmaObjects": 0,
+  "finalDmaBytes": 0,
+  "deployment": "Temporary app-02 runtime on existing development image; final image boot remains pending"
+}

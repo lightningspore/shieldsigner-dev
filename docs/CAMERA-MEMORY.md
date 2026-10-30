@@ -1,5 +1,7 @@
 # Camera and app memory measurements
 
+For the reader-facing explanation of Python allocations, imports, threads and LCD buffers, see [Memory and threads](MEMORY-THREADS.md).
+
 The ten-minute real ScanView soak passed with 8,851 camera frames, 2,968 renderer calls and 3,503 native QR decoder calls: zero errors or reconnects, followed by clean owner/DMA teardown. This run used native camera SHA `102b86c9…` and final LCD SHA `a3d81514…`. A later one-minute test of native `2957852a…` (final metrics placement only) also passed with the optional wallet/smartcard/settings UI modules preloaded: 746 frames, 261 renderer calls, 294 decoder calls, no reconnects or errors. The test preloaded module code and supplied no seed or transaction payload.
 
 The first three-minute real ScanView trial with compressed RAM swap and the PyO3 LCD driver completed 2,544 camera frames and 843 renderer calls, with zero reader/LCD errors. One startup transport reconnect recovered. The native owner stopped without cleanup errors and `CmaAllocated` returned to zero. Three subsequent fresh one-minute launches also passed: 732/756/763 camera frames, 245/267/271 renderer calls, and 290/301/305 native QR decoder calls. All three had zero reconnects and zero reader, renderer or decoder errors. Native owners stopped cleanly and DMA allocations returned to zero. Physical QR decoding, user-driven Back navigation, visual confirmation and a persistent image are still being qualified.

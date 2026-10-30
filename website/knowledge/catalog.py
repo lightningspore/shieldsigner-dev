@@ -1,5 +1,6 @@
 # Explicit public-content allowlist. Never crawl the repo or Telegram caches.
 GUIDES = [
+("memory-threads", "docs/MEMORY-THREADS.md", "Software", "Memory, Python and threads", "Measured RAM use, shared Python imports, camera workers, LCD buffers and compressed RAM swap."),
 ("luckfox-pinout", "docs/LUCKFOX-PINOUT.md", "Hardware", "Luckfox Mini pinout & signal map", "All 22 pins, voltage domains, SPI/I2C/UART/PWM alternatives and checked carrier connections."),
 ("mechanical-substitutions", "docs/MECHANICAL-SUBSTITUTIONS.md", "Build", "Switch & USB-C revision", "Manufacturer drawings, shared-supplier parts, new lands and measured-height buttons."),
 ("start-here", "docs/START-HERE.md", "Start here", "Start here: projects, versions & build paths", "How SeedSigner, ShieldSigner, Luckfox firmware and this prototype fit together."),

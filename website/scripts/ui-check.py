@@ -99,6 +99,16 @@ with sync_playwright() as p:
         page.locator('#results').get_by_role('link').filter(has_text='Cards & the Linux reader').click()
         page.wait_for_url('**/guides/smartcards/')
         assert page.locator('h1').inner_text().startswith('Smartcards')
+        page.goto(base+'/guides/memory-threads/')
+        assert 'Memory and threads' in page.locator('h1').inner_text()
+        assert '13.7 MiB' in page.locator('article').inner_text()
+        assert '112.5 KiB' in page.locator('article').inner_text()
+        for image in page.locator('article img').all():
+            image.scroll_into_view_if_needed()
+            image.evaluate('(img) => img.decode()')
+            assert image.evaluate('(img) => img.naturalWidth > 0')
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Memory guide overflows'
+        page.screenshot(path=str(artifacts/f'memory-threads-{width}.png'), full_page=True)
         page.goto(base+'/guides/lcd-module/')
         assert '2.8-inch' in page.locator('h1').inner_text()
         for image in page.locator('main img').all():

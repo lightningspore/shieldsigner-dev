@@ -1,5 +1,16 @@
 # Native frontend implementation and acceptance plan
 
+## Current status — 30 October 2026
+
+- Native reception/latest-frame pacing, QR IPC, preview preparation and deferred startup imports are implemented. The host Python suite has 58 passing tests; core Rust, compiled-interface and packed ARM checks passed.
+- Real Mini tests passed Scan/Back/reopen, process-fault recovery, camera entropy/seed/wallet navigation, smartcard-menu loading, and true RGB still capture. Exact packaged library/helper hashes also passed a temporary real-board trial.
+- Memory/CPU/frame/allocation/latency comparisons are recorded with mixed RAM/latency results stated explicitly. Local static-site/content and desktop/mobile QA passed.
+- **Image ready:** `dist/os/verified/native-cf4c428/shieldsigner-mini-native-cf4c428.img.xz`. Corrected build and packed verification both exited 0; compressed and raw checksums match. See OS-BUILD.md for hashes. No new-image flash/cold boot has happened.
+- **Reproducibility pending:** `mini-native-cf4c428-repro-03` is building the identical bundle. Its one-shot watcher waits for actual success and compares full raw-image hashes/input manifests, writing `reproducibility-result.json` and `repro-check-exit-code`. Actual build/watcher processes were confirmed live.
+- **Physical step pending:** card-reader assistance was requested; all local disk inventory shows no attached physical SD card. Flash/power-cycle and packaged-boot workflow checks remain required. The board currently runs the temporary packaged runtime at Home.
+
+The history below preserves checkpoint scopes; older “not implemented/packaged” statements describe those earlier checkpoints, not current status.
+
 Implement the requested preview pipeline, camera/QR bridge and deferred startup imports one area at a time. Preserve existing signing/entropy behavior and the reviewed display/button map. Keep source, hardware and packaged-image evidence separate.
 
 1. Build and test reusable Rust luma/RGB preview preparation against the current Pillow nearest-resize/expanded-rotation output. Preserve full-resolution decode/entropy/still APIs and GUI overlays.
@@ -66,7 +77,7 @@ Documentation validation: the generated static site passed 7 content/static test
 
 ## Open completion gates
 
-1. Require actual successful terminal image-build status, then verify packed rootfs/source/launcher/ABI/native socket/QR/preview checks against the immutable corrected bundle.
+1. **Passed:** actual image-build exit 0 and packed verification exit 0, including rootfs/source/launcher/ABI/native socket/QR/preview checks against the immutable corrected bundle.
 2. Verify reproducibility using a second build from identical inputs or explicitly identify and resolve any nondeterministic output; pinned inputs alone do not prove matching images.
 3. Flash the verified target, obtain a physical power-cycle boot, verify packaged source/library/backend identities without temporary overlays, and repeat real workflows/cleanup from that image. No external card reader was visible during the current build; arrange physical flashing/power steps only after the artifact is concrete and verified.
 4. Reconcile deployment status and divergence notes with actual image/boot evidence before marking the overall goal complete.
@@ -80,3 +91,5 @@ Corrected image `mini-native-cf4c428-02` completed with actual build exit 0; the
 Second build `mini-native-cf4c428-repro-03` launched from the identical immutable bundle `9b8d31…`; actual launcher and Docker activity were checked. Await its terminal image hash before claiming reproducibility. Physical card-reader/power-cycle assistance has been requested asynchronously because no external disk is visible; continue independent verification while awaiting that hardware.
 
 Exact packaged-runtime hardware trial: native library `d3b1dafe…` and every staged Python helper/shim were extracted from the verified rootfs, independently SHA-256 compared on the board against immutable inputs/build receipts, and loaded from a temporary runtime directory. `/proc` mappings confirmed the packaged library. Normal startup and live camera preview passed; two Scan/Back/reopen cycles ended with no camera/QR processes, zero DMA and final owner exit 0. This still uses the previous installed image/kernel/app and is not a physical new-image boot. Evidence: `reverse-engineering/rkaiq/frontend/packaged-runtime-hardware-2026-10-30.json`. Card-reader assistance remains pending; the identical-input second build remains active.
+
+Reproducibility watcher: the second build and its one-shot comparator were confirmed live together. The comparator waits for actual build success, requires identical copied input manifests, streams both complete raw images to SHA-256, and records the result. It does not flash or claim a cold boot. Current callback files are under the second output as `repro-watcher.pid`, `repro-comparison.log`, `repro-check-exit-code` and `reproducibility-result.json`.

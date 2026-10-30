@@ -218,6 +218,11 @@ class CameraCompatibilityTests(unittest.TestCase):
         with patch.object(PiVideoStream, "read", return_value=image):
             self.assertIs(video.read(), image)
             self.assertEqual(video.read(preview=True).size, (240, 180))
+            entropy_frame = video.read(display=True)
+            self.assertEqual((entropy_frame.mode, entropy_frame.size), ("RGB", (640, 480)))
+            self.assertEqual(entropy_frame.convert("L").tobytes(), y)
+            self.assertTrue(any(low != high for low, high in entropy_frame.getextrema()))
+            self.assertIs(video.read(), image)  # Display conversion never changes QR pixels.
         for magic, width, height, size in [(b"SSRGB001", 640, 480, len(payload)),
                 (b"SSNV12F1", 640, 480, len(payload)-1),
                 (b"SSNV12F1", 640, 480, len(payload)+1),

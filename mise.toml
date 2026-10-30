@@ -764,3 +764,7 @@ run = ["cargo test --locked --manifest-path firmware/lcd-rs/Cargo.toml", "uv run
 [tasks."camera:button"]
 description = "Send a named press to the explicitly enabled diagnostic app; pass KEY_PRESS or KEY_LEFT --hold-ms 500"
 run = "uv run --python 3.13 python scripts/camera-memory/button.py"
+
+[tasks."camera:screen"]
+description = "Capture the explicitly enabled diagnostic app screen to an ignored local path"
+run = "uv run --python 3.13 python scripts/camera-memory/screen.py"

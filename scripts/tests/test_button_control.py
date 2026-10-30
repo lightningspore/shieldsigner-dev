@@ -17,6 +17,12 @@ class ButtonTests(unittest.TestCase):
    level=False
    def read(self):return self.level
   pin=Pin();overlay=m.PinOverlay(pin,'KEY_LEFT',self.c);self.assertFalse(overlay.read());pin.level=True;self.assertTrue(overlay.read());self.request();self.now+=.1;self.assertFalse(overlay.read());self.now+=.2;self.assertTrue(overlay.read())
+ def test_capture_request_is_explicit_and_consumed_once(self):
+  calls=[];self.c.capture=lambda path:calls.append(path.name)
+  (self.c.directory/'screen.request').touch()
+  self.assertFalse(self.c.pressed('KEY_LEFT'));self.now+=.1
+  self.assertFalse(self.c.pressed('KEY_LEFT'));self.assertEqual(calls,['screen.png'])
+  self.assertFalse((self.c.directory/'screen.request').exists())
  def test_unknown_keys_and_unbounded_hold_rejected(self):
   for change in [{'key':'GPIO42'},{'holdMs':999999},{'holdMs':True},{'id':'$(secret)'}]:
    self.request(**change);self.now+=.1;self.assertFalse(self.c.pressed('KEY_LEFT'));self.assertEqual(json.loads((self.c.directory/'status.json').read_text())['state'],'rejected')

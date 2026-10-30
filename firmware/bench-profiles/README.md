@@ -89,3 +89,6 @@ Hardware proof: `reverse-engineering/rkaiq/memory/button-control-hardware-result
 `python-object-census.py` exports only type counts, selected shallow sizes and process memory, without tracemalloc or object values. It adds a monitor thread, refuses the object walk below 8 MiB available RAM and has a 180-second process deadline. It is a diagnostic run, not a normal launcher. Touching objects decompresses cold pages, so report PSS and swap before/after together.
 
 Full tracemalloc snapshots made the Mini unresponsive. `python-memory-profile.py` now refuses targets with less than 96 MiB MemTotal. Use `python-import-memory-profile.py` with the packed ARM Python under QEMU on a larger builder for full import snapshots. Its source-filename totals reflect allocation sites, not feature ownership, and are not target resident-memory measurements. The public guide and scoped summary are in `docs/MEMORY-THREADS.md` and `reverse-engineering/rkaiq/memory/python-deep-2026-10-29/summary.json`.
+
+
+For the complete real-app button/screen procedure, exploration outcomes and temporary camera compatibility fixes, see [App diagnostics](../../docs/APP-DIAGNOSTICS.md). Screen capture retains a latest-image reference and can contain wallet data; it is not a normal firmware feature.

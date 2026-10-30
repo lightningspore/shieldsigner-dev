@@ -149,6 +149,7 @@ def install_camera_backend(app_root):
     if existing is not None:
         if getattr(existing, "__shieldsigner_camera_patch__", None) and existing.__file__ == str(path):
             install_qr_backend(existing)
+            install_camera_error_cleanup(app_root, existing)
             return existing
         raise RuntimeError("Install the Rust camera backend before importing the application Camera")
     ensure_app_import_root(app_root)
@@ -174,7 +175,35 @@ def install_camera_backend(app_root):
         "installedFilesModified": False,
     }
     install_qr_backend(module)
+    install_camera_error_cleanup(app_root, module)
     return module
+
+
+def install_camera_error_cleanup(app_root, camera_module):
+    """Release an active camera before the normal application error screen."""
+    path = Path(app_root).resolve() / "seedsigner/controller.py"
+    if hashlib.sha256(path.read_bytes()).hexdigest() != SMALL_RAM_CONTROLLER_SHA256:
+        raise ValueError("Unsupported controller for camera error cleanup")
+    controller = importlib.import_module("seedsigner.controller")
+    if Path(controller.__file__).resolve() != path:
+        raise RuntimeError("Foreign controller for camera error cleanup")
+    if getattr(controller, "__shieldsigner_camera_error_cleanup__", False):
+        return
+    original = controller.Controller.handle_exception
+
+    def handle_exception(self, error):
+        camera = getattr(camera_module.Camera, "_instance", None)
+        if camera is not None and getattr(camera, "_video_stream", None) is not None:
+            try:
+                camera.stop_video_stream_mode()
+            except Exception as cleanup_error:
+                # Preserve the original user-visible failure; don't dump data.
+                import logging
+                logging.getLogger(__name__).warning("Camera error cleanup failed: %s", type(cleanup_error).__name__)
+        return original(self, error)
+
+    controller.Controller.handle_exception = handle_exception
+    controller.__shieldsigner_camera_error_cleanup__ = True
 
 
 

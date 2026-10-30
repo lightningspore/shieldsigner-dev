@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-29",
+  "image": "0.0.39-dev with temporary Python overlays",
+  "hardware": "Luckfox Pico Mini, 240x240 ST7789, SC3336",
+  "input": "Diagnostic named GPIO-read overlay; no GPIO writes",
+  "cameraSeedGeneration": {
+    "initialResult": "L-mode frame caused RGB extrema TypeError; camera remained active on error screen",
+    "afterFix": "Passed camera preview, final image, 12-word generation and finalization",
+    "entropyChecksWeakened": false
+  },
+  "flowsPassed": [
+    "startup notice",
+    "Tools menu",
+    "camera seed preview/capture",
+    "12-word seed pages",
+    "skip optional backup quiz",
+    "seed finalization",
+    "Native Segwit receive-address derivation/display",
+    "single-sig Native Segwit xpub details/QR",
+    "cancel export address-verification Scan",
+    "Settings menu browsing"
+  ],
+  "renderedQrChecks": [
+    {
+      "kind": "address",
+      "bytes": 42,
+      "decoded": true
+    },
+    {
+      "kind": "xpub UR frame",
+      "bytes": 115,
+      "decoded": true
+    }
+  ],
+  "qrCheckScope": "Actual rendered pixels sent to ARM ZXing under QEMU, not optical camera or animated reassembly",
+  "pythonTestsPassed": 49,
+  "errorsLoggedAfterFix": 0,
+  "cameraDmaKiBAfterFlows": 0,
+  "capturesPublished": false,
+  "seedClearedAfterDemo": true,
+  "persistentImageContainsFixes": false,
+  "files": {
+    "firmware/rkaiq-rs/python/shieldsigner_camera_compat.py": "249592062a504c39f24e627ef1753088a787fc65f962d8f5a85ca5f61c6c947d",
+    "firmware/rkaiq-rs/python/shieldsigner_integration.py": "066c0d5417951d156d3d34da10a57aefdabec373cbbb6d90ccbdae843f5a5c9d",
+    "firmware/bench-profiles/button_control.py": "be988412701158108d0a4ab614a3a29eea134b721629110c165c9643c49622a8",
+    "firmware/bench-profiles/button-controlled-app.py": "80ad3b3f3b9095dca8f5f1f503d506b69f5f0353dbeab1e5a4e4368181013e79"
+  },
+  "seedClearEvidence": "Fresh app process showed Load a Seed instead of a loaded-seed list; returned to Home afterward."
+}

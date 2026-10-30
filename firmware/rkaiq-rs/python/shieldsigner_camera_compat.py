@@ -22,6 +22,7 @@ class VideoStream(PiVideoStream):
             "backend": "rust-sc3336-fixed-native",
             "nativeResolution": [640, 480],
             "returnedImageMode": "L" if transport == "nv12" else "RGB",
+            "displayImageMode": "RGB",
             "transport": transport,
             "forStill": bool(for_still),
             "requestedResolution": list(resolution),
@@ -47,4 +48,9 @@ class VideoStream(PiVideoStream):
         frame = super().read(preview=preview, display=display)
         if self._small_ram_preview and preview and frame is not None:
             return frame.resize((240, 180), resample=Image.Resampling.NEAREST)
+        # Camera.read_video_stream(as_image=True, preview=False) uses display
+        # reads for image/entropy workflows. Those callers expect RGB channel
+        # tuples, while QR's ordinary read must retain exact full-resolution Y.
+        if self._small_ram_preview and display and frame is not None and frame.mode != "RGB":
+            return frame.convert("RGB")
         return frame

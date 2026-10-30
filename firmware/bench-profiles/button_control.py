@@ -19,7 +19,7 @@ class ButtonControl:
     def __init__(self,directory,clock=time.monotonic):
         self.directory=Path(directory);self.directory.mkdir(mode=0o700)
         self.clock=clock;self.lock=threading.Lock();self.next_poll=0
-        self.key=None;self.until=0;self.last_id=None
+        self.key=None;self.until=0;self.last_id=None;self.capture=None
         self.status('ready')
 
     def status(self,state):
@@ -34,6 +34,10 @@ class ButtonControl:
                 self.key=None;self.status('released')
             if now>=self.next_poll:
                 self.next_poll=now+0.025
+                capture_request=self.directory/'screen.request'
+                if self.capture is not None and capture_request.exists():
+                    capture_request.unlink()
+                    self.capture(self.directory/'screen.png')
                 request=self.directory/'request.json'
                 try:
                     with request.open('rb') as f:raw=f.read(513)

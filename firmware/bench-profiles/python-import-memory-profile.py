@@ -6,14 +6,22 @@ Emulation provides room for diagnostic snapshots, not target RAM measurements.
 Exports code paths, type names and counts only, never object values.
 """
 import importlib
+import argparse
 import json
 from pathlib import Path
 import sys
 import tracemalloc
 
-root = Path(sys.argv[1]).resolve()
-output = Path(sys.argv[2]); output.mkdir(parents=True, exist_ok=False)
-sys.path[:0] = [str(root/'usr/lib/shieldsigner-camera/python'), str(root/'opt/src')]
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("root", type=Path)
+parser.add_argument("output", type=Path)
+parser.add_argument("--runtime-python", type=Path)
+parser.add_argument("--startup-routes", choices=("baseline", "deferred"), default="baseline")
+args = parser.parse_args()
+root = args.root.resolve()
+output = args.output; output.mkdir(parents=True, exist_ok=False)
+runtime = args.runtime_python.resolve() if args.runtime_python else root/'usr/lib/shieldsigner-camera/python'
+sys.path[:0] = [str(runtime), str(root/'usr/lib/shieldsigner-camera/python'), str(root/'opt/src')]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import importlib.util
 spec = importlib.util.spec_from_file_location('memory_profile',Path(__file__).with_name('python-memory-profile.py'))
@@ -40,6 +48,9 @@ stages = [
     ('settings_views', ['seedsigner.views.settings_views']),
     ('smartcard_views', ['seedsigner.views.smartcard_views']),
 ]
+if args.startup_routes == "deferred":
+    stages = [(phase, [name for name in modules if name != "seedsigner.views.smartcard_views"]
+               if phase == "startup_routes" else modules) for phase, modules in stages]
 tracemalloc.start(1)
 for phase, modules in stages:
     try:
@@ -54,6 +65,7 @@ for phase, modules in stages:
             importlib.import_module(module)
         profile.report(phase, output)
         path = output/(phase+'.json'); record=json.loads(path.read_text())
+        record['startupRoutePolicy']=args.startup_routes
         record['scope']='Actual packed ARM Python import graph under qemu-user; no Controller initialization, hardware, live GUI or target RSS measurement.'
         path.write_text(json.dumps(record,indent=2)+'\n')
     except Exception as error:

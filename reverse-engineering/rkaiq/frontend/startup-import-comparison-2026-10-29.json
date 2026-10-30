@@ -1,0 +1,132 @@
+{
+  "phases": [
+    {
+      "phase": "entry_imports",
+      "baseline": {
+        "tracedCurrentBytesBeforeSnapshot": 8805650,
+        "tracedPeakBytesBeforeSnapshot": 9949712,
+        "moduleCount": 358,
+        "gcTrackedObjects": 31222
+      },
+      "deferred": {
+        "tracedCurrentBytesBeforeSnapshot": 8804962,
+        "tracedPeakBytesBeforeSnapshot": 9948916,
+        "moduleCount": 358,
+        "gcTrackedObjects": 31222
+      },
+      "savedLiveBytes": 688
+    },
+    {
+      "phase": "startup_routes",
+      "baseline": {
+        "tracedCurrentBytesBeforeSnapshot": 13362142,
+        "tracedPeakBytesBeforeSnapshot": 13679391,
+        "moduleCount": 505,
+        "gcTrackedObjects": 40152
+      },
+      "deferred": {
+        "tracedCurrentBytesBeforeSnapshot": 8965308,
+        "tracedPeakBytesBeforeSnapshot": 9192966,
+        "moduleCount": 361,
+        "gcTrackedObjects": 31079
+      },
+      "savedLiveBytes": 4396834
+    },
+    {
+      "phase": "scan_imports",
+      "baseline": {
+        "tracedCurrentBytesBeforeSnapshot": 13707170,
+        "tracedPeakBytesBeforeSnapshot": 14832203,
+        "moduleCount": 507,
+        "gcTrackedObjects": 40476
+      },
+      "deferred": {
+        "tracedCurrentBytesBeforeSnapshot": 9177171,
+        "tracedPeakBytesBeforeSnapshot": 10300341,
+        "moduleCount": 363,
+        "gcTrackedObjects": 31399
+      },
+      "savedLiveBytes": 4529999
+    },
+    {
+      "phase": "seed_views",
+      "baseline": {
+        "tracedCurrentBytesBeforeSnapshot": 13714909,
+        "tracedPeakBytesBeforeSnapshot": 14052952,
+        "moduleCount": 507,
+        "gcTrackedObjects": 40474
+      },
+      "deferred": {
+        "tracedCurrentBytesBeforeSnapshot": 12032624,
+        "tracedPeakBytesBeforeSnapshot": 12066150,
+        "moduleCount": 481,
+        "gcTrackedObjects": 37128
+      },
+      "savedLiveBytes": 1682285
+    },
+    {
+      "phase": "tools_views",
+      "baseline": {
+        "tracedCurrentBytesBeforeSnapshot": 14436143,
+        "tracedPeakBytesBeforeSnapshot": 15073644,
+        "moduleCount": 522,
+        "gcTrackedObjects": 41950
+      },
+      "deferred": {
+        "tracedCurrentBytesBeforeSnapshot": 14388149,
+        "tracedPeakBytesBeforeSnapshot": 15021527,
+        "moduleCount": 522,
+        "gcTrackedObjects": 41949
+      },
+      "savedLiveBytes": 47994
+    },
+    {
+      "phase": "settings_views",
+      "baseline": {
+        "tracedCurrentBytesBeforeSnapshot": 14695459,
+        "tracedPeakBytesBeforeSnapshot": 14812802,
+        "moduleCount": 525,
+        "gcTrackedObjects": 42465
+      },
+      "deferred": {
+        "tracedCurrentBytesBeforeSnapshot": 14693227,
+        "tracedPeakBytesBeforeSnapshot": 14809648,
+        "moduleCount": 525,
+        "gcTrackedObjects": 42469
+      },
+      "savedLiveBytes": 2232
+    },
+    {
+      "phase": "smartcard_views",
+      "baseline": {
+        "tracedCurrentBytesBeforeSnapshot": 14703481,
+        "tracedPeakBytesBeforeSnapshot": 15054701,
+        "moduleCount": 525,
+        "gcTrackedObjects": 42466
+      },
+      "deferred": {
+        "tracedCurrentBytesBeforeSnapshot": 14706659,
+        "tracedPeakBytesBeforeSnapshot": 15057480,
+        "moduleCount": 525,
+        "gcTrackedObjects": 42466
+      },
+      "savedLiveBytes": -3178
+    }
+  ],
+  "kind": "controlled-packed-ARM-import-comparison",
+  "hardwareTouched": false,
+  "controllerInitialized": false,
+  "targetPssMeasured": false,
+  "execution": "Packed ARM Python 3.12 under QEMU cortex-a7, fresh process per policy",
+  "appControllerSourceSha256": "2c080563d12cef837f25799a7139277ad7c3756a05329822f81d961c2e7e031e",
+  "limits": [
+    "Same current integration and source guards in both runs; baseline explicitly imports smartcard_views at startup_routes, deferred omits that edge.",
+    "This profiles staged imports, not execution of the GUI/controller main loop.",
+    "Tracing excludes many native Rust/Pillow/kernel allocations; diagnostic overhead perturbs allocation state.",
+    "Opening optional Tools/seed features legitimately loads their dependencies."
+  ],
+  "sourcesSha256": {
+    "firmware/bench-profiles/python-import-memory-profile.py": "5115eb4e5bc3fbaa8a9c52a76a105c70f9b32e4a5831b2d4d4e002b04e8b4e1c",
+    "firmware/rkaiq-rs/python/shieldsigner_integration.py": "1fe021f06ccbc5f8b428bf9b4de8df3722c60d3a280a0a23354a7d60d0a69dd9"
+  }
+}

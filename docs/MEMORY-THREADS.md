@@ -145,3 +145,11 @@ Walking objects touches pages. During the Scan census, process PSS rose from 16.
 Full on-target tracemalloc snapshots made the Mini unresponsive and required a reboot. In the server-side import run, tracing metadata alone grew to about 5.2 MiB before snapshot temporaries. The full-snapshot tool now refuses low-memory targets. The board was restored to its normal app; detailed import tracing remains off-board.
 
 [Measurement summary](../reverse-engineering/rkaiq/memory/python-deep-2026-10-29/summary.json) contains the two separately scoped experiments. Helper sources live in `firmware/bench-profiles/python-object-census.py` and `python-import-memory-profile.py`; the full snapshot helper is not a Mini profiling recipe.
+
+## Deferred smartcard startup import
+
+The guarded small-RAM integration now defers the optional smartcard dependency graph previously imported at entry to `Controller.start()`. The smartcard-menu cache-clear check still verifies the original view class identity; home wipe, signing, entropy and mandatory storage initialization remain unchanged.
+
+A fresh-process comparison using packed ARM Python under QEMU measured 13,362,142 → 8,965,308 traced live bytes at startup-route imports (**4.19 MiB lower**) and 13,707,170 → 9,177,171 after Scan imports (**4.32 MiB lower**). Both stages loaded 144 fewer modules. Opening seed views loads part of the graph; Tools loads almost all of it. The allocation saving is temporary until those features are used.
+
+These are controlled import-stage measurements, not target PSS/RSS or full GUI startup results. Native allocations and profiling overhead differ from ordinary app memory. The real-board comparison remains pending. Source hashes, stages and limits are in `reverse-engineering/rkaiq/frontend/startup-import-comparison-2026-10-29.json`.

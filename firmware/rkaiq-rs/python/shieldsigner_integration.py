@@ -350,6 +350,43 @@ def install_lazy_scan_views(app_root):
 SMALL_RAM_CONTROLLER_SHA256 = "2c080563d12cef837f25799a7139277ad7c3756a05329822f81d961c2e7e031e"
 
 
+def lazy_controller_routes(module, path, source):
+    """Recompile only the pinned start method; preserve every routing body."""
+    import ast
+    before = "        from seedsigner.views.smartcard_views import ToolsSmartcardMenuView\n"
+    branch = "elif next_destination.View_cls == ToolsSmartcardMenuView:"
+    if source.count(before) != 1 or source.count(branch) != 1:
+        raise ValueError("Controller startup-route replacement count differs")
+    patched = source.replace(before, "").replace(branch,
+        "elif _shieldsigner_is_smartcard_menu(next_destination.View_cls):")
+    tree = ast.parse(patched)
+    controller = next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == "Controller")
+    start = next(node for node in controller.body if isinstance(node, ast.FunctionDef) and node.name == "start")
+    if start.decorator_list:
+        raise ValueError("Unexpected decorated Controller.start")
+    filename = str(path) + " [small-RAM startup routes]"
+    linecache.cache[filename] = (len(patched), None, patched.splitlines(True), filename)
+    namespace = {}
+    exec(compile(ast.Module(body=[start], type_ignores=[]), filename, "exec"), module.__dict__, namespace)
+
+    def is_smartcard_menu(view_cls):
+        # Normal destinations do not import the optional smartcard dependency
+        # graph. The special case still compares the original class identity.
+        if (getattr(view_cls, "__module__", None) != "seedsigner.views.smartcard_views"
+                or getattr(view_cls, "__name__", None) != "ToolsSmartcardMenuView"):
+            return False
+        from seedsigner.views.smartcard_views import ToolsSmartcardMenuView
+        return view_cls is ToolsSmartcardMenuView
+
+    module.__dict__["_shieldsigner_is_smartcard_menu"] = is_smartcard_menu
+    replacement = namespace["start"]
+    replacement.__qualname__ = module.Controller.start.__qualname__
+    module.Controller.start = replacement
+    return {"kind": "smartcard-startup-import-deferred",
+            "patchedControllerSha256": hashlib.sha256(patched.encode()).hexdigest(),
+            "smartcardMenuIdentityPreserved": True}
+
+
 def install_small_ram_profile(app_root):
     """Skip optional preloading; preserve both mandatory storage initializers.
 
@@ -377,10 +414,12 @@ def install_small_ram_profile(app_root):
         controller._storage = module.SeedStorage()
         controller._storage2 = module.EncryptedQRStorage()
 
+    routes = lazy_controller_routes(module, path, source.decode())
     module.BackgroundImportThread.run = initialize_storage
     info = {"kind": "optional-background-preloads-disabled",
             "controllerSourceSha256": SMALL_RAM_CONTROLLER_SHA256,
             "mandatoryStorageInitializers": ["SeedStorage", "EncryptedQRStorage"],
+            "startupRoutes": routes,
             "optionalViewsRemainOnDemand": True,
             "installedFilesModified": False}
     setattr(module, marker, info)

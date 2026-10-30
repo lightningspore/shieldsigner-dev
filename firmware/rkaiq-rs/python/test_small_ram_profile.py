@@ -2,20 +2,34 @@
 import hashlib
 from pathlib import Path
 import tempfile
+import sys
 import types
 import unittest
 from unittest.mock import patch
 from shieldsigner_integration import install_small_ram_profile
+
+FIXTURE = '''class Controller:
+    def start(self, next_destination):
+        from seedsigner.views.smartcard_views import ToolsSmartcardMenuView
+        if next_destination.View_cls is None:
+            return self.satodime_slot_cache
+        elif next_destination.View_cls == ToolsSmartcardMenuView:
+            self.satodime_slot_cache = None
+        return self.satodime_slot_cache
+'''
 
 
 class SmallRamProfileTests(unittest.TestCase):
     def fixture(self, directory):
         path = Path(directory) / 'seedsigner/controller.py'
         path.parent.mkdir()
-        path.write_text('# reviewed controller fixture\n')
+        path.write_text(FIXTURE)
         storage = types.SimpleNamespace(_storage=None, _storage2=None)
-        controller = type('Controller', (), {'_instance': None,
-                          'get_instance': staticmethod(lambda: storage)})
+        namespace = {}
+        exec(compile(FIXTURE, str(path), 'exec'), namespace)
+        controller = namespace['Controller']
+        controller._instance = None
+        controller.get_instance = staticmethod(lambda: storage)
         calls = []
         class Background:
             def run(self):
@@ -40,6 +54,26 @@ class SmallRamProfileTests(unittest.TestCase):
                 self.assertIsNotNone(storage._storage2)
                 self.assertTrue(all(call.args == ('seedsigner.controller',) for call in imports.call_args_list))
             self.assertEqual(path.read_bytes(), before)
+
+    def test_optional_class_identity_and_cache_clear_are_preserved(self):
+        with tempfile.TemporaryDirectory() as root:
+            path,module,_,_ = self.fixture(root)
+            with patch('shieldsigner_integration.SMALL_RAM_CONTROLLER_SHA256',hashlib.sha256(path.read_bytes()).hexdigest()), patch('shieldsigner_integration.importlib.import_module',return_value=module):
+                install_small_ram_profile(root)
+            instance=module.Controller()
+            instance.satodime_slot_cache={'public-fixture': True}
+            normal=type('Normal',(),{})
+            with patch.dict(sys.modules, {'seedsigner.views.smartcard_views':None}):
+                self.assertEqual(instance.start(types.SimpleNamespace(View_cls=normal)),{'public-fixture':True})
+                self.assertEqual(instance.start(types.SimpleNamespace(View_cls=None)),{'public-fixture':True})
+            optional=types.ModuleType('seedsigner.views.smartcard_views')
+            original=type('ToolsSmartcardMenuView',(),{'__module__':optional.__name__})
+            impostor=type('ToolsSmartcardMenuView',(),{'__module__':optional.__name__})
+            optional.ToolsSmartcardMenuView=original
+            with patch.dict(sys.modules,{optional.__name__:optional}):
+                self.assertEqual(instance.start(types.SimpleNamespace(View_cls=impostor)),{'public-fixture':True})
+                self.assertIsNone(instance.start(types.SimpleNamespace(View_cls=original)))
+                self.assertIsNone(instance.satodime_slot_cache)
 
     def test_unknown_source_fails_before_import(self):
         with tempfile.TemporaryDirectory() as root:

@@ -1,0 +1,27 @@
+{
+  "kind": "native-coordinator-lifecycle-followup",
+  "nativeStreamSourceSha256": "c845ade21189c36b570b16fb11bf657156750182107dbb6eb324b7594c0acecd",
+  "testSourceSha256": "bc5a10f357a8bae63337975fc9c340a64506eb32b0c281857c653f006d977ed3",
+  "hostPythonSuiteTestsPassed": 58,
+  "realLuckfoxSocketTestsPassed": 5,
+  "checks": [
+    "Rejected second start preserves active receiver and cursor map",
+    "Timeout during reconnect consumes remaining bounded retry budget",
+    "Repeated reconnect timeouts exhaust the configured budget",
+    "External receive/cancel and terminal malformed-header cases still pass",
+    "Real corrected-app Scan displayed live preview; Back returned cleanly"
+  ],
+  "realCameraOwnerExitCode": 0,
+  "finalCameraAndQrProcesses": 0,
+  "finalDmaObjects": 0,
+  "finalDmaBytes": 0,
+  "supersededBuild": {
+    "name": "mini-native-fd11b1c-01",
+    "bundleSha256": "8eea6bcd8d3401b4611cc91193929821efaac5e97b6e391128f22d9a1096a9b1",
+    "deliberatelyStopped": true,
+    "exitCode": 137,
+    "reason": "Coordinator edge-case fixes require a new immutable source bundle; avoid completing a superseded image",
+    "flashed": false
+  },
+  "deployment": "Temporary app-02 helper directory; existing native extension and installed image retained"
+}

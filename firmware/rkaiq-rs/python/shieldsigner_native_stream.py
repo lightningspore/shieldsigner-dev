@@ -19,6 +19,11 @@ class NativeVideoStream(ManagedStream):
         self._native_consumers = {}
 
     def start(self):
+        # Reject before changing a live stream's receiver/cursor state.
+        if self._thread and self._thread.is_alive():
+            raise RuntimeError("Camera reader is already running")
+        if self._owner is not None and self._owner.poll() is None:
+            raise RuntimeError("Previous camera owner has not stopped")
         self._native_consumers.clear()
         self._native_receiver = None
         return super().start()
@@ -37,17 +42,17 @@ class NativeVideoStream(ManagedStream):
             failures = 0
             connected_once = False
             while not self._stop.is_set():
-                timeout = min(self.connect_timeout, self.frame_timeout) if connected_once else self.connect_timeout
-                connection = self._connect(time.monotonic() + timeout)
-                connected_once = True
-                receiver = self._receiver_class(connection.fileno(), self.width, self.height,
-                                                self.transport, self.frame_timeout,
-                                                1 / self.consumer_frame_period if self.consumer_frame_period else 120)
-                with self._frame_ready:
-                    self._native_receiver = receiver
-                    self._frame_ready.notify_all()
                 received = 0
                 try:
+                    timeout = min(self.connect_timeout, self.frame_timeout) if connected_once else self.connect_timeout
+                    connection = self._connect(time.monotonic() + timeout)
+                    connected_once = True
+                    receiver = self._receiver_class(connection.fileno(), self.width, self.height,
+                                                    self.transport, self.frame_timeout,
+                                                    1 / self.consumer_frame_period if self.consumer_frame_period else 120)
+                    with self._frame_ready:
+                        self._native_receiver = receiver
+                        self._frame_ready.notify_all()
                     while not self._stop.wait(.02):
                         self._check_owner_alive()
                         generation, dropped, stopped = receiver.statistics()
@@ -60,6 +65,8 @@ class NativeVideoStream(ManagedStream):
                             receiver.read(7, 0)
                             raise EOFError("Native camera receiver stopped")
                 except OSError as exc:
+                    if self._stop.is_set():
+                        raise InterruptedError("Camera reader stopped") from exc
                     # A fresh connection is safe only with a live managed owner.
                     self._check_owner_alive()
                     if self._owner is None or not connected_once:
@@ -72,11 +79,13 @@ class NativeVideoStream(ManagedStream):
                     with self._frame_ready:
                         self._native_receiver = None
                         self._frame_ready.notify_all()
-                    receiver.close()
-                    receiver = None
+                    if receiver is not None:
+                        receiver.close()
+                        receiver = None
                     completed += received
-                    connection.close()
-                    connection = None
+                    if connection is not None:
+                        connection.close()
+                        connection = None
                     with self._lock:
                         self._socket = None
                 self._stop.wait(.05)

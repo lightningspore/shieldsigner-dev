@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "nativeReceptionQrAndPreview": true,
+  "cases": [
+    {
+      "name": "nul-highbit",
+      "payloadBytes": 13,
+      "byteExact": true,
+      "seconds": 0.04881017282605171
+    },
+    {
+      "name": "all-byte-values",
+      "payloadBytes": 256,
+      "byteExact": true,
+      "seconds": 0.01726938784122467
+    },
+    {
+      "name": "binary32-bytes",
+      "payloadBytes": 32,
+      "byteExact": true,
+      "seconds": 0.008967749774456024
+    }
+  ],
+  "blankReturnsNone": true,
+  "workerReused": true,
+  "workerClosed": true,
+  "statistics": [
+    1,
+    4,
+    3,
+    0,
+    0.002567148,
+    null
+  ],
+  "opticalQualified": false,
+  "extensionSha256": "96bb4c72144b3e446995db7b79f8d106352352837a91128cd92d523ca3126809",
+  "readerSha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "execution": "ARM uClibc extension in packed Python 3.12 and actual ARM ZXing under QEMU cortex-a7",
+  "hardwareTouched": false,
+  "guiIntegrated": false,
+  "imageContainsImplementation": false,
+  "auxvCompatibility": {
+    "keysComparedWithProcAuxv": [
+      6,
+      16,
+      51
+    ],
+    "pageSizeMatchesSysconf": true,
+    "unknownKeyEnoent": true,
+    "successPreservesErrno": true
+  },
+  "sourceSha256": {
+    "firmware/lcd-rs/src/frontend_frame.rs": "8b2be99d9247d56aba4a2e6f90f7695e7d40aa146c55f928571817aab2645085",
+    "firmware/lcd-rs/src/frontend_frame_python.rs": "c273c1c5070fea88ca232a34a761f753251289d2a4ba987ad33a3cbf46738ec5",
+    "firmware/lcd-rs/src/frontend_qr.rs": "1c16836784f8075d0b51db0aac62b1f04f46f7764f94809b338ff84202b094b1",
+    "firmware/lcd-rs/src/frontend_qr_python.rs": "ad3a1ed62d19da8ea941c38c10c57f5df08d6e5167447f96617e304d59861288",
+    "firmware/lcd-rs/src/frontend_receiver.rs": "d01583afb7328d4bfef00893793b5f0ce96859baa24ecd7997a6784e19c5b05f",
+    "firmware/lcd-rs/src/lib.rs": "0bb0796addecf6ea6c3d152da2a3c9d86c641de23aba5983fe88166eae258ea3",
+    "firmware/lcd-rs/src/preview.rs": "433670a1058269585385708e73d31bf785b34d49edb88d80f6d696d39a7c53ed",
+    "firmware/lcd-rs/src/preview_python.rs": "6efbddba78937f6b282b4e432b84e7f59b538c34ca5ede7a82b51167cfa85023",
+    "firmware/lcd-rs/src/uclibc_auxv.rs": "286fe96b5fcf8b54e644f49d780fb9019d11785ea70f1fbec1438f2bf4c897aa"
+  }
+}

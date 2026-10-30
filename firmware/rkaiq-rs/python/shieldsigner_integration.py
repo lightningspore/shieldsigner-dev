@@ -70,16 +70,22 @@ def install_qr_backend(module):
     from PIL import Image
     from seedsigner.models.decode_qr import DecodeQR
     requested = os.environ.get("SHIELDSIGNER_QR_READER")
+    native_frontend = os.environ.get("SHIELDSIGNER_FRONTEND_BACKEND", "python") == "rust"
+    configuration = (requested, native_frontend)
     if hasattr(module, "__shieldsigner_qr_configuration__"):
-        if module.__shieldsigner_qr_configuration__ != requested:
+        if module.__shieldsigner_qr_configuration__ != configuration:
             raise RuntimeError("Restart the application to change QR backends")
         return
     if requested:
-        from shieldsigner_qr_decoder import NativeQrReader
-        client = NativeQrReader(requested)
+        from shieldsigner_qr_decoder import NativeQrReader, RustTransportQrReader
+        client = (RustTransportQrReader if native_frontend else NativeQrReader)(requested)
+        if native_frontend:
+            from shieldsigner_lcd import NativeFrame
         original = DecodeQR.extract_qr_data
 
         def extract(image, is_binary=False):
+            if native_frontend and isinstance(image, NativeFrame):
+                return client.decode(image)
             if image is None or not isinstance(image, Image.Image):
                 return original(image, is_binary=is_binary)
             try:
@@ -104,8 +110,28 @@ def install_qr_backend(module):
         module.__shieldsigner_qr_client__ = client
         module.__shieldsigner_camera_patch__["qrDecoder"] = client.stats
     else:
+        if native_frontend:
+            raise ValueError("Native frontend requires SHIELDSIGNER_QR_READER")
         module.__shieldsigner_camera_patch__["qrFallback"] = install_qr_fallback(DecodeQR)
-    module.__shieldsigner_qr_configuration__ = requested
+    module.__shieldsigner_qr_configuration__ = configuration
+
+
+def install_native_preview(module):
+    if os.environ.get("SHIELDSIGNER_FRONTEND_BACKEND", "python") != "rust":
+        return
+    if getattr(module, "__shieldsigner_native_preview__", False):
+        return
+    if module.__shieldsigner_camera_patch__["sourceSha256"] != IMAGE_CAMERA_SOURCE_SHA256:
+        raise RuntimeError("Native frontend requires the reviewed image Camera profile")
+    original = module.Camera.read_video_stream
+    def read(camera, as_image=False, preview=False, greyscale=True):
+        stream = camera._video_stream
+        if as_image and preview and stream is not None and getattr(stream, "transport", None) == "nv12":
+            return stream.read_native_preview(90 + camera._camera_rotation)
+        return original(camera, as_image=as_image, preview=preview, greyscale=greyscale)
+    module.Camera.read_video_stream = read
+    module.__shieldsigner_native_preview__ = True
+    module.__shieldsigner_camera_patch__["frontend"] = "rust"
 
 
 def camera_source(app_root):
@@ -148,6 +174,7 @@ def install_camera_backend(app_root):
     existing = sys.modules.get(name)
     if existing is not None:
         if getattr(existing, "__shieldsigner_camera_patch__", None) and existing.__file__ == str(path):
+            install_native_preview(existing)
             install_qr_backend(existing)
             install_camera_error_cleanup(app_root, existing)
             return existing
@@ -174,6 +201,7 @@ def install_camera_backend(app_root):
         "changes": ["Rust camera stream import", "Preserve complete rotated preview canvas"],
         "installedFilesModified": False,
     }
+    install_native_preview(module)
     install_qr_backend(module)
     install_camera_error_cleanup(app_root, module)
     return module
@@ -385,10 +413,16 @@ def main():
     parser.add_argument("--lcd-backend", choices=("python", "rust"),
                         default=os.environ.get("SHIELDSIGNER_LCD_BACKEND", "python"),
                         help="Display transport (default python; Rust must be explicitly selected)")
+    parser.add_argument("--frontend-backend", choices=("python", "rust"),
+                        default=os.environ.get("SHIELDSIGNER_FRONTEND_BACKEND", "python"),
+                        help="Frame reception, preview and QR transport backend")
     parser.add_argument("application_args", nargs=argparse.REMAINDER)
     args = parser.parse_args()
     if args.lcd_backend not in ("python", "rust"):
         parser.error("SHIELDSIGNER_LCD_BACKEND must be python or rust")
+    if args.frontend_backend not in ("python", "rust"):
+        parser.error("SHIELDSIGNER_FRONTEND_BACKEND must be python or rust")
+    os.environ["SHIELDSIGNER_FRONTEND_BACKEND"] = args.frontend_backend
     root = Path(args.app_root).resolve()
     _, original, patched = camera_source(root)
     if args.print_patch:

@@ -10,11 +10,11 @@ crate-type = ["rlib", "cdylib"]
 
 [features]
 default = []
-python = ["dep:pyo3", "dep:libc"]
+python = ["dep:pyo3"]
 
 [dependencies]
 pyo3 = { version = "=0.23.5", optional = true, features = ["extension-module", "abi3-py311"] }
-libc = { version = "=0.2.191", optional = true }
+libc = "=0.2.191"
 
 [profile.release]
 opt-level = "s"

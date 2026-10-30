@@ -134,7 +134,8 @@ def stage(output, variant="production", kernel_probe=False, memory_profile="none
             add("payload/" + name, path.read_bytes(), 0o755)
         for name in ["shieldsigner_integration.py", "shieldsigner_video_stream.py",
                      "shieldsigner_qr_decoder.py", "shieldsigner_camera_compat.py",
-                     "shieldsigner_process_log.py"]:
+                     "shieldsigner_process_log.py", "shieldsigner_native_stream.py",
+                     "shieldsigner_native_camera.py"]:
             add("payload/python/" + name, (ROOT / "firmware/rkaiq-rs/python" / name).read_bytes())
         add("payload/pipeline.json", (ROOT / "reverse-engineering/rkaiq/examples/pipeline-luckfox-sc3336-observed.json").read_bytes())
         proof_name = "image-sdk-kernel-abi-development-validation.json" if variant == "dev" and not kernel_probe else "image-sdk-kernel-abi-validation.json"

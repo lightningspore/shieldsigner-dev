@@ -11,7 +11,7 @@ from PIL import Image
 from shieldsigner_video_stream import PiVideoStream
 
 
-class VideoStream(PiVideoStream):
+class _VideoContract:
     def __init__(self, resolution=(512, 384), framerate=12, format="bgr",
                  device_index=0, camera_config=None, prefer_v4l2=False, for_still=False):
         if device_index not in (0, None):
@@ -54,3 +54,14 @@ class VideoStream(PiVideoStream):
         if self._small_ram_preview and display and frame is not None and frame.mode != "RGB":
             return frame.convert("RGB")
         return frame
+
+
+class VideoStream(_VideoContract, PiVideoStream):
+    def __new__(cls, *args, **kwargs):
+        backend = os.environ.get("SHIELDSIGNER_FRONTEND_BACKEND", "python")
+        if backend not in ("python", "rust"):
+            raise ValueError("Frontend backend must be python or rust")
+        if cls is VideoStream and backend == "rust":
+            from shieldsigner_native_camera import NativeCameraStream
+            return NativeCameraStream(*args, **kwargs)
+        return super().__new__(cls)

@@ -31,6 +31,38 @@ impl PreviewRenderer {
         self.width * self.height * 3
     }
 
+    #[cfg(unix)]
+    fn render_frame<'py>(
+        &self,
+        py: Python<'py>,
+        frame: &crate::frontend_frame_python::NativeFrame,
+        rotation: u16,
+    ) -> PyResult<(usize, usize, Bound<'py, PyBytes>)> {
+        let frame = &frame.frame;
+        if frame.format != crate::frontend_frame::Format::Nv12 {
+            return Err(PyValueError::new_err("Native preview requires NV12"));
+        }
+        let mut pixels = self
+            .pixels
+            .try_lock()
+            .map_err(|_| PyRuntimeError::new_err("Preview renderer busy"))?;
+        let target = pixels.as_mut_slice();
+        let (dw, dh) = py
+            .allow_threads(|| {
+                luma_preview_into(
+                    &frame.pixels[..frame.width * frame.height],
+                    frame.width,
+                    frame.height,
+                    self.width,
+                    self.height,
+                    rotation,
+                    target,
+                )
+            })
+            .map_err(PyValueError::new_err)?;
+        Ok((dw, dh, PyBytes::new(py, &pixels)))
+    }
+
     fn render_luma<'py>(
         &self,
         py: Python<'py>,

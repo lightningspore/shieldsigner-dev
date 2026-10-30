@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "nul-highbit",
+      "payloadBytes": 13,
+      "byteExact": true,
+      "seconds": 0.03612052835524082
+    },
+    {
+      "name": "all-byte-values",
+      "payloadBytes": 256,
+      "byteExact": true,
+      "seconds": 0.009548756293952465
+    },
+    {
+      "name": "binary32-bytes",
+      "payloadBytes": 32,
+      "byteExact": true,
+      "seconds": 0.0038332128897309303
+    }
+  ],
+  "blankReturnsNone": true,
+  "workerReused": true,
+  "workerClosed": true,
+  "statistics": [
+    1,
+    4,
+    3,
+    0,
+    0.002332369,
+    null
+  ],
+  "opticalQualified": false,
+  "extensionSha256": "4bb548d2f2e80eaaf2e9c6bb19adf7d457f497ead09acb00ebd2d219f3bc971c",
+  "readerSha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "execution": "ARM uClibc extension in packed Python 3.12 under QEMU cortex-a7; actual static ARM ZXing worker under explicit QEMU launcher",
+  "hardwareTouched": false,
+  "guiIntegrated": false,
+  "imageContainsImplementation": false,
+  "sourceSha256": {
+    "firmware/lcd-rs/src/frontend_qr.rs": "f8c016f1b37e12e54b5834e9cbbb2c6db7915633fb3c9ea4e49a6bbd49d91f9d",
+    "firmware/lcd-rs/src/frontend_qr_python.rs": "ff39495aa22bccce3f3aa34056419dc27413f57dacc4697f2ef7ba4dbfcab19d",
+    "firmware/lcd-rs/tests/qr-worker-corpus.py": "e1229811f19143301993b852e82789fed9c1796d22c7155cbba79fa4b2d7e951"
+  },
+  "supersededSourceNote": "This binary predates the subsequent nonblocking poll deadline change. Rebuild/retest required before qualification of current source."
+}

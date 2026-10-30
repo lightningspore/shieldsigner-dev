@@ -1,9 +1,20 @@
 //! Bounded RGB888 -> ST7789 big-endian RGB565 frame transport.
 //! GPIO/register initialization remains in the reviewed Python driver initially.
 use std::io;
+pub mod frontend_frame;
+#[cfg(all(unix, feature = "python"))]
+mod frontend_frame_python;
+#[cfg(unix)]
+pub mod frontend_qr;
+#[cfg(all(unix, feature = "python"))]
+mod frontend_qr_python;
+#[cfg(unix)]
+pub mod frontend_receiver;
 pub mod preview;
 #[cfg(feature = "python")]
 mod preview_python;
+#[cfg(all(target_os = "linux", target_env = "uclibc"))]
+mod uclibc_auxv;
 
 pub fn rgb565_into(rgb: &[u8], out: &mut [u8]) -> Result<(), &'static str> {
     if rgb.len() % 3 != 0 || out.len() != rgb.len() / 3 * 2 {
@@ -192,6 +203,12 @@ mod python {
     fn shieldsigner_lcd(module: &Bound<'_, PyModule>) -> PyResult<()> {
         module.add_class::<FrameWriter>()?;
         module.add_class::<crate::preview_python::PreviewRenderer>()?;
+        #[cfg(unix)]
+        module.add_class::<crate::frontend_qr_python::QrWorker>()?;
+        #[cfg(unix)]
+        module.add_class::<crate::frontend_frame_python::NativeFrame>()?;
+        #[cfg(unix)]
+        module.add_class::<crate::frontend_frame_python::FrameReceiver>()?;
         module.add_function(wrap_pyfunction!(pack_rgb, module)?)?;
         Ok(())
     }

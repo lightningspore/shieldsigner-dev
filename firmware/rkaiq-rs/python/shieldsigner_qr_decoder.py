@@ -98,3 +98,37 @@ class NativeQrReader:
                         process.kill()
                         process.wait()
                 self.stats["lastExitCode"] = process.returncode
+
+
+class RustTransportQrReader(NativeQrReader):
+    """Retain executable validation/hash policy; delegate IPC and pixels to Rust."""
+    def __init__(self, binary, timeout=5):
+        # No child is spawned by this constructor. The parent establishes the
+        # same streaming executable digest and registers dynamic self.close.
+        self._native_worker = None
+        super().__init__(binary, timeout)
+        from shieldsigner_lcd import QrWorker
+        self._native_worker = QrWorker(str(self.binary), timeout)
+        self.stats["transport"] = "rust"
+
+    def _update_statistics(self):
+        values = self._native_worker.statistics()
+        for key, value in zip(("starts", "calls", "decoded", "errors", "lastRoundTripSeconds", "lastExitCode"), values):
+            self.stats[key] = value
+
+    def decode(self, image):
+        from shieldsigner_lcd import NativeFrame
+        with self._lock:
+            try:
+                if isinstance(image, NativeFrame):
+                    return self._native_worker.decode_frame(image)
+                width, height = image.size
+                return self._native_worker.decode_luma(image.convert("L").tobytes(), width, height)
+            finally:
+                self._update_statistics()
+
+    def close(self):
+        with self._lock:
+            if self._native_worker is not None:
+                self._native_worker.close()
+                self._update_statistics()

@@ -166,5 +166,14 @@ print(json.dumps({'passed':True,'nativeAbiImport':True,'originalPillowRgb565Equi
         lcd_command = command[:-2] + [str(lcd_smoke), str(root)]
         checked = subprocess.run(lcd_command, check=True, text=True, stdout=subprocess.PIPE)
         report['qemuRustLcdSmoke'] = json.loads(checked.stdout)
+    if profile_manifest.get('frontendBackend') == 'rust':
+        import shlex
+        reader = root / 'usr/lib/shieldsigner-camera/shieldsigner-qr-reader'
+        wrapper = a.output / 'packed-reader-qemu'
+        wrapper.write_text('#!/bin/sh\nexec qemu-arm -cpu cortex-a7 ' + shlex.quote(str(reader.resolve())) + '\n')
+        wrapper.chmod(0o700)
+        frontend_command = command[:-2] + [str(a.bundle / 'native-frontend-smoke.py'), str(root), str(wrapper.resolve())]
+        checked = subprocess.run(frontend_command, check=True, text=True, stdout=subprocess.PIPE)
+        report['qemuNativeFrontendSmoke'] = json.loads(checked.stdout)
 (a.output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
 print(json.dumps(report, indent=2))

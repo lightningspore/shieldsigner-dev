@@ -36,6 +36,23 @@ DEV_APP_HOLD_INIT = '#!/bin/sh\n# Diagnostic bench image: GPIO/display mapping m
 AUTOMATIC_APP_INIT = b'#!/bin/bash\n/start-seedsigner.sh\n\nexit 0'
 AUTOMATIC_APP_INIT_SHA256 = "b0b93fc8486d7d54e5d9ac1c5ef439fa86087f52123607a93f48d8292a518573"
 
+def frontend_environment(data):
+    frontend = data.get("frontendBackend", "python")
+    if frontend not in ("python", "rust") or (frontend == "rust" and data.get("lcdBackend") != "rust"):
+        raise ValueError("Invalid frontend/extension package selection")
+    return "export SHIELDSIGNER_FRONTEND_BACKEND=" + frontend + "\n" if "frontendBackend" in data else ""
+
+
+def verify_frontend(root, data, record):
+    expected = frontend_environment(data)
+    if record.get("frontendBackend", "python") != data.get("frontendBackend", "python"):
+        raise ValueError("Installed frontend differs from bundle")
+    lines = (root / "usr/bin/shieldsigner-launch").read_text().splitlines()
+    selected = [line for line in lines if line.startswith("export SHIELDSIGNER_FRONTEND_BACKEND=")]
+    if selected != ([expected.strip()] if expected else []):
+        raise ValueError("Frontend launcher selection missing, changed or duplicated")
+
+
 def app_startup(data):
     policy = data.get("appStartup", "held" if data.get("imageVariant", "production") == "dev" else "automatic")
     if policy not in ("automatic", "held"):
@@ -314,7 +331,7 @@ cd /opt/src
 exec python3 -u /usr/lib/shieldsigner-camera/python/shieldsigner_integration.py \\
   --app-root /opt/src --config /usr/lib/shieldsigner-camera/owner.json \\
   --qr-reader /usr/lib/shieldsigner-camera/shieldsigner-qr-reader "$@"
-''')
+'''.replace("set -eu\n", "set -eu\n" + frontend_environment(data), 1))
     launcher.chmod(0o755)
     removed = strip_vendor(root)
     changes = [startup, init, launcher, marker, display_config, os_release]
@@ -325,6 +342,7 @@ exec python3 -u /usr/lib/shieldsigner-camera/python/shieldsigner_integration.py 
         changes.append(root / "etc/init.d/S60pcscd")
     record = {"kind": "shieldsigner-rust-camera-rootfs-install", "version": data["version"],
               "imageVariant": data.get("imageVariant", "production"), "appStartup": app_startup(data),
+              "frontendBackend": data.get("frontendBackend", "python"),
               "ioProfile": io_profile, "ioConfigReceipt": io_config_receipt,
               "ioResourceReceipt": io_resource_receipt, "ioKernelReceipt": io_kernel_receipt,
               "bundleManifestSha256": digest(bundle / "manifest.json"), **app,
@@ -343,6 +361,7 @@ def verify(root, bundle, data):
     if record.get("appStartup", None if "appStartup" in data else app_startup(data)) != app_startup(data):
         raise ValueError("Installed app startup policy differs from bundle")
     verify_app_startup(root, data)
+    verify_frontend(root, data, record)
     io_profile = data.get("ioProfile", "carrier")
     if record.get("ioProfile", "carrier") != io_profile or proof.get("ioProfile", "carrier") != io_profile:
         raise ValueError("Installed IO profile differs from bundle/kernel proof")

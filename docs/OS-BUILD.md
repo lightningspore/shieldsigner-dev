@@ -8,6 +8,22 @@ The historical two successful builds and matching hashes below used unchanged up
 
 Production local output defaults to `dist/os/<reader-variant>/<camera-backend>/`; development adds `/dev/`, with `build.log`, `reader-config.json`, `camera-hooks.json` and `camera-bundle.json`. Keep these input manifests with image/checksum files. New image checksums are expected to differ from the historical URT/vendor baseline.
 
+## Native frontend image selection
+
+For the tested base-fork Mini development configuration, explicitly stage all profiles:
+
+```sh
+mise run os:camera:bundle -- --output dist/os/image-bundles/NEW_NATIVE_BUNDLE \
+  --variant dev --memory-profile zram16-lzo --lcd-backend rust \
+  --frontend-backend rust --io-profile base-fork --app-startup automatic
+SHIELDSIGNER_BUILD_HOST=YOUR_CONFIGURED_SSH_BUILDER \
+  mise run os:remote:build -- --bundle dist/os/image-bundles/NEW_NATIVE_BUNDLE --variant dev
+```
+
+`frontendBackend` is independent of automatic/held startup and is recorded in the immutable manifest/install receipt. Its explicit launcher export selects frame reception, preview preparation and QR IPC. The current native frontend requires the Rust extension package selected by `--lcd-backend rust`; a mismatched bundle is rejected. Bundles omitting the frontend field retain the historical Python selection. The overlay verifier rejects a missing, changed or duplicated export.
+
+Packed readback with `--qemu-python` additionally exercises native socket reception, all 256 QR byte values through the installed app/actual reader, four preview rotations against packed Pillow, native worker closure and guarded startup routes. The QEMU launcher digest is distinct from the actual reader. These checks do not replace a physical cold boot or GUI tests. Native frontend staging/smoke support is implemented; a newly built image must pass it before claiming image integration.
+
 ## Build the Rust-camera image
 
 The complete SDK build requires x86_64 Linux and Docker. The documented Proxmox guest can run it independently of this desktop. From the project root:

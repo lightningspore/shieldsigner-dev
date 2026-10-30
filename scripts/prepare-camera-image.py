@@ -99,7 +99,9 @@ def stage_lcd_inputs(staged, add):
             "cargoLockSha256":lock_sha,"rustTarget":"armv7-unknown-linux-uclibceabihf",
             "compilerRustVersion":"1.82.0","pythonAbi3Minimum":"3.11","libc":"uclibc"}
 
-def stage(output, variant="production", kernel_probe=False, memory_profile="none", lcd_backend="python", io_profile="carrier", app_startup=None):
+def stage(output, variant="production", kernel_probe=False, memory_profile="none", lcd_backend="python", io_profile="carrier", app_startup=None, frontend_backend="python"):
+    if frontend_backend not in ("python", "rust") or (frontend_backend == "rust" and lcd_backend != "rust"):
+        raise ValueError("Native frontend requires the Rust extension package (lcd-backend rust)")
     app_startup = app_startup or ("held" if variant == "dev" else "automatic")
     if app_startup not in ("automatic", "held"):
         raise ValueError("Unknown app startup policy")
@@ -186,12 +188,14 @@ fi''')
             add("payload/licenses/pycryptodomex-3.23.0/" + name, path.read_bytes())
         add("configure-hothmi-display.py", (ROOT / "scripts/configure-hothmi-display.py").read_bytes())
         add("image-overlay.py", (ROOT / "scripts/camera-image-overlay.py").read_bytes(), 0o755)
+        if frontend_backend == "rust":
+            add("native-frontend-smoke.py", (ROOT/"scripts/image-profiles/native-frontend-smoke.py").read_bytes())
         lcd_inputs = stage_lcd_inputs(staged, add) if lcd_backend == "rust" else None
         source_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
         dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip())
         manifest = {"kind": "shieldsigner-camera-image-bundle", "version": version,
                     "imageVariant": variant, "appStartup": app_startup, "kernelProofPending": kernel_probe, "cameraCmaSize": "12M",
-                    "memoryProfile": memory_profile, "lcdBackend": lcd_backend, "lcdInputs": lcd_inputs, "ioProfile": io_profile,
+                    "memoryProfile": memory_profile, "frontendBackend": frontend_backend, "lcdBackend": lcd_backend, "lcdInputs": lcd_inputs, "ioProfile": io_profile,
                     "memoryRuntimePolicy": ({"smallRam": True, "nativeReadOnlyCodeLock": True, "memlockLimitKiB": 4096} if memory_profile == "zram16-lzo" else None),
                     "sourceCommit": source_commit, "sourceDirty": dirty,
                     "applicationCommit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
@@ -206,6 +210,9 @@ fi''')
 
 def verify(bundle):
     result = json.loads((bundle / "manifest.json").read_text())
+    frontend = result.get("frontendBackend", "python")
+    if frontend not in ("python", "rust") or (frontend == "rust" and result.get("lcdBackend") != "rust"):
+        raise ValueError("Invalid frontend/extension package selection")
     for name, info in result["files"].items():
         path = bundle / name
         if Path(name).is_absolute() or ".." in Path(name).parts or path.is_symlink():
@@ -226,7 +233,8 @@ if __name__ == "__main__":
     parser.add_argument("--kernel-probe", action="store_true")
     parser.add_argument("--memory-profile", choices=["none", "zram16-lzo"], default="none")
     parser.add_argument("--lcd-backend", choices=["python", "rust"], default="python")
+    parser.add_argument("--frontend-backend", choices=["python", "rust"], default="python")
     parser.add_argument("--io-profile", choices=["carrier", "base-fork"], default="carrier")
     parser.add_argument("--app-startup", choices=["automatic", "held"], help="Default: held for dev, automatic for production")
     args = parser.parse_args()
-    print(json.dumps(stage(args.output.resolve(), args.variant, args.kernel_probe, args.memory_profile, args.lcd_backend, args.io_profile, args.app_startup) if args.output else verify(args.verify.resolve()), indent=2))
+    print(json.dumps(stage(args.output.resolve(), args.variant, args.kernel_probe, args.memory_profile, args.lcd_backend, args.io_profile, args.app_startup, args.frontend_backend) if args.output else verify(args.verify.resolve()), indent=2))

@@ -135,5 +135,9 @@
   },
   "frontendBackend": "rust",
   "physicalFlashPerformed": false,
-  "reproducibleSecondBuild": "running; identical immutable bundle, not yet compared"
+  "reproducibleSecondBuild": {
+    "passed": true,
+    "bitIdentical": true,
+    "evidence": "native-image-reproducibility-2026-10-30.json"
+  }
 }

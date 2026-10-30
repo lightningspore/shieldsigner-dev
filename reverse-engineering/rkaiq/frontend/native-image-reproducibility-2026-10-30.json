@@ -1,0 +1,13 @@
+{
+  "kind": "identical-input-native-image-rebuild",
+  "inputManifestsEqual": true,
+  "sourceCommit": "cf4c428a7e902b205ff5e89bd082f03216b7b68b",
+  "firstRawSha256": "0e004c87bac4de520c5e089c80a2bfa206fc1b5051aad4d8c1e417b292bcc8d0",
+  "secondRawSha256": "0e004c87bac4de520c5e089c80a2bfa206fc1b5051aad4d8c1e417b292bcc8d0",
+  "firstBytes": 361750528,
+  "secondBytes": 361750528,
+  "bitIdentical": true,
+  "coldBootQualified": false,
+  "scope": "Two full SDK image builds on the same builder with the same immutable runtime bundle and cached pinned toolchains",
+  "passed": true
+}

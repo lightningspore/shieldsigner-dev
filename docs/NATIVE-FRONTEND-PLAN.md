@@ -6,7 +6,7 @@
 - Real Mini tests passed Scan/Back/reopen, process-fault recovery, camera entropy/seed/wallet navigation, smartcard-menu loading, and true RGB still capture. Exact packaged library/helper hashes also passed a temporary real-board trial.
 - Memory/CPU/frame/allocation/latency comparisons are recorded with mixed RAM/latency results stated explicitly. Local static-site/content and desktop/mobile QA passed.
 - **Image ready:** `dist/os/verified/native-cf4c428/shieldsigner-mini-native-cf4c428.img.xz`. Corrected build and packed verification both exited 0; compressed and raw checksums match. See OS-BUILD.md for hashes. No new-image flash/cold boot has happened.
-- **Reproducibility pending:** `mini-native-cf4c428-repro-03` is building the identical bundle. Its one-shot watcher waits for actual success and compares full raw-image hashes/input manifests, writing `reproducibility-result.json` and `repro-check-exit-code`. Actual build/watcher processes were confirmed live.
+- **Reproducibility passed:** the second full build `mini-native-cf4c428-repro-03` and comparison both exited 0. Input manifests and complete 361,750,528-byte raw image hashes match exactly. Evidence: `native-image-reproducibility-2026-10-30.json`.
 - **Physical step pending:** card-reader assistance was requested; all local disk inventory shows no attached physical SD card. Flash/power-cycle and packaged-boot workflow checks remain required. The board currently runs the temporary packaged runtime at Home.
 
 The history below preserves checkpoint scopes; older “not implemented/packaged” statements describe those earlier checkpoints, not current status.
@@ -78,7 +78,7 @@ Documentation validation: the generated static site passed 7 content/static test
 ## Open completion gates
 
 1. **Passed:** actual image-build exit 0 and packed verification exit 0, including rootfs/source/launcher/ABI/native socket/QR/preview checks against the immutable corrected bundle.
-2. Verify reproducibility using a second build from identical inputs or explicitly identify and resolve any nondeterministic output; pinned inputs alone do not prove matching images.
+2. **Passed:** the second full SDK build used identical inputs and produced a byte-identical full image. Both builds/comparison exited 0; complete raw-image SHA-256 is `0e004c87…`.
 3. Flash the verified target, obtain a physical power-cycle boot, verify packaged source/library/backend identities without temporary overlays, and repeat real workflows/cleanup from that image. No external card reader was visible during the current build; arrange physical flashing/power steps only after the artifact is concrete and verified.
 4. Reconcile deployment status and divergence notes with actual image/boot evidence before marking the overall goal complete.
 
@@ -97,3 +97,5 @@ Reproducibility watcher: the second build and its one-shot comparator were confi
 Boot readback preparation: `scripts/verify-native-boot.py` now compares the live image identity, immutable runtime/startup hashes/modes, root mounts/overlays, board/kernel/UART2/CMA/zram and normal packaged-library process mapping without a target Python process or writes. Its old-image guard was exercised and correctly rejected the currently booted `c3d559…` image; the temporary packaged overlay cannot pass as the new `9b8d31…` boot. Full positive verification remains pending physical flash. `reverse-engineering/rkaiq/frontend/preflash-identity-guard-2026-10-30.json`.
 
 Boot-checker target compatibility probe: the minimal BusyBox image lacks `stat`, and zram mem_limit is write-only (as the existing zram helper documents). Permission readback now parses color-stripped `ls -ldn` modes, and cap readback uses mm_stat field 4. Both primitives were tested on the current Mini: expected 0644/0755 permissions and 8,388,608-byte cap matched. The actual positive new-image boot gate remains pending; the old-image identity refusal remains intentional.
+
+Reproducibility gate completed: second full SDK build and post-build comparison exited 0. Copied input manifests are equal, both image sizes are 361,750,528 bytes, and complete raw SHA-256 values match `0e004c87bac4de520c5e089c80a2bfa206fc1b5051aad4d8c1e417b292bcc8d0`. This is a same-builder/cached-pinned-toolchain comparison. Physical card-reader assistance has not arrived; no flash/cold boot is claimed.

@@ -10,7 +10,7 @@ Production local output defaults to `dist/os/<reader-variant>/<camera-backend>/`
 
 ## Verified native frontend candidate (30 October 2026)
 
-The clean `cf4c428` development image built with exit 0 and passed packed rootfs/profile checks plus actual packed ARM Python/native reception, all 256 QR byte values, four preview rotations, startup-route guards and worker cleanup. It uses automatic startup, reviewed base-fork wiring, zram16-lzo and both Rust LCD/frontend backends. It is **not yet physically flashed or cold-boot qualified**. An identical-input second build is running; reproducibility has not yet been claimed.
+The clean `cf4c428` development image built with exit 0 and passed packed rootfs/profile checks plus actual packed ARM Python/native reception, all 256 QR byte values, four preview rotations, startup-route guards and worker cleanup. It uses automatic startup, reviewed base-fork wiring, zram16-lzo and both Rust LCD/frontend backends. It is **not yet physically flashed or cold-boot qualified**. Two full SDK builds from identical immutable inputs produced byte-identical 361,750,528-byte images. The comparison passed; physical flashing/cold boot remains pending.
 
 Local image: `dist/os/verified/native-cf4c428/shieldsigner-mini-native-cf4c428.img.xz` (62,301,408 bytes). The compressed stream was decompressed and matched the full 361,750,528-byte raw image exactly.
 
@@ -21,7 +21,7 @@ Local image: `dist/os/verified/native-cf4c428/shieldsigner-mini-native-cf4c428.i
 | Immutable input bundle | `9b8d31ebb8701daeba130ef51d87605994bf363fc0dcda8f2d146d45302ceffa` |
 | Packaged native extension | `d3b1dafe6421d6a54f73b058f26e8403fedd36d3a10ce7b7bdd4e178bc448e9a` |
 
-Local readback/install/native-build receipts and `SHA256SUMS` are beside the image. Public metadata: `reverse-engineering/rkaiq/frontend/native-image-packed-validation-2026-10-30.json`. Use the packaged extension identity when verifying the new boot; the earlier temporary `a732f27d…` candidate is a different build artifact.
+Local readback/install/native-build receipts and `SHA256SUMS` are beside the image. Reproducibility evidence is `reverse-engineering/rkaiq/frontend/native-image-reproducibility-2026-10-30.json`: both raw images have the exact SHA-256 above. This comparison used the same builder and cached pinned toolchains, not independent fresh toolchains on different hosts. Public metadata: `reverse-engineering/rkaiq/frontend/native-image-packed-validation-2026-10-30.json`. Use the packaged extension identity when verifying the new boot; the earlier temporary `a732f27d…` candidate is a different build artifact.
 
 ### Verify the actual new boot
 

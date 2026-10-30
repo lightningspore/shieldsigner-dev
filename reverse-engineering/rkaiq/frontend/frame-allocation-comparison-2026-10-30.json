@@ -1,0 +1,135 @@
+{
+  "kind": "packed-ARM-frame-preview-allocation-comparison",
+  "runs": {
+    "python": [
+      {
+        "backend": "python",
+        "nativeExtensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+        "warmupPreviews": 20,
+        "measuredPreviews": 40,
+        "tracedBytesBeforeSteady": 3620,
+        "tracedLiveBytesAfterSteady": 4832,
+        "tracedPeakBytesDuringSteady": 1387378,
+        "tracedPeakAboveSteadyStartBytes": 1383758,
+        "liveTracedBlocksAfterSteady": 104,
+        "framesReceived": 60,
+        "nativePoolPayloadBytesNotFullyTraced": null,
+        "nativeReusablePreviewBytesNotFullyTraced": null,
+        "scope": "Actual guarded Camera read/preview adapter and socket receiver under packed ARM Python/QEMU; no initialized Controller or GUI",
+        "hardwareTouched": false,
+        "targetPssMeasured": false
+      },
+      {
+        "backend": "python",
+        "nativeExtensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+        "warmupPreviews": 20,
+        "measuredPreviews": 40,
+        "tracedBytesBeforeSteady": 3620,
+        "tracedLiveBytesAfterSteady": 5184,
+        "tracedPeakBytesDuringSteady": 1387730,
+        "tracedPeakAboveSteadyStartBytes": 1384110,
+        "liveTracedBlocksAfterSteady": 115,
+        "framesReceived": 60,
+        "nativePoolPayloadBytesNotFullyTraced": null,
+        "nativeReusablePreviewBytesNotFullyTraced": null,
+        "scope": "Actual guarded Camera read/preview adapter and socket receiver under packed ARM Python/QEMU; no initialized Controller or GUI",
+        "hardwareTouched": false,
+        "targetPssMeasured": false
+      },
+      {
+        "backend": "python",
+        "nativeExtensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+        "warmupPreviews": 20,
+        "measuredPreviews": 40,
+        "tracedBytesBeforeSteady": 3620,
+        "tracedLiveBytesAfterSteady": 5152,
+        "tracedPeakBytesDuringSteady": 1387698,
+        "tracedPeakAboveSteadyStartBytes": 1384078,
+        "liveTracedBlocksAfterSteady": 114,
+        "framesReceived": 60,
+        "nativePoolPayloadBytesNotFullyTraced": null,
+        "nativeReusablePreviewBytesNotFullyTraced": null,
+        "scope": "Actual guarded Camera read/preview adapter and socket receiver under packed ARM Python/QEMU; no initialized Controller or GUI",
+        "hardwareTouched": false,
+        "targetPssMeasured": false
+      }
+    ],
+    "rust": [
+      {
+        "backend": "rust",
+        "nativeExtensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+        "warmupPreviews": 20,
+        "measuredPreviews": 40,
+        "tracedBytesBeforeSteady": 3246,
+        "tracedLiveBytesAfterSteady": 5386,
+        "tracedPeakBytesDuringSteady": 135447,
+        "tracedPeakAboveSteadyStartBytes": 132201,
+        "liveTracedBlocksAfterSteady": 118,
+        "framesReceived": 59,
+        "nativePoolPayloadBytesNotFullyTraced": 1382400,
+        "nativeReusablePreviewBytesNotFullyTraced": 129600,
+        "scope": "Actual guarded Camera read/preview adapter and socket receiver under packed ARM Python/QEMU; no initialized Controller or GUI",
+        "hardwareTouched": false,
+        "targetPssMeasured": false
+      },
+      {
+        "backend": "rust",
+        "nativeExtensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+        "warmupPreviews": 20,
+        "measuredPreviews": 40,
+        "tracedBytesBeforeSteady": 3246,
+        "tracedLiveBytesAfterSteady": 5386,
+        "tracedPeakBytesDuringSteady": 135447,
+        "tracedPeakAboveSteadyStartBytes": 132201,
+        "liveTracedBlocksAfterSteady": 118,
+        "framesReceived": 59,
+        "nativePoolPayloadBytesNotFullyTraced": 1382400,
+        "nativeReusablePreviewBytesNotFullyTraced": 129600,
+        "scope": "Actual guarded Camera read/preview adapter and socket receiver under packed ARM Python/QEMU; no initialized Controller or GUI",
+        "hardwareTouched": false,
+        "targetPssMeasured": false
+      },
+      {
+        "backend": "rust",
+        "nativeExtensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+        "warmupPreviews": 20,
+        "measuredPreviews": 40,
+        "tracedBytesBeforeSteady": 3246,
+        "tracedLiveBytesAfterSteady": 5354,
+        "tracedPeakBytesDuringSteady": 135415,
+        "tracedPeakAboveSteadyStartBytes": 132169,
+        "liveTracedBlocksAfterSteady": 117,
+        "framesReceived": 59,
+        "nativePoolPayloadBytesNotFullyTraced": 1382400,
+        "nativeReusablePreviewBytesNotFullyTraced": 129600,
+        "scope": "Actual guarded Camera read/preview adapter and socket receiver under packed ARM Python/QEMU; no initialized Controller or GUI",
+        "hardwareTouched": false,
+        "targetPssMeasured": false
+      }
+    ]
+  },
+  "medians": {
+    "python": {
+      "tracedPeakBytesDuringSteady": 1387698,
+      "tracedPeakAboveSteadyStartBytes": 1384078,
+      "tracedLiveBytesAfterSteady": 5152,
+      "liveTracedBlocksAfterSteady": 114
+    },
+    "rust": {
+      "tracedPeakBytesDuringSteady": 135447,
+      "tracedPeakAboveSteadyStartBytes": 132201,
+      "tracedLiveBytesAfterSteady": 5386,
+      "liveTracedBlocksAfterSteady": 118
+    }
+  },
+  "sourceRevision": "cf4c428",
+  "diagnosticSourceSha256": "0cbbc7ee800cb025b8df3577e5b059cdd48fedcef80d6af27fbfd3432ecdfa1c",
+  "limits": [
+    "Fresh process per run, three runs per backend, public synthetic NV12 pixels.",
+    "Single preview consumer through actual guarded Camera.read_video_stream and socket adapter; Camera shell bypasses GPIO/Controller initialization.",
+    "After 20 warmup previews, 40 previews measured; startup and GUI/QR workload are excluded.",
+    "Tracemalloc does not fully count Rust Vec, Pillow or kernel allocations; native pool reserves 1,382,400 bytes plus 129,600 preview bytes.",
+    "Live block counts are retained allocations, not cumulative allocation events.",
+    "Off-board QEMU result; ordinary board PSS/swap comparison is separate."
+  ]
+}

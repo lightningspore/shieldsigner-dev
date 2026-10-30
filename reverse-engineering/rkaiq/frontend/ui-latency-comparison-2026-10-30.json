@@ -1,0 +1,79 @@
+{
+  "kind": "matched-real-UI-latency-comparison",
+  "runtimeSourceRevision": "cf4c428",
+  "board": "Luckfox Pico Mini",
+  "python": {
+    "kind": "real-diagnostic-button-ui-latency",
+    "backend": "python",
+    "cycles": [
+      {
+        "buttonToBothCameraQrOwnersSeconds": 5.733495124964975,
+        "backToHomeAndNoOwnersSeconds": 1.8832210410619155,
+        "finalDmaObjects": 0,
+        "finalDmaBytes": 0
+      },
+      {
+        "buttonToBothCameraQrOwnersSeconds": 3.4358719170559198,
+        "backToHomeAndNoOwnersSeconds": 1.916982667054981,
+        "finalDmaObjects": 0,
+        "finalDmaBytes": 0
+      },
+      {
+        "buttonToBothCameraQrOwnersSeconds": 2.873650333029218,
+        "backToHomeAndNoOwnersSeconds": 2.0474832920590416,
+        "finalDmaObjects": 0,
+        "finalDmaBytes": 0
+      }
+    ],
+    "medianButtonToOwnersSeconds": 3.4358719170559198,
+    "medianBackToHomeAndNoOwnersSeconds": 1.916982667054981,
+    "limits": [
+      "Host interpreter/client startup, ADB round trips, 500ms Back hold and polling overhead included.",
+      "Opening metric means both camera and QR processes exist, not first rendered or decoded frame.",
+      "Diagnostic button inputs test app navigation, not electrical switch latency.",
+      "Caller must verify backend configuration and wake any screensaver before starting."
+    ]
+  },
+  "rust": {
+    "kind": "real-diagnostic-button-ui-latency",
+    "backend": "rust",
+    "cycles": [
+      {
+        "buttonToBothCameraQrOwnersSeconds": 2.749595333938487,
+        "backToHomeAndNoOwnersSeconds": 2.7203374999808148,
+        "finalDmaObjects": 0,
+        "finalDmaBytes": 0
+      },
+      {
+        "buttonToBothCameraQrOwnersSeconds": 2.323828750057146,
+        "backToHomeAndNoOwnersSeconds": 2.414854499977082,
+        "finalDmaObjects": 0,
+        "finalDmaBytes": 0
+      },
+      {
+        "buttonToBothCameraQrOwnersSeconds": 1.8444480830803514,
+        "backToHomeAndNoOwnersSeconds": 1.2242757079657167,
+        "finalDmaObjects": 0,
+        "finalDmaBytes": 0
+      }
+    ],
+    "medianButtonToOwnersSeconds": 2.323828750057146,
+    "medianBackToHomeAndNoOwnersSeconds": 2.414854499977082,
+    "limits": [
+      "Host interpreter/client startup, ADB round trips, 500ms Back hold and polling overhead included.",
+      "Opening metric means both camera and QR processes exist, not first rendered or decoded frame.",
+      "Diagnostic button inputs test app navigation, not electrical switch latency.",
+      "Caller must verify backend configuration and wake any screensaver before starting."
+    ]
+  },
+  "sourceSha256": {
+    "scripts/camera-memory/ui-latency.py": "b67f959240ea260ac85e3af85a25ff9444117574a9b87ec7a0ece261d65684de",
+    "scripts/camera-memory/button.py": "cfd05c8b75b71a63e6a3b2255144dc724c8ca9fd420fd581382dd53db7aa1d15"
+  },
+  "limits": [
+    "Three cycles each; Rust first, then Python; caches, zram, scheduler and temperature were not controlled.",
+    "Same current helper code, Rust LCD, Small-RAM, code lock and zram configuration; backend confirmed in app startup logs.",
+    "Rust camera/QR readiness median was lower; Back median was higher. This does not establish a general latency improvement.",
+    "All six exits reached Home with no camera/QR owners and zero DMA; screenshots/QR values are excluded."
+  ]
+}

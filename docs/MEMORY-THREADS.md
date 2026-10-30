@@ -173,3 +173,18 @@ One 90-second real-Scan diagnostic run per backend used the same current startup
 App CPU was about 34% lower and rendering about 15% faster in this pair. Both runs had zero reader, renderer and QR errors/reconnects and clean timed owner cleanup; the final DMA count was zero. RAM results are mixed: the reusable native pool/thread has a cost, app PSS/swap were higher, and zram/page residency changed. This is not evidence of a net app-memory reduction. The extra native receiver thread remains in addition to the Python owner coordinator.
 
 CPU derives from target `/proc/PID/stat` counters with measured `SC_CLK_TCK=100`. The host sampler adds no on-board Python process. The benchmark adds telemetry/watchdog threads and starts Scan directly; its duration termination is separate from the successful real Back/cancel tests. Scene, order, cache/zram residency and CPU frequency/temperature were not controlled beyond using the same board/settings. No optical QR or signing workload was presented. Source hashes, sample hashes and scoped measurements: `reverse-engineering/rkaiq/frontend/matched-gui-performance-2026-10-29.json`.
+
+## Frame-path allocation and interaction measurements
+
+Three fresh packed-ARM/QEMU processes per backend exercised the actual guarded Camera preview method and socket adapter with synthetic 640×480 NV12 frames. After 20 warmup previews, 40 previews were measured. Median traced Python peak was **1,387,698 bytes → 135,447 bytes**, about 90% lower. Retained traced block counts were 114 → 118; these are live blocks, not cumulative allocation events.
+
+This measures temporary Python pressure in a single preview path. Rust/Pillow/kernel allocations are not fully traced. The native path reserves **1,382,400 bytes** for three frame slots and **129,600 bytes** for reusable preview RGB, outside most of that trace. Use the real-board PSS/swap results above for the broader footprint; the tracing result does not establish a total RAM reduction. The test uses an uninitialized Camera shell to avoid GPIO/Controller initialization and does not profile the full GUI or QR workload. Evidence: `reverse-engineering/rkaiq/frontend/frame-allocation-comparison-2026-10-30.json`.
+
+Three actual button-controlled Scan/Back cycles per backend gave:
+
+| Median host-observed interval | Python | Rust |
+|---|---:|---:|
+| Press to both camera/QR processes present | 3.44 s | 2.32 s |
+| Back press to Home, no owners and zero DMA | 1.92 s | 2.41 s |
+
+Every exit completed cleanly. Opening measures process readiness, not the first rendered/decoded frame. Back includes the 500 ms virtual hold; both intervals include host client startup, ADB and polling. Rust ran first, and three cycles with uncontrolled cache/zram/temperature effects cannot establish a general improvement. Readiness was faster and Back slower at the medians in this pair. Evidence and all individual values: `reverse-engineering/rkaiq/frontend/ui-latency-comparison-2026-10-30.json`.

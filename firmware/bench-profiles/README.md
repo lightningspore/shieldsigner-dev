@@ -105,3 +105,7 @@ mise exec -- uv run --python 3.13 python scripts/camera-memory/compare-frontends
 ```
 
 Measure `SC_CLK_TCK` on the target before supplying it; do not use the desktop's value. The comparison defaults to steady telemetry seconds 30–75, rejects missing/restarted roles and reader/renderer/QR errors, and reports CPU/PSS/swap/frame/render/decode-call rates. Samples and counters are asynchronous, so their window durations are recorded separately. This pair does not measure ordinary startup or UI cancellation.
+
+`frontend-allocation-profile.py ROOTFS --runtime-python HELPERS --native-extension-root EXTENSION_DIR --backend python|rust` runs off-board under the packed ARM Python/QEMU environment. It uses synthetic socket frames and the guarded Camera read method, with a Camera shell instead of GPIO/Controller construction. It warms 20 previews, measures 40, reports traced peaks/live blocks and explicitly lists untraced fixed native buffers. Run fresh processes; do not call this ordinary GUI/target-memory profiling.
+
+For actual interaction timing, start the normal diagnostic app at verified, awake Home with no camera owners. `scripts/camera-memory/ui-latency.py --backend rust --log /tmp/app.log --output dist/latency.json` performs three real Scan/Back cycles and verifies Home/process/DMA outcomes. Confirm backend startup logs first. It sends only named buttons, saves no screenshots or QR values, and includes client/ADB/polling/hold overhead. The opening metric is camera/QR-process readiness. Swap/cache/order effects and small sample count remain limitations.

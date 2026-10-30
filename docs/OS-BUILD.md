@@ -8,6 +8,21 @@ The historical two successful builds and matching hashes below used unchanged up
 
 Production local output defaults to `dist/os/<reader-variant>/<camera-backend>/`; development adds `/dev/`, with `build.log`, `reader-config.json`, `camera-hooks.json` and `camera-bundle.json`. Keep these input manifests with image/checksum files. New image checksums are expected to differ from the historical URT/vendor baseline.
 
+## Verified native frontend candidate (30 October 2026)
+
+The clean `cf4c428` development image built with exit 0 and passed packed rootfs/profile checks plus actual packed ARM Python/native reception, all 256 QR byte values, four preview rotations, startup-route guards and worker cleanup. It uses automatic startup, reviewed base-fork wiring, zram16-lzo and both Rust LCD/frontend backends. It is **not yet physically flashed or cold-boot qualified**. An identical-input second build is running; reproducibility has not yet been claimed.
+
+Local image: `dist/os/verified/native-cf4c428/shieldsigner-mini-native-cf4c428.img.xz` (62,301,408 bytes). The compressed stream was decompressed and matched the full 361,750,528-byte raw image exactly.
+
+| Artifact | SHA-256 |
+|---|---|
+| Compressed image | `d7d51947d848aa9a985d6db3ac49eee03c88b8c22a5a3c6cf4dd1c923cb0f229` |
+| Raw image | `0e004c87bac4de520c5e089c80a2bfa206fc1b5051aad4d8c1e417b292bcc8d0` |
+| Immutable input bundle | `9b8d31ebb8701daeba130ef51d87605994bf363fc0dcda8f2d146d45302ceffa` |
+| Packaged native extension | `d3b1dafe6421d6a54f73b058f26e8403fedd36d3a10ce7b7bdd4e178bc448e9a` |
+
+Local readback/install/native-build receipts and `SHA256SUMS` are beside the image. Public metadata: `reverse-engineering/rkaiq/frontend/native-image-packed-validation-2026-10-30.json`. Use the packaged extension identity when verifying the new boot; the earlier temporary `a732f27d…` candidate is a different build artifact.
+
 ## Native frontend image selection
 
 For the tested base-fork Mini development configuration, explicitly stage all profiles:

@@ -1,0 +1,31 @@
+{
+  "kind": "exact-packaged-native-runtime-hardware-trial",
+  "bundleManifestSha256": "9b8d31ebb8701daeba130ef51d87605994bf363fc0dcda8f2d146d45302ceffa",
+  "runtimeHashesVerified": {
+    "shieldsigner_integration.py": "1fe021f06ccbc5f8b428bf9b4de8df3722c60d3a280a0a23354a7d60d0a69dd9",
+    "shieldsigner_video_stream.py": "db700586037edd9a3dd198bce64ece52dc999f92d92ffd07c33e08c83c194c75",
+    "shieldsigner_qr_decoder.py": "dffc6344c97bbe14e3c336e0a87ba41dd418ab974427c9f3da2e492b0fe97751",
+    "shieldsigner_camera_compat.py": "50fa72eccb3ed3b0a5bdaaa1aa6643a6aec320fabaf418b0d705eb2f682c8201",
+    "shieldsigner_process_log.py": "c0d7960dfbe58746eaf7c84788cb13fafc3d45ae3130b5b8a9df04fd8bd82456",
+    "shieldsigner_native_stream.py": "c845ade21189c36b570b16fb11bf657156750182107dbb6eb324b7594c0acecd",
+    "shieldsigner_native_camera.py": "0450a7647b4dc29213e37b0623b4160c01054043b359fd638f667adeb4edd4e3",
+    "shieldsigner_lcd_driver.py": "0940ccaff73e6a2ecafa495c8b39df8be293ca7b516ab7613c77886c84bbb807",
+    "shieldsigner_lcd.abi3.so": "d3b1dafe6421d6a54f73b058f26e8403fedd36d3a10ce7b7bdd4e178bc448e9a"
+  },
+  "checks": {
+    "packagedLibraryMappedInApp": true,
+    "normalStartupReachedHome": true,
+    "realCameraPreview": true,
+    "scanBackReopenCycles": 2,
+    "lastOwnerExitCode": 0,
+    "cameraAndQrProcessesGoneAfterBack": true,
+    "finalDmaObjects": 0,
+    "finalDmaBytes": 0
+  },
+  "imageBootQualified": false,
+  "limits": [
+    "Library/helpers extracted from the verified image and staged with a temporary executable file bind mount.",
+    "Still running the previous image/kernel/app installation; this is not flashing or physical cold boot.",
+    "Private screenshots and camera pixels are excluded."
+  ]
+}

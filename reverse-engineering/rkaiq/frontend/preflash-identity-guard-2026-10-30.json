@@ -1,0 +1,20 @@
+{
+  "kind": "boot-checker-negative-identity-test",
+  "oldImageCorrectlyRejected": true,
+  "checkerSourceSha256": "447b7ac575974958711d2679ec78d8564476339538582f6642117985d8823117",
+  "observed": {
+    "kind": "native-image-read-only-boot-identity",
+    "passed": false,
+    "expectedBundleSha256": "9b8d31ebb8701daeba130ef51d87605994bf363fc0dcda8f2d146d45302ceffa",
+    "coldPowerCycleAttestedByThisTool": false,
+    "containsImagesSeedsOrDecodedQr": false,
+    "observedBundleSha256": "c3d559f3a2e2e146a369b9806914a29735636aa28d39d96d06cd44205301ce89",
+    "bootId": "a4e4bb5c-be6e-478d-9ca7-959a50861036",
+    "bootIdChanged": false,
+    "failure": "Booted image identity differs; temporary helpers do not qualify"
+  },
+  "limits": [
+    "Only the old-image identity guard was exercised on hardware; positive verification awaits a real flash.",
+    "A boot ID alone is not evidence of a physical power cycle."
+  ]
+}

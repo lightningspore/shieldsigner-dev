@@ -23,6 +23,22 @@ Local image: `dist/os/verified/native-cf4c428/shieldsigner-mini-native-cf4c428.i
 
 Local readback/install/native-build receipts and `SHA256SUMS` are beside the image. Public metadata: `reverse-engineering/rkaiq/frontend/native-image-packed-validation-2026-10-30.json`. Use the packaged extension identity when verifying the new boot; the earlier temporary `a732f27d…` candidate is a different build artifact.
 
+### Verify the actual new boot
+
+After flashing and physically power-cycling the Mini, use the local immutable receipts:
+
+```sh
+mise exec -- uv run --python 3.13 python scripts/verify-native-boot.py \
+  --bundle dist/os/image-bundles/native-frontend-cf4c428-02 \
+  --installation dist/os/verified/native-cf4c428/image-installation.json \
+  --previous-boot-id PREVIOUS_BOOT_UUID \
+  --output dist/os/verified/native-cf4c428/new-boot.json
+```
+
+Run after normal app startup has mapped the packaged extension, before replacing it with a diagnostic launcher. The checker reads image identity first, then verifies runtime/startup hashes and modes, a read-only SquashFS root, no overlays on verified paths, UART2/CMA/zram policy and the normally launched app's packaged native-library mapping. It runs shell utilities, not a second target Python interpreter, and saves no images or wallet/QR values. The old current image was correctly rejected by its identity guard. Positive verification awaits the actual flash.
+
+Record the physical power-cycle observation separately; a changed boot UUID or `adb reboot` does not establish that event. Repeat GUI/camera/workflow cleanup from the new image afterward. The tool is read-only and does not flash, initialize GPIO or change settings.
+
 ## Native frontend image selection
 
 For the tested base-fork Mini development configuration, explicitly stage all profiles:

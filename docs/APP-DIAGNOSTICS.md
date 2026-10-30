@@ -90,3 +90,15 @@ The two Python fixes were tested as temporary file bind mounts on this boot. The
 The earlier three software-controlled Scan/Back cycles are recorded in `reverse-engineering/rkaiq/memory/button-control-hardware-result.json`. The broader exploratory record is `reverse-engineering/rkaiq/memory/app-exploration-2026-10-29.json`. Neither contains mnemonics, QR payloads or camera images.
 
 Remaining checks include repeating the exploration from a rebuilt image, optical QR decoding and coordinator signing/verification, physical button testing, backup quiz, seed recovery and smartcard operations. A successful menu exploration is not a substitute for those flows.
+
+## Native frontend application protocol check
+
+With the current compiled extension and runtime helpers on PYTHONPATH, set `SHIELDSIGNER_FRONTEND_BACKEND=rust` and run:
+
+```sh
+python3 native_qr_hardware_check.py --app-root /opt/src \
+  --reader /usr/lib/shieldsigner-camera/shieldsigner-qr-reader \
+  --report /tmp/new-native-qr-report.json --native-frames
+```
+
+Use a fresh report filename. This diagnostic feeds generated public byte-mode QR images through synthetic native socket reception into the actual installed `DecodeQR`. It checks binary/CompactSeedQR/animated-UR handling and worker stop/restart. It touches no camera or GPIO unless the separate `--camera-config` option is supplied. Native-frame synthetic checks should be run without that option; actual GUI/optical tests are a separate milestone. Do not interpret its timing, Python fixture allocations or QEMU execution as ordinary app performance.

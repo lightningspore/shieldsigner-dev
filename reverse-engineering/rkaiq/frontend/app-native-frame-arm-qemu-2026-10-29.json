@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "opticalScanQualified": false,
+  "scope": "ARM native worker and actual installed DecodeQR; public synthetic fixtures, no camera input",
+  "appSourceSha256": {
+    "seedsigner/hardware/camera.py": "f5a927cdf7fd99f9c21aff793b540f59c1e9523a8945daaec96e1cb35375f6f2",
+    "seedsigner/models/decode_qr.py": "cd981f1b31144617836b1823198423fa53cc047fe251f28f6d5d7403466e2f1c"
+  },
+  "pythonSourcesSha256": {
+    "shieldsigner_integration.py": "0a22e511e7d6450169c83dcb853c41f3b6e70bb43e8608a6a9938c7b81a1ea6e",
+    "native_qr_hardware_check_v2.py": "b247cdc553857d4ca50a8c1f7bf3141ba8ed0f5d1f597d5d277ff785d7083604",
+    "shieldsigner_process_log.py": "c0d7960dfbe58746eaf7c84788cb13fafc3d45ae3130b5b8a9df04fd8bd82456",
+    "shieldsigner_native_camera.py": "0450a7647b4dc29213e37b0623b4160c01054043b359fd638f667adeb4edd4e3",
+    "shieldsigner_native_stream.py": "383291be3021685de06a8c65c62b4087adb63fde7417796067f78a7a74e4d141",
+    "shieldsigner_qr_decoder.py": "dffc6344c97bbe14e3c336e0a87ba41dd418ab974427c9f3da2e492b0fe97751",
+    "native_qr_hardware_check.py": "b660bd49fac734586caff0cdb9aee0147d5ac58f504db96fdf377e046fa48033",
+    "shieldsigner_video_stream.py": "db700586037edd9a3dd198bce64ece52dc999f92d92ffd07c33e08c83c194c75",
+    "shieldsigner_camera_compat.py": "50fa72eccb3ed3b0a5bdaaa1aa6643a6aec320fabaf418b0d705eb2f682c8201"
+  },
+  "inputRepresentation": "NativeFrame",
+  "binaryCases": [
+    {
+      "payloadBytes": 13,
+      "byteExact": true,
+      "seconds": 0.12050806451588869
+    },
+    {
+      "payloadBytes": 256,
+      "byteExact": true,
+      "seconds": 0.386141293682158
+    },
+    {
+      "payloadBytes": 32,
+      "byteExact": true,
+      "seconds": 0.08686173427850008
+    }
+  ],
+  "compactSeedCases": [
+    {
+      "entropyBytes": 16,
+      "expectedPublicFixture": true
+    },
+    {
+      "entropyBytes": 32,
+      "expectedPublicFixture": true
+    }
+  ],
+  "animatedUr": {
+    "fragments": 5,
+    "framesSubmitted": 6,
+    "reversedOrder": true,
+    "duplicateHandled": true,
+    "duplicateStatus": 1,
+    "matchesInstalledDirectDataStatuses": true,
+    "byteExactReassembledPsbt": true
+  },
+  "cleanStopAndRestart": true,
+  "installedAppUnchanged": true,
+  "nativeStats": {
+    "kind": "native-zxing-3.1.1-local-average",
+    "binarySha256": "62f4244ebfc1d1ed25358324cef35f78f6d486ad3ca20b9558c3197ec57b43fc",
+    "starts": 2,
+    "calls": 12,
+    "decoded": 12,
+    "errors": 0,
+    "lastRoundTripSeconds": 0.026389204,
+    "lastExitCode": 0,
+    "transport": "rust",
+    "binaryDigestScope": "Explicit QEMU launcher; native reader digest recorded separately"
+  },
+  "execution": "Packed ARM Python 3.12 under QEMU cortex-a7, pinned installed application and actual static ARM ZXing via explicit QEMU launcher",
+  "hardwareTouched": false,
+  "guiNavigationQualified": false,
+  "extensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+  "sourceRevision": "db9a601",
+  "nativeReaderSha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+  "readerLauncherSha256": "62f4244ebfc1d1ed25358324cef35f78f6d486ad3ca20b9558c3197ec57b43fc",
+  "diagnosticSourceSha256": "b247cdc553857d4ca50a8c1f7bf3141ba8ed0f5d1f597d5d277ff785d7083604"
+}

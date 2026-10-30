@@ -16,11 +16,33 @@ from qrcode.util import QRData, MODE_8BIT_BYTE
 from shieldsigner_integration import install_camera_backend
 
 
-def image(data):
+def image(data, native=False):
     code = qrcode.QRCode(box_size=4, border=4, error_correction=qrcode.constants.ERROR_CORRECT_M)
     code.add_data(QRData(data, mode=MODE_8BIT_BYTE))
     code.make(fit=True)
-    return code.make_image().convert("RGB")
+    result = code.make_image().convert("RGB")
+    if not native:
+        return result
+    import socket
+    import struct
+    import threading
+    from shieldsigner_lcd import FrameReceiver
+    width, height = result.size
+    left, right = socket.socketpair()
+    receiver = FrameReceiver(left.fileno(), width, height, "nv12", framerate=120)
+    pixels = result.convert("L").tobytes() + bytes([128]) * (width * height // 2)
+    packet = struct.pack("<8sIIII", b"SSNV12F1", width, height, 1, len(pixels)) + pixels
+    sender = threading.Thread(target=right.sendall, args=(packet,))
+    sender.start()
+    try:
+        frame = receiver.read(0, 1)
+        sender.join()
+        assert frame is not None
+        return frame
+    finally:
+        receiver.close()
+        left.close()
+        right.close()
 
 
 def digest(path):
@@ -36,7 +58,11 @@ def main():
                         help="Also exercise this app version's real Camera.get_instance/start/read/stop")
     parser.add_argument("--runtime-profile", choices=["luckfox_22", "luckfox_40", "luckfox_pi"],
                         help="Test-only explicit profile; does not qualify device-tree autodetection")
+    parser.add_argument("--native-frames", action="store_true",
+                        help="Feed synthetic frames through compiled native reception and actual DecodeQR")
     args = parser.parse_args()
+    if args.native_frames and os.environ.get("SHIELDSIGNER_FRONTEND_BACKEND") != "rust":
+        parser.error("--native-frames requires SHIELDSIGNER_FRONTEND_BACKEND=rust")
     if args.report.exists():
         parser.error("Choose a new report filename")
     os.environ["SHIELDSIGNER_QR_READER"] = str(args.reader.resolve())
@@ -55,18 +81,19 @@ def main():
               "scope": "ARM native worker and actual installed DecodeQR; public synthetic fixtures, no camera input",
               "appSourceSha256": {str(p.relative_to(args.app_root)): digest(p) for p in installed},
               "pythonSourcesSha256": {p.name: digest(p) for p in Path(__file__).parent.glob("*.py")},
+              "inputRepresentation": "NativeFrame" if args.native_frames else "Pillow",
               "binaryCases": [], "compactSeedCases": []}
     try:
         for data in [b"\x00\xff\x80\xfe\x00hello\x00\xc0\x81", bytes(range(256)), bytes(range(32))]:
             started = time.monotonic()
-            extracted = DecodeQR.extract_qr_data(image(data), is_binary=True)
+            extracted = DecodeQR.extract_qr_data(image(data, native=args.native_frames), is_binary=True)
             assert extracted == data
             report["binaryCases"].append({"payloadBytes": len(data), "byteExact": True,
                                            "seconds": time.monotonic()-started})
         for length in (16, 32):
             entropy = bytes(range(length))
             decoder = DecodeQR()
-            assert decoder.add_image(image(entropy)) == DecodeQRStatus.COMPLETE
+            assert decoder.add_image(image(entropy, native=args.native_frames)) == DecodeQRStatus.COMPLETE
             assert decoder.get_seed_phrase() == bip39.mnemonic_from_bytes(entropy).split()
             report["compactSeedCases"].append({"entropyBytes": length, "expectedPublicFixture": True})
         # A public synthetic unsigned transaction, no signing keys or real inputs.
@@ -88,7 +115,7 @@ def main():
         statuses = []
         for part in [frames[0], *frames]:
             data = part.encode("ascii")
-            status = decoder.add_image(image(data))
+            status = decoder.add_image(image(data, native=args.native_frames))
             assert status == reference.add_data(data)
             statuses.append(int(status))
         assert decoder.complete and decoder.get_data_psbt() == payload
@@ -100,8 +127,11 @@ def main():
         process = client._process
         assert client.stats["starts"] == 1 and client.stats["errors"] == 0
         client.close()
-        assert process.poll() == 0
-        assert DecodeQR.extract_qr_data(image(b"1BoatSLRHtKNngkdXEeobR76b53LETtpyT"), is_binary=True) == b"1BoatSLRHtKNngkdXEeobR76b53LETtpyT"
+        if process is not None:
+            assert process.poll() == 0
+        else:
+            assert client.stats["transport"] == "rust" and client.stats["lastExitCode"] == 0
+        assert DecodeQR.extract_qr_data(image(b"1BoatSLRHtKNngkdXEeobR76b53LETtpyT", native=args.native_frames), is_binary=True) == b"1BoatSLRHtKNngkdXEeobR76b53LETtpyT"
         assert client.stats["starts"] == 2
         report["cleanStopAndRestart"] = True
         if args.camera_config:

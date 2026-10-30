@@ -1,0 +1,192 @@
+{
+  "kind": "matched-real-GUI-frontend-comparison",
+  "steadyWindowRequestedSeconds": [
+    30,
+    75
+  ],
+  "targetClockTicksPerSecond": 100,
+  "python": {
+    "samples": 32,
+    "hostWindowSeconds": 43.05171203613281,
+    "counterWindowSeconds": 42.61566256200058,
+    "medianAvailableKiB": 8746.0,
+    "minimumAvailableKiB": 6964,
+    "medianZramAllocatedBytes": 3829760.0,
+    "processes": {
+      "app": {
+        "medianPssKiB": 15250.0,
+        "medianSwapPssKiB": 5708.0,
+        "medianThreads": 9.0,
+        "cpuPercentOfOneCore": 43.25031251805375
+      },
+      "camera": {
+        "medianPssKiB": 8296.0,
+        "medianSwapPssKiB": 0.0,
+        "medianThreads": 5.0,
+        "cpuPercentOfOneCore": 25.62035161515214
+      },
+      "qr": {
+        "medianPssKiB": 820.0,
+        "medianSwapPssKiB": 0.0,
+        "medianThreads": 1.0,
+        "cpuPercentOfOneCore": 8.756910751507123
+      }
+    },
+    "framesPerSecond": 14.947555938459079,
+    "rendersPerSecond": 4.8573690412261055,
+    "qrCallsPerSecond": 5.913318832796998
+  },
+  "rust": {
+    "samples": 37,
+    "hostWindowSeconds": 45.43545079231262,
+    "counterWindowSeconds": 44.408699728999636,
+    "medianAvailableKiB": 10052,
+    "minimumAvailableKiB": 9668,
+    "medianZramAllocatedBytes": 4550656,
+    "processes": {
+      "app": {
+        "medianPssKiB": 15736,
+        "medianSwapPssKiB": 7080,
+        "medianThreads": 10,
+        "cpuPercentOfOneCore": 28.34790846221605
+      },
+      "camera": {
+        "medianPssKiB": 8116,
+        "medianSwapPssKiB": 164,
+        "medianThreads": 5,
+        "cpuPercentOfOneCore": 24.452271973231394
+      },
+      "qr": {
+        "medianPssKiB": 752,
+        "medianSwapPssKiB": 0,
+        "medianThreads": 1,
+        "cpuPercentOfOneCore": 8.80369828019132
+      }
+    },
+    "framesPerSecond": 14.974543367810963,
+    "rendersPerSecond": 5.58449136122875,
+    "qrCallsPerSecond": 5.989817347124385
+  },
+  "limits": [
+    "Same current startup-import policy in both runs; isolates frontend transport/preparation, not older firmware.",
+    "One short run per backend, Python first; scene, cache and zram residency can affect results.",
+    "Harness telemetry/watchdog threads are diagnostic overhead.",
+    "CPU percentages are per single CPU core, derived from target proc counters.",
+    "No optical QR fixture or signing workload; duration termination is not UI cancellation."
+  ],
+  "board": "Luckfox Pico Mini, single CPU core",
+  "runtimeSourceRevision": "7c10b54",
+  "extensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+  "sampleSha256": {
+    "matched-python.jsonl": "e1796110c1c7f0c0130438f182514c58b0842a67a20df04b27a8d006243b8da0",
+    "matched-rust.jsonl": "39e2cc119e1b03c2b62319eb5fd718534d430f460639c64830a653514c866661"
+  },
+  "diagnosticSourceSha256": {
+    "firmware/bench-profiles/gui-camera-bench.py": "851b261866641bc58c3a4703a718f27cd2ea1fec837422aa667b195038314396",
+    "scripts/camera-memory/collect.py": "d13dfbc145d5cbb293f499833575baa6a77c54210357f82a07f393e84f7a0265",
+    "scripts/camera-memory/compare-frontends.py": "470d60a68f60c03c5d635c48800a486fe031ce68d985613a13b3981221def0f2"
+  },
+  "finalStates": {
+    "python": {
+      "kind": "real-scanview-benchmark",
+      "pid": 1956,
+      "elapsedSeconds": 97.67768796300152,
+      "phase": "process-exit",
+      "rustLcd": true,
+      "smallRam": true,
+      "frontendBackend": "python",
+      "renderer": {
+        "successfulCalls": 427,
+        "errors": 0
+      },
+      "streams": [
+        {
+          "fullFrames": 1309,
+          "reconnects": 0,
+          "readerErrors": 0,
+          "stopped": true
+        }
+      ],
+      "qr": {
+        "starts": 1,
+        "calls": 519,
+        "decoded": 0,
+        "errors": 0,
+        "lastRoundTripSeconds": 0.09651045800092106
+      },
+      "retiredCounters": {
+        "frames": 0,
+        "reconnects": 0,
+        "readerErrors": 0
+      },
+      "termination": {
+        "reason": "duration",
+        "isUiCancellationClaim": false,
+        "controllerFinallyClaimed": false,
+        "processExitRequested": true,
+        "ownerCleanupTimedOut": false,
+        "cameraCleanupErrors": []
+      },
+      "uiCancellationQualified": false,
+      "terminationPolicy": {
+        "durationSeconds": 90.0,
+        "cleanupBudgetSeconds": 8,
+        "hardFallback": "with --duration: default SIGALRM at duration + cleanup budget + 1 second; final telemetry may be absent"
+      },
+      "containsImagesOrDecodedQr": false
+    },
+    "rust": {
+      "kind": "real-scanview-benchmark",
+      "pid": 2783,
+      "elapsedSeconds": 98.16000604699911,
+      "phase": "process-exit",
+      "rustLcd": true,
+      "smallRam": true,
+      "frontendBackend": "rust",
+      "renderer": {
+        "successfulCalls": 475,
+        "errors": 0
+      },
+      "streams": [
+        {
+          "fullFrames": 1310,
+          "reconnects": 0,
+          "readerErrors": 0,
+          "stopped": true
+        }
+      ],
+      "qr": {
+        "starts": 1,
+        "calls": 519,
+        "decoded": 0,
+        "errors": 0,
+        "lastRoundTripSeconds": 0.019081125
+      },
+      "retiredCounters": {
+        "frames": 0,
+        "reconnects": 0,
+        "readerErrors": 0
+      },
+      "termination": {
+        "reason": "duration",
+        "isUiCancellationClaim": false,
+        "controllerFinallyClaimed": false,
+        "processExitRequested": true,
+        "ownerCleanupTimedOut": false,
+        "cameraCleanupErrors": []
+      },
+      "uiCancellationQualified": false,
+      "terminationPolicy": {
+        "durationSeconds": 90.0,
+        "cleanupBudgetSeconds": 8,
+        "hardFallback": "with --duration: default SIGALRM at duration + cleanup budget + 1 second; final telemetry may be absent"
+      },
+      "containsImagesOrDecodedQr": false
+    }
+  },
+  "cleanup": {
+    "finalCameraAndQrProcesses": 0,
+    "finalDmaObjects": 0,
+    "finalDmaBytes": 0
+  }
+}

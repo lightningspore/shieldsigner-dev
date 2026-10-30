@@ -92,3 +92,16 @@ Full tracemalloc snapshots made the Mini unresponsive. `python-memory-profile.py
 
 
 For the complete real-app button/screen procedure, exploration outcomes and temporary camera compatibility fixes, see [App diagnostics](../../docs/APP-DIAGNOSTICS.md). Screen capture retains a latest-image reference and can contain wallet data; it is not a normal firmware feature.
+
+## Comparing frontend backends
+
+`gui-camera-bench.py --frontend-backend python|rust` selects the frame/preview/QR bridge explicitly (default Python). Stage the same current helper directory and native extension for both runs; pass it as both `--camera-python-root` and `--lcd-python-root`, with `--rust-lcd --small-ram`. The reviewed installed helper directory remains a fallback for the LCD shim. Keep camera binary, owner config, code-lock/MEMLOCK and zram identical. Do not run two apps/owners at once.
+
+The host sampler `scripts/camera-memory/collect.py --telemetry-file /tmp/bench-state.json` also reads process CPU ticks, thread counts and process start ticks, and includes the benchmark's metadata-only state. After separate runs, use:
+
+```sh
+mise exec -- uv run --python 3.13 python scripts/camera-memory/compare-frontends.py \
+  dist/python.jsonl dist/rust.jsonl --ticks-per-second 100 --output dist/comparison.json
+```
+
+Measure `SC_CLK_TCK` on the target before supplying it; do not use the desktop's value. The comparison defaults to steady telemetry seconds 30–75, rejects missing/restarted roles and reader/renderer/QR errors, and reports CPU/PSS/swap/frame/render/decode-call rates. Samples and counters are asynchronous, so their window durations are recorded separately. This pair does not measure ordinary startup or UI cancellation.

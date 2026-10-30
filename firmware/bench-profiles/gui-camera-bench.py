@@ -42,6 +42,7 @@ def main():
     parser.add_argument('--rust-lcd', action='store_true', help='Install the reviewed process-local Rust LCD shim before Renderer construction')
     parser.add_argument('--lcd-python-root', type=Path, default=Path('/tmp/lcd-python'))
     parser.add_argument('--small-ram', action='store_true', help='Explicitly enable the existing small-RAM application/integration policy')
+    parser.add_argument('--frontend-backend', choices=('python', 'rust'), default='python', help='Explicit camera frame/preview/QR transport backend')
     parser.add_argument('--state-file', type=Path, default=Path('/tmp/shieldsigner-gui-bench-state.json'))
     parser.add_argument('--duration', type=float, help='Terminate the benchmark process after this many seconds, with bounded owner cleanup; not a UI cancel test')
     parser.add_argument('--cleanup-seconds', type=float, default=8, help='Maximum best-effort owner cleanup interval before process exit')
@@ -53,10 +54,11 @@ def main():
         value = getattr(args, name)
         if value is not None and (not math.isfinite(value) or value <= 0):
             parser.error('--' + name.replace('_', '-') + ' must be finite and positive')
+    os.environ['SHIELDSIGNER_FRONTEND_BACKEND'] = args.frontend_backend
     os.environ['SHIELDSIGNER_SMALL_RAM'] = '1' if args.small_ram else '0'
     os.environ['SHIELDSIGNER_CAMERA_CONFIG'] = str(args.config.resolve())
     os.environ['SHIELDSIGNER_QR_READER'] = str(args.qr_reader.resolve())
-    sys.path[:0] = [str(args.camera_python_root.resolve()), str(args.app_root.resolve())]
+    sys.path[:0] = [str(args.camera_python_root.resolve()), '/usr/lib/shieldsigner-camera/python', str(args.app_root.resolve())]
     if args.rust_lcd:
         sys.path.insert(0, str(args.lcd_python_root.resolve()))
         from shieldsigner_lcd_driver import install
@@ -142,7 +144,7 @@ def main():
                 active.append({key: value for key, value in record.items() if key != 'reference'})
             return {'kind': 'real-scanview-benchmark', 'pid': os.getpid(),
                     'elapsedSeconds': time.monotonic()-started, 'phase': phase,
-                    'rustLcd': args.rust_lcd, 'smallRam': args.small_ram,
+                    'rustLcd': args.rust_lcd, 'smallRam': args.small_ram, 'frontendBackend': args.frontend_backend,
                     'renderer': dict(renderer), 'streams': active,
                     'qr': {key: value for key, value in getattr(getattr(camera_backend, '__shieldsigner_qr_client__', None), 'stats', {}).items() if key in ('starts', 'calls', 'decoded', 'errors', 'lastRoundTripSeconds')},
                     'retiredCounters': dict(retired), 'termination': termination,

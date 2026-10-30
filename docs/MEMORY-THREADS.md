@@ -153,3 +153,23 @@ The guarded small-RAM integration now defers the optional smartcard dependency g
 A fresh-process comparison using packed ARM Python under QEMU measured 13,362,142 → 8,965,308 traced live bytes at startup-route imports (**4.19 MiB lower**) and 13,707,170 → 9,177,171 after Scan imports (**4.32 MiB lower**). Both stages loaded 144 fewer modules. Opening seed views loads part of the graph; Tools loads almost all of it. The allocation saving is temporary until those features are used.
 
 These are controlled import-stage measurements, not target PSS/RSS or full GUI startup results. Native allocations and profiling overhead differ from ordinary app memory. The real-board comparison remains pending. Source hashes, stages and limits are in `reverse-engineering/rkaiq/frontend/startup-import-comparison-2026-10-29.json`.
+
+## Matched frontend comparison on the Mini
+
+One 90-second real-Scan diagnostic run per backend used the same current startup policy, camera owner, native ZXing, Rust LCD, Small-RAM/zram and code-lock settings. Python ran first. The 30–75-second steady windows gave:
+
+| Metric | Python frontend | Rust frontend |
+|---|---:|---:|
+| App CPU, percent of one core | 43.3% | 28.3% |
+| Render calls/sec | 4.86 | 5.58 |
+| Camera frames/sec | 14.95 | 14.97 |
+| QR calls/sec | 5.91 | 5.99 |
+| Median app PSS | 15,250 KiB | 15,736 KiB |
+| Median app SwapPss | 5,708 KiB | 7,080 KiB |
+| Median available RAM | 8,746 KiB | 10,052 KiB |
+| Minimum available RAM | 6,964 KiB | 9,668 KiB |
+| App threads including benchmark helpers | 9 | 10 |
+
+App CPU was about 34% lower and rendering about 15% faster in this pair. Both runs had zero reader, renderer and QR errors/reconnects and clean timed owner cleanup; the final DMA count was zero. RAM results are mixed: the reusable native pool/thread has a cost, app PSS/swap were higher, and zram/page residency changed. This is not evidence of a net app-memory reduction. The extra native receiver thread remains in addition to the Python owner coordinator.
+
+CPU derives from target `/proc/PID/stat` counters with measured `SC_CLK_TCK=100`. The host sampler adds no on-board Python process. The benchmark adds telemetry/watchdog threads and starts Scan directly; its duration termination is separate from the successful real Back/cancel tests. Scene, order, cache/zram residency and CPU frequency/temperature were not controlled beyond using the same board/settings. No optical QR or signing workload was presented. Source hashes, sample hashes and scoped measurements: `reverse-engineering/rkaiq/frontend/matched-gui-performance-2026-10-29.json`.

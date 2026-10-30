@@ -1,0 +1,28 @@
+{
+  "kind": "native-frontend-real-GUI-fault-recovery",
+  "sourceRevision": "7c10b54",
+  "extensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+  "fault": "SIGKILL of exact camera-probe child after verifying its app PPid and comm",
+  "checks": {
+    "cameraWasStreaming": true,
+    "systemErrorViewDisplayed": true,
+    "originalErrorType": "RuntimeError",
+    "failedCameraReaped": true,
+    "qrWorkerReapedBeforeHome": true,
+    "dmaObjectsAfterError": 0,
+    "dmaBytesAfterError": 0,
+    "backToMainMenuWorked": true,
+    "freshScanDisplayedLivePreview": true,
+    "freshCameraAndQrProcessesStarted": true,
+    "freshOwnerExitCode": 0,
+    "backAfterRecoveryWorked": true,
+    "finalCameraAndQrProcesses": 0,
+    "finalDmaObjects": 0,
+    "finalDmaBytes": 0
+  },
+  "limits": [
+    "One injected camera-process failure, not every driver/kernel failure mode.",
+    "Temporary runtime on existing image; packaged/cold-boot verification remains separate.",
+    "Private screen captures excluded."
+  ]
+}

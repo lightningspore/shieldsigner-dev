@@ -106,3 +106,9 @@ Use a fresh report filename. This diagnostic feeds generated public byte-mode QR
 ## Native frontend hardware repeat
 
 The native frontend candidate repeated camera entropy collection, final-image acceptance, disposable 12-word seed finalization, Native Segwit receive-address derivation and address-QR rendering on the Mini. The optional backup quiz was skipped. Existing RNG-health, five-sample pool, variation and duplicate checks were preserved; the dark-scene entropy indicator was amber rather than described as good. The app was restarted and its Load a Seed menu verified before opening Smartcard Tools through deferred imports. Camera owner exit was 0 and DMA/owner cleanup passed. No mnemonic pages were captured and no signing was claimed. Public outcome metadata is in `reverse-engineering/rkaiq/frontend/native-entropy-wallet-hardware-2026-10-29.json`; private screenshots stay under ignored `dist/native-frontend/app-arm-01`.
+
+## Native frontend fault recovery
+
+With a diagnostic app in Scan, identify its exact `camera-probe` child and verify both `/proc/PID/comm` and `/proc/PID/status` PPid before sending `kill -KILL PID`. Do not use a broad process-name kill. This is a deliberate fault, so owner exit -9 is expected. Verify the app reaches System Error, the QR worker is reaped, and `/sys/kernel/debug/dma_buf/bufinfo` reports zero objects/bytes. Activate Back to Main Menu, reopen Scan, confirm fresh live preview and then Back again. The fresh owner should exit 0 and leave no children/DMA.
+
+That sequence passed on the native candidate; `reverse-engineering/rkaiq/frontend/native-fault-recovery-hardware-2026-10-29.json` records the scope. One process-kill case does not qualify every driver/kernel failure. Debugfs was mounted for readback; CMA free-space alone was not treated as DMA cleanup evidence.

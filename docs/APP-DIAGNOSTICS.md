@@ -102,3 +102,7 @@ python3 native_qr_hardware_check.py --app-root /opt/src \
 ```
 
 Use a fresh report filename. This diagnostic feeds generated public byte-mode QR images through synthetic native socket reception into the actual installed `DecodeQR`. It checks binary/CompactSeedQR/animated-UR handling and worker stop/restart. It touches no camera or GPIO unless the separate `--camera-config` option is supplied. Native-frame synthetic checks should be run without that option; actual GUI/optical tests are a separate milestone. Do not interpret its timing, Python fixture allocations or QEMU execution as ordinary app performance.
+
+## Native frontend hardware repeat
+
+The native frontend candidate repeated camera entropy collection, final-image acceptance, disposable 12-word seed finalization, Native Segwit receive-address derivation and address-QR rendering on the Mini. The optional backup quiz was skipped. Existing RNG-health, five-sample pool, variation and duplicate checks were preserved; the dark-scene entropy indicator was amber rather than described as good. The app was restarted and its Load a Seed menu verified before opening Smartcard Tools through deferred imports. Camera owner exit was 0 and DMA/owner cleanup passed. No mnemonic pages were captured and no signing was claimed. Public outcome metadata is in `reverse-engineering/rkaiq/frontend/native-entropy-wallet-hardware-2026-10-29.json`; private screenshots stay under ignored `dist/native-frontend/app-arm-01`.

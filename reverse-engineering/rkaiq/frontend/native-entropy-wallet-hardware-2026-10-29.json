@@ -1,0 +1,37 @@
+{
+  "kind": "native-frontend-camera-entropy-wallet-checkpoint",
+  "sourceRevision": "7c10b54",
+  "extensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+  "board": "Luckfox Pico Mini",
+  "deployment": "temporary helpers/native extension on existing 2663ac8 development image",
+  "checks": {
+    "cameraEntropyLivePreview": true,
+    "unchangedRngHealthGatePassed": true,
+    "unchangedVariationAndUniqueFramePoolAccepted": true,
+    "fullResolutionFinalImageCapturedAndAccepted": true,
+    "entropyOwnerExitCode": 0,
+    "dmaObjectsAfterCapture": 0,
+    "dmaBytesAfterCapture": 0,
+    "testSeedWordCount": 12,
+    "wordPagesAdvancedWithoutCaptures": true,
+    "optionalBackupQuiz": "explicitly skipped",
+    "testSeedFinalized": true,
+    "nativeSegwitReceiveAddressesDerived": true,
+    "addressQrRendered": true,
+    "seedClearedByAppRestart": true,
+    "clearanceVerifiedByLoadASeedMenu": true,
+    "deferredSmartcardToolsMenuOpened": true,
+    "returnedHome": true,
+    "finalCameraAndQrOwners": 0,
+    "finalDmaObjects": 0,
+    "finalDmaBytes": 0
+  },
+  "privateArtifacts": "Screenshots under ignored dist; no mnemonic captures, values or QR payloads in public record",
+  "limits": [
+    "No signing or external coordinator round trip in this workflow.",
+    "Rendered address QR is not an optical decode test.",
+    "Smartcard menu navigation is not reader/applet hardware qualification.",
+    "Dark scene had an amber entropy indicator; no mixing, volume, duplicate/flat-frame or RNG checks were bypassed.",
+    "Temporary runtime only; final image and cold boot remain pending."
+  ]
+}

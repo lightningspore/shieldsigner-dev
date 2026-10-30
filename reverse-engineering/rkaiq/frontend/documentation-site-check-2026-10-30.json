@@ -1,0 +1,36 @@
+{
+  "kind": "local-static-documentation-validation",
+  "sourceRevision": "d4aab1a",
+  "siteDeployedByThisCheck": false,
+  "staticSiteChecksPassed": 7,
+  "browserWidths": [
+    1440,
+    390
+  ],
+  "browserJourneysPassed": [
+    "home and board views",
+    "PCB download/checklist",
+    "BOM filters and quantities",
+    "build/flash/use/card guides",
+    "memory guide images and overflow",
+    "mobile navigation",
+    "no-JavaScript access"
+  ],
+  "newMemoryGuideValuesVerified": [
+    "43.3%",
+    "28.3%",
+    "90% lower",
+    "1.92 s",
+    "2.41 s"
+  ],
+  "totalRamReductionLimitationPresent": true,
+  "docSourceSha256": {
+    "docs/MEMORY-THREADS.md": "df1d312d5cffa9e6ffd22994877a3a613c8d101e392f7f409b9a0dcd4f985e4e",
+    "docs/OS-BUILD.md": "ef117bb853a59aff5c62986d65d0c98bf3a899f95199139eaeaf42278832db70",
+    "docs/APP-DIAGNOSTICS.md": "970ed61b2a1fea2a1fa32e72f0719f585ea11fb4b9a2d561128913d5a3443c0a"
+  },
+  "limits": [
+    "Local generated static site only; deployment is separate.",
+    "Private captures and wallet data were not added to the public allowlist."
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "pillowVersion": "11.0.0",
+  "byteExactPillowCases": 16,
+  "immutableReturnedBytes": true,
+  "invalidInputsRejected": true,
+  "hardwareTouched": false,
+  "cases": [
+    {
+      "source": [
+        640,
+        480
+      ],
+      "preview": [
+        240,
+        180
+      ],
+      "angle": 0,
+      "bytes": 129600,
+      "sha256": "14eccfeabae076fc7853bef19660f6bb2f1640fbc2b6d7e8902fbc93f79a4621"
+    },
+    {
+      "source": [
+        640,
+        480
+      ],
+      "preview": [
+        240,
+        180
+      ],
+      "angle": 90,
+      "bytes": 129600,
+      "sha256": "b1dfd6bd6f1ed67e743ec87350daee440f0826c87172b0d3a1fc7914a36ed90c"
+    },
+    {
+      "source": [
+        640,
+        480
+      ],
+      "preview": [
+        240,
+        180
+      ],
+      "angle": 180,
+      "bytes": 129600,
+      "sha256": "333ebdceb076825746f828bb63d0de9c6aef2717127397bdf460aa323497192a"
+    },
+    {
+      "source": [
+        640,
+        480
+      ],
+      "preview": [
+        240,
+        180
+      ],
+      "angle": 270,
+      "bytes": 129600,
+      "sha256": "c7cb74242c0b8134280a41239379408a72a6282dd2767313bc812b38208d2956"
+    },
+    {
+      "source": [
+        320,
+        240
+      ],
+      "preview": [
+        240,
+        180
+      ],
+      "angle": 0,
+      "bytes": 129600,
+      "sha256": "6716a4ab9516dc9f7b1e358ad2793fc01356a263ce4a390b6ef3fe7177c571de"
+    },
+    {
+      "source": [
+        320,
+        240
+      ],
+      "preview": [
+        240,
+        180
+      ],
+      "angle": 90,
+      "bytes": 129600,
+      "sha256": "06a245b5ee658766b83c95b145021822d907565a020f15b06a00094f40b9b96a"
+    },
+    {
+      "source": [
+        320,
+        240
+      ],
+      "preview": [
+        240,
+        180
+      ],
+      "angle": 180,
+      "bytes": 129600,
+      "sha256": "fdd4b9e2d4b65ff13bee31ab8eb29a196c6aadf40e331952f33b54d90b39491f"
+    },
+    {
+      "source": [
+        320,
+        240
+      ],
+      "preview": [
+        240,
+        180
+      ],
+      "angle": 270,
+      "bytes": 129600,
+      "sha256": "7a543e70b61483a5ace3f2ec97f397028c2047cb53060e0a635728a67d13b3c0"
+    },
+    {
+      "source": [
+        13,
+        7
+      ],
+      "preview": [
+        9,
+        5
+      ],
+      "angle": 0,
+      "bytes": 135,
+      "sha256": "f839313df2a65d8b288dc6d5b76393beb6d1c36111a565d280e1c9c72cd73e0e"
+    },
+    {
+      "source": [
+        13,
+        7
+      ],
+      "preview": [
+        9,
+        5
+      ],
+      "angle": 90,
+      "bytes": 135,
+      "sha256": "b76a600f68763008bc480b75cd5e6d4e63f71ff801015af48cc93703b26697f4"
+    },
+    {
+      "source": [
+        13,
+        7
+      ],
+      "preview": [
+        9,
+        5
+      ],
+      "angle": 180,
+      "bytes": 135,
+      "sha256": "68d9c27d609246df65cdf104051320408189261b5dadd0978eb30d5078e3d19d"
+    },
+    {
+      "source": [
+        13,
+        7
+      ],
+      "preview": [
+        9,
+        5
+      ],
+      "angle": 270,
+      "bytes": 135,
+      "sha256": "6a6a6c29006eda11f62446c086f883c5ada2ea1f238827cab5d43c77cec12bef"
+    },
+    {
+      "source": [
+        1,
+        1
+      ],
+      "preview": [
+        1,
+        1
+      ],
+      "angle": 0,
+      "bytes": 3,
+      "sha256": "709e80c88487a2411e1ee4dfb9f22a861492d20c4765150c0c794abd70f8147c"
+    },
+    {
+      "source": [
+        1,
+        1
+      ],
+      "preview": [
+        1,
+        1
+      ],
+      "angle": 90,
+      "bytes": 3,
+      "sha256": "709e80c88487a2411e1ee4dfb9f22a861492d20c4765150c0c794abd70f8147c"
+    },
+    {
+      "source": [
+        1,
+        1
+      ],
+      "preview": [
+        1,
+        1
+      ],
+      "angle": 180,
+      "bytes": 3,
+      "sha256": "709e80c88487a2411e1ee4dfb9f22a861492d20c4765150c0c794abd70f8147c"
+    },
+    {
+      "source": [
+        1,
+        1
+      ],
+      "preview": [
+        1,
+        1
+      ],
+      "angle": 270,
+      "bytes": 3,
+      "sha256": "709e80c88487a2411e1ee4dfb9f22a861492d20c4765150c0c794abd70f8147c"
+    }
+  ],
+  "kind": "native-preview-physical-arm-reference",
+  "execution": "Physical Luckfox Pico Mini, packed Python 3.12.10 and Pillow 11.0.0",
+  "binarySha256": "19024e4ef45e679267e6666eb3bd93cac37583a486944f8b6cddd0140917d74a",
+  "sourceArchiveSha256": "38821117256c2fc9f287d48044b0fd56b8883fb843a544d76c2ce35c9e1d9afb",
+  "sourceFiles": {
+    "src/lib.rs": "23ad6db691300df528f2a6b113eeb5a9ff438ab7263ac085bbb68bf31707a17d",
+    "src/preview.rs": "433670a1058269585385708e73d31bf785b34d49edb88d80f6d696d39a7c53ed",
+    "src/preview_python.rs": "97203b7839263ef42c063bd54bad8629d1575c51cd2b0493eebd85543654c858",
+    "Cargo.toml": "04d60a16d06cea8dc0c975d3bca3181bdea90587a93c5b25aeee4ac51ec04e26",
+    "Cargo.lock": "a648cd4135c6a2db637900eddc634a96fac6181385f1999d5704c340587e1d8e",
+    "build.rs": "e63cce50dcd0384fc2d497c892f2dfe9dc68708717d147b165b25ab479ed73a1"
+  },
+  "sdkCacheReadOnly": true,
+  "guiIntegrated": false,
+  "displaySpiExercised": false,
+  "flashableImageContainsChange": false,
+  "appRestored": true
+}

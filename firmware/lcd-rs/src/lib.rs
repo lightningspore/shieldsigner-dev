@@ -1,6 +1,9 @@
 //! Bounded RGB888 -> ST7789 big-endian RGB565 frame transport.
 //! GPIO/register initialization remains in the reviewed Python driver initially.
 use std::io;
+pub mod preview;
+#[cfg(feature = "python")]
+mod preview_python;
 
 pub fn rgb565_into(rgb: &[u8], out: &mut [u8]) -> Result<(), &'static str> {
     if rgb.len() % 3 != 0 || out.len() != rgb.len() / 3 * 2 {
@@ -188,6 +191,7 @@ mod python {
     #[pymodule]
     fn shieldsigner_lcd(module: &Bound<'_, PyModule>) -> PyResult<()> {
         module.add_class::<FrameWriter>()?;
+        module.add_class::<crate::preview_python::PreviewRenderer>()?;
         module.add_function(wrap_pyfunction!(pack_rgb, module)?)?;
         Ok(())
     }

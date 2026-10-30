@@ -82,3 +82,10 @@ reviewed shim on PYTHONPATH. Selection occurs before camera/Controller setup,
 uses the shim's idempotent installer and fails explicitly if the runtime is
 missing or the display source differs. This does not change pins or make the
 native backend the production default.
+
+
+## Native preview primitive
+
+`PreviewRenderer(width=240, height=180)` reuses a bounded RGB output vector. `render_luma(bytes, source_width, source_height, rotation)` returns expanded output dimensions and independent RGB bytes for 0/90/180/270 degrees. Processing releases the GIL; concurrent use fails explicitly rather than waiting with the GIL held. Source geometry and destination bounds are checked before writing. The current interface is a primitive; it does not yet replace app reception or GUI preparation.
+
+`tests/preview-reference.py` requires the compiled extension on PYTHONPATH and pinned Pillow 11.0.0. It compares every output byte for four geometries and four rotations, tests independent returned buffers and rejects invalid inputs without touching GPIO/SPI. The physical ARM result is in `reverse-engineering/rkaiq/frontend/preview-arm-reference-2026-10-29.json`. The upstream divergence and rollout plan are documented in `docs/UPSTREAM-DIVERGENCES.md` and `docs/NATIVE-FRONTEND-PLAN.md`.

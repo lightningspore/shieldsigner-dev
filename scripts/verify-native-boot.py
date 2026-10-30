@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import shlex
 import subprocess
+import stat
 import time
 
 p=argparse.ArgumentParser(description=__doc__)
@@ -59,17 +60,22 @@ try:
         batch=names[offset:offset+20]
         raw=shell('sha256sum '+' '.join(shlex.quote(name) for name in batch))
         hashes={line.split(maxsplit=1)[1]:line.split()[0] for line in raw.splitlines()}
-        raw=shell('stat -c "%a %n" '+' '.join(shlex.quote(name) for name in batch))
-        modes={line.split(maxsplit=1)[1]:int(line.split()[0],8) for line in raw.splitlines()}
+        raw=shell('ls -ldn '+' '.join(shlex.quote(name) for name in batch))
+        raw=re.sub(r'\x1b\[[0-9;]*m','',raw)
+        modes={}
+        for line in raw.splitlines():
+            matches=[name for name in batch if line.endswith(name)]
+            if len(matches)==1:modes[matches[0]]=line.split()[0]
         for name in batch:
             sha,mode=expected[name]
-            if hashes.get(name)!=sha or modes.get(name)!=mode:raise ValueError('Installed file differs: '+name)
+            if hashes.get(name)!=sha or modes.get(name)!=stat.filemode(stat.S_IFREG|mode):raise ValueError('Installed file differs: '+name)
             files.append({'path':name.lstrip('/'),'sha256':sha,'mode':mode})
     report['files']=files
     if shell('cat /proc/device-tree/serial@ff4c0000/status').strip('\0')!='disabled':raise ValueError('UART2 not disabled')
     cmdline=shell('cat /proc/cmdline')
     if re.findall(r'(?:^|\s)rk_dma_heap_cma=(\S+)',cmdline)!=['12M']:raise ValueError('Expected CMA12')
-    if shell('cat /sys/block/zram0/disksize')!='16777216' or shell('cat /sys/block/zram0/mem_limit')!='8388608':raise ValueError('Wrong zram limits')
+    mm_stat=shell('cat /sys/block/zram0/mm_stat').split()
+    if shell('cat /sys/block/zram0/disksize')!='16777216' or len(mm_stat)<4 or mm_stat[3]!='8388608':raise ValueError('Wrong zram limits')
     if '[lzo]' not in shell('cat /sys/block/zram0/comp_algorithm'):raise ValueError('Wrong zram algorithm')
     swaps=[line.split()[0] for line in shell('cat /proc/swaps').splitlines()[1:]]
     if swaps!=['/dev/zram0']:raise ValueError('Unexpected swap device(s)')

@@ -10,7 +10,7 @@ Production local output defaults to `dist/os/<reader-variant>/<camera-backend>/`
 
 ## Verified native frontend candidate (30 October 2026)
 
-The clean `cf4c428` development image built with exit 0 and passed packed rootfs/profile checks plus actual packed ARM Python/native reception, all 256 QR byte values, four preview rotations, startup-route guards and worker cleanup. It uses automatic startup, reviewed base-fork wiring, zram16-lzo and both Rust LCD/frontend backends. It is **not yet physically flashed or cold-boot qualified**. Two full SDK builds from identical immutable inputs produced byte-identical 361,750,528-byte images. The comparison passed; physical flashing/cold boot remains pending.
+The clean `cf4c428` development image built with exit 0 and passed packed rootfs/profile checks plus actual packed ARM Python/native reception, all 256 QR byte values, four preview rotations, startup-route guards and worker cleanup. It uses automatic startup, reviewed base-fork wiring, zram16-lzo and both Rust LCD/frontend backends. It is **physically flashed and cold-boot verified** on the Mini. Two full SDK builds from identical immutable inputs produced byte-identical 361,750,528-byte images. The comparison passed; physical flashing/cold boot also passed.
 
 Local image: `dist/os/verified/native-cf4c428/shieldsigner-mini-native-cf4c428.img.xz` (62,301,408 bytes). The compressed stream was decompressed and matched the full 361,750,528-byte raw image exactly.
 
@@ -35,7 +35,7 @@ mise exec -- uv run --python 3.13 python scripts/verify-native-boot.py \
   --output dist/os/verified/native-cf4c428/new-boot.json
 ```
 
-Run after normal app startup has mapped the packaged extension, before replacing it with a diagnostic launcher. The checker reads image identity first, then verifies runtime/startup hashes and modes, a read-only SquashFS root, no overlays on verified paths, UART2/CMA/zram policy and the normally launched app's packaged native-library mapping. It runs shell utilities, not a second target Python interpreter, and saves no images or wallet/QR values. The old current image was correctly rejected by its identity guard. Positive verification awaits the actual flash.
+Run after normal app startup has mapped the packaged extension, before replacing it with a diagnostic launcher. The checker reads image identity first, then verifies runtime/startup hashes and modes, a read-only SquashFS root, no unexpected overlays on verified paths (the exact standard OS `/etc` overlay is recognized), UART2/CMA/zram policy and the normally launched app's packaged native-library mapping. It runs shell utilities, not a second target Python interpreter, and saves no images or wallet/QR values. The old current image was correctly rejected by its identity guard. Positive verification passed after the actual flash: 112 files/modes, new boot identity, native-library process mapping and runtime policy matched. The user confirmed a complete power cycle and repeated successful optical QR decoding; subsequent camera/QR/DMA cleanup was clean. Evidence: `reverse-engineering/rkaiq/frontend/native-image-cold-boot-validation-2026-10-30.json`.
 
 Record the physical power-cycle observation separately; a changed boot UUID or `adb reboot` does not establish that event. Repeat GUI/camera/workflow cleanup from the new image afterward. The tool is read-only and does not flash, initialize GPIO or change settings.
 

@@ -1,13 +1,13 @@
 # Native frontend implementation and acceptance plan
 
-## Current status — 30 October 2026
+## Current status — complete, 30 October 2026
 
 - Native reception/latest-frame pacing, QR IPC, preview preparation and deferred startup imports are implemented. The host Python suite has 58 passing tests; core Rust, compiled-interface and packed ARM checks passed.
 - Real Mini tests passed Scan/Back/reopen, process-fault recovery, camera entropy/seed/wallet navigation, smartcard-menu loading, and true RGB still capture. Exact packaged library/helper hashes also passed a temporary real-board trial.
 - Memory/CPU/frame/allocation/latency comparisons are recorded with mixed RAM/latency results stated explicitly. Local static-site/content and desktop/mobile QA passed.
-- **Image ready:** `dist/os/verified/native-cf4c428/shieldsigner-mini-native-cf4c428.img.xz`. Corrected build and packed verification both exited 0; compressed and raw checksums match. See OS-BUILD.md for hashes. No new-image flash/cold boot has happened.
+- **Image ready:** `dist/os/verified/native-cf4c428/shieldsigner-mini-native-cf4c428.img.xz`. Corrected build and packed verification both exited 0; compressed and raw checksums match. See OS-BUILD.md for hashes. The image was flashed and physically power-cycled; 112 packaged files/modes, the normal app/native mapping and memory/IO policy passed readback.
 - **Reproducibility passed:** the second full build `mini-native-cf4c428-repro-03` and comparison both exited 0. Input manifests and complete 361,750,528-byte raw image hashes match exactly. Evidence: `native-image-reproducibility-2026-10-30.json`.
-- **Physical step pending:** card-reader assistance was requested; all local disk inventory shows no attached physical SD card. Flash/power-cycle and packaged-boot workflow checks remain required. The board currently runs the temporary packaged runtime at Home.
+- **Cold boot passed:** user confirmed card flashing and complete power removal/restoration. Boot ID changed to `53940bef-1253-4b39-9cd9-5654889a22da`; normal packaged startup mapped the correct native library. User confirmed repeated successful optical QR scans, and subsequent owner/DMA cleanup was zero with camera exit 0. No temporary runtime was used on this boot. Evidence: `native-image-cold-boot-validation-2026-10-30.json`.
 
 The history below preserves checkpoint scopes; older “not implemented/packaged” statements describe those earlier checkpoints, not current status.
 
@@ -75,12 +75,12 @@ Remaining performance measurements completed: controlled actual frame/preview AP
 
 Documentation validation: the generated static site passed 7 content/static tests and the full desktop/mobile browser journeys at 1440/390 px, including guide images, memory-table overflow checks and no-JavaScript access. New CPU/allocation/latency values and the total-RAM limitation were checked in generated HTML. This is local QA, not a site-deployment claim. `reverse-engineering/rkaiq/frontend/documentation-site-check-2026-10-30.json`.
 
-## Open completion gates
+## Completion audit
 
 1. **Passed:** actual image-build exit 0 and packed verification exit 0, including rootfs/source/launcher/ABI/native socket/QR/preview checks against the immutable corrected bundle.
 2. **Passed:** the second full SDK build used identical inputs and produced a byte-identical full image. Both builds/comparison exited 0; complete raw-image SHA-256 is `0e004c87…`.
-3. Flash the verified target, obtain a physical power-cycle boot, verify packaged source/library/backend identities without temporary overlays, and repeat real workflows/cleanup from that image. No external card reader was visible during the current build; arrange physical flashing/power steps only after the artifact is concrete and verified.
-4. Reconcile deployment status and divergence notes with actual image/boot evidence before marking the overall goal complete.
+3. **Passed:** verified image flashed, physical power cycle confirmed by user, fresh boot identity and 112 file hashes/modes checked, root library mapped by normal startup, successful optical QR scans confirmed, and owner/DMA cleanup checked. The standard OS `/etc` writable overlay is explicitly recognized; no unexpected runtime overlays are present.
+4. **Passed:** deployment/divergence notes reconciled with actual image, reproducibility, boot and workflow evidence. Historical checkpoint limits remain explicit.
 
 RGB still-path hardware checkpoint: with the GUI stopped, the real Camera.start_single_frame_mode/capture_frame API using native reception returned three RGB 640×480 frames. No images were saved. The capture reference cleared, owner exited 0, and camera/QR processes plus DMA returned to zero. This supplements the earlier grayscale-video entropy workflow. `reverse-engineering/rkaiq/frontend/native-rgb-still-hardware-2026-10-30.json`; reproducible diagnostic `firmware/bench-profiles/native-still-check.py`. The corrected image job remains live in Buildroot dependencies; this is not new-image boot evidence.
 
@@ -99,3 +99,5 @@ Boot readback preparation: `scripts/verify-native-boot.py` now compares the live
 Boot-checker target compatibility probe: the minimal BusyBox image lacks `stat`, and zram mem_limit is write-only (as the existing zram helper documents). Permission readback now parses color-stripped `ls -ldn` modes, and cap readback uses mm_stat field 4. Both primitives were tested on the current Mini: expected 0644/0755 permissions and 8,388,608-byte cap matched. The actual positive new-image boot gate remains pending; the old-image identity refusal remains intentional.
 
 Reproducibility gate completed: second full SDK build and post-build comparison exited 0. Copied input manifests are equal, both image sizes are 361,750,528 bytes, and complete raw SHA-256 values match `0e004c87bac4de520c5e089c80a2bfa206fc1b5051aad4d8c1e417b292bcc8d0`. This is a same-builder/cached-pinned-toolchain comparison. Physical card-reader assistance has not arrived; no flash/cold boot is claimed.
+
+Final packaged cold-boot gate passed: the new 9b8d31… image booted with fresh UUID, 112 files/modes matched, root was read-only SquashFS, only the standard OS `/etc` overlay covered verified paths, and normal startup mapped the packaged d3b1dafe… native extension. UART2/CMA12/zram policy passed. User confirmed actual flash/power removal/restoration and repeated optical QR decoding. Afterward no camera/QR workers remained, latest camera exit was 0 and DMA was zero. `native-image-cold-boot-validation-2026-10-30.json`. All objective completion gates are now supported; no new funded signing or smartcard hardware claim is made.

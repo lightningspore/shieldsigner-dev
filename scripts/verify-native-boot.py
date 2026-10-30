@@ -52,7 +52,17 @@ try:
             expected['/usr/lib/shieldsigner-camera/'+name[len('payload/'):]]=(info['sha256'],info['mode'])
     for name,sha in installation['startupSha256'].items():expected['/'+name]=(sha,installation['startupModes'][name])
     expected['/'+installation['cameraSource']]=(installation['cameraSourceSha256'],0o644)
-    if any(row[1]!='/' and any(name==row[1] or name.startswith(row[1].rstrip('/')+'/') for name in expected) for row in mounts):raise ValueError('Verified runtime path has a temporary mount overlay')
+    standard_etc=[]
+    for row in mounts:
+        if row[1]=='/':continue
+        covers=any(name==row[1] or name.startswith(row[1].rstrip('/')+'/') for name in expected)
+        if not covers:continue
+        options=row[3].split(',')
+        if (row[0:3]==['overlay','/etc','overlay'] and
+            all(option in options for option in ['lowerdir=/etc','upperdir=/tmp/.rootfs-overlay/etc/upper','workdir=/tmp/.rootfs-overlay/etc/work'])):
+            standard_etc.append('/etc')
+        else:raise ValueError('Verified runtime path has an unexpected mount overlay')
+    report['standardOsWritableOverlays']=standard_etc
     files=[]
     # Batching keeps target work in shell utilities, with no extra Python heap.
     names=list(expected)

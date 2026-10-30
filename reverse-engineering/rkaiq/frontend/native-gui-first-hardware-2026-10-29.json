@@ -1,0 +1,63 @@
+{
+  "kind": "native-frontend-real-GUI-checkpoint",
+  "sourceRevision": "7c10b54",
+  "extensionSha256": "a732f27d08b0437ba092bf000a67aebc755c48b1f08171b57636530937dee479",
+  "board": "Luckfox Pico Mini",
+  "installedImageRevision": "2663ac8",
+  "deployment": "Temporary helper directory and per-file executable read-only bind mount; installed image unchanged",
+  "runtime": {
+    "smallRam": true,
+    "lcdBackend": "rust",
+    "frontendBackend": "rust",
+    "codeLock": true,
+    "diagnosticButtons": true,
+    "diagnosticRequestedScreenshots": true
+  },
+  "checks": {
+    "realStartupReachedHome": true,
+    "realScanPreview": true,
+    "scanBackReopenCycles": 3,
+    "lastBackReturnedHome": true,
+    "cameraAndQrProcessesGoneAfterEachBack": true,
+    "dmaBufferObjectsAfterEachBack": 0,
+    "dmaBufferBytesAfterEachBack": 0,
+    "lastOwnerExitCode": 0,
+    "lastOwnerLogErrorType": null
+  },
+  "memorySample": {
+    "samples": 18,
+    "elapsedSeconds": 20.693843875080347,
+    "availableKiBRange": [
+      9408,
+      10188
+    ],
+    "processes": {
+      "python3": {
+        "minimumPssKiB": 17109,
+        "medianPssKiB": 17654.0,
+        "maximumPssKiB": 17897
+      },
+      "camera-probe": {
+        "minimumPssKiB": 8296,
+        "medianPssKiB": 8296.0,
+        "maximumPssKiB": 8296
+      },
+      "shieldsigner-qr": {
+        "minimumPssKiB": 824,
+        "medianPssKiB": 824.0,
+        "maximumPssKiB": 860
+      }
+    }
+  },
+  "observedScanThreads": {
+    "app": 8,
+    "camera": 5,
+    "qr": 1
+  },
+  "limits": [
+    "Synthetic binary/UR proof is separate from optical acquisition. No optical payload decoded in this dark scene.",
+    "Renderer screenshots are private and ignored; no SPI readback or new human visual confirmation.",
+    "Short diagnostic sample; not a matched old/new performance comparison.",
+    "Camera entropy, wallet navigation, error recovery and final image cold boot remain pending for this native revision."
+  ]
+}

@@ -63,3 +63,29 @@ Teardown is **not automatic**. First stop the app, camera and QR owners and insp
 The image builder now has separate `--memory-profile zram16-lzo`, `--lcd-backend rust` and `--io-profile base-fork` selections. They stage a standard-kernel zram policy, SDK-built uClibc LCD package and explicit guarded wiring/resource policy respectively. None is inferred from another. A separate `--app-startup automatic|held` choice defaults to held for dev and automatic for production; enabling a memory/LCD/IO profile does not select startup.
 
 The actual zram/carrier kernel probe has passed. The base-fork UART2-disabled DTB probe also passed. The actual LCD package and `2663ac8` full image built successfully and passed packed readback/ARM QEMU checks. A read-only SquashFS runtime hardware check passed; a fresh persistent-image boot remains pending. Host checks are not a claim of new-image boot qualification. See [the integration checkpoint](IMAGE-INTEGRATION.md) for source, receipt, init, strip and packed-image requirements. The runtime-only setup above deliberately retains its old exact bench module pins.
+
+
+## Diagnostic button control
+
+`button_control.py` overlays named virtual active-low readings on the reviewed GPIO input objects. Physical low inputs remain active; it never writes GPIO lines. The adapter runs inside the app, adds no thread, and preserves normal debounce, repeat, hold and screensaver handling. The launcher `button-controlled-app.py` uses the real app startup and does not jump directly to Scan.
+
+This is explicitly enabled diagnostic code, not part of the flashed default startup. Stop the existing `/start-seedsigner.sh` supervisor and app before launching it, and confirm camera owners are gone. Stage both files under `/tmp`, then use the same Small-RAM, Rust LCD, code-lock and 4096 KiB MEMLOCK environment as the normal launcher. Restarting normally/rebooting removes this process-local patch. The guarded source hash must match before it installs.
+
+The app creates `/tmp/shieldsigner-buttons-PID` (0700) and publishes its active directory in `/tmp/shieldsigner-button-control-current.json` (0600). Requests accept only the eight named keys, a 30–1500 ms hold and a bounded ID; input files are limited to 512 bytes. Requests are consumed once, overlapping/duplicate requests are rejected, and release uses monotonic time. No TCP listener or arbitrary code command is exposed.
+
+With the diagnostic app already running:
+
+```sh
+mise run camera:button KEY_PRESS
+mise run camera:button KEY_LEFT --hold-ms 500
+```
+
+Use 120 ms menu presses and a 500 ms Scan cancellation: the frame-paced Scan loop may miss a brief press. The client waits up to 20 seconds for a release observation, allowing camera startup to block polling. A delivered/released acknowledgement is not proof of navigation; verify the app view and camera ownership/DMA separately. Do not replay a timed-out command without inspecting the current state.
+
+Hardware proof: `reverse-engineering/rkaiq/memory/button-control-hardware-result.json` records three real-app Scan/Back cycles. Every cycle returned to MainMenuView with no camera/QR owners and zero allocated camera DMA. This tests software navigation, not electrical button wiring or optical QR decoding. The source fixture tests cover physical-input preservation, bounded press/release, duplicate handling and invalid requests.
+
+## Python memory diagnostics
+
+`python-object-census.py` exports only type counts, selected shallow sizes and process memory, without tracemalloc or object values. It adds a monitor thread, refuses the object walk below 8 MiB available RAM and has a 180-second process deadline. It is a diagnostic run, not a normal launcher. Touching objects decompresses cold pages, so report PSS and swap before/after together.
+
+Full tracemalloc snapshots made the Mini unresponsive. `python-memory-profile.py` now refuses targets with less than 96 MiB MemTotal. Use `python-import-memory-profile.py` with the packed ARM Python under QEMU on a larger builder for full import snapshots. Its source-filename totals reflect allocation sites, not feature ownership, and are not target resident-memory measurements. The public guide and scoped summary are in `docs/MEMORY-THREADS.md` and `reverse-engineering/rkaiq/memory/python-deep-2026-10-29/summary.json`.

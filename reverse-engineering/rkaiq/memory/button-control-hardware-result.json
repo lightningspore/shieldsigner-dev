@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-29",
+  "imageVersion": "0.0.39-dev",
+  "normalAppNavigation": true,
+  "gpioWrites": false,
+  "addedThreads": 0,
+  "scope": "Diagnostic GPIO-read overlay preserves physical inputs; verifies app navigation/owner teardown, not electrical button wiring or optical QR.",
+  "cycles": [
+    {
+      "cycle": 1,
+      "seconds": 9.266445916029625,
+      "open": {
+        "key": "KEY_PRESS",
+        "holdMs": 120,
+        "deliveredAndReleased": true,
+        "uiOutcomeRequiresVerification": true
+      },
+      "back": {
+        "key": "KEY_LEFT",
+        "holdMs": 500,
+        "deliveredAndReleased": true,
+        "uiOutcomeRequiresVerification": true
+      },
+      "cameraAndQrOwnersAbsentAfterBack": true,
+      "cameraDmaKiBAfterBack": 0,
+      "returnedToMainMenu": true
+    },
+    {
+      "cycle": 2,
+      "seconds": 9.152337417006493,
+      "open": {
+        "key": "KEY_PRESS",
+        "holdMs": 120,
+        "deliveredAndReleased": true,
+        "uiOutcomeRequiresVerification": true
+      },
+      "back": {
+        "key": "KEY_LEFT",
+        "holdMs": 500,
+        "deliveredAndReleased": true,
+        "uiOutcomeRequiresVerification": true
+      },
+      "cameraAndQrOwnersAbsentAfterBack": true,
+      "cameraDmaKiBAfterBack": 0,
+      "returnedToMainMenu": true
+    },
+    {
+      "cycle": 3,
+      "seconds": 8.646026292000897,
+      "open": {
+        "key": "KEY_PRESS",
+        "holdMs": 120,
+        "deliveredAndReleased": true,
+        "uiOutcomeRequiresVerification": true
+      },
+      "back": {
+        "key": "KEY_LEFT",
+        "holdMs": 500,
+        "deliveredAndReleased": true,
+        "uiOutcomeRequiresVerification": true
+      },
+      "cameraAndQrOwnersAbsentAfterBack": true,
+      "cameraDmaKiBAfterBack": 0,
+      "returnedToMainMenu": true
+    }
+  ]
+}

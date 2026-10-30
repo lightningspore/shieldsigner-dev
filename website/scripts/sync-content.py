@@ -21,7 +21,7 @@ for directory in [content, public]:
     if directory.exists(): shutil.rmtree(directory)
     directory.mkdir()
 url_map = {str((ROOT / source).resolve()): f"/guides/{slug}/" for slug, source, *_ in GUIDES}
-files = ["reverse-engineering/rkaiq/memory/memory-packed-image-1200.png", "reverse-engineering/rkaiq/memory/gui-packed-image-1200-result.json", *(f"reference/pdfs/{p.name}" for p in sorted((ROOT / "reference/pdfs").glob("*.pdf"))),
+files = ["reverse-engineering/rkaiq/memory/python-deep-2026-10-29/allocations.png", "reverse-engineering/rkaiq/memory/python-deep-2026-10-29/summary.json", "reverse-engineering/rkaiq/memory/memory-packed-image-1200.png", "reverse-engineering/rkaiq/memory/gui-packed-image-1200-result.json", *(f"reference/pdfs/{p.name}" for p in sorted((ROOT / "reference/pdfs").glob("*.pdf"))),
 "docs/luckfox-mini-pinout.json", "docs/luckfox-pinout-check.json", "docs/workflows.json", "docs/system-parts.json", "docs/card-workflows.json", "docs/os-build-benchmark.json", "docs/pdf-references.json", "docs/drc-assembly-exceptions.json",
 "enclosure/previews/assembled.png", "enclosure/previews/exploded.png",
 "manufacturing/jlcpcb/bom-carrier-jlcpcb.csv", "manufacturing/jlcpcb/cpl-carrier-jlcpcb.csv"]

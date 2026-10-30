@@ -1,0 +1,1667 @@
+{
+  "date": "2026-10-29",
+  "imageVersion": "0.0.39-dev",
+  "pythonVersion": "3.12.10",
+  "importScope": "Actual packed ARM Python under qemu-user, sequential import graph only, no target PSS or Controller/hardware initialization. Deltas depend on import order and include modest reporting noise.",
+  "objectScope": "Real board/app, no tracemalloc, one additional diagnostic monitor thread; shallow GC census misses untracked objects and changes page residency. No seed/transaction data supplied.",
+  "imports": [
+    {
+      "phase": "entry_imports",
+      "tracedLiveBytes": 8956524,
+      "tracingMetadataBytes": 3367352,
+      "moduleCount": 358,
+      "gcTrackedObjects": 31080,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 5060751,
+          "liveBlocks": 60929
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 487096,
+          "liveBlocks": 4320
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 345922,
+          "liveBlocks": 3819
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 188893,
+          "liveBlocks": 2040
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 110286,
+          "liveBlocks": 1501
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 109502,
+          "liveBlocks": 548
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 96387,
+          "liveBlocks": 817
+        },
+        {
+          "source": "usr/lib/python3.12/ctypes/__init__.py",
+          "liveBytes": 88160,
+          "liveBlocks": 840
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 77983,
+          "liveBlocks": 1297
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/ply/yacc.py",
+          "liveBytes": 71132,
+          "liveBlocks": 1442
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/c_ast.py",
+          "liveBytes": 70006,
+          "liveBlocks": 762
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/shamir_mnemonic/wordlist.py",
+          "liveBytes": 60570,
+          "liveBlocks": 1811
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/embit/descriptor/miniscript.py",
+          "liveBytes": 59129,
+          "liveBlocks": 530
+        }
+      ]
+    },
+    {
+      "phase": "scan_imports",
+      "tracedLiveBytes": 9309796,
+      "tracingMetadataBytes": 3474808,
+      "moduleCount": 360,
+      "gcTrackedObjects": 31261,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 5094022,
+          "liveBlocks": 61082
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 487419,
+          "liveBlocks": 4329
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 379744,
+          "liveBlocks": 4126
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 233185,
+          "liveBlocks": 2477
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 188893,
+          "liveBlocks": 2040
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 110286,
+          "liveBlocks": 1501
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 96387,
+          "liveBlocks": 817
+        },
+        {
+          "source": "usr/lib/python3.12/tracemalloc.py",
+          "liveBytes": 91448,
+          "liveBlocks": 3497
+        },
+        {
+          "source": "usr/lib/python3.12/ctypes/__init__.py",
+          "liveBytes": 88160,
+          "liveBlocks": 840
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 85781,
+          "liveBlocks": 1790
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 77927,
+          "liveBlocks": 1295
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/c_ast.py",
+          "liveBytes": 70006,
+          "liveBlocks": 762
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/ply/yacc.py",
+          "liveBytes": 64787,
+          "liveBlocks": 1265
+        }
+      ]
+    },
+    {
+      "phase": "seed_views",
+      "tracedLiveBytes": 12167065,
+      "tracingMetadataBytes": 4984744,
+      "moduleCount": 478,
+      "gcTrackedObjects": 36994,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 7304263,
+          "liveBlocks": 78216
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 615063,
+          "liveBlocks": 6060
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 287877,
+          "liveBlocks": 5026
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 215562,
+          "liveBlocks": 2296
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 212949,
+          "liveBlocks": 1802
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 150127,
+          "liveBlocks": 1459
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 113624,
+          "liveBlocks": 1562
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107252,
+          "liveBlocks": 894
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 89534,
+          "liveBlocks": 1850
+        },
+        {
+          "source": "usr/lib/python3.12/ctypes/__init__.py",
+          "liveBytes": 88160,
+          "liveBlocks": 840
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 77927,
+          "liveBlocks": 1295
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/c_ast.py",
+          "liveBytes": 70006,
+          "liveBlocks": 762
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/ply/yacc.py",
+          "liveBytes": 62378,
+          "liveBlocks": 1192
+        }
+      ]
+    },
+    {
+      "phase": "tools_views",
+      "tracedLiveBytes": 14537809,
+      "tracingMetadataBytes": 5402552,
+      "moduleCount": 520,
+      "gcTrackedObjects": 41834,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 8837369,
+          "liveBlocks": 92498
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 758375,
+          "liveBlocks": 7252
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 305723,
+          "liveBlocks": 5329
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 217830,
+          "liveBlocks": 2323
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 212949,
+          "liveBlocks": 1802
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 143839,
+          "liveBlocks": 1402
+        },
+        {
+          "source": "opt/src/seedsigner/views/smartcard_views.py",
+          "liveBytes": 139258,
+          "liveBlocks": 1286
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 120492,
+          "liveBlocks": 2431
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 114117,
+          "liveBlocks": 1578
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107412,
+          "liveBlocks": 898
+        },
+        {
+          "source": "opt/src/seedsigner/views/gpg_views.py",
+          "liveBytes": 97965,
+          "liveBlocks": 890
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 91214,
+          "liveBlocks": 1525
+        },
+        {
+          "source": "usr/lib/python3.12/ctypes/__init__.py",
+          "liveBytes": 88160,
+          "liveBlocks": 840
+        }
+      ]
+    },
+    {
+      "phase": "settings_views",
+      "tracedLiveBytes": 14843337,
+      "tracingMetadataBytes": 5481096,
+      "moduleCount": 523,
+      "gcTrackedObjects": 42354,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 8936622,
+          "liveBlocks": 93337
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 835496,
+          "liveBlocks": 7982
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 306048,
+          "liveBlocks": 5337
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 217830,
+          "liveBlocks": 2323
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 212949,
+          "liveBlocks": 1802
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 143839,
+          "liveBlocks": 1402
+        },
+        {
+          "source": "opt/src/seedsigner/views/smartcard_views.py",
+          "liveBytes": 136878,
+          "liveBlocks": 1251
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 132454,
+          "liveBlocks": 2661
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 114117,
+          "liveBlocks": 1578
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107412,
+          "liveBlocks": 898
+        },
+        {
+          "source": "usr/lib/python3.12/tracemalloc.py",
+          "liveBytes": 100520,
+          "liveBlocks": 3808
+        },
+        {
+          "source": "opt/src/seedsigner/views/gpg_views.py",
+          "liveBytes": 96233,
+          "liveBlocks": 864
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 91214,
+          "liveBlocks": 1525
+        }
+      ]
+    },
+    {
+      "phase": "smartcard_views",
+      "tracedLiveBytes": 14856849,
+      "tracingMetadataBytes": 5488024,
+      "moduleCount": 523,
+      "gcTrackedObjects": 42356,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 8936026,
+          "liveBlocks": 93317
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 834120,
+          "liveBlocks": 7941
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 305892,
+          "liveBlocks": 5332
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 217830,
+          "liveBlocks": 2323
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 212949,
+          "liveBlocks": 1802
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 143839,
+          "liveBlocks": 1402
+        },
+        {
+          "source": "opt/src/seedsigner/views/smartcard_views.py",
+          "liveBytes": 136878,
+          "liveBlocks": 1251
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 136606,
+          "liveBlocks": 2761
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 114117,
+          "liveBlocks": 1578
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107412,
+          "liveBlocks": 898
+        },
+        {
+          "source": "usr/lib/python3.12/tracemalloc.py",
+          "liveBytes": 105496,
+          "liveBlocks": 3996
+        },
+        {
+          "source": "opt/src/seedsigner/views/gpg_views.py",
+          "liveBytes": 96233,
+          "liveBlocks": 864
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 91214,
+          "liveBlocks": 1525
+        }
+      ]
+    }
+  ],
+  "objectCensus": [
+    {
+      "phase": "baseline",
+      "availableKiBBefore": 29380,
+      "processBeforeKiB": {
+        "Rss": 8132,
+        "Pss": 7753,
+        "Pss_Anon": 3560,
+        "Pss_File": 4193,
+        "Pss_Shmem": 0,
+        "Shared_Clean": 492,
+        "Shared_Dirty": 0,
+        "Private_Clean": 4080,
+        "Private_Dirty": 3560,
+        "Referenced": 8132,
+        "Anonymous": 3560,
+        "LazyFree": 0,
+        "AnonHugePages": 0,
+        "ShmemPmdMapped": 0,
+        "FilePmdMapped": 0,
+        "Shared_Hugetlb": 0,
+        "Private_Hugetlb": 0,
+        "Swap": 0,
+        "SwapPss": 0,
+        "Locked": 0
+      },
+      "processAfterKiB": {
+        "Rss": 8180,
+        "Pss": 7801,
+        "Pss_Anon": 3608,
+        "Pss_File": 4193,
+        "Pss_Shmem": 0,
+        "Shared_Clean": 492,
+        "Shared_Dirty": 0,
+        "Private_Clean": 4080,
+        "Private_Dirty": 3608,
+        "Referenced": 8180,
+        "Anonymous": 3608,
+        "LazyFree": 0,
+        "AnonHugePages": 0,
+        "ShmemPmdMapped": 0,
+        "FilePmdMapped": 0,
+        "Shared_Hugetlb": 0,
+        "Private_Hugetlb": 0,
+        "Swap": 0,
+        "SwapPss": 0,
+        "Locked": 0
+      },
+      "gcTrackedObjects": 8970,
+      "uniqueFunctionCodeObjects": 1607,
+      "functionCodeShallowBytes": 491432,
+      "moduleCount": 77,
+      "threads": [
+        {
+          "name": "MainThread",
+          "class": "_MainThread",
+          "nativeId": 1176
+        }
+      ],
+      "types": [
+        {
+          "type": "builtins.function",
+          "count": 1644,
+          "shallowBytes": 131520,
+          "sizedCount": 1644
+        },
+        {
+          "type": "builtins.tuple",
+          "count": 920,
+          "shallowBytes": 28908,
+          "sizedCount": 920
+        },
+        {
+          "type": "builtins.dict",
+          "count": 854,
+          "shallowBytes": 218364,
+          "sizedCount": 854
+        },
+        {
+          "type": "builtins.type",
+          "count": 233,
+          "shallowBytes": 154824,
+          "sizedCount": 233
+        },
+        {
+          "type": "builtins.list",
+          "count": 199,
+          "shallowBytes": 17428,
+          "sizedCount": 199
+        },
+        {
+          "type": "builtins.module",
+          "count": 75,
+          "shallowBytes": 2700,
+          "sizedCount": 75
+        },
+        {
+          "type": "builtins.set",
+          "count": 65,
+          "shallowBytes": 20076,
+          "sizedCount": 65
+        },
+        {
+          "type": "builtins.frozenset",
+          "count": 58,
+          "shallowBytes": 17656,
+          "sizedCount": 58
+        }
+      ],
+      "pillowWrappers": []
+    },
+    {
+      "phase": "idle",
+      "availableKiBBefore": 14272,
+      "processBeforeKiB": {
+        "Rss": 29876,
+        "Pss": 29499,
+        "Pss_Anon": 20096,
+        "Pss_File": 9403,
+        "Pss_Shmem": 0,
+        "Shared_Clean": 488,
+        "Shared_Dirty": 0,
+        "Private_Clean": 9292,
+        "Private_Dirty": 20096,
+        "Referenced": 28836,
+        "Anonymous": 20096,
+        "LazyFree": 0,
+        "AnonHugePages": 0,
+        "ShmemPmdMapped": 0,
+        "FilePmdMapped": 0,
+        "Shared_Hugetlb": 0,
+        "Private_Hugetlb": 0,
+        "Swap": 216,
+        "SwapPss": 216,
+        "Locked": 0
+      },
+      "processAfterKiB": {
+        "Rss": 30096,
+        "Pss": 29719,
+        "Pss_Anon": 20280,
+        "Pss_File": 9439,
+        "Pss_Shmem": 0,
+        "Shared_Clean": 488,
+        "Shared_Dirty": 0,
+        "Private_Clean": 9400,
+        "Private_Dirty": 20208,
+        "Referenced": 29056,
+        "Anonymous": 20280,
+        "LazyFree": 0,
+        "AnonHugePages": 0,
+        "ShmemPmdMapped": 0,
+        "FilePmdMapped": 0,
+        "Shared_Hugetlb": 0,
+        "Private_Hugetlb": 0,
+        "Swap": 116,
+        "SwapPss": 116,
+        "Locked": 0
+      },
+      "gcTrackedObjects": 41038,
+      "uniqueFunctionCodeObjects": 9547,
+      "functionCodeShallowBytes": 3753384,
+      "moduleCount": 516,
+      "threads": [
+        {
+          "name": "MainThread",
+          "class": "_MainThread",
+          "nativeId": 1176
+        },
+        {
+          "name": "object-census-monitor",
+          "class": "Thread",
+          "nativeId": 1179
+        },
+        {
+          "name": "Thread-1",
+          "class": "MicroSD",
+          "nativeId": 1189
+        },
+        {
+          "name": "Thread-4",
+          "class": "WipeTimerThread",
+          "nativeId": 1191
+        },
+        {
+          "name": "Thread-5",
+          "class": "HardwareRngMonitorThread",
+          "nativeId": 1192
+        }
+      ],
+      "types": [
+        {
+          "type": "builtins.function",
+          "count": 10037,
+          "shallowBytes": 802960,
+          "sizedCount": 10037
+        },
+        {
+          "type": "builtins.tuple",
+          "count": 5616,
+          "shallowBytes": 174280,
+          "sizedCount": 5616
+        },
+        {
+          "type": "builtins.dict",
+          "count": 4863,
+          "shallowBytes": 1177092,
+          "sizedCount": 4863
+        },
+        {
+          "type": "builtins.type",
+          "count": 1658,
+          "shallowBytes": 1212324,
+          "sizedCount": 1658
+        },
+        {
+          "type": "builtins.list",
+          "count": 1545,
+          "shallowBytes": 128176,
+          "sizedCount": 1545
+        },
+        {
+          "type": "builtins.module",
+          "count": 512,
+          "shallowBytes": 18432,
+          "sizedCount": 512
+        },
+        {
+          "type": "builtins.set",
+          "count": 342,
+          "shallowBytes": 83784,
+          "sizedCount": 342
+        },
+        {
+          "type": "builtins.frozenset",
+          "count": 175,
+          "shallowBytes": 103508,
+          "sizedCount": 175
+        }
+      ],
+      "pillowWrappers": [
+        {
+          "type": "PIL.Image.Image",
+          "count": 4
+        },
+        {
+          "type": "PIL.ImageFont.FreeTypeFont",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "phase": "scan",
+      "availableKiBBefore": 9244,
+      "processBeforeKiB": {
+        "Rss": 16796,
+        "Pss": 16565,
+        "Pss_Anon": 12980,
+        "Pss_File": 3585,
+        "Pss_Shmem": 0,
+        "Shared_Clean": 316,
+        "Shared_Dirty": 0,
+        "Private_Clean": 3936,
+        "Private_Dirty": 12544,
+        "Referenced": 16408,
+        "Anonymous": 12980,
+        "LazyFree": 0,
+        "AnonHugePages": 0,
+        "ShmemPmdMapped": 0,
+        "FilePmdMapped": 0,
+        "Shared_Hugetlb": 0,
+        "Private_Hugetlb": 0,
+        "Swap": 10212,
+        "SwapPss": 10212,
+        "Locked": 0
+      },
+      "processAfterKiB": {
+        "Rss": 21868,
+        "Pss": 21752,
+        "Pss_Anon": 18188,
+        "Pss_File": 3564,
+        "Pss_Shmem": 0,
+        "Shared_Clean": 148,
+        "Shared_Dirty": 0,
+        "Private_Clean": 4128,
+        "Private_Dirty": 17592,
+        "Referenced": 21508,
+        "Anonymous": 18188,
+        "LazyFree": 0,
+        "AnonHugePages": 0,
+        "ShmemPmdMapped": 0,
+        "FilePmdMapped": 0,
+        "Shared_Hugetlb": 0,
+        "Private_Hugetlb": 0,
+        "Swap": 5328,
+        "SwapPss": 5328,
+        "Locked": 0
+      },
+      "gcTrackedObjects": 42145,
+      "uniqueFunctionCodeObjects": 9698,
+      "functionCodeShallowBytes": 3844948,
+      "moduleCount": 520,
+      "threads": [
+        {
+          "name": "MainThread",
+          "class": "_MainThread",
+          "nativeId": 1176
+        },
+        {
+          "name": "object-census-monitor",
+          "class": "Thread",
+          "nativeId": 1179
+        },
+        {
+          "name": "Thread-1",
+          "class": "MicroSD",
+          "nativeId": 1189
+        },
+        {
+          "name": "Thread-4",
+          "class": "WipeTimerThread",
+          "nativeId": 1191
+        },
+        {
+          "name": "Thread-5",
+          "class": "HardwareRngMonitorThread",
+          "nativeId": 1192
+        },
+        {
+          "name": "camera-log-drainer",
+          "class": "Thread",
+          "nativeId": 1225
+        },
+        {
+          "name": "Thread-9 (_update)",
+          "class": "Thread",
+          "nativeId": 1226
+        },
+        {
+          "name": "Thread-10",
+          "class": "LivePreviewThread",
+          "nativeId": 1227
+        }
+      ],
+      "types": [
+        {
+          "type": "builtins.function",
+          "count": 10198,
+          "shallowBytes": 815840,
+          "sizedCount": 10198
+        },
+        {
+          "type": "builtins.tuple",
+          "count": 5992,
+          "shallowBytes": 192088,
+          "sizedCount": 5992
+        },
+        {
+          "type": "builtins.dict",
+          "count": 4967,
+          "shallowBytes": 1207344,
+          "sizedCount": 4967
+        },
+        {
+          "type": "builtins.type",
+          "count": 1715,
+          "shallowBytes": 1262940,
+          "sizedCount": 1715
+        },
+        {
+          "type": "builtins.list",
+          "count": 1596,
+          "shallowBytes": 134220,
+          "sizedCount": 1596
+        },
+        {
+          "type": "builtins.module",
+          "count": 517,
+          "shallowBytes": 18612,
+          "sizedCount": 517
+        },
+        {
+          "type": "builtins.set",
+          "count": 348,
+          "shallowBytes": 84432,
+          "sizedCount": 348
+        },
+        {
+          "type": "builtins.frozenset",
+          "count": 175,
+          "shallowBytes": 103508,
+          "sizedCount": 175
+        }
+      ],
+      "pillowWrappers": [
+        {
+          "type": "PIL.ImageFont.FreeTypeFont",
+          "count": 14
+        },
+        {
+          "type": "PIL.Image.Image",
+          "count": 10
+        }
+      ]
+    },
+    {
+      "phase": "after-scan",
+      "availableKiBBefore": 14516,
+      "processBeforeKiB": {
+        "Rss": 21316,
+        "Pss": 20918,
+        "Pss_Anon": 16792,
+        "Pss_File": 4126,
+        "Pss_Shmem": 0,
+        "Shared_Clean": 644,
+        "Shared_Dirty": 0,
+        "Private_Clean": 4904,
+        "Private_Dirty": 15768,
+        "Referenced": 21040,
+        "Anonymous": 16792,
+        "LazyFree": 0,
+        "AnonHugePages": 0,
+        "ShmemPmdMapped": 0,
+        "FilePmdMapped": 0,
+        "Shared_Hugetlb": 0,
+        "Private_Hugetlb": 0,
+        "Swap": 4488,
+        "SwapPss": 4488,
+        "Locked": 0
+      },
+      "processAfterKiB": {
+        "Rss": 22556,
+        "Pss": 22158,
+        "Pss_Anon": 17828,
+        "Pss_File": 4330,
+        "Pss_Shmem": 0,
+        "Shared_Clean": 644,
+        "Shared_Dirty": 0,
+        "Private_Clean": 6076,
+        "Private_Dirty": 15836,
+        "Referenced": 22384,
+        "Anonymous": 17828,
+        "LazyFree": 0,
+        "AnonHugePages": 0,
+        "ShmemPmdMapped": 0,
+        "FilePmdMapped": 0,
+        "Shared_Hugetlb": 0,
+        "Private_Hugetlb": 0,
+        "Swap": 3468,
+        "SwapPss": 3468,
+        "Locked": 0
+      },
+      "gcTrackedObjects": 42040,
+      "uniqueFunctionCodeObjects": 9703,
+      "functionCodeShallowBytes": 3847836,
+      "moduleCount": 520,
+      "threads": [
+        {
+          "name": "MainThread",
+          "class": "_MainThread",
+          "nativeId": 1176
+        },
+        {
+          "name": "object-census-monitor",
+          "class": "Thread",
+          "nativeId": 1179
+        },
+        {
+          "name": "Thread-1",
+          "class": "MicroSD",
+          "nativeId": 1189
+        },
+        {
+          "name": "Thread-4",
+          "class": "WipeTimerThread",
+          "nativeId": 1191
+        },
+        {
+          "name": "Thread-5",
+          "class": "HardwareRngMonitorThread",
+          "nativeId": 1192
+        },
+        {
+          "name": "Thread-11",
+          "class": "UpdateThread",
+          "nativeId": 1276
+        }
+      ],
+      "types": [
+        {
+          "type": "builtins.function",
+          "count": 10205,
+          "shallowBytes": 816400,
+          "sizedCount": 10205
+        },
+        {
+          "type": "builtins.tuple",
+          "count": 5852,
+          "shallowBytes": 184604,
+          "sizedCount": 5852
+        },
+        {
+          "type": "builtins.dict",
+          "count": 4974,
+          "shallowBytes": 1215636,
+          "sizedCount": 4974
+        },
+        {
+          "type": "builtins.type",
+          "count": 1715,
+          "shallowBytes": 1262940,
+          "sizedCount": 1715
+        },
+        {
+          "type": "builtins.list",
+          "count": 1618,
+          "shallowBytes": 134848,
+          "sizedCount": 1618
+        },
+        {
+          "type": "builtins.module",
+          "count": 517,
+          "shallowBytes": 18612,
+          "sizedCount": 517
+        },
+        {
+          "type": "builtins.set",
+          "count": 348,
+          "shallowBytes": 84432,
+          "sizedCount": 348
+        },
+        {
+          "type": "builtins.frozenset",
+          "count": 175,
+          "shallowBytes": 103508,
+          "sizedCount": 175
+        }
+      ],
+      "pillowWrappers": [
+        {
+          "type": "PIL.ImageFont.FreeTypeFont",
+          "count": 14
+        },
+        {
+          "type": "PIL.Image.Image",
+          "count": 11
+        }
+      ]
+    }
+  ],
+  "physicalBackNavigation": {
+    "userConfirmedMenu": true,
+    "cameraAndQrOwnersAbsent": true,
+    "cameraDmaAllocatedKiBAfterBack": 0
+  },
+  "limits": [
+    "Code objects, functions, container sizes and traced allocations overlap: do not sum as a complete heap.",
+    "Many strings/bytes and native Pillow/Rust allocations are outside this census.",
+    "Full on-target tracemalloc snapshot made the board unresponsive; board rebooted and normal app restored."
+  ],
+  "helpers": {
+    "firmware/bench-profiles/python-object-census.py": "867bd731e84887808f9f75fc51b67dac74ce51d9273419f73accf7521b7e99a8",
+    "firmware/bench-profiles/python-memory-profile.py": "e70732b69197290faa46d42d0abc1260424f6f259209efe6a8a99cfca67d1214",
+    "firmware/bench-profiles/python-import-memory-profile.py": "8e60eecec41c08f1d610d30d4d8bbef7c42dbbc883e30a16d1569e2ffc6d76ab"
+  },
+  "startupImportSequence": [
+    {
+      "phase": "entry_imports",
+      "tracedLiveBytes": 8955238,
+      "tracingMetadataBytes": 3366696,
+      "moduleCount": 358,
+      "gcTrackedObjects": 31082,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 5060754,
+          "liveBlocks": 60929
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 486933,
+          "liveBlocks": 4314
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 345922,
+          "liveBlocks": 3819
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 188893,
+          "liveBlocks": 2040
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 110071,
+          "liveBlocks": 1496
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 109502,
+          "liveBlocks": 548
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 96352,
+          "liveBlocks": 816
+        },
+        {
+          "source": "usr/lib/python3.12/ctypes/__init__.py",
+          "liveBytes": 88160,
+          "liveBlocks": 840
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 77983,
+          "liveBlocks": 1297
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/ply/yacc.py",
+          "liveBytes": 70208,
+          "liveBlocks": 1414
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/c_ast.py",
+          "liveBytes": 70006,
+          "liveBlocks": 762
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/shamir_mnemonic/wordlist.py",
+          "liveBytes": 60531,
+          "liveBlocks": 1810
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/embit/descriptor/miniscript.py",
+          "liveBytes": 59129,
+          "liveBlocks": 530
+        }
+      ]
+    },
+    {
+      "phase": "startup_routes",
+      "tracedLiveBytes": 13523000,
+      "tracingMetadataBytes": 5215032,
+      "moduleCount": 505,
+      "gcTrackedObjects": 40085,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 8271562,
+          "liveBlocks": 88111
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 731619,
+          "liveBlocks": 7115
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 294909,
+          "liveBlocks": 5180
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 217830,
+          "liveBlocks": 2323
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 147459,
+          "liveBlocks": 1454
+        },
+        {
+          "source": "opt/src/seedsigner/views/smartcard_views.py",
+          "liveBytes": 137181,
+          "liveBlocks": 1256
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 113529,
+          "liveBlocks": 1561
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 109462,
+          "liveBlocks": 547
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107502,
+          "liveBlocks": 899
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 91214,
+          "liveBlocks": 1525
+        },
+        {
+          "source": "usr/lib/python3.12/ctypes/__init__.py",
+          "liveBytes": 88160,
+          "liveBlocks": 840
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 85808,
+          "liveBlocks": 1791
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/ndef/wifi.py",
+          "liveBytes": 81812,
+          "liveBlocks": 741
+        }
+      ]
+    },
+    {
+      "phase": "scan_imports",
+      "tracedLiveBytes": 13868202,
+      "tracingMetadataBytes": 5326952,
+      "moduleCount": 507,
+      "gcTrackedObjects": 40408,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 8295135,
+          "liveBlocks": 88069
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 763937,
+          "liveBlocks": 7366
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 295193,
+          "liveBlocks": 5188
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 231093,
+          "liveBlocks": 2422
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 217830,
+          "liveBlocks": 2323
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 144127,
+          "liveBlocks": 1405
+        },
+        {
+          "source": "opt/src/seedsigner/views/smartcard_views.py",
+          "liveBytes": 136977,
+          "liveBlocks": 1253
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 123247,
+          "liveBlocks": 2505
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 113529,
+          "liveBlocks": 1561
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107478,
+          "liveBlocks": 898
+        },
+        {
+          "source": "usr/lib/python3.12/tracemalloc.py",
+          "liveBytes": 95832,
+          "liveBlocks": 3634
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 91214,
+          "liveBlocks": 1525
+        },
+        {
+          "source": "usr/lib/python3.12/ctypes/__init__.py",
+          "liveBytes": 88160,
+          "liveBlocks": 840
+        }
+      ]
+    },
+    {
+      "phase": "seed_views",
+      "tracedLiveBytes": 13875941,
+      "tracingMetadataBytes": 5331128,
+      "moduleCount": 507,
+      "gcTrackedObjects": 40407,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 8295119,
+          "liveBlocks": 88068
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 762801,
+          "liveBlocks": 7329
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 295077,
+          "liveBlocks": 5184
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 217830,
+          "liveBlocks": 2323
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 213569,
+          "liveBlocks": 1802
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 144127,
+          "liveBlocks": 1405
+        },
+        {
+          "source": "opt/src/seedsigner/views/smartcard_views.py",
+          "liveBytes": 136977,
+          "liveBlocks": 1253
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 127171,
+          "liveBlocks": 2601
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 113529,
+          "liveBlocks": 1561
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107478,
+          "liveBlocks": 898
+        },
+        {
+          "source": "usr/lib/python3.12/tracemalloc.py",
+          "liveBytes": 105440,
+          "liveBlocks": 3996
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 91214,
+          "liveBlocks": 1525
+        },
+        {
+          "source": "usr/lib/python3.12/ctypes/__init__.py",
+          "liveBytes": 88160,
+          "liveBlocks": 840
+        }
+      ]
+    },
+    {
+      "phase": "tools_views",
+      "tracedLiveBytes": 14597281,
+      "tracingMetadataBytes": 5434824,
+      "moduleCount": 522,
+      "gcTrackedObjects": 41883,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 8843129,
+          "liveBlocks": 92605
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 762009,
+          "liveBlocks": 7318
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 306048,
+          "liveBlocks": 5336
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 217830,
+          "liveBlocks": 2323
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 210937,
+          "liveBlocks": 1749
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 144127,
+          "liveBlocks": 1405
+        },
+        {
+          "source": "opt/src/seedsigner/views/smartcard_views.py",
+          "liveBytes": 136977,
+          "liveBlocks": 1253
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 124174,
+          "liveBlocks": 2525
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 113902,
+          "liveBlocks": 1573
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107478,
+          "liveBlocks": 898
+        },
+        {
+          "source": "opt/src/seedsigner/views/gpg_views.py",
+          "liveBytes": 96469,
+          "liveBlocks": 868
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 91214,
+          "liveBlocks": 1525
+        },
+        {
+          "source": "usr/lib/python3.12/ctypes/__init__.py",
+          "liveBytes": 88160,
+          "liveBlocks": 840
+        }
+      ]
+    },
+    {
+      "phase": "settings_views",
+      "tracedLiveBytes": 14856873,
+      "tracingMetadataBytes": 5486552,
+      "moduleCount": 525,
+      "gcTrackedObjects": 42398,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 8942366,
+          "liveBlocks": 93443
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 839162,
+          "liveBlocks": 8050
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 306346,
+          "liveBlocks": 5343
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 217830,
+          "liveBlocks": 2323
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 210937,
+          "liveBlocks": 1749
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 144127,
+          "liveBlocks": 1405
+        },
+        {
+          "source": "opt/src/seedsigner/views/smartcard_views.py",
+          "liveBytes": 136977,
+          "liveBlocks": 1253
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 127191,
+          "liveBlocks": 2586
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 113902,
+          "liveBlocks": 1573
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107478,
+          "liveBlocks": 898
+        },
+        {
+          "source": "usr/lib/python3.12/tracemalloc.py",
+          "liveBytes": 100528,
+          "liveBlocks": 3808
+        },
+        {
+          "source": "opt/src/seedsigner/views/gpg_views.py",
+          "liveBytes": 96233,
+          "liveBlocks": 864
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 91214,
+          "liveBlocks": 1525
+        }
+      ]
+    },
+    {
+      "phase": "smartcard_views",
+      "tracedLiveBytes": 14864895,
+      "tracingMetadataBytes": 5491704,
+      "moduleCount": 525,
+      "gcTrackedObjects": 42400,
+      "topAllocationSources": [
+        {
+          "source": "<frozen importlib._bootstrap_external>",
+          "liveBytes": 8940010,
+          "liveBlocks": 93394
+        },
+        {
+          "source": "usr/lib/python3.12/dataclasses.py",
+          "liveBytes": 836802,
+          "liveBlocks": 7997
+        },
+        {
+          "source": "<frozen importlib._bootstrap>",
+          "liveBytes": 306190,
+          "liveBlocks": 5338
+        },
+        {
+          "source": "usr/lib/python3.12/site-packages/pycparser/yacctab.py",
+          "liveBytes": 284860,
+          "liveBlocks": 1579
+        },
+        {
+          "source": "usr/lib/python3.12/enum.py",
+          "liveBytes": 217830,
+          "liveBlocks": 2323
+        },
+        {
+          "source": "usr/lib/shieldsigner-camera/python/shieldsigner_integration.py",
+          "liveBytes": 210937,
+          "liveBlocks": 1749
+        },
+        {
+          "source": "opt/src/seedsigner/views/seed_views.py",
+          "liveBytes": 144127,
+          "liveBlocks": 1405
+        },
+        {
+          "source": "opt/src/seedsigner/views/smartcard_views.py",
+          "liveBytes": 136977,
+          "liveBlocks": 1253
+        },
+        {
+          "source": "usr/lib/python3.12/json/decoder.py",
+          "liveBytes": 131507,
+          "liveBlocks": 2689
+        },
+        {
+          "source": "opt/src/seedsigner/helpers/secure_delete.py",
+          "liveBytes": 116112,
+          "liveBlocks": 3095
+        },
+        {
+          "source": "usr/lib/python3.12/typing.py",
+          "liveBytes": 113902,
+          "liveBlocks": 1573
+        },
+        {
+          "source": "<frozen abc>",
+          "liveBytes": 107478,
+          "liveBlocks": 898
+        },
+        {
+          "source": "usr/lib/python3.12/tracemalloc.py",
+          "liveBytes": 105508,
+          "liveBlocks": 3996
+        },
+        {
+          "source": "opt/src/seedsigner/views/gpg_views.py",
+          "liveBytes": 96233,
+          "liveBlocks": 864
+        },
+        {
+          "source": "usr/lib/python3.12/collections/__init__.py",
+          "liveBytes": 91214,
+          "liveBlocks": 1525
+        }
+      ]
+    }
+  ]
+}

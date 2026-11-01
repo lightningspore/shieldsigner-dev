@@ -1,27 +1,71 @@
-# Eight-pin pill carrier: prototype quote kit
+# Eight-pin pill carrier: 0.0.9 first-article review kit
 
-Unzip the outer order ZIP once. Upload **shieldsigner-modular-gerbers.zip**, then its matching **bom-jlcpcb.csv** and **cpl-jlcpcb.csv**. These are one set for the **0.0.7-dev, 160×70 mm pill carrier**. Do not mix the standard FPC or former Pico-bay files into this order.
+**Status: stock_review_required.** This artwork revision adds `denver.space` branding
+and preserves the existing electrical/mechanical layout. See the included
+`branding-audit.json` and `PCB-ORDER-READINESS.md`. The previous 0.0.7 supplier
+preview and unpaid quote are historical; no new upload, cart update, assembler
+placement approval or physical qualification is claimed.
 
-Request **two copper layers, 1.6 mm thickness and two-sided SMT assembly**. There are **35 placements / 17 catalog lines**: eight switches and U701/C701/C702 on top; 24 parts underneath. Gerbers/drills/CPL share the auxiliary origin (50,130) mm. CPL coordinates use millimeters, Y = 130 minus PCB Y; bottom X is not mirrored. Inspect socket entrance, USB orientation, SEC1210 pin 1, regulator pin 1, sides and rotations in the assembler's preview.
+Unzip the outer order ZIP once. Upload **shieldsigner-modular-gerbers.zip**, then
+its matching **bom-jlcpcb.csv** and **cpl-jlcpcb.csv**. Request two copper layers,
+1.6 mm thickness and both-side SMT assembly for the 160×70 mm pill. Do not mix
+standard FPC, former Pico-bay or separate PWM-candidate files into this order.
 
-Switch, USB, card, SEC1210 and AP2112 lead lands follow retained supplier/manufacturer drawings. The SEC1210 has four reduced exposed-pad paste windows. Customer Luckfox castellated lands have no stencil paste. Old bare-panel FPC/backlight lands are removed. J302 is the customer-fitted two-pin 5 V/GND power header. There are **zero DRC exclusions**. Four both-side 6 mm hardware keepouts reserve space around M2.5 supports; the copper planes and input circuitry clear those areas.
+There are **35 SMT placements / 17 catalog lines**: 11 on top (eight switches
+and U701/C701/C702), 24 underneath. Modules, customer headers/supports, six copper
+jumpers and 12 copper-only test pads are outside the SMT population. J302 is the
+optional customer-fitted +5 V/GND input header.
 
-J701, J302, U202, H701–H704, six copper jumpers and twelve copper test pads are outside SMT BOM/CPL. `population.csv` accounts for all **60 footprints**. `customer-parts.csv` lists the retail LCD, ordinary headers and supports. JLCPCB does not source/install the retail LCD or Luckfox. Customer soldering is limited to 2.54 mm headers: 30 carrier joints, up to 30 additional module joints if bare.
+Gerbers, plated/nonplated drills and CPL use the same auxiliary origin (50,130)
+mm. CPL Y is 130 minus native PCB Y; bottom X is not mirrored. Supplier
+compensation for J301/J601/U601 is already included in the upload CPL; the native
+reference CSV is diagnostic only. **Do not repeat the historical manual moves.**
+Use [the placement checklist](placement-review/README.md) for the new preview.
 
-The immediate plan is **one populated first article** before repeat builds. Ask the supplier to state its bare-board and assembled-board minima separately; surplus bare boards may remain unpopulated. The historical stock report below was calculated for five boards and does not prescribe five assembled units. `stock-for-five.json` contains dated public assembly-stock fields and required quantities, not a reservation. Final stock, minimum-purchase/attrition fees, card-socket handling, loading and the actual quote need JLCPCB confirmation. Do not substitute the SEC1210 firmware suffix or an arbitrary display.
+The saved manufacturer land-pattern/model checks remain useful. Regenerated
+native checks and the compatibility proof must match the new PCB hash. Stock
+files are dated snapshots, not reservations. Select the exact USB connector if
+JLC's BOM importer leaves it unchecked. Confirm all matched MPNs, stock/attrition,
+DFM and a new quote before payment; do not substitute the SEC1210 firmware suffix.
 
-The matching kit passes native ERC/DRC, connectivity, schematic parity and the documented model/land-pattern/geometry assertions. It is prepared for **prototype quotation and assembler DFM**, not physical qualification. Header fit, LCD rail/thermal behavior, display initialization, reader/card transactions and enclosure fit remain first-article work. The LCD, socket and supports use explicitly simplified dimensional models. No paid order has been placed.
+## Five-board stock blocker
 
-USB4125-GF-A uses its 1.90 mm shell stakes on the 1.60 mm PCB. Stakes do not protrude through the opposite face. Have JLC review insertion/solder fill and all rotations in the assembly preview; do not substitute -0190 without a deliberate BOM review. Switches are C&K PTS636SK25SMTRLFS, C2689642.
+Fresh public fields show only **2** C5417011 / 7312P0225A13LF sockets under
+`canPresaleNumber`, against **5** installed sockets required. `overseasStockCount`
+is 9 and is kept separate; it is not automatically available to standard assembly.
+Five assembled units are not checkout-ready until JLC confirms enough exact
+sockets and attrition. Do not assume two visible sockets guarantee two units.
+Switches show 46 against 40 installed; SEC1210 shows 46 against 5. All stock remains
+unreserved and subject to assembler sourcing review. No part swap is proposed.
 
-## Nominal fabrication screen and assembly preparation
+## Factory and first-article gates
 
-`mise run variant:lcd:fab-audit` records the [fabrication capability audit](fabrication-capability-audit.json). Current native features include 0.15 mm minimum routed tracks, 234 vias with 0.30 mm drills / 0.15 mm actual annular rings, and four plated USB slots of 0.60 × 1.20 mm. Native DRC enforces 0.15 mm copper clearance and 0.20 mm routed-edge clearance. These selected nominal features screen within [JLC's published rigid-PCB capability profile](https://jlcpcb.com/capabilities/pcb-capabilities/); this is not an independent Gerber DFM review or inspection of finished boards.
+**Do not power this carrier using the tested base-fork bench image unchanged.**
+It drives two carrier button nets as LCD outputs. Use the carrier-profile image
+and read the included `PCB-SOFTWARE-COMPATIBILITY.md` before inserting modules.
+This is a real profile conflict; the artwork change does not fix it.
 
-The single capsule is not an approved assembly panel. JLC's [standard-assembly rail/fiducial guidance](https://jlcpcb.com/help/article/how-to-add-edge-rails-fiducials-for-pcb-assembly-order) and [irregular-outline review requirement](https://jlcpcb.com/help/article/pcb-dimensions) still need a supplier-approved implementation for this board. Obtain the rail/tooling/fiducial/depaneling drawing and its cost. Do not put tabs where they obstruct USB/card access, display supports or the final enclosure. No board-area or case geometry change has been approved by the software screen.
+The capsule still needs an approved assembly rail/fiducial/tooling/depanelization
+plan. The nominal board uses 0.15 mm minimum routed tracks, 0.30 mm via drills,
+0.15 mm actual via annuli and four USB plated slots of 0.60 × 1.20 mm. The native
+rules enforce 0.15 mm copper and 0.20 mm routed-edge clearance. These selected
+features do not replace factory Gerber DFM or inspection.
 
-Visible footprint reference labels U202 (0.10 mm stroke) and R606 (0.70 mm height) are flagged for fabrication-preview legibility review. This limited text scan does not cover board artwork or establish an electrical fault. A future layout revision can improve them alongside any first-article corrections; do not mix modified art with an older pinned release kit.
+Review the QFN exposed-pad stencil and central via for solder wicking/voiding,
+then establish a physical inspection/rework process. U202 and R606 reference
+text were already small in the old layout; inspect them and all new artwork in
+the new fabrication preview. Copper mask/pad clearance and legibility need visual
+review even when electrical DRC passes.
 
-## 0.0.7 supplier status
+Exact header purchase MPNs, LCD/module physical fit, rail transients, LCD-regulator
+thermal margin, smartcard operation and enclosure assembly remain unqualified.
+Build and measure one first article before populating repeats. The supplied
+readiness and bring-up guides specify those checks. Do not infer carrier
+qualification from the separately tested 240×240 firmware bench setup.
 
-The **0.0.7 Gerbers and CPL** were uploaded together and checked in a fresh supplier preview without manual part moves. The saved five-board quote is $195.54 before shipping/tax. The previous 0.0.6 cart was replaced; the old placement screenshot remains historical. Final assembler DFM/placement confirmation is still required. The 12 new test pads have no paste or purchased parts. Their signal/probe table is in `BRINGUP.md` inside the order ZIP.
+## Historical evidence
+
+`history/0.0.7-preview/` preserves the old correction record, release manifest,
+readiness report, placement guide and unpaid quote. Their hashes/claims apply
+only to the original 0.0.7 board. The root-level dated quote and older feasibility
+reports also retain their original identities; they are not a new 0.0.9 quote.

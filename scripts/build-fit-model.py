@@ -57,12 +57,12 @@ with zipfile.ZipFile(out/'shieldsigner-fit-kit.zip','w',zipfile.ZIP_DEFLATED) as
     for path in sorted(out.glob('*.step')):bundle.write(path,path.name)
     for path in sorted(out.glob('*.glb')):bundle.write(path,path.name)
     for path in sorted((out/'case').glob('*.stl')):bundle.write(path,'case/'+path.name)
-manifest={'version':'0.0.1-dev','boardSha256':json.loads((root/'assets/modular-downloads.json').read_text())['boardSha256'],
+manifest={'version':'0.0.2-dev','boardSha256':json.loads((root/'assets/modular-downloads.json').read_text())['boardSha256'],
  'scadSha256':hashlib.sha256((root/'enclosure/case.scad').read_bytes()).hexdigest(),
  'sourceStepSha256':hashlib.sha256(source.read_bytes()).hexdigest(),'assets':[]}
 for path in sorted(out.iterdir()):
     if path.is_file():manifest['assets'].append({'name':path.name,'size':path.stat().st_size,
       'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
-      'url':'https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.1-dev/'+path.name})
+      'url':'https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.2-dev/'+path.name})
 (root/'assets/fit-downloads.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print('Fit kit exported; STEP round-trip height:',readback.zlen,flush=True)

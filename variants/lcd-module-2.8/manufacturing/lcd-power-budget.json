@@ -1,5 +1,5 @@
 {
-  "boardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
+  "boardSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
   "qualification": "Planning sensitivity calculation only; actual thermal resistance, load and temperature are unmeasured.",
   "inputs": {
     "vinV": 5.25,

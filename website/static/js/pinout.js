@@ -24,7 +24,7 @@ for (const root of document.querySelectorAll('[data-pinout-tool]')) {
       root.querySelector(`[data-table-net="${pin.pin}"]`).textContent = pin.net[revision.value]
       root.querySelector(`[data-pin="${pin.pin}"]`).setAttribute('aria-label',`Pin ${pin.pin}: ${pin.name}; ${pin.volts} V; ${pin.use[revision.value]}`)
     }
-    root.querySelector('[data-diagram-revision]').textContent = revision.value === 'released' ? 'ShieldSigner 0.0.7 · released' : 'ShieldSigner 0.0.8 · PWM candidate'
+    root.querySelector('[data-diagram-revision]').textContent = data.revisionLabels[revision.value]
     root.querySelector('svg title').textContent = `Luckfox Mini A/B pinout · ${root.querySelector('[data-diagram-revision]').textContent}`
     pick(picker.value)
   })

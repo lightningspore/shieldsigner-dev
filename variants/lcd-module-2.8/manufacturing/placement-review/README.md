@@ -1,50 +1,67 @@
-# JLCPCB assembly placement guide — PCB 0.0.7-dev
+# JLCPCB placement review — PCB 0.0.9-dev
 
-Assembly package **0.0.7 r2**, 2026-10-24. This revision moves the controller cluster 17 mm toward the top edge, adds 12 copper-only test pads, and adds branding. Its Gerbers, BOM and compensated CPL were uploaded together and checked without manual part moves. The saved five-board cart quote is $195.54 before shipping/tax. USB solder-tail/stake alignment, the socket entrance/orientation and relocated U601 pin 1 were checked. The old 0.0.6 cart was replaced. Final assembler DFM/placement approval and physical first-article qualification remain pending.
+Assembly package **0.0.9 r1** is an artwork-only first-article kit with
+**review_required** status. Exact protected-tree comparison against the 0.0.7
+board preserves component poses/identities, pads, copper, outline and the export
+datum. This supports retaining the reviewed compensation; it does not establish
+a new supplier preview, cart update or assembler placement approval.
+
+The former 0.0.7 preview/quote is preserved under `../history/0.0.7-preview/`.
+No order/payment is submitted by generating these files.
 
 ## Upload and confirm
 
-1. Upload `shieldsigner-modular-gerbers.zip`, `bom-jlcpcb.csv` and **`cpl-jlcpcb.csv` from this package**. Select 1.6 mm, LeadFree HASL and Both Sides assembly. Expect 35 SMT placements across 17 catalog lines. Modules and through-hole headers are customer fitted.
-2. **Do not repeat the old manual rotations/offsets. They are already applied in this CSV.** `placement-review/cpl-native-reference.csv` is a diagnostic native export, not the JLC upload file.
-3. Explicitly select J301 USB4125-GF-A-0190 / C5246813 in JLC's matched BOM if it is unchecked: the uploader otherwise omits this connector. Verify quantity 5 for a five-board assembly.
-4. Inspect the imported placements: USB mouth outward, solder tails on inward lands, all shell stakes in slots; smartcard tapered edge up and notch down in bottom/component-side view, with numbered contacts as below; U601 pin-1 marker at the native upper-left triangle.
-5. Keep **Confirm Parts Placement: Yes** and review final assembler DFM before approving assembly. The preview check is not physical qualification.
+1. Upload this package's Gerber ZIP, BOM and **compensated `cpl-jlcpcb.csv`**
+   together. Select 1.6 mm, both-side assembly. Expect 35 SMT placements across
+   17 catalog lines, with customer-fitted modules and through-hole headers.
+2. Do not repeat old manual rotations/offsets: they are already in the upload
+   CSV. `cpl-native-reference.csv` is diagnostic only.
+3. Explicitly include J301 **USB4125-GF-A-0190 / C5246813** if the importer leaves
+   it unchecked. Verify every matched reference and quantity.
+4. Inspect USB mouth outward, six tails on their lands and all four stakes in
+   slots; inspect every numbered smartcard contact and U601 pin 1.
+5. Keep **Confirm Parts Placement: Yes**. Obtain new assembler DFM, panel/tooling
+   and placement review before approving assembly. Record the new preview against
+   the new PCB/output hashes; leave historical claims attached to their old board.
 
-| Ref | Corrected CPL Mid X (mm) | Mid Y (mm) | Rotation | Correction from native export |
+| Ref | Corrected Mid X (mm) | Mid Y (mm) | Rotation | Correction from native |
 |---|---:|---:|---:|---|
 | J301 | 46.510000 | 9.830000 | 0° | +0.84 mm Y; +180° |
-| J601 | 88.620000 | 20.050000 | 0° | -0.8 mm X; +180° |
+| J601 | 88.620000 | 20.050000 | 0° | −0.8 mm X; +180° |
 | U601 | 85.000000 | 60.700000 | 0° | +180° |
 
-Supplier compensation leaves the other 32 native placement rows unchanged. The relocation itself moves 13 fitted parts. Corrections are pinned to the PCB SHA and catalog identities in `jlc-placement-corrections.json` in the native source package. The exporter rejects a changed board, changed identity/side/datum, or attempts to apply compensation twice. Each new catalog model or PCB revision still needs preview review.
+Other 32 placement rows are unchanged. The exporter verifies current board hash,
+artwork compatibility proof, identities, bottom side and native datum before
+applying compensation exactly once. D302's native/catalog pad-1 baseline needs
+no extra rotation; a blanket bottom-side rule would be wrong. U701 stays on top
+with its original pin-1 orientation; D301 is bidirectional.
 
-J301's translation uses the four physical shell-stake centers as the mechanical datum; the supplier's copper-pad centers are not a substitute for the manufacturer lead geometry. Its imported preview shows the six solder-tail ends overlapping their lands and the stakes aligned with the slots. U601's corrected pin-1 dot agrees with the native triangle. D302 LED's library has a different pad-1 baseline and needs **no** additional rotation: a blanket rotation change for all bottom-side parts would be incorrect. U701 remains unchanged on top.
+## Smartcard numbered-contact review
 
-The checked five-board quote is USD 195.54 before freight/tax/coupons. No payment/order was submitted during this review.
+The retained [contact audit](smartcard-contact-audit.json) is a manufacturer/
+catalog coordinate comparison of the unchanged connector footprint. Its library
+agreement is not a physical assembly tolerance or new supplier-preview approval.
 
-## Numbered-contact verification completed
+In the bottom/component-side view, the tapered socket edge is up and notch down.
+The upper row runs C1–C4 left to right; lower row C5–C8 left to right. Detection
+pads are NO then COM left to right, between rows and to their right. Locating
+holes are lower left and upper right. Two holes alone do not resolve the
+180-degree ambiguity; inspect the asymmetric numbered contacts.
 
-**The user's revised J601 rotation passes the contact-position check.** Its component-side view has the tapered edge at the top and the notch at the bottom. The prior offset-only preview below is historical and must not be reused.
+| Contact | Net / role |
+|---|---|
+| C1 | SEC1210_SC_VCC |
+| C2 | SEC1210_SC_RST |
+| C3 | SEC1210_SC_CLK_PostR |
+| C4 | RFU, unconnected |
+| C5 | GND |
+| C6 | SEC1210_SC_VCC, tied to card VCC in this design |
+| C7 | SEC1210_SC_IO |
+| C8 | RFU, unconnected |
+| NO | SEC1210_SC_PRSNT |
+| COM | GND |
 
-The [numeric audit](smartcard-contact-audit.json) compares every C1–C8/COM/NO pad center and land size, plus both locating holes, with the **JLCEDA/EasyEDA official library (嘉立创EDA/EasyEDA官方库)** [C5417011 footprint](https://easyeda.com/api/components/fac09934403f4310b3853998f3c08281), obtained through its [part lookup](https://easyeda.com/api/products/C5417011/components?version=6.4.19.5). The catalog footprint differs from our component-local origin by **+0.8 mm X, 0 mm Y**; after this translation all compared dimensions agree within **0.001 mm**. That is a library-coordinate comparison, not a measured assembly tolerance. The manufacturer drawing's page 2 establishes the numbered pattern.
-
-In the **carrier-bottom/component-side view shown by JLC**, the upper row runs **C1, C2, C3, C4 left to right**; the lower row runs **C5, C6, C7, C8 left to right**. The detection contacts are **NO then COM left to right**, between the rows and to their right. The locating holes are lower left and upper right. This asymmetric contact pattern, together with the outline, resolves the 180-degree ambiguity that the two locating holes alone do not reliably resolve.
-
-| Contact | Native net / purpose | Check |
-|---|---|---|
-| C1 | SEC1210_SC_VCC, switched card supply | Upper left |
-| C2 | SEC1210_SC_RST | Upper row, second |
-| C3 | SEC1210_SC_CLK_PostR | Upper row, third |
-| C4 | RFU, unconnected | Upper right |
-| C5 | GND | Lower left |
-| C6 | SEC1210_SC_VCC, tied to card VCC by this design | Lower row, second |
-| C7 | SEC1210_SC_IO | Lower row, third |
-| C8 | RFU, unconnected | Lower right |
-| NO | SEC1210_SC_PRSNT | Left detection pad |
-| COM | GND | Right detection pad |
-
-The current preview was checked by registering the catalog outline/holes, calculating its numbered contact locations and temporarily moving the model aside to expose the actual copper. Upper row, lower row and both switch pads matched. **Undo restored the user's placement exactly** during that earlier check. Package r3 subsequently reproduced this same numbered-contact orientation from the corrected CSV with no manual moves. No order/payment was submitted. Final assembler DFM/placement approval and physical bring-up remain separate.
-
-## Superseded previews
-
-The old `jlc-bottom-corrected.png` and assembly packages r1/r2 predate the corrected CPL. Do not use their smartcard orientation or their uncompensated CSV for a new order. Use r3 and the table above.
+The catalog origin differs from the native connector-local origin by +0.8 mm X.
+The retained comparison matches contact centers/land sizes and both locating
+holes within 0.001 mm after translation. That exact coordinate agreement justifies
+the origin correction; final assembly and first powered hardware remain pending.

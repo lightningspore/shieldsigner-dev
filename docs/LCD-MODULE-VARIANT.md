@@ -1,10 +1,18 @@
 # ShieldSigner pill: 2.8-inch, eight-pin SPI LCD
 
-This is the **0.0.7-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
+This is the **0.0.9-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
 
 ![Assembled pill carrier, front](../variants/lcd-module-2.8/assembly-front.png)
 
 JLCPCB assembles **35 SMT pieces across 17 catalog lines**. Customer soldering is ordinary **2.54 mm headers**: 30 joints on the carrier, plus up to 30 on unheadered LCD/Luckfox modules. There is no customer LCD ribbon connection, fine-pitch connector, QFN or smartcard-contact soldering. The camera retains its normal Luckfox ribbon connection.
+
+The rear silkscreen now includes the official The Space logo and `denver.space`.
+An [artwork-only audit](../variants/lcd-module-2.8/branding-audit.json) confirms
+that all electrical/mechanical PCB data is preserved. Read the
+[order-readiness review](PCB-ORDER-READINESS.md) for current sourcing and supplier
+gates. The tested 240×240 bench firmware must not be used unchanged on this
+carrier: [its LCD outputs conflict with carrier button nets](PCB-SOFTWARE-COMPATIBILITY.md).
+A carrier-profile image, 320×240 display setup and 10 MHz clock are required.
 
 ## Get the matching files
 
@@ -76,7 +84,7 @@ Four M2.5 supports use manufacturer-drawn hole centers. **12 mm female-female sp
 
 The modeled 8.5 mm female socket, 2.54 mm male insulator and 6 mm posts give about **5.04 mm insertion** with the module back 12 mm above the carrier. The module's rear connector has 6.8 mm nominal clearance. The Luckfox retains its separate socket stack and outward-facing microSD. The screen sits higher than the 2.5 mm switch actuators, so an enclosure needs suitable button plungers and a new camera/card opening layout.
 
-There are **19 portable STEP models** with recorded sources and hashes. Supplier/upstream models represent the Luckfox, switches, USB, bridge and regulator. **The LCD, card socket and threadless supports are clearly identified dimensional envelopes**, not detailed manufacturer STEP files. The LCD envelope is regenerated from the saved drawing by `scripts/model-pill-display.py`. Native checks verify reviewed solder lands, the eight-pin interface, capsule edges, mounting centers and module/button separation. Physical tolerances and complete enclosure fit remain untested.
+There are **22 portable STEP models** with recorded sources and hashes. Supplier/upstream models represent the Luckfox, switches, USB, bridge and regulator. **The LCD, card socket and threadless supports are clearly identified dimensional envelopes**, not detailed manufacturer STEP files. The LCD envelope is regenerated from the saved drawing by `scripts/model-pill-display.py`. Native checks verify reviewed solder lands, the eight-pin interface, capsule edges, mounting centers and module/button separation. Physical tolerances and complete enclosure fit remain untested.
 
 ![Assembled pill carrier, back](../variants/lcd-module-2.8/assembly-back.png)
 
@@ -102,4 +110,4 @@ USB-C remains a power-only input with separate 5.1 kΩ CC pull-downs. J301 is no
 
 ## Layout and probe revision 0.0.7-dev
 
-The reader controller/support cluster moves 17 mm toward the top edge. The socket, module headers, mounting holes, USB-C and board outline stay fixed. Twelve labelled copper test pads add access to power rails, UART and card signals without adding purchased parts. ShieldSigner and LightningSpore marks use single-colour silkscreen. See the [test-point table](BRINGUP.md#pcb-007-test-points). Use the matching 0.0.7 Gerbers and CPL, with a fresh supplier preview.
+The reader controller/support cluster moves 17 mm toward the top edge. The socket, module headers, mounting holes, USB-C and board outline stay fixed. Twelve labelled copper test pads add access to power rails, UART and card signals without adding purchased parts. ShieldSigner and LightningSpore marks use single-colour silkscreen. See the [test-point table](BRINGUP.md#pcb-007-test-points). This describes the 0.0.7 layout change; current 0.0.9 adds artwork only. Use the current matched kit and request a fresh supplier preview.

@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "revision": "0.0.9-dev",
+  "sourceUrl": "https://denver.space/assets/branding/Logos/TheSpace_Logos_Full_3.webp",
+  "sourceSha256": "32f6dd6ce4ad7032ae67440e622f2c078db1dad4bd4621566663dda040a13b63",
+  "sourceCropPixels": [
+    416,
+    2278,
+    5392,
+    1728
+  ],
+  "traceWidthPixels": 1500,
+  "widthMm": 30,
+  "heightMm": 9.620000000000001,
+  "centerMm": [
+    184.5,
+    106.5
+  ],
+  "side": "B.SilkS",
+  "polygons": 999,
+  "name": "denver.space",
+  "nameHeightMm": 1.25,
+  "nameStrokeMm": 0.2,
+  "baselineBoardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
+  "boardSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
+  "conversion": "Monochrome threshold; trace at1500px width; 9px(0.18mm) morphology removes sub-printable hairlines; 0.6px contour tolerance; native filled triangles preserve holes; X-mirrored geometry reads normally from board bottom",
+  "rights": "Logo belongs to The Space; source retained with attribution; no relicensing claim"
+}

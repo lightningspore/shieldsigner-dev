@@ -1,7 +1,12 @@
 {
-  "revision": "0.0.8-dev candidate",
-  "baseBoardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
-  "boardSha256": "c5644d7a6eb18ef013d008f880bb0813b05b33892b87eaa982da4638e973521a",
+  "revision": "0.0.10-dev candidate",
+  "baseRevision": "0.0.9-dev",
+  "mainOrderTargetUnchanged": true,
+  "fittedSmtComponents": 36,
+  "purchasingSkus": 17,
+  "brandingProtectedSha256": "dbc2715210a1fa9f5efafeb0e379c8a2e28812b26a122997d4f6b29c6224df6a",
+  "baseBoardSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
+  "boardSha256": "251ec9f252c5601187f15a66f76f0afd30e469c7e7792c415a0664bd11249238",
   "nativeChecks": {
     "erc": {
       "violations": 0,

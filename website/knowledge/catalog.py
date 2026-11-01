@@ -1,5 +1,7 @@
 # Explicit public-content allowlist. Never crawl the repo or Telegram caches.
 GUIDES = [
+("pcb-order-readiness", "docs/PCB-ORDER-READINESS.md", "Build", "PCB order readiness & current gates", "Artwork-only revision, native checks, matched files, current socket shortage and first-article assembly limits."),
+("pcb-software-compatibility", "docs/PCB-SOFTWARE-COMPATIBILITY.md", "Hardware", "Carrier PCB & firmware compatibility", "Exact host/LCD/button maps and why the working bench firmware must not be used unchanged on the carrier."),
 ("firmware-artifacts", "docs/FIRMWARE-ARTIFACTS.md", "Software", "Firmware images, staging & verification", "One canonical image location, immutable named staging, preserved caches and image identity checks."),
 ("firmware-status", "docs/FIRMWARE-STATUS.md", "Software", "Current LVGL firmware & test status", "Linux, Python, LVGL and Rust camera responsibilities; scoped memory measurements and the tested bench image."),
 ("memory-threads", "docs/MEMORY-THREADS.md", "Software", "Memory, Python and threads", "Measured RAM use, shared Python imports, camera workers, LCD buffers and compressed RAM swap."),

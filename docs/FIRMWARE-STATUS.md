@@ -12,6 +12,11 @@ separate hardware build. Its LCD wiring, buttons and UR2 reader require matching
 configuration and physical bring-up; the bench result does not qualify that PCB.
 Smartcards and additional languages were outside this LVGL test scope.
 
+**Do not use this bench image unchanged on the carrier.** Its LCD DC/reset
+outputs overlap carrier button nets. The
+[PCB/software compatibility audit](PCB-SOFTWARE-COMPATIBILITY.md) gives the exact
+carrier GPIO, 320×240/10 MHz LCD and UART/kernel requirements.
+
 ## What runs where
 
 | Layer | Responsibility |

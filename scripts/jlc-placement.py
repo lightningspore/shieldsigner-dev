@@ -13,6 +13,20 @@ def correct(rows, parts):
     board = VARIANT / 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
     if hashlib.sha256(board.read_bytes()).hexdigest() != config['boardSha256']:
         raise ValueError('PCB changed; review supplier placement corrections before export')
+    # A new artwork hash may retain the old compensation only with exact
+    # protected-geometry evidence, never by silently replacing the hash guard.
+    if 'artworkCompatibility' in config:
+        evidence = config['artworkCompatibility']
+        proof_path = VARIANT / evidence['audit']
+        if hashlib.sha256(proof_path.read_bytes()).hexdigest() != evidence['auditSha256']:
+            raise ValueError('Artwork compatibility evidence changed; re-review corrections')
+        proof = json.loads(proof_path.read_text())
+        if (proof.get('passed') is not True
+                or proof['baseline']['sha256'] != config['previousBoardSha256']
+                or proof['candidate']['sha256'] != config['boardSha256']
+                or proof['baseline']['protectedSha256'] != proof['candidate']['protectedSha256']
+                or proof.get('protectedChangedTags') != []):
+            raise ValueError('Artwork compatibility does not preserve the reviewed PCB')
     result = copy.deepcopy(rows)
     found = set()
     for row in result:

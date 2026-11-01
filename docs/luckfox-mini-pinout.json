@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-10-25",
+  "reviewed": "2026-10-31",
   "model": "Luckfox Pico Mini A/B",
   "orientation": "Component-side view; USB at top; left 1\u201311 top to bottom, right 22\u201312 top to bottom",
   "sources": [
@@ -519,7 +519,7 @@
         "candidate": "LCD_PWM"
       },
       "use": {
-        "released": "Unused on 0.0.7",
+        "released": "Unused on main 0.0.9",
         "candidate": "Optional LCD backlight PWM"
       },
       "note": {
@@ -820,5 +820,10 @@
       "legacyGpio": null,
       "note": "Separate bottom pads, not the 22-pin header; not wired on this carrier. Not GPIO or an RJ45-ready interface."
     }
-  ]
+  ],
+  "revisionLabels": {
+    "released": "ShieldSigner 0.0.9 \u00b7 review kit",
+    "candidate": "ShieldSigner 0.0.10 \u00b7 optional PWM candidate"
+  },
+  "revisionScope": "Compatibility keys released/candidate are retained. Main 0.0.9 review kit is not an approved or synchronized JLC cart; optional PWM 0.0.10 is not the main order target. Both require carrier-profile firmware, not the tested base-fork bench image."
 }

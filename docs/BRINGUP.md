@@ -45,6 +45,11 @@ Record idle input current after settling. Compare it with the fitted bridge/indi
 
 ## Stage 3 — Host supply and boot
 
+**Carrier firmware gate:** the tested `lvgl-dev.cb6170a37a5a` bench image must not
+run unchanged on this carrier. Its LCD DC/reset outputs overlap carrier button
+nets. Use the [carrier pin/profile audit](PCB-SOFTWARE-COMPATIBILITY.md) before
+power-up; pressing a switch on a driven output can short that GPIO to ground.
+
 Power off, install the exact compatible Luckfox module using the reviewed orientation/attachment method, and inspect insulation/clearance again. Use an image for that module and its SD/NAND storage. Verify the image using the fork's release procedure; do not fuse secure boot or provision permanent keys during bring-up.
 
 With no LCD/card load yet, choose a supply current limit based on the module's documented requirements and the intended loads. **No qualified host boot/peak-current limit has been established here.** An inadequate limit can cause brownout/reboot loops that resemble firmware failure. Record the configured limit and actual current/rail behavior.

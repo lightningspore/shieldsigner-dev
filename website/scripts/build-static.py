@@ -100,7 +100,7 @@ files=json.loads((SITE/'public/manifest.json').read_text())
 primary={'shieldsigner-jlcpcb-order.zip','shieldsigner-carrier-gerbers.zip','shieldsigner-luckfox-kicad.zip','schematic.pdf'}
 render('/downloads/','knowledge/downloads.html', files=files, primary_files=[p for p in files if p['name'] in primary],
        modular_version=json.loads((SITE.parent/'assets/modular-downloads.json').read_text())['release'].removeprefix('pill-preview-'),
-       enclosure_version=assets['version'], fit_files=enclosure['fit_files'],
+       enclosure_version=assets['version'], fit_version=fit['version'], fit_files=enclosure['fit_files'],
        modular_files=[p for p in files if p['name'].startswith('shieldsigner-modular-')],
        enclosure_files=[p for p in files if p['name'].startswith('shieldsigner-enclosure-')],
        pdfs=[p for p in files if p['name'].startswith('reference/pdfs/')],

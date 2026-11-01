@@ -6,7 +6,7 @@
       "slug": "pcb",
       "number": 1,
       "title": "Make & order the PCB",
-      "summary": "Get the three JLCPCB files, check assembly, and request a quote.",
+      "summary": "Review the matched 0.0.9 artwork package, resolve socket stock, and request a fresh assembly preview/quote.",
       "needs": [
         "Eight-pin pill carrier selected",
         "JLCPCB account for a prototype quote"
@@ -16,9 +16,10 @@
         {
           "title": "Choose the assembled pill carrier",
           "items": [
-            "The 160×70 mm pill uses a 2.8-inch eight-pin SPI module, socketed Luckfox and contact smartcard reader.",
+            "The 160\u00d770 mm pill uses a 2.8-inch eight-pin SPI module, socketed Luckfox and contact smartcard reader.",
             "Recommended route: JLCPCB assembles 35 SMT pieces; you install ordinary headers, modules and screws.",
-            "These files supersede the Pico-format display bay. The standard FPC carrier remains a separate reference."
+            "These files supersede the Pico-format display bay. The standard FPC carrier remains a separate reference.",
+            "Current order target is main 0.0.9-dev, with denver.space artwork and the existing always-on backlight. The separate PWM candidate is not promoted."
           ],
           "choices": [
             {
@@ -41,7 +42,7 @@
         {
           "title": "Download the matching order files",
           "items": [
-            "Use the pill bundle as one set; its BOM/CPL and Gerbers share the same PCB hash and datum.",
+            "Use the 0.0.9 pill bundle as one set. Its Gerbers/BOM/CPL share the new PCB hash and datum; do not reuse the old 0.0.7 preview as approval.",
             "Unzip once. Upload the inner shieldsigner-modular-gerbers.zip for the PCB; upload bom-jlcpcb.csv and cpl-jlcpcb.csv for assembly.",
             "LCD, Luckfox, customer headers/supports, six copper jumpers and twelve copper test pads are outside the SMT BOM. J302 is the optional 5 V/GND power header; old FPC/backlight parts are absent."
           ],
@@ -66,13 +67,19 @@
               "label": "Full schematic PDF",
               "url": "/files/shieldsigner-modular-schematic.pdf"
             }
+          ],
+          "links": [
+            {
+              "label": "Current package readiness and unresolved gates",
+              "url": "/guides/pcb-order-readiness/"
+            }
           ]
         },
         {
           "title": "Upload Gerbers to JLCPCB",
           "items": [
             "Start a PCB quote and upload the Gerber ZIP, not the KiCad source ZIP.",
-            "Confirm a 160×70 mm capsule, two copper layers and 1.6 mm thickness. Inspect the preview and separate plated/nonplated drills.",
+            "Confirm a 160\u00d770 mm capsule, two copper layers and 1.6 mm thickness. Inspect the preview and separate plated/nonplated drills.",
             "Enable PCB assembly for PCBA. The carrier uses parts on both sides; confirm the quoted assembly service supports them."
           ],
           "links": [
@@ -90,8 +97,11 @@
           "title": "Match parts and inspect placement",
           "items": [
             "Upload matching BOM/CPL. Expect 35 fitted SMT references across 17 catalog identities.",
-            "C603/C604 remain 1 µF C28323; C701/C702 are 10 µF C15850; U701 is the 3.3 V AP2112K C51118; U601 is the UR2 C633309.",
-            "Inspect both sides, card entrance, USB direction, SEC1210/regulator pin 1 and eight switches. No substitutions without checking electrical and footprint compatibility."
+            "C603/C604 remain 1 \u00b5F C28323; C701/C702 are 10 \u00b5F C15850; U701 is the 3.3 V AP2112K C51118; U601 is the UR2 C633309.",
+            "Inspect both sides, card entrance, USB direction, SEC1210/regulator pin 1 and eight switches. No substitutions without checking electrical and footprint compatibility.",
+            "The 2026-11-01 UTC exact-MPN snapshot shows socket C5417011 canPresaleNumber 2 against five installed required; overseasStockCount 9 is not automatically available to this assembly job.",
+            "Five assembled units are not checkout-ready until JLC confirms enough exact sockets and attrition. Two visible sockets do not guarantee two assembled units; no substitute or lower quantity is assumed.",
+            "J301 USB4125-GF-A-0190 may need explicit selection if the BOM importer leaves it unchecked. The compensated CPL already includes J301/J601/U601 origin/rotation corrections: do not repeat old manual moves."
           ],
           "links": [
             {
@@ -107,9 +117,10 @@
         {
           "title": "Resolve the remaining quote/DFM items",
           "items": [
-            "Confirm assembly rotations, socket handling, double-sided process, stock/attrition and the final quote before payment.",
+            "Obtain a fresh 0.0.9 supplier preview and final DFM/placement confirmation, approved assembly rails/fiducials/tooling, enough exact socket stock plus attrition, and a new quote before payment.",
             "Check the purchased LCD J1 row, mounting dimensions and 12 mm support stack. The retail module is outside PCBA.",
-            "These are prototype quotation files. Native ERC/DRC/connectivity/parity pass with zero exclusions; physical fit, display power/thermal behavior, firmware and enclosure testing remain open."
+            "These are prototype quotation files. Native ERC/DRC/connectivity/parity pass with zero exclusions; physical fit, display power/thermal behavior, firmware and enclosure testing remain open.",
+            "Before module power-up, use a reviewed carrier-profile image. The tested base-fork bench image drives GPIO56/57 as LCD outputs, but those are Left/Up switches on this PCB; pressing a switch can ground a driven output."
           ],
           "links": [
             {
@@ -119,6 +130,14 @@
             {
               "label": "Assembly and bring-up steps",
               "url": "/guides/modular-assembly/"
+            },
+            {
+              "label": "PCB/software compatibility: required carrier profile",
+              "url": "/guides/pcb-software-compatibility/"
+            },
+            {
+              "label": "First-article order gates and stock details",
+              "url": "/guides/pcb-order-readiness/"
             }
           ]
         },
@@ -146,7 +165,7 @@
           ]
         }
       ],
-      "notice": "Prototype quotation files; assembler DFM/rotation review and physical bring-up remain open.",
+      "notice": "PCB 0.0.9-dev is stock_review_required: five assembled boards need five exact smartcard sockets, but the 2026-11-01 UTC snapshot lists only two in canPresaleNumber. Overseas stock is separate. New supplier placement/DFM review is required; the old 0.0.7 cart/preview is historical.",
       "next": "parts",
       "references": [
         {
@@ -164,6 +183,14 @@
         {
           "label": "Optional DigiKey self-assembly",
           "url": "/guides/self-assembly/"
+        },
+        {
+          "label": "Current first-article readiness",
+          "url": "/guides/pcb-order-readiness/"
+        },
+        {
+          "label": "Carrier firmware profile compatibility",
+          "url": "/guides/pcb-software-compatibility/"
         }
       ]
     },
@@ -341,7 +368,7 @@
           ]
         }
       ],
-      "notice": "The current tested LVGL image uses the base-fork 240×240 bench profile. Selecting dev mode alone does not adapt it to the 2.8-inch pill carrier or its UR2 reader.",
+      "notice": "The current tested LVGL image uses the base-fork 240\u00d7240 bench profile. Selecting dev mode alone does not adapt it to the 2.8-inch pill carrier or its UR2 reader.",
       "next": "flash",
       "references": [
         {
@@ -373,6 +400,7 @@
         {
           "title": "Find the exact local image",
           "items": [
+            "First determine whether this is the bench display/button board or the carrier PCB. The working base-fork image is not a safe drop-in carrier image; pressing Left/Up can ground a driven LCD output.",
             "Run firmware:where in your existing build checkout to find the deliberately selected image. A new clone contains source, not the local image files.",
             "The current checkpoint is lvgl-dev.cb6170a37a5a. Match the image profile, display orientation/colors, buttons and camera before writing a card.",
             "Use a Mini microSD image for this target; NAND/eMMC updates and other Luckfox model images are different artifacts."
@@ -384,6 +412,10 @@
             }
           ],
           "links": [
+            {
+              "label": "Read before carrier power-up: GPIO conflict and correct profile",
+              "url": "/guides/pcb-software-compatibility/"
+            },
             {
               "label": "Current image identity, hashes and limits",
               "url": "/guides/firmware-status/"
@@ -425,11 +457,15 @@
         {
           "title": "Boot and record the visible checks",
           "items": [
-            "Power off before inserting the microSD or changing display/camera connectors. Use the wiring profile that belongs to this image.",
+            "Before inserting modules or applying carrier power, verify the built image actually uses the carrier GPIO/LCD profile and UART policy. Power off before inserting microSD or changing display/camera connectors. Do not use unchanged base-fork bench firmware on the carrier.",
             "Confirm LVGL Home, readable colors/orientation, buttons and a harmless public camera QR. The user has confirmed these basic bench-image operations; repeat them on your hardware.",
             "Then test seed creation/reload, receive-address verification and transaction handoff with a disposable wallet. A full user-wallet acceptance session remains pending."
           ],
           "links": [
+            {
+              "label": "Exact carrier GPIO/LCD/UART requirements",
+              "url": "/guides/pcb-software-compatibility/"
+            },
             {
               "label": "First use and transaction loop",
               "url": "/build/use/"
@@ -468,9 +504,13 @@
         {
           "label": "Boot and power diagnosis",
           "url": "/guides/bringup/"
+        },
+        {
+          "label": "Critical bench/carrier profile mismatch",
+          "url": "/guides/pcb-software-compatibility/"
         }
       ],
-      "notice": "Current bench firmware is lvgl-dev.cb6170a37a5a with the base-fork 240×240 profile. The separate 2.8-inch pill carrier is not qualified by that result. This site does not host a firmware image download."
+      "notice": "Do not power the pill carrier with the tested base-fork bench image unchanged: it drives GPIO56/57 as LCD outputs on carrier Left/Up switch nets. Use a reviewed carrier-profile image before module power-up. The lvgl-dev.cb6170a37a5a bench image is local-only and tested on its separate 240\u00d7240 board."
     },
     {
       "slug": "use",
@@ -501,7 +541,7 @@
         {
           "title": "Create and back up a test seed",
           "items": [
-            "On the device: Tools → New seed (camera entropy or dice entropy). Choose the length and complete the prompts.",
+            "On the device: Tools \u2192 New seed (camera entropy or dice entropy). Choose the length and complete the prompts.",
             "Record and verify the words offline. The ordinary SeedSigner flow holds the loaded seed in memory, so you need its backup again after power-off.",
             "Use a disposable seed and an unfunded wallet for your first run. The website never asks you to enter a seed or PIN."
           ],
@@ -515,8 +555,8 @@
         {
           "title": "Export public wallet information",
           "items": [
-            "Open the loaded seed’s options and export an xpub for Single Sig and the script type you intend to use. Choose Sparrow as the QR format.",
-            "In Sparrow: create a new wallet, choose the air-gapped hardware wallet route, and scan the signer’s public export.",
+            "Open the loaded seed\u2019s options and export an xpub for Single Sig and the script type you intend to use. Choose Sparrow as the QR format.",
+            "In Sparrow: create a new wallet, choose the air-gapped hardware wallet route, and scan the signer\u2019s public export.",
             "Keep network, derivation path and script type consistent. This is a watch-only wallet; never type the seed into Sparrow just to make scanning work."
           ],
           "links": [
@@ -537,7 +577,7 @@
         {
           "title": "Verify a receive address",
           "items": [
-            "Display a receive address in Sparrow and use the signer’s address-verification/scan flow to confirm it belongs to your loaded seed and wallet settings.",
+            "Display a receive address in Sparrow and use the signer\u2019s address-verification/scan flow to confirm it belongs to your loaded seed and wallet settings.",
             "Compare the complete address and network. For multisig, import the correct wallet descriptor; a single cosigner seed alone does not define the wallet.",
             "Record this as a separate acceptance check; public-fixture signing does not establish address verification with your own wallet."
           ]
@@ -547,7 +587,7 @@
           "items": [
             "Sparrow builds an unsigned transaction (PSBT) and displays it as an animated QR. Scan that QR with the signer.",
             "On the signer, review destination addresses, amounts, change and fee before approving.",
-            "Display the signed QR, scan it back into Sparrow, then review there. Sparrow—not the offline signer—broadcasts when you explicitly choose to do so."
+            "Display the signed QR, scan it back into Sparrow, then review there. Sparrow\u2014not the offline signer\u2014broadcasts when you explicitly choose to do so."
           ],
           "diagram": "signing",
           "links": [
@@ -608,7 +648,7 @@
         {
           "title": "Choose what the card should do",
           "items": [
-            "SeedKeeper stores secrets; loading one puts it in the Luckfox’s memory for host signing.",
+            "SeedKeeper stores secrets; loading one puts it in the Luckfox\u2019s memory for host signing.",
             "Satochip derives/signs on the card; the host still reviews the transaction and requests a signature.",
             "This PCB has a contact socket and no NFC reader. Buy a contact-capable retail card, or a supported blank JavaCard for deliberate DIY provisioning."
           ],
@@ -633,7 +673,7 @@
         {
           "title": "Verify the reader before changing the card",
           "items": [
-            "Insert a spare card and inspect Tools → Smartcard Tools. Card presence/ATR only prove transport, not the right applet.",
+            "Insert a spare card and inspect Tools \u2192 Smartcard Tools. Card presence/ATR only prove transport, not the right applet.",
             "J601 is the Amphenol 7312P0225A13LF contact socket. Only SEC1210 SC1 is wired; UR2 may enumerate another empty slot.",
             "If no card is detected, check seating and the UR2/UART configuration before installing applets or guessing PINs."
           ],
@@ -659,7 +699,7 @@
         {
           "title": "Check the result and keep a recovery copy",
           "items": [
-            "After loading a SeedKeeper secret, compare its fingerprint. For Satochip, compare the card’s master fingerprint/public export with the intended seed.",
+            "After loading a SeedKeeper secret, compare its fingerprint. For Satochip, compare the card\u2019s master fingerprint/public export with the intended seed.",
             "A wrong fingerprint is a reason to stop and check setup, not to overwrite the card.",
             "Keep PINs, management keys and wallet backups offline. Do not reset a card containing a seed as a transport diagnostic."
           ],

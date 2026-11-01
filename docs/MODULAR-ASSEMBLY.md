@@ -1,6 +1,6 @@
 # Assemble the eight-pin pill carrier
 
-**JLCPCB solders the 35 SMT parts. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.7-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
+**JLCPCB solders the 35 SMT parts. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.9-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
 
 For an optional DIY build, use the separate [self-assembly guide](SELF-ASSEMBLY.md) and DigiKey purchase CSV. The original JLC kit below remains the assembled-board ordering path.
 
@@ -46,7 +46,9 @@ For the current first-article plan, populate and qualify **one board first**; le
 
 Confirm stock, rotation, DFM, loading/attrition fees and final quote before payment. No paid order or physical qualification is implied by the software checks. Do not substitute the SEC1210 firmware suffix or an arbitrary eight-pin LCD.
 
-**JLC placement check:** PCB **0.0.7-dev** adds the relocated controller cluster, 12 copper-only test pads and brand silkscreen. Use its matching Gerbers and compensated CPL together; the older 0.0.6 r3 cart is not this layout. Supplier origin/rotation corrections for J301, J601 and U601 are retained, with U601's new position. The new Gerbers/CPL were uploaded and previewed without manual part moves; the saved five-board cart is $195.54 before shipping/tax. Keep **Confirm Parts Placement: Yes** for final assembler review. See the [placement guide](../variants/lcd-module-2.8/manufacturing/placement-review/README.md) and [test-point table](BRINGUP.md).
+**Current order check:** the 0.0.9 artwork revision has new matched Gerbers and the same reviewed compensated CPL geometry. It has **not** been approved in a new supplier preview/cart. The saved 0.0.7 quote is historical. A fresh catalog check found only two C5417011 smartcard sockets in standard assembly stock against five required; overseas stock is recorded separately and is not a confirmed allocation. Ask JLC about sourcing and its minimum assembled quantity before committing. See [current order readiness](PCB-ORDER-READINESS.md), the [placement guide](../variants/lcd-module-2.8/manufacturing/placement-review/README.md) and [test-point table](BRINGUP.md).
+
+**Firmware gate before module power:** do not boot the current bench image unchanged on the carrier. It drives the Left/Up button nets as LCD DC/reset. Use the reviewed carrier profile, 320×240 display setup, 10 MHz SPI clock and matching UART-enabled kernel/resource policy. [The compatibility audit](PCB-SOFTWARE-COMPATIBILITY.md) lists exact pins and build boundaries.
 
 ## 2. Inspect the assembled carrier
 

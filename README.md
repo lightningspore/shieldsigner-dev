@@ -16,7 +16,9 @@ Native KiCad is the preferred editing workflow. This repository publishes the re
 
 ## Eight-pin 2.8-inch pill build
 
-PCB **0.0.7-dev** relocates the smartcard controller cluster, adds 12 labelled copper test pads and ShieldSigner/LightningSpore silkscreen. The [bring-up guide](docs/BRINGUP.md) explains the probes. Use the matching new Gerbers/CPL; the revised 0.0.7 cart has been previewed and saved; final assembler review remains required.
+PCB **0.0.9-dev** adds the official The Space logo and **denver.space** rear silkscreen. The [artwork audit](variants/lcd-module-2.8/branding-audit.json) confirms every non-silkscreen PCB object is unchanged from 0.0.7. The matched 35-part/17-SKU kit passes native electrical, pinout and manufacturing-file checks. **Five assembled boards are not checkout-ready:** fresh JLC assembly stock lists only two selected smartcard sockets, and this revision needs a new supplier placement/DFM review. See [order readiness](docs/PCB-ORDER-READINESS.md).
+
+**Use carrier-profile firmware before power-up.** The working 240×240 bench image drives two carrier button nets as LCD outputs. [The compatibility audit](docs/PCB-SOFTWARE-COMPATIBILITY.md) maps every pin and explains the required 320×240/10 MHz carrier configuration. The board keeps its always-on backlight default.
 
 Start with the [pill carrier guide](docs/LCD-MODULE-VARIANT.md) and [customer assembly steps](docs/MODULAR-ASSEMBLY.md). This **160×70 mm capsule** follows the eight-pin SPI module interface in the existing Luckfox design, with the larger 2.8-inch display between the controls. JLCPCB handles 35 SMT placements across 17 catalog lines. Customer soldering is ordinary headers: 30 carrier joints, plus up to 30 if both modules arrive bare.
 
@@ -30,7 +32,7 @@ The optional [DigiKey self-assembly guide](docs/SELF-ASSEMBLY.md) provides a sep
 
 ## Backlight PWM revision candidate
 
-The [0.0.8-dev backlight candidate](variants/lcd-backlight-pwm/README.md) adds a dedicated Luckfox PWM path and one pull-down resistor. **Always-on remains the factory default**; PWM is selected with the existing backlight straps. Native ERC/DRC/connectivity/parity and both mode checks pass. This candidate is separate from the released 0.0.7 manufacturing files and saved cart; module PWM response still needs a bench check. Rebuild it with `mise run variant:lcd:pwm`.
+The [0.0.10-dev backlight candidate](variants/lcd-backlight-pwm/README.md) adds a dedicated Luckfox PWM path and one pull-down resistor. **Always-on remains the factory default**; PWM is selected with the existing backlight straps. Native ERC/DRC/connectivity/parity and both mode checks pass. This candidate is separate from the main 0.0.9 artwork/ordering kit; neither new revision has a current cart approval; module PWM response still needs a bench check. Rebuild it with `mise run variant:lcd:pwm`.
 
 ## Standard FPC reference documentation
 
@@ -86,10 +88,10 @@ Derived from 3rdIteration/SeedSigner at the pinned revision in [reference/proven
 
 ## Public repository
 
-Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. The [0.0.7-dev pill package](https://github.com/lightningspore/shieldsigner-dev/releases/tag/pill-assembly-0.0.7-r2) contains the current native project, schematic, matched quote kit and 3D exports. The older workflow preview remains a separate standard FPC reference. These are prototype review files, not physically qualified production hardware.
+Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. The [0.0.9-dev pill package](https://github.com/lightningspore/shieldsigner-dev/releases/tag/pill-assembly-0.0.9-r1) contains the current native project, schematic, matched quote kit and 3D exports. The older workflow preview remains a separate standard FPC reference. These are prototype review files, not physically qualified production hardware.
 
 ## Build and use workflows
 
-The public site now starts with six tasks: [PCB order](https://shieldsigner.dev/build/pcb/), [parts](https://shieldsigner.dev/build/parts/), [compile](https://shieldsigner.dev/build/compile/), [flash](https://shieldsigner.dev/build/flash/), [SeedSigner use](https://shieldsigner.dev/build/use/) and [smartcards](https://shieldsigner.dev/build/cards/). The site is **0.0.8-dev**, with its Git revision visible. Passives show explicit units and catalog ratings. For the standard FPC reference, `mise run bom:check` validates its 28 fitted passive values. The pill manufacturing gate validates its own fitted passives against its catalog. C603/C604 purchase identities are now the 1 µF C28323 parts, superseding the initial preview’s incorrect 100 nF metadata.
+The public site now starts with six tasks: [PCB order](https://shieldsigner.dev/build/pcb/), [parts](https://shieldsigner.dev/build/parts/), [compile](https://shieldsigner.dev/build/compile/), [flash](https://shieldsigner.dev/build/flash/), [SeedSigner use](https://shieldsigner.dev/build/use/) and [smartcards](https://shieldsigner.dev/build/cards/). The website development version and source revision are visible in its footer. Passives show explicit units and catalog ratings. For the standard FPC reference, `mise run bom:check` validates its 28 fitted passive values. The pill manufacturing gate validates its own fitted passives against its catalog. C603/C604 purchase identities are now the 1 µF C28323 parts, superseding the initial preview’s incorrect 100 nF metadata.
 
 Revision **0.0.6-dev** replaces the eight XKB switches with C&K PTS636SK25SMTRLFS and the SHOUHAN USB-C with GCT USB4125-GF-A-0190, using new manufacturer lands and exact shared JLC/DigiKey MPNs. Use its matched BOM/CPL and Gerbers together. The [mechanical review](docs/MECHANICAL-SUBSTITUTIONS.md) records the baseline comparison; [self-assembly documentation](docs/SELF-ASSEMBLY.md) explains sourcing and measured-height plungers.

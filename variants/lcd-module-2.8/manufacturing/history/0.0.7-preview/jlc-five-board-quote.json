@@ -1,0 +1,41 @@
+{
+  "observedDate": "2026-10-24",
+  "boardRevision": "0.0.7-dev",
+  "currency": "USD",
+  "pcbQuantity": 5,
+  "assembledQuantity": 5,
+  "sides": "Both",
+  "fittedSmtPerBoard": 35,
+  "catalogLines": 17,
+  "usbConnectorIncluded": true,
+  "usbMpn": "USB4125-GF-A-0190",
+  "usbFivePiecePurchaseUSD": "4.5825",
+  "pcbUSD": "11.60",
+  "assemblyIncludingComponentsUSD": "183.94",
+  "subtotalBeforeShippingTaxUSD": "195.54",
+  "perBoardBeforeShippingTaxUSD": "39.108",
+  "assemblyBreakdownUSD": {
+    "setup": "51.50",
+    "stencil": "16.54",
+    "components": "86.97",
+    "feeders": "26.35",
+    "smtLabor": "1.46",
+    "placementConfirmation": ".45",
+    "packaging": ".52",
+    "specialComponents": ".15"
+  },
+  "excluded": [
+    "shipping",
+    "tax",
+    "LCD",
+    "Luckfox",
+    "camera",
+    "customer headers including J302",
+    "mechanical hardware",
+    "microSD",
+    "smartcard",
+    "enclosure"
+  ],
+  "status": "Saved unpaid five-board quote for PCB 0.0.7; both-side standard assembly, USB included; corrected CSV preview checked without manual part moves. Final assembler DFM and first article remain pending.",
+  "boardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7"
+}

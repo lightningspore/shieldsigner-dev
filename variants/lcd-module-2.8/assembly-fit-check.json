@@ -1,6 +1,6 @@
 {
-  "boardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
-  "sourceGlbSha256": "c40eb99880dbd5d1fa6d00a419a80a75ef7c9e6d0412a779046e000b003d867c",
+  "boardSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
+  "sourceGlbSha256": "5bc5499a9c3527aa301c60f4bea9731a76c0e3bfad58f1ef249563a8a217f75a",
   "coordinateFrame": {
     "units": "mm",
     "origin": "Carrier XY centre; carrier front component mounting plane Z=0",

@@ -1,0 +1,233 @@
+{
+  "schema": 1,
+  "kind": "shieldsigner-artwork-fabrication-compatibility-audit",
+  "passed": true,
+  "candidateBoardSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
+  "nativeArtworkAuditSha256": "41fdd803142063f5bafcfa109bfb05913b24f3808657f560463d6189ba23c033",
+  "baselineRelease": "pill-assembly-0.0.7-r2",
+  "baselineGerberArchive": {
+    "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-assembly-0.0.7-r2/shieldsigner-modular-gerbers.zip",
+    "sha256": "b7d595e79a5d67e8e61b7b46ca359f1e709bbcda206a12ab7a9fc37517eac570",
+    "verifiedBeforeComparison": true
+  },
+  "baselineOrderArchive": {
+    "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/pill-assembly-0.0.7-r2/shieldsigner-modular-order.zip",
+    "sha256": "164f4aab339c184b517090a454261b1bd328c5b7156357cc39e54aaafcd22c05",
+    "verifiedBeforeComparison": true
+  },
+  "candidateGerberArchive": {
+    "path": "dist/lcd-module-2.8/shieldsigner-modular-gerbers.zip",
+    "sha256": "60a604294a0ddf7b8f1d18d67fbd35e743832d902296cb66e7329c1384c8e9ac"
+  },
+  "archiveMembersEqual": true,
+  "files": [
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-B_Cu.gbl",
+      "kind": "non-silk-gerber",
+      "baselineSha256": "59a6195dcc1bb811b330c5fede634fc9370c98dcf52c254cd4c62cf4db76c41f",
+      "candidateSha256": "39b89dc4c9138c575a7471cd2a2ba3056e9afdeeb838ff549ae50add923245f1",
+      "baselineBytes": 259371,
+      "candidateBytes": 259371,
+      "normalizedBaselineSha256": "99e6d9c8372aecaed06116538ee59b20b133948494bc3435f3535b837d5c3f53",
+      "normalizedCandidateSha256": "99e6d9c8372aecaed06116538ee59b20b133948494bc3435f3535b837d5c3f53",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-B_Mask.gbs",
+      "kind": "non-silk-gerber",
+      "baselineSha256": "a5947b5d951ba1e3c00b991989d15c4a4be7bfdfac58f7b028ffc1a3e08a23d7",
+      "candidateSha256": "dfe2e91f3c916a71856cdf91696f7590d487a637f77c5a6e42ea56e2801aaf5b",
+      "baselineBytes": 16734,
+      "candidateBytes": 16734,
+      "normalizedBaselineSha256": "145651dd81a79b193ba642c3b3ebbe1e1786c82690466dcae04c1f5ec25dd134",
+      "normalizedCandidateSha256": "145651dd81a79b193ba642c3b3ebbe1e1786c82690466dcae04c1f5ec25dd134",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-B_Paste.gbp",
+      "kind": "non-silk-gerber",
+      "baselineSha256": "5fbbcbfcf817bd8ac218bd70def255b14031952624c230dc2e0a9bfe81d159f4",
+      "candidateSha256": "238938b330c7e1c4540b3a7c1ddaa577241b1538a16a63c6294bae39596bfd15",
+      "baselineBytes": 5350,
+      "candidateBytes": 5350,
+      "normalizedBaselineSha256": "72e5f4825acc350af7720be1664fc4bff3b45c253a5433b24c47a69fc0025c2f",
+      "normalizedCandidateSha256": "72e5f4825acc350af7720be1664fc4bff3b45c253a5433b24c47a69fc0025c2f",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-B_Silkscreen.gbo",
+      "kind": "silkscreen",
+      "baselineSha256": "2b36923c2bb6f2b24b62405b6b898bdd51f6d780a706d458aef039914c906302",
+      "candidateSha256": "4fd360ef642d1bb0f3b0adb10a71f7fa3bb02297ceb8d238da7d640fcb6fa087",
+      "baselineBytes": 182794,
+      "candidateBytes": 299429,
+      "normalizedBaselineSha256": "3be6c1046466400e677f36c5f4cc3fe8c91410ce6d73b76ad742ea865053d7cf",
+      "normalizedCandidateSha256": "16e4a38f75bd3fedb7d814a930e2892d3b7e87e8115efcd7a9d9276afa6d9a99",
+      "exactEqual": false,
+      "timestampNormalizedEqual": false,
+      "regionStarts": {
+        "baseline": 10,
+        "candidate": 1009
+      }
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-Edge_Cuts.gm1",
+      "kind": "non-silk-gerber",
+      "baselineSha256": "61df7fd15b233ef9dcd598bbc47e42095fb3d2fee8dbc9cb71e0d1683c98c937",
+      "candidateSha256": "a65b24a11159e287633ebba6b6e35fee2943289e480c953d49dfc62deccad7a7",
+      "baselineBytes": 1100,
+      "candidateBytes": 1100,
+      "normalizedBaselineSha256": "d0f4ec52d5ba06f5832501c708a96115c442b80674ff78257d332a2c406b1b07",
+      "normalizedCandidateSha256": "d0f4ec52d5ba06f5832501c708a96115c442b80674ff78257d332a2c406b1b07",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-F_Cu.gtl",
+      "kind": "non-silk-gerber",
+      "baselineSha256": "ad247f213e861bb0775c5179a3adb7183457e7450a593562532591eced448f52",
+      "candidateSha256": "8ba381f2f4587febb00244d1b8976cc2b95f9641b87836ad3014e023ac4d742e",
+      "baselineBytes": 165605,
+      "candidateBytes": 165605,
+      "normalizedBaselineSha256": "4497c2cc2f694b8202b254cdb0d621678d537e04ddb9333e3e55c4c6f1d1c8eb",
+      "normalizedCandidateSha256": "4497c2cc2f694b8202b254cdb0d621678d537e04ddb9333e3e55c4c6f1d1c8eb",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-F_Mask.gts",
+      "kind": "non-silk-gerber",
+      "baselineSha256": "e02cdf4a6a8568e0b270807f524db67d4932e71b45e9db4573e13c866a239bd4",
+      "candidateSha256": "d2715e62aa54bc29bd550e639f502d2cda1a8810e598de672719ba20b1205c46",
+      "baselineBytes": 9624,
+      "candidateBytes": 9624,
+      "normalizedBaselineSha256": "20fd83b2c93bce2f1228be9ef60f0aa1e6486619fcf67ec236c376f2f362025e",
+      "normalizedCandidateSha256": "20fd83b2c93bce2f1228be9ef60f0aa1e6486619fcf67ec236c376f2f362025e",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-F_Paste.gtp",
+      "kind": "non-silk-gerber",
+      "baselineSha256": "a7692e3e6a5d23f27cc6bb4fb9bf4ed11a96c305188aa7ee456dcc06bec56a4d",
+      "candidateSha256": "b24396c1db605095685eb10238085d7fe7c2a850376a2e03d9d519685b18bf12",
+      "baselineBytes": 2473,
+      "candidateBytes": 2473,
+      "normalizedBaselineSha256": "1be0c0b1148a146bc29cd688fd27b958be524eaff967fc748bd93a70817f7f05",
+      "normalizedCandidateSha256": "1be0c0b1148a146bc29cd688fd27b958be524eaff967fc748bd93a70817f7f05",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-F_Silkscreen.gto",
+      "kind": "silkscreen",
+      "baselineSha256": "8cb0b309ac5e21a0d8d6993f954345af8199f6f919133c7f12e70797e2f4bbd4",
+      "candidateSha256": "76c14db6d5109f0073814884789ba78d6379654252a4551eb6af3022663c86d7",
+      "baselineBytes": 60160,
+      "candidateBytes": 60996,
+      "normalizedBaselineSha256": "dee5a70c84b13dc68fd93cb7d6feb01d5d2ae3fe4c66a682351295c900d92cdd",
+      "normalizedCandidateSha256": "fc5ea218801e4a444f13eb4340ab727e772f6345ac3210f58b29bfd484039e85",
+      "exactEqual": false,
+      "timestampNormalizedEqual": false,
+      "regionStarts": {
+        "baseline": 2,
+        "candidate": 2
+      }
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-NPTH.drl",
+      "kind": "drill",
+      "baselineSha256": "42da9cd3cf87b70ea253e4a85f7163bd5a041de91efae73c1bbf966a00499592",
+      "candidateSha256": "ba9a3b0dbbdaca7bd948fcbff6b4a8c7b55067829be3ff7a83aaaca77f7b13ba",
+      "baselineBytes": 476,
+      "candidateBytes": 476,
+      "normalizedBaselineSha256": "635d3c8fc44c7ca70ddb6e45c33e3497ef485fd5845b2dc51ca99fbba5bce5a0",
+      "normalizedCandidateSha256": "635d3c8fc44c7ca70ddb6e45c33e3497ef485fd5845b2dc51ca99fbba5bce5a0",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-PTH.drl",
+      "kind": "drill",
+      "baselineSha256": "85a9c452717e0a3cedc792bada4af09a2414424e854f1ecbf14da6460e2b9217",
+      "candidateSha256": "6aac40515e51fec69d706e24c11bf3f9e173cd93ef739f51daadb65e0e11a1bc",
+      "baselineBytes": 4175,
+      "candidateBytes": 4175,
+      "normalizedBaselineSha256": "f02ec79f095f03fc98e9405870c78b2b3727493a51d39856755f2253107c44c4",
+      "normalizedCandidateSha256": "f02ec79f095f03fc98e9405870c78b2b3727493a51d39856755f2253107c44c4",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    },
+    {
+      "name": "SeedSigner-Plus-smartcard-pico-job.gbrjob",
+      "kind": "job-metadata",
+      "baselineSha256": "d99a934c04f89e29f005823fb2af8d74c08a4756cd7fec0573e1b5e03d010eda",
+      "candidateSha256": "d57c3b4e907c4404a9c5b566c8a52e857c3df8c0b810409201d873a593bd8266",
+      "baselineBytes": 2910,
+      "candidateBytes": 2910,
+      "normalizedBaselineSha256": "89dafd41721792576506a69202e0376f6bb53a76cb51aa1b28c3a3464377114e",
+      "normalizedCandidateSha256": "89dafd41721792576506a69202e0376f6bb53a76cb51aa1b28c3a3464377114e",
+      "exactEqual": false,
+      "timestampNormalizedEqual": true
+    }
+  ],
+  "manufacturing": [
+    {
+      "name": "bom-jlcpcb.csv",
+      "baselineSha256": "94e9e76f2058dbd5fdea56c022649cb37a1d2b820ff943a17bc2b5b29174e4ab",
+      "candidateSha256": "94e9e76f2058dbd5fdea56c022649cb37a1d2b820ff943a17bc2b5b29174e4ab",
+      "exactEqual": true,
+      "rowsEqual": true,
+      "rowCount": 17
+    },
+    {
+      "name": "cpl-jlcpcb.csv",
+      "baselineSha256": "66c24509336b04deac2cfbbdd64fc0117898ff4c51b1360b457794343bcdd7aa",
+      "candidateSha256": "66c24509336b04deac2cfbbdd64fc0117898ff4c51b1360b457794343bcdd7aa",
+      "exactEqual": true,
+      "rowsEqual": true,
+      "rowCount": 35
+    },
+    {
+      "name": "population.csv",
+      "baselineSha256": "ecdf0e28bf1e133322bc59294279306e35e767bbb55e7df916e5fdb55f8491cf",
+      "candidateSha256": "ecdf0e28bf1e133322bc59294279306e35e767bbb55e7df916e5fdb55f8491cf",
+      "exactEqual": true,
+      "rowsEqual": true,
+      "rowCount": 60
+    }
+  ],
+  "placementCorrections": {
+    "correctionsEqual": true,
+    "baselineUploadedCsvPreviewChecked": true,
+    "candidateUploadedCsvPreviewChecked": false,
+    "candidateReviewStatus": "review_required",
+    "scope": "Actual correction map unchanged. Qualification metadata deliberately updated for the new board; new upload preview remains unchecked."
+  },
+  "normalization": {
+    "scope": "Date tokens only in exact CreationDate / KiCad creation-comment lines. No geometry, aperture, coordinate, tool, rule, ordering, newline or checksum data normalized.",
+    "patterns": [
+      "(?m)^(%TF\\.CreationDate,)\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d[+-]\\d\\d:\\d\\d(\\*%)$",
+      "(?m)^(G04 Created by KiCad \\(PCBNEW [^)]+\\) date )\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d(\\*)$",
+      "(?m)^(; DRILL file KiCad [^\\r\\n]+ date )\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d$",
+      "(?m)^(; #@! TF\\.CreationDate,)\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d[+-]\\d\\d:\\d\\d$",
+      "(?m)^(    \"CreationDate\": \")\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d[+-]\\d\\d:\\d\\d(\")$"
+    ]
+  },
+  "summary": {
+    "nonSilkGerberAndDrillFilesMatching": 9,
+    "jobMetadataMatchingExceptTimestamp": true,
+    "bothSilkLayersChanged": true,
+    "bomRows": 17,
+    "cplRows": 35,
+    "populationRows": 60
+  },
+  "limits": [
+    "Read-only comparison of existing exports; no re-export, package rebuild, board edits or supplier upload performed.",
+    "Native board proof binds the source; changed silkscreen plot content confirms artwork reached fabrication outputs. Visual logo clearance and supplier DFM/placement preview are separate gates.",
+    "Historical supplier placement compensation is retained exactly, not newly placement-approved."
+  ]
+}

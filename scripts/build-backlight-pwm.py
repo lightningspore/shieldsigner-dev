@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build a separately checked dedicated-PWM hardware revision candidate.
 
-The released 0.0.7 board and its quote assets are never overwritten.
+The main 0.0.9 board and its quote assets are never overwritten.
 """
 from pathlib import Path
 import hashlib,json,re,runpy,shutil,subprocess,sys,uuid
@@ -11,7 +11,9 @@ DEST=ROOT/'variants/lcd-backlight-pwm/kicad'
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));children,one,parse=sx['children'],sx['one'],sx['parse']
 def uid(name):return str(uuid.uuid5(uuid.NAMESPACE_URL,'shieldsigner-pwm:'+name))
 R_ID=uid('R703')
-BASE_SHA='b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7'
+BASE_SHA='59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5'
+ELECTRICAL_BASE_SHA='b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7'
+PROTECTED_SHA='dbc2715210a1fa9f5efafeb0e379c8a2e28812b26a122997d4f6b29c6224df6a'
 def node_text(text,predicate):
  return next(expr for _,_,expr in sx['expressions'](text) if predicate(parse(expr)))
 def update(text,callback):
@@ -25,7 +27,7 @@ def update(text,callback):
 def prepare():
  DEST.mkdir(parents=True,exist_ok=True)
  for path in SOURCE.iterdir():
-  if path.name in {'3dmodels','.DS_Store'} or path.suffix in {'.kicad_prl','.md','.json'}:continue
+  if path.name in {'3dmodels','.DS_Store'} or path.name.startswith('~') or path.suffix in {'.kicad_prl','.lck','.md','.json'}:continue
   target=DEST/path.name
   if path.is_dir():shutil.copytree(path,target,dirs_exist_ok=True)
   else:shutil.copyfile(path,target)
@@ -68,7 +70,7 @@ def prepare():
   if n[0]=='footprint' and any(p[1:3]==['Reference','JP202'] for p in children(n,'property')):
    return expr.replace('"MCU_BACKLIGHT"','"LCD_PWM"')
   return expr
- board_text=update(board.read_text(),pcb_change).replace('0.0.7-dev','0.0.8-dev').replace('"MCU_BACKLIGHT"','"unconnected-(JP204-A-Pad1)"')
+ board_text=update(board.read_text(),pcb_change).replace('0.0.9-dev','0.0.10-dev').replace('"MCU_BACKLIGHT"','"unconnected-(JP204-A-Pad1)"')
  original=node_text(board_text,lambda n:n[0]=='footprint' and any(p[1:3]==['Reference','R301'] for p in children(n,'property')))
  original_node=parse(original);old_path=one(original_node,'path')[1]
  cloned=original.replace('"R301"','"R703"').replace(old_path,rpi_path+'/'+R_ID)
@@ -118,7 +120,12 @@ if '--worker' in sys.argv:
 
 if __name__=='__main__':
  base_sha=hashlib.sha256((SOURCE/'SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest()
- assert base_sha==BASE_SHA,'Released baseline changed; review recipe before rebuilding'
+ assert base_sha==BASE_SHA,'Main baseline changed; review recipe before rebuilding'
+ branding=json.loads((SOURCE.parent/'branding-audit.json').read_text())
+ assert branding.get('passed') is True and branding['baseline']['sha256']==ELECTRICAL_BASE_SHA
+ assert branding['candidate']['sha256']==base_sha
+ assert branding['baseline']['protectedSha256']==branding['candidate']['protectedSha256']==PROTECTED_SHA
+ assert branding.get('protectedChangedTags')==[], 'Artwork baseline changed protected electrical tree'
  path=prepare()
  python=ROOT/'.tools/kicad-10/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3'
  subprocess.run([str(python),__file__,'--worker',path],check=True)
@@ -150,6 +157,7 @@ if __name__=='__main__':
   assert one(newer[identifier],'net')[-1]==('LCD_PWM' if name=='I2C-SDA' else name),'Original copper changed net'
   for key in ('start','end','at','width','size','drill','layer','layers'):
    assert one(t,key)==one(newer[identifier],key),'Original copper geometry changed'
+ assert len(removed)==9, 'Reviewed recipe must remove exactly nine legacy backlight segments'
  assert pads(current['R703'])=={'1':'LCD_PWM','2':'GND'}
  assert 'Bridged' in current['JP201'][1] and '_Open_' in current['JP202'][1]
  def joined(a,z,closed):
@@ -175,7 +183,7 @@ if __name__=='__main__':
   violations=report.get('violations',[])+[v for sh in report.get('sheets',[]) for v in sh['violations']]
   checks[kind]={'violations':len(violations),'unconnected':len(report.get('unconnected_items',[])),'parity':len(report.get('schematic_parity',[]))}
   assert not violations and not report.get('unconnected_items') and not report.get('schematic_parity'),kind+' failed'
- summary={'revision':'0.0.8-dev candidate','baseBoardSha256':base_sha,'boardSha256':hashlib.sha256(board.read_bytes()).hexdigest(),
+ summary={'revision':'0.0.10-dev candidate','baseRevision':'0.0.9-dev','mainOrderTargetUnchanged':True,'fittedSmtComponents':36,'purchasingSkus':17,'brandingProtectedSha256':PROTECTED_SHA,'baseBoardSha256':base_sha,'boardSha256':hashlib.sha256(board.read_bytes()).hexdigest(),
   'nativeChecks':checks,'preservedExistingComponentPoses':len(original),'preservedOriginalCopperNetAssignments':True,
   'obsoleteBacklightSegmentsRemoved':len(removed),'defaultMode':'Always on: JP201 closed, JP202 open',
   'optionalMode':'PWM: JP201 open, JP202 closed; JP203/JP205 closed and JP204/JP206 open in both modes',

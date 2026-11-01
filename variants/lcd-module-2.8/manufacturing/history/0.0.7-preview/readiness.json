@@ -1,0 +1,53 @@
+{
+  "variant": "modular-lcd-2.8",
+  "boardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
+  "fittedSmtPieces": 35,
+  "catalogLines": 17,
+  "bomCplRefsMatch": true,
+  "layers": 2,
+  "thicknessMm": 1.6,
+  "originMm": {
+    "x": 50,
+    "y": 130,
+    "cplY": "130 minus board y; bottom X is not mirrored"
+  },
+  "proposedPrototypeQuantity": 5,
+  "stockReserved": false,
+  "catalogStockSufficientForFive": true,
+  "placementRotationsQualifiedByAssembler": false,
+  "status": "prototype_quote_files",
+  "nativeErcErrors": 0,
+  "nativeActiveDrcErrors": 0,
+  "nativeUnconnected": 0,
+  "nativeParityIssues": 0,
+  "dnpCourtyardExclusions": 0,
+  "mechanicalModelsVerified": 22,
+  "limitations": [
+    "Physical header/module fit and powered bring-up not tested",
+    "LCD, smartcard socket, switch, USB and spacer models are drawing-derived envelopes",
+    "Stock snapshot is not a reservation",
+    "Supplier preview and quote checked for 0.0.7; final assembler DFM and placement confirmation pending"
+  ],
+  "files": {
+    "shieldsigner-modular-gerbers.zip": "b7d595e79a5d67e8e61b7b46ca359f1e709bbcda206a12ab7a9fc37517eac570",
+    "bom-jlcpcb.csv": "94e9e76f2058dbd5fdea56c022649cb37a1d2b820ff943a17bc2b5b29174e4ab",
+    "cpl-jlcpcb.csv": "66c24509336b04deac2cfbbdd64fc0117898ff4c51b1360b457794343bcdd7aa",
+    "population.csv": "ecdf0e28bf1e133322bc59294279306e35e767bbb55e7df916e5fdb55f8491cf"
+  },
+  "supplierPlacementCompensation": {
+    "file": "placement-review/cpl-corrections.json",
+    "references": [
+      "J301",
+      "J601",
+      "U601"
+    ],
+    "uploadedCsvPreviewChecked": true,
+    "assemblerQualified": false
+  },
+  "testPoints": {
+    "copperOnly": 12,
+    "pasteApertures": 0,
+    "assemblyPlacements": 0,
+    "map": "testpoints.json"
+  }
+}

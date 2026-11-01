@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "kind": "shieldsigner-pcb-artwork-only-audit",
+  "passed": true,
+  "baseline": {
+    "path": ".tools/pcb-branding/baseline.kicad_pcb",
+    "sha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
+    "protectedSha256": "dbc2715210a1fa9f5efafeb0e379c8a2e28812b26a122997d4f6b29c6224df6a",
+    "protectedCounts": {
+      "embedded_fonts": 1,
+      "footprint": 60,
+      "general": 1,
+      "generator": 1,
+      "generator_version": 1,
+      "gr_arc": 2,
+      "gr_line": 199,
+      "gr_poly": 1,
+      "gr_rect": 3,
+      "gr_text": 59,
+      "layers": 1,
+      "paper": 1,
+      "segment": 538,
+      "setup": 1,
+      "version": 1,
+      "via": 234,
+      "zone": 6,
+      "footprintPads": 200
+    }
+  },
+  "candidate": {
+    "path": "variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb",
+    "sha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
+    "protectedSha256": "dbc2715210a1fa9f5efafeb0e379c8a2e28812b26a122997d4f6b29c6224df6a",
+    "protectedCounts": {
+      "embedded_fonts": 1,
+      "footprint": 60,
+      "general": 1,
+      "generator": 1,
+      "generator_version": 1,
+      "gr_arc": 2,
+      "gr_line": 199,
+      "gr_poly": 1,
+      "gr_rect": 3,
+      "gr_text": 59,
+      "layers": 1,
+      "paper": 1,
+      "segment": 538,
+      "setup": 1,
+      "version": 1,
+      "via": 234,
+      "zone": 6,
+      "footprintPads": 200
+    }
+  },
+  "protectedChangedTags": [],
+  "silkscreen": {
+    "baseline": {
+      "gr_circle:B.SilkS": 1,
+      "gr_poly:B.SilkS": 3,
+      "gr_poly:F.SilkS": 2,
+      "gr_text:B.SilkS": 19,
+      "gr_text:F.SilkS": 22
+    },
+    "candidate": {
+      "gr_circle:B.SilkS": 1,
+      "gr_poly:B.SilkS": 1002,
+      "gr_poly:F.SilkS": 2,
+      "gr_text:B.SilkS": 20,
+      "gr_text:F.SilkS": 22
+    },
+    "addedOrChanged": {
+      "gr_poly:B.SilkS": 999,
+      "gr_text:B.SilkS": 1,
+      "gr_text:F.SilkS": 1
+    },
+    "removedOrChanged": {
+      "gr_text:F.SilkS": 1
+    },
+    "changedExistingUuidCount": 1,
+    "addedPolygonCount": 999,
+    "addedTextCount": 1
+  },
+  "scope": "Exact protected PCB tree modulo harmless object/unique-key metadata ordering; only known top-level F.SilkS/B.SilkS graphics may differ. Footprints (including silk/properties/pads/poses), tracks, vias, zones, edges, layers, nets, setup and UUID values remain protected.",
+  "limits": "Not DRC, fabrication qualification or visual artwork-clearance approval. Numeric atom spelling changes and unsupported repeated-child reorderings fail conservatively."
+}

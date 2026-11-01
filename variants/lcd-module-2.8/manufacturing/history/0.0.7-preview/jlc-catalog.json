@@ -1,0 +1,1344 @@
+{
+  "note": "Public catalog snapshot, not a stock reservation or confirmed assembly quote. Raw stock field names retained deliberately.",
+  "parts": [
+    {
+      "componentModelEn": "CC0805JRNPO9BN330",
+      "componentBrandEn": "YAGEO",
+      "componentSpecificationEn": "0805",
+      "describe": "33pF 50V NP0 ±5% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 1066436,
+      "overseasStockCount": 1118306,
+      "preMinPurchaseNum": 1612,
+      "leastPatchNumber": 20,
+      "lossNumber": 12,
+      "initialPrice": 0.007,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805JRNPO9BN330_C107115.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C107115",
+          "attribute_value_name": "50V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C107115",
+          "attribute_value_name": "±5%"
+        },
+        {
+          "attribute_name_en": "Capacitance",
+          "component_code": "C107115",
+          "attribute_value_name": "33pF"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C107115",
+          "attribute_value_name": "NP0"
+        }
+      ],
+      "code": "C107115",
+      "url": "https://jlcpcb.com/partdetail/C107115",
+      "checkedAt": "2026-10-15T15:18:13.665764+00:00",
+      "htmlSha256": "9f81a6478288566935f2a0e7e3ae67347a40140fa692a785bb08895918fd17da",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "0805W8F1003T5E",
+      "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+      "componentSpecificationEn": "0805",
+      "describe": "-55℃~+155℃ 100kΩ 125mW 150V Thick Film Resistor ±1% ±100ppm/℃ 0805 Chip Resistor - Surface Mount ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 3246632,
+      "overseasStockCount": 3709303,
+      "preMinPurchaseNum": 1920,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0059,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2205312316_UNI-ROYAL-Uniroyal-Elec-0805W8F1003T5E_C149504.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Resistance",
+          "component_code": "C149504",
+          "attribute_value_name": "100kΩ"
+        },
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C149504",
+          "attribute_value_name": "-55℃~+155℃"
+        },
+        {
+          "attribute_name_en": "Power(Watts)",
+          "component_code": "C149504",
+          "attribute_value_name": "125mW"
+        },
+        {
+          "attribute_name_en": "Type",
+          "component_code": "C149504",
+          "attribute_value_name": "Thick Film Resistor"
+        },
+        {
+          "attribute_name_en": "Voltage-Supply(Max)",
+          "component_code": "C149504",
+          "attribute_value_name": "150V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C149504",
+          "attribute_value_name": "±1%"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C149504",
+          "attribute_value_name": "±100ppm/℃"
+        }
+      ],
+      "code": "C149504",
+      "url": "https://jlcpcb.com/partdetail/C149504",
+      "checkedAt": "2026-10-15T15:18:13.677035+00:00",
+      "htmlSha256": "57d379f2510c74574aab950f803adc4810086ba39841fe8e92f414007b4d3a32",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "CL21A106KAYNNNE",
+      "componentBrandEn": "Samsung Electro-Mechanics",
+      "componentSpecificationEn": "0805",
+      "describe": "10uF 25V X5R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 2032511,
+      "overseasStockCount": 3662731,
+      "preMinPurchaseNum": 254,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0439,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21A106KAYNNNE_C15850.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C15850",
+          "attribute_value_name": "25V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C15850",
+          "attribute_value_name": "±10%"
+        },
+        {
+          "attribute_name_en": "Capacitance",
+          "component_code": "C15850",
+          "attribute_value_name": "10uF"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C15850",
+          "attribute_value_name": "X5R"
+        }
+      ],
+      "code": "C15850",
+      "url": "https://jlcpcb.com/partdetail/C15850",
+      "checkedAt": "2026-10-15T15:18:16.236101+00:00",
+      "htmlSha256": "b5f4980eb81a54d62f203cacf48a65a8ea782f5441cffa62caafed01e4dc90a7",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "0805W8F1000T5E",
+      "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+      "componentSpecificationEn": "0805",
+      "describe": "-55℃~+155℃ 100Ω 125mW 150V Thick Film Resistor ±1% ±100ppm/℃ 0805 Chip Resistor - Surface Mount ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 8150751,
+      "overseasStockCount": 8761475,
+      "preMinPurchaseNum": 2735,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0042,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0805W8F1000T5E_C17408.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Resistance",
+          "component_code": "C17408",
+          "attribute_value_name": "100Ω"
+        },
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C17408",
+          "attribute_value_name": "-55℃~+155℃"
+        },
+        {
+          "attribute_name_en": "Power(Watts)",
+          "component_code": "C17408",
+          "attribute_value_name": "125mW"
+        },
+        {
+          "attribute_name_en": "Type",
+          "component_code": "C17408",
+          "attribute_value_name": "Thick Film Resistor"
+        },
+        {
+          "attribute_name_en": "Voltage-Supply(Max)",
+          "component_code": "C17408",
+          "attribute_value_name": "150V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C17408",
+          "attribute_value_name": "±1%"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C17408",
+          "attribute_value_name": "±100ppm/℃"
+        }
+      ],
+      "code": "C17408",
+      "url": "https://jlcpcb.com/partdetail/C17408",
+      "checkedAt": "2026-10-15T15:18:13.654449+00:00",
+      "htmlSha256": "3f1f32871e928c5f38f2ff17fcde0cefa5bde1ae520b5d39eeb426b964fd2261",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "0805W8F1002T5E",
+      "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+      "componentSpecificationEn": "0805",
+      "describe": "-55℃~+155℃ 10kΩ 125mW 150V Thick Film Resistor ±1% ±100ppm/℃ 0805 Chip Resistor - Surface Mount ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 53932157,
+      "overseasStockCount": 56884721,
+      "preMinPurchaseNum": 3471,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0033,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0805W8F1002T5E_C17414.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Resistance",
+          "component_code": "C17414",
+          "attribute_value_name": "10kΩ"
+        },
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C17414",
+          "attribute_value_name": "-55℃~+155℃"
+        },
+        {
+          "attribute_name_en": "Power(Watts)",
+          "component_code": "C17414",
+          "attribute_value_name": "125mW"
+        },
+        {
+          "attribute_name_en": "Type",
+          "component_code": "C17414",
+          "attribute_value_name": "Thick Film Resistor"
+        },
+        {
+          "attribute_name_en": "Voltage-Supply(Max)",
+          "component_code": "C17414",
+          "attribute_value_name": "150V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C17414",
+          "attribute_value_name": "±1%"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C17414",
+          "attribute_value_name": "±100ppm/℃"
+        }
+      ],
+      "code": "C17414",
+      "url": "https://jlcpcb.com/partdetail/C17414",
+      "checkedAt": "2026-10-15T15:18:13.617094+00:00",
+      "htmlSha256": "e4e75f8969ed32d1a31071a4aca981f00a5496f9709b1530cb95608d9c5c2ea7",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "0805W8F470JT5E",
+      "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+      "componentSpecificationEn": "0805",
+      "describe": "-55℃~+155℃ 125mW 150V 47Ω Thick Film Resistor ±1% ±100ppm/℃ 0805 Chip Resistor - Surface Mount ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 458061,
+      "overseasStockCount": 548263,
+      "preMinPurchaseNum": 3923,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0031,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010200_UNI-ROYAL-Uniroyal-Elec-0805W8F470JT5E_C17714.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Resistance",
+          "component_code": "C17714",
+          "attribute_value_name": "47Ω"
+        },
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C17714",
+          "attribute_value_name": "-55℃~+155℃"
+        },
+        {
+          "attribute_name_en": "Power(Watts)",
+          "component_code": "C17714",
+          "attribute_value_name": "125mW"
+        },
+        {
+          "attribute_name_en": "Type",
+          "component_code": "C17714",
+          "attribute_value_name": "Thick Film Resistor"
+        },
+        {
+          "attribute_name_en": "Voltage-Supply(Max)",
+          "component_code": "C17714",
+          "attribute_value_name": "150V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C17714",
+          "attribute_value_name": "±1%"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C17714",
+          "attribute_value_name": "±100ppm/℃"
+        }
+      ],
+      "code": "C17714",
+      "url": "https://jlcpcb.com/partdetail/C17714",
+      "checkedAt": "2026-10-15T15:18:13.831311+00:00",
+      "htmlSha256": "4898d672fd0c7acb6912c995213a6db567891004df846b89ae41be4bdcef9e78",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "SMF5.0CA",
+      "componentBrandEn": "hongjiacheng",
+      "componentSpecificationEn": "SOD-123FL",
+      "describe": "-55℃~+150℃ 1 200W@10/1000us 21.7A@10/1000us 400uA 5V 7V 9.2V Bidirectional IEC 61000-4-2 TVS SOD-123FL ESD and Surge Protection (TVS/ESD) ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 1412906,
+      "overseasStockCount": 1509277,
+      "preMinPurchaseNum": 378,
+      "leastPatchNumber": 15,
+      "lossNumber": 4,
+      "initialPrice": 0.0299,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2312041000_hongjiacheng-SMF5-0CA_C19077498.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C19077498",
+          "attribute_value_name": "-55℃~+150℃"
+        },
+        {
+          "attribute_name_en": "Type",
+          "component_code": "C19077498",
+          "attribute_value_name": "TVS"
+        },
+        {
+          "attribute_name_en": "Peak Pulse Power Dissipation (Ppp)",
+          "component_code": "C19077498",
+          "attribute_value_name": "200W@10/1000us"
+        },
+        {
+          "attribute_name_en": "Number of Channels",
+          "component_code": "C19077498",
+          "attribute_value_name": "1"
+        },
+        {
+          "attribute_name_en": "level of protection",
+          "component_code": "C19077498",
+          "attribute_value_name": "IEC 61000-4-2"
+        },
+        {
+          "attribute_name_en": "Clamping Voltage",
+          "component_code": "C19077498",
+          "attribute_value_name": "9.2V"
+        },
+        {
+          "attribute_name_en": "Polarity",
+          "component_code": "C19077498",
+          "attribute_value_name": "Bidirectional"
+        },
+        {
+          "attribute_name_en": "Peak Pulse Current (Ipp)",
+          "component_code": "C19077498",
+          "attribute_value_name": "21.7A@10/1000us"
+        },
+        {
+          "attribute_name_en": "Voltage - Breakdown",
+          "component_code": "C19077498",
+          "attribute_value_name": "7V"
+        },
+        {
+          "attribute_name_en": "Reverse Stand-Off Voltage (Vrwm)",
+          "component_code": "C19077498",
+          "attribute_value_name": "5V"
+        },
+        {
+          "attribute_name_en": "Reverse Leakage Current (Ir)",
+          "component_code": "C19077498",
+          "attribute_value_name": "400uA"
+        }
+      ],
+      "code": "C19077498",
+      "url": "https://jlcpcb.com/partdetail/C19077498",
+      "checkedAt": "2026-10-15T15:18:14.534868+00:00",
+      "htmlSha256": "c59e5e4dbbd1a2e53a9914664d8eae4e712c9b86f554e487871a0999407b4c2e",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "KT-0805G",
+      "componentBrandEn": "Hubei KENTO Elec",
+      "componentSpecificationEn": "0805",
+      "describe": "-40℃~+85℃ 100mW 120° 2.6V~3.1V 430mcd 513nm~528nm 525nm 5mA Discrete Diode Emerald Green Water Clear 0805 LED Indication - Discrete ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 2474039,
+      "overseasStockCount": 2712933,
+      "preMinPurchaseNum": 711,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0164,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_1806151820_Hubei-KENTO-Elec-KT-0805G_C2297.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Wavelength - Dominant",
+          "component_code": "C2297",
+          "attribute_value_name": "513nm~528nm"
+        },
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C2297",
+          "attribute_value_name": "-40℃~+85℃"
+        },
+        {
+          "attribute_name_en": "Test Current",
+          "component_code": "C2297",
+          "attribute_value_name": "5mA"
+        },
+        {
+          "attribute_name_en": "Viewing Angle",
+          "component_code": "C2297",
+          "attribute_value_name": "120°"
+        },
+        {
+          "attribute_name_en": "Lamp Holder Type",
+          "component_code": "C2297",
+          "attribute_value_name": "2mm x 1.25mm square LED"
+        },
+        {
+          "attribute_name_en": "Luminous Intensity",
+          "component_code": "C2297",
+          "attribute_value_name": "430mcd"
+        },
+        {
+          "attribute_name_en": "Power(Watts)",
+          "component_code": "C2297",
+          "attribute_value_name": "100mW"
+        },
+        {
+          "attribute_name_en": "Diode Configuration",
+          "component_code": "C2297",
+          "attribute_value_name": "Discrete Diode"
+        },
+        {
+          "attribute_name_en": "Illumination Color",
+          "component_code": "C2297",
+          "attribute_value_name": "Emerald Green"
+        },
+        {
+          "attribute_name_en": "Lens Color",
+          "component_code": "C2297",
+          "attribute_value_name": "Water Clear"
+        },
+        {
+          "attribute_name_en": "Peak Wavelength",
+          "component_code": "C2297",
+          "attribute_value_name": "525nm"
+        },
+        {
+          "attribute_name_en": "Voltage - Forward(Vf)",
+          "component_code": "C2297",
+          "attribute_value_name": "2.6V~3.1V"
+        }
+      ],
+      "code": "C2297",
+      "url": "https://jlcpcb.com/partdetail/C2297",
+      "checkedAt": "2026-10-15T15:18:14.896998+00:00",
+      "htmlSha256": "fe2ca61b94278b4b72f638c65ab5a235ade208a476b07fcf6faeef6d45ab730e",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "PTS636SK25SMTRLFS",
+      "componentBrandEn": "C&K",
+      "componentSpecificationEn": "SMD,6x3.5mm",
+      "describe": "-40℃~+90℃ 12V 2.5N 3.7mm 50mA 6.1mm Gull Wing IP40 No Rectangular Button SPST-NO Surface Mount,Vertical SMD,6x3.5mm Tactile Switches ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 61,
+      "overseasStockCount": 2894,
+      "preMinPurchaseNum": 26,
+      "leastPatchNumber": 5,
+      "lossNumber": 1,
+      "initialPrice": 0.3546,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2110271930_C-K-PTS636SK25SMTRLFS_C2689642.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C2689642",
+          "attribute_value_name": "-40℃~+90℃"
+        },
+        {
+          "attribute_name_en": "Contact Current",
+          "component_code": "C2689642",
+          "attribute_value_name": "50mA"
+        },
+        {
+          "attribute_name_en": "Operating Force",
+          "component_code": "C2689642",
+          "attribute_value_name": "2.5N"
+        },
+        {
+          "attribute_name_en": "IP Rating",
+          "component_code": "C2689642",
+          "attribute_value_name": "IP40"
+        },
+        {
+          "attribute_name_en": "Length",
+          "component_code": "C2689642",
+          "attribute_value_name": "6.1mm"
+        },
+        {
+          "attribute_name_en": "Termination Style",
+          "component_code": "C2689642",
+          "attribute_value_name": "Gull Wing"
+        },
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C2689642",
+          "attribute_value_name": "12V"
+        },
+        {
+          "attribute_name_en": "Actuator Style",
+          "component_code": "C2689642",
+          "attribute_value_name": "Rectangular Button"
+        },
+        {
+          "attribute_name_en": "Circuit",
+          "component_code": "C2689642",
+          "attribute_value_name": "SPST-NO"
+        },
+        {
+          "attribute_name_en": "With Lamp",
+          "component_code": "C2689642",
+          "attribute_value_name": "No"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C2689642",
+          "attribute_value_name": "Surface Mount,Vertical"
+        },
+        {
+          "attribute_name_en": "Width",
+          "component_code": "C2689642",
+          "attribute_value_name": "3.7mm"
+        }
+      ],
+      "code": "C2689642",
+      "url": "https://jlcpcb.com/partdetail/C2689642",
+      "checkedAt": "2026-10-17T20:42:32.346088+00:00",
+      "htmlSha256": "1752686b8b04e6e18eb57e56340bed827c139e31ce572adedbe18ac2605b6c6c",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "0805W8F5101T5E",
+      "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+      "componentSpecificationEn": "0805",
+      "describe": "-55℃~+155℃ 125mW 150V 5.1kΩ Thick Film Resistor ±1% ±100ppm/℃ 0805 Chip Resistor - Surface Mount ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 2470638,
+      "overseasStockCount": 2875423,
+      "preMinPurchaseNum": 2099,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0056,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010030_UNI-ROYAL-Uniroyal-Elec-0805W8F5101T5E_C27834.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Resistance",
+          "component_code": "C27834",
+          "attribute_value_name": "5.1kΩ"
+        },
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C27834",
+          "attribute_value_name": "-55℃~+155℃"
+        },
+        {
+          "attribute_name_en": "Power(Watts)",
+          "component_code": "C27834",
+          "attribute_value_name": "125mW"
+        },
+        {
+          "attribute_name_en": "Type",
+          "component_code": "C27834",
+          "attribute_value_name": "Thick Film Resistor"
+        },
+        {
+          "attribute_name_en": "Voltage-Supply(Max)",
+          "component_code": "C27834",
+          "attribute_value_name": "150V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C27834",
+          "attribute_value_name": "±1%"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C27834",
+          "attribute_value_name": "±100ppm/℃"
+        }
+      ],
+      "code": "C27834",
+      "url": "https://jlcpcb.com/partdetail/C27834",
+      "checkedAt": "2026-10-15T15:18:14.720785+00:00",
+      "htmlSha256": "14f0384205bad8ade118569ef97d1f4fe412aa29514907fbe9657d1528f055f0",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "CL21B105KBFNNNE",
+      "componentBrandEn": "Samsung Electro-Mechanics",
+      "componentSpecificationEn": "0805",
+      "describe": "1uF 50V X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 1667923,
+      "overseasStockCount": 2118198,
+      "preMinPurchaseNum": 473,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0291,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21B105KBFNNNE_C28323.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C28323",
+          "attribute_value_name": "50V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C28323",
+          "attribute_value_name": "±10%"
+        },
+        {
+          "attribute_name_en": "Capacitance",
+          "component_code": "C28323",
+          "attribute_value_name": "1uF"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C28323",
+          "attribute_value_name": "X7R"
+        }
+      ],
+      "code": "C28323",
+      "url": "https://jlcpcb.com/partdetail/C28323",
+      "checkedAt": "2026-10-15T15:18:14.703700+00:00",
+      "htmlSha256": "02272282af7d628b8284bda7d7420bf0a53e331b80474fb12e5cbd4f4f09140e",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "0805W8F5600T5E",
+      "componentBrandEn": "UNI-ROYAL(Uniroyal Elec)",
+      "componentSpecificationEn": "0805",
+      "describe": "-55℃~+155℃ 125mW 150V 560Ω Thick Film Resistor ±1% ±100ppm/℃ 0805 Chip Resistor - Surface Mount ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 269545,
+      "overseasStockCount": 322424,
+      "preMinPurchaseNum": 4102,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0029,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010030_UNI-ROYAL-Uniroyal-Elec-0805W8F5600T5E_C28636.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Resistance",
+          "component_code": "C28636",
+          "attribute_value_name": "560Ω"
+        },
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C28636",
+          "attribute_value_name": "-55℃~+155℃"
+        },
+        {
+          "attribute_name_en": "Power(Watts)",
+          "component_code": "C28636",
+          "attribute_value_name": "125mW"
+        },
+        {
+          "attribute_name_en": "Type",
+          "component_code": "C28636",
+          "attribute_value_name": "Thick Film Resistor"
+        },
+        {
+          "attribute_name_en": "Voltage-Supply(Max)",
+          "component_code": "C28636",
+          "attribute_value_name": "150V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C28636",
+          "attribute_value_name": "±1%"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C28636",
+          "attribute_value_name": "±100ppm/℃"
+        }
+      ],
+      "code": "C28636",
+      "url": "https://jlcpcb.com/partdetail/C28636",
+      "checkedAt": "2026-10-15T15:18:17.104076+00:00",
+      "htmlSha256": "79f4c90d7b30ae3f4d58548c385e75254e41a783839341069c09a22349d8de7d",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "TS-1101-C-W",
+      "componentBrandEn": "XKB Connection",
+      "componentSpecificationEn": "SMD,6x3.6mm",
+      "describe": "-30℃~+85℃ 12V 2.5mm 2.6N 3.6mm 50,000 cycles 50mA 6mm No Rectangular Button SPST Surface Mount,Vertical Without Bracket SMD,6x3.6mm Tactile Switches ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 300772,
+      "overseasStockCount": 366425,
+      "preMinPurchaseNum": 255,
+      "leastPatchNumber": 5,
+      "lossNumber": 1,
+      "initialPrice": 0.0437,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C318938",
+          "attribute_value_name": "-30℃~+85℃"
+        },
+        {
+          "attribute_name_en": "Contact Current",
+          "component_code": "C318938",
+          "attribute_value_name": "50mA"
+        },
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C318938",
+          "attribute_value_name": "12V"
+        },
+        {
+          "attribute_name_en": "Actuator Style",
+          "component_code": "C318938",
+          "attribute_value_name": "Rectangular Button"
+        },
+        {
+          "attribute_name_en": "with Bracket",
+          "component_code": "C318938",
+          "attribute_value_name": "Without Bracket"
+        },
+        {
+          "attribute_name_en": "Switch Height",
+          "component_code": "C318938",
+          "attribute_value_name": "2.5mm"
+        },
+        {
+          "attribute_name_en": "Circuit",
+          "component_code": "C318938",
+          "attribute_value_name": "SPST"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C318938",
+          "attribute_value_name": "Surface Mount,Vertical"
+        },
+        {
+          "attribute_name_en": "Operating Force",
+          "component_code": "C318938",
+          "attribute_value_name": "2.6N"
+        },
+        {
+          "attribute_name_en": "Length",
+          "component_code": "C318938",
+          "attribute_value_name": "6mm"
+        },
+        {
+          "attribute_name_en": "Life",
+          "component_code": "C318938",
+          "attribute_value_name": "50,000 cycles"
+        },
+        {
+          "attribute_name_en": "With Lamp",
+          "component_code": "C318938",
+          "attribute_value_name": "No"
+        },
+        {
+          "attribute_name_en": "Width",
+          "component_code": "C318938",
+          "attribute_value_name": "3.6mm"
+        }
+      ],
+      "code": "C318938",
+      "url": "https://jlcpcb.com/partdetail/C318938",
+      "checkedAt": "2026-10-15T15:18:15.467865+00:00",
+      "htmlSha256": "8f1b9178c8563e89359fe6df26a627bc12161911672f2dcfb8c0de7d2e379979",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "CC0805KRX7R9BB104",
+      "componentBrandEn": "YAGEO",
+      "componentSpecificationEn": "0805",
+      "describe": "100nF 50V X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+      "componentLibraryType": "base",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 18304571,
+      "overseasStockCount": 21538924,
+      "preMinPurchaseNum": 778,
+      "leastPatchNumber": 20,
+      "lossNumber": 10,
+      "initialPrice": 0.0188,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-CC0805KRX7R9BB104_C49678.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C49678",
+          "attribute_value_name": "50V"
+        },
+        {
+          "attribute_name_en": "Tolerance",
+          "component_code": "C49678",
+          "attribute_value_name": "±10%"
+        },
+        {
+          "attribute_name_en": "Capacitance",
+          "component_code": "C49678",
+          "attribute_value_name": "100nF"
+        },
+        {
+          "attribute_name_en": "Temperature Coefficient",
+          "component_code": "C49678",
+          "attribute_value_name": "X7R"
+        }
+      ],
+      "code": "C49678",
+      "url": "https://jlcpcb.com/partdetail/C49678",
+      "checkedAt": "2026-10-15T15:18:15.795722+00:00",
+      "htmlSha256": "cc930a3b5c1079755708c3d417c1ff5cefbf1c22538f7e9152c40deabe097d8f",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "AP2112K-3.3TRG1",
+      "componentBrandEn": "Diodes Incorporated",
+      "componentSpecificationEn": "SOT-25-5",
+      "describe": "-40℃~+85℃@(Ta) 1 250mV@(600mA) 3.3V 50uVrms 55uA 600mA 65dB@(1kHz) 6V Fixed Over Current Protection、Thermal Shutdown、Enable control Positive SOT-25-5 Voltage Regulators - Linear, Low Drop Out (LDO) Regulators ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 9153,
+      "overseasStockCount": 11640,
+      "preMinPurchaseNum": 67,
+      "leastPatchNumber": 5,
+      "lossNumber": 0,
+      "initialPrice": 0.1715,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Diodes-Incorporated-AP2112K-3-3TRG1_C51118.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Power Supply Rejection Ratio (PSRR)",
+          "component_code": "C51118",
+          "attribute_value_name": "65dB@(1kHz)"
+        },
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C51118",
+          "attribute_value_name": "-40℃~+85℃@(Ta)"
+        },
+        {
+          "attribute_name_en": "standby current",
+          "component_code": "C51118",
+          "attribute_value_name": "55uA"
+        },
+        {
+          "attribute_name_en": "Noise",
+          "component_code": "C51118",
+          "attribute_value_name": "50uVrms"
+        },
+        {
+          "attribute_name_en": "Voltage - Supply",
+          "component_code": "C51118",
+          "attribute_value_name": "6V"
+        },
+        {
+          "attribute_name_en": "Output Type",
+          "component_code": "C51118",
+          "attribute_value_name": "Fixed"
+        },
+        {
+          "attribute_name_en": "Output Current",
+          "component_code": "C51118",
+          "attribute_value_name": "600mA"
+        },
+        {
+          "attribute_name_en": "Output Configuration",
+          "component_code": "C51118",
+          "attribute_value_name": "Positive"
+        },
+        {
+          "attribute_name_en": "Features",
+          "component_code": "C51118",
+          "attribute_value_name": "Over Current Protection、Short Circuit Protection、Thermal shutdown、Enable control、Output discharge"
+        },
+        {
+          "attribute_name_en": "Voltage Dropout",
+          "component_code": "C51118",
+          "attribute_value_name": "250mV@(600mA)"
+        },
+        {
+          "attribute_name_en": "Output Voltage",
+          "component_code": "C51118",
+          "attribute_value_name": "3.3V"
+        },
+        {
+          "attribute_name_en": "Number of Outputs",
+          "component_code": "C51118",
+          "attribute_value_name": "1"
+        }
+      ],
+      "code": "C51118",
+      "url": "https://jlcpcb.com/partdetail/C51118",
+      "checkedAt": "2026-10-15T15:18:15.768938+00:00",
+      "htmlSha256": "0be2a06978d7cbf08f26fad13fc0f41227b2e8ec044628065f4e164926d79161",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "7312P0225A13LF",
+      "componentBrandEn": "Amphenol ICC",
+      "componentSpecificationEn": "SMD",
+      "describe": "-20℃~+70℃ 3.6mm SMD SIM Card Connectors ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 28,
+      "overseasStockCount": 35,
+      "preMinPurchaseNum": 3,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 3.4175,
+      "needAuditFlag": false,
+      "dataManualUrl": "",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C5417011",
+          "attribute_value_name": "-20℃~+70℃"
+        },
+        {
+          "attribute_name_en": "Height Above Board",
+          "component_code": "C5417011",
+          "attribute_value_name": "3.6mm"
+        }
+      ],
+      "code": "C5417011",
+      "url": "https://jlcpcb.com/partdetail/C5417011",
+      "checkedAt": "2026-10-15T15:18:15.750246+00:00",
+      "htmlSha256": "1e0030598fb14f3e86b435c714776d444c1137559ca2d1e302817ce47a40ca37",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "SEC1210/PV-UR2",
+      "componentBrandEn": "Microchip Tech",
+      "componentSpecificationEn": "QFN-24",
+      "describe": "-40℃~+85℃ 3.6V~5.5V 3Mbps Interrupt generation、Wake-up function、Non-volatile configuration storage SPI、UART QFN-24 Interface - Specialized ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 55,
+      "overseasStockCount": 75,
+      "preMinPurchaseNum": 1,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 9.8186,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2410121852_Microchip-Tech-SEC1210-PV-UR2_C633309.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C633309",
+          "attribute_value_name": "-40℃~+85℃"
+        },
+        {
+          "attribute_name_en": "Data Rate",
+          "component_code": "C633309",
+          "attribute_value_name": "3Mbps"
+        },
+        {
+          "attribute_name_en": "Voltage - Supply",
+          "component_code": "C633309",
+          "attribute_value_name": "3.6V~5.5V"
+        },
+        {
+          "attribute_name_en": "Features",
+          "component_code": "C633309",
+          "attribute_value_name": "Interrupt generation、Wake-up function、Non-volatile configuration storage"
+        },
+        {
+          "attribute_name_en": "Interface",
+          "component_code": "C633309",
+          "attribute_value_name": "SPI、UART"
+        }
+      ],
+      "code": "C633309",
+      "url": "https://jlcpcb.com/partdetail/C633309",
+      "checkedAt": "2026-10-15T15:18:16.319649+00:00",
+      "htmlSha256": "88701857ee08e1515a3676ad3666d8e6f9a8187050a823a6721fb4745d029051",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "TYPE-C 6P(073)",
+      "componentBrandEn": "SHOU HAN",
+      "componentSpecificationEn": "SMD",
+      "describe": "-25℃~+85℃ 1 10 thousand cycles 3A 5V 6P Black Female Surface Mount, Right Angle Type-C SMD USB Connectors ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 136793,
+      "overseasStockCount": 138230,
+      "preMinPurchaseNum": 276,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 0.0403,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2006181823_SHOU-HAN-TYPE-C-6P-073_C668623.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C668623",
+          "attribute_value_name": "-30℃~+80℃"
+        },
+        {
+          "attribute_name_en": "Current Rating-Power",
+          "component_code": "C668623",
+          "attribute_value_name": "3A"
+        },
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C668623",
+          "attribute_value_name": "5V"
+        },
+        {
+          "attribute_name_en": "Gender",
+          "component_code": "C668623",
+          "attribute_value_name": "Female"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C668623",
+          "attribute_value_name": "Surface Mount, Right Angle"
+        },
+        {
+          "attribute_name_en": "Detection color",
+          "component_code": "C668623",
+          "attribute_value_name": "Black"
+        },
+        {
+          "attribute_name_en": "Number of Ports",
+          "component_code": "C668623",
+          "attribute_value_name": "1"
+        },
+        {
+          "attribute_name_en": "Length",
+          "component_code": "C668623",
+          "attribute_value_name": "6.8mm"
+        },
+        {
+          "attribute_name_en": "Connector Type",
+          "component_code": "C668623",
+          "attribute_value_name": "Type-C"
+        },
+        {
+          "attribute_name_en": "Number of Contacts",
+          "component_code": "C668623",
+          "attribute_value_name": "6P"
+        },
+        {
+          "attribute_name_en": "Connect-Disconnect Life",
+          "component_code": "C668623",
+          "attribute_value_name": "10 thousand cycles"
+        }
+      ],
+      "code": "C668623",
+      "url": "https://jlcpcb.com/partdetail/C668623",
+      "checkedAt": "2026-10-15T15:18:16.918759+00:00",
+      "htmlSha256": "675bdd09c8dd5670bedf7490f509bc64b78641e2d43a53b20dd31aca652a9660",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "USB4125-GF-A",
+      "componentBrandEn": "Global Connector Technology",
+      "componentSpecificationEn": "SMD",
+      "describe": "-30℃~+85℃ 1 3A 48V 6P Black Female Surface Mount, Right Angle Type-C SMD USB Connectors ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 667,
+      "overseasStockCount": 851,
+      "preMinPurchaseNum": 9,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 1.0425,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_Global-Connector-Technology-USB4125-GF-A_C3151650.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C3151650",
+          "attribute_value_name": "-30℃~+85℃"
+        },
+        {
+          "attribute_name_en": "Current Rating-Power",
+          "component_code": "C3151650",
+          "attribute_value_name": "3A"
+        },
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C3151650",
+          "attribute_value_name": "48V"
+        },
+        {
+          "attribute_name_en": "Gender",
+          "component_code": "C3151650",
+          "attribute_value_name": "Female"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C3151650",
+          "attribute_value_name": "Surface Mount, Right Angle"
+        },
+        {
+          "attribute_name_en": "Detection color",
+          "component_code": "C3151650",
+          "attribute_value_name": "Black"
+        },
+        {
+          "attribute_name_en": "Number of Ports",
+          "component_code": "C3151650",
+          "attribute_value_name": "1"
+        },
+        {
+          "attribute_name_en": "Connector Type",
+          "component_code": "C3151650",
+          "attribute_value_name": "Type-C"
+        },
+        {
+          "attribute_name_en": "Number of Contacts",
+          "component_code": "C3151650",
+          "attribute_value_name": "6P"
+        }
+      ],
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 1.0425
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 29,
+          "productPrice": 0.8445
+        },
+        {
+          "startNumber": 30,
+          "endNumber": 99,
+          "productPrice": 0.7447
+        },
+        {
+          "startNumber": 100,
+          "endNumber": 499,
+          "productPrice": 0.6465
+        },
+        {
+          "startNumber": 500,
+          "endNumber": 999,
+          "productPrice": 0.5875
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": -1,
+          "productPrice": 0.5565
+        }
+      ],
+      "code": "C3151650",
+      "url": "https://jlcpcb.com/partdetail/C3151650",
+      "checkedAt": "2026-10-24T16:48:27.234202+00:00",
+      "htmlSha256": "22452954360620d5ca6d3c7b137470ebeae2f8c1cf8757006f0e94cc62d443bc",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "USB4125-GF-A-0190",
+      "componentBrandEn": "Global Connector Technology",
+      "componentSpecificationEn": "SMD",
+      "describe": "-30℃~+85℃ 1 20 thousand cycles 3A 48V 6P Black Female Surface Mount, Right Angle Type-C SMD USB Connectors ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 2592,
+      "overseasStockCount": 2803,
+      "preMinPurchaseNum": 13,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 0.9165,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2401301201_Global-Connector-Technology-USB4125-GF-A-0190_C5246813.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C5246813",
+          "attribute_value_name": "-30℃~+85℃"
+        },
+        {
+          "attribute_name_en": "Current Rating-Power",
+          "component_code": "C5246813",
+          "attribute_value_name": "3A"
+        },
+        {
+          "attribute_name_en": "Voltage Rating",
+          "component_code": "C5246813",
+          "attribute_value_name": "48V"
+        },
+        {
+          "attribute_name_en": "Gender",
+          "component_code": "C5246813",
+          "attribute_value_name": "Female"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C5246813",
+          "attribute_value_name": "Surface Mount, Right Angle"
+        },
+        {
+          "attribute_name_en": "Detection color",
+          "component_code": "C5246813",
+          "attribute_value_name": "Black"
+        },
+        {
+          "attribute_name_en": "Number of Ports",
+          "component_code": "C5246813",
+          "attribute_value_name": "1"
+        },
+        {
+          "attribute_name_en": "Connector Type",
+          "component_code": "C5246813",
+          "attribute_value_name": "Type-C"
+        },
+        {
+          "attribute_name_en": "Number of Contacts",
+          "component_code": "C5246813",
+          "attribute_value_name": "6P"
+        },
+        {
+          "attribute_name_en": "Connect-Disconnect Life",
+          "component_code": "C5246813",
+          "attribute_value_name": "20,000 cycles"
+        }
+      ],
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 0.9165
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 29,
+          "productPrice": 0.7479
+        },
+        {
+          "startNumber": 30,
+          "endNumber": 99,
+          "productPrice": 0.6628
+        },
+        {
+          "startNumber": 100,
+          "endNumber": 499,
+          "productPrice": 0.5794
+        },
+        {
+          "startNumber": 500,
+          "endNumber": 999,
+          "productPrice": 0.5286
+        },
+        {
+          "startNumber": 1000,
+          "endNumber": -1,
+          "productPrice": 0.5025
+        }
+      ],
+      "code": "C5246813",
+      "url": "https://jlcpcb.com/partdetail/C5246813",
+      "checkedAt": "2026-10-24T16:48:27.170963+00:00",
+      "htmlSha256": "6723f1371f4cb9ea0d685252b11a86bac2da047d7c832004058dbe99aaf07c18",
+      "status": "public_catalog_snapshot"
+    }
+  ]
+}

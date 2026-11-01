@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "mode": "before",
+      "phases": {
+        "home-idle": {
+          "medianPythonPrivateAnonPlusSwapKiB": 11586.0,
+          "samples": 6
+        },
+        "camera-live": {
+          "medianPythonPrivateAnonPlusSwapKiB": 14120,
+          "samples": 13
+        }
+      },
+      "cameraFrames": 57,
+      "cameraStopped": true,
+      "ownerExitCode": 0,
+      "packages": {
+        "PIL": 0,
+        "qrcode": 0,
+        "embit": 10,
+        "urtypes": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      }
+    },
+    {
+      "mode": "after",
+      "phases": {
+        "home-idle": {
+          "medianPythonPrivateAnonPlusSwapKiB": 11184.0,
+          "samples": 6
+        },
+        "camera-live": {
+          "medianPythonPrivateAnonPlusSwapKiB": 13732,
+          "samples": 13
+        }
+      },
+      "cameraFrames": 57,
+      "cameraStopped": true,
+      "ownerExitCode": 0,
+      "packages": {
+        "decimal": 0,
+        "_decimal": 0,
+        "PIL": 0,
+        "qrcode": 0,
+        "embit": 10,
+        "urtypes": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      }
+    }
+  ],
+  "homeReductionKiB": 402,
+  "scanReductionKiB": 388,
+  "hostTests": 239,
+  "scope": "Sequential warm hardware observations of private anonymous RAM plus swap, excluding each phase first 3 seconds; run-order/allocator variation is not isolated. Not total system RAM or sums of RSS.",
+  "originalAmountRendererLogicUnchanged": true,
+  "transactionReview": {
+    "passed": true,
+    "receipt": "decimal-import-wallet-flow-arm.json",
+    "signatureAndExportVerified": true
+  },
+  "runtimeBundle": "dist/lvgl-app/runtime-memory-decimal-01",
+  "runtimeManifestSha256": "d2cc81aac678d2b38965f819ecf9f1fb4cd9efd0168af68b32ef5536e423d973"
+}

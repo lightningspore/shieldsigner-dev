@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "mode": "before",
+      "medianPythonPrivateAnonPlusSwapKiB": 14898.0,
+      "frames": 56,
+      "cameraStopped": true,
+      "ownerExitCode": 0,
+      "packages": {
+        "PIL": 0,
+        "qrcode": 0,
+        "embit": 27,
+        "urtypes": 17,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      }
+    },
+    {
+      "mode": "after",
+      "medianPythonPrivateAnonPlusSwapKiB": 14250.0,
+      "frames": 58,
+      "cameraStopped": true,
+      "ownerExitCode": 0,
+      "packages": {
+        "PIL": 0,
+        "qrcode": 0,
+        "embit": 10,
+        "urtypes": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      }
+    }
+  ],
+  "reductionPrivateKiB": 648.0,
+  "hostTests": 231,
+  "parserLogicAstUnchangedExceptImports": true,
+  "publicPayloadCases": [
+    "compact seed 12",
+    "compact seed 24",
+    "numeric seed 12",
+    "numeric seed 24",
+    "base64 PSBT",
+    "base43 PSBT",
+    "reversed/duplicated animated UR PSBT",
+    "unreadable returns None",
+    "duplicate-key PSBT refused"
+  ],
+  "scope": "Warm scan observations across incremental checkpoints, not isolated allocation or total system RAM; native camera/QR binaries unchanged",
+  "runtimeManifestSha256": "b22b4c3fd2ead6e13f5c7f45636daaed37908ee6bfa38925d9aa2e4b2aab7877"
+}

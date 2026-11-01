@@ -1,0 +1,151 @@
+{
+  "passed": true,
+  "originalController": true,
+  "originalViewInitialization": true,
+  "screenSequence": [
+    "OpeningSplashScreen",
+    "WarningScreen",
+    "MainMenuScreen",
+    "ButtonListScreen",
+    "MainMenuScreen"
+  ],
+  "nativeRendererNoPILCanvas": true,
+  "activityTimerUpdated": true,
+  "resourceSnapshots": [
+    {
+      "screen": "OpeningSplashScreen",
+      "python": {
+        "VmSize": "44040 kB",
+        "VmHWM": "26596 kB",
+        "VmRSS": "26160 kB",
+        "RssAnon": "16280 kB",
+        "RssFile": "9880 kB",
+        "RssShmem": "0 kB",
+        "Threads": "5",
+        "user_ticks": 698,
+        "system_ticks": 306
+      },
+      "native": {
+        "VmSize": "1724 kB",
+        "VmHWM": "456 kB",
+        "VmRSS": "456 kB",
+        "RssAnon": "60 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "396 kB",
+        "Threads": "1",
+        "user_ticks": 9,
+        "system_ticks": 7
+      }
+    },
+    {
+      "screen": "WarningScreen",
+      "python": {
+        "VmSize": "44200 kB",
+        "VmHWM": "26596 kB",
+        "VmRSS": "25980 kB",
+        "RssAnon": "16252 kB",
+        "RssFile": "9728 kB",
+        "RssShmem": "0 kB",
+        "Threads": "5",
+        "user_ticks": 832,
+        "system_ticks": 342
+      },
+      "native": {
+        "VmSize": "1748 kB",
+        "VmHWM": "856 kB",
+        "VmRSS": "856 kB",
+        "RssAnon": "208 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "648 kB",
+        "Threads": "1",
+        "user_ticks": 19,
+        "system_ticks": 13
+      }
+    },
+    {
+      "screen": "MainMenuScreen",
+      "python": {
+        "VmSize": "44200 kB",
+        "VmHWM": "26596 kB",
+        "VmRSS": "25752 kB",
+        "RssAnon": "16172 kB",
+        "RssFile": "9580 kB",
+        "RssShmem": "0 kB",
+        "Threads": "5",
+        "user_ticks": 1124,
+        "system_ticks": 401
+      },
+      "native": {
+        "VmSize": "1772 kB",
+        "VmHWM": "968 kB",
+        "VmRSS": "964 kB",
+        "RssAnon": "232 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "732 kB",
+        "Threads": "1",
+        "user_ticks": 46,
+        "system_ticks": 20
+      }
+    },
+    {
+      "screen": "ButtonListScreen",
+      "python": {
+        "VmSize": "48828 kB",
+        "VmHWM": "26596 kB",
+        "VmRSS": "23468 kB",
+        "RssAnon": "18800 kB",
+        "RssFile": "4668 kB",
+        "RssShmem": "0 kB",
+        "Threads": "5",
+        "user_ticks": 1278,
+        "system_ticks": 493
+      },
+      "native": {
+        "VmSize": "1796 kB",
+        "VmHWM": "1000 kB",
+        "VmRSS": "988 kB",
+        "RssAnon": "248 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "740 kB",
+        "Threads": "1",
+        "user_ticks": 58,
+        "system_ticks": 26
+      }
+    },
+    {
+      "screen": "MainMenuScreen",
+      "python": {
+        "VmSize": "48828 kB",
+        "VmHWM": "26596 kB",
+        "VmRSS": "23468 kB",
+        "RssAnon": "18800 kB",
+        "RssFile": "4668 kB",
+        "RssShmem": "0 kB",
+        "Threads": "5",
+        "user_ticks": 1316,
+        "system_ticks": 496
+      },
+      "native": {
+        "VmSize": "1828 kB",
+        "VmHWM": "1036 kB",
+        "VmRSS": "1032 kB",
+        "RssAnon": "276 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "756 kB",
+        "Threads": "1",
+        "user_ticks": 62,
+        "system_ticks": 31
+      }
+    }
+  ],
+  "resourceComparison": false,
+  "mandatoryStoragesInitialized": true,
+  "wipeAndRngWorkersStartedAndStopped": true,
+  "startupInterstitialsSkipped": false,
+  "smallRamPolicyEnabled": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "persistentSettingsWritten": false,
+  "testSourceSha256": "25c0a3b43623c81cda5061403621f12d023d4c307af89e7c0f7f3e5496c8dea5",
+  "scope": "Original startup interstitial decision path and live dev warning probes, native splash/Renderer, working small-RAM import policy; scripted keypad; no cold boot, desktop branch, custom SD logo, or full-wallet qualification."
+}

@@ -1,0 +1,8 @@
+{
+  "application": {"url": "https://github.com/3rdIteration/seedsigner.git", "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"},
+  "screens": {"url": "https://github.com/kdmukai/seedsigner-lvgl-screens.git", "commit": "33ddc0763c31b5ae0b6380147ba624a7fc0c9273"},
+  "lvgl": {"url": "https://github.com/lvgl/lvgl.git", "commit": "85aa60d18b3d5e5588d7b247abf90198f07c8a63"},
+  "reference_bindings": {"url": "https://github.com/kdmukai/seedsigner-raspi-lvgl.git", "commit": "1cb456500e6adcb09801a88d386fa0dc1134c1ec"},
+  "reference_app": {"url": "https://github.com/kdmukAI-bot/seedsigner.git", "commit": "fd9ba8fc766f715668bc37fbb5485499def9e52f"},
+  "language-packs": {"url": "https://github.com/kdmukAI-bot/seedsigner-language-packs.git", "commit": "a9e39dabf60e093bb3d1494eb4728f83342c878b"}
+}

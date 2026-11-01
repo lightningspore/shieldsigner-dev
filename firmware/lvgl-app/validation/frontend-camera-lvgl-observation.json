@@ -1,0 +1,81 @@
+{
+  "kind": "frontend-resource-observations",
+  "paired": false,
+  "results": [
+    {
+      "frontend": "lvgl",
+      "phases": {
+        "home-idle": {
+          "sampleCount": 7,
+          "windowSeconds": 6.004,
+          "medianUnits": "KiB except Threads",
+          "processes": {
+            "python": {
+              "VmRSS": 24640,
+              "RssAnon": 14840,
+              "VmSwap": 152,
+              "Threads": 5,
+              "cpuPercentOneCore": 18.321
+            },
+            "native": {
+              "VmRSS": 1464,
+              "RssAnon": 220,
+              "VmSwap": 0,
+              "Threads": 1,
+              "cpuPercentOneCore": 1.166
+            }
+          },
+          "medianSystemMemAvailableKiB": 16440,
+          "dmaObservations": [
+            "Total 0 objects, 0 bytes"
+          ]
+        },
+        "camera-live": {
+          "sampleCount": 10,
+          "windowSeconds": 9.0016,
+          "medianUnits": "KiB except Threads",
+          "processes": {
+            "python": {
+              "VmRSS": 16050.0,
+              "RssAnon": 13830.0,
+              "VmSwap": 4440.0,
+              "Threads": 8.0,
+              "cpuPercentOneCore": 39.66
+            },
+            "native": {
+              "VmRSS": 1660.0,
+              "RssAnon": 352.0,
+              "VmSwap": 4.0,
+              "Threads": 1.0,
+              "cpuPercentOneCore": 2.666
+            },
+            "camera-probe": {
+              "VmRSS": 7814.0,
+              "RssAnon": 4890.0,
+              "VmSwap": 0.0,
+              "Threads": 5.0,
+              "cpuPercentOneCore": 23.44
+            },
+            "shieldsigner-qr-reader": {
+              "VmRSS": 824.0,
+              "RssAnon": 336.0,
+              "VmSwap": 0.0,
+              "Threads": 1.0,
+              "cpuPercentOneCore": 3.111
+            }
+          },
+          "medianSystemMemAvailableKiB": 7816.0,
+          "dmaObservations": [
+            "Total 1 objects, 3981312 bytes"
+          ]
+        }
+      },
+      "cameraStats": null
+    }
+  ],
+  "limitations": [
+    "Warm-device measurements with benchmark overhead; no cold-start or repeat-order qualification.",
+    "RSS and swap are separate; shared pages and DMA prevent summing RSS as total physical RAM.",
+    "Process CPU excludes unmeasured kernel work; no FPS or response-latency claim."
+  ]
+}

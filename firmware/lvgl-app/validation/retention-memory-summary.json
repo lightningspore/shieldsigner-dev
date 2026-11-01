@@ -1,0 +1,114 @@
+{
+  "passed": true,
+  "camera": [
+    {
+      "frames": 0,
+      "pythonPrivateKiB": 13352,
+      "afterCollectionPrivateKiB": 13352,
+      "nativePrivateKiB": 76,
+      "threads": "2",
+      "collectedObjects": 68,
+      "dma": "Total 0 objects, 0 bytes"
+    },
+    {
+      "frames": 36,
+      "pythonPrivateKiB": 13360,
+      "afterCollectionPrivateKiB": 13360,
+      "nativePrivateKiB": 204,
+      "threads": "2",
+      "collectedObjects": 32,
+      "dma": "Total 0 objects, 0 bytes"
+    },
+    {
+      "frames": 38,
+      "pythonPrivateKiB": 13360,
+      "afterCollectionPrivateKiB": 13360,
+      "nativePrivateKiB": 208,
+      "threads": "2",
+      "collectedObjects": 32,
+      "dma": "Total 0 objects, 0 bytes"
+    },
+    {
+      "frames": 38,
+      "pythonPrivateKiB": 13368,
+      "afterCollectionPrivateKiB": 13368,
+      "nativePrivateKiB": 208,
+      "threads": "2",
+      "collectedObjects": 32,
+      "dma": "Total 0 objects, 0 bytes"
+    },
+    {
+      "frames": 38,
+      "pythonPrivateKiB": 13368,
+      "afterCollectionPrivateKiB": 13368,
+      "nativePrivateKiB": 208,
+      "threads": "2",
+      "collectedObjects": 32,
+      "dma": "Total 0 objects, 0 bytes"
+    },
+    {
+      "frames": 37,
+      "pythonPrivateKiB": 13376,
+      "afterCollectionPrivateKiB": 13376,
+      "nativePrivateKiB": 208,
+      "threads": "2",
+      "collectedObjects": 32,
+      "dma": "Total 0 objects, 0 bytes"
+    }
+  ],
+  "qr": [
+    {
+      "stage": "after-initial-exports",
+      "pythonPrivateKiB": 10420,
+      "afterCollectionPrivateKiB": 10420,
+      "nativePrivateKiB": 80,
+      "collectedObjects": 36
+    },
+    {
+      "stage": "repeat-export-1",
+      "pythonPrivateKiB": 10424,
+      "afterCollectionPrivateKiB": 10424,
+      "nativePrivateKiB": 80,
+      "collectedObjects": 0
+    },
+    {
+      "stage": "repeat-export-2",
+      "pythonPrivateKiB": 10424,
+      "afterCollectionPrivateKiB": 10424,
+      "nativePrivateKiB": 80,
+      "collectedObjects": 0
+    },
+    {
+      "stage": "repeat-export-3",
+      "pythonPrivateKiB": 10424,
+      "afterCollectionPrivateKiB": 10424,
+      "nativePrivateKiB": 80,
+      "collectedObjects": 0
+    },
+    {
+      "stage": "repeat-export-4",
+      "pythonPrivateKiB": 10428,
+      "afterCollectionPrivateKiB": 10428,
+      "nativePrivateKiB": 80,
+      "collectedObjects": 0
+    },
+    {
+      "stage": "repeat-export-5",
+      "pythonPrivateKiB": 10432,
+      "afterCollectionPrivateKiB": 10432,
+      "nativePrivateKiB": 80,
+      "collectedObjects": 0
+    }
+  ],
+  "cameraLiveCyclePrivateRangeKiB": 16,
+  "qrRepeatPrivateRangeKiB": 8,
+  "forcedCollectionAddedToProduction": false,
+  "publicQRFixturesOnly": true,
+  "scope": "Post-close private anonymous RAM plus swap in two separate diagnostic processes; test retains metadata snapshots. This bounds observed cycles, not every possible app workflow or an indefinite-duration leak rate.",
+  "runtimeBundle": "dist/lvgl-app/runtime-memory-native-preview-01",
+  "runtimeManifestSha256": "ed5493c91648a175c6a7fb1d498fee9e9a78beba4ef05779c545528f5a525374",
+  "runtimeIdenticalAfterAudit": true,
+  "freshStaging": "dist/lvgl-app/runtime-memory-retention-audit-01",
+  "typingStandaloneImportKiB": 208,
+  "typingRemoved": false
+}

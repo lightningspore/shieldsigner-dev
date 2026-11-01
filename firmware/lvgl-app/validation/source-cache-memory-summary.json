@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "before": {
+    "passed": true,
+    "scope": "Isolated inspection of methods used by existing LVGL adapters; not a running-app total",
+    "beforePrivateKiB": 12872,
+    "cachedPrivateKiB": 13444,
+    "evictedPrivateKiB": 13448,
+    "cacheEntries": [
+      {
+        "file": "seedsigner/controller.py",
+        "sourceBytes": 38738,
+        "retainedPythonBytes": 61760
+      },
+      {
+        "file": "seedsigner/gui/screens/tools_screens.py",
+        "sourceBytes": 69693,
+        "retainedPythonBytes": 108769
+      },
+      {
+        "file": "seedsigner/hardware/microsd.py",
+        "sourceBytes": 10258,
+        "retainedPythonBytes": 16665
+      },
+      {
+        "file": "seedsigner/views/seed_views.py",
+        "sourceBytes": 222580,
+        "retainedPythonBytes": 358448
+      },
+      {
+        "file": "seedsigner/views/tools_views.py",
+        "sourceBytes": 62848,
+        "retainedPythonBytes": 101126
+      }
+    ],
+    "retainedPythonBytes": 646768,
+    "hardwareOpened": false,
+    "walletCreated": false
+  },
+  "after": {
+    "passed": true,
+    "evictOnRead": true,
+    "scope": "Isolated inspection of methods used by existing LVGL adapters; not a running-app total",
+    "beforePrivateKiB": 12900,
+    "cachedPrivateKiB": 13200,
+    "evictedPrivateKiB": 13200,
+    "cacheEntries": [],
+    "retainedPythonBytes": 0,
+    "hardwareOpened": false,
+    "walletCreated": false
+  },
+  "removedRetainedPythonBytes": 646768,
+  "isolatedPrivateIncreaseBeforeKiB": 572,
+  "isolatedPrivateIncreaseAfterKiB": 300,
+  "hostTests": 237,
+  "hardwareCameraEntropy": "source-cache-entropy-arm.json",
+  "appEntry": {
+    "passed": true,
+    "receipt": "source-cache-app-entry-arm.json",
+    "originalMainInvoked": true,
+    "originalSettingsUnchanged": true,
+    "workersStopped": true
+  },
+  "scope": "Source-text cache allocation removal; allocator retains freed arenas, so removed object bytes are not a guaranteed equivalent RSS saving. Separate fresh-process tests have run-order variation.",
+  "runtimeBundle": "dist/lvgl-app/runtime-memory-source-cache-01",
+  "runtimeManifestSha256": "e6b93248a455261d1bd43746b88a1c4722b6ff31792d22d4f9114a959e005b84"
+}

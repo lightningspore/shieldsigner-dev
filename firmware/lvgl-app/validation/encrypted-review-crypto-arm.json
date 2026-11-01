@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "screen": "ScanReviewEncryptionKeyScreen",
+      "fullTextPreserved": true,
+      "proceedAndBack": true
+    },
+    {
+      "screen": "SeedEncryptedQRReviewMnemonicIDScreen",
+      "fullTextPreserved": true,
+      "proceedAndBack": true
+    }
+  ],
+  "originalCryptoRoundTrip": true,
+  "wrongKeyRejected": true,
+  "mode": "AES-ECB",
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "dependencyInitializationInjected": true,
+  "opticalQualified": false,
+  "qrExportQualified": false,
+  "runnerReceipt": "dist/lvgl-app/checks/encrypted-review-20261030T171657991284Z.json",
+  "scope": "Public LCD review controls and original AES-ECB encryption/decryption Views with injected dependency initialization; no optical input or rendered QR export in this checkpoint."
+}

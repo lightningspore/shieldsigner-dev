@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "beforeImportDeltaPrivateKiB": 8628,
+  "afterImportDeltaPrivateKiB": 8388,
+  "reductionPrivateKiB": 240,
+  "urModulesAfterToolsImport": 0,
+  "scope": "Fresh-process Tools import; not a full running-app or total system measurement",
+  "hostTests": 234,
+  "encoderComparisons": 23,
+  "originalOutputExact": true,
+  "fullControllerExport": {
+    "passed": true,
+    "receipt": "encoder-import-wallet-export-arm.json",
+    "pixelDecodedWithZXing": true,
+    "addressVerification": true
+  }
+}

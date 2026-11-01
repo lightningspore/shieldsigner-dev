@@ -1,0 +1,87 @@
+{
+  "verified": true,
+  "directory": "dist/lvgl-app/locale-assets/c0b8b623e734a8a4",
+  "locales": 22,
+  "fontLocales": 9,
+  "runtimeFiles": 32,
+  "runtimeBytes": 705899,
+  "unsupportedShapingTemplates": {
+    "hi": 1,
+    "th": 3
+  },
+  "runtimeIntegrated": false,
+  "twoBuildFileHashesIdentical": true,
+  "corruptAssetRejected": true,
+  "indexSha256": "ab5c321de906c52e46ef2d431aa924a6d6334e61bfec26867a4bd9f1edd29663",
+  "inputs": {
+    "environment": {
+      "image": "ghcr.io/kdmukai-bot/seedsigner-langpack-builder@sha256:3a3f1b97821f326a8b7eb1c13e7df889f4146d879f1b03b0581099d74b0bc6fb",
+      "maxRuntimeFileBytes": 524288,
+      "platform": "linux/amd64",
+      "translationsCommit": "708961a4163b1bd43eb15c4a26713649c63f6ccd",
+      "translationsSubmodule": "src/seedsigner/resources/seedsigner-translations"
+    },
+    "fontLocales": [
+      "el",
+      "fa",
+      "hi",
+      "ja",
+      "ko",
+      "ru",
+      "th",
+      "vi",
+      "zh_Hans_CN"
+    ],
+    "producerSha256": "97cd0819e6f8a9a68473732d8dc029378ab188fc9ab008c69a623262108235fd",
+    "sourcePins": {
+      "application": {
+        "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+        "url": "https://github.com/3rdIteration/seedsigner.git"
+      },
+      "language-packs": {
+        "commit": "a9e39dabf60e093bb3d1494eb4728f83342c878b",
+        "url": "https://github.com/kdmukAI-bot/seedsigner-language-packs.git"
+      },
+      "lvgl": {
+        "commit": "85aa60d18b3d5e5588d7b247abf90198f07c8a63",
+        "url": "https://github.com/lvgl/lvgl.git"
+      },
+      "reference_app": {
+        "commit": "fd9ba8fc766f715668bc37fbb5485499def9e52f",
+        "url": "https://github.com/kdmukAI-bot/seedsigner.git"
+      },
+      "reference_bindings": {
+        "commit": "1cb456500e6adcb09801a88d386fa0dc1134c1ec",
+        "url": "https://github.com/kdmukai/seedsigner-raspi-lvgl.git"
+      },
+      "screens": {
+        "commit": "33ddc0763c31b5ae0b6380147ba624a7fc0c9273",
+        "url": "https://github.com/kdmukai/seedsigner-lvgl-screens.git"
+      }
+    },
+    "translationLocales": [
+      "ca",
+      "cs",
+      "de",
+      "el",
+      "es",
+      "fa",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "no",
+      "pl",
+      "pt_BR",
+      "ru",
+      "th",
+      "tr",
+      "vi",
+      "zh_Hans_CN"
+    ]
+  },
+  "scope": "Host asset build/integrity/cache evidence only. Original translation pin, pinned upstream producer and pinned offline Docker environment. Native runtime integration and four Hindi/Thai shaping templates remain unresolved."
+}

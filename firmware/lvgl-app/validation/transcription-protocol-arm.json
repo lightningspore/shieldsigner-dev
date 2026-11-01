@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "screen": "seed_transcribe_whole_qr_screen",
+      "case": "invalid-hex",
+      "rejected": true
+    },
+    {
+      "screen": "seed_transcribe_whole_qr_screen",
+      "case": "short-matrix",
+      "rejected": true
+    },
+    {
+      "screen": "seed_transcribe_whole_qr_screen",
+      "case": "unsupported-size",
+      "rejected": true
+    },
+    {
+      "screen": "seed_transcribe_whole_qr_screen",
+      "case": "wrong-template",
+      "rejected": true
+    },
+    {
+      "screen": "seed_transcribe_zoomed_qr_screen",
+      "case": "invalid-hex",
+      "rejected": true
+    },
+    {
+      "screen": "seed_transcribe_zoomed_qr_screen",
+      "case": "short-matrix",
+      "rejected": true
+    },
+    {
+      "screen": "seed_transcribe_zoomed_qr_screen",
+      "case": "unsupported-size",
+      "rejected": true
+    },
+    {
+      "screen": "seed_transcribe_zoomed_qr_screen",
+      "case": "wrong-template",
+      "rejected": true
+    }
+  ],
+  "processRecovered": true,
+  "physicalDisplay": false,
+  "testSourceSha256": "e1199dd0bdee75dd6c0c03f4785f47139fb4bf490803028e0b74fee4ee3c64e3"
+}

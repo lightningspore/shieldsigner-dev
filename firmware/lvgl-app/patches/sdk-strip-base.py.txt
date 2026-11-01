@@ -1,0 +1,29 @@
+def configure_sdk_strip(sdk, bundle):
+    proof = json.loads((bundle / "payload/kernel-camera-abi.json").read_text())
+    revision = subprocess.check_output(["git", "-C", str(sdk), "rev-parse", "HEAD"], text=True).strip()
+    if revision != proof["sdkRevision"]:
+        raise ValueError("SDK strip policy revision differs from the reviewed pin")
+    relative = "project/build.sh"
+    original = subprocess.check_output(["git", "-C", str(sdk), "show", revision + ":" + relative], text=True)
+    start = original.index("function __RELEASE_FILESYSTEM_FILES() {")
+    end = original.index("\nfunction __COPY_FILES() {", start)
+    before = original[start:end]
+    after = replace_once(before, "-o -name '*.ko' \\) -print0", "-o -name '*.ko' -o -path '*/usr/lib/shieldsigner-camera/camera-probe' -o -path '*/usr/lib/shieldsigner-camera/shieldsigner-qr-reader' \\) -print0")
+    base_after = after
+    lcd = json.loads((bundle / "manifest.json").read_text()).get("lcdBackend", "python") == "rust"
+    lcd_path = "/usr/lib/shieldsigner-camera/python/shieldsigner_lcd.abi3.so"
+    if lcd:
+        after = replace_once(after, " -o -path '*/usr/lib/shieldsigner-camera/shieldsigner-qr-reader'",
+                             " -o -path '*/usr/lib/shieldsigner-camera/shieldsigner-qr-reader' -o -path '*" + lcd_path + "'")
+    script = sdk / relative
+    current = script.read_text()
+    current_start = current.index("function __RELEASE_FILESYSTEM_FILES() {")
+    current_end = current.index("\nfunction __COPY_FILES() {", current_start)
+    if current[current_start:current_end] not in {before, base_after, after}:
+        raise ValueError("SDK filesystem strip function has unreviewed edits")
+    script.write_text(current[:current_start] + after + current[current_end:])
+    return {"kind": "preserve-verified-static-camera-binaries", "sdkRevision": revision,
+            "file": relative, "originalFunctionSha256": hashlib.sha256(before.encode()).hexdigest(),
+            "patchedFunctionSha256": hashlib.sha256(after.encode()).hexdigest(),
+            "excludedPaths": ["/usr/lib/shieldsigner-camera/camera-probe", "/usr/lib/shieldsigner-camera/shieldsigner-qr-reader"] + ([lcd_path] if lcd else []),
+            "allOtherStripBehaviorPreserved": True}

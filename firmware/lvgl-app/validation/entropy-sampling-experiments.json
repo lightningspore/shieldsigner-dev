@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "runnerReceipt": "dist/lvgl-app/checks/entropy-sample-pixels-20261030T184547876888Z.json",
+  "result": {
+    "passed": true,
+    "checks": [
+      {
+        "rotation": 0,
+        "all256Levels": true,
+        "extremaAndSampleBytesExact": true
+      },
+      {
+        "rotation": 90,
+        "all256Levels": true,
+        "extremaAndSampleBytesExact": true
+      },
+      {
+        "rotation": 180,
+        "all256Levels": true,
+        "extremaAndSampleBytesExact": true
+      },
+      {
+        "rotation": 270,
+        "all256Levels": true,
+        "extremaAndSampleBytesExact": true
+      }
+    ],
+    "physicalCamera": false,
+    "physicalDisplay": false,
+    "finalCaptureFormatChanged": false
+  },
+  "hostAstBenchmark": {
+    "wholeModule": {
+      "currentBytes": 367591,
+      "peakBytes": 4570766,
+      "sourceBytes": 69693
+    },
+    "methodOnly": {
+      "currentBytes": 44142,
+      "peakBytes": 586215,
+      "sourceBytes": 8502
+    },
+    "scope": "Host Python tracemalloc allocation microbenchmark, not Luckfox RSS or a fix for the physical ISP failure."
+  },
+  "productionActive": false,
+  "scope": "Grayscale/pairing sample experiments moved to tests/experimental_entropy_samples.py. Original RGB reads also passed after reducing diagnostic imports, so production sampling remains original. Host AST allocation figures are not ARM RSS."
+}

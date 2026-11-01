@@ -1,0 +1,62 @@
+{
+  "objective": "Reduce LVGL memory by removing junk while preserving functionality, without a new rewrite",
+  "passed": true,
+  "requirements": [
+    {
+      "requirement": "Unused eager backends removed",
+      "evidence": "startup-helper-memory-summary.json; decimal-import-memory-summary.json; wallet-optional-import-memory-summary.json; tools-import-memory-summary.json",
+      "verified": true
+    },
+    {
+      "requirement": "Original wallet/encoding/entropy behavior retained",
+      "evidence": "245 host tests, including structural class/function comparisons; packaged-source-cache-wallet-arm.json; packaged-source-cache-entropy-arm.json; encoder-import-payloads-arm.json",
+      "verified": true
+    },
+    {
+      "requirement": "Disposable native/source buffers cleared or released",
+      "evidence": "native-preview-memory-summary.json; source-cache-memory-summary.json; native-preview-host.json",
+      "verified": true
+    },
+    {
+      "requirement": "Repeated use checked for retained resources",
+      "evidence": "retention-memory-summary.json; retention-camera-cycles-arm.json; retention-qr-cycles-arm.json",
+      "verified": true
+    },
+    {
+      "requirement": "Tested cache behavior included in the artifact",
+      "evidence": "packaged-source-cache-memory-summary.json; packaged-source-cache-after-arm.json; identical final/candidate runtime manifests",
+      "verified": true
+    },
+    {
+      "requirement": "Settings and startup/shutdown work with packaged files",
+      "evidence": "packaged-entry-default-cache-arm.json; packaged-source-cache-settings-arm.json",
+      "verified": true
+    },
+    {
+      "requirement": "Original files and algorithm source preserved",
+      "evidence": "source guards/pinned source checks; same-size/same-mtime cache invalidation tests; originalSettingsUnchanged in app-entry receipts; no installed app/image writes",
+      "verified": true
+    },
+    {
+      "requirement": "Remaining dependencies have active purposes",
+      "evidence": "typing import trace and cost; protected shared wordlists; original still-image/entropy and optional scaling Pillow consumers; native preview data required while active",
+      "verified": true
+    }
+  ],
+  "artifact": {
+    "path": "dist/lvgl-app/runtime-memory-cleanup-final",
+    "manifestSha256": "cb6170a37a5acf03e78072cc73f759e823c56ee6f1d6c509d6acdbeadd3a9185",
+    "files": 253,
+    "bytes": 5469515,
+    "releaseReady": false,
+    "installed": false,
+    "flashed": false
+  },
+  "limits": [
+    "This is the memory-cleanup goal, not completion or production qualification of the full LVGL migration.",
+    "English scope and no smartcard feature development/testing follow user instructions; original optional class/method logic is preserved structurally.",
+    "RAM observations cover named workloads and private anonymous RAM plus swap; they are not a mathematical global minimum or total-device memory claim.",
+    "First-boot source-compilation behavior was simulated with isolated cache prefixes; no new OS image or physical reboot was performed."
+  ],
+  "remainingMemoryCleanupWork": []
+}

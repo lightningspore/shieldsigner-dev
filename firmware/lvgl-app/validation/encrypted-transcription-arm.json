@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "screen": "ScanReviewEncryptionKeyScreen",
+      "fullTextPreserved": true,
+      "proceedAndBack": true
+    },
+    {
+      "screen": "SeedEncryptedQRReviewMnemonicIDScreen",
+      "fullTextPreserved": true,
+      "proceedAndBack": true
+    }
+  ],
+  "originalCryptoRoundTrip": true,
+  "wrongKeyRejected": true,
+  "mode": "AES-ECB",
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "dependencyInitializationInjected": true,
+  "opticalQualified": false,
+  "qrExportQualified": true,
+  "pixelsDecodedByNativeZXing": true,
+  "encryptedTranscriptionViews": true,
+  "transcriptionModules": 29,
+  "runnerReceipt": "dist/lvgl-app/checks/encrypted-review-20261030T172132597927Z.json",
+  "testSourceSha256": "cf8c63f6e2a976ea1267a5105672961643ca61ee1787418f62c6deb8c6fee4a3",
+  "scope": "Original encrypted review, fullscreen and manual-transcription Views, actual 29x29 encrypted payload, public seed AES-ECB round trip; scripted input, dependency initialization injected. No optical or full Controller qualification."
+}

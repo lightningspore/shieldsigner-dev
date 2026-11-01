@@ -1,0 +1,11 @@
+--- a/components/seedsigner/seedsigner.h
++++ b/components/seedsigner/seedsigner.h
+@@ -16,7 +16,7 @@
+ // entries) plus headroom for future scrollable lists. 32 keeps the scaffold
+ // state compact (32 pointers = 256 bytes on a 64-bit host) without imposing
+ // a practical limit on legitimate UIs.
+-#define SEEDSIGNER_SCAFFOLD_MAX_BUTTONS 32
++#define SEEDSIGNER_SCAFFOLD_MAX_BUTTONS 128
+ 
+ // Result of create_top_nav_screen_scaffold().
+ //

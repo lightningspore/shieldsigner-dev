@@ -768,3 +768,75 @@ run = "uv run --python 3.13 python scripts/camera-memory/button.py"
 [tasks."camera:screen"]
 description = "Capture the explicitly enabled diagnostic app screen to an ignored local path"
 run = "uv run --python 3.13 python scripts/camera-memory/screen.py"
+
+[tasks."lvgl:demo:build"]
+description = "Build isolated pinned LVGL menu demo for Luckfox; does not deploy or flash"
+run = "uv run python firmware/lvgl-demo/build.py"
+
+[tasks."lvgl:app:inventory"]
+description = "Inventory pinned ShieldSigner screen classes and LVGL candidates in the isolated migration"
+run = "uv run python firmware/lvgl-app/inventory.py"
+
+[tasks."lvgl:app:build"]
+description = "Cross-build isolated native upstream LVGL screen host; no deploy or flash"
+run = "uv run python firmware/lvgl-app/build.py"
+
+[tasks."lvgl:app:build:host"]
+description = "Build the LVGL protocol renderer for this computer without touching the board"
+run = "uv run python firmware/lvgl-app/build.py --host"
+
+[tasks."lvgl:app:test:host"]
+description = "Run public native-renderer protocol regressions locally, with no board access"
+run = "uv run python firmware/lvgl-app/host_check.py"
+
+[tasks."lvgl:app:test"]
+description = "Test isolated LVGL migration screen/result contracts"
+run = "uv run --python 3.12 --with pillow==11.3.0 --with qrcode==7.3.1 python -m unittest discover -s firmware/lvgl-app/tests -p 'test_*.py'"
+
+[tasks."lvgl:app:resources"]
+description = "Summarize one verified resource receipt or compare two matching frontend runs"
+run = "uv run python firmware/lvgl-app/resource_report.py"
+
+[tasks."lvgl:app:memory-maps"]
+description = "Read metadata-only memory accounting from an existing interactive LVGL process"
+run = "uv run python firmware/lvgl-app/memory_maps.py"
+
+[tasks."lvgl:app:bundle"]
+description = "Stage or verify an inactive LVGL runtime payload; no image build/install/flash"
+run = "uv run python firmware/lvgl-app/package.py"
+
+[tasks."lvgl:app:locales"]
+description = "Build/verify pinned upstream locale assets with the original translation source"
+run = "uv run python firmware/lvgl-app/build_locales.py"
+
+[tasks."lvgl:app:hardware"]
+description = "Temporarily deploy a verified LVGL build and run one public-fixture hardware check; never flash"
+run = "uv run python firmware/lvgl-app/hardware_check.py"
+
+[tasks."lvgl:app:notices"]
+description = "Reproduce pinned LVGL font metadata and audit retained notices"
+run = "uv run python firmware/lvgl-app/audit_licenses.py --output firmware/lvgl-app/validation/notice-audit-host.json"
+
+[tasks."lvgl:app:image-draft"]
+description = "Prepare/verify inactive English LVGL image overlay; never build/flash"
+run = "uv run python firmware/lvgl-app/image_stage.py"
+
+[tasks."lvgl:app:image-attach"]
+description = "Attach verified English LVGL draft to a frozen camera image bundle"
+run = "uv run python firmware/lvgl-app/attach_image_bundle.py"
+
+[tasks."firmware:where"]
+description = "Locate the deliberately selected verified firmware image"
+run = "uv run python scripts/firmware-artifacts.py where"
+
+[tasks."firmware:verify"]
+description = "Verify current or named firmware image hashes and packed evidence"
+run = "uv run python scripts/firmware-artifacts.py verify"
+
+[tasks."firmware:stage"]
+description = "Build and stage one named LVGL runtime/overlay bundle; never build an OS image or flash"
+run = "uv run python scripts/firmware-artifacts.py stage"
+
+[tasks."firmware:test"]
+description = "Test artifact paths, provenance and staging without device access"
+run = "uv run python -m unittest discover -s scripts/tests -p test_firmware_artifacts.py"

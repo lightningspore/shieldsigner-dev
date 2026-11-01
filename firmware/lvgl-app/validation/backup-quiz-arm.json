@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "words": 12,
+      "pending": true,
+      "reviewAndSkipRoutes": true,
+      "wrongAnswerDidNotConfirm": true,
+      "retryRetainedWordIndex": true,
+      "allWordsConfirmedOnce": true,
+      "pendingSentinelPreserved": true,
+      "seedStored": true
+    },
+    {
+      "words": 24,
+      "pending": false,
+      "reviewAndSkipRoutes": true,
+      "wrongAnswerDidNotConfirm": true,
+      "retryRetainedWordIndex": true,
+      "allWordsConfirmedOnce": true,
+      "pendingSentinelPreserved": true,
+      "seedStored": true
+    }
+  ],
+  "quizPrompts": 38,
+  "originalRandomnessAndAnswerChecks": true,
+  "originalViewsAndStorage": true,
+  "dependencyInitializationInjected": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "testSourceSha256": "d331b326794babb782f3fcff41362119169fa0df06ff3621d1163af245937090"
+}

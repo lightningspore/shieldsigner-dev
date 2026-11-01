@@ -1,0 +1,62 @@
+--- a/components/seedsigner/screens/seed_review_passphrase_screen.cpp
++++ b/components/seedsigner/screens/seed_review_passphrase_screen.cpp
+@@ -227,6 +227,29 @@
+ }  // namespace
+ 
+ 
++
++extern "C" bool ss_attach_review_spaces(lv_obj_t *label,const lv_font_t *font) {
++    int32_t cell_width=lv_font_get_glyph_width(font,' ',0);
++    int32_t ascent  = font->line_height - font->base_line;   // baseline offset from line top
++    int32_t max_top = 0;                                                           // tallest ink above the baseline
++    for (uint32_t codepoint = 0x21; codepoint <= 0x7E; ++codepoint) {
++        lv_font_glyph_dsc_t glyph_dsc;
++        if (!lv_font_get_glyph_dsc(font, &glyph_dsc, codepoint, 0)) continue;
++        int32_t top = (int32_t)glyph_dsc.ofs_y + (int32_t)glyph_dsc.box_h;
++        if (top > max_top) max_top = top;
++    }
++    seed_review_passphrase_space_block_t *space_block =
++        (seed_review_passphrase_space_block_t *)lv_malloc(sizeof(seed_review_passphrase_space_block_t));
++    if (!space_block) return false;
++    space_block->cell_width = cell_width;
++    space_block->top        = ascent - max_top;   // tallest ink in the set (special chars included)
++    space_block->bottom     = ascent;             // baseline, aligned with the text
++    space_block->inset      = cell_width / 8 > 0 ? cell_width / 8 : 1;   // ~1/8-cell gap (▉ was 7/8 fill)
++    lv_obj_add_event_cb(label, seed_review_passphrase_space_block_cb,      LV_EVENT_DRAW_MAIN_END, space_block);
++    lv_obj_add_event_cb(label, seed_review_passphrase_space_block_free_cb, LV_EVENT_DELETE,        space_block);
++    return true;
++}
++
+ void seed_review_passphrase_screen(void *ctx_json) {
+     // --- Config ---
+ 
+--- a/components/seedsigner/screens/button_list_screen.cpp
++++ b/components/seedsigner/screens/button_list_screen.cpp
+@@ -58,6 +58,7 @@
+ 
+ #include <nlohmann/json.hpp>  // json (cfg reads + structural-default writes)
+ 
++#include "text_review.h"
+ #include <stdexcept>          // std::runtime_error (required-field validation)
+ #include <string>             // std::string
+ 
+@@ -116,6 +117,10 @@
+                 screen.upper_body, text.c_str(),
+                 lv_obj_get_content_width(screen.upper_body));
+             apply_body_tight_line_spacing(intro_label);
++            if (cfg.value("review_spaces", false) && !ss_attach_review_spaces(intro_label,lv_obj_get_style_text_font(intro_label,LV_PART_MAIN))) {
++                lv_obj_delete(screen.screen);
++                throw std::runtime_error("Review marker allocation failed");
++            }
+         }
+     }
+ 
+@@ -126,7 +131,7 @@
+     // selected_button, default 0). A concrete index keeps a button active even when
+     // intro text makes the list overflow — a menu/list always has a selection.
+     // (cf. status screens, which pass NAV_INDEX_NONE.)
+-    bind_screen_navigation(cfg, screen, /*default_initial_index=*/0);
++    bind_screen_navigation(cfg, screen, cfg.value("read_first",false) ? NAV_INDEX_NONE : 0);
+ 
+     load_screen_and_cleanup_previous(screen.screen);
+ }

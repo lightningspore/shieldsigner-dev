@@ -1,0 +1,507 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "cancel": false,
+      "entropyStats": {
+        "previewFrames": 7,
+        "poolFrames": 5
+      },
+      "displayedFrames": 8,
+      "ownerExitCode": 0,
+      "dma": "Total 0 objects, 0 bytes",
+      "seconds": 26.934
+    },
+    {
+      "cancel": true,
+      "entropyStats": {
+        "previewFrames": 3,
+        "poolFrames": 2
+      },
+      "displayedFrames": 3,
+      "ownerExitCode": 0,
+      "dma": "Total 0 objects, 0 bytes",
+      "seconds": 24.077
+    }
+  ],
+  "resourceSnapshots": [
+    {
+      "stage": "before-display",
+      "frames": 0,
+      "python": {
+        "VmSize": "52612 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "15732 kB",
+        "RssAnon": "12696 kB",
+        "RssFile": "3036 kB",
+        "RssShmem": "0 kB",
+        "VmData": "32276 kB",
+        "VmSwap": "11368 kB",
+        "Threads": "5",
+        "minor_faults": 15518,
+        "major_faults": 519,
+        "user_ticks": 882,
+        "system_ticks": 439
+      },
+      "native": {
+        "VmSize": "1752 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "672 kB",
+        "RssAnon": "192 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "480 kB",
+        "VmData": "200 kB",
+        "VmSwap": "16 kB",
+        "Threads": "1",
+        "minor_faults": 315,
+        "major_faults": 35,
+        "user_ticks": 23,
+        "system_ticks": 23
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4528 kB",
+        "MemAvailable": "8304 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "124 kB",
+        "Shmem": "540 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 1,
+      "python": {
+        "VmSize": "52780 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "15672 kB",
+        "RssAnon": "12792 kB",
+        "RssFile": "2880 kB",
+        "RssShmem": "0 kB",
+        "VmData": "32444 kB",
+        "VmSwap": "11440 kB",
+        "Threads": "5",
+        "minor_faults": 18166,
+        "major_faults": 641,
+        "user_ticks": 894,
+        "system_ticks": 615
+      },
+      "native": {
+        "VmSize": "1884 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "796 kB",
+        "RssAnon": "336 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "460 kB",
+        "VmData": "332 kB",
+        "VmSwap": "4 kB",
+        "Threads": "1",
+        "minor_faults": 466,
+        "major_faults": 41,
+        "user_ticks": 24,
+        "system_ticks": 26
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4896 kB",
+        "MemAvailable": "8228 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "52 kB",
+        "Shmem": "544 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 2,
+      "python": {
+        "VmSize": "52780 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "15748 kB",
+        "RssAnon": "12776 kB",
+        "RssFile": "2972 kB",
+        "RssShmem": "0 kB",
+        "VmData": "32444 kB",
+        "VmSwap": "11456 kB",
+        "Threads": "5",
+        "minor_faults": 20339,
+        "major_faults": 730,
+        "user_ticks": 910,
+        "system_ticks": 792
+      },
+      "native": {
+        "VmSize": "1888 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "840 kB",
+        "RssAnon": "340 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "500 kB",
+        "VmData": "336 kB",
+        "VmSwap": "4 kB",
+        "Threads": "1",
+        "minor_faults": 520,
+        "major_faults": 46,
+        "user_ticks": 27,
+        "system_ticks": 29
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4588 kB",
+        "MemAvailable": "8272 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "4 kB",
+        "Shmem": "564 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 3,
+      "python": {
+        "VmSize": "52780 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "15484 kB",
+        "RssAnon": "12844 kB",
+        "RssFile": "2640 kB",
+        "RssShmem": "0 kB",
+        "VmData": "32444 kB",
+        "VmSwap": "11388 kB",
+        "Threads": "5",
+        "minor_faults": 22784,
+        "major_faults": 823,
+        "user_ticks": 927,
+        "system_ticks": 998
+      },
+      "native": {
+        "VmSize": "1888 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "840 kB",
+        "RssAnon": "340 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "500 kB",
+        "VmData": "336 kB",
+        "VmSwap": "4 kB",
+        "Threads": "1",
+        "minor_faults": 556,
+        "major_faults": 46,
+        "user_ticks": 28,
+        "system_ticks": 31
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "3864 kB",
+        "MemAvailable": "7428 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "8 kB",
+        "Shmem": "564 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 4,
+      "python": {
+        "VmSize": "52780 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "16004 kB",
+        "RssAnon": "12888 kB",
+        "RssFile": "3116 kB",
+        "RssShmem": "0 kB",
+        "VmData": "32444 kB",
+        "VmSwap": "11344 kB",
+        "Threads": "5",
+        "minor_faults": 25070,
+        "major_faults": 894,
+        "user_ticks": 948,
+        "system_ticks": 1159
+      },
+      "native": {
+        "VmSize": "1892 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "844 kB",
+        "RssAnon": "344 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "500 kB",
+        "VmData": "340 kB",
+        "VmSwap": "4 kB",
+        "Threads": "1",
+        "minor_faults": 562,
+        "major_faults": 46,
+        "user_ticks": 28,
+        "system_ticks": 36
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4560 kB",
+        "MemAvailable": "8308 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "0 kB",
+        "Shmem": "564 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 5,
+      "python": {
+        "VmSize": "52780 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "15804 kB",
+        "RssAnon": "12928 kB",
+        "RssFile": "2876 kB",
+        "RssShmem": "0 kB",
+        "VmData": "32444 kB",
+        "VmSwap": "11304 kB",
+        "Threads": "5",
+        "minor_faults": 27567,
+        "major_faults": 980,
+        "user_ticks": 962,
+        "system_ticks": 1354
+      },
+      "native": {
+        "VmSize": "1892 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "844 kB",
+        "RssAnon": "344 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "500 kB",
+        "VmData": "340 kB",
+        "VmSwap": "4 kB",
+        "Threads": "1",
+        "minor_faults": 566,
+        "major_faults": 46,
+        "user_ticks": 28,
+        "system_ticks": 41
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4892 kB",
+        "MemAvailable": "8276 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "4 kB",
+        "Shmem": "564 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 6,
+      "python": {
+        "VmSize": "52780 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "15904 kB",
+        "RssAnon": "12964 kB",
+        "RssFile": "2940 kB",
+        "RssShmem": "0 kB",
+        "VmData": "32444 kB",
+        "VmSwap": "11268 kB",
+        "Threads": "5",
+        "minor_faults": 30194,
+        "major_faults": 1050,
+        "user_ticks": 990,
+        "system_ticks": 1522
+      },
+      "native": {
+        "VmSize": "1892 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "844 kB",
+        "RssAnon": "344 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "500 kB",
+        "VmData": "340 kB",
+        "VmSwap": "4 kB",
+        "Threads": "1",
+        "minor_faults": 578,
+        "major_faults": 46,
+        "user_ticks": 28,
+        "system_ticks": 46
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4692 kB",
+        "MemAvailable": "8324 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "4 kB",
+        "Shmem": "564 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 7,
+      "python": {
+        "VmSize": "52020 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "16560 kB",
+        "RssAnon": "12872 kB",
+        "RssFile": "3688 kB",
+        "RssShmem": "0 kB",
+        "VmData": "31684 kB",
+        "VmSwap": "10620 kB",
+        "Threads": "2",
+        "minor_faults": 32054,
+        "major_faults": 1238,
+        "user_ticks": 1020,
+        "system_ticks": 1586
+      },
+      "native": {
+        "VmSize": "1896 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "904 kB",
+        "RssAnon": "348 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "556 kB",
+        "VmData": "344 kB",
+        "VmSwap": "4 kB",
+        "Threads": "1",
+        "minor_faults": 593,
+        "major_faults": 59,
+        "user_ticks": 31,
+        "system_ticks": 52
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "7016 kB",
+        "MemAvailable": "13184 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "1076 kB",
+        "Shmem": "736 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 0,
+      "python": {
+        "VmSize": "53164 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "15584 kB",
+        "RssAnon": "13136 kB",
+        "RssFile": "2448 kB",
+        "RssShmem": "0 kB",
+        "VmData": "32828 kB",
+        "VmSwap": "11392 kB",
+        "Threads": "5",
+        "minor_faults": 37356,
+        "major_faults": 2078,
+        "user_ticks": 1083,
+        "system_ticks": 1870
+      },
+      "native": {
+        "VmSize": "1896 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "692 kB",
+        "RssAnon": "208 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "484 kB",
+        "VmData": "344 kB",
+        "VmSwap": "144 kB",
+        "Threads": "1",
+        "minor_faults": 627,
+        "major_faults": 95,
+        "user_ticks": 41,
+        "system_ticks": 58
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4700 kB",
+        "MemAvailable": "7788 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "76 kB",
+        "Shmem": "704 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 1,
+      "python": {
+        "VmSize": "53352 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "15088 kB",
+        "RssAnon": "13096 kB",
+        "RssFile": "1992 kB",
+        "RssShmem": "0 kB",
+        "VmData": "33016 kB",
+        "VmSwap": "11620 kB",
+        "Threads": "5",
+        "minor_faults": 42556,
+        "major_faults": 2322,
+        "user_ticks": 1102,
+        "system_ticks": 2279
+      },
+      "native": {
+        "VmSize": "1896 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "864 kB",
+        "RssAnon": "344 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "520 kB",
+        "VmData": "344 kB",
+        "VmSwap": "8 kB",
+        "Threads": "1",
+        "minor_faults": 735,
+        "major_faults": 132,
+        "user_ticks": 44,
+        "system_ticks": 61
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4556 kB",
+        "MemAvailable": "7588 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "8 kB",
+        "Shmem": "708 kB"
+      }
+    },
+    {
+      "stage": "before-display",
+      "frames": 2,
+      "python": {
+        "VmSize": "53352 kB",
+        "VmHWM": "24764 kB",
+        "VmRSS": "15180 kB",
+        "RssAnon": "13076 kB",
+        "RssFile": "2104 kB",
+        "RssShmem": "0 kB",
+        "VmData": "33016 kB",
+        "VmSwap": "11640 kB",
+        "Threads": "5",
+        "minor_faults": 46764,
+        "major_faults": 2483,
+        "user_ticks": 1118,
+        "system_ticks": 2670
+      },
+      "native": {
+        "VmSize": "1896 kB",
+        "VmHWM": "1436 kB",
+        "VmRSS": "884 kB",
+        "RssAnon": "344 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "540 kB",
+        "VmData": "344 kB",
+        "VmSwap": "8 kB",
+        "Threads": "1",
+        "minor_faults": 737,
+        "major_faults": 137,
+        "user_ticks": 50,
+        "system_ticks": 61
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4620 kB",
+        "MemAvailable": "7600 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "0 kB",
+        "Shmem": "728 kB"
+      }
+    }
+  ],
+  "originalSampleReads": true,
+  "mockFrameworkLoaded": false,
+  "displayUpdatesDisabled": false,
+  "physicalCamera": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "rngHealthStatusInjected": true,
+  "dependencyInitializationInjected": true,
+  "walletGenerated": false,
+  "pixelsSaved": false,
+  "mixerQualified": false,
+  "runnerReceipt": "dist/lvgl-app/checks/image-entropy-physical-20261030T192147851734Z.json",
+  "testSourceSha256": "7ac701ea498e03c1d9775d5d2667b235719aafdc980a0ae97eae05891e97f677",
+  "scope": "Real camera and LCD through original acquisition/review Views with original RGB sampling reads. Captures five compact distinct samples, reshoots, reopens and cancels. Scripted input and injected View/RNG-health status; no wallet generated or physical pixel export. Not real RNG monitoring, full Controller, every entropy/multilingual flow or long-duration acceptance.",
+  "productionSampling": "Original two Camera reads; no paired/grayscale override",
+  "performanceQualified": false
+}

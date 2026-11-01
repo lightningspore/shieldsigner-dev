@@ -136,6 +136,10 @@ for key, value, helper, field in [
     if profile_manifest.get(key) == value:
         checked = subprocess.run(['python3', str(a.bundle / helper), '--verify', str(root)], check=True, text=True, stdout=subprocess.PIPE)
         report[field] = json.loads(checked.stdout)
+lvgl_helper = a.bundle / 'lvgl-overlay/overlay-apply.py'
+if lvgl_helper.is_file():
+    checked = subprocess.run(['python3', str(lvgl_helper), '--verify', str(root)], check=True, text=True, stdout=subprocess.PIPE)
+    report['lvglOverlayVerification'] = json.loads(checked.stdout)
 if a.qemu_python:
     smoke = a.output / 'public-python-api-smoke.py'
     smoke.write_text('"""Public direct-data API smoke; no pixels, worker, camera, or boot claim."""\nimport hashlib,json,sys\nfrom pathlib import Path\nroot=Path(sys.argv[1]); sys.path.insert(0,str(root/\'opt/src\'))\nimport Cryptodome\nfrom Cryptodome.Cipher import AES\nassert Cryptodome.__version__==\'3.23.0\'\nassert AES.new(bytes(16),AES.MODE_ECB).encrypt(bytes(16)).hex()==\'66e94bd4ef8a2c3b884cfa59ca342b2e\'\nfrom seedsigner.models.decode_qr import DecodeQR,DecodeQRStatus\nfrom seedsigner.helpers.ur2.ur import UR\nfrom seedsigner.helpers.ur2.ur_encoder import UREncoder\nfrom urtypes.crypto import PSBT as UR_PSBT\nfrom embit import bip39,psbt,transaction,script\nfor length in (16,32):\n entropy=bytes(range(length)); decoder=DecodeQR()\n assert decoder.add_data(entropy)==DecodeQRStatus.COMPLETE\n assert decoder.get_seed_phrase()==bip39.mnemonic_from_bytes(entropy).split()\ntx=transaction.Transaction(vin=[transaction.TransactionInput(bytes(32),0)],vout=[transaction.TransactionOutput(0,script.Script(b\'\\x6a\\x4c\\xc8\'+bytes(range(200))))])\npayload=psbt.PSBT(tx).serialize(); encoder=UREncoder(UR(\'crypto-psbt\',UR_PSBT(payload).to_cbor()),max_fragment_len=60)\nfragments=[]\nfor _ in range(20):\n fragments.append(encoder.next_part())\n if encoder.is_complete(): break\nassert len(fragments)>1\nframes=list(reversed(fragments)); decoder=DecodeQR()\nfor part in [frames[0],*frames]: decoder.add_data(part.encode(\'ascii\'))\nassert decoder.complete and decoder.get_data_psbt()==payload\nprint(json.dumps({\'passed\':True,\'pythonVersion\':sys.version,\'cryptodomeVersion\':Cryptodome.__version__,\'aesKnownVector\':True,\'compactSeedEntropyBytes\':[16,32],\'animatedUr\':{\'fragments\':len(fragments),\'reversedOrder\':True,\'duplicateHandled\':True,\'byteExactPsbt\':True},\'scope\':\'Actual packed Python/app direct-data APIs under explicit userspace QEMU, no QR pixels or camera\',\'imageBootQualified\':False}))\n')
@@ -175,5 +179,44 @@ print(json.dumps({'passed':True,'nativeAbiImport':True,'originalPillowRgb565Equi
         frontend_command = command[:-2] + [str(a.bundle / 'native-frontend-smoke.py'), str(root), str(wrapper.resolve())]
         checked = subprocess.run(frontend_command, check=True, text=True, stdout=subprocess.PIPE)
         report['qemuNativeFrontendSmoke'] = json.loads(checked.stdout)
+    if lvgl_helper.is_file():
+        import shlex
+        native = root / 'usr/lib/shieldsigner-lvgl/shieldsigner-lvgl'
+        wrapper = a.output / 'packed-lvgl-qemu'
+        wrapper.write_text('#!/bin/sh\nexec qemu-arm -cpu cortex-a7 ' + shlex.quote(str(native.resolve())) + '\n')
+        wrapper.chmod(0o700)
+        smoke = a.output / 'public-lvgl-packed-smoke.py'
+        smoke.write_text("""import json,sys
+from pathlib import Path
+root=Path(sys.argv[1]);wrapper=Path(sys.argv[2]);work=Path(sys.argv[3])
+prefix=root/'usr/lib/shieldsigner-lvgl'
+sys.path[:0]=[str(prefix/'python'),str(root/'opt/src'),str(root/'usr/lib/shieldsigner-camera/python')]
+from app import options,check
+count=check(options(['--app-root',str(root/'opt/src'),'--camera-root',str(root/'usr/lib/shieldsigner-camera/python'),'--binary',str(prefix/'shieldsigner-lvgl'),'--settings',str(work/'unused-public-settings.json'),'--check']))
+from transport import NativeHost
+from contracts import configuration
+rectangles=[0]
+def pixels(area,data):rectangles[0]+=1
+host=NativeHost(wrapper,pixels,timeout=30)
+try:
+ host.send('screen',name='button_list_screen',request=1,config=dict(top_nav=dict(title='Public packed fixture'),button_list=['One','Two']))
+ assert host.next_event()==dict(event='screen_ready',request=1)
+ host.send('key',key=10,pressed=True);host.send('key',key=10,pressed=False)
+ selected=host.next_event()
+ assert selected['event']=='button_selected' and selected['index']==0 and type(selected['scroll_y']) is int
+ value='public'+chr(0)+'literal'+chr(92)+'0'
+ builder,cfg=configuration(type('SeedAddPassphraseScreen',(),{}),dict(passphrase=value))
+ host.send('screen',name=builder,request=2,config=cfg)
+ assert host.next_event()==dict(event='screen_ready',request=2)
+ host.send('key',key=ord('3'),pressed=True);host.send('key',key=ord('3'),pressed=False)
+ assert host.next_event()==dict(event='passphrase_result',text=value,back=False)
+ host.send('clear');assert host.next_event()==dict(event='screen_cleared')
+ assert rectangles[0]>0
+finally:host.close()
+assert not (work/'unused-public-settings.json').exists()
+print(json.dumps(dict(passed=True,sourceGuards=count,nativeManifestVerified=True,packedPythonAndRenderer=True,publicMenuSelection=True,nulPassphraseExact=True,renderedRectangles=rectangles[0],noDevicesAcquired=True,noSettingsWritten=True,imageBootQualified=False,scope='Packed ARM Python/adapters/native renderer under userspace QEMU; no GPIO/SPI/camera/boot claim')))
+""")
+        checked = subprocess.run(command[:-2] + [str(smoke), str(root), str(wrapper.resolve()), str(a.output)], check=True, text=True, stdout=subprocess.PIPE)
+        report['qemuLvglSmoke'] = json.loads(checked.stdout)
 (a.output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
 print(json.dumps(report, indent=2))

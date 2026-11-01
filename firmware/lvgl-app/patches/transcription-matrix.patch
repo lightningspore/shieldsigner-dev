@@ -1,0 +1,87 @@
+--- a/components/seedsigner/screens/seed_transcribe_whole_qr_screen.cpp
++++ b/components/seedsigner/screens/seed_transcribe_whole_qr_screen.cpp
+@@ -76,6 +76,7 @@
+ #include "gui_constants.h"    // BACKGROUND_COLOR, COMPONENT_PADDING, DIRE_WARNING_COLOR
+ #include "screen_helpers.h"   // ensure_top_nav_structure, require_top_nav_title
+ 
++#include "transcription_matrix.h"
+ #include "lvgl.h"             // lv_obj tree, draw-event direct rendering, display resolution queries
+ 
+ #include <nlohmann/json.hpp>  // json (cfg reads + structural-default writes)
+@@ -436,6 +437,8 @@
+ 
+     int border = cfg.value("border", 1);   // structural default — Python: qr.qrimage(border=1)
+ 
++    auto supplied_matrix = transcription_matrix(cfg);
++
+     // --- QR encode ---
+ 
+     // Encode up front, before any LVGL object exists: payload decode/encode
+@@ -449,7 +452,9 @@
+         if (qr_matrix) lv_free(qr_matrix);
+         throw std::runtime_error("seed_transcribe_whole_qr_screen: QR buffer alloc failed");
+     }
+-    bool encode_succeeded = encode_transcription_qr(qr_mode, payload, temp_buffer, qr_matrix);
++    bool encode_succeeded = true;
++    if (!supplied_matrix.empty()) memcpy(qr_matrix, supplied_matrix.data(), supplied_matrix.size());
++    else encode_succeeded = encode_transcription_qr(qr_mode, payload, temp_buffer, qr_matrix);
+     lv_free(temp_buffer);  // scratch only needed during encode
+     if (!encode_succeeded) {
+         lv_free(qr_matrix);
+--- a/components/seedsigner/screens/seed_transcribe_zoomed_qr_screen.cpp
++++ b/components/seedsigner/screens/seed_transcribe_zoomed_qr_screen.cpp
+@@ -82,6 +82,7 @@
+ #include "screen_helpers.h"   // nav_mode_override_from_cfg
+ #include "navigation.h"       // attach_keypad_indevs_to_group (held-key-safe input handoff)
+ 
++#include "transcription_matrix.h"
+ #include "lvgl.h"             // widgets, direct-draw layer API, lv_anim, lv_group/lv_indev
+ 
+ #include <nlohmann/json.hpp>  // json (cfg reads)
+@@ -532,8 +533,10 @@
+ 
+     std::vector<uint8_t> payload = qr_decode_payload(qr_data, data_encoding);
+ 
++    auto supplied_matrix = transcription_matrix(cfg);
+     seed_transcribe_zoomed_qr_ctx_t *ctx =
+         (seed_transcribe_zoomed_qr_ctx_t *)lv_malloc(sizeof(seed_transcribe_zoomed_qr_ctx_t));
++    if (!ctx) throw std::runtime_error("Transcription context allocation failed");
+     lv_memzero(ctx, sizeof(*ctx));
+     ctx->input_mode = input_mode;
+     ctx->encode_scratch = (uint8_t *)lv_malloc(qrcodegen_BUFFER_LEN_MAX);
+@@ -542,10 +545,20 @@
+     // Encode once (this is a static QR — no host frame push). match_python_mask=true so the
+     // hand-transcribed pattern is pixel-identical to a Pi Zero (see qr_python_lost_point). On
+     // failure we still build the screen so navigation doesn't crash; the field stays white.
+-    ctx->have_frame = qr_encode_bytes(qr_mode, payload.data(), payload.size(),
+-                                      ctx->encode_scratch, ctx->qr_matrix,
+-                                      /*match_python_mask=*/true);
+-    ctx->size = ctx->have_frame ? qrcodegen_getSize(ctx->qr_matrix) : 21;
++    if (!ctx->encode_scratch || !ctx->qr_matrix) {
++        if (ctx->encode_scratch) lv_free(ctx->encode_scratch);
++        if (ctx->qr_matrix) lv_free(ctx->qr_matrix);
++        lv_free(ctx); throw std::runtime_error("Transcription matrix allocation failed");
++    }
++    if (!supplied_matrix.empty()) {
++        memcpy(ctx->qr_matrix, supplied_matrix.data(), supplied_matrix.size());
++        ctx->have_frame = true;
++    } else ctx->have_frame = qr_encode_bytes(qr_mode, payload.data(), payload.size(),ctx->encode_scratch,ctx->qr_matrix,true);
++    if (!ctx->have_frame) {
++        lv_free(ctx->encode_scratch);lv_free(ctx->qr_matrix);lv_free(ctx);
++        throw std::runtime_error("Transcription QR encoding failed");
++    }
++    ctx->size = qrcodegen_getSize(ctx->qr_matrix);
+ 
+     // Zone geometry. modules_per_zone follows Python: 7 for a 21-module QR (fills the
+     // 240 screen nicely), 5 otherwise. pixels_per_module scales with the profile.
+--- a/components/seedsigner/screens/seed_transcribe_seedqr_format_screen.cpp
++++ b/components/seedsigner/screens/seed_transcribe_seedqr_format_screen.cpp
+@@ -153,7 +153,7 @@
+     compact_opts.value_color      = SEEDSIGNER_ICON_COLOR_DEFAULT;    // -> BODY_FONT_COLOR (white)
+     compact_opts.is_text_centered = false;
+     compact_opts.value_wrap_width = value_wrap_width;
+-    icon_text_line(screen.upper_body, &compact_opts);
++    if (cfg.value("show_compact", true)) icon_text_line(screen.upper_body, &compact_opts);
+ 
+     // --- Navigation + load ---
+ 

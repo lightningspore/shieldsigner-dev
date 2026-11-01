@@ -1,0 +1,41 @@
+{
+  "passed": false,
+  "runnerReceipt": "dist/lvgl-app/checks/image-entropy-physical-20261030T183151339484Z.json",
+  "ownerErrors": [
+    {
+      "event": "raw-bridge-finished",
+      "error": "AE event owner fell behind; event queue is full",
+      "cleanupErrors": []
+    },
+    {
+      "event": "statistics-finished",
+      "error": "Camera capture cancelled",
+      "cleanupErrors": []
+    },
+    {
+      "event": "automatic-ae-finished",
+      "error": "ISP parameter pool remained full for 250 ms",
+      "success": false
+    },
+    {
+      "event": "image-capture-finished",
+      "error": "ISP parameter pool remained full for 250 ms",
+      "success": false
+    },
+    {
+      "event": "finished",
+      "error": "ISP parameter pool remained full for 250 ms",
+      "cleanupErrors": [],
+      "success": false
+    },
+    {
+      "event": "first-frame-finished",
+      "error": "ISP parameter pool remained full for 250 ms",
+      "success": false
+    }
+  ],
+  "observedOwnerError": "ISP parameter pool remained full for 250 ms",
+  "dmaAfterFailure": "Total 0 objects, 0 bytes",
+  "scope": "Combined physical camera/LCD acquisition failed. Camera-only success does not qualify this flow. Owner metrics also showed queue buildup/page faults; causal diagnosis and a fix remain pending.",
+  "remainingOwners": []
+}

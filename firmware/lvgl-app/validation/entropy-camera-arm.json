@@ -1,0 +1,169 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "cycle": 0,
+      "frameSize": [
+        640,
+        480
+      ],
+      "previewSize": [
+        240,
+        180
+      ],
+      "transport": "nv12",
+      "backend": {
+        "backend": "rust-sc3336-fixed-native",
+        "nativeResolution": [
+          640,
+          480
+        ],
+        "returnedImageMode": "NativeFrame",
+        "displayImageMode": "RGB",
+        "transport": "nv12",
+        "forStill": false,
+        "requestedResolution": [
+          512,
+          384
+        ],
+        "requestedFramerate": 6,
+        "requestedFormat": "bgr",
+        "requestedV4l2": true,
+        "legacyCameraConfig": {
+          "device": "/dev/video12",
+          "pixelformat": "GREY",
+          "framerate": 6,
+          "resolution": [
+            512,
+            384
+          ]
+        },
+        "resamplingPerformed": false,
+        "consumerFramerateLimit": 6,
+        "sensorFramerateChanged": false,
+        "previewResolutionBeforeRotation": [
+          240,
+          180
+        ],
+        "previewOnlyResampling": true,
+        "decodeResolution": [
+          640,
+          480
+        ],
+        "frontend": "rust"
+      },
+      "seconds": 1.144,
+      "python": {
+        "VmSize": "32196 kB",
+        "VmHWM": "21352 kB",
+        "VmRSS": "20672 kB",
+        "RssAnon": "11356 kB",
+        "RssFile": "9316 kB",
+        "RssShmem": "0 kB",
+        "VmData": "17888 kB",
+        "VmSwap": "184 kB",
+        "Threads": "4",
+        "minor_faults": 5102,
+        "major_faults": 21,
+        "user_ticks": 232,
+        "system_ticks": 61
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "3344 kB",
+        "MemAvailable": "15284 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "12440 kB",
+        "Shmem": "1952 kB"
+      },
+      "ownerExitCode": 0,
+      "stopped": true
+    },
+    {
+      "cycle": 1,
+      "frameSize": [
+        640,
+        480
+      ],
+      "previewSize": [
+        240,
+        180
+      ],
+      "transport": "nv12",
+      "backend": {
+        "backend": "rust-sc3336-fixed-native",
+        "nativeResolution": [
+          640,
+          480
+        ],
+        "returnedImageMode": "NativeFrame",
+        "displayImageMode": "RGB",
+        "transport": "nv12",
+        "forStill": false,
+        "requestedResolution": [
+          512,
+          384
+        ],
+        "requestedFramerate": 6,
+        "requestedFormat": "bgr",
+        "requestedV4l2": true,
+        "legacyCameraConfig": {
+          "device": "/dev/video12",
+          "pixelformat": "GREY",
+          "framerate": 6,
+          "resolution": [
+            512,
+            384
+          ]
+        },
+        "resamplingPerformed": false,
+        "consumerFramerateLimit": 6,
+        "sensorFramerateChanged": false,
+        "previewResolutionBeforeRotation": [
+          240,
+          180
+        ],
+        "previewOnlyResampling": true,
+        "decodeResolution": [
+          640,
+          480
+        ],
+        "frontend": "rust"
+      },
+      "seconds": 0.581,
+      "python": {
+        "VmSize": "32196 kB",
+        "VmHWM": "21352 kB",
+        "VmRSS": "19928 kB",
+        "RssAnon": "10956 kB",
+        "RssFile": "8972 kB",
+        "RssShmem": "0 kB",
+        "VmData": "17888 kB",
+        "VmSwap": "596 kB",
+        "Threads": "4",
+        "minor_faults": 6941,
+        "major_faults": 23,
+        "user_ticks": 241,
+        "system_ticks": 66
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4212 kB",
+        "MemAvailable": "14032 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "12184 kB",
+        "Shmem": "2064 kB"
+      },
+      "ownerExitCode": 0,
+      "stopped": true
+    }
+  ],
+  "physicalCamera": true,
+  "physicalDisplay": false,
+  "pixelsSaved": false,
+  "walletGenerated": false,
+  "entropyQualityQualified": false,
+  "fullLvglEntropyFlowQualified": false,
+  "runnerReceipt": "dist/lvgl-app/checks/entropy-camera-20261030T182948699806Z.json",
+  "scope": "Physical camera read/reopen via private guarded Camera and existing Rust NV12 backend, two clean cycles. No LCD, entropy-quality assessment, wallet creation or combined LVGL entropy acceptance."
+}

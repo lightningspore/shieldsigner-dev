@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "length": 12,
+      "mode": "zeros",
+      "originalChecksumMatchesIndependentBip39": true,
+      "originalPendingSeed": true,
+      "doneRoute": "SeedFinalizeView"
+    },
+    {
+      "length": 12,
+      "mode": "coins",
+      "originalChecksumMatchesIndependentBip39": true,
+      "originalPendingSeed": true,
+      "doneRoute": "SeedFinalizeView"
+    },
+    {
+      "length": 12,
+      "mode": "word",
+      "originalChecksumMatchesIndependentBip39": true,
+      "originalPendingSeed": true,
+      "doneRoute": "SeedDiscardView"
+    },
+    {
+      "length": 24,
+      "mode": "zeros",
+      "originalChecksumMatchesIndependentBip39": true,
+      "originalPendingSeed": true,
+      "doneRoute": "SeedFinalizeView"
+    },
+    {
+      "length": 24,
+      "mode": "coins",
+      "originalChecksumMatchesIndependentBip39": true,
+      "originalPendingSeed": true,
+      "doneRoute": "SeedFinalizeView"
+    },
+    {
+      "length": 24,
+      "mode": "word",
+      "originalChecksumMatchesIndependentBip39": true,
+      "originalPendingSeed": true,
+      "doneRoute": "SeedDiscardView"
+    }
+  ],
+  "doneBackPreservesPendingMnemonic": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "dependencyInitializationInjected": true,
+  "coinKeyboardQualified": false,
+  "finalizationAndDiscardExecutionQualified": false,
+  "runnerReceipt": "dist/lvgl-app/checks/final-word-20261030T173811366028Z.json",
+  "testSourceSha256": "58b7c6c404e2c9982ce5a3d8316a2cfb27cf9081917cfea3d24e1dcea0a6076d",
+  "scope": "Original checksum calculation and result Views, 12/24-word zero/coin-bit/selected-word public fixtures; exact independent BIP39 entropy/mnemonic matches, original pending-seed conversion and Load/Discard destinations, result Back preservation. Coin keyboard input and subsequent finalize/discard execution not qualified. Scripted input, dependency initialization injected; not full Controller or physical buttons."
+}

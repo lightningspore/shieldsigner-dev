@@ -1,0 +1,175 @@
+{
+  "kind": "frontend-resource-observations",
+  "paired": true,
+  "results": [
+    {
+      "frontend": "lvgl",
+      "phases": {
+        "home-idle": {
+          "sampleCount": 7,
+          "windowSeconds": 6.0016,
+          "medianUnits": "KiB except Threads",
+          "processes": {
+            "python": {
+              "VmRSS": 24504,
+              "RssAnon": 14808,
+              "VmSwap": 172,
+              "Threads": 5,
+              "cpuPercentOneCore": 18.162
+            },
+            "native": {
+              "VmRSS": 1464,
+              "RssAnon": 220,
+              "VmSwap": 0,
+              "Threads": 1,
+              "cpuPercentOneCore": 1.166
+            }
+          },
+          "medianSystemMemAvailableKiB": 16748,
+          "dmaObservations": [
+            "Total 0 objects, 0 bytes"
+          ]
+        },
+        "camera-live": {
+          "sampleCount": 10,
+          "windowSeconds": 9.0,
+          "medianUnits": "KiB except Threads",
+          "processes": {
+            "python": {
+              "VmRSS": 15504.0,
+              "RssAnon": 13304.0,
+              "VmSwap": 6004.0,
+              "Threads": 8.0,
+              "cpuPercentOneCore": 49.889
+            },
+            "native": {
+              "VmRSS": 1660.0,
+              "RssAnon": 352.0,
+              "VmSwap": 4.0,
+              "Threads": 1.0,
+              "cpuPercentOneCore": 3.111
+            },
+            "camera-probe": {
+              "VmRSS": 7556.0,
+              "RssAnon": 4916.0,
+              "VmSwap": 0.0,
+              "Threads": 5.0,
+              "cpuPercentOneCore": 22.889
+            },
+            "shieldsigner-qr-reader": {
+              "VmRSS": 824.0,
+              "RssAnon": 336.0,
+              "VmSwap": 0.0,
+              "Threads": 1.0,
+              "cpuPercentOneCore": 5.333
+            }
+          },
+          "medianSystemMemAvailableKiB": 7812.0,
+          "dmaObservations": [
+            "Total 1 objects, 3981312 bytes"
+          ]
+        }
+      },
+      "cameraStats": {
+        "frames": 45,
+        "decodedFrames": 0,
+        "cameraStopped": true,
+        "ownerExitCode": 0,
+        "qr": {
+          "kind": "native-zxing-3.1.1-local-average",
+          "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+          "starts": 1,
+          "calls": 45,
+          "decoded": 0,
+          "errors": 0,
+          "lastRoundTripSeconds": 0.018134083,
+          "lastExitCode": 0,
+          "transport": "rust"
+        },
+        "completedPreviewFrames": 45,
+        "processedFrameIntervalSeconds": 12.979546131005918,
+        "processedFramesPerSecond": 3.3899490441265523,
+        "stageSeconds": {
+          "frameRead": 0.8086440800034325,
+          "previewRender": 0.222067126967886,
+          "qrDecode": 1.479501337002148,
+          "previewSend": 0.31133462602156214,
+          "previewAck": 12.022483664011816
+        }
+      }
+    },
+    {
+      "frontend": "pil",
+      "phases": {
+        "home-idle": {
+          "sampleCount": 7,
+          "windowSeconds": 5.9997,
+          "medianUnits": "KiB except Threads",
+          "processes": {
+            "python": {
+              "VmRSS": 23404,
+              "RssAnon": 15436,
+              "VmSwap": 184,
+              "Threads": 5,
+              "cpuPercentOneCore": 16.167
+            }
+          },
+          "medianSystemMemAvailableKiB": 16316,
+          "dmaObservations": [
+            "Total 0 objects, 0 bytes"
+          ]
+        },
+        "camera-live": {
+          "sampleCount": 10,
+          "windowSeconds": 9.0036,
+          "medianUnits": "KiB except Threads",
+          "processes": {
+            "python": {
+              "VmRSS": 17798.0,
+              "RssAnon": 13150.0,
+              "VmSwap": 6576.0,
+              "Threads": 8.0,
+              "cpuPercentOneCore": 42.761
+            },
+            "camera-probe": {
+              "VmRSS": 5712.0,
+              "RssAnon": 3224.0,
+              "VmSwap": 1724.0,
+              "Threads": 5.0,
+              "cpuPercentOneCore": 23.768
+            },
+            "shieldsigner-qr-reader": {
+              "VmRSS": 808.0,
+              "RssAnon": 336.0,
+              "VmSwap": 0.0,
+              "Threads": 1.0,
+              "cpuPercentOneCore": 7.997
+            }
+          },
+          "medianSystemMemAvailableKiB": 9390.0,
+          "dmaObservations": [
+            "Total 1 objects, 3981312 bytes"
+          ]
+        }
+      },
+      "cameraStats": {
+        "qr": {
+          "kind": "native-zxing-3.1.1-local-average",
+          "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+          "starts": 1,
+          "calls": 70,
+          "decoded": 0,
+          "errors": 0,
+          "lastRoundTripSeconds": 0.050268458,
+          "lastExitCode": 0,
+          "transport": "rust"
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Warm-device measurements with benchmark overhead; no cold-start or repeat-order qualification.",
+    "RSS and swap are separate; shared pages and DMA prevent summing RSS as total physical RAM.",
+    "Process CPU excludes unmeasured kernel work; no FPS or response-latency claim."
+  ]
+}

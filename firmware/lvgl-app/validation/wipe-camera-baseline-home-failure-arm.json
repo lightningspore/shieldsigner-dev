@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "scope": "Corrected Home->Scan with same current test source, existing small-RAM policy disabled",
+  "testSourceSha256": "9edfd2536a644b4535f816d3f0907e781ae138f53bc4038d4b0a660eead160b7",
+  "failure": "Camera owner exited uncleanly; original Controller routed ErrorScreen and test stopped rather than suppressing it.",
+  "cameraWipeQualified": false,
+  "postRunDmaObjects": 0,
+  "postRunDmaBytes": 0
+}

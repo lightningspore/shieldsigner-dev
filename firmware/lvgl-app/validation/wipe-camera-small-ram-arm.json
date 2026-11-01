@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "originalWipePolicy": true,
+  "publicSeedBufferZeroed": true,
+  "seedStorageCleared": true,
+  "oldNativeProcessReaped": true,
+  "newNativeProcess": true,
+  "seedViewDidNotResume": true,
+  "returnedThroughOriginalController": true,
+  "screenSequence": [
+    "MainMenuScreen",
+    "ScanScreen",
+    "MainMenuScreen"
+  ],
+  "originalWipeTimerTriggerSimulated": true,
+  "smallRamPolicy": {
+    "integrationSha256": "1fe021f06ccbc5f8b428bf9b4de8df3722c60d3a280a0a23354a7d60d0a69dd9",
+    "smallRam": {
+      "kind": "optional-background-preloads-disabled",
+      "controllerSourceSha256": "2c080563d12cef837f25799a7139277ad7c3756a05329822f81d961c2e7e031e",
+      "mandatoryStorageInitializers": [
+        "SeedStorage",
+        "EncryptedQRStorage"
+      ],
+      "startupRoutes": {
+        "kind": "smartcard-startup-import-deferred",
+        "patchedControllerSha256": "cf3a6fad3f42ab3221c0cb53f358c352e18ce85a05633ee499dcce112a1d069c",
+        "smartcardMenuIdentityPreserved": true
+      },
+      "optionalViewsRemainOnDemand": true,
+      "installedFilesModified": false
+    },
+    "lazyScan": {
+      "kind": "slip39-scan-destinations-imported-on-demand",
+      "sourceSha256": "ad151a5b572c5cc5564f94163a3060e6f9abc5bcc63ab7a0ae69eac069ef7f0c",
+      "patchedSourceSha256": "a2fbaad8aec8c56c79477548bf8969f53db8a125e4cae61c433de545921c0762",
+      "installedFilesModified": false,
+      "featuresRemoved": false
+    }
+  },
+  "homeFirst": true,
+  "cameraCleanup": {
+    "frames": 2,
+    "decodedFrames": 0,
+    "cameraStopped": true,
+    "ownerExitCode": 0,
+    "qr": {
+      "kind": "native-zxing-3.1.1-local-average",
+      "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+      "starts": 1,
+      "calls": 2,
+      "decoded": 0,
+      "errors": 0,
+      "lastRoundTripSeconds": 0.022486333,
+      "lastExitCode": 0,
+      "transport": "rust"
+    }
+  },
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "testSourceSha256": "9edfd2536a644b4535f816d3f0907e781ae138f53bc4038d4b0a660eead160b7",
+  "scope": "Original Home->Scan->wipe->Home; existing small-RAM policy, native Renderer/toasts; simulated timer callback, two live frames, no optical decoding; earlier passing run had same flow before wrapper extraction."
+}

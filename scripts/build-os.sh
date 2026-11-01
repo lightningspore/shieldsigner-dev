@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-os_dir="$project_dir/tools/os/seedsigner-os"
+os_dir="$(python3 "$project_dir/scripts/firmware_paths.py" os-source)"
+os_work="$(python3 "$project_dir/scripts/firmware_paths.py" os-work)"
+staging_root="$(python3 "$project_dir/scripts/firmware_paths.py" staging)"
+legacy_os_dir="$project_dir/tools/os/seedsigner-os"
 os_commit=e7589465aff172f4f510ad46d18776ccc8d2c203
 image_variant="${SHIELDSIGNER_IMAGE_VARIANT:-production}"
 case "$image_variant" in production) upstream_variant=non-dev; usb_mode=auto ;; dev) upstream_variant=dev; usb_mode=gadget ;; *) echo 'Image variant must be production or dev' >&2; exit 1 ;; esac
@@ -11,10 +14,27 @@ case "$reader_variant" in UR2|URT) ;; *) echo "Reader variant must be UR2 or URT
 camera_backend="${SHIELDSIGNER_CAMERA_BACKEND:-rust}"
 case "$camera_backend" in rust|vendor) ;; *) echo "Camera backend must be rust or vendor" >&2; exit 1 ;; esac
 app_commit=efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f
-default_output="$project_dir/dist/os/$reader_variant/$camera_backend"
-[[ "$image_variant" == production ]] || default_output="$default_output/dev"
+build_stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+default_output="$os_work/os-$reader_variant-$camera_backend-$image_variant-$build_stamp"
 output_dir="${SHIELDSIGNER_OUTPUT_DIR:-$default_output}"
-mkdir -p "$project_dir/tools/os" "$output_dir"
+mkdir -p "$(dirname "$os_dir")" "$output_dir" "$staging_root"
+# Preserve the existing SDK/Docker bind-mount cache when adopting the layout.
+# Never move a checkout which may be in use by an older launcher.
+if [[ ! -e "$os_dir" && -d "$legacy_os_dir/.git" && ! -L "$legacy_os_dir" ]]; then
+  # Reuse the wrapper's inherited descriptor; direct invocations acquire the same lock.
+  if ! { true >&9; } 2>/dev/null; then
+    exec 9>"$project_dir/dist/os-image-build.lock"
+  fi
+  flock -n 9 || { echo 'Another image job owns the workspace/cache' >&2; exit 2; }
+  active_containers="$(docker ps --format '{{.Names}}')" || { echo 'Cannot verify SDK build inactivity' >&2; exit 2; }
+  if grep -q '^seedsigner-build-' <<< "$active_containers"; then
+    echo 'An SDK build is active; leave its legacy checkout in place and retry later' >&2
+    exit 2
+  fi
+  [[ "$(git -C "$legacy_os_dir" rev-parse HEAD)" == "$os_commit" ]] || { echo 'Legacy OS checkout differs from the pinned revision' >&2; exit 1; }
+  mv "$legacy_os_dir" "$os_dir"
+  ln -s "$os_dir" "$legacy_os_dir"
+fi
 if [[ ! -d "$os_dir/.git" ]]; then
   git clone --no-checkout https://github.com/3rdIteration/seedsigner-os.git "$os_dir"
   git -C "$os_dir" checkout --detach "$os_commit"
@@ -33,8 +53,8 @@ if [[ "$camera_backend" == rust ]]; then
   if [[ -z "${SHIELDSIGNER_CAMERA_BUNDLE:-}" ]]; then
     mise run camera:rust:arm
     mise run camera:qr:native-build
-    bundle_dir="$(mktemp -d "$output_dir/.camera-bundle.XXXXXX")"
-    rmdir "$bundle_dir"
+    stage_dir="$(mktemp -d "$staging_root/camera-$build_stamp.XXXXXX")"
+    bundle_dir="$stage_dir/camera-bundle"
     uv run "$project_dir/scripts/prepare-camera-image.py" --output "$bundle_dir" --variant "$image_variant" > "$output_dir/camera-bundle.json"
     export SHIELDSIGNER_CAMERA_BUNDLE="$bundle_dir"
   else

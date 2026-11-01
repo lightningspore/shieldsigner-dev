@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "account": 0,
+      "cancel": true,
+      "staticQRBytesExact": false
+    },
+    {
+      "account": 0,
+      "cancel": false,
+      "staticQRBytesExact": true
+    },
+    {
+      "account": 7,
+      "cancel": true,
+      "staticQRBytesExact": false
+    },
+    {
+      "account": 7,
+      "cancel": false,
+      "staticQRBytesExact": true
+    }
+  ],
+  "originalViewAndDerivation": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "persistentSettingsWritten": false,
+  "testSourceSha256": "2c4f2f90c85548b86154a8e1ec679bdb92fcee78a50a88079958509ce9e90cab",
+  "scope": "Public BIP39 seed; original review and static xpub QR Views with injected dependency initialization; native ZXing rendered-pixel decoding, not optical; canceled cases do not export.",
+  "opticalQualified": false
+}

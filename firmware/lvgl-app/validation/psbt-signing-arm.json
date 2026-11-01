@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "fixture": "NORMAL-1_p2wpkh",
+  "backPreservedExactBytes": true,
+  "signatures": 1,
+  "finalizable": true,
+  "originalFinalizeView": true,
+  "originalParserAndCrypto": true,
+  "nativeLoading": true,
+  "reviewedViews": [
+    "PSBTMathView",
+    "PSBTAddressDetailsView",
+    "PSBTChangeDetailsView"
+  ],
+  "signedQRBytesExact": true,
+  "capturedQRFrames": 10,
+  "opticalQualified": false,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "persistentSettingsWritten": false,
+  "testSourceSha256": "733722f2718321d2233a405cb2e765777fbcec3997a994583fbfb94ad925af5a",
+  "scope": "Single public native-segwit transaction; View dependency initialization injected; temporary deployment; full Controller not exercised."
+}

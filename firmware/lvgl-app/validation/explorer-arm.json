@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "source": "seed",
+      "change": false,
+      "paging": true,
+      "index": 17,
+      "addressIndependentlyMatched": true,
+      "renderedQRBytesExact": true,
+      "selectionAndScrollReturned": true,
+      "cachedPageUnchanged": true
+    },
+    {
+      "source": "seed",
+      "change": true,
+      "paging": true,
+      "index": 17,
+      "addressIndependentlyMatched": true,
+      "renderedQRBytesExact": true,
+      "selectionAndScrollReturned": true,
+      "cachedPageUnchanged": true
+    },
+    {
+      "source": "descriptor",
+      "change": false,
+      "paging": true,
+      "index": 17,
+      "addressIndependentlyMatched": true,
+      "renderedQRBytesExact": true,
+      "selectionAndScrollReturned": true,
+      "cachedPageUnchanged": true
+    },
+    {
+      "source": "descriptor",
+      "change": true,
+      "paging": true,
+      "index": 17,
+      "addressIndependentlyMatched": true,
+      "renderedQRBytesExact": true,
+      "selectionAndScrollReturned": true,
+      "cachedPageUnchanged": true
+    }
+  ],
+  "seedOptionsBackCleanup": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "opticalQualified": false,
+  "dependencyInitializationInjected": true,
+  "allScriptTypesQualified": false,
+  "runnerReceipt": "dist/lvgl-app/checks/explorer-20261030T173344651424Z.json",
+  "testSourceSha256": "06aad0b269f489a477bbadf13312b941033b66558ebfc42486456b26e233dc52",
+  "scope": "Original explorer Views: seed native-segwit and public 2-of-3 descriptor, receive/change, 20 cached addresses, second-page index 17, independent address derivation, rendered QR exact bytes, return selection/scroll arguments, Back/cache cleanup. Scripted input, View dependency initialization injected. No optical, physical buttons, exact visual scroll restoration, full Controller or all script/network qualification.",
+  "initialTimeout": "dist/lvgl-app/checks/explorer-20261030T173227782001Z.json"
+}

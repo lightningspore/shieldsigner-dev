@@ -1,0 +1,113 @@
+{
+  "passed": true,
+  "measurements": [
+    {
+      "run": "before",
+      "phase": "home-idle",
+      "privateAnonPlusSwapKiB": 15008,
+      "loadedPackages": {
+        "PIL": 17,
+        "qrcode": 0,
+        "embit": 28,
+        "urtypes": 17,
+        "Cryptodome": 9,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 8,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      },
+      "fontCache": {}
+    },
+    {
+      "run": "before",
+      "phase": "settings",
+      "privateAnonPlusSwapKiB": 16848,
+      "loadedPackages": {
+        "PIL": 22,
+        "qrcode": 0,
+        "embit": 28,
+        "urtypes": 17,
+        "Cryptodome": 9,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 8,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      },
+      "fontCache": {}
+    },
+    {
+      "run": "after",
+      "phase": "home-idle",
+      "privateAnonPlusSwapKiB": 14772,
+      "loadedPackages": {
+        "PIL": 17,
+        "qrcode": 0,
+        "embit": 28,
+        "urtypes": 17,
+        "Cryptodome": 9,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      },
+      "fontCache": {}
+    },
+    {
+      "run": "after",
+      "phase": "settings",
+      "privateAnonPlusSwapKiB": 16420,
+      "loadedPackages": {
+        "PIL": 22,
+        "qrcode": 0,
+        "embit": 28,
+        "urtypes": 17,
+        "Cryptodome": 9,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      },
+      "fontCache": {}
+    }
+  ],
+  "scope": "One warm before/after pair; allocator/run-order noise not isolated; overlapping import costs must not be summed",
+  "secureDeleteUnchanged": true,
+  "wordlistProtectionPreserved": true,
+  "originalRecoveryAlgorithms": true
+}

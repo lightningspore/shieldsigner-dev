@@ -1,0 +1,5319 @@
+{
+  "passed": true,
+  "runnerReceipt": "dist/lvgl-app/checks/import-profile-20261030T181736006975Z.json",
+  "snapshots": [
+    {
+      "stage": "baseline",
+      "seconds": 0.0,
+      "python": {
+        "VmSize": "14492 kB",
+        "VmHWM": "11744 kB",
+        "VmRSS": "11744 kB",
+        "RssAnon": "4032 kB",
+        "RssFile": "7712 kB",
+        "RssShmem": "0 kB",
+        "VmData": "4108 kB",
+        "VmSwap": "0 kB",
+        "Threads": "1",
+        "minor_faults": 1256,
+        "major_faults": 40,
+        "user_ticks": 67,
+        "system_ticks": 81
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "13048 kB",
+        "MemAvailable": "27612 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "12696 kB",
+        "Shmem": "1908 kB"
+      },
+      "addedModules": [],
+      "moduleCount": 74
+    },
+    {
+      "stage": "seedsigner.models.settings",
+      "seconds": 1.897,
+      "python": {
+        "VmSize": "19180 kB",
+        "VmHWM": "15860 kB",
+        "VmRSS": "15860 kB",
+        "RssAnon": "7784 kB",
+        "RssFile": "8076 kB",
+        "RssShmem": "0 kB",
+        "VmData": "7672 kB",
+        "VmSwap": "0 kB",
+        "Threads": "1",
+        "minor_faults": 2328,
+        "major_faults": 50,
+        "user_ticks": 190,
+        "system_ticks": 120
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "7588 kB",
+        "MemAvailable": "23876 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "12696 kB",
+        "Shmem": "1908 kB"
+      },
+      "addedModules": [
+        "__future__",
+        "_ast",
+        "_ctypes",
+        "_locale",
+        "_opcode",
+        "_posixsubprocess",
+        "_string",
+        "_struct",
+        "_tokenize",
+        "_typing",
+        "_weakrefset",
+        "array",
+        "ast",
+        "atexit",
+        "collections.abc",
+        "contextlib",
+        "copy",
+        "ctypes",
+        "ctypes._endian",
+        "dataclasses",
+        "dis",
+        "fcntl",
+        "gettext",
+        "importlib.machinery",
+        "inspect",
+        "linecache",
+        "locale",
+        "logging",
+        "mmap",
+        "opcode",
+        "periphery",
+        "periphery.gpio",
+        "periphery.gpio_cdev1",
+        "periphery.gpio_cdev2",
+        "periphery.gpio_sysfs",
+        "periphery.i2c",
+        "periphery.led",
+        "periphery.mmio",
+        "periphery.pwm",
+        "periphery.serial",
+        "periphery.spi",
+        "platform",
+        "seedsigner",
+        "seedsigner.hardware",
+        "seedsigner.hardware.battery_hat",
+        "seedsigner.hardware.io_config",
+        "seedsigner.hardware.microsd",
+        "seedsigner.helpers",
+        "seedsigner.helpers.l10n",
+        "seedsigner.models",
+        "seedsigner.models.settings",
+        "seedsigner.models.settings_definition",
+        "seedsigner.models.singleton",
+        "seedsigner.models.threads",
+        "select",
+        "selectors",
+        "signal",
+        "smbus2",
+        "smbus2.smbus2",
+        "string",
+        "struct",
+        "subprocess",
+        "termios",
+        "textwrap",
+        "threading",
+        "token",
+        "tokenize",
+        "traceback",
+        "typing",
+        "typing.io",
+        "typing.re",
+        "weakref"
+      ],
+      "moduleCount": 146
+    },
+    {
+      "stage": "seedsigner.gui.screens.seed_screens",
+      "seconds": 7.762,
+      "python": {
+        "VmSize": "31628 kB",
+        "VmHWM": "23580 kB",
+        "VmRSS": "23580 kB",
+        "RssAnon": "13872 kB",
+        "RssFile": "9708 kB",
+        "RssShmem": "0 kB",
+        "VmData": "13832 kB",
+        "VmSwap": "0 kB",
+        "Threads": "1",
+        "minor_faults": 4985,
+        "major_faults": 79,
+        "user_ticks": 609,
+        "system_ticks": 224
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "1316 kB",
+        "MemAvailable": "17824 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "12440 kB",
+        "Shmem": "1908 kB"
+      },
+      "addedModules": [
+        "PIL",
+        "PIL.ExifTags",
+        "PIL.Image",
+        "PIL.ImageColor",
+        "PIL.ImageDraw",
+        "PIL.ImageFilter",
+        "PIL.ImageFont",
+        "PIL.ImageMode",
+        "PIL.TiffTags",
+        "PIL._binary",
+        "PIL._deprecate",
+        "PIL._imaging",
+        "PIL._imagingft",
+        "PIL._typing",
+        "PIL._util",
+        "PIL._version",
+        "PIL.features",
+        "_bisect",
+        "_bz2",
+        "_compression",
+        "_contextvars",
+        "_pydecimal",
+        "_random",
+        "_sha2",
+        "base64",
+        "binascii",
+        "bisect",
+        "bz2",
+        "contextvars",
+        "ctypes.util",
+        "decimal",
+        "embit",
+        "embit.base",
+        "embit.base58",
+        "embit.bech32",
+        "embit.bip32",
+        "embit.bip39",
+        "embit.bip85",
+        "embit.compact",
+        "embit.ec",
+        "embit.hashes",
+        "embit.misc",
+        "embit.networks",
+        "embit.psbt",
+        "embit.script",
+        "embit.transaction",
+        "embit.util",
+        "embit.util.key",
+        "embit.util.py_secp256k1",
+        "embit.util.secp256k1",
+        "embit.wordlists",
+        "embit.wordlists.bip39",
+        "hmac",
+        "numbers",
+        "qrcode",
+        "qrcode.LUT",
+        "qrcode.base",
+        "qrcode.compat",
+        "qrcode.compat.png",
+        "qrcode.constants",
+        "qrcode.exceptions",
+        "qrcode.image",
+        "qrcode.image.base",
+        "qrcode.image.pure",
+        "qrcode.image.styledpil",
+        "qrcode.image.styles",
+        "qrcode.image.styles.colormasks",
+        "qrcode.image.styles.moduledrawers",
+        "qrcode.image.styles.moduledrawers.base",
+        "qrcode.image.styles.moduledrawers.pil",
+        "qrcode.main",
+        "qrcode.util",
+        "random",
+        "secrets",
+        "seedsigner.gui",
+        "seedsigner.gui.components",
+        "seedsigner.gui.keyboard",
+        "seedsigner.gui.renderer",
+        "seedsigner.gui.screens",
+        "seedsigner.gui.screens.screen",
+        "seedsigner.gui.screens.seed_screens",
+        "seedsigner.hardware.buttons",
+        "seedsigner.hardware.displays",
+        "seedsigner.hardware.displays.display_driver",
+        "seedsigner.helpers.qr",
+        "seedsigner.helpers.secure_delete",
+        "seedsigner.helpers.ur2",
+        "seedsigner.helpers.ur2.bytewords",
+        "seedsigner.helpers.ur2.cbor_lite",
+        "seedsigner.helpers.ur2.constants",
+        "seedsigner.helpers.ur2.crc32",
+        "seedsigner.helpers.ur2.fountain_encoder",
+        "seedsigner.helpers.ur2.fountain_utils",
+        "seedsigner.helpers.ur2.random_sampler",
+        "seedsigner.helpers.ur2.ur",
+        "seedsigner.helpers.ur2.ur_encoder",
+        "seedsigner.helpers.ur2.utils",
+        "seedsigner.helpers.ur2.xoshiro256",
+        "seedsigner.models.aezeed",
+        "seedsigner.models.encode_qr",
+        "seedsigner.models.seed",
+        "shamir_mnemonic",
+        "shamir_mnemonic.cipher",
+        "shamir_mnemonic.constants",
+        "shamir_mnemonic.rs1024",
+        "shamir_mnemonic.shamir",
+        "shamir_mnemonic.share",
+        "shamir_mnemonic.utils",
+        "shamir_mnemonic.wordlist",
+        "shutil",
+        "tempfile",
+        "unicodedata",
+        "urtypes",
+        "urtypes.bytes",
+        "urtypes.cbor",
+        "urtypes.cbor.data",
+        "urtypes.cbor.decoder",
+        "urtypes.cbor.encoder",
+        "urtypes.crypto",
+        "urtypes.crypto.account",
+        "urtypes.crypto.bip39",
+        "urtypes.crypto.coin_info",
+        "urtypes.crypto.ec_key",
+        "urtypes.crypto.hd_key",
+        "urtypes.crypto.keypath",
+        "urtypes.crypto.multi_key",
+        "urtypes.crypto.output",
+        "urtypes.crypto.psbt",
+        "urtypes.registry",
+        "zlib"
+      ],
+      "moduleCount": 276
+    },
+    {
+      "stage": "seedsigner.views.seed_views",
+      "seconds": 11.914,
+      "python": {
+        "VmSize": "37568 kB",
+        "VmHWM": "29384 kB",
+        "VmRSS": "28724 kB",
+        "RssAnon": "19268 kB",
+        "RssFile": "9456 kB",
+        "RssShmem": "0 kB",
+        "VmData": "19000 kB",
+        "VmSwap": "0 kB",
+        "Threads": "1",
+        "minor_faults": 8520,
+        "major_faults": 84,
+        "user_ticks": 912,
+        "system_ticks": 281
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "1224 kB",
+        "MemAvailable": "12408 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "12440 kB",
+        "Shmem": "1908 kB"
+      },
+      "addedModules": [
+        "Cryptodome",
+        "Cryptodome.Cipher",
+        "Cryptodome.Cipher.AES",
+        "Cryptodome.Random",
+        "Cryptodome.Util",
+        "Cryptodome.Util._cpu_features",
+        "Cryptodome.Util._file_system",
+        "Cryptodome.Util._raw_api",
+        "Cryptodome.Util.py3compat",
+        "PIL.GimpGradientFile",
+        "PIL.GimpPaletteFile",
+        "PIL.ImageOps",
+        "PIL.ImagePalette",
+        "PIL.PaletteFile",
+        "_cffi_backend",
+        "_datetime",
+        "cffi",
+        "cffi.api",
+        "cffi.commontypes",
+        "cffi.cparser",
+        "cffi.error",
+        "cffi.lock",
+        "cffi.model",
+        "datetime",
+        "ecdsa",
+        "ecdsa._compat",
+        "ecdsa._sha3",
+        "ecdsa._version",
+        "ecdsa.curves",
+        "ecdsa.der",
+        "ecdsa.ecdh",
+        "ecdsa.ecdsa",
+        "ecdsa.eddsa",
+        "ecdsa.ellipticcurve",
+        "ecdsa.errors",
+        "ecdsa.keys",
+        "ecdsa.numbertheory",
+        "ecdsa.rfc6979",
+        "ecdsa.ssh",
+        "ecdsa.util",
+        "embit.descriptor",
+        "embit.descriptor.arguments",
+        "embit.descriptor.base",
+        "embit.descriptor.descriptor",
+        "embit.descriptor.errors",
+        "embit.descriptor.miniscript",
+        "embit.descriptor.taptree",
+        "importlib._abc",
+        "importlib.util",
+        "keycard",
+        "keycard.apdu",
+        "keycard.card_interface",
+        "keycard.commands",
+        "keycard.commands.change_secret",
+        "keycard.commands.derive_key",
+        "keycard.commands.export_key",
+        "keycard.commands.factory_reset",
+        "keycard.commands.generate_key",
+        "keycard.commands.generate_mnemonic",
+        "keycard.commands.get_data",
+        "keycard.commands.get_status",
+        "keycard.commands.ident",
+        "keycard.commands.init",
+        "keycard.commands.load_key",
+        "keycard.commands.mutually_authenticate",
+        "keycard.commands.open_secure_channel",
+        "keycard.commands.pair",
+        "keycard.commands.remove_key",
+        "keycard.commands.select",
+        "keycard.commands.set_pinless_path",
+        "keycard.commands.sign",
+        "keycard.commands.store_data",
+        "keycard.commands.unblock_pin",
+        "keycard.commands.unpair",
+        "keycard.commands.verify_pin",
+        "keycard.constants",
+        "keycard.crypto",
+        "keycard.crypto.aes",
+        "keycard.crypto.generate_pairing_token",
+        "keycard.crypto.padding",
+        "keycard.exceptions",
+        "keycard.parsing",
+        "keycard.parsing.application_info",
+        "keycard.parsing.capabilities",
+        "keycard.parsing.exported_key",
+        "keycard.parsing.identity",
+        "keycard.parsing.keypath",
+        "keycard.parsing.signature_result",
+        "keycard.parsing.tlv",
+        "keycard.preconditions",
+        "keycard.secure_channel",
+        "pyaes",
+        "pyaes.aes",
+        "pyaes.blockfeeder",
+        "pyaes.util",
+        "pycparser",
+        "pycparser.ast_transforms",
+        "pycparser.c_ast",
+        "pycparser.c_lexer",
+        "pycparser.c_parser",
+        "pycparser.lextab",
+        "pycparser.ply",
+        "pycparser.ply.lex",
+        "pycparser.ply.yacc",
+        "pycparser.plyparser",
+        "pycparser.yacctab",
+        "pysatochip",
+        "pysatochip.CardConnector",
+        "pysatochip.CardDataParser",
+        "pysatochip.JCconstants",
+        "pysatochip.SecureChannel",
+        "pysatochip.TxParser",
+        "pysatochip.certificate_validator",
+        "pysatochip.ecc",
+        "pysatochip.slip44",
+        "pysatochip.util",
+        "pysatochip.version",
+        "seedsigner.helpers.bitbox02_backup",
+        "seedsigner.helpers.iso7816",
+        "seedsigner.helpers.keycard_connector",
+        "seedsigner.helpers.passport_backup",
+        "seedsigner.helpers.seedkeeper_utils",
+        "seedsigner.helpers.tapsigner_backup",
+        "seedsigner.models.qr_type",
+        "seedsigner.views",
+        "seedsigner.views.seed_views",
+        "seedsigner.views.view",
+        "six",
+        "six.moves",
+        "smartcard",
+        "smartcard.AbstractCardRequest",
+        "smartcard.Card",
+        "smartcard.CardConnection",
+        "smartcard.CardConnectionDecorator",
+        "smartcard.CardConnectionEvent",
+        "smartcard.CardConnectionObserver",
+        "smartcard.CardMonitoring",
+        "smartcard.CardRequest",
+        "smartcard.CardService",
+        "smartcard.CardType",
+        "smartcard.Exceptions",
+        "smartcard.Observer",
+        "smartcard.PassThruCardService",
+        "smartcard.Session",
+        "smartcard.Synchronization",
+        "smartcard.System",
+        "smartcard.pcsc",
+        "smartcard.pcsc.PCSCCardConnection",
+        "smartcard.pcsc.PCSCCardRequest",
+        "smartcard.pcsc.PCSCExceptions",
+        "smartcard.pcsc.PCSCReader",
+        "smartcard.pcsc.PCSCReaderGroups",
+        "smartcard.reader",
+        "smartcard.reader.Reader",
+        "smartcard.reader.ReaderFactory",
+        "smartcard.reader.ReaderGroups",
+        "smartcard.scard",
+        "smartcard.scard._scard",
+        "smartcard.scard.scard",
+        "smartcard.sw",
+        "smartcard.sw.SWExceptions",
+        "smartcard.ulist",
+        "smartcard.util",
+        "swig_runtime_data4"
+      ],
+      "moduleCount": 440
+    },
+    {
+      "stage": "seedsigner.views.tools_views",
+      "seconds": 19.433,
+      "python": {
+        "VmSize": "48080 kB",
+        "VmHWM": "30136 kB",
+        "VmRSS": "26860 kB",
+        "RssAnon": "24168 kB",
+        "RssFile": "2692 kB",
+        "RssShmem": "0 kB",
+        "VmData": "28468 kB",
+        "VmSwap": "4092 kB",
+        "Threads": "1",
+        "minor_faults": 18449,
+        "major_faults": 123,
+        "user_ticks": 1519,
+        "system_ticks": 393
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "2800 kB",
+        "MemAvailable": "5832 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "8088 kB",
+        "Shmem": "1796 kB"
+      },
+      "addedModules": [
+        "Cryptodome.Hash",
+        "Cryptodome.Hash.SHAKE256",
+        "Cryptodome.Hash.keccak",
+        "_csv",
+        "_heapq",
+        "_queue",
+        "concurrent",
+        "concurrent.futures",
+        "concurrent.futures._base",
+        "concurrent.futures.thread",
+        "csv",
+        "embit.descriptor.checksum",
+        "heapq",
+        "ndef",
+        "ndef.bluetooth",
+        "ndef.deviceinfo",
+        "ndef.handover",
+        "ndef.message",
+        "ndef.record",
+        "ndef.signature",
+        "ndef.smartposter",
+        "ndef.text",
+        "ndef.uri",
+        "ndef.wifi",
+        "pyzbar",
+        "pyzbar.locations",
+        "pyzbar.pyzbar",
+        "pyzbar.pyzbar_error",
+        "pyzbar.wrapper",
+        "pyzbar.zbar_library",
+        "queue",
+        "seedsigner.gui.screens.scan_screens",
+        "seedsigner.gui.screens.tools_screens",
+        "seedsigner.hardware.camera",
+        "seedsigner.hardware.rng_monitor",
+        "seedsigner.helpers.bip85_drng",
+        "seedsigner.helpers.diceware",
+        "seedsigner.helpers.embit_utils",
+        "seedsigner.helpers.mnemonic_generation",
+        "seedsigner.helpers.ndef_helper",
+        "seedsigner.helpers.password_generation",
+        "seedsigner.helpers.satochip_signer",
+        "seedsigner.helpers.satodime_coins",
+        "seedsigner.helpers.secure_boot_tools",
+        "seedsigner.helpers.seedsigner_os",
+        "seedsigner.helpers.ur2.fountain_decoder",
+        "seedsigner.helpers.ur2.ur_decoder",
+        "seedsigner.models.decode_qr",
+        "seedsigner.models.psbt_framing",
+        "seedsigner.models.psbt_parser",
+        "seedsigner.models.wif",
+        "seedsigner.views.gpg_views",
+        "seedsigner.views.keycard_bias",
+        "seedsigner.views.microsd_views",
+        "seedsigner.views.password_generator_views",
+        "seedsigner.views.satochip_bias",
+        "seedsigner.views.smartcard_views",
+        "seedsigner.views.tools_views",
+        "uuid"
+      ],
+      "moduleCount": 499
+    }
+  ],
+  "exportBindings": {
+    "seedsigner.views.tools_views": {
+      "base64": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "hashlib": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "hmac": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "json": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "logging": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "os": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "sys": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "time": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "platform": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "binascii": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "re": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "subprocess": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "Path": {
+        "kind": "type",
+        "origin": "pathlib",
+        "qualname": "Path"
+      },
+      "math": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "secp256k1": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "PSBT": {
+        "kind": "type",
+        "origin": "embit.psbt",
+        "qualname": "PSBT"
+      },
+      "Descriptor": {
+        "kind": "type",
+        "origin": "embit.descriptor.descriptor",
+        "qualname": "Descriptor"
+      },
+      "checksum": {
+        "kind": "function",
+        "origin": "embit.descriptor.checksum",
+        "qualname": "checksum"
+      },
+      "HDKey": {
+        "kind": "type",
+        "origin": "embit.bip32",
+        "qualname": "HDKey"
+      },
+      "Image": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "autocontrast": {
+        "kind": "function",
+        "origin": "PIL.ImageOps",
+        "qualname": "autocontrast"
+      },
+      "_": {
+        "kind": "function",
+        "origin": "gettext",
+        "qualname": "gettext"
+      },
+      "FontAwesomeIconConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "FontAwesomeIconConstants"
+      },
+      "GUIConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "GUIConstants"
+      },
+      "SeedSignerIconConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "SeedSignerIconConstants"
+      },
+      "resize_image_to_fill": {
+        "kind": "function",
+        "origin": "seedsigner.gui.components",
+        "qualname": "resize_image_to_fill"
+      },
+      "reflow_text_into_pages": {
+        "kind": "function",
+        "origin": "seedsigner.gui.components",
+        "qualname": "reflow_text_into_pages"
+      },
+      "RET_CODE__BACK_BUTTON": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "ButtonListScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonListScreen"
+      },
+      "DireWarningScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "DireWarningScreen"
+      },
+      "LargeIconStatusScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "LargeIconStatusScreen"
+      },
+      "WarningScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "WarningScreen"
+      },
+      "ErrorScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ErrorScreen"
+      },
+      "ScanScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.scan_screens",
+        "qualname": "ScanScreen"
+      },
+      "ToolsCalcFinalWordDoneScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsCalcFinalWordDoneScreen"
+      },
+      "ToolsCalcFinalWordFinalizePromptScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsCalcFinalWordFinalizePromptScreen"
+      },
+      "ToolsCalcFinalWordScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsCalcFinalWordScreen"
+      },
+      "ToolsCoinFlipEntryScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsCoinFlipEntryScreen"
+      },
+      "ToolsDiceEntropyEntryScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsDiceEntropyEntryScreen"
+      },
+      "ToolsImageEntropyFinalImageScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsImageEntropyFinalImageScreen"
+      },
+      "ToolsImageEntropyLivePreviewScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsImageEntropyLivePreviewScreen"
+      },
+      "ToolsAddressExplorerAddressTypeScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsAddressExplorerAddressTypeScreen"
+      },
+      "ToolsTextQRTextEntryScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRTextEntryScreen"
+      },
+      "ToolsTextQRReviewTextScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRReviewTextScreen"
+      },
+      "ToolsTextQRTranscribeModePromptScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRTranscribeModePromptScreen"
+      },
+      "ToolsTranscribeTextQRWholeQRScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTranscribeTextQRWholeQRScreen"
+      },
+      "ToolsTranscribeTextQRZoomedInScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTranscribeTextQRZoomedInScreen"
+      },
+      "ToolsTranscribeTextQRConfirmQRPromptScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTranscribeTextQRConfirmQRPromptScreen"
+      },
+      "ToolsNetworkInfoScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsNetworkInfoScreen"
+      },
+      "ToolsBatteryCalibrationIntroScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsBatteryCalibrationIntroScreen"
+      },
+      "ToolsBatteryCalibrationStartScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsBatteryCalibrationStartScreen"
+      },
+      "ToolsBatteryCalibrationRunningScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsBatteryCalibrationRunningScreen"
+      },
+      "embit_utils": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "mnemonic_generation": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "bip85_drng": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "diceware": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "password_generation": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "format_sw_error": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.iso7816",
+        "qualname": "format_sw_error"
+      },
+      "ndef_helper": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "secure_boot_tools": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "DecodeQR": {
+        "kind": "type",
+        "origin": "seedsigner.models.decode_qr",
+        "qualname": "DecodeQR"
+      },
+      "GenericStaticQrEncoder": {
+        "kind": "type",
+        "origin": "seedsigner.models.encode_qr",
+        "qualname": "GenericStaticQrEncoder"
+      },
+      "ButtonOption": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonOption"
+      },
+      "Seed": {
+        "kind": "type",
+        "origin": "seedsigner.models.seed",
+        "qualname": "Seed"
+      },
+      "InvalidSeedException": {
+        "kind": "type",
+        "origin": "seedsigner.models.seed",
+        "qualname": "InvalidSeedException"
+      },
+      "XprvSeed": {
+        "kind": "type",
+        "origin": "seedsigner.models.seed",
+        "qualname": "XprvSeed"
+      },
+      "SettingsConstants": {
+        "kind": "type",
+        "origin": "seedsigner.models.settings_definition",
+        "qualname": "SettingsConstants"
+      },
+      "SeedDiscardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedDiscardView"
+      },
+      "SeedFinalizeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedFinalizeView"
+      },
+      "SeedMnemonicEntryView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedMnemonicEntryView"
+      },
+      "SeedOptionsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedOptionsView"
+      },
+      "SeedWordsWarningView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedWordsWarningView"
+      },
+      "SeedExportXpubScriptTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedExportXpubScriptTypeView"
+      },
+      "SeedExportXpubVerifyAddressView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedExportXpubVerifyAddressView"
+      },
+      "LoadSeedView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "LoadSeedView"
+      },
+      "SeedSlip39CreateFromBytesView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedSlip39CreateFromBytesView"
+      },
+      "SeedSlip39RegenerateSharesView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedSlip39RegenerateSharesView"
+      },
+      "AccountNumberView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "AccountNumberView"
+      },
+      "SeedElectrumMnemonicStartView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedElectrumMnemonicStartView"
+      },
+      "SeedSlip39MnemonicStartView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedSlip39MnemonicStartView"
+      },
+      "SeedKeeperSelectView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedKeeperSelectView"
+      },
+      "View": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "View"
+      },
+      "Destination": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "Destination"
+      },
+      "BackStackView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "BackStackView"
+      },
+      "MainMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "MainMenuView"
+      },
+      "ToolsSatochipBiasCheckView": {
+        "kind": "type",
+        "origin": "seedsigner.views.satochip_bias",
+        "qualname": "ToolsSatochipBiasCheckView"
+      },
+      "ToolsKeycardBiasCheckView": {
+        "kind": "type",
+        "origin": "seedsigner.views.keycard_bias",
+        "qualname": "ToolsKeycardBiasCheckView"
+      },
+      "MicroSD": {
+        "kind": "type",
+        "origin": "seedsigner.hardware.microsd",
+        "qualname": "MicroSD"
+      },
+      "HardwareRngHealthMonitor": {
+        "kind": "type",
+        "origin": "seedsigner.hardware.rng_monitor",
+        "qualname": "HardwareRngHealthMonitor"
+      },
+      "seedkeeper_utils": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "_call_with_timeout": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.satochip_signer",
+        "qualname": "_call_with_timeout"
+      },
+      "_get_extended_key": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.satochip_signer",
+        "qualname": "_get_extended_key"
+      },
+      "format_path_string": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.satochip_signer",
+        "qualname": "format_path_string"
+      },
+      "normalize_signature_der": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.satochip_signer",
+        "qualname": "normalize_signature_der"
+      },
+      "seed_screens": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "logger": {
+        "kind": "Logger",
+        "origin": "logging",
+        "qualname": null
+      },
+      "MIN_RSA_KEY_BITS": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "SEEDKEEPER_DIC_TYPE": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "SEEDKEEPER_DIC_ORIGIN": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "SEEDKEEPER_DIC_EXPORT_RIGHTS": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP39_WORDLIST_DIC": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "CardConnector": {
+        "kind": "type",
+        "origin": "pysatochip.CardConnector",
+        "qualname": "CardConnector"
+      },
+      "UnexpectedSW12Error": {
+        "kind": "type",
+        "origin": "pysatochip.CardConnector",
+        "qualname": "UnexpectedSW12Error"
+      },
+      "unhexlify": {
+        "kind": "builtin_function_or_method",
+        "origin": "binascii",
+        "qualname": "unhexlify"
+      },
+      "hexlify": {
+        "kind": "builtin_function_or_method",
+        "origin": "binascii",
+        "qualname": "hexlify"
+      },
+      "PASSWORD_TYPE_RANDOM": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_DICEWARE_EFF_SHORT": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_DICEWARE_EFF_LONG": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_DICEWARE_BIP39": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_DICE_ROLLS": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_HEX": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_BASE64": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_BASE85": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_WORD_SEPARATOR_NONE": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_WORD_SEPARATOR_CAPITALISE": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_WORD_SEPARATOR_SPACE": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_WORD_SEPARATOR_DOT": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_ENTROPY_CAMERA": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_ENTROPY_DICE": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_ENTROPY_BIP85": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_ENTROPY_HARDWARE_RNG": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_APP_HEX": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_APP_BASE64": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_APP_BASE85": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_APP_DICE": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "_clear_password_entropy_cache": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_clear_password_entropy_cache"
+      },
+      "_cache_password_entropy": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_cache_password_entropy"
+      },
+      "_get_password_entropy_cache": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_get_password_entropy_cache"
+      },
+      "_read_secure_rng_bytes": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_read_secure_rng_bytes"
+      },
+      "_ensure_entropy_quality": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_ensure_entropy_quality"
+      },
+      "_system_entropy_salt": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_system_entropy_salt"
+      },
+      "_derive_hardware_rng_entropy_bytes": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_derive_hardware_rng_entropy_bytes"
+      },
+      "_derive_camera_entropy_bytes": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_derive_camera_entropy_bytes"
+      },
+      "_random_charset": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_random_charset"
+      },
+      "_bip85_supported_password_type": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_bip85_supported_password_type"
+      },
+      "_strength_to_length": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_strength_to_length"
+      },
+      "_dice_rolls_for_strength": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_dice_rolls_for_strength"
+      },
+      "_is_diceware_password_type": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_is_diceware_password_type"
+      },
+      "_diceware_word_count": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_diceware_word_count"
+      },
+      "_format_word_password": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_format_word_password"
+      },
+      "ToolsMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsMenuView"
+      },
+      "ToolsBatteryCalibrationView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsBatteryCalibrationView"
+      },
+      "ToolsNetworkInfoView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsNetworkInfoView"
+      },
+      "ToolsImageEntropyLivePreviewView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsImageEntropyLivePreviewView"
+      },
+      "ToolsImageEntropyFinalImageView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsImageEntropyFinalImageView"
+      },
+      "ToolsImageEntropyMnemonicLengthView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsImageEntropyMnemonicLengthView"
+      },
+      "ToolsDiceEntropyMnemonicLengthView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsDiceEntropyMnemonicLengthView"
+      },
+      "ToolsDiceEntropyEntryView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsDiceEntropyEntryView"
+      },
+      "ToolsCalcFinalWordNumWordsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsCalcFinalWordNumWordsView"
+      },
+      "ToolsCalcFinalWordFinalizePromptView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsCalcFinalWordFinalizePromptView"
+      },
+      "ToolsCalcFinalWordCoinFlipsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsCalcFinalWordCoinFlipsView"
+      },
+      "ToolsCalcFinalWordShowFinalWordView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsCalcFinalWordShowFinalWordView"
+      },
+      "ToolsCalcFinalWordDoneView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsCalcFinalWordDoneView"
+      },
+      "ToolsAddressExplorerSelectSourceView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsAddressExplorerSelectSourceView"
+      },
+      "ToolsAddressExplorerAddressTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsAddressExplorerAddressTypeView"
+      },
+      "ToolsAddressExplorerAddressListView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsAddressExplorerAddressListView"
+      },
+      "ToolsAddressExplorerAddressView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsAddressExplorerAddressView"
+      },
+      "ToolsTextQRView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsTextQRView"
+      },
+      "LoadingScreenThread": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "LoadingScreenThread"
+      },
+      "find_sd_card_device": {
+        "kind": "function",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "find_sd_card_device"
+      },
+      "ToolsMicroSDMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDMenuView"
+      },
+      "ToolsMicroSDFlashView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDFlashView"
+      },
+      "ToolsMicroSDVerifyWarningView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDVerifyWarningView"
+      },
+      "ToolsMicroSDVerifyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDVerifyView"
+      },
+      "ToolsMicroSDWipeZeroView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDWipeZeroView"
+      },
+      "ToolsMicroSDWipeRandomView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDWipeRandomView"
+      },
+      "struct": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "tempfile": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "ec": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "script": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "networks": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "satodime_coins": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "read_diy_mount_status": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.seedsigner_os",
+        "qualname": "read_diy_mount_status"
+      },
+      "BaseSimpleAnimatedQREncoder": {
+        "kind": "type",
+        "origin": "seedsigner.models.encode_qr",
+        "qualname": "BaseSimpleAnimatedQREncoder"
+      },
+      "MultisigWalletDescriptorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "MultisigWalletDescriptorView"
+      },
+      "ToolsSmartcardMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSmartcardMenuView"
+      },
+      "ToolsCommonNdefView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsCommonNdefView"
+      },
+      "ToolsSmartcardInfoView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSmartcardInfoView"
+      },
+      "ToolsSmartcardGenuineCheckView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSmartcardGenuineCheckView"
+      },
+      "ToolsSatochipChangePinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipChangePinView"
+      },
+      "ToolsSatochipChangeNFCView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipChangeNFCView"
+      },
+      "ToolsSatochipFactoryResetView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipFactoryResetView"
+      },
+      "ToolsSatochipChangeLabelView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipChangeLabelView"
+      },
+      "ToolsSeedkeeperView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperView"
+      },
+      "ToolsSeedkeeperCardSettingsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperCardSettingsView"
+      },
+      "ToolsSeedkeeperFreeSpaceView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperFreeSpaceView"
+      },
+      "ToolsSeedkeeperCloneSecretsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperCloneSecretsView"
+      },
+      "ToolsSeedkeeperViewSecretsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperViewSecretsView"
+      },
+      "ToolsSeedkeeperImportPasswordView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperImportPasswordView"
+      },
+      "ToolsSeedkeeperDeleteSecretView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperDeleteSecretView"
+      },
+      "ToolsSeedkeeperLoadDescriptorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperLoadDescriptorView"
+      },
+      "ToolsSeedkeeperSaveDescriptorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperSaveDescriptorView"
+      },
+      "ToolsSatochipView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipView"
+      },
+      "ToolsSatochipCardSettingsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipCardSettingsView"
+      },
+      "ToolsSmartcardViewFingerprintView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSmartcardViewFingerprintView"
+      },
+      "ToolsKeycardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardView"
+      },
+      "ToolsKeycardAdvancedView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardAdvancedView"
+      },
+      "ToolsKeycardBenchmarkSignView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardBenchmarkSignView"
+      },
+      "ToolsKeycardBenchmarkMessageSignView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardBenchmarkMessageSignView"
+      },
+      "ToolsKeycardChangePinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardChangePinView"
+      },
+      "ToolsKeycardChangePukView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardChangePukView"
+      },
+      "ToolsKeycardUnblockPinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardUnblockPinView"
+      },
+      "ToolsKeycardSetNameView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardSetNameView"
+      },
+      "ToolsKeycardRemoveSeedView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardRemoveSeedView"
+      },
+      "ToolsKeycardFactoryResetView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardFactoryResetView"
+      },
+      "ToolsSatochipLoadPsbtView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipLoadPsbtView"
+      },
+      "ToolsSatochipAdvancedView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipAdvancedView"
+      },
+      "ToolsSatochipBenchmarkSignView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipBenchmarkSignView"
+      },
+      "ToolsSatochipBenchmarkMessageSignView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipBenchmarkMessageSignView"
+      },
+      "ToolsSatochipImportSeedView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipImportSeedView"
+      },
+      "ToolsSatochipEnable2FAView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipEnable2FAView"
+      },
+      "SatochipExportXpubSigTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubSigTypeView"
+      },
+      "SatochipExportXpubScriptTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubScriptTypeView"
+      },
+      "SatochipExportXpubCustomDerivationView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubCustomDerivationView"
+      },
+      "SatochipExportXpubCoordinatorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubCoordinatorView"
+      },
+      "SatochipExportXpubWarningView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubWarningView"
+      },
+      "SatochipExportXpubDetailsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubDetailsView"
+      },
+      "SatochipExportXpubQRDisplayView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubQRDisplayView"
+      },
+      "SatochipLoadDescriptorScriptTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipLoadDescriptorScriptTypeView"
+      },
+      "SatochipLoadDescriptorCustomDerivationView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipLoadDescriptorCustomDerivationView"
+      },
+      "SatochipLoadDescriptorDetailsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipLoadDescriptorDetailsView"
+      },
+      "SATODIME_SLIP44_BTC": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_SLIP44_BTC_BYTES": {
+        "kind": "list",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_EMPTY_CONTRACT": {
+        "kind": "list",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_NO_BACKUP_WARNING": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_RESEAL_REFUSAL_TEXT": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_SLOT_UNINITIALIZED": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_SLOT_SEALED": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_SLOT_UNSEALED": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_SLOT_UNKNOWN": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "ToolsSatodimeClaimView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeClaimView"
+      },
+      "ToolsSatodimeBackupUnlockView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeBackupUnlockView"
+      },
+      "ToolsSatodimeRestoreUnlockView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeRestoreUnlockView"
+      },
+      "ToolsSatodimeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeView"
+      },
+      "ToolsSatodimeSlotsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeSlotsView"
+      },
+      "ToolsSatodimeSlotMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeSlotMenuView"
+      },
+      "ToolsSatodimeCardSettingsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeCardSettingsView"
+      },
+      "ToolsSatodimeReshowUnlockView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeReshowUnlockView"
+      },
+      "ToolsSatodimeSealSlotView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeSealSlotView"
+      },
+      "ToolsSatodimeUnsealSlotView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeUnsealSlotView"
+      },
+      "ToolsSatodimeSignTxView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeSignTxView"
+      },
+      "ToolsSatodimeLoadKeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeLoadKeyView"
+      },
+      "ToolsSatodimeViewAddressView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeViewAddressView"
+      },
+      "ToolsSatodimeViewPrivateKeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeViewPrivateKeyView"
+      },
+      "ToolsSatodimeResetSlotView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeResetSlotView"
+      },
+      "ToolsSatodimeTransferOwnershipView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeTransferOwnershipView"
+      },
+      "ToolsSpecterDIYView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSpecterDIYView"
+      },
+      "ToolsJavacardWipeMnemonicView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardWipeMnemonicView"
+      },
+      "ToolsSpecterDIYChangePinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSpecterDIYChangePinView"
+      },
+      "ToolsSatochipDIYView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipDIYView"
+      },
+      "ToolsDIYMountStatusView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsDIYMountStatusView"
+      },
+      "JAVACARD_KEYS_MICROSD_FILENAME": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "JAVACARD_KEYS_SEEDKEEPER_PREFIX": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SPECTER_JAVACARD_DEFAULT_AID": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "ToolsJavacardKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardKeysView"
+      },
+      "ToolsJavacardLoadMnemonicView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardLoadMnemonicView"
+      },
+      "ToolsJavacardSaveMnemonicView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardSaveMnemonicView"
+      },
+      "ToolsJavacardLoadKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardLoadKeysView"
+      },
+      "ToolsJavacardSaveKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardSaveKeysView"
+      },
+      "ToolsJavacardUnlockCardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardUnlockCardView"
+      },
+      "ToolsJavacardLockCardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardLockCardView"
+      },
+      "ToolsJavacardClearKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardClearKeysView"
+      },
+      "ToolsDIYBuildAppletsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsDIYBuildAppletsView"
+      },
+      "ToolsDIYInstallAppletView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsDIYInstallAppletView"
+      },
+      "ToolsDIYUninstallAppletView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsDIYUninstallAppletView"
+      },
+      "datetime": {
+        "kind": "type",
+        "origin": "datetime",
+        "qualname": "datetime"
+      },
+      "timezone": {
+        "kind": "type",
+        "origin": "datetime",
+        "qualname": "timezone"
+      },
+      "resolve_microsd_images_dir": {
+        "kind": "function",
+        "origin": "seedsigner.hardware.microsd",
+        "qualname": "resolve_microsd_images_dir"
+      },
+      "parse_secret_key_list": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "parse_secret_key_list"
+      },
+      "parse_subkey_list": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "parse_subkey_list"
+      },
+      "BIP85_GPG_CREATED_TS": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_APP": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_ECC_APP": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_RSA": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_BRAINPOOL": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_CURVE25519": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_SECP256K1": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_NIST": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_DATA": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "bip85_export_json": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_export_json"
+      },
+      "bip85_import_json": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_import_json"
+      },
+      "bip85_save_data": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_save_data"
+      },
+      "bip85_load_data": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_load_data"
+      },
+      "parse_uid_list": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "parse_uid_list"
+      },
+      "filter_deletable_subkeys": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "filter_deletable_subkeys"
+      },
+      "ToolsGPGMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGMenuView"
+      },
+      "ToolsGPGAdvancedMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGAdvancedMenuView"
+      },
+      "ToolsGPGViewKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGViewKeysView"
+      },
+      "ToolsGPGKeyDetailsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGKeyDetailsView"
+      },
+      "ToolsGPGKeySubkeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGKeySubkeysView"
+      },
+      "ToolsGPGSubkeyDetailsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSubkeyDetailsView"
+      },
+      "ToolsGPGCrossCertifyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGCrossCertifyView"
+      },
+      "ToolsGPGExportBundleView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportBundleView"
+      },
+      "ToolsGPGBip85MetadataMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGBip85MetadataMenuView"
+      },
+      "ToolsGPGSaveBip85DataView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSaveBip85DataView"
+      },
+      "ToolsGPGLoadBip85DataView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadBip85DataView"
+      },
+      "ToolsGPGRebuildBip85KeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGRebuildBip85KeyView"
+      },
+      "ToolsGPGSubkeyMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSubkeyMenuView"
+      },
+      "ToolsGPGRevokeSubkeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGRevokeSubkeysView"
+      },
+      "ToolsGPGDeleteSubkeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGDeleteSubkeysView"
+      },
+      "ToolsGPGChangeExpiryView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGChangeExpiryView"
+      },
+      "ToolsGPGExportSubkeySecretsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportSubkeySecretsView"
+      },
+      "ToolsGPGUidMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGUidMenuView"
+      },
+      "ToolsGPGAddUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGAddUidView"
+      },
+      "ToolsGPGEditUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGEditUidView"
+      },
+      "ToolsGPGSetPrimaryUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSetPrimaryUidView"
+      },
+      "ToolsGPGRevokeUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGRevokeUidView"
+      },
+      "ToolsGPGDeleteUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGDeleteUidView"
+      },
+      "ToolsGPGFileOpsMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGFileOpsMenuView"
+      },
+      "ToolsGPGMessageMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGMessageMenuView"
+      },
+      "ToolsGPGSignMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSignMenuView"
+      },
+      "ToolsGPGEncryptMessageView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGEncryptMessageView"
+      },
+      "ToolsGPGDecryptMessageView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGDecryptMessageView"
+      },
+      "ToolsGPGImportMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportMenuView"
+      },
+      "ToolsGPGExportMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportMenuView"
+      },
+      "ToolsGPGSmartMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSmartMenuView"
+      },
+      "ToolsGPGCardInfoView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGCardInfoView"
+      },
+      "ToolsGPGGenerateKeyOnCardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGGenerateKeyOnCardView"
+      },
+      "ToolsGPGChangeAdminPinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGChangeAdminPinView"
+      },
+      "ToolsGPGChangeUserPinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGChangeUserPinView"
+      },
+      "ToolsGPGEncryptFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGEncryptFileView"
+      },
+      "ToolsGPGDecryptFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGDecryptFileView"
+      },
+      "ToolsGPGVerifyFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGVerifyFileView"
+      },
+      "ToolsGPGSignFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSignFileView"
+      },
+      "ToolsGPGSignManifestView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSignManifestView"
+      },
+      "ToolsGPGImportPubkeyMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportPubkeyMenuView"
+      },
+      "ToolsGPGLoadPubkeyQRView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadPubkeyQRView"
+      },
+      "ToolsGPGImportPubkeyFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportPubkeyFileView"
+      },
+      "ToolsGPGImportPubkeySeedkeeperView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportPubkeySeedkeeperView"
+      },
+      "ToolsGPGImportPrivkeyMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportPrivkeyMenuView"
+      },
+      "ToolsGPGLoadPrivkeyQRView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadPrivkeyQRView"
+      },
+      "ToolsGPGLoadPrivkeyFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadPrivkeyFileView"
+      },
+      "ToolsGPGLoadPrivkeySeedkeeperView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadPrivkeySeedkeeperView"
+      },
+      "bip85_rsa_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_rsa_from_root"
+      },
+      "bip85_ed25519_seed_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_ed25519_seed_from_root"
+      },
+      "bip85_ed25519_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_ed25519_from_root"
+      },
+      "gpg_quick_addkey": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "gpg_quick_addkey"
+      },
+      "gpg_edit_subkey": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "gpg_edit_subkey"
+      },
+      "gpg_edit_uid": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "gpg_edit_uid"
+      },
+      "gpg_export_selected_subkeys": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "gpg_export_selected_subkeys"
+      },
+      "bip85_verify_existing": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_verify_existing"
+      },
+      "Optional": {
+        "kind": "_SpecialForm",
+        "origin": "typing",
+        "qualname": "Optional"
+      },
+      "List": {
+        "kind": "_SpecialGenericAlias",
+        "origin": "typing",
+        "qualname": "List"
+      },
+      "Dict": {
+        "kind": "_SpecialGenericAlias",
+        "origin": "typing",
+        "qualname": "Dict"
+      },
+      "bip85_add_subkeys": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_add_subkeys"
+      },
+      "loose_add_subkeys": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "loose_add_subkeys"
+      },
+      "bip85_secp256k1_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_secp256k1_from_root"
+      },
+      "bip85_p256_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_p256_from_root"
+      },
+      "bip85_brainpoolp256r1_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_brainpoolp256r1_from_root"
+      },
+      "bip85_p384_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_p384_from_root"
+      },
+      "bip85_p521_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_p521_from_root"
+      },
+      "bip85_brainpoolp384r1_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_brainpoolp384r1_from_root"
+      },
+      "bip85_brainpoolp512r1_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_brainpoolp512r1_from_root"
+      },
+      "ToolsGPGLoadBIP85KeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadBIP85KeyView"
+      },
+      "ToolsGPGAddSubkeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGAddSubkeysView"
+      },
+      "ToolsGPGGenerateKeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGGenerateKeyView"
+      },
+      "ToolsGPGExportPubkeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportPubkeyView"
+      },
+      "ToolsGPGExportPrivkeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportPrivkeyView"
+      },
+      "ToolsGPGImportKeyToCardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportKeyToCardView"
+      },
+      "ToolsTextQRTextEntryView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRTextEntryView"
+      },
+      "ToolsTextQRTextEntryExitDialogView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRTextEntryExitDialogView"
+      },
+      "ToolsTextQRReviewTextView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRReviewTextView"
+      },
+      "ToolsTextQRTranscribeModePromptView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRTranscribeModePromptView"
+      },
+      "ToolsTextQRTranscribeModeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRTranscribeModeView"
+      },
+      "ToolsTextQRFullScreenModeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRFullScreenModeView"
+      },
+      "ToolsTranscribeTextQRZoomedInView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTranscribeTextQRZoomedInView"
+      },
+      "ToolsTranscribeTextQRConfirmQRPromptView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTranscribeTextQRConfirmQRPromptView"
+      },
+      "ToolsTranscribeTextQRConfirmScanView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTranscribeTextQRConfirmScanView"
+      },
+      "ToolsTextQRScanQRCodeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRScanQRCodeView"
+      },
+      "ToolsTextQRReviewTextView2": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRReviewTextView2"
+      },
+      "secrets": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "ToolsPasswordGeneratorTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordGeneratorTypeView"
+      },
+      "ToolsPasswordStrengthView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordStrengthView"
+      },
+      "ToolsPasswordRandomOptionsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordRandomOptionsView"
+      },
+      "ToolsPasswordEntropySourceView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordEntropySourceView"
+      },
+      "ToolsPasswordHardwareRngEntropyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordHardwareRngEntropyView"
+      },
+      "ToolsPasswordWordSeparatorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordWordSeparatorView"
+      },
+      "ToolsPasswordDiceRollCountView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordDiceRollCountView"
+      },
+      "ToolsPasswordDiceEntryView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordDiceEntryView"
+      },
+      "ToolsPasswordGenerateView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordGenerateView"
+      },
+      "ToolsPasswordBIP85GenerateView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordBIP85GenerateView"
+      },
+      "ToolsPasswordReviewView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordReviewView"
+      },
+      "ToolsPasswordSaveView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordSaveView"
+      },
+      "_save_password_to_seedkeeper": {
+        "kind": "function",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "_save_password_to_seedkeeper"
+      },
+      "_text_qr_done_destination": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_text_qr_done_destination"
+      },
+      "_get_specter_card_api": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_get_specter_card_api"
+      },
+      "_normalize_bip39_mnemonic_text": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_normalize_bip39_mnemonic_text"
+      },
+      "_prompt_keycard_new_pin": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_prompt_keycard_new_pin"
+      },
+      "_prompt_keycard_new_puk": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_prompt_keycard_new_puk"
+      },
+      "_prompt_specter_new_pin": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_prompt_specter_new_pin"
+      },
+      "_unlock_specter_card_if_needed": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_unlock_specter_card_if_needed"
+      },
+      "_bip85_key_type_choices_gpg": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_bip85_key_type_choices"
+      },
+      "_bip85_subkey_specs_gpg": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_bip85_subkey_specs"
+      },
+      "_bip85_version_from_ss_version_gpg": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_bip85_version_from_ss_version"
+      },
+      "_check_future_key_creation_gpg": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_check_future_key_creation"
+      },
+      "_normalize_date_input_gpg": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_normalize_date_input"
+      },
+      "_select_import_algo_gpg": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_select_import_algo"
+      },
+      "_text_qr_done_destination_gpg": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_text_qr_done_destination"
+      },
+      "_bip85_subkey_specs": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_bip85_subkey_specs"
+      },
+      "_bip85_key_type_choices": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_bip85_key_type_choices"
+      },
+      "_bip85_version_from_ss_version": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_bip85_version_from_ss_version"
+      },
+      "_check_future_key_creation": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_check_future_key_creation"
+      },
+      "_select_import_algo": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_select_import_algo"
+      },
+      "_normalize_date_input": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_normalize_date_input"
+      }
+    },
+    "seedsigner.views.gpg_views": {
+      "base64": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "hashlib": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "json": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "logging": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "os": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "re": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "subprocess": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "time": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "datetime": {
+        "kind": "type",
+        "origin": "datetime",
+        "qualname": "datetime"
+      },
+      "timezone": {
+        "kind": "type",
+        "origin": "datetime",
+        "qualname": "timezone"
+      },
+      "Path": {
+        "kind": "type",
+        "origin": "pathlib",
+        "qualname": "Path"
+      },
+      "MIN_RSA_KEY_BITS": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "HDKey": {
+        "kind": "type",
+        "origin": "embit.bip32",
+        "qualname": "HDKey"
+      },
+      "_": {
+        "kind": "function",
+        "origin": "gettext",
+        "qualname": "gettext"
+      },
+      "FontAwesomeIconConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "FontAwesomeIconConstants"
+      },
+      "GUIConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "GUIConstants"
+      },
+      "SeedSignerIconConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "SeedSignerIconConstants"
+      },
+      "RET_CODE__BACK_BUTTON": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "ButtonListScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonListScreen"
+      },
+      "DireWarningScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "DireWarningScreen"
+      },
+      "LargeIconStatusScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "LargeIconStatusScreen"
+      },
+      "WarningScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "WarningScreen"
+      },
+      "ErrorScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ErrorScreen"
+      },
+      "ButtonOption": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonOption"
+      },
+      "SettingsConstants": {
+        "kind": "type",
+        "origin": "seedsigner.models.settings_definition",
+        "qualname": "SettingsConstants"
+      },
+      "SeedExportXpubScriptTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedExportXpubScriptTypeView"
+      },
+      "AccountNumberView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "AccountNumberView"
+      },
+      "View": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "View"
+      },
+      "Destination": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "Destination"
+      },
+      "BackStackView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "BackStackView"
+      },
+      "MainMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "MainMenuView"
+      },
+      "ToolsMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsMenuView"
+      },
+      "ToolsTextQRView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsTextQRView"
+      },
+      "ToolsTextQRTextEntryScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRTextEntryScreen"
+      },
+      "ToolsTextQRReviewTextScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRReviewTextScreen"
+      },
+      "ToolsTextQRTranscribeModePromptScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRTranscribeModePromptScreen"
+      },
+      "ToolsTranscribeTextQRWholeQRScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTranscribeTextQRWholeQRScreen"
+      },
+      "ToolsTranscribeTextQRZoomedInScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTranscribeTextQRZoomedInScreen"
+      },
+      "ToolsTranscribeTextQRConfirmQRPromptScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTranscribeTextQRConfirmQRPromptScreen"
+      },
+      "seedkeeper_utils": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "MicroSD": {
+        "kind": "type",
+        "origin": "seedsigner.hardware.microsd",
+        "qualname": "MicroSD"
+      },
+      "resolve_microsd_images_dir": {
+        "kind": "function",
+        "origin": "seedsigner.hardware.microsd",
+        "qualname": "resolve_microsd_images_dir"
+      },
+      "GenericStaticQrEncoder": {
+        "kind": "type",
+        "origin": "seedsigner.models.encode_qr",
+        "qualname": "GenericStaticQrEncoder"
+      },
+      "SEEDKEEPER_DIC_TYPE": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "SEEDKEEPER_DIC_EXPORT_RIGHTS": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "UnexpectedSW12Error": {
+        "kind": "type",
+        "origin": "pysatochip.CardConnector",
+        "qualname": "UnexpectedSW12Error"
+      },
+      "logger": {
+        "kind": "Logger",
+        "origin": "logging",
+        "qualname": null
+      },
+      "parse_secret_key_list": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "parse_secret_key_list"
+      },
+      "parse_subkey_list": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "parse_subkey_list"
+      },
+      "BIP85_GPG_CREATED_TS": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "_normalize_date_input": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_normalize_date_input"
+      },
+      "_list_sd_files": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_list_sd_files"
+      },
+      "_manifest_names_are_safe": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_manifest_names_are_safe"
+      },
+      "_CLEARSIGN_BEGIN": {
+        "kind": "bytes",
+        "origin": null,
+        "qualname": null
+      },
+      "_CLEARSIGN_SIG_END": {
+        "kind": "bytes",
+        "origin": null,
+        "qualname": null
+      },
+      "_clearsigned_has_unsigned_content": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_clearsigned_has_unsigned_content"
+      },
+      "_check_manifest_lines": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_check_manifest_lines"
+      },
+      "BIP85_GPG_APP": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_ECC_APP": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_RSA": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_BRAINPOOL": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_CURVE25519": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_SECP256K1": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_GPG_KEY_TYPE_NIST": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_DATA": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "_bip85_version_from_ss_version": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_bip85_version_from_ss_version"
+      },
+      "_resolve_bip85_app_and_keytype": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_resolve_bip85_app_and_keytype"
+      },
+      "bip85_export_json": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_export_json"
+      },
+      "bip85_import_json": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_import_json"
+      },
+      "bip85_save_data": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_save_data"
+      },
+      "bip85_load_data": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_load_data"
+      },
+      "parse_uid_list": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "parse_uid_list"
+      },
+      "filter_deletable_subkeys": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "filter_deletable_subkeys"
+      },
+      "_select_import_algo": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_select_import_algo"
+      },
+      "ToolsGPGMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGMenuView"
+      },
+      "ToolsGPGAdvancedMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGAdvancedMenuView"
+      },
+      "_GPG_ALGO_NAMES": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "_format_fpr_blocks": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_format_fpr_blocks"
+      },
+      "_parse_gpg_verify_status": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_parse_gpg_verify_status"
+      },
+      "_gpg_algo_label": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_gpg_algo_label"
+      },
+      "ToolsGPGViewKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGViewKeysView"
+      },
+      "ToolsGPGKeyDetailsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGKeyDetailsView"
+      },
+      "ToolsGPGKeySubkeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGKeySubkeysView"
+      },
+      "ToolsGPGSubkeyDetailsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSubkeyDetailsView"
+      },
+      "ToolsGPGCrossCertifyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGCrossCertifyView"
+      },
+      "ToolsGPGExportBundleView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportBundleView"
+      },
+      "ToolsGPGBip85MetadataMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGBip85MetadataMenuView"
+      },
+      "ToolsGPGSaveBip85DataView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSaveBip85DataView"
+      },
+      "ToolsGPGLoadBip85DataView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadBip85DataView"
+      },
+      "ToolsGPGRebuildBip85KeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGRebuildBip85KeyView"
+      },
+      "ToolsGPGSubkeyMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSubkeyMenuView"
+      },
+      "ToolsGPGRevokeSubkeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGRevokeSubkeysView"
+      },
+      "ToolsGPGDeleteSubkeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGDeleteSubkeysView"
+      },
+      "ToolsGPGChangeExpiryView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGChangeExpiryView"
+      },
+      "ToolsGPGExportSubkeySecretsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportSubkeySecretsView"
+      },
+      "ToolsGPGUidMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGUidMenuView"
+      },
+      "ToolsGPGAddUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGAddUidView"
+      },
+      "ToolsGPGEditUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGEditUidView"
+      },
+      "ToolsGPGSetPrimaryUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSetPrimaryUidView"
+      },
+      "ToolsGPGRevokeUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGRevokeUidView"
+      },
+      "ToolsGPGDeleteUidView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGDeleteUidView"
+      },
+      "ToolsGPGFileOpsMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGFileOpsMenuView"
+      },
+      "ToolsGPGMessageMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGMessageMenuView"
+      },
+      "ToolsGPGSignMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSignMenuView"
+      },
+      "ToolsGPGEncryptMessageView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGEncryptMessageView"
+      },
+      "ToolsGPGDecryptMessageView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGDecryptMessageView"
+      },
+      "ToolsGPGImportMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportMenuView"
+      },
+      "ToolsGPGExportMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportMenuView"
+      },
+      "ToolsGPGSmartMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSmartMenuView"
+      },
+      "ToolsGPGCardInfoView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGCardInfoView"
+      },
+      "ToolsGPGGenerateKeyOnCardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGGenerateKeyOnCardView"
+      },
+      "ToolsGPGChangeAdminPinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGChangeAdminPinView"
+      },
+      "ToolsGPGChangeUserPinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGChangeUserPinView"
+      },
+      "ToolsGPGEncryptFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGEncryptFileView"
+      },
+      "ToolsGPGDecryptFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGDecryptFileView"
+      },
+      "ToolsGPGVerifyFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGVerifyFileView"
+      },
+      "ToolsGPGSignFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSignFileView"
+      },
+      "ToolsGPGSignManifestView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGSignManifestView"
+      },
+      "_check_future_key_creation": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_check_future_key_creation"
+      },
+      "ToolsGPGImportPubkeyMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportPubkeyMenuView"
+      },
+      "ToolsGPGLoadPubkeyQRView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadPubkeyQRView"
+      },
+      "ToolsGPGImportPubkeyFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportPubkeyFileView"
+      },
+      "ToolsGPGImportPubkeySeedkeeperView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportPubkeySeedkeeperView"
+      },
+      "ToolsGPGImportPrivkeyMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportPrivkeyMenuView"
+      },
+      "ToolsGPGLoadPrivkeyQRView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadPrivkeyQRView"
+      },
+      "ToolsGPGLoadPrivkeyFileView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadPrivkeyFileView"
+      },
+      "ToolsGPGLoadPrivkeySeedkeeperView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadPrivkeySeedkeeperView"
+      },
+      "bip85_rsa_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_rsa_from_root"
+      },
+      "bip85_ed25519_seed_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_ed25519_seed_from_root"
+      },
+      "bip85_ed25519_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_ed25519_from_root"
+      },
+      "gpg_quick_addkey": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "gpg_quick_addkey"
+      },
+      "gpg_edit_subkey": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "gpg_edit_subkey"
+      },
+      "gpg_edit_uid": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "gpg_edit_uid"
+      },
+      "gpg_export_selected_subkeys": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "gpg_export_selected_subkeys"
+      },
+      "_normalize_bip85_alg": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_normalize_bip85_alg"
+      },
+      "_bip85_subkey_specs": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_bip85_subkey_specs"
+      },
+      "bip85_verify_existing": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_verify_existing"
+      },
+      "Optional": {
+        "kind": "_SpecialForm",
+        "origin": "typing",
+        "qualname": "Optional"
+      },
+      "List": {
+        "kind": "_SpecialGenericAlias",
+        "origin": "typing",
+        "qualname": "List"
+      },
+      "Dict": {
+        "kind": "_SpecialGenericAlias",
+        "origin": "typing",
+        "qualname": "Dict"
+      },
+      "bip85_add_subkeys": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_add_subkeys"
+      },
+      "loose_add_subkeys": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "loose_add_subkeys"
+      },
+      "bip85_secp256k1_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_secp256k1_from_root"
+      },
+      "bip85_p256_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_p256_from_root"
+      },
+      "bip85_brainpoolp256r1_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_brainpoolp256r1_from_root"
+      },
+      "bip85_p384_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_p384_from_root"
+      },
+      "bip85_p521_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_p521_from_root"
+      },
+      "bip85_brainpoolp384r1_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_brainpoolp384r1_from_root"
+      },
+      "bip85_brainpoolp512r1_from_root": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "bip85_brainpoolp512r1_from_root"
+      },
+      "_bip85_key_type_choices": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_bip85_key_type_choices"
+      },
+      "ToolsGPGLoadBIP85KeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGLoadBIP85KeyView"
+      },
+      "ToolsGPGAddSubkeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGAddSubkeysView"
+      },
+      "ToolsGPGGenerateKeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGGenerateKeyView"
+      },
+      "ToolsGPGExportPubkeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportPubkeyView"
+      },
+      "ToolsGPGExportPrivkeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGExportPrivkeyView"
+      },
+      "ToolsGPGImportKeyToCardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsGPGImportKeyToCardView"
+      },
+      "ToolsTextQRTextEntryView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRTextEntryView"
+      },
+      "ToolsTextQRTextEntryExitDialogView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRTextEntryExitDialogView"
+      },
+      "ToolsTextQRReviewTextView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRReviewTextView"
+      },
+      "_text_qr_done_destination": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_text_qr_done_destination"
+      },
+      "ToolsTextQRTranscribeModePromptView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRTranscribeModePromptView"
+      },
+      "ToolsTextQRTranscribeModeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRTranscribeModeView"
+      },
+      "ToolsTextQRFullScreenModeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRFullScreenModeView"
+      },
+      "ToolsTranscribeTextQRZoomedInView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTranscribeTextQRZoomedInView"
+      },
+      "ToolsTranscribeTextQRConfirmQRPromptView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTranscribeTextQRConfirmQRPromptView"
+      },
+      "ToolsTranscribeTextQRConfirmScanView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTranscribeTextQRConfirmScanView"
+      },
+      "ToolsTextQRScanQRCodeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRScanQRCodeView"
+      },
+      "ToolsTextQRReviewTextView2": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRReviewTextView2"
+      }
+    },
+    "seedsigner.views.smartcard_views": {
+      "base64": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "binascii": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "hexlify": {
+        "kind": "builtin_function_or_method",
+        "origin": "binascii",
+        "qualname": "hexlify"
+      },
+      "unhexlify": {
+        "kind": "builtin_function_or_method",
+        "origin": "binascii",
+        "qualname": "unhexlify"
+      },
+      "hashlib": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "hmac": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "json": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "logging": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "os": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "platform": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "re": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "struct": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "subprocess": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "sys": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "tempfile": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "time": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "Path": {
+        "kind": "type",
+        "origin": "pathlib",
+        "qualname": "Path"
+      },
+      "HDKey": {
+        "kind": "type",
+        "origin": "embit.bip32",
+        "qualname": "HDKey"
+      },
+      "Descriptor": {
+        "kind": "type",
+        "origin": "embit.descriptor.descriptor",
+        "qualname": "Descriptor"
+      },
+      "ec": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "script": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "networks": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "_": {
+        "kind": "function",
+        "origin": "gettext",
+        "qualname": "gettext"
+      },
+      "FontAwesomeIconConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "FontAwesomeIconConstants"
+      },
+      "GUIConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "GUIConstants"
+      },
+      "SeedSignerIconConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "SeedSignerIconConstants"
+      },
+      "RET_CODE__BACK_BUTTON": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "ButtonListScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonListScreen"
+      },
+      "DireWarningScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "DireWarningScreen"
+      },
+      "LargeIconStatusScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "LargeIconStatusScreen"
+      },
+      "WarningScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "WarningScreen"
+      },
+      "ErrorScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ErrorScreen"
+      },
+      "seed_screens": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "ToolsTextQRTextEntryScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRTextEntryScreen"
+      },
+      "ToolsTextQRReviewTextScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRReviewTextScreen"
+      },
+      "ButtonOption": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonOption"
+      },
+      "MicroSD": {
+        "kind": "type",
+        "origin": "seedsigner.hardware.microsd",
+        "qualname": "MicroSD"
+      },
+      "embit_utils": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "ndef_helper": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "satodime_coins": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "seedkeeper_utils": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "_call_with_timeout": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.satochip_signer",
+        "qualname": "_call_with_timeout"
+      },
+      "_get_extended_key": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.satochip_signer",
+        "qualname": "_get_extended_key"
+      },
+      "format_path_string": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.satochip_signer",
+        "qualname": "format_path_string"
+      },
+      "normalize_signature_der": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.satochip_signer",
+        "qualname": "normalize_signature_der"
+      },
+      "format_sw_error": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.iso7816",
+        "qualname": "format_sw_error"
+      },
+      "read_diy_mount_status": {
+        "kind": "function",
+        "origin": "seedsigner.helpers.seedsigner_os",
+        "qualname": "read_diy_mount_status"
+      },
+      "BaseSimpleAnimatedQREncoder": {
+        "kind": "type",
+        "origin": "seedsigner.models.encode_qr",
+        "qualname": "BaseSimpleAnimatedQREncoder"
+      },
+      "InvalidSeedException": {
+        "kind": "type",
+        "origin": "seedsigner.models.seed",
+        "qualname": "InvalidSeedException"
+      },
+      "Seed": {
+        "kind": "type",
+        "origin": "seedsigner.models.seed",
+        "qualname": "Seed"
+      },
+      "XprvSeed": {
+        "kind": "type",
+        "origin": "seedsigner.models.seed",
+        "qualname": "XprvSeed"
+      },
+      "SettingsConstants": {
+        "kind": "type",
+        "origin": "seedsigner.models.settings_definition",
+        "qualname": "SettingsConstants"
+      },
+      "logger": {
+        "kind": "Logger",
+        "origin": "logging",
+        "qualname": null
+      },
+      "CardConnector": {
+        "kind": "type",
+        "origin": "pysatochip.CardConnector",
+        "qualname": "CardConnector"
+      },
+      "UnexpectedSW12Error": {
+        "kind": "type",
+        "origin": "pysatochip.CardConnector",
+        "qualname": "UnexpectedSW12Error"
+      },
+      "SEEDKEEPER_DIC_TYPE": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "SEEDKEEPER_DIC_ORIGIN": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "SEEDKEEPER_DIC_EXPORT_RIGHTS": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP39_WORDLIST_DIC": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "View": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "View"
+      },
+      "Destination": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "Destination"
+      },
+      "BackStackView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "BackStackView"
+      },
+      "MainMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "MainMenuView"
+      },
+      "AccountNumberView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "AccountNumberView"
+      },
+      "MultisigWalletDescriptorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "MultisigWalletDescriptorView"
+      },
+      "SeedElectrumMnemonicStartView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedElectrumMnemonicStartView"
+      },
+      "SeedExportXpubVerifyAddressView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedExportXpubVerifyAddressView"
+      },
+      "SeedFinalizeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedFinalizeView"
+      },
+      "SeedKeeperSelectView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedKeeperSelectView"
+      },
+      "SeedSlip39MnemonicStartView": {
+        "kind": "type",
+        "origin": "seedsigner.views.seed_views",
+        "qualname": "SeedSlip39MnemonicStartView"
+      },
+      "_applet_card_filter": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_applet_card_filter"
+      },
+      "ToolsSmartcardMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSmartcardMenuView"
+      },
+      "ToolsCommonNdefView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsCommonNdefView"
+      },
+      "ToolsSmartcardInfoView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSmartcardInfoView"
+      },
+      "ToolsSmartcardGenuineCheckView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSmartcardGenuineCheckView"
+      },
+      "ToolsSatochipChangePinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipChangePinView"
+      },
+      "ToolsSatochipChangeNFCView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipChangeNFCView"
+      },
+      "ToolsSatochipFactoryResetView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipFactoryResetView"
+      },
+      "ToolsSatochipChangeLabelView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipChangeLabelView"
+      },
+      "ToolsSeedkeeperView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperView"
+      },
+      "ToolsSeedkeeperCardSettingsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperCardSettingsView"
+      },
+      "ToolsSeedkeeperFreeSpaceView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperFreeSpaceView"
+      },
+      "ToolsSeedkeeperCloneSecretsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperCloneSecretsView"
+      },
+      "ToolsSeedkeeperViewSecretsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperViewSecretsView"
+      },
+      "ToolsSeedkeeperImportPasswordView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperImportPasswordView"
+      },
+      "ToolsSeedkeeperDeleteSecretView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperDeleteSecretView"
+      },
+      "ToolsSeedkeeperLoadDescriptorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperLoadDescriptorView"
+      },
+      "ToolsSeedkeeperSaveDescriptorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSeedkeeperSaveDescriptorView"
+      },
+      "ToolsSatochipView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipView"
+      },
+      "ToolsSatochipCardSettingsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipCardSettingsView"
+      },
+      "ToolsSmartcardViewFingerprintView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSmartcardViewFingerprintView"
+      },
+      "ToolsKeycardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardView"
+      },
+      "ToolsKeycardAdvancedView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardAdvancedView"
+      },
+      "_keycard_benchmark_pubkey": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_keycard_benchmark_pubkey"
+      },
+      "_verify_der_signature": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_verify_der_signature"
+      },
+      "ToolsKeycardBenchmarkSignView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardBenchmarkSignView"
+      },
+      "ToolsKeycardBenchmarkMessageSignView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardBenchmarkMessageSignView"
+      },
+      "ToolsKeycardChangePinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardChangePinView"
+      },
+      "ToolsKeycardChangePukView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardChangePukView"
+      },
+      "ToolsKeycardUnblockPinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardUnblockPinView"
+      },
+      "ToolsKeycardSetNameView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardSetNameView"
+      },
+      "ToolsKeycardRemoveSeedView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardRemoveSeedView"
+      },
+      "ToolsKeycardFactoryResetView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsKeycardFactoryResetView"
+      },
+      "ToolsSatochipLoadPsbtView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipLoadPsbtView"
+      },
+      "ToolsSatochipAdvancedView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipAdvancedView"
+      },
+      "ToolsSatochipBenchmarkSignView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipBenchmarkSignView"
+      },
+      "ToolsSatochipBenchmarkMessageSignView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipBenchmarkMessageSignView"
+      },
+      "ToolsSatochipImportSeedView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipImportSeedView"
+      },
+      "ToolsSatochipEnable2FAView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipEnable2FAView"
+      },
+      "SatochipExportXpubSigTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubSigTypeView"
+      },
+      "SatochipExportXpubScriptTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubScriptTypeView"
+      },
+      "SatochipExportXpubCustomDerivationView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubCustomDerivationView"
+      },
+      "SatochipExportXpubCoordinatorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubCoordinatorView"
+      },
+      "SatochipExportXpubWarningView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubWarningView"
+      },
+      "SatochipExportXpubDetailsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubDetailsView"
+      },
+      "SatochipExportXpubQRDisplayView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipExportXpubQRDisplayView"
+      },
+      "SatochipLoadDescriptorScriptTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipLoadDescriptorScriptTypeView"
+      },
+      "SatochipLoadDescriptorCustomDerivationView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipLoadDescriptorCustomDerivationView"
+      },
+      "SatochipLoadDescriptorDetailsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "SatochipLoadDescriptorDetailsView"
+      },
+      "SATODIME_SLIP44_BTC": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_SLIP44_BTC_BYTES": {
+        "kind": "list",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_EMPTY_CONTRACT": {
+        "kind": "list",
+        "origin": null,
+        "qualname": null
+      },
+      "_satodime_pubkey": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_pubkey"
+      },
+      "_satodime_address": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_address"
+      },
+      "_satodime_is_testnet": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_is_testnet"
+      },
+      "_satodime_slot_coin": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_slot_coin"
+      },
+      "_satodime_slot_slip44": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_slot_slip44"
+      },
+      "SATODIME_NO_BACKUP_WARNING": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_RESEAL_REFUSAL_TEXT": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "_satodime_unseal_warning": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_unseal_warning"
+      },
+      "_satodime_require_rng_health": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_require_rng_health"
+      },
+      "SATODIME_SLOT_UNINITIALIZED": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_SLOT_SEALED": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_SLOT_UNSEALED": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SATODIME_SLOT_UNKNOWN": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "_satodime_slot_state": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_slot_state"
+      },
+      "_satodime_state_label": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_state_label"
+      },
+      "_satodime_slot_label": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_slot_label"
+      },
+      "_satodime_read_slot": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_read_slot"
+      },
+      "_satodime_build_cache": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_build_cache"
+      },
+      "_satodime_cached_slot": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_cached_slot"
+      },
+      "_satodime_write_slot_metadata": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_write_slot_metadata"
+      },
+      "_satodime_is_claimed": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_is_claimed"
+      },
+      "_satodime_prepare": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_prepare"
+      },
+      "_satodime_handle_unlock_error": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_handle_unlock_error"
+      },
+      "_satodime_prompt_nickname": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_prompt_nickname"
+      },
+      "_satodime_cached_nickname": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_cached_nickname"
+      },
+      "ToolsSatodimeClaimView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeClaimView"
+      },
+      "ToolsSatodimeBackupUnlockView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeBackupUnlockView"
+      },
+      "ToolsSatodimeRestoreUnlockView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeRestoreUnlockView"
+      },
+      "_satodime_scan_text": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_satodime_scan_text"
+      },
+      "ToolsSatodimeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeView"
+      },
+      "ToolsSatodimeSlotsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeSlotsView"
+      },
+      "ToolsSatodimeSlotMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeSlotMenuView"
+      },
+      "ToolsSatodimeCardSettingsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeCardSettingsView"
+      },
+      "ToolsSatodimeReshowUnlockView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeReshowUnlockView"
+      },
+      "ToolsSatodimeSealSlotView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeSealSlotView"
+      },
+      "ToolsSatodimeUnsealSlotView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeUnsealSlotView"
+      },
+      "ToolsSatodimeSignTxView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeSignTxView"
+      },
+      "ToolsSatodimeLoadKeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeLoadKeyView"
+      },
+      "ToolsSatodimeViewAddressView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeViewAddressView"
+      },
+      "ToolsSatodimeViewPrivateKeyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeViewPrivateKeyView"
+      },
+      "ToolsSatodimeResetSlotView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeResetSlotView"
+      },
+      "ToolsSatodimeTransferOwnershipView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatodimeTransferOwnershipView"
+      },
+      "ToolsSpecterDIYView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSpecterDIYView"
+      },
+      "ToolsJavacardWipeMnemonicView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardWipeMnemonicView"
+      },
+      "ToolsSpecterDIYChangePinView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSpecterDIYChangePinView"
+      },
+      "ToolsSatochipDIYView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsSatochipDIYView"
+      },
+      "ToolsDIYMountStatusView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsDIYMountStatusView"
+      },
+      "_truncate_hash_middle": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_truncate_hash_middle"
+      },
+      "JAVACARD_KEYS_MICROSD_FILENAME": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "JAVACARD_KEYS_SEEDKEEPER_PREFIX": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "SPECTER_JAVACARD_DEFAULT_AID": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "_candidate_specter_card_paths": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_candidate_specter_card_paths"
+      },
+      "_get_specter_card_api": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_get_specter_card_api"
+      },
+      "_normalize_bip39_mnemonic_text": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_normalize_bip39_mnemonic_text"
+      },
+      "_show_specter_card_bricked_warning": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_show_specter_card_bricked_warning"
+      },
+      "_open_specter_secure_channel": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_open_specter_secure_channel"
+      },
+      "_specter_compact_size": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_specter_compact_size"
+      },
+      "_specter_tagged_hash": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_specter_tagged_hash"
+      },
+      "_specter_aead_encrypt": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_specter_aead_encrypt"
+      },
+      "_serialize_specter_plaintext_blob": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_serialize_specter_plaintext_blob"
+      },
+      "_is_specter_pin_error": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_is_specter_pin_error"
+      },
+      "_show_specter_incorrect_pin_warning": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_show_specter_incorrect_pin_warning"
+      },
+      "_prompt_specter_pin_once": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_prompt_specter_pin_once"
+      },
+      "_prompt_specter_new_pin": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_prompt_specter_new_pin"
+      },
+      "_prompt_keycard_digits_once": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_prompt_keycard_digits_once"
+      },
+      "_prompt_keycard_new_digits": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_prompt_keycard_new_digits"
+      },
+      "_prompt_keycard_new_pin": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_prompt_keycard_new_pin"
+      },
+      "_prompt_keycard_new_puk": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_prompt_keycard_new_puk"
+      },
+      "_unlock_specter_card_if_needed": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_unlock_specter_card_if_needed"
+      },
+      "_normalize_javacard_key": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_normalize_javacard_key"
+      },
+      "_parse_javacard_keys": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_parse_javacard_keys"
+      },
+      "_format_javacard_keys": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_format_javacard_keys"
+      },
+      "_format_gp_key_args": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_format_gp_key_args"
+      },
+      "_decode_seedkeeper_text": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_decode_seedkeeper_text"
+      },
+      "ToolsJavacardKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardKeysView"
+      },
+      "ToolsJavacardLoadMnemonicView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardLoadMnemonicView"
+      },
+      "ToolsJavacardSaveMnemonicView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardSaveMnemonicView"
+      },
+      "ToolsJavacardLoadKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardLoadKeysView"
+      },
+      "ToolsJavacardSaveKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardSaveKeysView"
+      },
+      "ToolsJavacardUnlockCardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardUnlockCardView"
+      },
+      "ToolsJavacardLockCardView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardLockCardView"
+      },
+      "ToolsJavacardClearKeysView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsJavacardClearKeysView"
+      },
+      "_JAVACARD_BUILD_CONF_FILENAME": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "_JAVACARD_TASKDEF_CLASSPATH": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "_JAVACARD_JCKIT": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "_JAVACARD_TOOLCHAIN_ROOT": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "_JAVACARD_APPLETS": {
+        "kind": "dict",
+        "origin": null,
+        "qualname": null
+      },
+      "_javacard_platform_key": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_javacard_platform_key"
+      },
+      "_validate_javacard_aid": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_validate_javacard_aid"
+      },
+      "_validate_javacard_version": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_validate_javacard_version"
+      },
+      "_load_javacard_build_config": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_load_javacard_build_config"
+      },
+      "_generate_javacard_build_xml": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_generate_javacard_build_xml"
+      },
+      "ToolsDIYBuildAppletsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsDIYBuildAppletsView"
+      },
+      "_get_internal_cap_dir": {
+        "kind": "function",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "_get_internal_cap_dir"
+      },
+      "ToolsDIYInstallAppletView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsDIYInstallAppletView"
+      },
+      "ToolsDIYUninstallAppletView": {
+        "kind": "type",
+        "origin": "seedsigner.views.smartcard_views",
+        "qualname": "ToolsDIYUninstallAppletView"
+      },
+      "find_sd_card_device": {
+        "kind": "function",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "find_sd_card_device"
+      },
+      "ToolsMicroSDMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDMenuView"
+      },
+      "ToolsMicroSDFlashView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDFlashView"
+      },
+      "ToolsMicroSDVerifyWarningView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDVerifyWarningView"
+      },
+      "ToolsMicroSDVerifyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDVerifyView"
+      },
+      "ToolsMicroSDWipeZeroView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDWipeZeroView"
+      },
+      "ToolsMicroSDWipeRandomView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDWipeRandomView"
+      }
+    },
+    "seedsigner.views.password_generator_views": {
+      "hashlib": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "logging": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "math": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "os": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "secrets": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "struct": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "time": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "Path": {
+        "kind": "type",
+        "origin": "pathlib",
+        "qualname": "Path"
+      },
+      "HDKey": {
+        "kind": "type",
+        "origin": "embit.bip32",
+        "qualname": "HDKey"
+      },
+      "_": {
+        "kind": "function",
+        "origin": "gettext",
+        "qualname": "gettext"
+      },
+      "FontAwesomeIconConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "FontAwesomeIconConstants"
+      },
+      "GUIConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "GUIConstants"
+      },
+      "SeedSignerIconConstants": {
+        "kind": "type",
+        "origin": "seedsigner.gui.components",
+        "qualname": "SeedSignerIconConstants"
+      },
+      "RET_CODE__BACK_BUTTON": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "ButtonListScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonListScreen"
+      },
+      "LargeIconStatusScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "LargeIconStatusScreen"
+      },
+      "WarningScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "WarningScreen"
+      },
+      "ErrorScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ErrorScreen"
+      },
+      "seed_screens": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "ButtonOption": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonOption"
+      },
+      "ToolsDiceEntropyEntryScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsDiceEntropyEntryScreen"
+      },
+      "ToolsTextQRReviewTextScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRReviewTextScreen"
+      },
+      "ToolsTextQRTextEntryScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.tools_screens",
+        "qualname": "ToolsTextQRTextEntryScreen"
+      },
+      "password_generation": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "diceware": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "mnemonic_generation": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_APP_DICE": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_APP_HEX": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_APP_BASE64": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "BIP85_APP_BASE85": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "ToolsImageEntropyLivePreviewView": {
+        "kind": "type",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "ToolsImageEntropyLivePreviewView"
+      },
+      "_bip85_supported_password_type": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_bip85_supported_password_type"
+      },
+      "_cache_password_entropy": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_cache_password_entropy"
+      },
+      "_clear_password_entropy_cache": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_clear_password_entropy_cache"
+      },
+      "_derive_camera_entropy_bytes": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_derive_camera_entropy_bytes"
+      },
+      "_derive_hardware_rng_entropy_bytes": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_derive_hardware_rng_entropy_bytes"
+      },
+      "_dice_rolls_for_strength": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_dice_rolls_for_strength"
+      },
+      "_diceware_word_count": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_diceware_word_count"
+      },
+      "_format_word_password": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_format_word_password"
+      },
+      "_get_password_entropy_cache": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_get_password_entropy_cache"
+      },
+      "_is_diceware_password_type": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_is_diceware_password_type"
+      },
+      "_random_charset": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_random_charset"
+      },
+      "_strength_to_length": {
+        "kind": "function",
+        "origin": "seedsigner.views.tools_views",
+        "qualname": "_strength_to_length"
+      },
+      "seedkeeper_utils": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "ToolsTextQRFullScreenModeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRFullScreenModeView"
+      },
+      "ToolsTextQRTranscribeModePromptView": {
+        "kind": "type",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "ToolsTextQRTranscribeModePromptView"
+      },
+      "_text_qr_done_destination": {
+        "kind": "function",
+        "origin": "seedsigner.views.gpg_views",
+        "qualname": "_text_qr_done_destination"
+      },
+      "Seed": {
+        "kind": "type",
+        "origin": "seedsigner.models.seed",
+        "qualname": "Seed"
+      },
+      "SettingsConstants": {
+        "kind": "type",
+        "origin": "seedsigner.models.settings_definition",
+        "qualname": "SettingsConstants"
+      },
+      "View": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "View"
+      },
+      "Destination": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "Destination"
+      },
+      "BackStackView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "BackStackView"
+      },
+      "MainMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "MainMenuView"
+      },
+      "logger": {
+        "kind": "Logger",
+        "origin": "logging",
+        "qualname": null
+      },
+      "PASSWORD_TYPE_RANDOM": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_DICEWARE_EFF_SHORT": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_DICEWARE_EFF_LONG": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_DICEWARE_BIP39": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_DICE_ROLLS": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_HEX": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_BASE64": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_TYPE_BASE85": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_WORD_SEPARATOR_NONE": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_WORD_SEPARATOR_CAPITALISE": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_WORD_SEPARATOR_SPACE": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_WORD_SEPARATOR_DOT": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_ENTROPY_CAMERA": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_ENTROPY_DICE": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_ENTROPY_BIP85": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "PASSWORD_ENTROPY_HARDWARE_RNG": {
+        "kind": "str",
+        "origin": null,
+        "qualname": null
+      },
+      "ToolsPasswordGeneratorTypeView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordGeneratorTypeView"
+      },
+      "ToolsPasswordStrengthView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordStrengthView"
+      },
+      "ToolsPasswordRandomOptionsView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordRandomOptionsView"
+      },
+      "ToolsPasswordEntropySourceView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordEntropySourceView"
+      },
+      "ToolsPasswordHardwareRngEntropyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordHardwareRngEntropyView"
+      },
+      "ToolsPasswordWordSeparatorView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordWordSeparatorView"
+      },
+      "ToolsPasswordDiceRollCountView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordDiceRollCountView"
+      },
+      "ToolsPasswordDiceEntryView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordDiceEntryView"
+      },
+      "ToolsPasswordGenerateView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordGenerateView"
+      },
+      "ToolsPasswordBIP85GenerateView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordBIP85GenerateView"
+      },
+      "_save_password_to_seedkeeper": {
+        "kind": "function",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "_save_password_to_seedkeeper"
+      },
+      "ToolsPasswordReviewView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordReviewView"
+      },
+      "ToolsPasswordSaveView": {
+        "kind": "type",
+        "origin": "seedsigner.views.password_generator_views",
+        "qualname": "ToolsPasswordSaveView"
+      }
+    },
+    "seedsigner.views.microsd_views": {
+      "logging": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "os": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "platform": {
+        "kind": "module",
+        "origin": null,
+        "qualname": null
+      },
+      "_": {
+        "kind": "function",
+        "origin": "gettext",
+        "qualname": "gettext"
+      },
+      "RET_CODE__BACK_BUTTON": {
+        "kind": "int",
+        "origin": null,
+        "qualname": null
+      },
+      "ButtonListScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonListScreen"
+      },
+      "LargeIconStatusScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "LargeIconStatusScreen"
+      },
+      "WarningScreen": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "WarningScreen"
+      },
+      "ButtonOption": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "ButtonOption"
+      },
+      "LoadingScreenThread": {
+        "kind": "type",
+        "origin": "seedsigner.gui.screens.screen",
+        "qualname": "LoadingScreenThread"
+      },
+      "MicroSD": {
+        "kind": "type",
+        "origin": "seedsigner.hardware.microsd",
+        "qualname": "MicroSD"
+      },
+      "View": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "View"
+      },
+      "Destination": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "Destination"
+      },
+      "BackStackView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "BackStackView"
+      },
+      "MainMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.view",
+        "qualname": "MainMenuView"
+      },
+      "logger": {
+        "kind": "Logger",
+        "origin": "logging",
+        "qualname": null
+      },
+      "find_sd_card_device": {
+        "kind": "function",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "find_sd_card_device"
+      },
+      "ToolsMicroSDMenuView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDMenuView"
+      },
+      "ToolsMicroSDFlashView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDFlashView"
+      },
+      "ToolsMicroSDVerifyWarningView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDVerifyWarningView"
+      },
+      "ToolsMicroSDVerifyView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDVerifyView"
+      },
+      "ToolsMicroSDWipeZeroView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDWipeZeroView"
+      },
+      "ToolsMicroSDWipeRandomView": {
+        "kind": "type",
+        "origin": "seedsigner.views.microsd_views",
+        "qualname": "ToolsMicroSDWipeRandomView"
+      }
+    }
+  },
+  "verifiedSourceSha256": {
+    "seedsigner/views/tools_views.py": "62ec90fcc848fce567a8b5ae3ff3ab8deb22fb7525a92cdf950954f682872d99",
+    "seedsigner/views/gpg_views.py": "28d529ad8ca2d7770ae136db8e60c22809829ae5a0a5aca244bedb2b1bc10511",
+    "seedsigner/views/smartcard_views.py": "839570be59713639f24e63a75439697a74494c9529783eeaa9686363193cec4c",
+    "seedsigner/views/password_generator_views.py": "bbc0bba9e2181215d9af68ff1d0f8762a018ed32eb7c3761c95cb7817fcb1a92",
+    "seedsigner/views/microsd_views.py": "94df642452f941a4fee2bf0d9545a88e92d3d59896909e988173a48297c623d7"
+  },
+  "largestSelfTimes": [
+    {
+      "selfMicroseconds": 1958920,
+      "cumulativeMicroseconds": 2247717,
+      "module": "seedsigner.views.smartcard_views"
+    },
+    {
+      "selfMicroseconds": 1582549,
+      "cumulativeMicroseconds": 1582549,
+      "module": "seedsigner.views.gpg_views"
+    },
+    {
+      "selfMicroseconds": 665200,
+      "cumulativeMicroseconds": 696280,
+      "module": "seedsigner.gui.screens.tools_screens"
+    },
+    {
+      "selfMicroseconds": 614966,
+      "cumulativeMicroseconds": 1160049,
+      "module": "seedsigner.gui.components"
+    },
+    {
+      "selfMicroseconds": 600717,
+      "cumulativeMicroseconds": 3897615,
+      "module": "seedsigner.gui.screens.screen"
+    },
+    {
+      "selfMicroseconds": 399607,
+      "cumulativeMicroseconds": 410770,
+      "module": "seedsigner.models.psbt_parser"
+    },
+    {
+      "selfMicroseconds": 322957,
+      "cumulativeMicroseconds": 322957,
+      "module": "PIL._imagingft"
+    },
+    {
+      "selfMicroseconds": 312840,
+      "cumulativeMicroseconds": 838403,
+      "module": "Cryptodome.Util._raw_api"
+    },
+    {
+      "selfMicroseconds": 307544,
+      "cumulativeMicroseconds": 1134992,
+      "module": "seedsigner.models.decode_qr"
+    },
+    {
+      "selfMicroseconds": 271080,
+      "cumulativeMicroseconds": 271080,
+      "module": "PIL._imaging"
+    },
+    {
+      "selfMicroseconds": 248761,
+      "cumulativeMicroseconds": 1925358,
+      "module": "seedsigner.models.encode_qr"
+    },
+    {
+      "selfMicroseconds": 238076,
+      "cumulativeMicroseconds": 238076,
+      "module": "seedsigner.models.aezeed"
+    },
+    {
+      "selfMicroseconds": 220386,
+      "cumulativeMicroseconds": 1418993,
+      "module": "seedsigner.gui.screens.scan_screens"
+    },
+    {
+      "selfMicroseconds": 215170,
+      "cumulativeMicroseconds": 219797,
+      "module": "pyzbar.wrapper"
+    },
+    {
+      "selfMicroseconds": 210113,
+      "cumulativeMicroseconds": 460682,
+      "module": "seedsigner.models.settings_definition"
+    },
+    {
+      "selfMicroseconds": 205263,
+      "cumulativeMicroseconds": 205263,
+      "module": "seedsigner.views.view"
+    },
+    {
+      "selfMicroseconds": 199970,
+      "cumulativeMicroseconds": 199970,
+      "module": "_hashlib"
+    },
+    {
+      "selfMicroseconds": 177918,
+      "cumulativeMicroseconds": 177918,
+      "module": "seedsigner.views.password_generator_views"
+    },
+    {
+      "selfMicroseconds": 173527,
+      "cumulativeMicroseconds": 576154,
+      "module": "seedsigner.helpers.keycard_connector"
+    },
+    {
+      "selfMicroseconds": 150498,
+      "cumulativeMicroseconds": 150498,
+      "module": "PIL.ExifTags"
+    }
+  ],
+  "largestCumulativeTimes": [
+    {
+      "selfMicroseconds": 600717,
+      "cumulativeMicroseconds": 3897615,
+      "module": "seedsigner.gui.screens.screen"
+    },
+    {
+      "selfMicroseconds": 1958920,
+      "cumulativeMicroseconds": 2247717,
+      "module": "seedsigner.views.smartcard_views"
+    },
+    {
+      "selfMicroseconds": 248761,
+      "cumulativeMicroseconds": 1925358,
+      "module": "seedsigner.models.encode_qr"
+    },
+    {
+      "selfMicroseconds": 147837,
+      "cumulativeMicroseconds": 1632466,
+      "module": "seedsigner.helpers.seedkeeper_utils"
+    },
+    {
+      "selfMicroseconds": 1582549,
+      "cumulativeMicroseconds": 1582549,
+      "module": "seedsigner.views.gpg_views"
+    },
+    {
+      "selfMicroseconds": 220386,
+      "cumulativeMicroseconds": 1418993,
+      "module": "seedsigner.gui.screens.scan_screens"
+    },
+    {
+      "selfMicroseconds": 614966,
+      "cumulativeMicroseconds": 1160049,
+      "module": "seedsigner.gui.components"
+    },
+    {
+      "selfMicroseconds": 307544,
+      "cumulativeMicroseconds": 1134992,
+      "module": "seedsigner.models.decode_qr"
+    },
+    {
+      "selfMicroseconds": 16503,
+      "cumulativeMicroseconds": 1013657,
+      "module": "seedsigner.helpers.tapsigner_backup"
+    },
+    {
+      "selfMicroseconds": 90482,
+      "cumulativeMicroseconds": 970923,
+      "module": "Cryptodome.Cipher.AES"
+    },
+    {
+      "selfMicroseconds": 33208,
+      "cumulativeMicroseconds": 924753,
+      "module": "seedsigner.gui.renderer"
+    },
+    {
+      "selfMicroseconds": 66335,
+      "cumulativeMicroseconds": 888756,
+      "module": "pysatochip.CardConnector"
+    },
+    {
+      "selfMicroseconds": 312840,
+      "cumulativeMicroseconds": 838403,
+      "module": "Cryptodome.Util._raw_api"
+    },
+    {
+      "selfMicroseconds": 88303,
+      "cumulativeMicroseconds": 795859,
+      "module": "PIL.Image"
+    },
+    {
+      "selfMicroseconds": 665200,
+      "cumulativeMicroseconds": 696280,
+      "module": "seedsigner.gui.screens.tools_screens"
+    },
+    {
+      "selfMicroseconds": 113771,
+      "cumulativeMicroseconds": 670629,
+      "module": "seedsigner.models.seed"
+    },
+    {
+      "selfMicroseconds": 173527,
+      "cumulativeMicroseconds": 576154,
+      "module": "seedsigner.helpers.keycard_connector"
+    },
+    {
+      "selfMicroseconds": 29952,
+      "cumulativeMicroseconds": 563767,
+      "module": "seedsigner.hardware.io_config"
+    },
+    {
+      "selfMicroseconds": 14707,
+      "cumulativeMicroseconds": 533815,
+      "module": "seedsigner.hardware"
+    },
+    {
+      "selfMicroseconds": 104017,
+      "cumulativeMicroseconds": 519109,
+      "module": "seedsigner.hardware.battery_hat"
+    }
+  ],
+  "scope": "Pinned-module import-only diagnostic, no display/camera/wallet startup. Importtime is wall time with profiling overhead; cumulative rows overlap. Metadata-only namespace bindings, not values. No lazy loading applied or memory-saving claim."
+}

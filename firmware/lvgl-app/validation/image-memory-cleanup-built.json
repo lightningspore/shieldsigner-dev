@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "stage": "verified-image-ready",
+  "version": "lvgl-dev.cb6170a37a5a",
+  "runtimeManifestSha256": "cb6170a37a5acf03e78072cc73f759e823c56ee6f1d6c509d6acdbeadd3a9185",
+  "image": "dist/os/flash-images/lvgl-memory-cleanup-final/shieldsigner-lvgl-dev-cb6170a37a5a.img.xz",
+  "imageBytes": 363778048,
+  "imageSha256": "e605e47ab21dc4785a24ee356966b8cf649fe1716248de126cfce9605601e862",
+  "compressedSha256": "834b2ca4d24055dbc533997e43e92bb54932e75c49dff27698316a51a6859853",
+  "packedVerification": "image-memory-cleanup-packed.json",
+  "imageBuilt": true,
+  "flashed": false,
+  "bootQualified": false
+}

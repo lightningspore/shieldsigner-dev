@@ -1,0 +1,276 @@
+{
+  "passed": true,
+  "nativeBuild": {
+    "target": "host",
+    "binarySha256": "f8d97ce23627cf936801e6a58ba6646a41af1dc043ec5b88fb8dd4235f80d492",
+    "inputs": {
+      "build.py": "b2ea7324a3b7d2face732e0ecb0bb76f78acafd283711f8b60345486ca0a0890",
+      "assets.py": "b69e92a2ce327ded33ba251a37d75b6296115620fcb254a9b2a06e62aab2a2ea",
+      "build_manifest.py": "5db053aef373731e8d287d2a480f8d84a83c3581bd38773662cde0412ee1e703",
+      "sources.py": "8b3b48224efb5626466ed37261246fca3835b20b72489bf806e14494a8ae6a59",
+      "sources.lock.json": "8add43850148b89a5d73a0428091e155452bf6bab6af42507b66af0f734f210a",
+      "native/branding.h": "3afaba63584ba597109e79d11f3727f4ee9b4535a90fc4fd8b22def146097e38",
+      "native/host.cpp": "1b39c813b8451f25d188a02585cf9f2afd88de189245bfa9545c0c5b2a66c003",
+      "native/live_preview.h": "940dfe5760d8c4ef918734621b64fce9758e4828dc8dafb208f8a58183da2c57",
+      "native/lv_conf.h": "1a5fdf74f2a35b694634040b9a0a643f4bbee84b4c381fb42fe60fb089596264",
+      "native/text_review.h": "6a60e40e58cd41d27e1a49cef3ea41a782f132cfc56aab851b3950d06e6fa0dc",
+      "native/transcription_matrix.h": "f30d48f4fb8fee346a29f5078570c5806077b4288fa9f6b460fcc1a6543b0a88",
+      "patches/address-success-details.patch": "10ec72ea95fe91ed73cd819b1547f7edb6b264be6841531add5639cd34bd9c86",
+      "patches/descriptor-read-first.patch": "355752c9574d1b05dcf741827985a34cf9675f966b5a8b7dc92ef3782dd7cea6",
+      "patches/grid-back-navigation.patch": "ca78a795814ba406cdda0c7467d7c553284f2113eb6e9304d55398797185374e",
+      "patches/high-fee-markers.patch": "bacbb5ee650c303f2d4fed6e2195eb92f2931cae2e52c87a2583164e430c969e",
+      "patches/keyboard-key3-save.patch": "5c9b1f09cdb3808db9389efdcd1791c19344bb14df689dd617f13fce2b128e06",
+      "patches/passphrase-nav-aux.patch": "2a8802181c200c461bc8532790aef9932d6e9d466fe95385efa08b78550a18ae",
+      "patches/review-text.patch": "a4e4b6a44f7adc133c72aea039628fac25a67518161111620472e397e5a98840",
+      "patches/scaffold-capacity.patch": "7a8bbec8d9ce648532458d340c85914ce7c847b20194c9d082d85ec1133e9c32",
+      "patches/screensaver-controller-entry.patch": "84af8e67eff83592b71c60adfcda2b687a6ef8a04e01b46ccfc90383303d78d0",
+      "patches/status-custom-visibility.patch": "9af82032819977845fbca64f68e283a3bc4bc8d81b075913dda0bd6823bb2d13",
+      "patches/transcription-matrix.patch": "46f61b0d24845066143ffced05c9712d3777249fdcc5100d2974c3c8d49d3eb2",
+      "patches/zz-fork-branding.patch": "292fc3201f078957f1b1e8f816915e6584a840aa87c3d2c68e11980985de32a0",
+      "patches/zzz-transcription-border.patch": "88afa8c8213dde855cfbaefdce999bb252b97e26979cc350f367d783648a1565",
+      "patches/zzzz-network-font.patch": "3e52bf0fce0d4803cb54adffc32c2fea8b03061b7fc2f8986b7f714637870e64",
+      "patches/zzzz-transcription-alignment.patch": "0890b75874c7991d9a08161ac24cfb5562bc88d69df9db415502a20bbbfeb7bd"
+    }
+  },
+  "pythonBundleSha256": {
+    "python/address_search.py": "78e60bab3768e091980a6e6d4fc121f0991c7c31e7d2b23df589d849d3d8993b",
+    "python/app.py": "a9fe7c6b5f49ce56d1d3440d61d508b25462b7d3bd207c0faf3dbb365cd12eb2",
+    "python/battery_info.py": "b5bbfa50e58258609a4a0b9a98452383c6645c7f6a9f8dcd0fb480245f96900a",
+    "python/bytecode_cache.py": "9ebc3308019804ce57eb267e3f13d893d2f9ef0ca2b7b8b252b0fc572966adfe",
+    "python/calibration.py": "de7f8bda3ad45f986687a7c504008b775d2954b052ea670c64b152d18529e074",
+    "python/camera_scan.py": "021fd11317cdd7b10b5eb14bc61c627ccb4ae48534130b32f36a2c9b375018c0",
+    "python/contracts.py": "fde004bb9f60e832a6b9b109391dda6e0a6d14fc1cbf5542e41aad1862ad410c",
+    "python/dependency_policy.py": "56803a27c896a2503cefc59edd20296719885e30d84132ab115613c57df30315",
+    "python/descriptor_contracts.py": "be9a738534f78f54a82a328806992de4c98a97dee618ed9f1a6de403dc5f58ed",
+    "python/diagnostic_scope.py": "08ac37c193badf0bbac706536609643d6559effa38588eb48dee9f368b0bc7c4",
+    "python/display_scaler.py": "c2222a85d5cabe080ad3b8f2a8d8e86cba0154acecb988f73cad797f407219fb",
+    "python/encrypted_contracts.py": "43fb12fdc57adbba2f20821459f56f6b663f65242327b42a9a6a11cbdd59e3ac",
+    "python/entropy_camera.py": "f5b7fce11ca69317f36298916bfba6a8f43c23334da17d105c569c659de93d94",
+    "python/entropy_fallback.py": "50ce789643599fe647f85e20d03acd4382323eda49b11e55185110cb987c1213",
+    "python/entropy_source.py": "24b723847035de7449702702ed1c112b81f8382c7597520f3ff95177fc7381a0",
+    "python/explorer_contracts.py": "9dc5e34890a50080a91afd462a4eda540675755cae8a4dfc8f964306e47dc26b",
+    "python/final_word_contracts.py": "0b0badc0adad66504b52326226ef7dd809893960215c979b45e50950bc25eeac",
+    "python/formatting.py": "eb1879fa111010a48947736e9017090d68286706c6a9d8d2e919ae675b0732e6",
+    "python/grid_hold.py": "55a9788dfbe77db776ce0c319b19a420d02d455822c044b75b7cde12f6037d4e",
+    "python/guards.py": "534ee579c1225586cfeb546570acd422922d9ad82285a8287f6f97c1427da024",
+    "python/home_battery.py": "374f5be96ca7b475a942eab0eda5c3728a72f222fdd0234c84d699bf035cad4e",
+    "python/home_recovery.py": "34ffed02436386d1d9f91900a29000614e759794ffe7f78efe4fd8a2b9024a3a",
+    "python/image_entropy.py": "54ff65df29d7d37b561eda005c866e613f0640d362fc8124984d3ce9e34ad50b",
+    "python/io_test.py": "578bb90fa3c8ef27c65e55d741ab0aab3dcbad41d2220def7d8ed66e05848ae1",
+    "python/lifecycle.py": "c244dc2e8b520f25adcb8e8d16d4589a7c0874ce066f40bf9ed1652f591e1acc",
+    "python/live_info.py": "3d8702678f354a089eceb4adc534fbb59990e74c3b8b3242f0ca106c8f7d43fa",
+    "python/loading.py": "c10e773fb2566dd2aedc9ae1d3a5eaf9f657db5090444f0e1701542512007b7e",
+    "python/luckfox.py": "a94b5595a2f836554b334dc0c1a6924e908284fb3003690e994a1cc7b71c1953",
+    "python/message_contracts.py": "246d6674f346961cc331ece62d0d23cb104a3213c05a3b22e65673419ed03cdb",
+    "python/microsd_lifecycle.py": "588aaa9474eb021b7e4d548bbe85d315f995c59c9df051f01563b478e7d458ac",
+    "python/psbt_contracts.py": "e89dff9150f9b53b53d734e97d0aa94b2e65268754ed12c7f90c19aabd52e470",
+    "python/qr_output.py": "3ff61d165ad0a3f8604e49de6e22edef18ce687c0b82682d1be33e3a9347b8fa",
+    "python/renderer_bridge.py": "d15ef0191ce1f8d87fb0f6a5de127e82298fd7ff26f1a377f44126df1ee3e73c",
+    "python/resources.py": "89f96b4d1134d6ef2749c8176a622003b7b70575079ad94eaa1afde50cd82aa8",
+    "python/runtime.py": "a150268ffdccbcbb7d2376000972fac5b7e7e7a64f7264914ef98c5bf62cc3d5",
+    "python/screen_bridge.py": "5ff2ba2ae7ef5e04cfa8c0e00cfec863eef0b7bcea9f4e1d55809e55e3e96cb8",
+    "python/screensaver_bridge.py": "723e4fd50fd02ad735ca8d1a3695a062a22eb451532b01ca6729114909d70095",
+    "python/startup_policy.py": "4b5d3e0e185399a32b8ea159e9bd87c3ae42b003d653faf10a0665a86cc1e28b",
+    "python/startup_splash.py": "6534db610cf4699dfcafef579da9f22375af7362ec5a397dd7b32e219e9e8cf9",
+    "python/textqr_contracts.py": "5098e1ea01b3d681a1aa42119769ce1a947a1bdbb85262251f6bcdf26970d23f",
+    "python/toast_bridge.py": "f4fc096375e63a9bd7620e067a92c811f7239e55440d50350c8dce21010e883e",
+    "python/transcription.py": "450f29aad60d066647df89fda65a03829bca9bf51ecc4f5e9cf44643ed485a1a",
+    "python/transport.py": "f431c58dac460f17cdec1df6929f0ef1b8c01188b71ba354a5e2955eb358aa85"
+  },
+  "cases": [
+    {
+      "case": "corpus",
+      "passed": true,
+      "seconds": 7.187,
+      "scriptSha256": "c19084cf52a7766b8c97a77c8facdc2d24ab9530231541e1d356c8ac06921d54",
+      "fixtureSha256": "1917c0a2bde02904830bc4921a854a50246dc8c2e4e7b7d11758a8fcca6ae3ac",
+      "exitCode": 0,
+      "result": {
+        "passed": true,
+        "screens": 43,
+        "results": [
+          {
+            "screen": "main_menu_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "button_list_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "screensaver_screen",
+            "renderedRectangles": 28
+          },
+          {
+            "screen": "opening_splash_screen",
+            "renderedRectangles": 28
+          },
+          {
+            "screen": "large_icon_status_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_add_passphrase_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "camera_preview_overlay_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "camera_preview_pillarboxed_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "camera_entropy_overlay_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "toast_overlay_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "keyboard_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_mnemonic_entry_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "qr_display_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_transcribe_zoomed_qr_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_finalize_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "loading_spinner_screen",
+            "renderedRectangles": 24
+          },
+          {
+            "screen": "psbt_overview_screen",
+            "renderedRectangles": 20
+          },
+          {
+            "screen": "psbt_address_details_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "psbt_change_details_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "psbt_math_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "settings_locale_picker_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_export_xpub_details_screen",
+            "renderedRectangles": 24
+          },
+          {
+            "screen": "seed_review_passphrase_screen",
+            "renderedRectangles": 16
+          },
+          {
+            "screen": "seed_words_screen",
+            "renderedRectangles": 28
+          },
+          {
+            "screen": "multisig_wallet_descriptor_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_sign_message_confirm_address_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "settings_qr_confirmation_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_sign_message_confirm_message_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_address_verification_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_address_verification_success_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "tools_calc_final_word_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "tools_calc_final_word_done_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_transcribe_whole_qr_screen",
+            "renderedRectangles": 24
+          },
+          {
+            "screen": "tools_address_explorer_address_list_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "tools_address_explorer_address_type_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "power_options_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "seed_transcribe_seedqr_format_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "reset_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "power_off_not_required_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "donate_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "version_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "psbt_op_return_screen",
+            "renderedRectangles": 12
+          },
+          {
+            "screen": "io_test_screen",
+            "renderedRectangles": 12
+          }
+        ],
+        "navigation": {
+          "event": "button_selected",
+          "index": 0,
+          "scroll_y": 0
+        },
+        "totalRectangles": 640
+      },
+      "error": null
+    }
+  ],
+  "scope": "Host native-protocol regression with public pixels/metadata. No original Controller, camera, physical GPIO/LCD or ARM resource qualification."
+}

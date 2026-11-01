@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "case": "matching",
+      "originalDestination": "SeedTranscribeSeedQRConfirmSuccessView",
+      "nativeFrames": 1,
+      "qrWorkerExitCode": 0,
+      "sourceStopped": true,
+      "seedUnchanged": true
+    },
+    {
+      "case": "different-seed",
+      "originalDestination": "SeedTranscribeSeedQRConfirmWrongSeedView",
+      "nativeFrames": 1,
+      "qrWorkerExitCode": 0,
+      "sourceStopped": true,
+      "seedUnchanged": true
+    },
+    {
+      "case": "not-seed",
+      "originalDestination": "SeedTranscribeSeedQRConfirmInvalidQRView",
+      "nativeFrames": 1,
+      "qrWorkerExitCode": 0,
+      "sourceStopped": true,
+      "seedUnchanged": true
+    },
+    {
+      "case": "cancel",
+      "originalDestination": "BackStackView",
+      "nativeFrames": 2,
+      "qrWorkerExitCode": 0,
+      "sourceStopped": true,
+      "seedUnchanged": true
+    }
+  ],
+  "originalScanViewAndSeedComparison": true,
+  "nativeReceiverPreviewZXing": true,
+  "physicalCamera": false,
+  "opticalQualified": false,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "dependencyInitializationInjected": true,
+  "testSourceSha256": "511abe2764afd2cf427c0020197dcfdc90a3ee800221fd105f8d90c1dd720d2c",
+  "fixtureSourceSha256": "3e62216602793193a1ec30dc7698e56e585cde33a52647daa88a320b1e6d8532"
+}

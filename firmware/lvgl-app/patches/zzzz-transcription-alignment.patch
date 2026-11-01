@@ -1,0 +1,11 @@
+--- a/components/seedsigner/screens/seed_transcribe_zoomed_qr_screen.cpp
++++ b/components/seedsigner/screens/seed_transcribe_zoomed_qr_screen.cpp
+@@ -183,7 +183,7 @@
+     bool finder = (module_x < 7 && module_y < 7) ||                 // top-left
+                   (module_x >= size - 7 && module_y < 7) ||         // top-right
+                   (module_x < 7 && module_y >= size - 7);           // bottom-left
+-    int align = (size == 25) ? 16 : (size == 29) ? 20 : -1;
++    int align = (size == 25) ? 16 : (size == 29) ? 20 : (size == 33) ? 24 : -1;
+     bool alignment = align >= 0 &&
+                      module_x >= align && module_x < align + 5 &&
+                      module_y >= align && module_y < align + 5;

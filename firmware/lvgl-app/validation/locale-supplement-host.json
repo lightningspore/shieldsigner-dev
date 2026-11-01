@@ -1,0 +1,714 @@
+{
+  "passed": true,
+  "assetInputs": {
+    "environment": {
+      "image": "ghcr.io/kdmukai-bot/seedsigner-langpack-builder@sha256:3a3f1b97821f326a8b7eb1c13e7df889f4146d879f1b03b0581099d74b0bc6fb",
+      "maxRuntimeFileBytes": 524288,
+      "platform": "linux/amd64",
+      "translationsCommit": "708961a4163b1bd43eb15c4a26713649c63f6ccd",
+      "translationsSubmodule": "src/seedsigner/resources/seedsigner-translations"
+    },
+    "fontLocales": [
+      "el",
+      "fa",
+      "hi",
+      "ja",
+      "ko",
+      "ru",
+      "th",
+      "vi",
+      "zh_Hans_CN"
+    ],
+    "producerSha256": "d89de246f4aeda44445f2492615b1c9b1dfd82c1fc2ae3f87e8096ecb1a7deee",
+    "sourcePins": {
+      "application": {
+        "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+        "url": "https://github.com/3rdIteration/seedsigner.git"
+      },
+      "language-packs": {
+        "commit": "a9e39dabf60e093bb3d1494eb4728f83342c878b",
+        "url": "https://github.com/kdmukAI-bot/seedsigner-language-packs.git"
+      },
+      "lvgl": {
+        "commit": "85aa60d18b3d5e5588d7b247abf90198f07c8a63",
+        "url": "https://github.com/lvgl/lvgl.git"
+      },
+      "reference_app": {
+        "commit": "fd9ba8fc766f715668bc37fbb5485499def9e52f",
+        "url": "https://github.com/kdmukAI-bot/seedsigner.git"
+      },
+      "reference_bindings": {
+        "commit": "1cb456500e6adcb09801a88d386fa0dc1134c1ec",
+        "url": "https://github.com/kdmukai/seedsigner-raspi-lvgl.git"
+      },
+      "screens": {
+        "commit": "33ddc0763c31b5ae0b6380147ba624a7fc0c9273",
+        "url": "https://github.com/kdmukai/seedsigner-lvgl-screens.git"
+      }
+    },
+    "supplementSha256": "a2fe5e6de781abfc8218a1c82ac7ecbe2702f0fd87830658091600770b0fb9db",
+    "translationLocales": [
+      "ca",
+      "cs",
+      "de",
+      "el",
+      "es",
+      "fa",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "no",
+      "pl",
+      "pt_BR",
+      "ru",
+      "th",
+      "tr",
+      "vi",
+      "zh_Hans_CN"
+    ]
+  },
+  "runtimeFiles": 32,
+  "runtimeBytes": 709846,
+  "twoBuildsIdentical": true,
+  "closedSetVariants": 8,
+  "allVariantsHavePlainRunsWithoutMissingGlyphs": true,
+  "catalogFilesUnchanged": 21,
+  "unsupportedTemplates": {},
+  "inactiveRuntime": {
+    "twoStagesIdentical": true,
+    "manifest": {
+      "files": {
+        "payload/usr/lib/shieldsigner-lvgl/launch.sh": {
+          "bytes": 325,
+          "mode": 493,
+          "sha256": "1a37bf50147310bc9d8bfcccb1e435ccc6c7dfd85513d4244bdb1159ca03825a"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/el/el_regular.ttf": {
+          "bytes": 14864,
+          "mode": 420,
+          "sha256": "465258973976d96f27979073e4d39e777b8d8ba10adae564d5e4e91d8c766458"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/el/el_semibold.ttf": {
+          "bytes": 14912,
+          "mode": 420,
+          "sha256": "42f38ef383c13e4dc94fb98318a2c6fc4a376518f2691c6911873b2c9fefa7ed"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/el/endonym_240.bin": {
+          "bytes": 1513,
+          "mode": 420,
+          "sha256": "981e7b23b21aad1e2b8366fd59712d8533aafe243f2fe71f40992330775c8614"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/el/manifest.json": {
+          "bytes": 1160,
+          "mode": 420,
+          "sha256": "a53045c8ae95c8aaf8994b6cd5c2fcdaa42a786da07fce313ca46963115fb802"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/fa/endonym_240.bin": {
+          "bytes": 1052,
+          "mode": 420,
+          "sha256": "c77ccc9d94b384206f079f6821fc0bb2eb48a3fcb688ba2fdf6734bfcf28de63"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/fa/fa.ttf": {
+          "bytes": 13828,
+          "mode": 420,
+          "sha256": "02454ccd1acd38ca8ec3e7616e88fbe32313e1e14d733eb45d0a8459abcd7f42"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/fa/manifest.json": {
+          "bytes": 865,
+          "mode": 420,
+          "sha256": "1731103ddbe343f4bffcae14063aaa8b08d5f114dbec8664f1ef8ffb05c7e6c9"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/hi/endonym_240.bin": {
+          "bytes": 831,
+          "mode": 420,
+          "sha256": "1aa6499a4a3befa92e4205c72b1986dca08df6f397d52f7e45ee11cd037c9d98"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/hi/hi.ttf": {
+          "bytes": 142252,
+          "mode": 420,
+          "sha256": "6cf0644f00daf494375bb3e2506c275db4f568f18fde06c12999628cd10f7652"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/hi/manifest.json": {
+          "bytes": 1203,
+          "mode": 420,
+          "sha256": "5daf652191671684362240c9306e742f1910f36529837fd934ab2849b658682d"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/hi/runs.bin": {
+          "bytes": 64635,
+          "mode": 420,
+          "sha256": "632952ae9e4ec5442b8221db9fc7143cf7d1fb444af835dc92a42afdeec15de9"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ja/endonym_240.bin": {
+          "bytes": 1095,
+          "mode": 420,
+          "sha256": "fac0b4125b5362431521f056ac5f83f38fa6348fe67d178d2e02e558058dd181"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ja/ja.ttf": {
+          "bytes": 81912,
+          "mode": 420,
+          "sha256": "5726723731d086a49a4dc2097713ebd1535f8a7e033da165ffbc413ccc0fe105"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ja/manifest.json": {
+          "bytes": 855,
+          "mode": 420,
+          "sha256": "fe826d440aae0df0276776b082a4416f10ed62f3296204374cd4546e8ef52371"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ko/endonym_240.bin": {
+          "bytes": 1000,
+          "mode": 420,
+          "sha256": "0153de8c7f9dff622c3418a94cc831c2d712c1c53bbcc34ebc5154424329f37a"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ko/ko.ttf": {
+          "bytes": 44248,
+          "mode": 420,
+          "sha256": "c9a0ca6d31f7bdefde950aed6f4d6d21d4b63421b35a57501885311a06e72d5f"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ko/manifest.json": {
+          "bytes": 855,
+          "mode": 420,
+          "sha256": "2797d380b378c9511b5ff3cabbf1c739075ecee464abe49c7432373109d43114"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ru/endonym_240.bin": {
+          "bytes": 1290,
+          "mode": 420,
+          "sha256": "ad8ec57ea2524b4368002ce354fbb6667209906e2bef3805def9bfe1d99ec893"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ru/manifest.json": {
+          "bytes": 1153,
+          "mode": 420,
+          "sha256": "93a7f470957f67f2a2562f403e5e82e525a04edf48c8c72095537e9d2dd56c00"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ru/ru_regular.ttf": {
+          "bytes": 30200,
+          "mode": 420,
+          "sha256": "58aea2155190646705451fe913f8d5093578053e8aaef0ec6b1afddebcf07222"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/ru/ru_semibold.ttf": {
+          "bytes": 30200,
+          "mode": 420,
+          "sha256": "2f1d54bae94b4c45353b46a984af4dcf449af7f2ebe87f355bf96d1c51dc39d5"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/runtime-index.json": {
+          "bytes": 17885,
+          "mode": 420,
+          "sha256": "9fae0734d774115c47acce50d44d3435a67927cfadc60fccc46583f1aaff6b80"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/th/endonym_240.bin": {
+          "bytes": 552,
+          "mode": 420,
+          "sha256": "39ec81b3ce3ddad361574d330f4b3c0cee4e33eb4e9f2cb15ffddce1d0ba57c7"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/th/manifest.json": {
+          "bytes": 1167,
+          "mode": 420,
+          "sha256": "34d9f1c40836d6b6aa1c2d60cfc0e2d28e6fac55588536b32c529189fb673a0d"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/th/runs.bin": {
+          "bytes": 68113,
+          "mode": 420,
+          "sha256": "9fd2b8eb2f9a5b44728ca6c921327208a22e5de41795ff535880eba8432a013c"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/th/th.ttf": {
+          "bytes": 20320,
+          "mode": 420,
+          "sha256": "470d106609e94bdca362d252944bd784f214eda06c76ad0e8fcbcabecdcf9b5f"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/vi/endonym_240.bin": {
+          "bytes": 1627,
+          "mode": 420,
+          "sha256": "6726ea092da50c0bd3d94fe5b3cafbc237150b9d8fb67844c575fb9b3eac89db"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/vi/manifest.json": {
+          "bytes": 1168,
+          "mode": 420,
+          "sha256": "9d27f95154f8bb33f0e4425b9922c849927c7d279601d1ae4d504b88735db578"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/vi/vi_regular.ttf": {
+          "bytes": 32012,
+          "mode": 420,
+          "sha256": "dca29fa1939e0e99e2a4fed32e966ca1543d3f56bb84b2ad0fda7f50c0a1e0af"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/vi/vi_semibold.ttf": {
+          "bytes": 31920,
+          "mode": 420,
+          "sha256": "391e59b7a7fd159e479903cbd1673ecf44d08bb1aebd14407a43cf09ae70c46d"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/zh_Hans_CN/endonym_240.bin": {
+          "bytes": 1513,
+          "mode": 420,
+          "sha256": "89bb58957d0f18739b3a476f25ef84cbceef3855aad7d5f6688488f834731335"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/zh_Hans_CN/manifest.json": {
+          "bytes": 879,
+          "mode": 420,
+          "sha256": "74fdf8c645c5e5bac5b21e1f89e2809a54504d36e63b682224438a768e52fa7b"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/locales/zh_Hans_CN/zh_Hans_CN.ttf": {
+          "bytes": 100652,
+          "mode": 420,
+          "sha256": "05404462742d49ca3edc4942116544b486346163bdbc0ef57ac74d2c4d7a07ac"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/address_search.py": {
+          "bytes": 979,
+          "mode": 420,
+          "sha256": "78e60bab3768e091980a6e6d4fc121f0991c7c31e7d2b23df589d849d3d8993b"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/app.py": {
+          "bytes": 8580,
+          "mode": 420,
+          "sha256": "b83c4d89716e487ee64eceb06281b6a243126f77ece7331405b4b2e38afaf9d7"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/battery_info.py": {
+          "bytes": 1777,
+          "mode": 420,
+          "sha256": "b5bbfa50e58258609a4a0b9a98452383c6645c7f6a9f8dcd0fb480245f96900a"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/calibration.py": {
+          "bytes": 4515,
+          "mode": 420,
+          "sha256": "de7f8bda3ad45f986687a7c504008b775d2954b052ea670c64b152d18529e074"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/camera_scan.py": {
+          "bytes": 5510,
+          "mode": 420,
+          "sha256": "a1ea212b8ca97366dc1803c0e7782e82e8d9d786e70df8bff7834792dcfab2f1"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/contracts.py": {
+          "bytes": 18447,
+          "mode": 420,
+          "sha256": "fde004bb9f60e832a6b9b109391dda6e0a6d14fc1cbf5542e41aad1862ad410c"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/dependency_policy.py": {
+          "bytes": 5555,
+          "mode": 420,
+          "sha256": "f5849452ba669336eb3bfb661131d2b6eb7f17aa4f6a74861b5e86d5da01a59e"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/descriptor_contracts.py": {
+          "bytes": 1337,
+          "mode": 420,
+          "sha256": "be9a738534f78f54a82a328806992de4c98a97dee618ed9f1a6de403dc5f58ed"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/display_scaler.py": {
+          "bytes": 1271,
+          "mode": 420,
+          "sha256": "c2222a85d5cabe080ad3b8f2a8d8e86cba0154acecb988f73cad797f407219fb"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/encrypted_contracts.py": {
+          "bytes": 2688,
+          "mode": 420,
+          "sha256": "43fb12fdc57adbba2f20821459f56f6b663f65242327b42a9a6a11cbdd59e3ac"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/entropy_camera.py": {
+          "bytes": 2346,
+          "mode": 420,
+          "sha256": "f5b7fce11ca69317f36298916bfba6a8f43c23334da17d105c569c659de93d94"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/entropy_fallback.py": {
+          "bytes": 2361,
+          "mode": 420,
+          "sha256": "e2e987ef33f49f7a0c9a5d469ddb82c282f98dbc5f56145560f463b3889b36d9"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/entropy_source.py": {
+          "bytes": 3008,
+          "mode": 420,
+          "sha256": "24b723847035de7449702702ed1c112b81f8382c7597520f3ff95177fc7381a0"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/explorer_contracts.py": {
+          "bytes": 1987,
+          "mode": 420,
+          "sha256": "9dc5e34890a50080a91afd462a4eda540675755cae8a4dfc8f964306e47dc26b"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/final_word_contracts.py": {
+          "bytes": 2402,
+          "mode": 420,
+          "sha256": "0b0badc0adad66504b52326226ef7dd809893960215c979b45e50950bc25eeac"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/formatting.py": {
+          "bytes": 9355,
+          "mode": 420,
+          "sha256": "eb1879fa111010a48947736e9017090d68286706c6a9d8d2e919ae675b0732e6"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/grid_hold.py": {
+          "bytes": 1991,
+          "mode": 420,
+          "sha256": "55a9788dfbe77db776ce0c319b19a420d02d455822c044b75b7cde12f6037d4e"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/guards.py": {
+          "bytes": 609,
+          "mode": 420,
+          "sha256": "534ee579c1225586cfeb546570acd422922d9ad82285a8287f6f97c1427da024"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/home_battery.py": {
+          "bytes": 1224,
+          "mode": 420,
+          "sha256": "374f5be96ca7b475a942eab0eda5c3728a72f222fdd0234c84d699bf035cad4e"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/home_recovery.py": {
+          "bytes": 783,
+          "mode": 420,
+          "sha256": "34ffed02436386d1d9f91900a29000614e759794ffe7f78efe4fd8a2b9024a3a"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/image_entropy.py": {
+          "bytes": 4357,
+          "mode": 420,
+          "sha256": "54ff65df29d7d37b561eda005c866e613f0640d362fc8124984d3ce9e34ad50b"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/io_test.py": {
+          "bytes": 5191,
+          "mode": 420,
+          "sha256": "578bb90fa3c8ef27c65e55d741ab0aab3dcbad41d2220def7d8ed66e05848ae1"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/lifecycle.py": {
+          "bytes": 4348,
+          "mode": 420,
+          "sha256": "c244dc2e8b520f25adcb8e8d16d4589a7c0874ce066f40bf9ed1652f591e1acc"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/live_info.py": {
+          "bytes": 1544,
+          "mode": 420,
+          "sha256": "3d8702678f354a089eceb4adc534fbb59990e74c3b8b3242f0ca106c8f7d43fa"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/loading.py": {
+          "bytes": 1439,
+          "mode": 420,
+          "sha256": "c10e773fb2566dd2aedc9ae1d3a5eaf9f657db5090444f0e1701542512007b7e"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/locale_assets.py": {
+          "bytes": 3426,
+          "mode": 420,
+          "sha256": "871ae842472d57489e3773c76c40835683112b962b553a503efd678fdcdfd247"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/luckfox.py": {
+          "bytes": 3692,
+          "mode": 420,
+          "sha256": "2ec7907cdd18c0aaac731e58e74b9707f4d4dea6bdc6d36b5e55d04ebbbe2c54"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/message_contracts.py": {
+          "bytes": 2306,
+          "mode": 420,
+          "sha256": "246d6674f346961cc331ece62d0d23cb104a3213c05a3b22e65673419ed03cdb"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/microsd_lifecycle.py": {
+          "bytes": 2363,
+          "mode": 420,
+          "sha256": "588aaa9474eb021b7e4d548bbe85d315f995c59c9df051f01563b478e7d458ac"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/psbt_contracts.py": {
+          "bytes": 4204,
+          "mode": 420,
+          "sha256": "e89dff9150f9b53b53d734e97d0aa94b2e65268754ed12c7f90c19aabd52e470"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/qr_output.py": {
+          "bytes": 3841,
+          "mode": 420,
+          "sha256": "3ff61d165ad0a3f8604e49de6e22edef18ce687c0b82682d1be33e3a9347b8fa"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/renderer_bridge.py": {
+          "bytes": 3141,
+          "mode": 420,
+          "sha256": "d15ef0191ce1f8d87fb0f6a5de127e82298fd7ff26f1a377f44126df1ee3e73c"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/runtime.py": {
+          "bytes": 13093,
+          "mode": 420,
+          "sha256": "eb1a7870d5ab1f5b6f5b1e20523869eedf27c7f420149f1bba749cdf1bc310e6"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/screen_bridge.py": {
+          "bytes": 4040,
+          "mode": 420,
+          "sha256": "5ff2ba2ae7ef5e04cfa8c0e00cfec863eef0b7bcea9f4e1d55809e55e3e96cb8"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/screensaver_bridge.py": {
+          "bytes": 1026,
+          "mode": 420,
+          "sha256": "723e4fd50fd02ad735ca8d1a3695a062a22eb451532b01ca6729114909d70095"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/source-guards.json": {
+          "bytes": 4203,
+          "mode": 420,
+          "sha256": "1c4cd3bad41e1ffc219c19bdb4cb52a0714aaae988b440d4b6bebc8fee7c6955"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/startup_policy.py": {
+          "bytes": 1401,
+          "mode": 420,
+          "sha256": "4b5d3e0e185399a32b8ea159e9bd87c3ae42b003d653faf10a0665a86cc1e28b"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/startup_splash.py": {
+          "bytes": 2466,
+          "mode": 420,
+          "sha256": "6534db610cf4699dfcafef579da9f22375af7362ec5a397dd7b32e219e9e8cf9"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/textqr_contracts.py": {
+          "bytes": 2693,
+          "mode": 420,
+          "sha256": "5098e1ea01b3d681a1aa42119769ce1a947a1bdbb85262251f6bcdf26970d23f"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/toast_bridge.py": {
+          "bytes": 1485,
+          "mode": 420,
+          "sha256": "f4fc096375e63a9bd7620e067a92c811f7239e55440d50350c8dce21010e883e"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/transcription.py": {
+          "bytes": 3331,
+          "mode": 420,
+          "sha256": "450f29aad60d066647df89fda65a03829bca9bf51ecc4f5e9cf44643ed485a1a"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/python/transport.py": {
+          "bytes": 6299,
+          "mode": 420,
+          "sha256": "f431c58dac460f17cdec1df6929f0ef1b8c01188b71ba354a5e2955eb358aa85"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/shieldsigner-lvgl": {
+          "bytes": 1597100,
+          "mode": 493,
+          "sha256": "89f65361ecae5c5c6829586f3387a0f88265c62588dda86d23e41c7999d39185"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/shieldsigner-lvgl.manifest.json": {
+          "bytes": 2809,
+          "mode": 420,
+          "sha256": "bc21ad51b90e4b5ecf67bc40aeebd018e31dba0587cceb75bf715a1aa5d4bb6d"
+        },
+        "payload/usr/lib/shieldsigner-lvgl/source-pins.json": {
+          "bytes": 797,
+          "mode": 420,
+          "sha256": "1c44d121e80756ecb56f4ffe648f9c984aead7ef90eb59cf25bea39a2add2565"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/SeedSigner-MIT.txt": {
+          "bytes": 1067,
+          "mode": 420,
+          "sha256": "1258a5daf0928bc18bfaa2047b8eaa34cae2a70b2f97feb0d024bc52f5ca09f5"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/local/SeedSigner-MIT.txt": {
+          "bytes": 1067,
+          "mode": 420,
+          "sha256": "1258a5daf0928bc18bfaa2047b8eaa34cae2a70b2f97feb0d024bc52f5ca09f5"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/COPYRIGHTS.md": {
+          "bytes": 1914,
+          "mode": 420,
+          "sha256": "18dff80ab6d19cca167018a2883b73f5575ccf1e6dff60a58b1f99425b666439"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/LICENCE.txt": {
+          "bytes": 1072,
+          "mode": 420,
+          "sha256": "27a80bd36832ab42d35ad60c08b2b230a807a9bc0d58e94ec1531543dc49cbe8"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/FT800-FT813/LICENSE": {
+          "bytes": 1076,
+          "mode": 420,
+          "sha256": "862e06968462faf8ff2066fffaf7c4522aa48ddafd11fe9c578248aa4b013729"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/barcode/LICENSE.txt": {
+          "bytes": 1299,
+          "mode": 420,
+          "sha256": "bc9492ba4839f81fed80aa4b966e7078b18fc7f0d81cf47aa3c04a86047099f1"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/frogfs/LICENSE.txt": {
+          "bytes": 15921,
+          "mode": 420,
+          "sha256": "af175b9d96ee93c21a036152e1b905b0b95304d4ae8c2c921c7609100ba8df7e"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/gif/LICENSE": {
+          "bytes": 11419,
+          "mode": 420,
+          "sha256": "63fefff6dd199d109389e0f413579387e9ca9cfdeeae961ecdbcb120d08432e0"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/lodepng/LICENSE.txt": {
+          "bytes": 882,
+          "mode": 420,
+          "sha256": "f43c59ae0979ea7c08b24a56cfe7816f3c82141d13f5866a2040f66b02589771"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/lz4/LICENSE.txt": {
+          "bytes": 1311,
+          "mode": 420,
+          "sha256": "8b58c446121a109ccf32edc094bba3010a3d85e4ee3702950db55e4d3e87736c"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/nanovg/LICENSE.txt": {
+          "bytes": 877,
+          "mode": 420,
+          "sha256": "45185a6680ed83863bef33e1055f9fd76374df4b81c957802c19a286c982dfd2"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/qrcode/LICENSE.txt": {
+          "bytes": 1125,
+          "mode": 420,
+          "sha256": "4d3b92a5e730466508ed46e8632140dfb96221bacfa18c95355cee161e7a22c8"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/thorvg/LICENSE.txt": {
+          "bytes": 1099,
+          "mode": 420,
+          "sha256": "861eb0197d1b43e3c904c433b605cf38be3c4bc447bb9752dfad74c704e36af7"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/tiny_ttf/LICENSE.txt": {
+          "bytes": 3669,
+          "mode": 420,
+          "sha256": "f214b427f12e19d68f65e2e30a3c9a1f59ee4a09d4c684931971a8f3bfdd7a1f"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/tjpgd/LICENSE.txt": {
+          "bytes": 873,
+          "mode": 420,
+          "sha256": "e85563f195d82708ca334e85c63d0352c980ccc66dca2052e9fd05f7823df51c"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/libs/vg_lite_driver/LICENSE.txt": {
+          "bytes": 1399,
+          "mode": 420,
+          "sha256": "928c166e5324bd40709174aae078010aa8206ce056aa199fb98126b062ecbd64"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/stdlib/builtin/LICENSE_SPRINTF.txt": {
+          "bytes": 1135,
+          "mode": 420,
+          "sha256": "ec49d3c5a052dba6392f3e5e6d51134d102624c19afab6b3dd9ff8921d85403d"
+        },
+        "payload/usr/share/licenses/shieldsigner-lvgl/lvgl/src/stdlib/builtin/LICENSE_TLSF.txt": {
+          "bytes": 32,
+          "mode": 420,
+          "sha256": "2b32f144050a1236599765ed1ca2c88d5b99e8e3364eadbb547ab0fbc4b01220"
+        }
+      },
+      "kind": "shieldsigner-lvgl-inactive-runtime",
+      "licenseClosureVerified": false,
+      "localesIncluded": true,
+      "nativeBuild": {
+        "binarySha256": "89f65361ecae5c5c6829586f3387a0f88265c62588dda86d23e41c7999d39185",
+        "inputs": {
+          "assets.py": "b69e92a2ce327ded33ba251a37d75b6296115620fcb254a9b2a06e62aab2a2ea",
+          "build.py": "b2ea7324a3b7d2face732e0ecb0bb76f78acafd283711f8b60345486ca0a0890",
+          "build_manifest.py": "5db053aef373731e8d287d2a480f8d84a83c3581bd38773662cde0412ee1e703",
+          "native/branding.h": "3afaba63584ba597109e79d11f3727f4ee9b4535a90fc4fd8b22def146097e38",
+          "native/host.cpp": "7e6834a96d8e30699cf04947d1daef9e0ab0c77daebcdb1a007faf9b9513159b",
+          "native/live_preview.h": "940dfe5760d8c4ef918734621b64fce9758e4828dc8dafb208f8a58183da2c57",
+          "native/lv_conf.h": "1a5fdf74f2a35b694634040b9a0a643f4bbee84b4c381fb42fe60fb089596264",
+          "native/text_review.h": "6a60e40e58cd41d27e1a49cef3ea41a782f132cfc56aab851b3950d06e6fa0dc",
+          "native/transcription_matrix.h": "f30d48f4fb8fee346a29f5078570c5806077b4288fa9f6b460fcc1a6543b0a88",
+          "patches/address-success-details.patch": "10ec72ea95fe91ed73cd819b1547f7edb6b264be6841531add5639cd34bd9c86",
+          "patches/descriptor-read-first.patch": "355752c9574d1b05dcf741827985a34cf9675f966b5a8b7dc92ef3782dd7cea6",
+          "patches/grid-back-navigation.patch": "ca78a795814ba406cdda0c7467d7c553284f2113eb6e9304d55398797185374e",
+          "patches/high-fee-markers.patch": "bacbb5ee650c303f2d4fed6e2195eb92f2931cae2e52c87a2583164e430c969e",
+          "patches/keyboard-key3-save.patch": "5c9b1f09cdb3808db9389efdcd1791c19344bb14df689dd617f13fce2b128e06",
+          "patches/passphrase-nav-aux.patch": "2a8802181c200c461bc8532790aef9932d6e9d466fe95385efa08b78550a18ae",
+          "patches/review-text.patch": "a4e4b6a44f7adc133c72aea039628fac25a67518161111620472e397e5a98840",
+          "patches/scaffold-capacity.patch": "7a8bbec8d9ce648532458d340c85914ce7c847b20194c9d082d85ec1133e9c32",
+          "patches/screensaver-controller-entry.patch": "84af8e67eff83592b71c60adfcda2b687a6ef8a04e01b46ccfc90383303d78d0",
+          "patches/status-custom-visibility.patch": "9af82032819977845fbca64f68e283a3bc4bc8d81b075913dda0bd6823bb2d13",
+          "patches/transcription-matrix.patch": "46f61b0d24845066143ffced05c9712d3777249fdcc5100d2974c3c8d49d3eb2",
+          "patches/zz-fork-branding.patch": "292fc3201f078957f1b1e8f816915e6584a840aa87c3d2c68e11980985de32a0",
+          "patches/zzz-transcription-border.patch": "88afa8c8213dde855cfbaefdce999bb252b97e26979cc350f367d783648a1565",
+          "patches/zzzz-network-font.patch": "3e52bf0fce0d4803cb54adffc32c2fea8b03061b7fc2f8986b7f714637870e64",
+          "patches/zzzz-transcription-alignment.patch": "0890b75874c7991d9a08161ac24cfb5562bc88d69df9db415502a20bbbfeb7bd",
+          "sources.lock.json": "1c44d121e80756ecb56f4ffe648f9c984aead7ef90eb59cf25bea39a2add2565",
+          "sources.py": "8b3b48224efb5626466ed37261246fca3835b20b72489bf806e14494a8ae6a59"
+        },
+        "target": "arm-linux-musleabihf"
+      },
+      "releaseReady": false,
+      "requiresCameraRuntime": "/usr/lib/shieldsigner-camera",
+      "requiresExistingApplicationRoot": "/opt/src",
+      "schema": 1,
+      "serviceInstalled": false,
+      "settings": "/userdata/shieldsigner-lvgl-settings.json",
+      "sources": {
+        "application": {
+          "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+          "url": "https://github.com/3rdIteration/seedsigner.git"
+        },
+        "language-packs": {
+          "commit": "a9e39dabf60e093bb3d1494eb4728f83342c878b",
+          "url": "https://github.com/kdmukAI-bot/seedsigner-language-packs.git"
+        },
+        "lvgl": {
+          "commit": "85aa60d18b3d5e5588d7b247abf90198f07c8a63",
+          "url": "https://github.com/lvgl/lvgl.git"
+        },
+        "reference_app": {
+          "commit": "fd9ba8fc766f715668bc37fbb5485499def9e52f",
+          "url": "https://github.com/kdmukAI-bot/seedsigner.git"
+        },
+        "reference_bindings": {
+          "commit": "1cb456500e6adcb09801a88d386fa0dc1134c1ec",
+          "url": "https://github.com/kdmukai/seedsigner-raspi-lvgl.git"
+        },
+        "screens": {
+          "commit": "33ddc0763c31b5ae0b6380147ba624a7fc0c9273",
+          "url": "https://github.com/kdmukai/seedsigner-lvgl-screens.git"
+        }
+      }
+    }
+  },
+  "scope": "Offline pack reproducibility and glyph presence; no claim of visual parity or bootable image qualification",
+  "finalAssetInputs": {
+    "environment": {
+      "image": "ghcr.io/kdmukai-bot/seedsigner-langpack-builder@sha256:3a3f1b97821f326a8b7eb1c13e7df889f4146d879f1b03b0581099d74b0bc6fb",
+      "maxRuntimeFileBytes": 524288,
+      "platform": "linux/amd64",
+      "translationsCommit": "708961a4163b1bd43eb15c4a26713649c63f6ccd",
+      "translationsSubmodule": "src/seedsigner/resources/seedsigner-translations"
+    },
+    "fontLocales": [
+      "el",
+      "fa",
+      "hi",
+      "ja",
+      "ko",
+      "ru",
+      "th",
+      "vi",
+      "zh_Hans_CN"
+    ],
+    "producerSha256": "dea6cb6d0a287ab5917606c23293a58fb5b80b16da60053b92c6381803166bb9",
+    "sourcePins": {
+      "application": {
+        "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+        "url": "https://github.com/3rdIteration/seedsigner.git"
+      },
+      "language-packs": {
+        "commit": "a9e39dabf60e093bb3d1494eb4728f83342c878b",
+        "url": "https://github.com/kdmukAI-bot/seedsigner-language-packs.git"
+      },
+      "lvgl": {
+        "commit": "85aa60d18b3d5e5588d7b247abf90198f07c8a63",
+        "url": "https://github.com/lvgl/lvgl.git"
+      },
+      "reference_app": {
+        "commit": "fd9ba8fc766f715668bc37fbb5485499def9e52f",
+        "url": "https://github.com/kdmukAI-bot/seedsigner.git"
+      },
+      "reference_bindings": {
+        "commit": "1cb456500e6adcb09801a88d386fa0dc1134c1ec",
+        "url": "https://github.com/kdmukai/seedsigner-raspi-lvgl.git"
+      },
+      "screens": {
+        "commit": "33ddc0763c31b5ae0b6380147ba624a7fc0c9273",
+        "url": "https://github.com/kdmukai/seedsigner-lvgl-screens.git"
+      }
+    },
+    "supplementSha256": "a2fe5e6de781abfc8218a1c82ac7ecbe2702f0fd87830658091600770b0fb9db",
+    "translationLocales": [
+      "ca",
+      "cs",
+      "de",
+      "el",
+      "es",
+      "fa",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "no",
+      "pl",
+      "pt_BR",
+      "ru",
+      "th",
+      "tr",
+      "vi",
+      "zh_Hans_CN"
+    ]
+  },
+  "finalAssetFilesIdenticalAfterDocumentationUpdate": true,
+  "finalAssetDirectory": "dist/lvgl-app/locale-assets/88b3d0f48862f452"
+}

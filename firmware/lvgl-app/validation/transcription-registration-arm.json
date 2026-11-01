@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "size": 33,
+      "border": 4,
+      "alignmentCornerSquare": true
+    },
+    {
+      "size": 33,
+      "border": 5,
+      "alignmentCornerSquare": true
+    }
+  ],
+  "invalidBordersRejected": true,
+  "processRecovered": true,
+  "physicalDisplay": false,
+  "runnerReceipt": "dist/lvgl-app/checks/transcription-registration-20261030T172352334416Z.json",
+  "testSourceSha256": "452a9d398781fc825a84c71b4f29bbc3be8d37372d5fc3112a41029cd9681278",
+  "failingBaseline": "dist/lvgl-app/checks/transcription-registration-20261030T172332536145Z.json",
+  "scope": "Native rendered-pixel regression for 33x33 alignment module corner using synthetic matrix, both original borders, malformed-border rejection and process recovery; no optical or physical-display qualification."
+}

@@ -1,0 +1,129 @@
+{
+  "fontFiles": 27,
+  "fontMetadataEnvironment": {
+    "image": "ghcr.io/kdmukai-bot/seedsigner-langpack-builder@sha256:3a3f1b97821f326a8b7eb1c13e7df889f4146d879f1b03b0581099d74b0bc6fb",
+    "maxRuntimeFileBytes": 524288,
+    "platform": "linux/amd64",
+    "translationsCommit": "708961a4163b1bd43eb15c4a26713649c63f6ccd",
+    "translationsSubmodule": "src/seedsigner/resources/seedsigner-translations"
+  },
+  "fontMetadataReproduced": true,
+  "fontMetadataToolSha256": "e25532ebdf54a28d69602a205dbade35c6e13b73f7650eee664378cd0e6bf378",
+  "gaps": [
+    "Pinned LVGL screens core has no top-level license grant; obtain applicable permission/terms before claiming redistribution closure.",
+    "SeedSigner custom icon font has no embedded copyright/license records; provenance/terms remain to be established.",
+    "Original application/OS dependency notices remain the image integration owner; this audits the added LVGL payload only."
+  ],
+  "jsonHeaderNotice": [
+    "//     __ _____ _____ _____",
+    "//  __|  |   __|     |   | |  JSON for Modern C++",
+    "// |  |  |__   |  |  | | | |  version 3.11.3",
+    "// |_____|_____|_____|_|___|  https://github.com/nlohmann/json",
+    "//",
+    "// SPDX-FileCopyrightText: 2013-2023 Niels Lohmann <https://nlohmann.me>",
+    "// SPDX-License-Identifier: MIT",
+    "",
+    "/****************************************************************************\\"
+  ],
+  "kind": "shieldsigner-lvgl-notice-audit",
+  "licenseClosureVerified": false,
+  "notices": {
+    "Apache-2.0.txt": {
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "FontAwesome5-LICENSE.txt": {
+      "bytes": 7427,
+      "sha256": "de784a808496d49f5f80dd9d1d6e9a51cff712cfbc339e7c25155631ae3cdb5d"
+    },
+    "Montserrat-OFL.txt": {
+      "bytes": 4392,
+      "sha256": "41f82bb4d24b304f30f7136bc47abdd083782e4265c984160f5649d1e78ea49c"
+    },
+    "README.txt": {
+      "bytes": 2060,
+      "sha256": "ad81c4828142d6cf9fe8916cc36215c20ba38254d3c56b8f6758610260c18d5d"
+    },
+    "SeedSigner-MIT.txt": {
+      "bytes": 1067,
+      "sha256": "1258a5daf0928bc18bfaa2047b8eaa34cae2a70b2f97feb0d024bc52f5ca09f5"
+    },
+    "Zig-MIT.txt": {
+      "bytes": 1080,
+      "sha256": "5c537d6853e005298a285d508cff9ac7192cea23576c840d485b2b586a7ff177"
+    },
+    "font-name-records.json": {
+      "bytes": 21403,
+      "sha256": "713fb592a4ece61edc27634d5e8f106036f8aceb39e1ee574850018a1c666523"
+    },
+    "libcxx-LICENSE.txt": {
+      "bytes": 16703,
+      "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+    },
+    "libcxxabi-LICENSE.txt": {
+      "bytes": 16706,
+      "sha256": "e2b35be49f7284a45b7baca8fc7b3ab7440e7902392b2528a457816b5bb2a15c"
+    },
+    "libunwind-LICENSE.txt": {
+      "bytes": 16706,
+      "sha256": "b5efebcaca80879234098e52d1725e6d9eb8fb96a19fce625d39184b705f7b6d"
+    },
+    "musl-COPYRIGHT.txt": {
+      "bytes": 6204,
+      "sha256": "f9bc4423732350eb0b3f7ed7e91d530298476f8fec0c6c427a1c04ade22655af"
+    },
+    "nlohmann-json-MIT.txt": {
+      "bytes": 1076,
+      "sha256": "86b998c792894ccb911a1cb7994f7a9652894e7a094c0b5e45be2f553f45cf14"
+    }
+  },
+  "schema": 1,
+  "screenTopLevelFiles": [
+    ".forgejo",
+    ".github",
+    ".gitignore",
+    ".gitlab-ci.yml",
+    ".gitmodules",
+    "README.md",
+    "components",
+    "docs",
+    "scripts",
+    "tests",
+    "third_party",
+    "tools"
+  ],
+  "sourcePins": {
+    "application": {
+      "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+      "url": "https://github.com/3rdIteration/seedsigner.git"
+    },
+    "language-packs": {
+      "commit": "a9e39dabf60e093bb3d1494eb4728f83342c878b",
+      "url": "https://github.com/kdmukAI-bot/seedsigner-language-packs.git"
+    },
+    "lvgl": {
+      "commit": "85aa60d18b3d5e5588d7b247abf90198f07c8a63",
+      "url": "https://github.com/lvgl/lvgl.git"
+    },
+    "reference_app": {
+      "commit": "fd9ba8fc766f715668bc37fbb5485499def9e52f",
+      "url": "https://github.com/kdmukAI-bot/seedsigner.git"
+    },
+    "reference_bindings": {
+      "commit": "1cb456500e6adcb09801a88d386fa0dc1134c1ec",
+      "url": "https://github.com/kdmukai/seedsigner-raspi-lvgl.git"
+    },
+    "screens": {
+      "commit": "33ddc0763c31b5ae0b6380147ba624a7fc0c9273",
+      "url": "https://github.com/kdmukai/seedsigner-lvgl-screens.git"
+    }
+  },
+  "toolchainNoticeSources": {
+    "Zig-MIT.txt": "LICENSE",
+    "libcxx-LICENSE.txt": "lib/libcxx/LICENSE.TXT",
+    "libcxxabi-LICENSE.txt": "lib/libcxxabi/LICENSE.TXT",
+    "libunwind-LICENSE.txt": "lib/libunwind/LICENSE.TXT",
+    "musl-COPYRIGHT.txt": "lib/libc/musl/COPYRIGHT"
+  },
+  "zigVersion": "0.15.2"
+}

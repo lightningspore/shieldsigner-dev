@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "messageLength": 20,
+      "nativeReviewAndAddress": true,
+      "addressBackPreservedMessage": true,
+      "originalSignatureVerified": true,
+      "renderedQRBytesExact": true,
+      "cleanup": true
+    },
+    {
+      "messageLength": 588,
+      "nativeReviewAndAddress": true,
+      "addressBackPreservedMessage": true,
+      "originalSignatureVerified": true,
+      "renderedQRBytesExact": true,
+      "cleanup": true
+    }
+  ],
+  "firstPageBackClearsState": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "opticalQualified": false,
+  "dependencyInitializationInjected": true,
+  "satochipQualified": false,
+  "runnerReceipt": "dist/lvgl-app/checks/message-signing-20261030T172644713058Z.json",
+  "testSourceSha256": "6654eb1aec869f0ebbbd0a0f73ed674941a12f01d33ae7b5f37b1b0c706db7df",
+  "scope": "Original signing Views using a preselected public BIP39 seed, mainnet native-segwit path, short Unicode and long scrolling messages. Original signatures verified with derived public key and signed-message hash; native ZXing decoded rendered framebuffer bytes. Scripted input, View initialization injected; no optical, Satochip, full Controller, or all path-policy qualification.",
+  "initialHarnessFailure": "dist/lvgl-app/checks/message-signing-20261030T172605662710Z.json"
+}

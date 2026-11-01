@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "stagesIdentical": true,
+  "verification": {
+    "verified": true,
+    "localesIncluded": true,
+    "files": 111,
+    "payloadBytes": 2647350,
+    "releaseReady": false,
+    "serviceInstalled": false
+  },
+  "manifestSha256": "b2ca279772f6ea669b648b095501788a6f0322a242b6803f09503108c9d0eadb",
+  "runtimeExecutableChanged": false,
+  "scope": "Inactive payload notices/integrity only, not permission or image qualification",
+  "inconsistentNoticeRejected": true
+}

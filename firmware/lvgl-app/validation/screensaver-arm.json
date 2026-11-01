@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "mode": "automatic",
+      "wakeConsumed": true,
+      "savedPixelsRestored": true
+    },
+    {
+      "mode": "explicit",
+      "wakeConsumed": true,
+      "savedPixelsRestored": true
+    },
+    {
+      "mode": "disabled",
+      "wakeConsumed": false,
+      "savedPixelsRestored": false
+    }
+  ],
+  "originalViewInitialization": true,
+  "originalControllerFacade": true,
+  "idleTimeoutMs": 600,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "customLogoQualified": false,
+  "testSourceSha256": "5191653e815cdcfe015be2937ca72418cdc7800dd298a12d9c249c5b7b290eba",
+  "scope": "Public one-button menu with original View initialization/Controller facade; accelerated 600 ms timeout; scripted keypad; no default-duration soak, touch, custom-logo or combined wipe/screensaver qualification."
+}

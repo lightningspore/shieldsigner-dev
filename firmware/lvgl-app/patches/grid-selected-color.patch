@@ -1,0 +1,70 @@
+--- a/components/seedsigner/screens/power_options_screen.cpp
++++ b/components/seedsigner/screens/power_options_screen.cpp
+@@ -48,6 +48,7 @@
+ #include "seedsigner.h"       // power_options_screen decl, screen_scaffold_t
+ #include "components.h"       // large_button_grid
+ #include "navigation.h"       // NAV_BODY_GRID
++#include "grid_style.h"
+ #include "screen_helpers.h"   // ensure_top_nav_structure, require_top_nav_title, read_button_list_items, button_item_cfg_t
+ 
+ #include "lvgl.h"             // lv_obj_t
+@@ -101,6 +102,8 @@
+         labels[i] = items[i].label.c_str();
+     }
+ 
++    const auto selected_color = grid_focus_color(cfg);
++
+     // --- Scaffold ---
+ 
+     // Chrome only: the scaffold builds the top-nav (default title font — unlike
+@@ -113,6 +116,7 @@
+     // Shared Python LargeButtonScreen grid: 2 tiles -> one centered row; 4 -> a 2x2 grid.
+     lv_obj_t *buttons[4] = {NULL, NULL, NULL, NULL};
+     large_button_grid(screen.body, screen.screen, icons.data(), labels.data(), count, buttons);
++    apply_grid_focus_color(buttons, count, selected_color);
+ 
+     // --- Navigation + load ---
+ 
+--- a/components/seedsigner/screens/main_menu_screen.cpp
++++ b/components/seedsigner/screens/main_menu_screen.cpp
+@@ -62,6 +62,7 @@
+ #include "components.h"       // large_icon_button
+ #include "gui_constants.h"    // MAIN_MENU_TITLE_FONT, SeedSignerIconConstants, TOP_NAV_HEIGHT, COMPONENT_PADDING, EDGE_PADDING
+ #include "navigation.h"       // NAV_BODY_GRID (nav_body_layout_t)
++#include "grid_style.h"
+ #include "screen_helpers.h"   // read_button_list_labels, require_top_nav_title
+ 
+ #include "lvgl.h"             // lv_obj_get_content_width / lv_obj_get_height / lv_obj_set_size / lv_obj_set_pos
+@@ -117,6 +118,8 @@
+     // list in the body, which bleeds through the gaps behind the grid.
+     cfg.erase("button_list");
+ 
++    const auto selected_color = grid_focus_color(cfg);
++
+     // --- Scaffold ---
+ 
+     // Chrome only: the scaffold builds the top-nav (with the 26px MainMenuScreen
+@@ -144,6 +147,7 @@
+     };
+     lv_obj_t *buttons[4] = {NULL, NULL, NULL, NULL};
+     large_button_grid(screen.body, screen.screen, main_menu_icons, label_ptrs, 4, buttons);
++    apply_grid_focus_color(buttons, 4, selected_color);
+ 
+     // --- Navigation + load ---
+ 
+--- a/components/seedsigner/components.cpp
++++ b/components/seedsigner/components.cpp
+@@ -1,3 +1,4 @@
++#include "grid_style.h"
+ #include "components.h"
+ #include "gui_constants.h"
+ #include "font_registry.h"
+@@ -512,7 +513,7 @@
+         return;
+     }
+     if (active) {
+-        lv_obj_set_style_bg_color(lv_button, lv_color_hex(ACCENT_COLOR), 0);
++        lv_obj_set_style_bg_color(lv_button, grid_active_color(lv_button, lv_color_hex(ACCENT_COLOR)), 0);
+     } else {
+         lv_obj_set_style_bg_color(lv_button, lv_color_hex(BUTTON_BACKGROUND_COLOR), 0);
+     }

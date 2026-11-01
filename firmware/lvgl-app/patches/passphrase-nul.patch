@@ -1,0 +1,37 @@
+--- a/components/seedsigner/screens/seed_add_passphrase_screen.cpp
++++ b/components/seedsigner/screens/seed_add_passphrase_screen.cpp
+@@ -55,6 +55,7 @@
+ //            which stamps the screensaver opt-out flag onto the screen root.
+ 
+ #include "screen_scaffold.h"  // parse_screen_json_ctx, create_top_nav_screen_scaffold, load_screen_and_cleanup_previous
++#include "nul_text.h"
+ #include "seedsigner.h"       // seed_add_passphrase_screen decl, screen_scaffold_t, seedsigner_lvgl_on_text_entered, seedsigner_lvgl_is_static_render
+ #include "gui_constants.h"    // BUTTON_HEIGHT, COMPONENT_PADDING, EDGE_PADDING, KEYBOARD_FONT, ICON_FONT__SEEDSIGNER, BUTTON_FONT_COLOR, SUCCESS_COLOR, SeedSignerIconConstants, active_profile
+ #include "input_profile.h"    // input_mode_t, INPUT_MODE_TOUCH/HARDWARE, input_profile_get_mode
+@@ -549,12 +550,12 @@
+     if (!text_area || !lv_obj_is_valid(text_area)) return;
+ 
+     // Editing keys + character insertion (both modes).
+-    if (std::strcmp(text, SeedSignerIconConstants::DELETE) == 0) { lv_textarea_delete_char(text_area); return; }
+-    if (std::strcmp(text, SeedSignerIconConstants::CHEVRON_LEFT) == 0)  { lv_textarea_cursor_left(text_area); return; }
+-    if (std::strcmp(text, SeedSignerIconConstants::CHEVRON_RIGHT) == 0) { lv_textarea_cursor_right(text_area); return; }
++    if (std::strcmp(text, SeedSignerIconConstants::DELETE) == 0) { nul_delete(text_area); return; }
++    if (std::strcmp(text, SeedSignerIconConstants::CHEVRON_LEFT) == 0)  { nul_left(text_area); return; }
++    if (std::strcmp(text, SeedSignerIconConstants::CHEVRON_RIGHT) == 0) { nul_right(text_area); return; }
+     // The space key displays the seedsigner space glyph; insert a real space.
+-    if (std::strcmp(text, SeedSignerIconConstants::SPACE) == 0) { lv_textarea_add_text(text_area, " "); return; }
+-    lv_textarea_add_text(text_area, text);
++    if (std::strcmp(text, SeedSignerIconConstants::SPACE) == 0) { nul_add(text_area, " "); return; }
++    nul_add(text_area, text);
+ }
+ 
+ // Parse cfg["initial_mode"] into a starting keyboard mode (for screenshots /
+@@ -687,7 +688,7 @@
+     std::string initial_text;
+     if (cfg.contains("initial_text") && cfg["initial_text"].is_string()) {
+         initial_text = cfg["initial_text"].get<std::string>();
+-        lv_textarea_set_text(text_area, initial_text.c_str());
++        nul_set_initial(text_area, initial_text);
+     }
+     if (cfg.contains("max_length") && cfg["max_length"].is_number_integer()) {
+         int max_length = cfg["max_length"].get<int>();

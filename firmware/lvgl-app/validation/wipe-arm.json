@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "originalWipePolicy": true,
+  "publicSeedBufferZeroed": true,
+  "seedStorageCleared": true,
+  "oldNativeProcessReaped": true,
+  "newNativeProcess": true,
+  "seedViewDidNotResume": true,
+  "returnedThroughOriginalController": true,
+  "screenSequence": [
+    "SeedWordsScreen",
+    "MainMenuScreen"
+  ],
+  "originalWipeTimerTriggerSimulated": true,
+  "cameraCleanup": null,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "testSourceSha256": "e06a59708f810829927f5df35f4b8e93a8b4be6536e7f26be18ec8b81ad04339",
+  "scope": "SeedWords screen wipe under original Controller; timer callback invoked by test after 500 ms, real inactivity clock duration not exercised."
+}

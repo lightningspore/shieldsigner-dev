@@ -4,6 +4,16 @@
 
 Native KiCad is the preferred editing workflow. This repository publishes the reviewed ShieldSigner carrier variant, tools and knowledge site. A separate experimental tscircuit port preserves the standard carrier for comparison.
 
+## Firmware and repository navigation
+
+- [Firmware artifacts](docs/FIRMWARE-ARTIFACTS.md): one home for verified images,
+  staging, reusable build data and provenance; find the current image with
+  `mise run firmware:where`.
+- [LVGL firmware](firmware/lvgl-app/README.md): runtime architecture, memory work
+  and scoped hardware/fixture validation.
+- [Repository cleanup goal](docs/REPO-CLEANUP-PLAN.md): phased organization work
+  and acceptance checks that preserve the working build.
+
 ## Eight-pin 2.8-inch pill build
 
 PCB **0.0.7-dev** relocates the smartcard controller cluster, adds 12 labelled copper test pads and ShieldSigner/LightningSpore silkscreen. The [bring-up guide](docs/BRINGUP.md) explains the probes. Use the matching new Gerbers/CPL; the revised 0.0.7 cart has been previewed and saved; final assembler review remains required.

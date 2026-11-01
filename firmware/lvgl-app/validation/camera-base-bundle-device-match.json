@@ -1,0 +1,19 @@
+{
+  "checks": [
+    {
+      "file": "payload/shieldsigner-qr-reader",
+      "bundleSha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+      "deviceSha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+      "matches": true
+    },
+    {
+      "file": "payload/camera-probe",
+      "bundleSha256": "3da849d8dcfb4fe292196f94844c82240f52f1445f91cd0c17b344081d4523eb",
+      "deviceSha256": "3da849d8dcfb4fe292196f94844c82240f52f1445f91cd0c17b344081d4523eb",
+      "matches": true
+    }
+  ],
+  "allMatch": true,
+  "lcdBindingSourceInputsMatch": true,
+  "scope": "Exact camera-probe/QR executables and frozen Rust LCD binding source inputs; binding rebuilt by SDK, not a binary identity claim"
+}

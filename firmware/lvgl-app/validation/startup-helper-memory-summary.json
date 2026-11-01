@@ -1,0 +1,95 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "mode": "before",
+      "phases": {
+        "home-idle": {
+          "medianPythonPrivateAnonPlusSwapKiB": 11184.0,
+          "samples": 6
+        },
+        "camera-live": {
+          "medianPythonPrivateAnonPlusSwapKiB": 13732,
+          "samples": 13
+        }
+      },
+      "cameraFrames": 57,
+      "cameraStopped": true,
+      "ownerExitCode": 0,
+      "packageCounts": {
+        "decimal": 0,
+        "_decimal": 0,
+        "PIL": 0,
+        "qrcode": 0,
+        "embit": 10,
+        "urtypes": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      }
+    },
+    {
+      "mode": "after",
+      "phases": {
+        "home-idle": {
+          "medianPythonPrivateAnonPlusSwapKiB": 11024.0,
+          "samples": 6
+        },
+        "camera-live": {
+          "medianPythonPrivateAnonPlusSwapKiB": 13464,
+          "samples": 13
+        }
+      },
+      "cameraFrames": 57,
+      "cameraStopped": true,
+      "ownerExitCode": 0,
+      "packageCounts": {
+        "datetime": 0,
+        "seedsigner.helpers.version": 0,
+        "seedsigner.models.aezeed": 0,
+        "decimal": 0,
+        "_decimal": 0,
+        "PIL": 0,
+        "qrcode": 0,
+        "embit": 10,
+        "urtypes": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      }
+    }
+  ],
+  "homeReductionKiB": 160,
+  "scanReductionKiB": 268,
+  "hostTests": 241,
+  "payloadCheck": {
+    "passed": true,
+    "receipt": "startup-helper-payloads-arm.json",
+    "dateAndSeedAndPSBTAndUR": true
+  },
+  "scope": "Warm sequential observations, not isolated allocations or total system RAM; median excludes each phase first 3 seconds.",
+  "runtimeBundle": "dist/lvgl-app/runtime-memory-startup-helpers-01",
+  "runtimeManifestSha256": "5ecf6d8b892b0805f572378801ba64aea200b106ab935e46f160aeb7e6aa0e51"
+}

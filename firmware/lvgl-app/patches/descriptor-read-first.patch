@@ -1,0 +1,19 @@
+--- a/components/seedsigner/screens/multisig_wallet_descriptor_screen.cpp
++++ b/components/seedsigner/screens/multisig_wallet_descriptor_screen.cpp
+@@ -71,6 +71,7 @@
+ #include "gui_constants.h"    // COMPONENT_PADDING, EDGE_PADDING, KEYBOARD_FONT, seedsigner_latin_font
+ #include "screen_helpers.h"   // ensure_top_nav_structure, require_top_nav_title
+ 
++#include "navigation.h"
+ #include "lvgl.h"             // flex/pad style setters, display-resolution queries
+ 
+ #include <nlohmann/json.hpp>  // json (cfg reads + structural-default writes)
+@@ -225,7 +226,7 @@
+ 
+     // Menu-style default index: an action list always has a selection, so the first
+     // button starts focused (the host may override via cfg initial_selected_index).
+-    bind_screen_navigation(cfg, screen, /*default_initial_index=*/0);
++    bind_screen_navigation(cfg, screen, cfg.value("read_first",false) ? NAV_INDEX_NONE : 0);
+ 
+     load_screen_and_cleanup_previous(screen.screen);
+ }

@@ -1,0 +1,22 @@
+--- a/components/seedsigner/screens/psbt_math_screen.cpp
++++ b/components/seedsigner/screens/psbt_math_screen.cpp
+@@ -302,7 +302,7 @@
+ 
+     // 4. Fee row.
+     current_y += row_advance;
+-    render_amount(current_y, std::string("-") + fee_amount, fee_label, (uint32_t)BODY_FONT_COLOR);
++    render_amount(current_y, std::string("-") + fee_amount, fee_label, (uint32_t)(cfg.value("is_high_fee_tx", false) ? DIRE_WARNING_COLOR : BODY_FONT_COLOR));
+ 
+     // 5. Rule-off line (aligned + sized to the centered block) — a bare
+     //    background-colored object standing in for Python's draw.line().
+--- a/components/seedsigner/screens/psbt_overview_screen.cpp
++++ b/components/seedsigner/screens/psbt_overview_screen.cpp
+@@ -837,7 +837,7 @@
+             lv_obj_t *label = lv_label_create(chart);
+             lv_obj_set_style_pad_all(label, 0, LV_PART_MAIN);
+             lv_obj_set_style_text_font(label, &BODY_FONT, LV_PART_MAIN);
+-            lv_obj_set_style_text_color(label, lv_color_hex(PSBT_OVERVIEW_LABEL_COLOR), LV_PART_MAIN);
++            lv_obj_set_style_text_color(label, lv_color_hex(cfg.value("is_high_fee_tx", false) && spec.text == fee_label ? DIRE_WARNING_COLOR : PSBT_OVERVIEW_LABEL_COLOR), LV_PART_MAIN);
+             lv_label_set_text(label, spec.text.c_str());
+             lv_obj_set_pos(label, spec.x, spec.y);
+         }

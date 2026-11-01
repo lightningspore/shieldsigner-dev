@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "scope": "Pre-build staging only; no image or boot qualification",
+  "defaultFrontend": "lvgl",
+  "version": {
+    "fork": "lightningspore",
+    "name": "lvgl-dev.66f593cee5e8",
+    "short_commit_hash": "3cf861a-dirty",
+    "timestamp": "2026-10-30T13:25:23+00:00"
+  },
+  "sourceDateEpoch": 1793366723,
+  "sourceDateEpochMeaning": "Fixed base revision timestamp, not wall-clock build time",
+  "runtimeManifestSha256": "66f593cee5e8f53112650c528354930e46f8c4a271b0165845040f48e2edd141",
+  "integrationPlanSha256": "90e872e558454fa15818df4061178adc73f84788d83292f61c77d7515b4510f5",
+  "repeatedStagingManifestsIdentical": true,
+  "language": "en",
+  "smartcardWorkExcluded": true,
+  "remoteJob": {
+    "kind": "shieldsigner-remote-image-job",
+    "bundleManifestSha256": "0ec478cd094091cc664cbbd62bc60a7801c58982f220fbf8a5c0f3cde8b70bce",
+    "remoteOutput": "/opt/shieldsigner-build/dist/os-lvgl-candidate-01",
+    "imageVariant": "dev",
+    "kernelProbeOnly": false,
+    "launcher": {
+      "pid": 302806
+    },
+    "scope": "Started only; inspect actual process/Docker and exit-code before claiming success"
+  },
+  "imageVariant": "dev",
+  "adbRequiredForAcceptance": true,
+  "flashed": false
+}

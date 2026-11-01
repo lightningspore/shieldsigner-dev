@@ -1,0 +1,33 @@
+"""PUBLIC TEST ONLY: upstream regtest 2-of-3 wallet; never fund these keys.
+
+Fixture literals copied from pinned application tests/psbt_testing_util.py.
+Original source SHA256: 3278f6dfc54ed977eb433a44887b66b0554bc1bb98e03bad5a517cb2e3cfabca
+"""
+MULTISIG_NATIVE_SEGWIT_1_INPUT = 'cHNidP8BADMCAAAAAbaPcIOkYKEWkbJpYrT/gbRQYzJ6CSFOJ5eeewflO6jJAAAAAAD9////AHAAAABPAQQ1h88EmoSnUYAAAAIQMkp0H2fIDDprJUDbKzC/+HxUkXMORn4E1dW9s6YYUQLOMo4uvEoFnOcNGcjrzHnZ64ZXsv22WoU7UMUfhSn2NxQPuIL/MAAAgAEAAIAAAACAAgAAgE8BBDWHzwRA+hbPgAAAAtCjPoabT6mduHms6sD7+rUniNXoDSlZvjkiYJpUC65FAqCWpcb6ZLoEcloJpk7vLpNRwwuOFNYyRAvzm28odTsIFAPNCiswAACAAQAAgAAAAIACAACATwEENYfPBMtS+WKAAAACIN1+5Cw5eeTBSKSY3g/NXrRBfXXDPEROQpFRHlmMlIECm0FA2Wj3AxUKxq9C1G9QJ2Ar5TvlMy3/VPUkfQS1HJ4UD4iQRDAAAIABAACAAAAAgAIAAIAAAQCJAgAAAAF1X+6fnEE2Mfa3mgKXygqWGWw2qQb3t1I4fdYJ3cIFowAAAAAA/f///wIA4fUFAAAAACIAIMpj8X3shRYalzfqac0USxW9AqloiW42GgwJjS3jLvSVWxAQJAEAAAAiUSBXg7Hc/rsd/34P6AqwBEDsuXzW+aNgcOsTxa+zGiHOXmsAAAABASsA4fUFAAAAACIAIMpj8X3shRYalzfqac0USxW9AqloiW42GgwJjS3jLvSVAQMEAQAAAAEFaVIhAlnU4yc1877LybCWrJke1kaZFO7WCoP2vDyEog2ERtyfIQKyV23E2SQWvjjaPhSNsRbfaZpPrORdY1Tr73Hm0Ub4nyEDy3sMBTuWlna6t45bdHdl/NzROoKeDVDMwLcIObQE9ZVTriIGAlnU4yc1877LybCWrJke1kaZFO7WCoP2vDyEog2ERtyfHA+4gv8wAACAAQAAgAAAAIACAACAAAAAAAAAAAAiBgKyV23E2SQWvjjaPhSNsRbfaZpPrORdY1Tr73Hm0Ub4nxwDzQorMAAAgAEAAIAAAACAAgAAgAAAAAAAAAAAIgYDy3sMBTuWlna6t45bdHdl/NzROoKeDVDMwLcIObQE9ZUcD4iQRDAAAIABAACAAAAAgAIAAIAAAAAAAAAAAAA='
+MULTISIG_NATIVE_SEGWIT_CHANGE = '01016952210234886728fde2bc0e8b9d7f6c4c452c700add80b2690bb237a3c3a6f4e7714c5221025485ce74baeeb49296f486e6780e1e2b46187943de4da3bb8f1a202cd6695393210355da420fc1b72af894a8532bc917528bd0e3bfbc435c33f8f0d9100671084b2353ae22020234886728fde2bc0e8b9d7f6c4c452c700add80b2690bb237a3c3a6f4e7714c521c0fb882ff3000008001000080000000800200008001000000040000002202025485ce74baeeb49296f486e6780e1e2b46187943de4da3bb8f1a202cd66953931c03cd0a2b30000080010000800000008002000080010000000400000022020355da420fc1b72af894a8532bc917528bd0e3bfbc435c33f8f0d9100671084b231c0f88904430000080010000800000008002000080010000000400000001030887f3f105000000000104220020751780ba145dd0a289a88bdccff824116518df23cb674e810654313520eb74db00'
+MULTISIG_NATIVE_SEGWIT_RECEIVE = '01030890d003000000000001042200200936ff1943bbe5c037ad9e9839ca3effe24d8b22fd38cc2601c9007cc0f210a100'
+
+MNEMONICS=(
+ 'model ensure search plunge galaxy firm exclude brain satoshi meadow cable roast',
+ 'better gown govern speak spawn vendor exercise item uncle odor sound cat',
+ 'sign sword lift deer ocean insect web lazy sick pencil start select',
+)
+def build():
+ from base64 import b64decode
+ from io import BytesIO
+ from embit.psbt import PSBT,OutputScope
+ from embit.descriptor import Descriptor
+ from embit import bip32
+ from embit.networks import NETWORKS
+ from seedsigner.models.seed import Seed
+ seeds=[Seed(words.split()) for words in MNEMONICS]
+ roots=[bip32.HDKey.from_seed(seed.seed_bytes) for seed in seeds]
+ keys=[]
+ for root in roots:
+  account=root.derive("m/48h/1h/0h/2h").to_public().to_base58(version=NETWORKS['test']['xpub'])
+  keys.append('['+root.my_fingerprint.hex()+'/48h/1h/0h/2h]'+account+'/<0;1>/*')
+ descriptor=Descriptor.from_string('wsh(sortedmulti(2,'+','.join(keys)+'))')
+ psbt=PSBT.parse(b64decode(MULTISIG_NATIVE_SEGWIT_1_INPUT))
+ for raw in (MULTISIG_NATIVE_SEGWIT_RECEIVE,MULTISIG_NATIVE_SEGWIT_CHANGE):
+  psbt.outputs.append(OutputScope.read_from(BytesIO(bytes.fromhex(raw))))
+ return seeds,roots,descriptor,psbt

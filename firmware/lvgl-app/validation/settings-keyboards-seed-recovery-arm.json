@@ -1,0 +1,322 @@
+{
+  "checkpoint": "2026-10-30-settings-keyboards-seed-recovery",
+  "scope": "Isolated original-View/model flows and native UI contracts; full Controller and image integration incomplete",
+  "sources": {
+    "application": {
+      "url": "https://github.com/3rdIteration/seedsigner.git",
+      "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+    },
+    "screens": {
+      "url": "https://github.com/kdmukai/seedsigner-lvgl-screens.git",
+      "commit": "33ddc0763c31b5ae0b6380147ba624a7fc0c9273"
+    },
+    "lvgl": {
+      "url": "https://github.com/lvgl/lvgl.git",
+      "commit": "85aa60d18b3d5e5588d7b247abf90198f07c8a63"
+    },
+    "reference_bindings": {
+      "url": "https://github.com/kdmukai/seedsigner-raspi-lvgl.git",
+      "commit": "1cb456500e6adcb09801a88d386fa0dc1134c1ec"
+    },
+    "reference_app": {
+      "url": "https://github.com/kdmukAI-bot/seedsigner.git",
+      "commit": "fd9ba8fc766f715668bc37fbb5485499def9e52f"
+    }
+  },
+  "guards": {
+    "gui/screens/screen.py": "456e74eff9a587c7e7e9c1db331e31bc8cdbf24f0d83740186904881a81f5adb",
+    "gui/screens/settings_screens.py": "b20ab9a0706a6f6582ad96f1b959d6e9089dcc001abc543a72dfeef3ae49f20f",
+    "gui/screens/seed_screens.py": "4c1353663c93e26fe824633c2ce516d7bbfa3bd6666dd7b4a1182e13d0836bd0",
+    "views/view.py": "45810f6d4fbf4bf9e35fac3dd123ba4fc500dbec1413890f18cc99c7a829baeb",
+    "views/settings_views.py": "933d7f7d19cfdec01e4b587c7a66d44abd0cb9b45df8fee1908a3aeaed87b4a6",
+    "models/settings.py": "9d77c292ecb6760bbc176c5355958b8a85f6e651160e65cc58e3066371602b40",
+    "models/settings_definition.py": "35687fa0852174ca2ed38575a1b4ade66cd2627348411c2a61d23fbb0fe766ea",
+    "gui/screens/tools_screens.py": "7afb500cf9ecee9531917f7f054d85c7906004ac6a33b40fddf10013c67d3df8",
+    "views/seed_views.py": "1784b3294ffc2c927d63244da80ac7b605144822f3ed28e72af0ded8abcbbd06",
+    "models/seed_storage.py": "35c5b3585a0f594fbcf40e7476a0abb3bd66c463c688b7ca1f97ca86b6a558cb",
+    "models/seed.py": "cb98d3d8b54b159e1c02a372be261e35d5bf47498eac201763f0de10154b8fff"
+  },
+  "binarySha256": "abf57cce18dae8ac7d3593a57192517fb5b6572b00c44ea9af9de6cfb7372bfb",
+  "binaryBytes": 1417380,
+  "nativeCorpus": {
+    "passed": true,
+    "screens": 43,
+    "results": [
+      {
+        "screen": "main_menu_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "button_list_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "screensaver_screen",
+        "renderedRectangles": 25
+      },
+      {
+        "screen": "opening_splash_screen",
+        "renderedRectangles": 27
+      },
+      {
+        "screen": "large_icon_status_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_add_passphrase_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "camera_preview_overlay_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "camera_preview_pillarboxed_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "camera_entropy_overlay_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "toast_overlay_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "keyboard_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_mnemonic_entry_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "qr_display_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_transcribe_zoomed_qr_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_finalize_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "loading_spinner_screen",
+        "renderedRectangles": 24
+      },
+      {
+        "screen": "psbt_overview_screen",
+        "renderedRectangles": 19
+      },
+      {
+        "screen": "psbt_address_details_screen",
+        "renderedRectangles": 13
+      },
+      {
+        "screen": "psbt_change_details_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "psbt_math_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "settings_locale_picker_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_export_xpub_details_screen",
+        "renderedRectangles": 28
+      },
+      {
+        "screen": "seed_review_passphrase_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_words_screen",
+        "renderedRectangles": 28
+      },
+      {
+        "screen": "multisig_wallet_descriptor_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_sign_message_confirm_address_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "settings_qr_confirmation_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_sign_message_confirm_message_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_address_verification_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_address_verification_success_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "tools_calc_final_word_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "tools_calc_final_word_done_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_transcribe_whole_qr_screen",
+        "renderedRectangles": 28
+      },
+      {
+        "screen": "tools_address_explorer_address_list_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "tools_address_explorer_address_type_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "power_options_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "seed_transcribe_seedqr_format_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "reset_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "power_off_not_required_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "donate_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "version_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "psbt_op_return_screen",
+        "renderedRectangles": 12
+      },
+      {
+        "screen": "io_test_screen",
+        "renderedRectangles": 12
+      }
+    ],
+    "navigation": {
+      "event": "button_selected",
+      "index": 0,
+      "scroll_y": 0
+    },
+    "totalRectangles": 640
+  },
+  "settingsFlow": {
+    "passed": true,
+    "steps": [
+      "advanced-menu-select-network",
+      "network-change-model-to-testnet",
+      "selection-back-restores-parent",
+      "advanced-back-to-general",
+      "deep-row-selection-preserves-scroll",
+      "deep-row-back-restores-offset-and-selection"
+    ],
+    "rectangles": 157,
+    "originalViewsAndModel": true,
+    "nativeKeypad": true,
+    "physicalDisplay": true,
+    "physicalButtons": false,
+    "persistentSettingsWritten": false,
+    "initialNetwork": "M"
+  },
+  "directKeyboardFlow": {
+    "passed": true,
+    "checks": [
+      "PBKDF2-direct-key3-save",
+      "BIP85-leading-zero-preserved",
+      "account-zero-save",
+      "derivation-path-exact",
+      "key3-save-from-top-nav",
+      "empty-save-ignored-then-type-zero",
+      "keyboard-back-sentinel",
+      "generic-save-original-trim",
+      "dice-exact-mapped-values-auto-complete",
+      "coin-exact-values-auto-complete"
+    ],
+    "rectangles": 244,
+    "originalScreenClasses": true,
+    "directConstruction": true,
+    "pilScreenConstructors": false,
+    "nativeKeypad": true,
+    "physicalButtons": false
+  },
+  "seedRecoveryFlow": {
+    "passed": true,
+    "acceptedWords": 12,
+    "publicVector": "BIP39-abandon-about",
+    "fingerprint": "73c5da0a",
+    "finalizedStoredSeed": true,
+    "cancelFirstWordClearedPending": true,
+    "originalViewsModelsCrypto": true,
+    "dependencyInitializationInjected": true,
+    "physicalDisplay": true,
+    "physicalButtons": false,
+    "persistentSettingsWritten": false,
+    "rectangles": 215
+  },
+  "nativeRebuild": {
+    "passed": true,
+    "beforeSha256": "abf57cce18dae8ac7d3593a57192517fb5b6572b00c44ea9af9de6cfb7372bfb",
+    "afterSha256": "abf57cce18dae8ac7d3593a57192517fb5b6572b00c44ea9af9de6cfb7372bfb",
+    "bytes": 1417380,
+    "scope": "Repeat native host build with identical source/config/toolchain inputs; not OS image reproducibility"
+  },
+  "hostUnitTests": 25,
+  "installedAppChanged": false,
+  "osImageBuilt": false,
+  "flashed": false,
+  "limits": [
+    "View dependency initialization injected; full Controller lifecycle untested",
+    "Scripted keys; physical button operation unqualified",
+    "Seed recovery reviews prefilled public words; not typing all letters",
+    "No passphrase, camera/QR, signing or full-app memory qualification"
+  ],
+  "codeSha256": {
+    "native/lv_conf.h": "46f6bd6adaca9cbbdc01d262597a9fb944f7f5bfd638bdaed77461916ccb8717",
+    "native/host.cpp": "fbd09e1f8a058b6a1615c18d01ff7aa8d36edc93ee4137cf0c503219ab78644a",
+    "python/guards.py": "534ee579c1225586cfeb546570acd422922d9ad82285a8287f6f97c1427da024",
+    "python/luckfox.py": "8fafa7b219bd99af09b707a7a25787d4c47ac938b3f5e8bf43ac09e97af1b67d",
+    "python/transport.py": "85b2a0d6026539dbdcc3f39bfd466275420426613dbf9e5844f1829b6f95c1a2",
+    "python/screen_bridge.py": "5368b9908db7cd2a96183c41b52be7b55185c4b2ade43f494390fccb475844bc",
+    "python/runtime.py": "6d350ad7914328f58edeb27ae8c824c4dbbe6f4e8c27ad322ce096e612b1879f",
+    "python/contracts.py": "29211a6405c22b73dc67ea6a80b48c10067456c957feef39da207577a44692a3",
+    "tests/test_contracts.py": "8b0e4c322bb3d62c30961806bac3c462fab7b4b4bbdfd67049a5522369f9c267",
+    "tests/app_contract_smoke.py": "1a11825d2a2bb7d1dcf879a1f2e6dd2a32d9f8d36f48d3f570bbbe2be4d63b7f",
+    "tests/test_screen_bridge.py": "05eae9e0ac9989b7ebb4702350b5840f3741468772431734670ca7a94e5517de",
+    "tests/settings_flow.py": "6d83315fb4a2b01538019ce2ff7d6789713220ce7b34dcb954ded016fbd0ec58",
+    "tests/test_runtime.py": "21d73af4a95ce6c8d91502ce285da572f5eed6abe68c553d9c4516eed07f13c2",
+    "tests/seed_recovery_flow.py": "30dba11c4bf3c761d4a8b8a15f54e99783b3e2aab9af7618ff498d95bf10bbba",
+    "tests/test_transport.py": "9c6d07aafbdababfa2160556cb247c9d0379ff3454f3ab4a00f521d49c74e314",
+    "tests/keyboard_flow.py": "462951b335f86fa7a23ead15aa70e78098c83de80ffb39e8ec96705ee2abaac4",
+    "tests/native_smoke.py": "c19084cf52a7766b8c97a77c8facdc2d24ab9530231541e1d356c8ac06921d54",
+    "patches/scaffold-capacity.patch": "7a8bbec8d9ce648532458d340c85914ce7c847b20194c9d082d85ec1133e9c32",
+    "patches/keyboard-key3-save.patch": "5c9b1f09cdb3808db9389efdcd1791c19344bb14df689dd617f13fce2b128e06",
+    "build.py": "d7468325fa9954b22f88a0cc6d15e5c5c6e1207cbcb6fe7ec3eb0a06a1e39b01",
+    "record-checkpoint.py": "532b8fa960197c8fcb1a4f3f2fc2094c6f8f9234f3885f213eeb8fa344e3d225",
+    "sources.py": "8b3b48224efb5626466ed37261246fca3835b20b72489bf806e14494a8ae6a59",
+    "inventory.py": "06935175a807353ba1bfd58e07ee690cb6582be57fbb0f76d1f36356dcb5e7cc",
+    "sources.lock.json": "8add43850148b89a5d73a0428091e155452bf6bab6af42507b66af0f734f210a",
+    "source-guards.json": "6685158f770e801a643f4ce735ce4ec4e55b20f0ca096f34a207c15c3ac9e31d"
+  }
+}

@@ -1,0 +1,794 @@
+[
+  {
+    "path": "application/src/seedsigner/resources/fonts/Font_Awesome_6_Free-Solid-900.otf",
+    "sha256": "6d553fdfa726bb47fc2ebf01a6b22da7417645e51ad69b17f90ad9a1a5941939",
+    "names": {
+      "0": [
+        "Copyright (c) Font Awesome"
+      ],
+      "1": [
+        "Font Awesome 6 Free Solid"
+      ],
+      "2": [
+        "Solid"
+      ],
+      "3": [
+        "Font Awesome 6 Free Solid-6.0.0"
+      ],
+      "5": [
+        "Version 768.00390625 (Font Awesome version: 6.0.0)"
+      ],
+      "6": [
+        "FontAwesome6Free-Solid"
+      ],
+      "13": [],
+      "14": []
+    }
+  },
+  {
+    "path": "application/src/seedsigner/resources/fonts/Inconsolata-Regular.ttf",
+    "sha256": "04bce5eef6ecc84bd9d14bc99143dfdb1949177db54dbd52252c7b6284c2f9d9",
+    "names": {
+      "0": [
+        "Copyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)"
+      ],
+      "1": [
+        "Inconsolata"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "3.001;CYRE;Inconsolata-Regular"
+      ],
+      "5": [
+        "Version 3.001"
+      ],
+      "6": [
+        "Inconsolata-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: http://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "application/src/seedsigner/resources/fonts/Inconsolata-SemiBold.ttf",
+    "sha256": "19d2b93178ed639960dff03d45de59707f96a58cde2e067c884544792a3aae32",
+    "names": {
+      "0": [
+        "Copyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)"
+      ],
+      "1": [
+        "Inconsolata SemiBold"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "3.001;CYRE;Inconsolata-SemiBold"
+      ],
+      "5": [
+        "Version 3.001"
+      ],
+      "6": [
+        "Inconsolata-SemiBold"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: http://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "application/src/seedsigner/resources/fonts/NotoSansDevanagari-Regular.ttf",
+    "sha256": "084a94d89eb54aafb93a056e15425c34fd859f6342875165d304837b3bcfc2d2",
+    "names": {
+      "0": [
+        "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/devanagari)"
+      ],
+      "1": [
+        "Noto Sans Devanagari"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.006;GOOG;NotoSansDevanagari-Regular"
+      ],
+      "5": [
+        "Version 2.006"
+      ],
+      "6": [
+        "NotoSansDevanagari-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://openfontlicense.org"
+      ],
+      "14": [
+        "https://openfontlicense.org"
+      ]
+    }
+  },
+  {
+    "path": "application/src/seedsigner/resources/fonts/OpenSans-Regular.ttf",
+    "sha256": "037236ed4bf58a85f67074c165d308260fd6be01c86d7df4e79ea16eb273f8c5",
+    "names": {
+      "0": [
+        "Digitized data copyright © 2010-2011, Google Corporation."
+      ],
+      "1": [
+        "Open Sans"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "1.10;1ASC;OpenSans-Regular"
+      ],
+      "5": [
+        "Version 1.10"
+      ],
+      "6": [
+        "OpenSans-Regular"
+      ],
+      "13": [
+        "Licensed under the Apache License, Version 2.0"
+      ],
+      "14": [
+        "http://www.apache.org/licenses/LICENSE-2.0"
+      ]
+    }
+  },
+  {
+    "path": "application/src/seedsigner/resources/fonts/OpenSans-SemiBold.ttf",
+    "sha256": "5e8d9e1a89083cd1b0849993fe2f3acc9aa33b7f439f7e8616872f6897f30684",
+    "names": {
+      "0": [
+        "Digitized data copyright © 2011, Google Corporation."
+      ],
+      "1": [
+        "Open Sans SemiBold"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "1.10;1ASC;OpenSans-SemiBold"
+      ],
+      "5": [
+        "Version 1.10"
+      ],
+      "6": [
+        "OpenSans-SemiBold"
+      ],
+      "13": [
+        "Licensed under the Apache License, Version 2.0"
+      ],
+      "14": [
+        "http://www.apache.org/licenses/LICENSE-2.0"
+      ]
+    }
+  },
+  {
+    "path": "application/src/seedsigner/resources/fonts/PlemolJPConsole-Regular-S.ttf",
+    "sha256": "48bab07609558127de2759c958f589e7352baa7bc54e94e0b68c749031e2ac7d",
+    "names": {
+      "0": [
+        "[IBM Plex]\nCopyright © 2017 IBM Corp.\n\n[Nerd Fonts]\nCopyright (c) 2014, Ryan L McIntyre (https://ryanlmcintyre.com).\n\n[PlemolJP]\nCopyright (c) 2021, Yuko Otawara"
+      ],
+      "1": [
+        "PlemolJP Console"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "FontForge 2.0 : PlemolJP Console Regular : 17-02-2024"
+      ],
+      "5": [
+        "Version 1.7.1 ; ttfautohint (v1.8.4.7-5d5b) -l 6 -r 45 -G 200 -x 14 -D latn -f none -m \"normal-Regular-ctrl.txt\" -a nnn -W -X \"13-\""
+      ],
+      "6": [
+        "PlemolJPConsole-Regular"
+      ],
+      "13": [],
+      "14": []
+    }
+  },
+  {
+    "path": "application/src/seedsigner/resources/fonts/PlemolJPConsole-SemiBold-S.ttf",
+    "sha256": "8ea7de8087aab72a8d5f841f4d79f9756e0832b614d763456dd3df04edc12d2f",
+    "names": {
+      "0": [
+        "[IBM Plex]\nCopyright © 2017 IBM Corp.\n\n[Nerd Fonts]\nCopyright (c) 2014, Ryan L McIntyre (https://ryanlmcintyre.com).\n\n[PlemolJP]\nCopyright (c) 2021, Yuko Otawara"
+      ],
+      "1": [
+        "PlemolJP Console"
+      ],
+      "2": [
+        "SemiBold"
+      ],
+      "3": [
+        "FontForge 2.0 : PlemolJP Console SemiBold : 17-02-2024"
+      ],
+      "5": [
+        "Version 1.7.1 ; ttfautohint (v1.8.4.7-5d5b) -l 6 -r 45 -G 200 -x 14 -D latn -f none -m \"normal-SemiBold-ctrl.txt\" -a nnn -W -X \"13-\""
+      ],
+      "6": [
+        "PlemolJPConsole-SemiBold"
+      ],
+      "13": [],
+      "14": []
+    }
+  },
+  {
+    "path": "application/src/seedsigner/resources/fonts/seedsigner-icons.otf",
+    "sha256": "85d6cbacb69633199fdf2b3bd76349f4d274367ac0c170cf5880c337a9ca6e59",
+    "names": {
+      "0": [],
+      "1": [
+        "seedsigner-icons"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "seedsigner-icons"
+      ],
+      "5": [
+        "Version 2.4"
+      ],
+      "6": [
+        "seedsigner-icons"
+      ],
+      "13": [],
+      "14": []
+    }
+  },
+  {
+    "path": "screens/components/seedsigner/assets/NotoNastaliqUrdu-Regular.ttf",
+    "sha256": "2fd7b78ce48768b4d7b251457191e0f6db4c85e966a8a10a1f04e196dad35bb6",
+    "names": {
+      "0": [
+        "Copyright 2017-2022 Google Inc. All Rights Reserved."
+      ],
+      "1": [
+        "Noto Nastaliq Urdu"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "3.002;GOOG;NotoNastaliqUrdu-Regular"
+      ],
+      "5": [
+        "Version 3.002; ttfautohint (v1.8) -l 8 -r 50 -G 200 -x 14 -D arab -f none -a qsq -X \"\""
+      ],
+      "6": [
+        "NotoNastaliqUrdu-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This Font Software is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the SIL Open Font License for the specific language, permissions and limitations governing your use of this Font Software."
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "screens/components/seedsigner/assets/NotoSansAR-Regular.ttf",
+    "sha256": "7babaf48a110fb38a89339cec00b96df455424a5ff06065d4eea1e40d7efafe1",
+    "names": {
+      "0": [
+        "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/arabic)"
+      ],
+      "1": [
+        "Noto Sans Arabic"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.012;GOOG;NotoSansArabic-Regular"
+      ],
+      "5": [
+        "Version 2.012"
+      ],
+      "6": [
+        "NotoSansArabic-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "https://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "screens/components/seedsigner/assets/NotoSansDevanagari-Regular.ttf",
+    "sha256": "084a94d89eb54aafb93a056e15425c34fd859f6342875165d304837b3bcfc2d2",
+    "names": {
+      "0": [
+        "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/devanagari)"
+      ],
+      "1": [
+        "Noto Sans Devanagari"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.006;GOOG;NotoSansDevanagari-Regular"
+      ],
+      "5": [
+        "Version 2.006"
+      ],
+      "6": [
+        "NotoSansDevanagari-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://openfontlicense.org"
+      ],
+      "14": [
+        "https://openfontlicense.org"
+      ]
+    }
+  },
+  {
+    "path": "screens/components/seedsigner/assets/NotoSansJP-Regular.ttf",
+    "sha256": "7c8597677e9fac0f54d7848ad18bc6a708dfb5baa4ebf4bd91e66efcca313bf3",
+    "names": {
+      "0": [
+        "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'."
+      ],
+      "1": [
+        "Noto Sans JP"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.004-H2;ADBO;NotoSansJP-Regular"
+      ],
+      "5": [
+        "Version 2.004-H2;hotconv 1.0.118;makeotfexe 2.5.65603"
+      ],
+      "6": [
+        "NotoSansJP-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "screens/components/seedsigner/assets/NotoSansKR-Regular.ttf",
+    "sha256": "9db318b65ee9c575a43e7efd273dbdd1afef26e467eea3e1073a50e1a6595f6d",
+    "names": {
+      "0": [
+        "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'."
+      ],
+      "1": [
+        "Noto Sans KR"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.004-H2;ADBO;NotoSansKR-Regular"
+      ],
+      "5": [
+        "Version 2.004-H2;hotconv 1.0.118;makeotfexe 2.5.65603"
+      ],
+      "6": [
+        "NotoSansKR-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "screens/components/seedsigner/assets/NotoSansSC-Regular.ttf",
+    "sha256": "5cf8b2a0576d5680284ab03a7a8219499d59bbe981a79bb3dc0031f251c39736",
+    "names": {
+      "0": [
+        "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'."
+      ],
+      "1": [
+        "Noto Sans SC"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.004-H2;ADBO;NotoSansSC-Regular"
+      ],
+      "5": [
+        "Version 2.004-H2;hotconv 1.0.118;makeotfexe 2.5.65603"
+      ],
+      "6": [
+        "NotoSansSC-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "screens/components/seedsigner/assets/NotoSansTH-Regular.ttf",
+    "sha256": "9acb585d8662ca4ed1b1cf5889dfa1393f8555103b3986e1ea1e3af4faef70bd",
+    "names": {
+      "0": [
+        "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/thai)"
+      ],
+      "1": [
+        "Noto Sans Thai"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.002;GOOG;NotoSansThai-Regular"
+      ],
+      "5": [
+        "Version 2.002"
+      ],
+      "6": [
+        "NotoSansThai-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "https://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "screens/components/seedsigner/assets/OpenSans-Regular.ttf",
+    "sha256": "ce57ff2cbd11a2ce997256c3ec5d7c9e8a8199141bd7aaceda77f37fbecd71b3",
+    "names": {
+      "0": [
+        "Copyright 2020 The Open Sans Project Authors (https://github.com/googlefonts/opensans)"
+      ],
+      "1": [
+        "Open Sans"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "3.003;GOOG;OpenSans-Regular"
+      ],
+      "5": [
+        "Version 3.003; ttfautohint (v1.8.4)"
+      ],
+      "6": [
+        "OpenSans-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "screens/components/seedsigner/assets/OpenSans-SemiBold.ttf",
+    "sha256": "ce59e775d558eefea4c8b01365acc14806cf7d83e18aff65ca1f9d3de4655d30",
+    "names": {
+      "0": [
+        "Copyright 2020 The Open Sans Project Authors (https://github.com/googlefonts/opensans)"
+      ],
+      "1": [
+        "Open Sans SemiBold"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "3.003;GOOG;OpenSans-SemiBold"
+      ],
+      "5": [
+        "Version 3.003; ttfautohint (v1.8.4)"
+      ],
+      "6": [
+        "OpenSans-SemiBold"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "language-packs/fonts/NotoNastaliqUrdu-Regular.ttf",
+    "sha256": "2fd7b78ce48768b4d7b251457191e0f6db4c85e966a8a10a1f04e196dad35bb6",
+    "names": {
+      "0": [
+        "Copyright 2017-2022 Google Inc. All Rights Reserved."
+      ],
+      "1": [
+        "Noto Nastaliq Urdu"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "3.002;GOOG;NotoNastaliqUrdu-Regular"
+      ],
+      "5": [
+        "Version 3.002; ttfautohint (v1.8) -l 8 -r 50 -G 200 -x 14 -D arab -f none -a qsq -X \"\""
+      ],
+      "6": [
+        "NotoNastaliqUrdu-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This Font Software is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the SIL Open Font License for the specific language, permissions and limitations governing your use of this Font Software."
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "language-packs/fonts/NotoSansAR-Regular.ttf",
+    "sha256": "7babaf48a110fb38a89339cec00b96df455424a5ff06065d4eea1e40d7efafe1",
+    "names": {
+      "0": [
+        "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/arabic)"
+      ],
+      "1": [
+        "Noto Sans Arabic"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.012;GOOG;NotoSansArabic-Regular"
+      ],
+      "5": [
+        "Version 2.012"
+      ],
+      "6": [
+        "NotoSansArabic-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "https://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "language-packs/fonts/NotoSansDevanagari-Regular.ttf",
+    "sha256": "084a94d89eb54aafb93a056e15425c34fd859f6342875165d304837b3bcfc2d2",
+    "names": {
+      "0": [
+        "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/devanagari)"
+      ],
+      "1": [
+        "Noto Sans Devanagari"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.006;GOOG;NotoSansDevanagari-Regular"
+      ],
+      "5": [
+        "Version 2.006"
+      ],
+      "6": [
+        "NotoSansDevanagari-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://openfontlicense.org"
+      ],
+      "14": [
+        "https://openfontlicense.org"
+      ]
+    }
+  },
+  {
+    "path": "language-packs/fonts/NotoSansJP-Regular.ttf",
+    "sha256": "7c8597677e9fac0f54d7848ad18bc6a708dfb5baa4ebf4bd91e66efcca313bf3",
+    "names": {
+      "0": [
+        "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'."
+      ],
+      "1": [
+        "Noto Sans JP"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.004-H2;ADBO;NotoSansJP-Regular"
+      ],
+      "5": [
+        "Version 2.004-H2;hotconv 1.0.118;makeotfexe 2.5.65603"
+      ],
+      "6": [
+        "NotoSansJP-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "language-packs/fonts/NotoSansKR-Regular.ttf",
+    "sha256": "9db318b65ee9c575a43e7efd273dbdd1afef26e467eea3e1073a50e1a6595f6d",
+    "names": {
+      "0": [
+        "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'."
+      ],
+      "1": [
+        "Noto Sans KR"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.004-H2;ADBO;NotoSansKR-Regular"
+      ],
+      "5": [
+        "Version 2.004-H2;hotconv 1.0.118;makeotfexe 2.5.65603"
+      ],
+      "6": [
+        "NotoSansKR-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "language-packs/fonts/NotoSansSC-Regular.ttf",
+    "sha256": "5cf8b2a0576d5680284ab03a7a8219499d59bbe981a79bb3dc0031f251c39736",
+    "names": {
+      "0": [
+        "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'."
+      ],
+      "1": [
+        "Noto Sans SC"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.004-H2;ADBO;NotoSansSC-Regular"
+      ],
+      "5": [
+        "Version 2.004-H2;hotconv 1.0.118;makeotfexe 2.5.65603"
+      ],
+      "6": [
+        "NotoSansSC-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "language-packs/fonts/NotoSansTH-Regular.ttf",
+    "sha256": "9acb585d8662ca4ed1b1cf5889dfa1393f8555103b3986e1ea1e3af4faef70bd",
+    "names": {
+      "0": [
+        "Copyright 2022 The Noto Project Authors (https://github.com/notofonts/thai)"
+      ],
+      "1": [
+        "Noto Sans Thai"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "2.002;GOOG;NotoSansThai-Regular"
+      ],
+      "5": [
+        "Version 2.002"
+      ],
+      "6": [
+        "NotoSansThai-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "https://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "language-packs/fonts/OpenSans-Regular.ttf",
+    "sha256": "ce57ff2cbd11a2ce997256c3ec5d7c9e8a8199141bd7aaceda77f37fbecd71b3",
+    "names": {
+      "0": [
+        "Copyright 2020 The Open Sans Project Authors (https://github.com/googlefonts/opensans)"
+      ],
+      "1": [
+        "Open Sans"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "3.003;GOOG;OpenSans-Regular"
+      ],
+      "5": [
+        "Version 3.003; ttfautohint (v1.8.4)"
+      ],
+      "6": [
+        "OpenSans-Regular"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  },
+  {
+    "path": "language-packs/fonts/OpenSans-SemiBold.ttf",
+    "sha256": "ce59e775d558eefea4c8b01365acc14806cf7d83e18aff65ca1f9d3de4655d30",
+    "names": {
+      "0": [
+        "Copyright 2020 The Open Sans Project Authors (https://github.com/googlefonts/opensans)"
+      ],
+      "1": [
+        "Open Sans SemiBold"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "3": [
+        "3.003;GOOG;OpenSans-SemiBold"
+      ],
+      "5": [
+        "Version 3.003; ttfautohint (v1.8.4)"
+      ],
+      "6": [
+        "OpenSans-SemiBold"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ]
+    }
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "words": 12,
+      "compact": false,
+      "wholeQRBytesExact": true,
+      "zoomExitNone": true,
+      "optionalConfirmationDone": true,
+      "seedUnchanged": true
+    },
+    {
+      "words": 12,
+      "compact": true,
+      "wholeQRBytesExact": true,
+      "zoomExitNone": true,
+      "optionalConfirmationDone": true,
+      "seedUnchanged": true
+    },
+    {
+      "words": 24,
+      "compact": false,
+      "wholeQRBytesExact": true,
+      "zoomExitNone": true,
+      "optionalConfirmationDone": true,
+      "seedUnchanged": true
+    },
+    {
+      "words": 24,
+      "compact": true,
+      "wholeQRBytesExact": true,
+      "zoomExitNone": true,
+      "optionalConfirmationDone": true,
+      "seedUnchanged": true
+    }
+  ],
+  "wholeQRBack": true,
+  "originalViewsAndEncoders": true,
+  "dependencyInitializationInjected": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "opticalQualified": false,
+  "scanConfirmationQualified": false,
+  "testSourceSha256": "4d2160fcbededab132fc437ad76adc783c9b1b5764529e0db14b041c674ba3a3"
+}

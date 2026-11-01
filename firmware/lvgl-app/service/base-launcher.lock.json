@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "sha256": "f8a441bab140d55ba4e57eff34a5a9edcbb18aac2b9f2acd93082670dc498de3",
+  "origin": "Working camera image launcher; camera-image-overlay.py plus reviewed Mini memory profile",
+  "preserves": [
+    "zram16-lzo",
+    "ulimit -l 4096",
+    "small-RAM policy",
+    "camera code locking",
+    "cold camera modules",
+    "original Rust PIL frontend"
+  ]
+}

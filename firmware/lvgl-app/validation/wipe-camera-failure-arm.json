@@ -1,0 +1,14 @@
+{
+  "passed": false,
+  "testSourceSha256": "e06a59708f810829927f5df35f4b8e93a8b4be6536e7f26be18ec8b81ad04339",
+  "frames": 1,
+  "cameraStopped": true,
+  "ownerExitCode": 1,
+  "qrWorkerExitCode": 0,
+  "ownerErrors": [
+    "AE event owner fell behind; event queue is full",
+    "ISP parameter pool remained full for 250 ms"
+  ],
+  "scope": "Original Controller, live scan, simulated wipe trigger. Failure preceded clean camera-owner shutdown. Cleanup polling fix subsequently unit-tested but live-camera rerun remains required.",
+  "rootCause": "unresolved; system also reported swap write errors, which does not establish causation"
+}

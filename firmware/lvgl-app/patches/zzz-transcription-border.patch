@@ -1,0 +1,44 @@
+--- a/components/seedsigner/screens/seed_transcribe_zoomed_qr_screen.cpp
++++ b/components/seedsigner/screens/seed_transcribe_zoomed_qr_screen.cpp
+@@ -133,6 +133,7 @@
+     bool         emitted;       // exit reported once
+ 
+     // QR + zone geometry (all in screen px unless noted).
++    int border_modules;         // original SeedQR=4, encrypted QR=5
+     int size;                   // qrcodegen module count per side
+     int modules_per_zone;       // 7 for a 21-module QR, else 5
+     int pixels_per_module;      // 24 * px_multiplier / 100
+@@ -168,7 +169,7 @@
+ int seed_transcribe_zoomed_qr_pan_for_zone(seed_transcribe_zoomed_qr_ctx_t *ctx,
+                                            int zone_index, int window_offset) {
+     return zone_index * ctx->modules_per_zone * ctx->pixels_per_module
+-           + SEED_TRANSCRIBE_ZOOMED_QR_BORDER_MODULES * ctx->pixels_per_module - window_offset;
++           + ctx->border_modules * ctx->pixels_per_module - window_offset;
+ }
+ 
+ // Is module (module_x,module_y) part of a fixed registration pattern (a finder "eye"
+@@ -206,7 +207,7 @@
+     lv_obj_get_coords(ctx->qr_field, &field_area);  // absolute; the object fills the screen
+ 
+     const int pixels_per_module = ctx->pixels_per_module;
+-    const int border            = SEED_TRANSCRIBE_ZOOMED_QR_BORDER_MODULES;
++    const int border            = ctx->border_modules;
+     const int size              = ctx->size;
+ 
+     // Two black module styles: DATA modules are round dots; the fixed registration
+@@ -533,12 +534,15 @@
+ 
+     std::vector<uint8_t> payload = qr_decode_payload(qr_data, data_encoding);
+ 
++    int border_modules=cfg.value("border_modules",SEED_TRANSCRIBE_ZOOMED_QR_BORDER_MODULES);
++    if (border_modules!=4 && border_modules!=5) throw std::runtime_error("Invalid transcription border");
+     auto supplied_matrix = transcription_matrix(cfg);
+     seed_transcribe_zoomed_qr_ctx_t *ctx =
+         (seed_transcribe_zoomed_qr_ctx_t *)lv_malloc(sizeof(seed_transcribe_zoomed_qr_ctx_t));
+     if (!ctx) throw std::runtime_error("Transcription context allocation failed");
+     lv_memzero(ctx, sizeof(*ctx));
+     ctx->input_mode = input_mode;
++    ctx->border_modules = border_modules;
+     ctx->encode_scratch = (uint8_t *)lv_malloc(qrcodegen_BUFFER_LEN_MAX);
+     ctx->qr_matrix      = (uint8_t *)lv_malloc(qrcodegen_BUFFER_LEN_MAX);
+ 

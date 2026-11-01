@@ -1,0 +1,111 @@
+{
+  "failedReceipt": "dist/lvgl-app/checks/image-entropy-physical-20261030T191051792373Z.json",
+  "failure": {
+    "stage": "physical-entropy-failure",
+    "displayDurations": [
+      5.36314246099937,
+      36.16532559999905
+    ],
+    "resourceSnapshots": [
+      {
+        "stage": "before-display",
+        "frames": 0,
+        "python": {
+          "VmSize": "54588 kB",
+          "VmHWM": "26128 kB",
+          "VmRSS": "15460 kB",
+          "RssAnon": "13236 kB",
+          "RssFile": "2224 kB",
+          "RssShmem": "0 kB",
+          "VmData": "33036 kB",
+          "VmSwap": "11696 kB",
+          "Threads": "5",
+          "minor_faults": 17537,
+          "major_faults": 542,
+          "user_ticks": 914,
+          "system_ticks": 707
+        },
+        "native": {
+          "VmSize": "1752 kB",
+          "VmHWM": "1436 kB",
+          "VmRSS": "840 kB",
+          "RssAnon": "204 kB",
+          "RssFile": "0 kB",
+          "RssShmem": "636 kB",
+          "VmData": "200 kB",
+          "VmSwap": "4 kB",
+          "Threads": "1",
+          "minor_faults": 368,
+          "major_faults": 8,
+          "user_ticks": 17,
+          "system_ticks": 44
+        },
+        "system": {
+          "MemTotal": "46028 kB",
+          "MemFree": "4680 kB",
+          "MemAvailable": "7636 kB",
+          "SwapTotal": "16380 kB",
+          "SwapFree": "24 kB",
+          "Shmem": "828 kB"
+        }
+      },
+      {
+        "stage": "before-display",
+        "frames": 1,
+        "python": {
+          "VmSize": "55096 kB",
+          "VmHWM": "26128 kB",
+          "VmRSS": "15160 kB",
+          "RssAnon": "13664 kB",
+          "RssFile": "1496 kB",
+          "RssShmem": "0 kB",
+          "VmData": "33544 kB",
+          "VmSwap": "11776 kB",
+          "Threads": "5",
+          "minor_faults": 32223,
+          "major_faults": 1459,
+          "user_ticks": 932,
+          "system_ticks": 3205
+        },
+        "native": {
+          "VmSize": "1888 kB",
+          "VmHWM": "1436 kB",
+          "VmRSS": "980 kB",
+          "RssAnon": "340 kB",
+          "RssFile": "0 kB",
+          "RssShmem": "640 kB",
+          "VmData": "336 kB",
+          "VmSwap": "4 kB",
+          "Threads": "1",
+          "minor_faults": 492,
+          "major_faults": 9,
+          "user_ticks": 35,
+          "system_ticks": 73
+        },
+        "system": {
+          "MemTotal": "46028 kB",
+          "MemFree": "4584 kB",
+          "MemAvailable": "6996 kB",
+          "SwapTotal": "16380 kB",
+          "SwapFree": "0 kB",
+          "Shmem": "820 kB"
+        }
+      }
+    ],
+    "hostError": "None",
+    "hostExitCode": null,
+    "entropyStats": {
+      "previewFrames": 2,
+      "poolFrames": 1,
+      "pairedFrames": 2,
+      "emptyPairedFrames": 5
+    },
+    "displayedFrames": 2,
+    "ownerExitCodes": [
+      0
+    ]
+  },
+  "displayDisabledFailure": "dist/lvgl-app/checks/image-entropy-control-20261030T184237871795Z.json",
+  "ownerDiagnosticsCaptured": true,
+  "scope": "Earlier heavyweight diagnostic: swapping, slow display updates and failures. Removing unittest.mock changed the diagnostic graph; original sampling subsequently passed. No controlled isolated byte saving or universal cause is claimed."
+}

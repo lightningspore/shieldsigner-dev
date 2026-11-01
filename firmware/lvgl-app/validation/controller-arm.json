@@ -1,0 +1,98 @@
+{
+  "passed": true,
+  "originalController": true,
+  "originalViewInitialization": true,
+  "screenSequence": [
+    "MainMenuScreen",
+    "ButtonListScreen",
+    "MainMenuScreen"
+  ],
+  "nativeRendererNoPILCanvas": true,
+  "activityTimerUpdated": true,
+  "resourceSnapshots": [
+    {
+      "screen": "MainMenuScreen",
+      "python": {
+        "VmSize": "49288 kB",
+        "VmHWM": "25104 kB",
+        "VmRSS": "24392 kB",
+        "RssAnon": "18532 kB",
+        "RssFile": "5860 kB",
+        "RssShmem": "0 kB",
+        "Threads": "6",
+        "user_ticks": 804,
+        "system_ticks": 365
+      },
+      "native": {
+        "VmSize": "1716 kB",
+        "VmHWM": "436 kB",
+        "VmRSS": "420 kB",
+        "RssAnon": "60 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "360 kB",
+        "Threads": "1",
+        "user_ticks": 0,
+        "system_ticks": 25
+      }
+    },
+    {
+      "screen": "ButtonListScreen",
+      "python": {
+        "VmSize": "49904 kB",
+        "VmHWM": "25104 kB",
+        "VmRSS": "23828 kB",
+        "RssAnon": "18588 kB",
+        "RssFile": "5240 kB",
+        "RssShmem": "0 kB",
+        "Threads": "5",
+        "user_ticks": 836,
+        "system_ticks": 390
+      },
+      "native": {
+        "VmSize": "1744 kB",
+        "VmHWM": "824 kB",
+        "VmRSS": "820 kB",
+        "RssAnon": "212 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "608 kB",
+        "Threads": "1",
+        "user_ticks": 6,
+        "system_ticks": 25
+      }
+    },
+    {
+      "screen": "MainMenuScreen",
+      "python": {
+        "VmSize": "49904 kB",
+        "VmHWM": "25104 kB",
+        "VmRSS": "23828 kB",
+        "RssAnon": "18588 kB",
+        "RssFile": "5240 kB",
+        "RssShmem": "0 kB",
+        "Threads": "5",
+        "user_ticks": 873,
+        "system_ticks": 397
+      },
+      "native": {
+        "VmSize": "1792 kB",
+        "VmHWM": "872 kB",
+        "VmRSS": "872 kB",
+        "RssAnon": "248 kB",
+        "RssFile": "0 kB",
+        "RssShmem": "624 kB",
+        "Threads": "1",
+        "user_ticks": 14,
+        "system_ticks": 25
+      }
+    }
+  ],
+  "resourceComparison": false,
+  "mandatoryStoragesInitialized": true,
+  "wipeAndRngWorkersStartedAndStopped": true,
+  "startupInterstitialsSkipped": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "persistentSettingsWritten": false,
+  "testSourceSha256": "69d8f11acbc25013c3ee7d80478e4e90b0aba7bcd3c75f2e5ccf39c03c9ceff1",
+  "scope": "Original Controller configure/start and View initialization; startup interstitials skipped; test ends at second Home; scripted input; inactivity wipe disabled for test, not qualified."
+}

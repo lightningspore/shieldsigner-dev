@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "mode": "eager",
+      "samples": 10,
+      "medianPythonPrivateAnonPlusSwapKiB": 15346.0,
+      "medianPythonRssKiB": 15686.0,
+      "pillowModules": 11,
+      "frames": 56,
+      "cameraOwnerExitCode": 0,
+      "cameraStopped": true
+    },
+    {
+      "mode": "deferred-prepared",
+      "samples": 10,
+      "medianPythonPrivateAnonPlusSwapKiB": 14898.0,
+      "medianPythonRssKiB": 14858.0,
+      "pillowModules": 0,
+      "frames": 56,
+      "cameraOwnerExitCode": 0,
+      "cameraStopped": true
+    }
+  ],
+  "reductionPrivateKiB": 448.0,
+  "scope": "Warm controlled eager compatibility import versus current deferred/prepared import; not isolated Pillow allocation or total system RAM attribution. Frame loops and native binaries unchanged.",
+  "hostTests": 230,
+  "legacyRGBAndLumaPixelTests": true,
+  "stillCameraEncryptionRoundtrip": true,
+  "installedRuntimeUnmodified": true,
+  "sourceHelperSha256": "db700586037edd9a3dd198bce64ece52dc999f92d92ffd07c33e08c83c194c75",
+  "runtimeManifestSha256": "4770fc3ee22db49fb585a2f5c81ee6bab6bb8e85dad89f8547a64b538392eb7d"
+}

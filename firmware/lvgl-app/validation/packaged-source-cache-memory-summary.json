@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "beforeOrdinarySourceCompilation": {
+    "home-idle": {
+      "python": 12308.0,
+      "native": 92.0
+    },
+    "camera-live": {
+      "python": 14084,
+      "native": 356
+    }
+  },
+  "afterBundledSourceCache": {
+    "home-idle": {
+      "python": 11012.0,
+      "native": 92.0
+    },
+    "camera-live": {
+      "python": 13576,
+      "native": 356
+    }
+  },
+  "pythonHomeReductionKiB": 1296,
+  "pythonScanReductionKiB": 508,
+  "frameCounts": [
+    57,
+    57
+  ],
+  "ownerExitCodes": [
+    0,
+    0
+  ],
+  "hostTests": 245,
+  "sourceCacheEntries": 142,
+  "extraStagedBytes": 1726498,
+  "stagedFiles": 253,
+  "stagedPayloadBytes": 5469515,
+  "runtimeBundle": "dist/lvgl-app/runtime-memory-cleanup-final",
+  "runtimeManifestSha256": "cb6170a37a5acf03e78072cc73f759e823c56ee6f1d6c509d6acdbeadd3a9185",
+  "identicalToHardwareTestedCandidate": true,
+  "launcherCacheSelectionVerified": true,
+  "staleSourceSameMtimeFallbackTested": true,
+  "scope": "Private anonymous RAM plus swap; first-boot source-compilation simulation, not a reboot or total system RAM attribution. Sequential observations retain run-order/allocator effects. Added bytecode is staged file storage, not a claimed equivalent RAM cost."
+}

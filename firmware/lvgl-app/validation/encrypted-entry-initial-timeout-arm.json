@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "failure": "Timed out waiting for Save response during short scripted key pulse",
+  "sourceReceipt": "dist/lvgl-app/checks/encrypted-entry-20261030T165211194043Z.json",
+  "runtimeSha256": "3e9046a42812692bcd19cef15a8e4738464534448d0172c3dcf6000d91fdebdd",
+  "rootCause": "Not established. Same sequence passed before input change; a related sampled-release handling gap was independently reproduced and fixed by unit test."
+}

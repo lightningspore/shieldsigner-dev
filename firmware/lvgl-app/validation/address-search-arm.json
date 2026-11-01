@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "change": false,
+      "verifiedIndex": 7,
+      "workerJoined": true
+    },
+    {
+      "change": true,
+      "verifiedIndex": 7,
+      "workerJoined": true
+    }
+  ],
+  "originalWorkerAndCallback": true,
+  "batchExhaustionReturnsBack": true,
+  "cancelButtonIndex": 0,
+  "enterOnlyCancelRepeats": 3,
+  "fullSingleSigViewAndSuccess": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "testSourceSha256": "ce96193ced75c37b9aca9727c7ea963c9a40114a5be6fe45c587069e92b6e03d",
+  "scope": "Original single-sig worker/callback and complete search/success Views; public seed, change index 7; injected dependency initialization/keypad; expanded/multisig not exercised."
+}

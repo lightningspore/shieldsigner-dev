@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "scope": "Fresh-process import-only Tools view dependency graph; no wallet or device created. These are overlapping import chains, not individual library sizes or running-app savings.",
+  "before": {
+    "passed": true,
+    "module": "seedsigner.views.tools_views",
+    "before": {
+      "privateKiB": 4224,
+      "rssKiB": 11848,
+      "packages": {
+        "PIL": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "ecdsa": 0,
+        "urtypes": 0
+      }
+    },
+    "after": {
+      "privateKiB": 17820,
+      "rssKiB": 26300,
+      "packages": {
+        "PIL": 17,
+        "Cryptodome": 8,
+        "cryptography": 0,
+        "pysatochip": 11,
+        "smartcard": 34,
+        "ecdsa": 16,
+        "urtypes": 17
+      }
+    },
+    "importDeltaPrivateKiB": 13596,
+    "scope": "Import-only wallet View graph; no hardware, seed, key or wallet created"
+  },
+  "after": {
+    "passed": true,
+    "module": "seedsigner.views.tools_views",
+    "before": {
+      "privateKiB": 4236,
+      "rssKiB": 11828,
+      "packages": {
+        "PIL": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "ecdsa": 0,
+        "urtypes": 0
+      }
+    },
+    "after": {
+      "privateKiB": 12864,
+      "rssKiB": 21308,
+      "packages": {
+        "PIL": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "ecdsa": 0,
+        "urtypes": 17
+      }
+    },
+    "importDeltaPrivateKiB": 8628,
+    "scope": "Import-only wallet View graph; no hardware, seed, key or wallet created"
+  },
+  "reductionPrivateKiB": 4968,
+  "hostTests": 234,
+  "hardwareFunctionality": {
+    "cameraEntropyGeneration": "passed",
+    "receipt": "tools-import-entropy-arm.json",
+    "seedCreatedAndWiped": true,
+    "cameraCleanup": "owner exit 0; no DMA buffers",
+    "coinFlipChecksum": "passed 12/24 words: edit, cancel, checksum, finalize/discard",
+    "coinReceipt": "tools-import-coin-arm.json"
+  },
+  "runtimeBundle": "dist/lvgl-app/runtime-memory-tools-01",
+  "runtimeManifestSha256": "7e50a7a69deee3901c73ee65a1b44bb3dfe92f909e3a3731bdd004503c544ee8",
+  "remainingCandidate": "encode_qr loads UR dependencies at module import because a base class must remain available; defer its optional backend imports next, preserving original encoders"
+}

@@ -1,0 +1,20 @@
+function __RELEASE_FILESYSTEM_FILES() {
+	if [ "$RK_BUILD_VERSION_TYPE" = "DEBUG" ]; then
+		msg_info "RK_BUILD_VERSION_TYPE is DEBUG, ignore strip symbols"
+		return
+	fi
+	local _target_dir
+	_target_dir=$1
+	msg_info "start to strip $_target_dir"
+	if [ -d "$_target_dir" -a -n "${RK_PROJECT_TOOLCHAIN_CROSS}" ]; then
+		find "$_target_dir" \( -name "lib*.la" -o -name "lib*.a" \) | xargs rm -rf {}
+		rm -rf $(find "$_target_dir" -name pkgconfig)
+		find "$_target_dir" -type f \( -perm /111 -o -name '*.so*' \) \
+			-not \( -name 'libpthread*.so*' -o -name 'ld-*.so*' -o -name '*.ko' \) -print0 |
+			xargs -0 ${RK_PROJECT_TOOLCHAIN_CROSS}-strip 2>/dev/null || true
+		find "$_target_dir" -type f -name '*.ko' -print0 |
+			xargs -0 ${RK_PROJECT_TOOLCHAIN_CROSS}-strip --strip-debug 2>/dev/null || true
+	else
+		msg_warn "not found target dir: $_target_dir, ignore"
+	fi
+}

@@ -1,0 +1,29 @@
+--- a/components/seedsigner/screens/button_list_screen.cpp
++++ b/components/seedsigner/screens/button_list_screen.cpp
+@@ -59,6 +59,10 @@
+ #include <nlohmann/json.hpp>  // json (cfg reads + structural-default writes)
+ 
+ #include "text_review.h"
++#include "gui_constants.h"
++#include "src/libs/tiny_ttf/lv_tiny_ttf.h"
++extern "C" const uint8_t shieldsigner_mono_ttf[];
++extern "C" const uint32_t shieldsigner_mono_ttf_len;
+ #include <stdexcept>          // std::runtime_error (required-field validation)
+ #include <string>             // std::string
+ 
+@@ -117,6 +121,15 @@
+                 screen.upper_body, text.c_str(),
+                 lv_obj_get_content_width(screen.upper_body));
+             apply_body_tight_line_spacing(intro_label);
++            if (cfg.value("text_monospace",false)) {
++                static lv_font_t *network_font=nullptr;
++                if(!network_font)network_font=lv_tiny_ttf_create_data(shieldsigner_mono_ttf,shieldsigner_mono_ttf_len,16);
++                if(!network_font){lv_obj_delete(screen.screen);throw std::runtime_error("Fixed-width font allocation failed");}
++                network_font->fallback=&BODY_FONT;
++                lv_obj_set_style_text_font(intro_label,network_font,LV_PART_MAIN);
++                lv_obj_set_style_text_align(intro_label,LV_TEXT_ALIGN_LEFT,LV_PART_MAIN);
++                lv_obj_set_style_text_line_space(intro_label,4,LV_PART_MAIN);
++            }
+             if (cfg.value("review_spaces", false) && !ss_attach_review_spaces(intro_label,lv_obj_get_style_text_font(intro_label,LV_PART_MAIN))) {
+                 lv_obj_delete(screen.screen);
+                 throw std::runtime_error("Review marker allocation failed");

@@ -143,17 +143,22 @@ def configure_sdk_strip(sdk, bundle):
     if lcd:
         after = replace_once(after, " -o -path '*/usr/lib/shieldsigner-camera/shieldsigner-qr-reader'",
                              " -o -path '*/usr/lib/shieldsigner-camera/shieldsigner-qr-reader' -o -path '*" + lcd_path + "'")
+    lcd_after = after
+    lvgl_path = "/usr/lib/shieldsigner-lvgl/shieldsigner-lvgl"
+    lvgl = bool(json.loads((bundle / "manifest.json").read_text()).get("lvglOverlay"))
+    if lvgl:
+        after = replace_once(after, "-o -name '*.ko'", "-o -name '*.ko' -o -path '*" + lvgl_path + "'")
     script = sdk / relative
     current = script.read_text()
     current_start = current.index("function __RELEASE_FILESYSTEM_FILES() {")
     current_end = current.index("\nfunction __COPY_FILES() {", current_start)
-    if current[current_start:current_end] not in {before, base_after, after}:
+    if current[current_start:current_end] not in {before, base_after, lcd_after, after}:
         raise ValueError("SDK filesystem strip function has unreviewed edits")
     script.write_text(current[:current_start] + after + current[current_end:])
     return {"kind": "preserve-verified-static-camera-binaries", "sdkRevision": revision,
             "file": relative, "originalFunctionSha256": hashlib.sha256(before.encode()).hexdigest(),
             "patchedFunctionSha256": hashlib.sha256(after.encode()).hexdigest(),
-            "excludedPaths": ["/usr/lib/shieldsigner-camera/camera-probe", "/usr/lib/shieldsigner-camera/shieldsigner-qr-reader"] + ([lcd_path] if lcd else []),
+            "excludedPaths": ["/usr/lib/shieldsigner-camera/camera-probe", "/usr/lib/shieldsigner-camera/shieldsigner-qr-reader"] + ([lcd_path] if lcd else []) + ([lvgl_path] if lvgl else []),
             "allOtherStripBehaviorPreserved": True}
 
 

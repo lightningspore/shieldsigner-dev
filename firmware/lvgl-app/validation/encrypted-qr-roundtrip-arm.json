@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "screen": "ScanReviewEncryptionKeyScreen",
+      "fullTextPreserved": true,
+      "proceedAndBack": true
+    },
+    {
+      "screen": "SeedEncryptedQRReviewMnemonicIDScreen",
+      "fullTextPreserved": true,
+      "proceedAndBack": true
+    }
+  ],
+  "originalCryptoRoundTrip": true,
+  "wrongKeyRejected": true,
+  "mode": "AES-ECB",
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "dependencyInitializationInjected": true,
+  "opticalQualified": false,
+  "qrExportQualified": true,
+  "pixelsDecodedByNativeZXing": true,
+  "runnerReceipt": "dist/lvgl-app/checks/encrypted-review-20261030T171836874215Z.json",
+  "testSourceSha256": "36a915c0fdc5428d1d8ffdd63b096fb5c9107ed530bd2bf30a50fc29f69d9cb8",
+  "scope": "Original encryption review/export/decrypt Views, public seed, AES-ECB only. Actual native ZXing decodes transmitted LCD framebuffer pixels; no optical camera or physical buttons. Dependency initialization injected; full Controller not exercised."
+}

@@ -1,0 +1,274 @@
+{
+  "passed": true,
+  "runnerReceipt": "dist/lvgl-app/checks/image-entropy-20261030T182631078119Z.json",
+  "cache": {
+    "prepared": true,
+    "prefix": "/userdata/shieldsigner-lvgl-bytecode",
+    "checkedHash": true,
+    "sources": 213,
+    "compiled": 1,
+    "reused": 212,
+    "bytes": 3761174,
+    "seconds": 2.034
+  },
+  "checkedHashBytecodeCache": true,
+  "testSourceSha256": "f4604bbd75ab6f259b5751943c4d74999c940bd2d534b47e3aae8341f5d594b5",
+  "wallSeconds": 40.841,
+  "importsSeconds": 13.727,
+  "peakPythonRssKiB": 27576,
+  "maxSampledPythonSwapKiB": 6948,
+  "previewMedianSeconds": 0.3237390630001755,
+  "resourceSnapshots": [
+    {
+      "stage": "before-app-imports",
+      "seconds": 0.027,
+      "python": {
+        "VmSize": "11036 kB",
+        "VmHWM": "8888 kB",
+        "VmRSS": "8888 kB",
+        "RssAnon": "3920 kB",
+        "RssFile": "4968 kB",
+        "RssShmem": "0 kB",
+        "VmData": "4008 kB",
+        "VmSwap": "0 kB",
+        "Threads": "1",
+        "minor_faults": 1197,
+        "major_faults": 3,
+        "user_ticks": 65,
+        "system_ticks": 14
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "5756 kB",
+        "MemAvailable": "27712 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "12696 kB",
+        "Shmem": "1976 kB"
+      }
+    },
+    {
+      "stage": "app-imports-complete",
+      "seconds": 13.727,
+      "python": {
+        "VmSize": "45268 kB",
+        "VmHWM": "26260 kB",
+        "VmRSS": "25264 kB",
+        "RssAnon": "19104 kB",
+        "RssFile": "6160 kB",
+        "RssShmem": "0 kB",
+        "VmData": "24280 kB",
+        "VmSwap": "2944 kB",
+        "Threads": "2",
+        "minor_faults": 11257,
+        "major_faults": 160,
+        "user_ticks": 855,
+        "system_ticks": 356
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "1164 kB",
+        "MemAvailable": "10944 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "9368 kB",
+        "Shmem": "1860 kB"
+      }
+    },
+    {
+      "stage": "rng-refusal",
+      "seconds": 13.891,
+      "python": {
+        "VmSize": "45268 kB",
+        "VmHWM": "26260 kB",
+        "VmRSS": "25440 kB",
+        "RssAnon": "19136 kB",
+        "RssFile": "6304 kB",
+        "RssShmem": "0 kB",
+        "VmData": "24280 kB",
+        "VmSwap": "2916 kB",
+        "Threads": "2",
+        "minor_faults": 11343,
+        "major_faults": 202,
+        "user_ticks": 857,
+        "system_ticks": 358
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "1120 kB",
+        "MemAvailable": "10916 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "9624 kB",
+        "Shmem": "1860 kB"
+      }
+    },
+    {
+      "stage": "acquire",
+      "seconds": 18.923,
+      "python": {
+        "VmSize": "45268 kB",
+        "VmHWM": "26260 kB",
+        "VmRSS": "25220 kB",
+        "RssAnon": "19036 kB",
+        "RssFile": "6184 kB",
+        "RssShmem": "0 kB",
+        "VmData": "24280 kB",
+        "VmSwap": "3032 kB",
+        "Threads": "2",
+        "minor_faults": 11646,
+        "major_faults": 249,
+        "user_ticks": 1003,
+        "system_ticks": 400
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "1432 kB",
+        "MemAvailable": "10792 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "9624 kB",
+        "Shmem": "1864 kB"
+      },
+      "reshoot": true
+    },
+    {
+      "stage": "acquired",
+      "seconds": 25.23,
+      "python": {
+        "VmSize": "48144 kB",
+        "VmHWM": "27576 kB",
+        "VmRSS": "24096 kB",
+        "RssAnon": "19236 kB",
+        "RssFile": "4860 kB",
+        "RssShmem": "0 kB",
+        "VmData": "27156 kB",
+        "VmSwap": "5716 kB",
+        "Threads": "2",
+        "minor_faults": 31048,
+        "major_faults": 340,
+        "user_ticks": 1286,
+        "system_ticks": 469
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4456 kB",
+        "MemAvailable": "9684 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "6040 kB",
+        "Shmem": "1124 kB"
+      },
+      "reads": 19
+    },
+    {
+      "stage": "acquire",
+      "seconds": 26.553,
+      "python": {
+        "VmSize": "46836 kB",
+        "VmHWM": "27576 kB",
+        "VmRSS": "22836 kB",
+        "RssAnon": "17976 kB",
+        "RssFile": "4860 kB",
+        "RssShmem": "0 kB",
+        "VmData": "25848 kB",
+        "VmSwap": "5668 kB",
+        "Threads": "2",
+        "minor_faults": 32616,
+        "major_faults": 352,
+        "user_ticks": 1315,
+        "system_ticks": 476
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "5716 kB",
+        "MemAvailable": "10944 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "6040 kB",
+        "Shmem": "1124 kB"
+      },
+      "reshoot": false
+    },
+    {
+      "stage": "acquired",
+      "seconds": 32.294,
+      "python": {
+        "VmSize": "48148 kB",
+        "VmHWM": "27576 kB",
+        "VmRSS": "22232 kB",
+        "RssAnon": "18228 kB",
+        "RssFile": "4004 kB",
+        "RssShmem": "0 kB",
+        "VmData": "27160 kB",
+        "VmSwap": "6948 kB",
+        "Threads": "2",
+        "minor_faults": 50589,
+        "major_faults": 355,
+        "user_ticks": 1588,
+        "system_ticks": 521
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "5824 kB",
+        "MemAvailable": "8504 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "4248 kB",
+        "Shmem": "760 kB"
+      },
+      "reads": 19
+    },
+    {
+      "stage": "mix-original-entropy",
+      "seconds": 33.613,
+      "python": {
+        "VmSize": "48040 kB",
+        "VmHWM": "27576 kB",
+        "VmRSS": "22124 kB",
+        "RssAnon": "18120 kB",
+        "RssFile": "4004 kB",
+        "RssShmem": "0 kB",
+        "VmData": "27052 kB",
+        "VmSwap": "6948 kB",
+        "Threads": "2",
+        "minor_faults": 52120,
+        "major_faults": 355,
+        "user_ticks": 1615,
+        "system_ticks": 529
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "5932 kB",
+        "MemAvailable": "8612 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "4248 kB",
+        "Shmem": "760 kB"
+      }
+    },
+    {
+      "stage": "complete",
+      "seconds": 40.841,
+      "python": {
+        "VmSize": "46852 kB",
+        "VmHWM": "27576 kB",
+        "VmRSS": "22284 kB",
+        "RssAnon": "17332 kB",
+        "RssFile": "4952 kB",
+        "RssShmem": "0 kB",
+        "VmData": "25864 kB",
+        "VmSwap": "6548 kB",
+        "Threads": "2",
+        "minor_faults": 53634,
+        "major_faults": 470,
+        "user_ticks": 1783,
+        "system_ticks": 581
+      },
+      "system": {
+        "MemTotal": "46028 kB",
+        "MemFree": "4552 kB",
+        "MemAvailable": "9368 kB",
+        "SwapTotal": "16380 kB",
+        "SwapFree": "4760 kB",
+        "Shmem": "812 kB"
+      }
+    }
+  ],
+  "uncachedReference": "dist/lvgl-app/checks/image-entropy-20261030T181135252034Z.json",
+  "referenceWallSeconds": 58.522,
+  "scope": "Same full-resolution synthetic entropy fixture and assertions; optional checked-hash app/SDK/diagnostic bytecode cache, no import graph/feature changes. Run-to-run cache/system state uncontrolled; observations are not isolated causal savings. Native/camera/ISP/DMA and physical camera/keys excluded.",
+  "performanceQualified": false
+}

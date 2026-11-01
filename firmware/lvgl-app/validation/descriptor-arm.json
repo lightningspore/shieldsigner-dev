@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "case": "scan-review-ok",
+      "policy": "2 of 3",
+      "keys": 3,
+      "nativeFrames": 1,
+      "nativeQrExitCode": 0,
+      "bothBranches": true
+    },
+    {
+      "case": "resume",
+      "destination": "PSBTOverviewView",
+      "originalRouting": true
+    },
+    {
+      "case": "resume",
+      "destination": "PSBTChangeDetailsView",
+      "originalRouting": true
+    },
+    {
+      "case": "resume",
+      "destination": "SeedAddressVerificationView",
+      "originalRouting": true
+    }
+  ],
+  "reviewBackClearsDescriptor": true,
+  "loadCancelRoutes": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "physicalCamera": false,
+  "opticalQualified": false,
+  "nativeReceiverPreviewZXing": true,
+  "dependencyInitializationInjected": true,
+  "smartcardQualified": false,
+  "multisigSigningQualified": false,
+  "runnerReceipt": "dist/lvgl-app/checks/descriptor-20261030T172954391648Z.json",
+  "testSourceSha256": "77d63c6c3cac1aaff81bdc2fdc18f127095dbb4c74324ba6bb1f6a3276554b92",
+  "scope": "Public 2-of-3 descriptor through synthetic NV12, actual native receiver/preview/ZXing and original ScanWalletDescriptorView parsing/normalization; LCD review and original resume/cancel routes. Scripted input and dependency initialization; not optical, full Controller, multisig signing, smartcard or complete address verification qualification."
+}

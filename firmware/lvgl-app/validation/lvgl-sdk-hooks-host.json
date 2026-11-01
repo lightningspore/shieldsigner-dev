@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "file": "opt/luckfox/build.sh",
+      "shellSyntax": true,
+      "legacyHookRecognized": true
+    },
+    {
+      "file": "opt/luckfox/os-build.sh",
+      "shellSyntax": true,
+      "legacyHookRecognized": true
+    },
+    {
+      "file": "opt/luckfox/prepare-oem-for-rootfs.sh",
+      "shellSyntax": true,
+      "legacyHookRecognized": true
+    }
+  ],
+  "sdkCompiled": false,
+  "imageBuilt": false,
+  "scope": "Generated shell hooks from pinned OS sources; no SDK/container build invoked"
+}

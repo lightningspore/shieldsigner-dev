@@ -1,0 +1,44 @@
+{
+  "applicationCommit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
+  "assets": [
+    {
+      "source": "logo_black_240.png",
+      "sourceSha256": "eb5d79b3f4a0490a4ec404f30d274e0ee776e459d0ce3a2ac2548531bd1a5646",
+      "crop": [
+        4,
+        83,
+        236,
+        157
+      ],
+      "size": [
+        232,
+        74
+      ],
+      "symbol": "shieldsigner_logo_img"
+    },
+    {
+      "source": "partners/sese_logo.png",
+      "sourceSha256": "1589dea125f0b1030f2fd2af06d2a48523d87095496db2998c39232da50167cc",
+      "crop": [
+        5,
+        0,
+        197,
+        61
+      ],
+      "size": [
+        192,
+        61
+      ],
+      "symbol": "shieldsigner_upstream_img"
+    }
+  ],
+  "buildHostPillow": "11.3.0",
+  "generator": "Pinned upstream scripts/png_to_lvgl.py",
+  "rebuild": {
+    "passed": true,
+    "sha256": "d1efbbfd433bf95ab602bb92b1cfaab306c5576668dd201e5f2c0b447d050465",
+    "bytes": 1446140,
+    "scope": "Repeated pinned build in same workspace and toolchain; cross-machine reproducibility not established"
+  },
+  "publicSplashPixelsVisuallyInspected": true
+}

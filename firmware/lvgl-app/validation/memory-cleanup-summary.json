@@ -1,0 +1,73 @@
+{
+  "passed": true,
+  "measurements": [
+    {
+      "phase": "home-idle",
+      "beforePrivateAnonPlusSwapKiB": 15008,
+      "afterPrivateAnonPlusSwapKiB": 11436,
+      "reductionKiB": 3572,
+      "reductionPercent": 23.8,
+      "beforeRssKiB": 24828,
+      "afterRssKiB": 19968,
+      "loadedPackageModuleCounts": {
+        "PIL": 0,
+        "qrcode": 0,
+        "embit": 10,
+        "urtypes": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      },
+      "fontCache": {}
+    },
+    {
+      "phase": "settings",
+      "beforePrivateAnonPlusSwapKiB": 16848,
+      "afterPrivateAnonPlusSwapKiB": 11500,
+      "reductionKiB": 5348,
+      "reductionPercent": 31.7,
+      "beforeRssKiB": 24176,
+      "afterRssKiB": 20032,
+      "loadedPackageModuleCounts": {
+        "PIL": 0,
+        "qrcode": 0,
+        "embit": 10,
+        "urtypes": 0,
+        "Cryptodome": 0,
+        "cryptography": 0,
+        "pgpy": 0,
+        "pyasn1": 0,
+        "pysatochip": 0,
+        "smartcard": 0,
+        "pygp": 0,
+        "ecdsa": 0,
+        "pyaes": 0,
+        "ndef": 0,
+        "shamir_mnemonic": 4,
+        "numpy": 0,
+        "cv2": 0,
+        "pyzbar": 0
+      },
+      "fontCache": {}
+    }
+  ],
+  "metric": "Python private anonymous resident RAM plus process swap; KiB",
+  "scope": "Warm-device observations, not isolated allocation or total physical system RAM; native UI unchanged. No claim these savings apply unchanged to scanning/signing.",
+  "preparedImportCache": true,
+  "preparedRuntimeManifestSha256": "5d54dd0ba6c24d03040abe325295177f4f2c8bae1dfcac06970dc3337d7bce1a",
+  "repeatedRuntimeManifestsIdentical": true,
+  "hostTests": 228,
+  "originalWalletAndCryptoPreserved": true,
+  "installedAppUnmodified": true
+}

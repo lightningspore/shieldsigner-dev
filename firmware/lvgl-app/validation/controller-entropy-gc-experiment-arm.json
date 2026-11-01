@@ -1,0 +1,564 @@
+{
+  "passed": false,
+  "check": "controller-entropy-gc",
+  "binarySha256": "43b0ac1f76379845a7445145f2092495681e3a473e8d810335d2e45921fa6aa3",
+  "bundleSha256": {
+    "python/address_search.py": "78e60bab3768e091980a6e6d4fc121f0991c7c31e7d2b23df589d849d3d8993b",
+    "python/bytecode_cache.py": "9ebc3308019804ce57eb267e3f13d893d2f9ef0ca2b7b8b252b0fc572966adfe",
+    "python/camera_scan.py": "021fd11317cdd7b10b5eb14bc61c627ccb4ae48534130b32f36a2c9b375018c0",
+    "python/contracts.py": "8f4e5dded2ef8eb0b406095a1e28c695efbb6910cdeffd22acf0df87a137a1ce",
+    "python/descriptor_contracts.py": "be9a738534f78f54a82a328806992de4c98a97dee618ed9f1a6de403dc5f58ed",
+    "python/diagnostic_scope.py": "50bb208403c28fdb016bf85e0cc17083de13b9814ad8b25eded5d34816e52346",
+    "python/encrypted_contracts.py": "43fb12fdc57adbba2f20821459f56f6b663f65242327b42a9a6a11cbdd59e3ac",
+    "python/entropy_camera.py": "ce44d6b99407044a26f7c893ba55ded05f7f96c7569d52ded7fc22b1c706ecd1",
+    "python/entropy_fallback.py": "50ce789643599fe647f85e20d03acd4382323eda49b11e55185110cb987c1213",
+    "python/entropy_source.py": "24b723847035de7449702702ed1c112b81f8382c7597520f3ff95177fc7381a0",
+    "python/explorer_contracts.py": "9dc5e34890a50080a91afd462a4eda540675755cae8a4dfc8f964306e47dc26b",
+    "python/final_word_contracts.py": "0b0badc0adad66504b52326226ef7dd809893960215c979b45e50950bc25eeac",
+    "python/formatting.py": "eb1879fa111010a48947736e9017090d68286706c6a9d8d2e919ae675b0732e6",
+    "python/guards.py": "534ee579c1225586cfeb546570acd422922d9ad82285a8287f6f97c1427da024",
+    "python/image_entropy.py": "54ff65df29d7d37b561eda005c866e613f0640d362fc8124984d3ce9e34ad50b",
+    "python/lifecycle.py": "1a22272773e3d7aa7d116129295823f118a3b49bd8630f1019933a9c67d50da8",
+    "python/loading.py": "c10e773fb2566dd2aedc9ae1d3a5eaf9f657db5090444f0e1701542512007b7e",
+    "python/luckfox.py": "8fafa7b219bd99af09b707a7a25787d4c47ac938b3f5e8bf43ac09e97af1b67d",
+    "python/message_contracts.py": "246d6674f346961cc331ece62d0d23cb104a3213c05a3b22e65673419ed03cdb",
+    "python/psbt_contracts.py": "e89dff9150f9b53b53d734e97d0aa94b2e65268754ed12c7f90c19aabd52e470",
+    "python/qr_output.py": "3ff61d165ad0a3f8604e49de6e22edef18ce687c0b82682d1be33e3a9347b8fa",
+    "python/renderer_bridge.py": "b6a2b5b39d8daae51e18594f321b53f030cc90af33a8083373241f16b242d841",
+    "python/resources.py": "b6454a5901801d7bb9b4f7d9eeaf40144faeda34ea3c35ca2dd29dcffb8170ea",
+    "python/runtime.py": "ea51659da853b57ec42b041299b38d47fb5bc9fe50903dd2dbd5c43d54cf101e",
+    "python/screen_bridge.py": "b6fc17fa4626d9c577a1b8c6a792ea6be2c71667bc435aeb194ef67a79b6bfdf",
+    "python/screensaver_bridge.py": "723e4fd50fd02ad735ca8d1a3695a062a22eb451532b01ca6729114909d70095",
+    "python/startup_policy.py": "33733d29b3145b4c11d89407a9ccaeef4740b8ab41a0ae71a00859c53f6ef4a2",
+    "python/startup_splash.py": "6534db610cf4699dfcafef579da9f22375af7362ec5a397dd7b32e219e9e8cf9",
+    "python/toast_bridge.py": "f4fc096375e63a9bd7620e067a92c811f7239e55440d50350c8dce21010e883e",
+    "python/transcription.py": "450f29aad60d066647df89fda65a03829bca9bf51ecc4f5e9cf44643ed485a1a",
+    "python/transport.py": "9ed03d437999f7fc30f42e1f265fe10e333aa2d7637d31562c3872f7ee12c25b",
+    "tests/address_search_flow.py": "ce96193ced75c37b9aca9727c7ea963c9a40114a5be6fe45c587069e92b6e03d",
+    "tests/app_contract_smoke.py": "1a11825d2a2bb7d1dcf879a1f2e6dd2a32d9f8d36f48d3f570bbbe2be4d63b7f",
+    "tests/backup_quiz_flow.py": "d331b326794babb782f3fcff41362119169fa0df06ff3621d1163af245937090",
+    "tests/camera_flow.py": "55d5acb828da25c402a40136722589b8698108a923716a487d27f2f1ab6925dc",
+    "tests/coin_flow.py": "c9ff3b90c3375374ff088fe7cd816bcec7d902bb975bc42398ca1bf4c8a159ea",
+    "tests/controller_entropy_flow.py": "d3df33989b5563325e6e1d83e8bac3c0969d1d0904d321575c40fd1f7e29867d",
+    "tests/controller_flow.py": "25c0a3b43623c81cda5061403621f12d023d4c307af89e7c0f7f3e5496c8dea5",
+    "tests/descriptor_flow.py": "77d63c6c3cac1aaff81bdc2fdc18f127095dbb4c74324ba6bb1f6a3276554b92",
+    "tests/encrypted_entry_flow.py": "11a9157bb42f0e025d6f2de7ee671942bad0f57d137c7422087688b0b1b418da",
+    "tests/encrypted_review_flow.py": "cf8c63f6e2a976ea1267a5105672961643ca61ee1787418f62c6deb8c6fee4a3",
+    "tests/entropy_camera_hardware.py": "c4adc897e336a1399331bf0366865d5a0afafbb2c5cfad5c623e211a569f9615",
+    "tests/entropy_fallback_hardware.py": "7fbe55991f8a82b9de09b75d7ce2d7292828bf91daa956a78740d355f8aa86f0",
+    "tests/entropy_sample_pixels.py": "fd7e0595d556c75a15b943432a25c48ee87535c8ee0ca7bc54e8a0ff309d55d6",
+    "tests/experimental_entropy_samples.py": "cdd39b4bb548128e4316e53963ebcfea57b72f0b5e514681d5ae968ba0a33232",
+    "tests/explorer_flow.py": "06aad0b269f489a477bbadf13312b941033b66558ebfc42486456b26e233dc52",
+    "tests/final_word_flow.py": "58b7c6c404e2c9982ce5a3d8316a2cfb27cf9081917cfea3d24e1dcea0a6076d",
+    "tests/image_entropy_flow.py": "ca11884f07afcd916d3d8740c5474196684e098fd0e6468b66379ad14638a988",
+    "tests/image_entropy_physical.py": "7ac701ea498e03c1d9775d5d2667b235719aafdc980a0ae97eae05891e97f677",
+    "tests/import_profile.py": "783a4e5793a2971ef99e4eecd40c12a5a20c66dfeb3fa90944e29e6b172546ff",
+    "tests/keyboard_flow.py": "462951b335f86fa7a23ead15aa70e78098c83de80ffb39e8ec96705ee2abaac4",
+    "tests/message_signing_flow.py": "6654eb1aec869f0ebbbd0a0f73ed674941a12f01d33ae7b5f37b1b0c706db7df",
+    "tests/native_smoke.py": "c19084cf52a7766b8c97a77c8facdc2d24ab9530231541e1d356c8ac06921d54",
+    "tests/passphrase_flow.py": "dd2fe7451587c2d734393a51994792567e81af3ea74824db5064d7196486193f",
+    "tests/preview_faults.py": "fad37f932746ae4a1768268c54e075f791b34c4981ad4e455432cbc53714045e",
+    "tests/preview_protocol.py": "7fca2e8003f58c68d8639359ae93f8d22492679c9745d0a2de3f5a4a4c855838",
+    "tests/psbt_screen_flow.py": "f2ecaa698dbffda7fb555cfc72bea7b88ecf93ca25c42a59bf45708fca2a21b7",
+    "tests/psbt_signing_flow.py": "733722f2718321d2233a405cb2e765777fbcec3997a994583fbfb94ad925af5a",
+    "tests/qr_output_flow.py": "2c38984e3dceedbaa9b0a2835d052ea10be718bd302ef3bde1834e7ad95f04d0",
+    "tests/qr_scan_fixtures.py": "3b4ddda9e24490126a14c374a7fb7004dccf95ab3bed8bf6e8bc2d9376cbb716",
+    "tests/screensaver_flow.py": "5191653e815cdcfe015be2937ca72418cdc7800dd298a12d9c249c5b7b290eba",
+    "tests/seed_recovery_flow.py": "30dba11c4bf3c761d4a8b8a15f54e99783b3e2aab9af7618ff498d95bf10bbba",
+    "tests/seedqr_confirmation_flow.py": "511abe2764afd2cf427c0020197dcfdc90a3ee800221fd105f8d90c1dd720d2c",
+    "tests/settings_flow.py": "6d83315fb4a2b01538019ce2ff7d6789713220ce7b34dcb954ded016fbd0ec58",
+    "tests/synthetic_frames.py": "3e62216602793193a1ec30dc7698e56e585cde33a52647daa88a320b1e6d8532",
+    "tests/test_address_search.py": "8792686c6c6d983d37c0ae0e149284f7df5e418e5ce95b79e51bf33a7c4b410a",
+    "tests/test_bytecode_cache.py": "6c31ab3b9d44202c18d2978dbe3454518d91dd59934c8193ed2285945153c88e",
+    "tests/test_camera_scan.py": "9efc75dfef17d85844d87bcabd417ae6716a004359f5338163ccc6fe63eb507e",
+    "tests/test_contracts.py": "6414cee37a9be7810f2768d13eb1d878961f3cbf610fde86a9ce19335a44902f",
+    "tests/test_descriptor_contracts.py": "116df9217b1b678cb591c3c11510843a45ce1d543939a3b21f6796d2981aeeb7",
+    "tests/test_diagnostic_scope.py": "a720786d307c58fb37c9313009ecab41860a6c7a017ea21198996a917ee462c7",
+    "tests/test_encrypted_contracts.py": "3911778133fcc7f7701dc445a127d9c0fee8e7f60e671ab8a3ea44cb73a30b94",
+    "tests/test_entropy_camera.py": "fed81b09a92886b9e9a0ffc1e27464ee190cbdd5f1b581204a0dfe4dbb5d2fa9",
+    "tests/test_entropy_fallback.py": "fb510b8344e9dfabd5b39ce61e4d9a4533cc6861a60d53e9a5933345ee982e4b",
+    "tests/test_entropy_source.py": "c6935226138667e2e89770aa9429530bdc1a168c54342397f0ebefacc1a49b59",
+    "tests/test_explorer_contracts.py": "8a0cf0143a3b0d020016d26879fbbd9c2a02feb2ae02b5ee4a38f043b96e9fc8",
+    "tests/test_final_word_contracts.py": "1e584870a2ac77012a0ac4ff00e0d69d8cf132255c976c59b78eaa2d02a18426",
+    "tests/test_hardware_check.py": "a1de142ef0a2d436a3077d928903777db6813a5ac4b1ba501346e8f1abe378e6",
+    "tests/test_lifecycle.py": "a413677f722c653139074630a0e5762df3fdef011ed4bbf17f78701e27a58807",
+    "tests/test_loading.py": "41d52302f9feb979ed3919b10b445709a34efd052349dc75e527c3773c334c8d",
+    "tests/test_message_contracts.py": "ec1f087e5a47ab03685e3e06b158fdaf0e321a02b00f8a655c6de059ed062caa",
+    "tests/test_renderer_bridge.py": "b914e6ab7a25c7c39538e0641fb3a388d703e54c0c0092b1a8a876f085bf92f3",
+    "tests/test_runtime.py": "7f5d4b2d0457f229249696abbc8ef47b1907000957566b25305a35ceebeba983",
+    "tests/test_screen_bridge.py": "05eae9e0ac9989b7ebb4702350b5840f3741468772431734670ca7a94e5517de",
+    "tests/test_screensaver_bridge.py": "d7650cbd54634559badc4639551a4b0444b83ae0a556a4270715e2c7486271cd",
+    "tests/test_startup_policy.py": "b6a77341538b28cf7b86c7220272c5c15eb334d8971f0492551bb567611177b8",
+    "tests/test_startup_splash.py": "95db002712990615b3b8fded12782877fb49b3d0af6798c2b42b32e5d8c02d64",
+    "tests/test_toast_bridge.py": "552b1644bf6fbbb7ac07a42a100781dc8054a8572ecdbe360f347cba2518b462",
+    "tests/test_transcription.py": "c3a5d01735696a22b7fd3bdaecfadb2a54b3611b20b67edf671991be64e6907b",
+    "tests/test_transport.py": "2cd038097f9a7cc921bca1080b69fc8a2de74fe46ef806adbf5964aa91c06d7e",
+    "tests/transcription_flow.py": "4d2160fcbededab132fc437ad76adc783c9b1b5764529e0db14b041c674ba3a3",
+    "tests/transcription_protocol.py": "e1199dd0bdee75dd6c0c03f4785f47139fb4bf490803028e0b74fee4ee3c64e3",
+    "tests/transcription_registration.py": "452a9d398781fc825a84c71b4f29bbc3be8d37372d5fc3112a41029cd9681278",
+    "tests/wipe_flow.py": "9edfd2536a644b4535f816d3f0907e781ae138f53bc4038d4b0a660eead160b7",
+    "tests/xpub_flow.py": "2c4f2f90c85548b86154a8e1ec679bdb92fcee78a50a88079958509ce9e90cab",
+    "source-guards.json": "862ddd0f9df1bc4b9101c944d40b2cb357ff3f420b1a8a0753c9a347ade41c36"
+  },
+  "exitCode": 0,
+  "timedOut": false,
+  "remainingOwnerPids": [],
+  "ownerDiagnostics": [
+    {
+      "path": "/tmp/shieldsigner-camera/camera-yw8du9ij/owner.log",
+      "events": [
+        {
+          "event": "raw-bridge-finished",
+          "error": "AE event owner fell behind; event queue is full",
+          "cleanupErrors": []
+        },
+        {
+          "event": "statistics-finished",
+          "error": "AE event owner fell behind; event queue is full",
+          "cleanupErrors": []
+        },
+        {
+          "event": "automatic-ae-finished",
+          "error": "ISP parameter pool remained full for 250 ms",
+          "success": false
+        },
+        {
+          "event": "image-capture-finished",
+          "error": "ISP parameter pool remained full for 250 ms",
+          "success": false
+        },
+        {
+          "event": "finished",
+          "error": "ISP parameter pool remained full for 250 ms",
+          "success": false,
+          "cleanupErrors": []
+        },
+        {
+          "event": "first-frame-finished",
+          "error": "ISP parameter pool remained full for 250 ms",
+          "success": false
+        },
+        {
+          "event": "ae-event-channel-metrics",
+          "metrics": {
+            "capacity": 64,
+            "depthScope": "enqueued events not yet acknowledged by owner; may include an event just removed from mpsc before acknowledgement",
+            "highWater": 64,
+            "kinds": [
+              {
+                "dequeued": 81,
+                "enqueued": 98,
+                "handled": 81,
+                "handlingMaxUs": 3412875,
+                "handlingTotalUs": 3771310,
+                "kind": "sof",
+                "queueAgeMaxUs": 4394149,
+                "queueAgeTotalUs": 175672695,
+                "rejected": 1
+              },
+              {
+                "dequeued": 21,
+                "enqueued": 33,
+                "handled": 21,
+                "handlingMaxUs": 1628227,
+                "handlingTotalUs": 2854746,
+                "kind": "statistics",
+                "queueAgeMaxUs": 3277862,
+                "queueAgeTotalUs": 10213591,
+                "rejected": 1
+              }
+            ],
+            "parameterSlotWaitCalls": 20,
+            "parameterSlotWaitMaxUs": 251290,
+            "parameterSlotWaitTotalUs": 288175,
+            "pendingAtFinish": 29,
+            "phaseTimingScope": "RUSAGE_THREAD on Linux; nested spans overlap and totals must not be summed. Faults are per-thread deltas, not bytes; non-Linux counters are zero.",
+            "phases": [
+              {
+                "calls": 81,
+                "majorFaults": 38,
+                "minorFaults": 212,
+                "name": "sof-sensor",
+                "threadCpuTotalUs": 598143,
+                "wallTotalUs": 3593557,
+                "worstFrame": 29,
+                "worstMajorFaults": 18,
+                "worstMinorFaults": 64,
+                "worstThreadCpuUs": 490642,
+                "worstWallUs": 3237483
+              },
+              {
+                "calls": 21,
+                "majorFaults": 8,
+                "minorFaults": 176,
+                "name": "ae-statistics",
+                "threadCpuTotalUs": 289648,
+                "wallTotalUs": 1164994,
+                "worstFrame": 28,
+                "worstMajorFaults": 7,
+                "worstMinorFaults": 38,
+                "worstThreadCpuUs": 253960,
+                "worstWallUs": 1006800
+              },
+              {
+                "calls": 21,
+                "majorFaults": 6,
+                "minorFaults": 270,
+                "name": "awb-statistics",
+                "threadCpuTotalUs": 186805,
+                "wallTotalUs": 553925,
+                "worstFrame": 28,
+                "worstMajorFaults": 6,
+                "worstMinorFaults": 59,
+                "worstThreadCpuUs": 171573,
+                "worstWallUs": 504240
+              },
+              {
+                "calls": 20,
+                "majorFaults": 0,
+                "minorFaults": 57,
+                "name": "parameter-slot-wait",
+                "threadCpuTotalUs": 8512,
+                "wallTotalUs": 287941,
+                "worstFrame": 49,
+                "worstMajorFaults": 0,
+                "worstMinorFaults": 45,
+                "worstThreadCpuUs": 6099,
+                "worstWallUs": 251262
+              },
+              {
+                "calls": 19,
+                "majorFaults": 4,
+                "minorFaults": 312,
+                "name": "isp-prepare-submit",
+                "threadCpuTotalUs": 135672,
+                "wallTotalUs": 743827,
+                "worstFrame": 7,
+                "worstMajorFaults": 3,
+                "worstMinorFaults": 80,
+                "worstThreadCpuUs": 96429,
+                "worstWallUs": 519120
+              }
+            ],
+            "untrackedDequeues": 0
+          }
+        }
+      ]
+    }
+  ],
+  "observations": {
+    "stage": "controller-entropy-failure",
+    "screenSequence": [
+      "ToolsImageEntropyLivePreviewScreen",
+      "ErrorScreen"
+    ],
+    "entropyStats": {
+      "previewFrames": 0,
+      "poolFrames": 0
+    },
+    "resourceSamples": [
+      {
+        "stage": "pixels",
+        "seconds": 22933.246,
+        "python": {
+          "VmSize": "31204 kB",
+          "VmHWM": "21228 kB",
+          "VmRSS": "21228 kB",
+          "RssAnon": "11376 kB",
+          "RssFile": "9852 kB",
+          "RssShmem": "0 kB",
+          "VmData": "13248 kB",
+          "VmSwap": "0 kB",
+          "Threads": "2",
+          "minor_faults": 4259,
+          "major_faults": 48,
+          "user_ticks": 392,
+          "system_ticks": 141
+        },
+        "native": {
+          "VmSize": "1732 kB",
+          "VmHWM": "1164 kB",
+          "VmRSS": "1164 kB",
+          "RssAnon": "64 kB",
+          "RssFile": "0 kB",
+          "RssShmem": "1100 kB",
+          "VmData": "180 kB",
+          "VmSwap": "0 kB",
+          "Threads": "1",
+          "minor_faults": 39,
+          "major_faults": 0,
+          "user_ticks": 0,
+          "system_ticks": 0
+        },
+        "system": {
+          "MemTotal": "46028 kB",
+          "MemFree": "1388 kB",
+          "MemAvailable": "19704 kB",
+          "SwapTotal": "16380 kB",
+          "SwapFree": "12516 kB",
+          "Shmem": "2100 kB"
+        }
+      },
+      {
+        "stage": "before-controller",
+        "seconds": 22937.478,
+        "python": {
+          "VmSize": "37796 kB",
+          "VmHWM": "25916 kB",
+          "VmRSS": "25520 kB",
+          "RssAnon": "16276 kB",
+          "RssFile": "9244 kB",
+          "RssShmem": "0 kB",
+          "VmData": "18580 kB",
+          "VmSwap": "156 kB",
+          "Threads": "2",
+          "minor_faults": 7631,
+          "major_faults": 64,
+          "user_ticks": 719,
+          "system_ticks": 191
+        },
+        "native": {
+          "VmSize": "1732 kB",
+          "VmHWM": "1164 kB",
+          "VmRSS": "1164 kB",
+          "RssAnon": "64 kB",
+          "RssFile": "0 kB",
+          "RssShmem": "1100 kB",
+          "VmData": "180 kB",
+          "VmSwap": "0 kB",
+          "Threads": "1",
+          "minor_faults": 39,
+          "major_faults": 0,
+          "user_ticks": 1,
+          "system_ticks": 11
+        },
+        "system": {
+          "MemTotal": "46028 kB",
+          "MemFree": "1480 kB",
+          "MemAvailable": "14868 kB",
+          "SwapTotal": "16380 kB",
+          "SwapFree": "12516 kB",
+          "Shmem": "2100 kB"
+        }
+      },
+      {
+        "stage": "after-controller",
+        "seconds": 22937.551,
+        "python": {
+          "VmSize": "43988 kB",
+          "VmHWM": "25916 kB",
+          "VmRSS": "25564 kB",
+          "RssAnon": "16312 kB",
+          "RssFile": "9252 kB",
+          "RssShmem": "0 kB",
+          "VmData": "24760 kB",
+          "VmSwap": "156 kB",
+          "Threads": "5",
+          "minor_faults": 7779,
+          "major_faults": 65,
+          "user_ticks": 722,
+          "system_ticks": 194
+        },
+        "native": {
+          "VmSize": "1732 kB",
+          "VmHWM": "1164 kB",
+          "VmRSS": "1164 kB",
+          "RssAnon": "64 kB",
+          "RssFile": "0 kB",
+          "RssShmem": "1100 kB",
+          "VmData": "180 kB",
+          "VmSwap": "0 kB",
+          "Threads": "1",
+          "minor_faults": 39,
+          "major_faults": 0,
+          "user_ticks": 1,
+          "system_ticks": 11
+        },
+        "system": {
+          "MemTotal": "46028 kB",
+          "MemFree": "1368 kB",
+          "MemAvailable": "14760 kB",
+          "SwapTotal": "16380 kB",
+          "SwapFree": "12516 kB",
+          "Shmem": "2100 kB"
+        }
+      },
+      {
+        "stage": "pixels",
+        "seconds": 22940.65,
+        "python": {
+          "VmSize": "49256 kB",
+          "VmHWM": "25916 kB",
+          "VmRSS": "24828 kB",
+          "RssAnon": "19476 kB",
+          "RssFile": "5352 kB",
+          "RssShmem": "0 kB",
+          "VmData": "29628 kB",
+          "VmSwap": "1768 kB",
+          "Threads": "5",
+          "minor_faults": 11034,
+          "major_faults": 94,
+          "user_ticks": 896,
+          "system_ticks": 268
+        },
+        "native": {
+          "VmSize": "1740 kB",
+          "VmHWM": "1424 kB",
+          "VmRSS": "1424 kB",
+          "RssAnon": "196 kB",
+          "RssFile": "0 kB",
+          "RssShmem": "1228 kB",
+          "VmData": "188 kB",
+          "VmSwap": "0 kB",
+          "Threads": "1",
+          "minor_faults": 89,
+          "major_faults": 0,
+          "user_ticks": 9,
+          "system_ticks": 16
+        },
+        "system": {
+          "MemTotal": "46028 kB",
+          "MemFree": "1420 kB",
+          "MemAvailable": "10744 kB",
+          "SwapTotal": "16380 kB",
+          "SwapFree": "10724 kB",
+          "Shmem": "2104 kB"
+        }
+      },
+      {
+        "stage": "before-camera-start",
+        "seconds": 22940.825,
+        "python": {
+          "VmSize": "49256 kB",
+          "VmHWM": "25916 kB",
+          "VmRSS": "24828 kB",
+          "RssAnon": "19476 kB",
+          "RssFile": "5352 kB",
+          "RssShmem": "0 kB",
+          "VmData": "29628 kB",
+          "VmSwap": "1768 kB",
+          "Threads": "5",
+          "minor_faults": 11077,
+          "major_faults": 94,
+          "user_ticks": 903,
+          "system_ticks": 268
+        },
+        "native": {
+          "VmSize": "1744 kB",
+          "VmHWM": "1436 kB",
+          "VmRSS": "1428 kB",
+          "RssAnon": "200 kB",
+          "RssFile": "0 kB",
+          "RssShmem": "1228 kB",
+          "VmData": "192 kB",
+          "VmSwap": "0 kB",
+          "Threads": "1",
+          "minor_faults": 106,
+          "major_faults": 0,
+          "user_ticks": 10,
+          "system_ticks": 16
+        },
+        "system": {
+          "MemTotal": "46028 kB",
+          "MemFree": "1460 kB",
+          "MemAvailable": "10784 kB",
+          "SwapTotal": "16380 kB",
+          "SwapFree": "10724 kB",
+          "Shmem": "2104 kB"
+        }
+      },
+      {
+        "stage": "after-collection",
+        "seconds": 22941.068,
+        "python": {
+          "VmSize": "49256 kB",
+          "VmHWM": "25916 kB",
+          "VmRSS": "25740 kB",
+          "RssAnon": "20504 kB",
+          "RssFile": "5236 kB",
+          "RssShmem": "0 kB",
+          "VmData": "29628 kB",
+          "VmSwap": "740 kB",
+          "Threads": "5",
+          "minor_faults": 12441,
+          "major_faults": 403,
+          "user_ticks": 917,
+          "system_ticks": 274
+        },
+        "native": {
+          "VmSize": "1744 kB",
+          "VmHWM": "1436 kB",
+          "VmRSS": "1428 kB",
+          "RssAnon": "200 kB",
+          "RssFile": "0 kB",
+          "RssShmem": "1228 kB",
+          "VmData": "192 kB",
+          "VmSwap": "0 kB",
+          "Threads": "1",
+          "minor_faults": 110,
+          "major_faults": 0,
+          "user_ticks": 10,
+          "system_ticks": 17
+        },
+        "system": {
+          "MemTotal": "46028 kB",
+          "MemFree": "1388 kB",
+          "MemAvailable": "10112 kB",
+          "SwapTotal": "16380 kB",
+          "SwapFree": "12004 kB",
+          "Shmem": "2104 kB"
+        }
+      },
+      {
+        "stage": "pixels",
+        "seconds": 22952.318,
+        "python": {
+          "VmSize": "56116 kB",
+          "VmHWM": "26112 kB",
+          "VmRSS": "16808 kB",
+          "RssAnon": "13008 kB",
+          "RssFile": "3800 kB",
+          "RssShmem": "0 kB",
+          "VmData": "35768 kB",
+          "VmSwap": "8296 kB",
+          "Threads": "5",
+          "minor_faults": 19308,
+          "major_faults": 794,
+          "user_ticks": 948,
+          "system_ticks": 612
+        },
+        "native": {
+          "VmSize": "1744 kB",
+          "VmHWM": "1436 kB",
+          "VmRSS": "536 kB",
+          "RssAnon": "196 kB",
+          "RssFile": "0 kB",
+          "RssShmem": "340 kB",
+          "VmData": "192 kB",
+          "VmSwap": "4 kB",
+          "Threads": "1",
+          "minor_faults": 197,
+          "major_faults": 100,
+          "user_ticks": 16,
+          "system_ticks": 36
+        },
+        "system": {
+          "MemTotal": "46028 kB",
+          "MemFree": "7816 kB",
+          "MemAvailable": "14024 kB",
+          "SwapTotal": "16380 kB",
+          "SwapFree": "2840 kB",
+          "Shmem": "484 kB"
+        }
+      }
+    ],
+    "preCameraCollections": [
+      {
+        "objects": 14,
+        "seconds": 0.227
+      }
+    ]
+  },
+  "productionChange": false,
+  "conclusion": "Rejected as a solution: explicit pre-camera gc collected only 14 objects in 0.227 seconds; acquisition still failed before the first preview. RSS before/after is affected by page-in and must not be treated as allocated heap savings."
+}

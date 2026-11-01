@@ -1,0 +1,33 @@
+--- a/components/seedsigner/screens/opening_splash_screen.cpp
++++ b/components/seedsigner/screens/opening_splash_screen.cpp
+@@ -69,2 +69,3 @@
+ 
++#include "branding.h"
+ #include "lvgl.h"             // lv_obj / lv_image / lv_label / lv_anim / lv_timer / lv_group / lv_indev + style setters, lv_malloc / lv_memzero / lv_free
+@@ -310,2 +311,3 @@
+     lv_obj_t *screen_root = lv_obj_create(NULL);
++    apply_screensaver_policy(screen_root, cfg, false);
+     lv_obj_set_style_bg_color(screen_root, lv_color_black(), LV_PART_MAIN);
+@@ -321,3 +323,3 @@
+     //    (-56 is the Python offset at the 240px reference; scale it by px_multiplier.)
+-    const lv_image_dsc_t *logo = seedsigner_logo_for_active_profile();
++    const lv_image_dsc_t *logo = &shieldsigner_logo_img;
+     const int32_t logo_w = (int32_t)logo->header.w;
+@@ -379,3 +381,3 @@
+     if (show_partner) {
+-        const lv_image_dsc_t *hrf = hrf_logo_for_active_profile();
++        const lv_image_dsc_t *hrf = &shieldsigner_upstream_img;
+         const int32_t hrf_h = (int32_t)hrf->header.h;
+--- a/components/seedsigner/screens/screensaver_screen.cpp
++++ b/components/seedsigner/screens/screensaver_screen.cpp
+@@ -39,2 +39,3 @@
+ 
++#include "branding.h"
+ #include "lvgl.h"              // root/image/timer/group/indev widgets + physics (lv_rand, lv_tick_get, lv_scr_load)
+@@ -225,4 +226,4 @@
+     //    png_to_lvgl.py and selected per display profile (px_multiplier) by
+-    //    seedsigner_logo_for_active_profile().
+-    const lv_image_dsc_t *logo = seedsigner_logo_for_active_profile();
++    //    &shieldsigner_logo_img.
++    const lv_image_dsc_t *logo = &shieldsigner_logo_img;
+     int32_t logo_width  = (int32_t)logo->header.w;

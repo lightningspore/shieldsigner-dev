@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "productionDependencyPolicy": true,
+  "cycles": [
+    {
+      "seconds": 3.087,
+      "frames": 0,
+      "processedPreviewFps": null,
+      "postCloseRssKiB": 20996,
+      "postCloseAnonKiB": 16812,
+      "postCloseSwapKiB": 2952,
+      "postCloseAnonPlusSwapKiB": 19764,
+      "threads": 2,
+      "dma": "Total 0 objects, 0 bytes",
+      "ownerExitCode": 0
+    },
+    {
+      "seconds": 93.837,
+      "frames": 432,
+      "processedPreviewFps": 4.897737654929187,
+      "postCloseRssKiB": 12536,
+      "postCloseAnonKiB": 9416,
+      "postCloseSwapKiB": 10372,
+      "postCloseAnonPlusSwapKiB": 19788,
+      "threads": 2,
+      "dma": "Total 0 objects, 0 bytes",
+      "ownerExitCode": 0
+    },
+    {
+      "seconds": 92.649,
+      "frames": 440,
+      "processedPreviewFps": 4.91641403656993,
+      "postCloseRssKiB": 11708,
+      "postCloseAnonKiB": 8052,
+      "postCloseSwapKiB": 11736,
+      "postCloseAnonPlusSwapKiB": 19788,
+      "threads": 2,
+      "dma": "Total 0 objects, 0 bytes",
+      "ownerExitCode": 0
+    },
+    {
+      "seconds": 92.262,
+      "frames": 443,
+      "processedPreviewFps": 4.936798301116505,
+      "postCloseRssKiB": 10080,
+      "postCloseAnonKiB": 7896,
+      "postCloseSwapKiB": 11892,
+      "postCloseAnonPlusSwapKiB": 19788,
+      "threads": 2,
+      "dma": "Total 0 objects, 0 bytes",
+      "ownerExitCode": 0
+    }
+  ],
+  "liveSecondsRequested": 270,
+  "postCloseAnonPlusSwapStable": true,
+  "scope": "Direct camera/QR/LVGL lifecycle with Tools module loaded; not full Controller memory, optical payload, cold-boot or unbounded leak qualification"
+}

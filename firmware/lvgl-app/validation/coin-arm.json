@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "length": 12,
+      "nativeKeyboardBitsExact": true,
+      "backspaceAndCancel": true,
+      "originalChecksumExact": true,
+      "executedOriginalFinalize": true,
+      "executedOriginalDiscard": false
+    },
+    {
+      "length": 24,
+      "nativeKeyboardBitsExact": true,
+      "backspaceAndCancel": true,
+      "originalChecksumExact": true,
+      "executedOriginalFinalize": false,
+      "executedOriginalDiscard": true
+    }
+  ],
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "dependencyInitializationInjected": true,
+  "entropySourceIsPublicScript": true,
+  "runnerReceipt": "dist/lvgl-app/checks/coin-20261030T174400187937Z.json",
+  "testSourceSha256": "c9ff3b90c3375374ff088fe7cd816bcec7d902bb975bc42398ca1bf4c8a159ea",
+  "scope": "Actual native coin keyboard through original 12/24-word Views; public scripted mixed bits, wrong-leading-bit deletion, partial cancel, independent BIP39 checksum match, original 12-word finalize/store and 24-word discard/clear. Scripted keys and View initialization; not physical buttons, real coin entropy, full Controller or every finalize/discard policy."
+}

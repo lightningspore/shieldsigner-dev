@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "preflight": {
+    "preflightPassed": true,
+    "writesPerformed": false
+  },
+  "application": {
+    "verified": true,
+    "files": 81,
+    "defaultFrontend": "pil",
+    "offlineRootfsOnly": true,
+    "deviceInstalled": false,
+    "imageBuilt": false
+  },
+  "sourceGuards": 44,
+  "standaloneHelper": true,
+  "existingSupervisorPreserved": true,
+  "rollbackExact": true,
+  "existingCameraFrontendVerifierPasses": true,
+  "existingAppStartupVerifierPasses": true,
+  "memoryPolicyLinesPreserved": true,
+  "cameraStartupReceiptExtended": true,
+  "scope": "Real English draft and frozen camera verifier components in disposable rootfs; no full kernel/module/SDK/boot qualification"
+}

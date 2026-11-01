@@ -5,6 +5,8 @@ export PATH="/usr/local/bin:$PATH"
 : "${SHIELDSIGNER_OUTPUT_DIR:?Set a new output directory for this image attempt}"
 project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 mkdir -p "$SHIELDSIGNER_OUTPUT_DIR"
+# Keep this legacy shared lock path in sync with all remote launchers, including
+# deployed older copies. It coordinates cache ownership, not image output.
 mkdir -p "$project_dir/dist"
 if [[ "${SHIELDSIGNER_IMAGE_LOCK_INHERITED:-0}" != 1 ]]; then
   exec 9>"$project_dir/dist/os-image-build.lock"

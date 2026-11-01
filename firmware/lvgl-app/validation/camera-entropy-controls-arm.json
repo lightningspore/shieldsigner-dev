@@ -1,0 +1,248 @@
+{
+  "camera-20261030T183903852371Z.json": {
+    "passed": true,
+    "result": {
+      "passed": true,
+      "cycles": [
+        {
+          "cancelled": true,
+          "complete": false,
+          "stats": {
+            "frames": 0,
+            "decodedFrames": 0,
+            "cameraStopped": true,
+            "ownerExitCode": 0,
+            "qr": {
+              "kind": "native-zxing-3.1.1-local-average",
+              "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+              "starts": 0,
+              "calls": 0,
+              "decoded": 0,
+              "errors": 0,
+              "lastRoundTripSeconds": null,
+              "lastExitCode": null,
+              "transport": "rust"
+            }
+          },
+          "dma": "Total 0 objects, 0 bytes"
+        },
+        {
+          "cancelled": true,
+          "complete": false,
+          "stats": {
+            "frames": 9,
+            "decodedFrames": 0,
+            "cameraStopped": true,
+            "ownerExitCode": 0,
+            "qr": {
+              "kind": "native-zxing-3.1.1-local-average",
+              "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+              "starts": 1,
+              "calls": 9,
+              "decoded": 0,
+              "errors": 0,
+              "lastRoundTripSeconds": 0.030511834,
+              "lastExitCode": 0,
+              "transport": "rust"
+            }
+          },
+          "dma": "Total 0 objects, 0 bytes"
+        },
+        {
+          "cancelled": true,
+          "complete": false,
+          "stats": {
+            "frames": 10,
+            "decodedFrames": 0,
+            "cameraStopped": true,
+            "ownerExitCode": 0,
+            "qr": {
+              "kind": "native-zxing-3.1.1-local-average",
+              "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+              "starts": 1,
+              "calls": 10,
+              "decoded": 0,
+              "errors": 0,
+              "lastRoundTripSeconds": 0.017323541,
+              "lastExitCode": 0,
+              "transport": "rust"
+            }
+          },
+          "dma": "Total 0 objects, 0 bytes"
+        }
+      ],
+      "rectangles": 255,
+      "physicalCamera": true,
+      "physicalDisplay": true,
+      "physicalButtons": false,
+      "qrValuesCaptured": false,
+      "scope": "Real-camera lifecycle and original decoder API; not a known optical test vector"
+    }
+  },
+  "camera-loaded-20261030T183957950537Z.json": {
+    "passed": true,
+    "result": {
+      "passed": true,
+      "cycles": [
+        {
+          "cancelled": true,
+          "complete": false,
+          "stats": {
+            "frames": 0,
+            "decodedFrames": 0,
+            "cameraStopped": true,
+            "ownerExitCode": 0,
+            "qr": {
+              "kind": "native-zxing-3.1.1-local-average",
+              "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+              "starts": 0,
+              "calls": 0,
+              "decoded": 0,
+              "errors": 0,
+              "lastRoundTripSeconds": null,
+              "lastExitCode": null,
+              "transport": "rust"
+            }
+          },
+          "dma": "Total 0 objects, 0 bytes"
+        },
+        {
+          "cancelled": true,
+          "complete": false,
+          "stats": {
+            "frames": 8,
+            "decodedFrames": 0,
+            "cameraStopped": true,
+            "ownerExitCode": 0,
+            "qr": {
+              "kind": "native-zxing-3.1.1-local-average",
+              "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+              "starts": 1,
+              "calls": 8,
+              "decoded": 0,
+              "errors": 0,
+              "lastRoundTripSeconds": 0.040161625,
+              "lastExitCode": 0,
+              "transport": "rust"
+            }
+          },
+          "dma": "Total 0 objects, 0 bytes"
+        },
+        {
+          "cancelled": true,
+          "complete": false,
+          "stats": {
+            "frames": 10,
+            "decodedFrames": 0,
+            "cameraStopped": true,
+            "ownerExitCode": 0,
+            "qr": {
+              "kind": "native-zxing-3.1.1-local-average",
+              "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+              "starts": 1,
+              "calls": 10,
+              "decoded": 0,
+              "errors": 0,
+              "lastRoundTripSeconds": 0.027916292,
+              "lastExitCode": 0,
+              "transport": "rust"
+            }
+          },
+          "dma": "Total 0 objects, 0 bytes"
+        }
+      ],
+      "rectangles": 246,
+      "physicalCamera": true,
+      "physicalDisplay": true,
+      "physicalButtons": false,
+      "qrValuesCaptured": false,
+      "scope": "Real-camera lifecycle and original decoder API; not a known optical test vector"
+    }
+  },
+  "camera-loaded-soak-20261030T185531353328Z.json": {
+    "passed": true,
+    "result": {
+      "passed": true,
+      "soak": true,
+      "toolsLoaded": true,
+      "cycles": [
+        {
+          "seconds": 3.73,
+          "cancelled": true,
+          "complete": false,
+          "stats": {
+            "frames": 0,
+            "decodedFrames": 0,
+            "cameraStopped": true,
+            "ownerExitCode": 0,
+            "qr": {
+              "kind": "native-zxing-3.1.1-local-average",
+              "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+              "starts": 0,
+              "calls": 0,
+              "decoded": 0,
+              "errors": 0,
+              "lastRoundTripSeconds": null,
+              "lastExitCode": null,
+              "transport": "rust"
+            }
+          },
+          "dma": "Total 0 objects, 0 bytes"
+        },
+        {
+          "seconds": 32.996,
+          "cancelled": true,
+          "complete": false,
+          "stats": {
+            "frames": 73,
+            "decodedFrames": 0,
+            "cameraStopped": true,
+            "ownerExitCode": 0,
+            "qr": {
+              "kind": "native-zxing-3.1.1-local-average",
+              "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+              "starts": 1,
+              "calls": 73,
+              "decoded": 0,
+              "errors": 0,
+              "lastRoundTripSeconds": 0.03824625,
+              "lastExitCode": 0,
+              "transport": "rust"
+            }
+          },
+          "dma": "Total 0 objects, 0 bytes"
+        },
+        {
+          "seconds": 33.731,
+          "cancelled": true,
+          "complete": false,
+          "stats": {
+            "frames": 75,
+            "decodedFrames": 0,
+            "cameraStopped": true,
+            "ownerExitCode": 0,
+            "qr": {
+              "kind": "native-zxing-3.1.1-local-average",
+              "binarySha256": "0ac7cfafdf2d71f8579e71203ee23dd053e10a6c99159a13ce92bac3f196ff44",
+              "starts": 1,
+              "calls": 75,
+              "decoded": 0,
+              "errors": 0,
+              "lastRoundTripSeconds": 0.030026208,
+              "lastExitCode": 0,
+              "transport": "rust"
+            }
+          },
+          "dma": "Total 0 objects, 0 bytes"
+        }
+      ],
+      "rectangles": 1416,
+      "physicalCamera": true,
+      "physicalDisplay": true,
+      "physicalButtons": false,
+      "qrValuesCaptured": false,
+      "scope": "Real-camera lifecycle and original decoder API; not a known optical test vector"
+    }
+  },
+  "scope": "Camera/LVGL lifecycle controls. Loaded-soak uses a diagnostic decoder that ignores payload completion to maintain duration; not optical or decoder acceptance."
+}

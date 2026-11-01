@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "rngFailureRefusedBeforeCamera": true,
+  "heldCaptureGate": true,
+  "previewPool": 5,
+  "finalPixelsUnmodified": true,
+  "reshootAndAccept": true,
+  "originalMixerAndSystemRng": true,
+  "originalPendingSeed": true,
+  "imageReferencesCleared": true,
+  "physicalDisplay": true,
+  "physicalCamera": false,
+  "physicalButtons": false,
+  "dependencyInitializationInjected": true,
+  "rngHealthStatusInjected": true,
+  "runnerReceipt": "dist/lvgl-app/checks/image-entropy-20261030T180502478909Z.json",
+  "testSourceSha256": "0cf2be00f28eee4d99823139657ffb75161064808292c320e29275a2f26181a7",
+  "binarySha256": "43b0ac1f76379845a7445145f2092495681e3a473e8d810335d2e45921fa6aa3",
+  "scope": "Original RNG-refusal, capture and final-image/mnemonic-length Views with full-resolution 640x480 synthetic RGB camera images, real native display and original mixer/system RNG. RNG health status and View initialization injected. No actual camera/private adapter, physical input, full Controller, multilingual, matched memory or latency qualification. Slow run; earlier timeout failures retained.",
+  "temporaryMemoryCleanup": "dist/lvgl-app/temporary-archive/cleanup.json",
+  "performanceQualified": false
+}

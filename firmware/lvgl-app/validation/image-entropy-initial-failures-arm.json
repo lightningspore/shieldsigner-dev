@@ -1,0 +1,32 @@
+{
+  "passed": false,
+  "attempts": [
+    {
+      "receipt": "dist/lvgl-app/checks/image-entropy-20261030T175342521687Z.json",
+      "passed": false,
+      "timedOut": true,
+      "exitCode": null,
+      "remainingOwnerPids": []
+    },
+    {
+      "receipt": "dist/lvgl-app/checks/image-entropy-20261030T175745115742Z.json",
+      "passed": false,
+      "timedOut": true,
+      "exitCode": null,
+      "remainingOwnerPids": []
+    }
+  ],
+  "observedPython": {
+    "rssKiB": 23296,
+    "swapKiB": 7516,
+    "peakRssKiB": 27192
+  },
+  "observedSystem": {
+    "memTotalKiB": 46028,
+    "memAvailableKiB": 2852,
+    "swapFreeKiB": 0
+  },
+  "kernelSwapWriteErrors": true,
+  "unusedDemoArchive": "dist/lvgl-app/temporary-archive/cleanup.json",
+  "scope": "Hardware failures, not qualification. First run timed out at 180 seconds; instrumented longer run failed native preview initialization after RNG refusal. Swap write errors and low memory observed; causality and subsequent retry outcome require separate evidence."
+}

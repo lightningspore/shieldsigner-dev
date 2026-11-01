@@ -1,0 +1,119 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "transcription-protocol",
+      "passed": true,
+      "binarySha256": "9f7a3f39a984cfdb265fe5cc4733a0e6ffefa36d924a8b31a3415602d03f3ddf",
+      "runnerSha256": "72c23764e348eb9f6af67a6310c58afd0e65a8a4049e1646605755b09b2ee018",
+      "remoteBundleVerified": true,
+      "freshBytecodeCachePrefix": true,
+      "worktreeChangedDuringCheck": false,
+      "remainingOwnerPids": [],
+      "sourceReceipt": "dist/lvgl-app/checks/transcription-protocol-20261030T164433281097Z.json",
+      "result": {
+        "passed": true,
+        "checks": [
+          {
+            "screen": "seed_transcribe_whole_qr_screen",
+            "case": "invalid-hex",
+            "rejected": true
+          },
+          {
+            "screen": "seed_transcribe_whole_qr_screen",
+            "case": "short-matrix",
+            "rejected": true
+          },
+          {
+            "screen": "seed_transcribe_whole_qr_screen",
+            "case": "unsupported-size",
+            "rejected": true
+          },
+          {
+            "screen": "seed_transcribe_whole_qr_screen",
+            "case": "wrong-template",
+            "rejected": true
+          },
+          {
+            "screen": "seed_transcribe_zoomed_qr_screen",
+            "case": "invalid-hex",
+            "rejected": true
+          },
+          {
+            "screen": "seed_transcribe_zoomed_qr_screen",
+            "case": "short-matrix",
+            "rejected": true
+          },
+          {
+            "screen": "seed_transcribe_zoomed_qr_screen",
+            "case": "unsupported-size",
+            "rejected": true
+          },
+          {
+            "screen": "seed_transcribe_zoomed_qr_screen",
+            "case": "wrong-template",
+            "rejected": true
+          }
+        ],
+        "processRecovered": true,
+        "physicalDisplay": false
+      }
+    },
+    {
+      "check": "seedqr-confirmation",
+      "passed": true,
+      "binarySha256": "9f7a3f39a984cfdb265fe5cc4733a0e6ffefa36d924a8b31a3415602d03f3ddf",
+      "runnerSha256": "e8d281be0e0ff387aa8974c637641ef7b15ca845bd5bfc2deb46b347878d8c98",
+      "remoteBundleVerified": true,
+      "freshBytecodeCachePrefix": true,
+      "worktreeChangedDuringCheck": false,
+      "remainingOwnerPids": [],
+      "sourceReceipt": "dist/lvgl-app/checks/seedqr-confirmation-20261030T164615142737Z.json",
+      "result": {
+        "passed": true,
+        "checks": [
+          {
+            "case": "matching",
+            "originalDestination": "SeedTranscribeSeedQRConfirmSuccessView",
+            "nativeFrames": 1,
+            "qrWorkerExitCode": 0,
+            "sourceStopped": true,
+            "seedUnchanged": true
+          },
+          {
+            "case": "different-seed",
+            "originalDestination": "SeedTranscribeSeedQRConfirmWrongSeedView",
+            "nativeFrames": 1,
+            "qrWorkerExitCode": 0,
+            "sourceStopped": true,
+            "seedUnchanged": true
+          },
+          {
+            "case": "not-seed",
+            "originalDestination": "SeedTranscribeSeedQRConfirmInvalidQRView",
+            "nativeFrames": 1,
+            "qrWorkerExitCode": 0,
+            "sourceStopped": true,
+            "seedUnchanged": true
+          },
+          {
+            "case": "cancel",
+            "originalDestination": "BackStackView",
+            "nativeFrames": 1,
+            "qrWorkerExitCode": 0,
+            "sourceStopped": true,
+            "seedUnchanged": true
+          }
+        ],
+        "originalScanViewAndSeedComparison": true,
+        "nativeReceiverPreviewZXing": true,
+        "physicalCamera": false,
+        "opticalQualified": false,
+        "physicalDisplay": true,
+        "physicalButtons": false,
+        "dependencyInitializationInjected": true
+      }
+    }
+  ],
+  "timeoutCleanupHardwareQualified": false
+}

@@ -1,0 +1,16 @@
+--- a/components/seedsigner/screens/seed_add_passphrase_screen.cpp
++++ b/components/seedsigner/screens/seed_add_passphrase_screen.cpp
+@@ -483,7 +483,12 @@
+ void seed_add_passphrase_back_key_cb(lv_event_t *e) {
+     if (lv_event_get_code(e) != LV_EVENT_KEY) return;
+     seed_add_passphrase_ctx_t *ctx = (seed_add_passphrase_ctx_t *)lv_event_get_user_data(e);
+-    if (ctx) kb_back_down_to_matrix(e, ctx->keyboard);
++    if (!ctx) return;
++    if (nav_aux_key_index(lv_event_get_key(e)) != 0) {
++        seed_add_passphrase_kb_key_cb(e);
++        return;
++    }
++    kb_back_down_to_matrix(e, ctx->keyboard);
+ }
+ 
+ // Tear down the group + ctx when the screen is destroyed (mirrors

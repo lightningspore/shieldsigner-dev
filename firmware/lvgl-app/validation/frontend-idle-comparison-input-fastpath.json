@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "sameBundleVerified": true,
+  "runOrder": [
+    "lvgl",
+    "pil"
+  ],
+  "pairs": 1,
+  "results": {
+    "lvgl": {
+      "sampleCount": 7,
+      "sampleWindowSeconds": 5.9906,
+      "medianUnits": "KiB except Threads",
+      "processes": {
+        "python": {
+          "VmRSS": 23920,
+          "RssAnon": 14148,
+          "VmSwap": 816,
+          "Threads": 5,
+          "cpuPercentOneCore": 8.179
+        },
+        "native": {
+          "VmRSS": 1520,
+          "RssAnon": 212,
+          "VmSwap": 0,
+          "Threads": 1,
+          "cpuPercentOneCore": 0.835
+        }
+      }
+    },
+    "pil": {
+      "sampleCount": 7,
+      "sampleWindowSeconds": 5.9947,
+      "medianUnits": "KiB except Threads",
+      "processes": {
+        "python": {
+          "VmRSS": 25592,
+          "RssAnon": 14204,
+          "VmSwap": 624,
+          "Threads": 5,
+          "cpuPercentOneCore": 7.673
+        }
+      }
+    }
+  },
+  "earlierPair": "frontend-idle-comparison.json",
+  "controlledOptimizationAttribution": false,
+  "limits": [
+    "Warm caches and system pressure vary",
+    "Profiler switch added to harness since earlier pair; disabled here",
+    "Script/sampling overhead included",
+    "RSS and swap separate; no total physical-memory sum",
+    "No camera/signing/latency/soak qualification"
+  ]
+}

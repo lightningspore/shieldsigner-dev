@@ -1,0 +1,42 @@
+--- a/components/seedsigner/screens/keyboard_screen.cpp
++++ b/components/seedsigner/screens/keyboard_screen.cpp
+@@ -120,6 +120,7 @@
+     lv_obj_t   *back_btn = nullptr;
+     lv_obj_t   *top_nav = nullptr;       // for re-laying-out the title on each update
+     lv_obj_t   *title_label = nullptr;
++    bool        key3_save_enabled = false;
+     bool        title_has_power = false; // power button present (for title centering)
+     lv_group_t *group = nullptr;
+ 
+@@ -212,13 +213,22 @@
+     if (lv_event_get_code(e) != LV_EVENT_KEY) return;
+     keyboard_screen_ctx_t *c = (keyboard_screen_ctx_t *)lv_event_get_user_data(e);
+     if (!c) return;
++    if (lv_event_get_key(e) == (uint32_t)'3' && c->key3_save_enabled) {
++        if (c->text_entry && std::strlen(lv_textarea_get_text(c->text_entry)) > 0) keyboard_complete(c);
++        return;
++    }
+     kb_handle_directional(e, c->map.data(), c->matrix, c->back_btn);
+ }
+ 
+ void keyboard_back_key_cb(lv_event_t *e) {
+     if (lv_event_get_code(e) != LV_EVENT_KEY) return;
+     keyboard_screen_ctx_t *c = (keyboard_screen_ctx_t *)lv_event_get_user_data(e);
+-    if (c) kb_back_down_to_matrix(e, c->matrix);
++    if (!c) return;
++    if (lv_event_get_key(e) == (uint32_t)'3' && c->key3_save_enabled) {
++        if (c->text_entry && std::strlen(lv_textarea_get_text(c->text_entry)) > 0) keyboard_complete(c);
++        return;
++    }
++    kb_back_down_to_matrix(e, c->matrix);
+ }
+ 
+ // LV_EVENT_DELETE teardown on the screen root: drop the joystick group (if any),
+@@ -305,6 +315,7 @@
+     }
+     c->total = c->return_after_n_chars;
+     bool show_save_button = cfg.value("show_save_button", false);
++    c->key3_save_enabled = show_save_button;
+     bool show_cursor_keys = cfg.value("show_cursor_keys", true);
+     if (cfg.contains("title_keystroke_template") && cfg["title_keystroke_template"].is_string()) {
+         c->title_template = cfg["title_keystroke_template"].get<std::string>();

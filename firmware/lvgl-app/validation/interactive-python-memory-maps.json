@@ -1,0 +1,575 @@
+{
+  "units": "KiB",
+  "mappings": [
+    {
+      "mapping": "[anonymous]",
+      "Rss": 9796,
+      "Pss": 9796,
+      "Private_Dirty": 9308,
+      "Private_Clean": 488,
+      "Swap": 2560,
+      "SwapPss": 2560
+    },
+    {
+      "mapping": "[heap]",
+      "Rss": 3492,
+      "Pss": 3492,
+      "Private_Dirty": 3400,
+      "Private_Clean": 92,
+      "Swap": 1324,
+      "SwapPss": 1324
+    },
+    {
+      "mapping": "libpython3.12.so.1.0",
+      "Rss": 3740,
+      "Pss": 3740,
+      "Private_Dirty": 672,
+      "Private_Clean": 3068,
+      "Swap": 152,
+      "SwapPss": 152
+    },
+    {
+      "mapping": "libcrypto.so.3",
+      "Rss": 892,
+      "Pss": 892,
+      "Private_Dirty": 12,
+      "Private_Clean": 880,
+      "Swap": 192,
+      "SwapPss": 192
+    },
+    {
+      "mapping": "shieldsigner_lcd.abi3.so",
+      "Rss": 308,
+      "Pss": 308,
+      "Private_Dirty": 16,
+      "Private_Clean": 292,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "libuClibc-1.0.31.so",
+      "Rss": 288,
+      "Pss": 98,
+      "Private_Dirty": 8,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "_scard.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 104,
+      "Pss": 104,
+      "Private_Dirty": 8,
+      "Private_Clean": 96,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "_socket.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 76,
+      "Pss": 76,
+      "Private_Dirty": 8,
+      "Private_Clean": 68,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "math.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 72,
+      "Pss": 72,
+      "Private_Dirty": 8,
+      "Private_Clean": 64,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "libiconv.so.2.6.0",
+      "Rss": 68,
+      "Pss": 68,
+      "Private_Dirty": 0,
+      "Private_Clean": 68,
+      "Swap": 4,
+      "SwapPss": 4
+    },
+    {
+      "mapping": "[stack]",
+      "Rss": 28,
+      "Pss": 28,
+      "Private_Dirty": 28,
+      "Private_Clean": 0,
+      "Swap": 32,
+      "SwapPss": 32
+    },
+    {
+      "mapping": "_ctypes.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 48,
+      "Pss": 48,
+      "Private_Dirty": 12,
+      "Private_Clean": 36,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "_hashlib.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 44,
+      "Pss": 44,
+      "Private_Dirty": 8,
+      "Private_Clean": 36,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "_struct.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 40,
+      "Pss": 40,
+      "Private_Dirty": 8,
+      "Private_Clean": 32,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "array.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 36,
+      "Pss": 36,
+      "Private_Dirty": 8,
+      "Private_Clean": 28,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "_json.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 36,
+      "Pss": 36,
+      "Private_Dirty": 8,
+      "Private_Clean": 28,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "binascii.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 32,
+      "Pss": 32,
+      "Private_Dirty": 4,
+      "Private_Clean": 28,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "ld-uClibc-1.0.31.so",
+      "Rss": 32,
+      "Pss": 20,
+      "Private_Dirty": 8,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "libfreetype.so.6.20.2",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 20,
+      "SwapPss": 20
+    },
+    {
+      "mapping": "_imaging.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 20,
+      "SwapPss": 20
+    },
+    {
+      "mapping": "select.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 20,
+      "Pss": 20,
+      "Private_Dirty": 8,
+      "Private_Clean": 12,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "fcntl.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 20,
+      "Pss": 20,
+      "Private_Dirty": 8,
+      "Private_Clean": 12,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "libatomic.so.1.2.0",
+      "Rss": 16,
+      "Pss": 16,
+      "Private_Dirty": 0,
+      "Private_Clean": 16,
+      "Swap": 4,
+      "SwapPss": 4
+    },
+    {
+      "mapping": "libpcsclite.so.1.0.0",
+      "Rss": 16,
+      "Pss": 16,
+      "Private_Dirty": 8,
+      "Private_Clean": 8,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "libtiff.so.6.1.0",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 16,
+      "SwapPss": 16
+    },
+    {
+      "mapping": "python3.12",
+      "Rss": 4,
+      "Pss": 4,
+      "Private_Dirty": 0,
+      "Private_Clean": 4,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "libv4lconvert.so.0.0.0",
+      "Rss": 12,
+      "Pss": 12,
+      "Private_Dirty": 12,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "libv4l2.so.0.0.0",
+      "Rss": 12,
+      "Pss": 12,
+      "Private_Dirty": 12,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "zbar.so",
+      "Rss": 12,
+      "Pss": 12,
+      "Private_Dirty": 12,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "_cffi_backend.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 12,
+      "SwapPss": 12
+    },
+    {
+      "mapping": "_random.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 12,
+      "Pss": 12,
+      "Private_Dirty": 8,
+      "Private_Clean": 4,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "libgcc_s.so.1",
+      "Rss": 8,
+      "Pss": 8,
+      "Private_Dirty": 4,
+      "Private_Clean": 4,
+      "Swap": 4,
+      "SwapPss": 4
+    },
+    {
+      "mapping": "libintl.so.8.4.0",
+      "Rss": 8,
+      "Pss": 8,
+      "Private_Dirty": 0,
+      "Private_Clean": 8,
+      "Swap": 4,
+      "SwapPss": 4
+    },
+    {
+      "mapping": "libzbar.so.0.3.0",
+      "Rss": 8,
+      "Pss": 8,
+      "Private_Dirty": 8,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "_queue.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 8,
+      "Pss": 8,
+      "Private_Dirty": 8,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "_raw_aes.abi3.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "_cpuid_c.abi3.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "unicodedata.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "libfribidi.so.0.4.0",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "libharfbuzz.so.0.61001.0",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "libpng16.so.16.44.0",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "libraqm.so.0.10.3",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "_imagingft.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "_contextvars.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "libjpeg.so.8.2.2",
+      "Rss": 4,
+      "Pss": 4,
+      "Private_Dirty": 4,
+      "Private_Clean": 0,
+      "Swap": 4,
+      "SwapPss": 4
+    },
+    {
+      "mapping": "_sha2.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "_bisect.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "_datetime.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 4,
+      "Pss": 4,
+      "Private_Dirty": 4,
+      "Private_Clean": 0,
+      "Swap": 4,
+      "SwapPss": 4
+    },
+    {
+      "mapping": "_heapq.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "_posixsubprocess.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 8,
+      "Pss": 8,
+      "Private_Dirty": 8,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "_opcode.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "termios.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "mmap.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "libffi.so.8.1.4",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "libbz2.so.1.0.8",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "_bz2.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "zlib.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "_blake2.cpython-312-arm-linux-gnueabihf.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 8,
+      "SwapPss": 8
+    },
+    {
+      "mapping": "libz.so.1",
+      "Rss": 4,
+      "Pss": 4,
+      "Private_Dirty": 4,
+      "Private_Clean": 0,
+      "Swap": 4,
+      "SwapPss": 4
+    },
+    {
+      "mapping": "libsecp256k1_linux_armv7l.so",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 4,
+      "SwapPss": 4
+    },
+    {
+      "mapping": "[sigpage]",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    },
+    {
+      "mapping": "[vectors]",
+      "Rss": 0,
+      "Pss": 0,
+      "Private_Dirty": 0,
+      "Private_Clean": 0,
+      "Swap": 0,
+      "SwapPss": 0
+    }
+  ],
+  "processTotals": {
+    "Rss": 19308,
+    "Pss": 19106,
+    "Private_Dirty": 13632,
+    "Private_Clean": 5372,
+    "Swap": 4528,
+    "SwapPss": 4528
+  },
+  "observedAt": "2026-10-30T23:45:08.210437+00:00",
+  "scope": "One uncontrolled interactive Python memory-map observation. No UI-state, object attribution, total-system measurement or causal memory-saving claim.",
+  "addressesRecorded": false,
+  "objectValuesRecorded": false
+}

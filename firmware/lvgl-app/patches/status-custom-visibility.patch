@@ -1,0 +1,30 @@
+--- a/components/seedsigner/screens/large_icon_status_screen.cpp
++++ b/components/seedsigner/screens/large_icon_status_screen.cpp
+@@ -125,7 +125,7 @@
+     // one screen renders any large-icon prompt: PSBTFinalize's SIGN icon, the microSD
+     // notification, etc. custom_icon backs defaults.icon (a const char*) for the render.
+     std::string custom_icon;
+-    if (status == status_type_t::CUSTOM) {
++    { // Original status subclasses permit caller-supplied icon/color overrides.
+         if (cfg.contains("icon") && cfg["icon"].is_string()) {
+             custom_icon   = cfg["icon"].get<std::string>();
+             defaults.icon = custom_icon.c_str();
+@@ -185,6 +185,9 @@
+     // anchors the headline spacing exactly where Python places it.
+     lv_obj_set_style_pad_all(icon, 0, LV_PART_MAIN);
+     lv_obj_set_style_text_align(icon, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
++    // Hidden labels do not reserve flex space (status_icon_size=0 upstream).
++    bool show_status_icon = cfg.value("show_status_icon", true);
++    if (!show_status_icon) lv_obj_add_flag(icon, LV_OBJ_FLAG_HIDDEN);
+ 
+     // upper_body now spans the full screen width (body padding zeroed above).
+     const int32_t upper_body_content_width = lv_obj_get_width(screen.screen);
+@@ -292,7 +295,7 @@
+             bool has_headline = cfg.contains("status_headline") &&
+                                 cfg["status_headline"].is_string() &&
+                                 !cfg["status_headline"].get<std::string>().empty();
+-            if (status == status_type_t::CUSTOM && !has_headline) {
++            if (show_status_icon && status == status_type_t::CUSTOM && !has_headline) {
+                 lv_obj_set_style_margin_top(body_label, 2 * COMPONENT_PADDING, LV_PART_MAIN);
+             }
+         }

@@ -1,0 +1,215 @@
+{
+  "passed": true,
+  "importRuns": [
+    {
+      "mode": "before",
+      "passed": true,
+      "before": {
+        "privateKiB": 4216,
+        "rssKiB": 11856,
+        "packages": {
+          "PIL": 0,
+          "Cryptodome": 0,
+          "cryptography": 0,
+          "pysatochip": 0,
+          "smartcard": 0,
+          "ecdsa": 0,
+          "urtypes": 0
+        }
+      },
+      "after": {
+        "privateKiB": 14124,
+        "rssKiB": 22816,
+        "packages": {
+          "PIL": 0,
+          "Cryptodome": 9,
+          "cryptography": 0,
+          "pysatochip": 11,
+          "smartcard": 34,
+          "ecdsa": 16,
+          "urtypes": 17
+        }
+      },
+      "importDeltaPrivateKiB": 9908,
+      "scope": "Import-only wallet View graph; no hardware, seed, key or wallet created"
+    },
+    {
+      "mode": "after",
+      "passed": true,
+      "before": {
+        "privateKiB": 4216,
+        "rssKiB": 11792,
+        "packages": {
+          "PIL": 0,
+          "Cryptodome": 0,
+          "cryptography": 0,
+          "pysatochip": 0,
+          "smartcard": 0,
+          "ecdsa": 0,
+          "urtypes": 0
+        }
+      },
+      "after": {
+        "privateKiB": 10088,
+        "rssKiB": 18432,
+        "packages": {
+          "PIL": 0,
+          "Cryptodome": 0,
+          "cryptography": 0,
+          "pysatochip": 0,
+          "smartcard": 0,
+          "ecdsa": 0,
+          "urtypes": 0
+        }
+      },
+      "importDeltaPrivateKiB": 5872,
+      "scope": "Import-only wallet View graph; no hardware, seed, key or wallet created"
+    }
+  ],
+  "importGraphReductionKiB": 4036,
+  "transactionObservations": [
+    {
+      "mode": "earlier",
+      "snapshots": [
+        {
+          "screen": "MainMenuScreen",
+          "privateAnonPlusSwapKiB": 14968
+        },
+        {
+          "screen": "ScanScreen",
+          "privateAnonPlusSwapKiB": 14976
+        },
+        {
+          "screen": "ButtonListScreen",
+          "privateAnonPlusSwapKiB": 15052
+        },
+        {
+          "screen": "ScanScreen",
+          "privateAnonPlusSwapKiB": 15052
+        },
+        {
+          "screen": "SeedFinalizeScreen",
+          "privateAnonPlusSwapKiB": 18860
+        },
+        {
+          "screen": "PSBTOverviewScreen",
+          "privateAnonPlusSwapKiB": 19036
+        },
+        {
+          "screen": "PSBTMathScreen",
+          "privateAnonPlusSwapKiB": 19036
+        },
+        {
+          "screen": "PSBTAddressDetailsScreen",
+          "privateAnonPlusSwapKiB": 19036
+        },
+        {
+          "screen": "PSBTChangeDetailsScreen",
+          "privateAnonPlusSwapKiB": 19036
+        },
+        {
+          "screen": "LoadMultisigWalletDescriptorScreen",
+          "privateAnonPlusSwapKiB": 19036
+        },
+        {
+          "screen": "ScanScreen",
+          "privateAnonPlusSwapKiB": 19036
+        },
+        {
+          "screen": "MultisigWalletDescriptorScreen",
+          "privateAnonPlusSwapKiB": 19004
+        },
+        {
+          "screen": "PSBTChangeDetailsScreen",
+          "privateAnonPlusSwapKiB": 19008
+        },
+        {
+          "screen": "PSBTFinalizeScreen",
+          "privateAnonPlusSwapKiB": 19012
+        },
+        {
+          "screen": "QRDisplayScreen",
+          "privateAnonPlusSwapKiB": 19012
+        },
+        {
+          "screen": "MainMenuScreen",
+          "privateAnonPlusSwapKiB": 19136
+        }
+      ]
+    },
+    {
+      "mode": "current",
+      "snapshots": [
+        {
+          "screen": "MainMenuScreen",
+          "privateAnonPlusSwapKiB": 15244
+        },
+        {
+          "screen": "ScanScreen",
+          "privateAnonPlusSwapKiB": 15248
+        },
+        {
+          "screen": "ButtonListScreen",
+          "privateAnonPlusSwapKiB": 15320
+        },
+        {
+          "screen": "ScanScreen",
+          "privateAnonPlusSwapKiB": 15320
+        },
+        {
+          "screen": "SeedFinalizeScreen",
+          "privateAnonPlusSwapKiB": 17156
+        },
+        {
+          "screen": "PSBTOverviewScreen",
+          "privateAnonPlusSwapKiB": 17196
+        },
+        {
+          "screen": "PSBTMathScreen",
+          "privateAnonPlusSwapKiB": 17196
+        },
+        {
+          "screen": "PSBTAddressDetailsScreen",
+          "privateAnonPlusSwapKiB": 17196
+        },
+        {
+          "screen": "PSBTChangeDetailsScreen",
+          "privateAnonPlusSwapKiB": 17196
+        },
+        {
+          "screen": "LoadMultisigWalletDescriptorScreen",
+          "privateAnonPlusSwapKiB": 17196
+        },
+        {
+          "screen": "ScanScreen",
+          "privateAnonPlusSwapKiB": 17196
+        },
+        {
+          "screen": "MultisigWalletDescriptorScreen",
+          "privateAnonPlusSwapKiB": 17216
+        },
+        {
+          "screen": "PSBTChangeDetailsScreen",
+          "privateAnonPlusSwapKiB": 17216
+        },
+        {
+          "screen": "PSBTFinalizeScreen",
+          "privateAnonPlusSwapKiB": 17216
+        },
+        {
+          "screen": "QRDisplayScreen",
+          "privateAnonPlusSwapKiB": 17292
+        },
+        {
+          "screen": "MainMenuScreen",
+          "privateAnonPlusSwapKiB": 17292
+        }
+      ]
+    }
+  ],
+  "hostTests": 231,
+  "viewLogicAstEquivalentExceptImportsAndTypeHints": true,
+  "optionalImplementationsUnmodified": true,
+  "scope": "Cold import graph and warm transaction observations are different workloads; savings must not be added; no isolated allocation or full-system RAM attribution.",
+  "runtimeManifestSha256": "02ceea55c3199f501175fbb509d5f3bd9846766ebbd123cd95c978859988e79e"
+}

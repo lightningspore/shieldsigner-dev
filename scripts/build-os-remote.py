@@ -12,9 +12,10 @@ import subprocess
 import tarfile
 import tempfile
 
-ROOT = Path(__file__).resolve().parents[1]
+from firmware_paths import ROOT, OS_WORK, STAGING, JOBS
 SCRIPTS = ["build-os.sh", "configure-os-reader.py", "configure-os-camera.py",
-           "prepare-camera-image.py", "camera-image-overlay.py", "run-os-image-job.sh"]
+           "prepare-camera-image.py", "camera-image-overlay.py", "run-os-image-job.sh",
+           "firmware_paths.py"]
 
 
 def run(*args, **kwargs):
@@ -33,11 +34,13 @@ def main():
         parser.error("Set SHIELDSIGNER_BUILD_HOST or pass --host (documented SSH builder)")
     if args.host.startswith("-") or not re.fullmatch(r"[A-Za-z0-9_.@:-]+", args.host):
         parser.error("Use an SSH host alias or user@host")
+    if args.name and not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", args.name):
+        parser.error("Output name must start with a letter/digit and contain only letters, digits, dots, dashes and underscores")
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     if not args.bundle:
         run("mise", "run", "camera:rust:arm")
         run("mise", "run", "camera:qr:native-build")
-        args.bundle = ROOT / "dist/os/image-bundles" / stamp
+        args.bundle = STAGING / (args.name or stamp) / "camera-bundle"
         run("uv", "run", "--python", "3.13", "python", "scripts/prepare-camera-image.py",
             "--output", args.bundle, "--variant", args.variant, *(["--kernel-probe"] if args.kernel_probe else []))
     args.bundle = args.bundle.resolve()
@@ -50,7 +53,7 @@ def main():
         parser.error("Kernel-probe mode must match its explicitly probe-only bundle")
     sha = hashlib.sha256((args.bundle / "manifest.json").read_bytes()).hexdigest()
     name = args.name or ("rust-" + manifest["version"] + "-" + stamp)
-    if not re.fullmatch(r"[A-Za-z0-9_.-]+", name):
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", name):
         parser.error("Output name may contain only letters, digits, dots, dashes and underscores")
     remote_archive = "/tmp/shieldsigner-image-" + sha[:16] + ".tar.gz"
     ssh = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", args.host]
@@ -64,8 +67,8 @@ if docker ps --format '{{.Names}}' | grep -q '^seedsigner-build-'; then
 fi
 '''
     run(*ssh, "pct exec 610 -- bash -s", input=preflight, text=True)
-    (ROOT / "dist/os").mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="image-transfer-", dir=ROOT / "dist/os") as temporary:
+    OS_WORK.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="image-transfer-", dir=OS_WORK) as temporary:
         archive = Path(temporary) / "payload.tar.gz"
         with tarfile.open(archive, "w:gz") as tar:
             tar.add(ROOT / "scripts", arcname="scripts", recursive=False)
@@ -77,10 +80,14 @@ fi
                 tar.add(args.bundle / entry, arcname="camera-bundle/" + entry)
         run("scp", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", archive,
             args.host + ":" + remote_archive)
-    guest_archive = "/tmp/shieldsigner-image-" + sha[:16] + ".tar.gz"
+    guest_root = Path("/opt/shieldsigner-build")
+    guest_work = guest_root / OS_WORK.relative_to(ROOT)
+    guest_archive = str(guest_work / "transfers" / (sha[:16] + ".tar.gz"))
+    run(*ssh, "pct exec 610 -- mkdir -p " + shlex.quote(str(Path(guest_archive).parent)))
     run(*ssh, "pct push 610 " + shlex.quote(remote_archive) + " " + shlex.quote(guest_archive))
-    output = "/opt/shieldsigner-build/dist/os-" + name
-    bundle_path = "/opt/shieldsigner-build/dist/camera-bundles/" + sha
+    run(*ssh, "rm -f " + shlex.quote(remote_archive))
+    output = str(guest_work / name)
+    bundle_path = str(guest_root / STAGING.relative_to(ROOT) / name / "camera-bundle")
     launch = '''set -eu
 export PATH=/usr/local/bin:$PATH
 cd /opt/shieldsigner-build
@@ -89,10 +96,12 @@ exec 9>dist/os-image-build.lock
 flock -n 9 || { echo 'Another image job owns the workspace/cache' >&2; exit 2; }
 if docker ps --format '{{.Names}}' | grep -q '^seedsigner-build-'; then exit 2; fi
 test ! -e @OUTPUT@
+test ! -e @BUNDLE@
 mkdir -p @OUTPUT@ @BUNDLE@
 tar -xzf @ARCHIVE@ -C /opt/shieldsigner-build scripts
 tar -xzf @ARCHIVE@ -C @BUNDLE@ --strip-components=1 camera-bundle
 uv run --python 3.13 python scripts/prepare-camera-image.py --verify @BUNDLE@ >/dev/null
+rm -f @ARCHIVE@
 nohup env SHIELDSIGNER_IMAGE_LOCK_INHERITED=1 SHIELDSIGNER_BUILD_JOBS=6 \\
  SHIELDSIGNER_IMAGE_VARIANT=@VARIANT@ SHIELDSIGNER_KERNEL_PROBE_ONLY=@PROBE@ \\
  SHIELDSIGNER_OUTPUT_DIR=@OUTPUT@ SHIELDSIGNER_CAMERA_BUNDLE=@BUNDLE@ \\
@@ -104,10 +113,10 @@ printf '{"pid":%s}\\n' "$pid"
     for token, value in [("@OUTPUT@", output), ("@BUNDLE@", bundle_path), ("@ARCHIVE@", guest_archive), ("@VARIANT@", args.variant), ("@PROBE@", "1" if args.kernel_probe else "0")]:
         launch = launch.replace(token, shlex.quote(value))
     result = subprocess.check_output([*ssh, "pct exec 610 -- bash -s"], input=launch, text=True)
-    job = {"kind": "shieldsigner-remote-image-job", "bundleManifestSha256": sha,
-           "remoteOutput": output, "imageVariant": args.variant, "kernelProbeOnly": args.kernel_probe, "launcher": json.loads(result.strip().splitlines()[-1]),
+    job = {"kind": "shieldsigner-remote-image-job", "name": name, "artifactLayout": 1, "bundleManifestSha256": sha,
+           "remoteOutput": output, "remoteBundle": bundle_path, "imageVariant": args.variant, "kernelProbeOnly": args.kernel_probe, "launcher": json.loads(result.strip().splitlines()[-1]),
            "scope": "Started only; inspect actual process/Docker and exit-code before claiming success"}
-    destination = ROOT / "dist/os/remote-jobs" / (name + ".json")
+    destination = JOBS / (name + ".json")
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(job, indent=2) + "\n")
     print(json.dumps(job, indent=2))

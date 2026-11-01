@@ -2,9 +2,18 @@
 # Guest-side watcher: wait for the existing first run, then compare a cached run.
 set -euo pipefail
 project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-first="$project_dir/dist/os"
-second="$project_dir/dist/os-second"
-metrics="$project_dir/dist/os-benchmark"
+os_work="$(python3 "$project_dir/scripts/firmware_paths.py" os-work)"
+benchmark="$os_work/benchmark"
+first="${SHIELDSIGNER_BENCHMARK_FIRST_DIR:-$benchmark/first}"
+second="${SHIELDSIGNER_BENCHMARK_SECOND_DIR:-$benchmark/second}"
+metrics="${SHIELDSIGNER_BENCHMARK_METRICS_DIR:-$benchmark/metrics}"
+# This watcher belongs to the historical Linux guest benchmark. Its cached
+# wrapper must already exist; never silently replace it with a different build.
+if [[ ! -f "$project_dir/scripts/build-os-cached.sh" ]]; then
+  echo 'Historical benchmark unavailable: scripts/build-os-cached.sh is not installed.' >&2
+  echo 'Use mise run os:remote:build for a supported build; do not start this watcher.' >&2
+  exit 2
+fi
 mkdir -p "$metrics"
 exec 9>"$metrics/watcher.lock"
 flock -n 9 || { echo 'Benchmark watcher already running'; exit 1; }

@@ -1,0 +1,22 @@
+--- a/components/seedsigner/screens/seed_address_verification_success_screen.cpp
++++ b/components/seedsigner/screens/seed_address_verification_success_screen.cpp
+@@ -256,6 +256,19 @@
+                                 COMPONENT_PADDING / 2 - text_top_leading(&BODY_FONT, index_text.c_str()),
+                                 LV_PART_MAIN);
+ 
++    // Fork's verified derivation and non-standard-path warning are host content.
++    for (const char *field : {"derivation_text", "non_standard_text"}) {
++        if (!cfg.contains(field) || !cfg[field].is_string() || cfg[field].get<std::string>().empty()) continue;
++        auto text = cfg[field].get<std::string>();
++        auto *label = lv_label_create(screen.upper_body);
++        lv_label_set_text(label, text.c_str());
++        lv_obj_set_style_text_font(label, &BODY_FONT, LV_PART_MAIN);
++        lv_obj_set_style_text_color(label, lv_color_hex(cfg.value("is_non_standard", false) ? WARNING_COLOR : BODY_FONT_COLOR), LV_PART_MAIN);
++        lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
++        lv_obj_set_width(label, display_width - 2 * EDGE_PADDING);
++        lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
++    }
++
+     // --- Navigation + load ---
+ 
+     // NAV_INDEX_NONE (read-first): when the stack fits, the single OK button is reached

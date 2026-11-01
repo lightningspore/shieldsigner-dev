@@ -1,0 +1,12 @@
+{
+  "verified": true,
+  "files": 63,
+  "payloadBytes": 1759380,
+  "releaseReady": false,
+  "serviceInstalled": false,
+  "deterministicSecondStage": true,
+  "modifiedFileRejected": true,
+  "packagingToolSha256": "76c852194e1076201a4be97448ed98671c789afbbf97a16e8b0bdcbb07969ed8",
+  "manifestSha256": "7a5638794a41aba09321454cf31852ca899359293bd53076ab3c3b183fde1581",
+  "scope": "Local inactive runtime packaging only. Static ARM validation, checksums/modes, deterministic manifest and corruption rejection. No target install, service activation, bootable image, license closure or ARM runtime qualification."
+}

@@ -1,0 +1,23 @@
+--- a/components/seedsigner/navigation.cpp
++++ b/components/seedsigner/navigation.cpp
+@@ -375,7 +375,20 @@
+             return;
+         }
+ 
++        // Match original LargeButtonScreen: left from either first-column tile
++        // enters Back; right from Back returns to the remembered tile.
++        if (key == LV_KEY_RIGHT && ctx->zone == NAV_ZONE_TOP && ctx->top_is_back) {
++            ctx->zone = NAV_ZONE_BODY;
++            update_visual_focus(ctx);
++            return;
++        }
+         if (ctx->zone == NAV_ZONE_BODY) {
++            if (key == LV_KEY_LEFT && ctx->body_index % cols == 0 &&
++                ctx->top_item && ctx->top_is_back) {
++                ctx->zone = NAV_ZONE_TOP;
++                update_visual_focus(ctx);
++                return;
++            }
+             // UP from the top row of the grid enters top-nav (if present).
+             if (key == LV_KEY_UP && ctx->body_index < cols && ctx->top_item) {
+                 ctx->zone = NAV_ZONE_TOP;

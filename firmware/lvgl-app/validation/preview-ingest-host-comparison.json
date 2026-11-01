@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "before": {
+    "passed": true,
+    "samplesSeconds": [
+      0.20045254204887897,
+      0.195736667024903,
+      0.19558133301325142,
+      0.19708316703327,
+      0.1943243748974055,
+      0.19288066599983722,
+      0.19138770794961601,
+      0.19504295801743865
+    ],
+    "medianSeconds": 0.19531214551534504,
+    "rectangles": 108,
+    "physicalDisplay": false,
+    "cameraStarted": false,
+    "scope": "Sequential preview IPC+render/flush acknowledgements, public RGB frames; not camera FPS or end-to-end QR latency."
+  },
+  "after": {
+    "passed": true,
+    "samplesSeconds": [
+      0.006527624907903373,
+      0.006563916918821633,
+      0.0064758750377222896,
+      0.006455500028096139,
+      0.0067802919074893,
+      0.006711708032526076,
+      0.006340333027765155,
+      0.00676441693212837
+    ],
+    "medianSeconds": 0.006545770913362503,
+    "rectangles": 108,
+    "physicalDisplay": false,
+    "cameraStarted": false,
+    "scope": "Sequential preview IPC+render/flush acknowledgements, public RGB frames; not camera FPS or end-to-end QR latency."
+  },
+  "scope": "Host-only headless sequential public-preview round trips before/after removing busy-read sleep. No camera or physical SPI; not a 30x hardware FPS claim."
+}

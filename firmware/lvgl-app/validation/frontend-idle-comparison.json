@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "sameBundleVerified": true,
+  "runOrder": [
+    "lvgl",
+    "pil"
+  ],
+  "pairs": 1,
+  "idleSampleWindow": "Seconds 1 through 7 of 8-second Home idle",
+  "results": {
+    "lvgl": {
+      "sampleCount": 7,
+      "sampleWindowSeconds": 5.998,
+      "medianUnits": "KiB except Threads",
+      "processes": {
+        "python": {
+          "VmRSS": 24768,
+          "RssAnon": 14864,
+          "VmSwap": 40,
+          "Threads": 5,
+          "cpuPercentOneCore": 11.17
+        },
+        "native": {
+          "VmRSS": 1520,
+          "RssAnon": 212,
+          "VmSwap": 0,
+          "Threads": 1,
+          "cpuPercentOneCore": 1.167
+        }
+      }
+    },
+    "pil": {
+      "sampleCount": 7,
+      "sampleWindowSeconds": 5.9975,
+      "medianUnits": "KiB except Threads",
+      "processes": {
+        "python": {
+          "VmRSS": 24900,
+          "RssAnon": 14436,
+          "VmSwap": 344,
+          "Threads": 5,
+          "cpuPercentOneCore": 7.503
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Warm device; no matched cold startup",
+    "Single sequential pair; cache/system pressure may differ",
+    "GPIO/script/sampling overhead included",
+    "Process RSS is not total physical memory and must not be naively summed",
+    "No camera/QR/signing load or latency/soak qualification"
+  ]
+}

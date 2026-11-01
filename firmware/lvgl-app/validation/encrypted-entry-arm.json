@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "screen": "ScanTypeEncryptionKeyScreen",
+      "saveFixturesExact": 5,
+      "backTextExact": true
+    },
+    {
+      "screen": "SeedEncryptedQRMnemonicIDScreen",
+      "saveFixturesExact": 5,
+      "backTextExact": true
+    }
+  ],
+  "originalEntryViewsAndDiscard": true,
+  "seedUnchanged": true,
+  "physicalDisplay": true,
+  "physicalButtons": false,
+  "dependencyInitializationInjected": true,
+  "cryptoExecuted": false,
+  "reviewScreensQualified": false,
+  "testSourceSha256": "11a9157bb42f0e025d6f2de7ee671942bad0f57d137c7422087688b0b1b418da",
+  "runtimeSha256": "c80037518493d6cfb1917921e4dbc8cfd89fbabffe238be658925dc8706905a4",
+  "contractsSha256": "0b200d71f4180f5a715664b13f7f5d081e7cceab4759e1b0077de67435b1205e",
+  "runnerReceipt": "dist/lvgl-app/checks/encrypted-entry-20261030T165909867700Z.json",
+  "scope": "Public prefilled text and original export entry/discard Views; no review, encryption or decryption qualification."
+}

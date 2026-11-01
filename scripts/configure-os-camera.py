@@ -17,7 +17,11 @@ def replace_once(text, before, after):
     return text.replace(before, after, 1)
 
 
-def patched(name, text, dependencies=True, probe=True, cma=True, memory=True, lcd=True, io=True):
+LVGL_INSTALL = '    if [[ -f /build/shieldsigner-camera/lvgl-overlay/overlay-apply.py ]]; then\n        python3 /build/shieldsigner-camera/lvgl-overlay/overlay-apply.py --rootfs "$ROOTFS_DIR"\n    fi\n\n'
+LVGL_VERIFY = '\n        if [[ -f /build/shieldsigner-camera/lvgl-overlay/overlay-apply.py ]]; then\n            python3 /build/shieldsigner-camera/lvgl-overlay/overlay-apply.py --verify "$ROOTFS_DIR"\n        fi'
+
+
+def patched(name, text, dependencies=True, probe=True, cma=True, memory=True, lcd=True, io=True, lvgl=True):
     if name.endswith("/build.sh"):
         text = replace_once(text, '    local docker_args="$PLATFORM_ARGS', '''    local camera_bundle_arg=""
     if [[ -n "${SHIELDSIGNER_CAMERA_BUNDLE:-}" ]]; then
@@ -96,6 +100,10 @@ fi
     fi
     print_step "Building Kernel"
     sdk_build kernel''')
+    if lvgl and name.endswith("/os-build.sh"):
+        text = replace_once(text, '    # Non-dev (production) rootfs hardening:', LVGL_INSTALL + '    # Non-dev (production) rootfs hardening:')
+        anchor='        python3 /build/shieldsigner-camera/image-overlay.py --verify "$ROOTFS_DIR"'
+        text = replace_once(text, anchor, anchor + LVGL_VERIFY)
     if not cma:
         text = text.replace(' -e MINI_CMA_SIZE=${MINI_CMA_SIZE:-12M}', '')
     if not probe:
@@ -119,7 +127,9 @@ def configure(checkout, mode):
         prior_desired = patched(name, original, probe=False, cma=False, memory=False, lcd=False, io=False)
         prior_probe_desired = patched(name, original, cma=False, memory=False, lcd=False, io=False)
         previous_dependency_hook = desired.replace('        export SHIELDSIGNER_CAMERA_SDK_DIR="$LUCKFOX_SDK_DIR"\n', '')
-        if path.read_text() not in {original, desired, prior_io_desired, prior_lcd_desired, prior_memory_desired, prior_desired, prior_probe_desired, previous_dependency_hook, patched(name, original, dependencies=False, memory=False, lcd=False, io=False)}:
+        accepted = {original, desired, prior_io_desired, prior_lcd_desired, prior_memory_desired, prior_desired, prior_probe_desired, previous_dependency_hook, patched(name, original, dependencies=False, memory=False, lcd=False, io=False)}
+        accepted |= {item.replace(LVGL_INSTALL, '').replace(LVGL_VERIFY, '') for item in tuple(accepted)}
+        if path.read_text() not in accepted:
             raise ValueError("OS camera hook has unreviewed edits: " + name)
         data = desired if mode == "rust" else original
         changes.append((path, data))

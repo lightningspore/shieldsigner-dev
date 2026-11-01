@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "scope": "Private anonymous RAM plus swap, not sum of RSS or total device RAM. Warm sequential phase medians exclude first 3 seconds. Python variation is not attributed to these native-only changes.",
+  "before": {
+    "home-idle": {
+      "python": 11024.0,
+      "native": 216.0
+    },
+    "camera-live": {
+      "python": 13464,
+      "native": 356
+    }
+  },
+  "after": {
+    "home-idle": {
+      "python": 11024.0,
+      "native": 92.0
+    },
+    "camera-live": {
+      "python": 13588,
+      "native": 356
+    }
+  },
+  "nativeHomeReductionKiB": 124,
+  "previewInputCapacityReleasedKiB": 132,
+  "previewStopPrivateBeforeKiB": 336,
+  "previewStopPrivateAfterKiB": 204,
+  "previewFrames": 57,
+  "cameraStopped": true,
+  "ownerExitCode": 0,
+  "blackOnStartAndAcrossRestarts": true,
+  "queuedCommandPreserved": true,
+  "malformedAndTruncatedBounded": true,
+  "hostTests": 241,
+  "hostNativeGroups": 9,
+  "runtimeBundle": "dist/lvgl-app/runtime-memory-native-preview-01",
+  "runtimeManifestSha256": "ed5493c91648a175c6a7fb1d498fee9e9a78beba4ef05779c545528f5a525374"
+}

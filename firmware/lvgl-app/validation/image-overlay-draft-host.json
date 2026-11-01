@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "twoDraftsIdentical": true,
+  "verification": {
+    "verified": true,
+    "files": 81,
+    "bytes": 1924302,
+    "defaultFrontend": "pil",
+    "imageBuilt": false,
+    "installed": false,
+    "releaseReady": false
+  },
+  "integrationPlanSha256": "14ed57476a2411ee201f3482904d91a1876b79f002e677ac99240d8f72bc8d61",
+  "baseLauncherExact": true,
+  "englishOnly": true,
+  "smartcardWorkExcluded": true,
+  "sourceDateEpoch": 1793366723,
+  "scope": "Offline overlay draft only; shell/version checks do not qualify device boot or service lifecycle",
+  "changedRollbackRejected": true
+}

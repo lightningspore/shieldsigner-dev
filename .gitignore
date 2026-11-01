@@ -9,7 +9,7 @@ tools/telegram/shieldsigner.txt
 __pycache__/
 
 .tools/
-tools/os/seedsigner-os/
+tools/os/seedsigner-os
 *.kicad_prl
 *.lck
 *-backups/

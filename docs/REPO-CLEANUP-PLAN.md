@@ -37,8 +37,20 @@ runtime/overlay/camera provenance verify. All 245 LVGL host tests pass after the
 move. All 55 compatibility aliases resolve correctly; 18 artifact-tool tests,
 the canonical native host build and all nine native protocol groups pass.
 The host rebuild left all 2,170 frozen image/staging file hashes unchanged.
-Phase 1 is complete. The later phases below remain planned work. No new OS image
-or board flash was required for this organization change.
+Phase 1 is complete. The follow-up cleanup also completed the source checkpoint
+review, current/history documentation split and test/evidence indexing in phases
+2–4. The reviewed firmware/tooling source is committed; no generated image,
+private capture or build cache is included. The LVGL README is now a short entry
+point, with focused architecture/build/memory/acceptance guides and both full
+notebooks preserved under `docs/history/`. All 295 JSON receipts are indexed
+exactly once, including historical failures. See the
+[source inventory](FIRMWARE-SOURCE-INVENTORY.md) for reviewed boundaries and the
+[test map](../firmware/lvgl-app/tests/README.md) for runner scope.
+
+Phase 5 remains selective maintenance, not a blanket deletion pass. Source pins,
+licenses and useful compiler/SDK caches are retained. The known historical
+recorder scripts remain explicitly labelled rather than being rerun or silently
+rewritten. No new OS image or board flash was required.
 
 ## Phase 1: establish the artifact lifecycle
 

@@ -2,6 +2,13 @@
 
 This build uses the ShieldSigner application fork of SeedSigner. The tables below describe the **pinned application's documented behavior**, not completed physical qualification of our carrier. Settings, installed dependencies and the selected hardware profile determine what appears and works.
 
+The current development frontend is LVGL, with the original Python wallet logic
+and a Rust camera/QR path. See [Current firmware](FIRMWARE-STATUS.md) for actual
+bench and automated acceptance. English is the current target; smartcard
+workflows have not been qualified in this frontend. The upstream feature and
+default tables below are reference material, not a claim that every branch has
+been exercised in the LVGL image.
+
 ## The normal Bitcoin signing workflow
 
 1. Load or generate a seed on the signer. Ordinary SeedSigner operation holds the loaded seed in memory.

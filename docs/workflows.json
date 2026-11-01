@@ -232,111 +232,129 @@
     {
       "slug": "compile",
       "number": 3,
-      "title": "Compile the software",
-      "summary": "Build the pinned Mini microSD image with the reader variant for your board.",
+      "title": "Build & iterate on firmware",
+      "summary": "Test the LVGL renderer, stage one named runtime, then build an OS image only when needed.",
       "needs": [
-        "x86_64 Linux builder with Docker",
-        "Git, mise and uv",
-        "Internet for first-build downloads"
+        "Repository checkout and mise",
+        "Desktop toolchain for host tests; x86_64 Linux + Docker for the OS build",
+        "A camera bundle matching the intended Mini display/button profile"
       ],
-      "result": "A flashable .img, build.log and recorded reader configuration.",
+      "result": "A tested host renderer, named immutable runtime inputs, or a separately tracked OS image candidate.",
       "steps": [
         {
-          "title": "Choose your target",
+          "title": "Start from the tested profile and source pins",
           "items": [
-            "This carrier uses Luckfox Pico Mini + microSD + SEC1210/PV-UR2.",
-            "Apple Silicon is rejected by the pinned upstream Docker runner. Use an x86_64 Linux machine/VM; clone the public repo there.",
-            "Mini NAND, Pro/Max and Pico Pi are different build/flash routes. Do not pick them by a similar filename."
-          ],
-          "links": [
-            {
-              "label": "Upstream Luckfox target matrix",
-              "url": "https://3rditeration.github.io/seedsigner/os/luckfox/README.html"
-            },
-            {
-              "label": "Install Docker on Linux",
-              "url": "https://docs.docker.com/engine/install/"
-            },
-            {
-              "label": "Install mise",
-              "url": "https://mise.jdx.dev/getting-started.html"
-            }
-          ]
-        },
-        {
-          "title": "Clone the project and prepare the reader",
-          "items": [
-            "Run from the repo root on your builder. Preparation checks the OS commit and applies only the reviewed Luckfox UR2 reader setting.",
-            "The manifest records the exact reader file hash; unrelated source changes are rejected."
+            "Read the firmware status first: current bench image lvgl-dev.cb6170a37a5a, Python wallet logic, native LVGL UI, Rust camera and ZXing-C++ decoder.",
+            "The repository pins OS e7589465aff172f4f510ad46d18776ccc8d2c203 and app efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f. Keep those pins when reproducing the baseline.",
+            "Use the canonical artifact directories. Hardware and website version strings do not identify the flashed firmware.",
+            "A fresh clone contains source, not the local baseline image or camera bundles. Image discovery/verification requires those artifacts to have been built or provided separately."
           ],
           "commands": [
             {
-              "label": "Prepare carrier sources",
-              "text": "git clone https://github.com/lightningspore/shieldsigner-dev.git\ncd shieldsigner-dev\nmise install uv\nmise run os:prepare"
-            },
-            {
-              "label": "Inspect the recorded reader variant",
-              "text": "cat dist/os/UR2/reader-config.json\ncat tools/os/seedsigner-os/opt/luckfox/files/sec1210"
-            }
-          ]
-        },
-        {
-          "title": "Start the build",
-          "items": [
-            "Six general jobs were used on our x86 builder. Rust/LLVM can dominate the first build; keep the named Docker caches.",
-            "The carrier wrapper now defaults to UR2. The previously benchmarked images were unchanged upstream URT builds."
-          ],
-          "commands": [
-            {
-              "label": "Build the UR2 Mini SD image",
-              "text": "SHIELDSIGNER_BUILD_JOBS=6 mise run os:build"
-            },
-            {
-              "label": "Follow current work from another terminal",
-              "text": "tail -f dist/os/UR2/build.log\ndocker stats"
-            }
-          ]
-        },
-        {
-          "title": "Collect and verify the output",
-          "items": [
-            "Successful exit is necessary: a log file alone is not a finished image.",
-            "Locate the .img and sha256sums.txt under dist/os/UR2. Keep reader-config.json with them.",
-            "The new UR2 preparation was tested, but a complete UR2 image build and hardware boot have not been qualified here."
-          ],
-          "commands": [
-            {
-              "label": "Locate images and calculate hashes",
-              "text": "find dist/os/UR2 -type f \\( -name '*.img' -o -name 'sha256sums.txt' \\)\nfind dist/os/UR2 -type f -name '*.img' -exec sha256sum {} \\;"
+              "label": "Open the repository toolchain",
+              "text": "git clone https://github.com/lightningspore/shieldsigner-dev.git\ncd shieldsigner-dev\nmise install"
             }
           ],
           "links": [
             {
-              "label": "Baseline build evidence and hashes",
-              "url": "/guides/os-build/#completed-cache-benchmark"
+              "label": "Current firmware and acceptance scope",
+              "url": "/guides/firmware-status/"
             }
           ]
         },
         {
-          "title": "Iterate without discarding caches",
+          "title": "Try the host renderer before rebuilding Linux",
           "items": [
-            "Run the same build again to reuse Docker/Rust/source caches. Our baseline rerun took 27m 5s instead of 2h 28m 26s.",
-            "Avoid the upstream clean task during ordinary iteration. Keep full rebuilds for toolchain/architecture changes."
+            "These commands compile for your desktop and exercise the native screen protocol; they do not use the camera, flash a card or change a device.",
+            "The host binary goes to dist/firmware/work/lvgl/build-host; generated protocol evidence goes to dist/firmware/checks/lvgl/host.",
+            "A host pass is useful regression evidence, but physical display, GPIO and camera checks still need the target hardware."
+          ],
+          "commands": [
+            {
+              "label": "Build and test locally",
+              "text": "mise run lvgl:app:build:host\nmise run lvgl:app:test:host\nmise run firmware:test"
+            }
+          ]
+        },
+        {
+          "title": "Stage a new application iteration",
+          "items": [
+            "Choose a new build name. The stager builds the ARM application renderer and freezes runtime, overlay and combined camera inputs together.",
+            "By default it uses the selected local image record's camera base. On a fresh checkout you must provide an existing reviewed camera bundle using --camera; local image artifacts are not in Git.",
+            "Staging is not an OS build, deployment or flash. Existing attempt directories are refused."
+          ],
+          "commands": [
+            {
+              "label": "Stage using the verified local camera base",
+              "text": "mise run firmware:stage -- --name my-lvgl-iteration"
+            },
+            {
+              "label": "Or supply a reviewed camera bundle",
+              "text": "mise run firmware:stage -- --name my-other-iteration --camera /path/to/reviewed/camera-bundle"
+            }
           ],
           "links": [
             {
-              "label": "Caching and targeted rebuild notes",
+              "label": "Artifact layout and preservation rules",
+              "url": "/guides/firmware-artifacts/"
+            }
+          ]
+        },
+        {
+          "title": "Build an OS image only at the image boundary",
+          "items": [
+            "Use an x86_64 Linux Docker builder. Pass the staged bundle explicitly so the image contains the intended LVGL inputs rather than a newly generated default camera-only bundle.",
+            "The example below uses a development bundle. Its variant must match --variant dev. SHIELDSIGNER_BUILD_HOST must already identify your authorized SSH builder.",
+            "Remote outputs use dist/firmware/work/os/<job>; the local job record goes to dist/firmware/jobs/<job>.json. Keep SDK, Rust, download and compiler caches."
+          ],
+          "commands": [
+            {
+              "label": "Launch and inspect one named remote development build",
+              "text": "mise run os:remote:build -- --variant dev --name my-lvgl-image --bundle dist/firmware/staging/my-lvgl-iteration/camera-bundle\nmise run os:remote:status -- my-lvgl-image"
+            }
+          ],
+          "links": [
+            {
+              "label": "Local builds, platform details and cached iteration",
               "url": "/guides/os-build/"
+            }
+          ]
+        },
+        {
+          "title": "Verify the candidate before calling it a flash image",
+          "items": [
+            "A successful job needs an actual terminal exit-code; recent log lines alone do not prove liveness or completion. Inspect the matching launcher and Docker state.",
+            "Keep OS job output separate from the verified image store. Check the packed image, hashes, runtime identity and profile before deliberately selecting an image.",
+            "The selected current image is found by firmware:where and checked by firmware:verify. An arbitrary new build is not automatically promoted or hardware-qualified."
+          ],
+          "commands": [
+            {
+              "label": "Check the deliberately selected image",
+              "text": "mise run firmware:where\nmise run firmware:verify"
+            }
+          ],
+          "links": [
+            {
+              "label": "Image identity and acceptance limits",
+              "url": "/guides/firmware-status/"
             }
           ]
         }
       ],
-      "notice": "Compile on x86_64 Linux. The UR2 wrapper prepares the right reader setting; the historical benchmark proves the upstream baseline, not this new patched image.",
+      "notice": "The current tested LVGL image uses the base-fork 240×240 bench profile. Selecting dev mode alone does not adapt it to the 2.8-inch pill carrier or its UR2 reader.",
       "next": "flash",
       "references": [
         {
-          "label": "Detailed Buildroot notes",
+          "label": "Current LVGL firmware guide",
+          "url": "/guides/firmware-status/"
+        },
+        {
+          "label": "Buildroot details and historical benchmarks",
           "url": "/guides/os-build/"
+        },
+        {
+          "label": "Firmware artifact lifecycle",
+          "url": "/guides/firmware-artifacts/"
         }
       ]
     },
@@ -344,113 +362,99 @@
       "slug": "flash",
       "number": 4,
       "title": "Flash & boot the software",
-      "summary": "Select the correct image, verify it, write microSD, and check the first boot.",
+      "summary": "Verify a local development image, match its hardware profile, and check the boot after writing microSD.",
       "needs": [
-        "Luckfox Pico Mini with SD boot",
+        "Luckfox Pico Mini configured for microSD boot",
         "microSD + reader",
-        "Matching Mini SD .img"
+        "Verified local image and matching display/button/camera profile"
       ],
-      "result": "A verified microSD and a first-boot hardware checklist.",
+      "result": "A written microSD and a recorded first-boot check for the selected hardware profile.",
       "steps": [
         {
-          "title": "Choose a local build or upstream image",
+          "title": "Find the exact local image",
           "items": [
-            "For our UR2 carrier, build with the previous workflow. Do not substitute the historical URT baseline hash for a new UR2 image.",
-            "The pinned upstream B13 Mini SD image is a convenient reference release; its stock reader setting is URT and still needs adaptation for this UR2 carrier.",
-            "Do not flash an SD .img as a NAND/eMMC update, or a Pro/Max/Pi image onto Mini."
+            "Run firmware:where in your existing build checkout to find the deliberately selected image. A new clone contains source, not the local image files.",
+            "The current checkpoint is lvgl-dev.cb6170a37a5a. Match the image profile, display orientation/colors, buttons and camera before writing a card.",
+            "Use a Mini microSD image for this target; NAND/eMMC updates and other Luckfox model images are different artifacts."
           ],
-          "choices": [
+          "commands": [
             {
-              "title": "Our UR2 carrier",
-              "text": "Prepare and compile the carrier image.",
+              "label": "Locate and verify the current local image",
+              "text": "mise run firmware:where\nmise run firmware:verify"
+            }
+          ],
+          "links": [
+            {
+              "label": "Current image identity, hashes and limits",
+              "url": "/guides/firmware-status/"
+            },
+            {
+              "label": "Need to build one first?",
               "url": "/build/compile/"
-            },
-            {
-              "title": "Upstream Mini SD reference",
-              "text": "B13, signed with a public development key; reader adaptation needed.",
-              "url": "https://github.com/3rdIteration/seedsigner/releases/download/SeSi-0.8.7%2BShSi-B13/seedsigner-luckfox-pico-mini-sd-SeSi-0.8.7_ShSi-B13-osproduction-signed-devkey.img"
-            }
-          ],
-          "downloads": [
-            {
-              "label": "Upstream B13 release and verification material",
-              "url": "https://github.com/3rdIteration/seedsigner/releases/tag/SeSi-0.8.7%2BShSi-B13"
             }
           ]
         },
         {
-          "title": "Verify the image before writing",
+          "title": "Check file identity and format",
           "items": [
-            "For the exact B13 upstream file below, the expected SHA-256 is 0b6ae5c48c952b614e515c042e58b9b8527c3a8ff8e7a7894ffa9e6196ff4ebf.",
-            "For your own build, use its generated checksum manifest; its hash is expected to differ.",
-            "A checksum proves file identity. Verify release signatures/signer identity using the upstream guide; the public dev key does not establish exclusive trust."
-          ],
-          "commands": [
-            {
-              "label": "macOS — hash the selected file",
-              "text": "cd ~/Downloads\nshasum -a 256 seedsigner-luckfox-pico-mini-sd-SeSi-0.8.7_ShSi-B13-osproduction-signed-devkey.img"
-            }
+            "The current compressed image is shieldsigner-lvgl-dev-cb6170a37a5a.img.xz; the decompressed .img has the same stem. Both have recorded SHA-256 values in the firmware guide.",
+            "firmware:verify checks the selected files and packed verification record. Hashes identify those exact bytes; they do not prove the carrier wiring or all app workflows work.",
+            "Use .img.xz only with a flasher that supports compressed images. A raw block-device writer must use the decompressed .img."
           ],
           "links": [
             {
-              "label": "Upstream image verification",
-              "url": "https://3rditeration.github.io/seedsigner/os/luckfox/verifying-a-release.html"
+              "label": "Hashes and artifact rules",
+              "url": "/guides/firmware-artifacts/"
             }
           ]
         },
         {
-          "title": "Write the microSD on your Mac",
+          "title": "Write and verify the microSD",
           "items": [
-            "Open balenaEtcher, choose Flash from file and select the .img.",
-            "Select the removable microSD by its capacity/name. Flashing erases that selected device; remove unrelated external drives first.",
-            "Flash and wait for verification to finish. Eject the card. If macOS offers to initialize an unfamiliar Linux partition, choose Ignore."
+            "In an image-aware flasher, select the verified local .img.xz or its decompressed .img.",
+            "Select the intended removable microSD by its capacity/name; flashing erases that selected device. Wait for the write and verification to complete.",
+            "Eject the card. If macOS offers to initialize an unfamiliar Linux partition, choose Ignore."
           ],
           "links": [
             {
-              "label": "Get balenaEtcher",
+              "label": "balenaEtcher project",
               "url": "https://etcher.balena.io/"
-            },
-            {
-              "label": "Upstream microSD flashing guide",
-              "url": "https://3rditeration.github.io/seedsigner/quickstarts/10-flash-microsd.html"
             }
           ]
         },
         {
-          "title": "First boot: verify one subsystem at a time",
+          "title": "Boot and record the visible checks",
           "items": [
-            "With power off, insert the card and connect the qualified LCD/camera/ribbon. Insulate module pins under the screen.",
-            "Use one regulated 5 V supply. Check screen, all eight keys and a harmless camera QR before testing cards.",
-            "Confirm System Info matches your image. A blank screen is a hardware/driver diagnostic, not permission to keep reflashing random images."
+            "Power off before inserting the microSD or changing display/camera connectors. Use the wiring profile that belongs to this image.",
+            "Confirm LVGL Home, readable colors/orientation, buttons and a harmless public camera QR. The user has confirmed these basic bench-image operations; repeat them on your hardware.",
+            "Then test seed creation/reload, receive-address verification and transaction handoff with a disposable wallet. A full user-wallet acceptance session remains pending."
           ],
           "links": [
             {
-              "label": "Full bring-up steps",
+              "label": "First use and transaction loop",
+              "url": "/build/use/"
+            },
+            {
+              "label": "Separate carrier bring-up checklist",
               "url": "/guides/bringup/"
-            },
-            {
-              "label": "Record actual test results",
-              "url": "/guides/bringup-results/"
             }
           ]
         },
         {
-          "title": "If the card reader is missing",
+          "title": "Keep development access and reader checks separate",
           "items": [
-            "UR2 hardware needs /dev/ttyS2:SEC1210UR2 in the reader file. Keep the UART2 console disabled.",
-            "On a shell-enabled bench image, inspect the reader file and pcscd status. Production images may deliberately have no shell.",
-            "Secure-boot fuse provisioning is separate and irreversible; it is not a step in this first flash."
-          ],
-          "commands": [
-            {
-              "label": "Inspect on a development image",
-              "text": "cat /etc/reader.conf.d/sec1210\n/etc/init.d/S60pcscd status"
-            }
+            "The current checkpoint is a development image with bench diagnostic access; do not treat that as a production security configuration.",
+            "The tested base-fork profile disables UART2. A carrier using SEC1210UR2 requires its own reviewed UART2/reader configuration and hardware qualification.",
+            "Smartcard testing and irreversible secure-boot fuse provisioning are outside this first LVGL boot checklist."
           ],
           "links": [
             {
-              "label": "Reader diagnostics",
-              "url": "/guides/smartcards/#how-the-reader-works-with-linux"
+              "label": "Hardware pin domains and selected connections",
+              "url": "/guides/luckfox-pinout/"
+            },
+            {
+              "label": "Card reader background",
+              "url": "/guides/smartcards/"
             }
           ]
         }
@@ -458,16 +462,21 @@
       "next": "use",
       "references": [
         {
+          "label": "Current firmware and measured status",
+          "url": "/guides/firmware-status/"
+        },
+        {
           "label": "Boot and power diagnosis",
           "url": "/guides/bringup/"
         }
-      ]
+      ],
+      "notice": "Current bench firmware is lvgl-dev.cb6170a37a5a with the base-fork 240×240 profile. The separate 2.8-inch pill carrier is not qualified by that result. This site does not host a firmware image download."
     },
     {
       "slug": "use",
       "number": 5,
-      "title": "Use SeedSigner",
-      "summary": "Create a test seed, connect a watch-only wallet, and practice the QR signing loop.",
+      "title": "Try the LVGL signing workflow",
+      "summary": "Check the working screens and camera, then practice the wallet QR handoff with a disposable seed.",
       "needs": [
         "Working display/buttons/camera",
         "Sparrow on your computer",
@@ -475,6 +484,20 @@
       ],
       "result": "A watch-only wallet and a practiced offline signing workflow.",
       "steps": [
+        {
+          "title": "Confirm the current firmware before creating a seed",
+          "items": [
+            "Use the firmware guide to identify your image and tested hardware profile. A working Home screen alone is not a completed wallet workflow.",
+            "The current app keeps the original Python wallet logic while LVGL renders the interface. Menu presentation may differ from older Pillow screenshots.",
+            "Check camera scanning with a harmless public QR first; then use a disposable seed and record where any wallet handoff fails."
+          ],
+          "links": [
+            {
+              "label": "Current LVGL firmware and acceptance table",
+              "url": "/guides/firmware-status/"
+            }
+          ]
+        },
         {
           "title": "Create and back up a test seed",
           "items": [
@@ -516,7 +539,7 @@
           "items": [
             "Display a receive address in Sparrow and use the signer’s address-verification/scan flow to confirm it belongs to your loaded seed and wallet settings.",
             "Compare the complete address and network. For multisig, import the correct wallet descriptor; a single cosigner seed alone does not define the wallet.",
-            "Do this before any real deposit. This prototype still needs its hardware validation."
+            "Record this as a separate acceptance check; public-fixture signing does not establish address verification with your own wallet."
           ]
         },
         {
@@ -549,9 +572,13 @@
           ]
         }
       ],
-      "notice": "This is an operating walkthrough, not a claim that our untested carrier is ready to hold funds.",
+      "notice": "Boot, LVGL usability and camera scanning are user-confirmed on the bench setup. Public-fixture signing/export checks passed; a full session with the user's own wallet is still pending. Smartcards are outside this LVGL acceptance scope.",
       "next": "cards",
       "references": [
+        {
+          "label": "Current LVGL status and memory measurements",
+          "url": "/guides/firmware-status/"
+        },
         {
           "label": "SeedSigner official docs",
           "url": "https://seedsigner.com/"

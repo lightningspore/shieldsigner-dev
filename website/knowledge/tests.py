@@ -28,6 +28,25 @@ def page(url):
     return (DIST/url.lstrip('/')/'index.html').read_text()
 
 class StaticSiteTests(unittest.TestCase):
+    def test_firmware_status_separates_bench_hardware_and_evidence(self):
+        status=page('/guides/firmware-status/')
+        for text in ['lvgl-dev.cb6170a37a5a', '240×240', '2.8-inch',
+                     '11,012 KiB', '13,576 KiB', 'logical swap', 'pending',
+                     'ZXing-C++', 'Python', 'local build artifact']:
+            self.assertIn(text,status)
+        self.assertIn('/guides/firmware-status/',page('/'))
+        for task in ['compile','flash','use']:
+            self.assertIn('/guides/firmware-status/',page(f'/build/{task}/'))
+        legacy=page('/guides/memory-threads/')
+        self.assertIn('earlier Python/Pillow renderer',legacy)
+        # A documented local image must never become a broken public download.
+        for path in DIST.rglob('index.html'):
+            for url in Links(path.read_text()).urls:
+                target=urlsplit(url)
+                self.assertFalse((not target.netloc or target.netloc=='shieldsigner.dev')
+                                 and target.path.endswith(('.img','.img.xz')),
+                                 f'Unpublished firmware download in {path}')
+
     def test_all_guides_tasks_and_card_pages_exist(self):
         paths=['/','/guides/','/downloads/',*[f'/guides/{g[0]}/' for g in GUIDES],
                *[f"/build/{t['slug']}/" for t in workflows.tasks()],

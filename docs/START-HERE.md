@@ -18,6 +18,7 @@ A Raspberry Pi image is not a Luckfox image. Luckfox models and flash targets al
 
 ## Choose a path
 
+- **Try the current firmware:** [LVGL development status](FIRMWARE-STATUS.md) explains the bench-tested image, memory results and remaining acceptance checks. Its 240×240 bench wiring is separate from the 2.8-inch pill carrier.
 - **Understand it first:** [Software features](SOFTWARE-FEATURES.md), then [wallet and backup concepts](WALLET-BACKUPS.md).
 - **Build this hardware:** [Modular assembly](MODULAR-ASSEMBLY.md), [LCD interface](LCD-MODULE-VARIANT.md), then [enclosure and 3D viewer](ENCLOSURE.md).
 - **Use existing hardware:** [Compile](/build/compile/), [flash](/build/flash/), then [first signing exercise](/build/use/).

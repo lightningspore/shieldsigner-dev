@@ -18,6 +18,7 @@
     <p class="task-summary">{{ task.summary }}</p>
     <div class="mobile-progress" x-cloak><span x-text="count + ' / {{ task.steps|length }} steps checked'"></span><button type="button" @click="reset()">Reset</button></div>
     <div class="task-facts"><div><span>You need</span><ul>{% for need in task.needs %}<li>{{ need }}</li>{% endfor %}</ul></div><div><span>You’ll have</span><p>{{ task.result }}</p></div></div>
+    {% if task.slug in ['compile', 'flash', 'use'] %}<p class="task-notice">Current bench firmware: LVGL + Rust camera, tested on the standard 240×240 display/button board. <a href="/guides/firmware-status/">Read the exact image, memory measurements and acceptance limits →</a></p>{% endif %}
     {% if task.notice %}<div class="task-notice">{{ task.notice }}</div>{% endif %}
     {% if task.slug == 'parts' %}{% include 'knowledge/parts.html' %}{% endif %}
     {% if task.slug == 'pcb' %}<div class="order-launch"><a class="button" href="/files/shieldsigner-modular-order.zip">Download JLC order files ↓</a><a href="https://jlcpcb.com/" target="_blank" rel="noopener">Open JLCPCB quote ↗</a><span>Pill Gerbers + BOM + CPL · {{ pcb_spec.layers }} layers · {{ pcb_spec.thickness }} mm · {{ pcb_spec.width }} × {{ pcb_spec.height }} mm</span></div>{% endif %}

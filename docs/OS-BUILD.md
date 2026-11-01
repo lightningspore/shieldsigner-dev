@@ -1,12 +1,27 @@
 # Luckfox OS image builds
 
+## Current LVGL development baseline
+
+Start with [Current firmware](FIRMWARE-STATUS.md) for the tested image, its
+240×240 base-fork display/button wiring, qualification boundaries and the
+Linux/Python/native architecture. This bench image is separate from physical
+qualification of the eight-pin 2.8-inch carrier.
+
+Use `mise run firmware:where` to locate the preserved local image and
+`mise run firmware:verify` to verify its bytes and frozen inputs. Generated
+artifacts now live under `dist/firmware/`: pinned checkouts in `sources/`,
+compiler and SDK output in `work/`, named frozen inputs in `staging/`, and
+verified flash candidates in `images/`. The [artifact guide](FIRMWARE-ARTIFACTS.md)
+documents the lifecycle. Historical paths and checksums below retain their
+original identities; `dist/os` remains a compatibility alias.
+
 ## Current carrier build command
 
 The wrapper defaults to `SHIELDSIGNER_IMAGE_VARIANT=production`, `SHIELDSIGNER_READER_VARIANT=UR2` and `SHIELDSIGNER_CAMERA_BACKEND=rust`. It prepares reviewed camera/image hooks in the pinned Luckfox OS checkout, configures SEC1210 UR2, and installs the Rust SC3336 owner plus the native open-source QR reader. `mise run os:prepare` applies only reviewed source preparation without compiling or flashing. Unknown checkout edits are rejected.
 
 The historical two successful builds and matching hashes below used unchanged upstream **URT/vendor camera**; they remain baseline evidence. They do not qualify the new Rust image. Use `SHIELDSIGNER_CAMERA_BACKEND=vendor SHIELDSIGNER_READER_VARIANT=URT mise run os:build` only for that explicit baseline or matching hardware.
 
-Production local output defaults to `dist/os/<reader-variant>/<camera-backend>/`; development adds `/dev/`, with `build.log`, `reader-config.json`, `camera-hooks.json` and `camera-bundle.json`. Keep these input manifests with image/checksum files. New image checksums are expected to differ from the historical URT/vendor baseline.
+Local output defaults to `dist/firmware/work/os/os-<reader>-<camera>-<variant>-<UTC>/`, with `build.log`, `reader-config.json`, `camera-hooks.json` and `camera-bundle.json`. `SHIELDSIGNER_OUTPUT_DIR` can override this location. Keep these input manifests with image/checksum files. New image checksums are expected to differ from the historical URT/vendor baseline. A default carrier build does not automatically select or reproduce the LVGL bench baseline; that requires its frozen combined bundle and development profile.
 
 ## Verified native frontend candidate (30 October 2026)
 

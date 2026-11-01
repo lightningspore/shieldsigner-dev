@@ -13,6 +13,12 @@ SeedSigner and use smartcards. The [reference library](/guides/) includes compon
 rationale, smartcard compatibility, assembly, firmware builds and saved manufacturer PDFs.
 The [downloads page](/downloads/) separates the pill and standard FPC carrier files.
 
+[Current firmware](FIRMWARE-STATUS.md) is the starting point for the LVGL bench
+image, its memory measurements and acceptance boundaries. The compile, flash and
+use journeys distinguish that tested 240×240 configuration from the unqualified
+2.8-inch carrier. Firmware binaries remain local artifacts unless explicitly
+published; hardware downloads do not include a firmware image.
+
 The parts table defaults to separate system parts with JavaScript enabled. Select
 Carrier/PCBA to inspect all passive values, ratings, exact references and quantities.
 Switching carrier variants changes the underlying BOM rather than mixing their parts.

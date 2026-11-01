@@ -1,5 +1,14 @@
 # Memory and threads on the Luckfox Mini
 
+## Current firmware versus this measurement record
+
+The current bench-tested image uses the LVGL frontend. Its latest scoped memory
+results and qualification status are in [Current firmware](FIRMWARE-STATUS.md).
+The measurements below describe the earlier Python/Pillow renderer and remain
+useful for understanding Linux accounting, camera workers and import costs.
+They are not the current LVGL renderer's memory or thread counts. In particular,
+LVGL uses a separate native screen process and different pixel buffers.
+
 ShieldSigner runs on a single-core Luckfox Pico Mini with 64 MiB of physical RAM. The app, camera buffers and image processing compete for that small budget. The current development image uses deferred imports, bounded frame queues and compressed RAM swap to keep camera scanning responsive.
 
 Measurements below were taken on 29 October 2026 with the 0.0.39-dev image and a 240×240 ST7789 display. They describe this configuration, not every Luckfox model or future release.

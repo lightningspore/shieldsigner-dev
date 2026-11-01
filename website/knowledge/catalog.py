@@ -1,5 +1,7 @@
 # Explicit public-content allowlist. Never crawl the repo or Telegram caches.
 GUIDES = [
+("firmware-artifacts", "docs/FIRMWARE-ARTIFACTS.md", "Software", "Firmware images, staging & verification", "One canonical image location, immutable named staging, preserved caches and image identity checks."),
+("firmware-status", "docs/FIRMWARE-STATUS.md", "Software", "Current LVGL firmware & test status", "Linux, Python, LVGL and Rust camera responsibilities; scoped memory measurements and the tested bench image."),
 ("memory-threads", "docs/MEMORY-THREADS.md", "Software", "Memory, Python and threads", "Measured RAM use, shared Python imports, camera workers, LCD buffers and compressed RAM swap."),
 ("luckfox-pinout", "docs/LUCKFOX-PINOUT.md", "Hardware", "Luckfox Mini pinout & signal map", "All 22 pins, voltage domains, SPI/I2C/UART/PWM alternatives and checked carrier connections."),
 ("mechanical-substitutions", "docs/MECHANICAL-SUBSTITUTIONS.md", "Build", "Switch & USB-C revision", "Manufacturer drawings, shared-supplier parts, new lands and measured-height buttons."),

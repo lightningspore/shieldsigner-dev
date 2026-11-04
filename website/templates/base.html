@@ -13,6 +13,7 @@
   <meta property="og:url" content="https://shieldsigner.dev{{ page_path }}">
   <link rel="stylesheet" href="/static/css/site.css?v={{ site_revision }}">
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  {% block head %}{% endblock %}
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -25,6 +26,7 @@
       <a href="/build/flash/">Flash</a>
       <a href="/build/use/">Use it</a>
       <a href="/guides/">Reference</a>
+      <a href="/talk/">The talk</a>
     </nav>
     <button class="menu" @click="menuOpen = !menuOpen" :aria-expanded="menuOpen" aria-controls="mobile-nav" aria-label="Toggle navigation">Menu</button>
     <nav id="mobile-nav" x-show="menuOpen" x-cloak aria-label="Mobile">
@@ -36,6 +38,7 @@
       <a href="/build/use/" @click="menuOpen = false">Use SeedSigner</a>
       <a href="/build/cards/" @click="menuOpen = false">Smartcards</a>
       <a href="/guides/" @click="menuOpen = false">Reference</a>
+      <a href="/talk/" @click="menuOpen = false">The talk</a>
     </nav>
   </header>
   <main id="main">{% block content %}{% endblock %}</main>
@@ -52,5 +55,6 @@
   <script src="/static/js/site.js?v={{ site_revision }}" defer></script>
   <script src="/static/js/alpine.min.js" defer></script>
   <script src="/static/js/enclosure-loader.js?v={{ site_revision }}" defer></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

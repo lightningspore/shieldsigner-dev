@@ -43,6 +43,23 @@ archive of the static document root and Caddy/container deployment files.
 - `/downloads/` and `/files/` provide reviewed, checksum-verified hardware sources,
   PDFs, matching fabrication kits and enclosure models.
 - `/healthz` is a generated JSON file with hosting mode, version and source revision.
+- `/talk/` is the illustrated presentation: reading mode, fullscreen/keyboard
+  presentation mode, source links, presenter notes, a 2-of-3 threshold example
+  and the existing assembly viewer. Its model loads when the section is visible.
+
+Edit presentation content in `knowledge/talk.json`, layout in
+`templates/knowledge/talk.html`, and behavior/styles in `static/js/talk.js` and
+`static/css/talk.css`. All sections are rendered into static HTML. In presentation
+mode use arrows/Page Up/Page Down, Home/End, N for notes and Escape for reading
+view; form fields and the model canvas retain their own keys. `Present` starts
+at the selected section, and URL fragments preserve section links. `Fullscreen`
+is optional; normal presentation mode works without that browser API. Print
+styles keep sections separate. The bench demo segment is a presenter handoff;
+no video or live camera feed is implied by the static case rendering.
+
+```sh
+UI_BASE_URL=http://127.0.0.1:8030 mise run ui:talk
+```
 
 Without JavaScript, every guide and task remains readable, card tabs navigate to their
 static pages, downloads work, and the complete pill parts list shows quantities for one

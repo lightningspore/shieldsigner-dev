@@ -13,6 +13,13 @@ SeedSigner and use smartcards. The [reference library](/guides/) includes compon
 rationale, smartcard compatibility, assembly, firmware builds and saved manufacturer PDFs.
 The [downloads page](/downloads/) separates the pill and standard FPC carrier files.
 
+The [presentation](/talk/) tells the build story through AI-assisted PCB edits,
+assembly models, enclosure code and firmware, with a short security/multisig
+prequel. Read it as a scrolling page or use Present for keyboard navigation and
+optional fullscreen. Presenter notes and primary sources are attached to each
+section. The 3D assembly is interactive; the bench demonstration is a handoff
+to physical hardware rather than an embedded camera feed.
+
 [Current firmware](FIRMWARE-STATUS.md) is the starting point for the LVGL bench
 image, its memory measurements and acceptance boundaries. The compile, flash and
 use journeys distinguish that tested 240×240 configuration from the unqualified

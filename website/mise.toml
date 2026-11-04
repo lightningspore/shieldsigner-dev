@@ -32,3 +32,6 @@ run = "uv run python scripts/deploy.py"
 
 [tasks."ui:pinout"]
 run = "uv run python scripts/pinout-ui-check.py"
+
+[tasks."ui:talk"]
+run = "uv run python scripts/talk-ui-check.py"

@@ -7,5 +7,11 @@
       loading=null
     })
   }
-  load()
+  const deferred=document.querySelector('[data-enclosure-viewer][data-defer-viewer]')
+  if (deferred && 'IntersectionObserver' in window) {
+    const observer=new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) { load(); observer.disconnect() }
+    }, { rootMargin:'100px' })
+    observer.observe(deferred)
+  } else load()
 })()

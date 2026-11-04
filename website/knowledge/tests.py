@@ -28,6 +28,43 @@ def page(url):
     return (DIST/url.lstrip('/')/'index.html').read_text()
 
 class StaticSiteTests(unittest.TestCase):
+    def test_talk_has_all_readable_slides_notes_and_local_presentation_assets(self):
+        expected=['intro','trust','incidents','multisig','workflow','pcb','assembly',
+                  'case','camera','lvgl','demo','verification','cost','next']
+        content=json.loads((ROOT/'knowledge/talk.json').read_text())
+        self.assertEqual([slide['id'] for slide in content['slides']],expected)
+        self.assertTrue(all(slide['notes'] and slide['sources'] for slide in content['slides']))
+        html=page('/talk/')
+        class TalkElements(HTMLParser):
+            def __init__(self):
+                super().__init__(); self.elements=[]; self.feed(html)
+            def handle_starttag(self,tag,attrs):
+                self.elements.append((tag,dict(attrs)))
+        elements=TalkElements().elements
+        slides=[attrs for tag,attrs in elements if tag=='section' and 'talk-slide' in attrs.get('class','').split()]
+        self.assertEqual([slide.get('id') for slide in slides],expected)
+        self.assertTrue(all('hidden' not in slide and slide.get('aria-hidden')!='true' for slide in slides),
+                        'Slides must be readable before JavaScript runs')
+        links=Links(html)
+        self.assertIn('talk',links.ids)
+        controls={attrs['id']:(tag,attrs) for tag,attrs in elements if attrs.get('id','').startswith('talk-')}
+        for name in ['start','exit','prev','next','notes','fullscreen']:
+            self.assertEqual(controls['talk-'+name][0],'button')
+        self.assertEqual(controls['talk-index'][0],'select')
+        self.assertEqual(controls['talk-position'][0],'output')
+        notes=[attrs for tag,attrs in elements if tag=='details' and 'talk-notes' in attrs.get('class','').split()]
+        self.assertEqual(len(notes),14)
+        self.assertTrue(all('open' not in note for note in notes),'Reading notes should start closed')
+        for slide in expected:
+            self.assertIn('#'+slide,links.urls,'Ordinary anchors must work without JavaScript')
+        assets=[attrs['src'] for tag,attrs in elements if tag=='script' and attrs.get('src')]
+        self.assertIn('/static/js/talk.js',[urlsplit(url).path for url in assets])
+        self.assertTrue(all(url.startswith('/static/') for url in assets),'Talk scripts must be served locally')
+        self.assertTrue(any('github.com/' in url and 'seedsigner' in url.lower() for url in links.urls),
+                        'Upstream source attribution should be linked, not implied')
+        for private_marker in ['/Users/', 'tools/telegram/private/', '.session', 'api_hash', 'bot_token']:
+            self.assertNotIn(private_marker,html,'Private integration material must not be published in the talk')
+
     def test_firmware_status_separates_bench_hardware_and_evidence(self):
         status=page('/guides/firmware-status/')
         for text in ['lvgl-dev.cb6170a37a5a', '240×240', '2.8-inch',

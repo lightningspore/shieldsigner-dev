@@ -50,6 +50,10 @@ for slug, source, category, title, description in GUIDES:
     guides.append(dict(slug=slug,source=source,category=category,title=title,description=description))
     search[slug]=(title+' '+description+' '+body).casefold()
 render('/', 'knowledge/home.html', tasks=workflows.tasks(), **enclosure)
+talk=json.loads((SITE/'knowledge/talk.json').read_text())
+assert len({s['id'] for s in talk['slides']})==len(talk['slides']), 'Duplicate talk section IDs'
+render('/talk/', 'knowledge/talk.html', talk=talk, **enclosure,
+       title=talk['title'], description='An illustrated build story: multivendor multisig, AI-assisted PCB design, code-defined mechanical models and the ShieldSigner firmware.')
 # Costs are rendered directly from the reviewed pricing snapshots.
 budget=json.loads((SITE.parent/'variants/lcd-module-2.8/self-assembly/first-article-budget.json').read_text())
 modules=json.loads((SITE.parent/'variants/lcd-module-2.8/self-assembly/system-pricing-current.json').read_text())

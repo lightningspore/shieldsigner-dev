@@ -1,0 +1,379 @@
+{
+  "title": "Building ShieldSigner with AI",
+  "subtitle": "How AI helped design a PCB, model a case and bring a tiny Linux signer to life.",
+  "duration": "20–25 minutes",
+  "asOf": "2026-11-03",
+  "slides": [
+    {
+      "id": "intro",
+      "chapter": "The build",
+      "title": "Building ShieldSigner with AI",
+      "summary": "From schematic to printable enclosure, driven by code.",
+      "points": [
+        "PCB → assembly → enclosure",
+        "Fast iteration. Explicit evidence."
+      ],
+      "notes": "This is a builder story: using AI to move between schematics, source, supplier drawings and mechanical models. The project is a development prototype, not a claim that a home-built signer is safer than commercial products. The main story is the PCB and 3D iteration; the camera and LVGL work show what happened when the hardware met software. Credit SeedSigner, ShieldSigner and their contributors throughout.",
+      "sources": [
+        {
+          "label": "Project and upstream context",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/START-HERE.md"
+        }
+      ],
+      "visual": "hero",
+      "image": {
+        "src": "/files/variants/lcd-module-2.8/assembly-front.png",
+        "alt": "Rendered ShieldSigner pill carrier assembly with its large LCD and controls",
+        "width": 1568,
+        "height": 984
+      }
+    },
+    {
+      "id": "trust",
+      "chapter": "Why build?",
+      "title": "Trust across the whole system",
+      "summary": "A signer is one part of a system.",
+      "points": [
+        "Seed generation",
+        "Device + distribution",
+        "Recovery + verification"
+      ],
+      "notes": "Before showing CAD, explain the motivation: understand the interfaces and reduce opaque assumptions. Firmware, entropy generation, the device, reseller handling, coordinator and backups are different trust boundaries. Open source helps inspection; it does not prove a particular binary, assembled board or recovery procedure is correct. Building this prototype teaches those boundaries rather than removing them.",
+      "sources": [
+        {
+          "label": "Wallet and backup boundaries",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/WALLET-BACKUPS.md"
+        }
+      ],
+      "visual": "multisig"
+    },
+    {
+      "id": "incidents",
+      "chapter": "Why build?",
+      "title": "Two failures. Different boundaries.",
+      "summary": "2026: entropy and physical distribution.",
+      "points": [
+        "July: weakened seed generation",
+        "October: reseller hardware implants",
+        "Updating ≠ repairing an old seed"
+      ],
+      "notes": "Coinkite published its seed-generation advisory on July 30, 2026. Affected firmware produced weakened seeds; its current status page distinguishes fixed releases and explains that updating does not repair an already affected seed. Check the official guidance rather than a model-name shortcut. Ledger’s October 15 response describes localized reseller-distribution implants that captured recovery phrases during setup. Ledger says its chip, OS and servers were not compromised. These illustrate distinct failure paths, not proof that either whole product family or our prototype is categorically unsafe or safe. Do not state unverified aggregate theft figures.",
+      "sources": [
+        {
+          "label": "Coinkite advisory · July 30, 2026",
+          "url": "https://blog.coinkite.com/coldcard-mk3-seed-generation-warning/"
+        },
+        {
+          "label": "COLDCARD current security status",
+          "url": "https://coldcard.com/security/status"
+        },
+        {
+          "label": "Ledger hardware-implant response · October 15, 2026",
+          "url": "https://support.ledger.com/article/Ledger-s-Response-to-the-Hardware-Implant-Attack"
+        }
+      ],
+      "visual": "incidents"
+    },
+    {
+      "id": "multisig",
+      "chapter": "Why build?",
+      "title": "2 of 3 — with independent keys",
+      "summary": "Diversity has to reach the secrets.",
+      "points": [
+        "Three distinct seeds",
+        "Test every signing pair",
+        "Keep the descriptor + recovery plan"
+      ],
+      "notes": "A 2-of-3 wallet can tolerate one unavailable signer, and one exposed key alone should not satisfy its threshold. That depends on genuinely distinct seeds: loading one seed into three devices does not create three independent secrets. Different vendor names do not guarantee independent code, entropy paths or purchasing channels. Shared reseller handling and compromised coordinator/address verification can still correlate failures. A descriptor, cosigner information and tested recovery procedure matter alongside seed backups. Demonstrate this with disposable public fixtures, never audience funds or a projected secret.",
+      "sources": [
+        {
+          "label": "Practice multisig and missing-key recovery",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/MULTISIG-PRACTICE.md"
+        }
+      ],
+      "visual": "multisig"
+    },
+    {
+      "id": "workflow",
+      "chapter": "AI + hardware",
+      "title": "Ask → generate → check → inspect",
+      "summary": "Make each iteration reviewable.",
+      "points": [
+        "Pin sources and assumptions",
+        "Automate repetitive edits",
+        "Measure the result"
+      ],
+      "notes": "This is the center of the talk. AI was useful for navigating a large codebase, extracting component pin maps, making repeatable KiCad edits, producing documentation and comparing evidence. It also took wrong turns. The improvement was a tighter procedure: one bounded change, explicit inputs, an inspectable diff, native checks and a rendered view. Delegate independent reading/review tasks while keeping edits and ownership bounded. An attractive rendering or confident answer is not an electrical test.",
+      "sources": [
+        {
+          "label": "KiCad workflow",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/KICAD.md"
+        },
+        {
+          "label": "PCB/software compatibility audit",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/PCB-SOFTWARE-COMPATIBILITY.md"
+        }
+      ],
+      "visual": "workflow"
+    },
+    {
+      "id": "pcb",
+      "chapter": "AI + hardware",
+      "title": "PCB changes you can repeat",
+      "summary": "Nets, footprints and choices have reasons.",
+      "points": [
+        "Power and voltage domains",
+        "Exact LCD/header pin order",
+        "BOM + placement stay matched"
+      ],
+      "notes": "Use the PCB image to point at the LCD header, Luckfox header, USB power and card-reader section. The main 0.0.9 review kit has 35 fitted SMT parts across 17 supplier SKUs. It preserves the main always-on electrical topology; the Denver.space artwork was checked separately against the protected electrical tree. Manufacturer land patterns and module drawings matter more than a generic symbol. Native ERC/DRC and schematic parity found no outstanding findings in the recorded checks, but do not establish powered first-article qualification.",
+      "sources": [
+        {
+          "label": "Order readiness",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/PCB-ORDER-READINESS.md"
+        },
+        {
+          "label": "Component and net audit",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/MODULE-PINOUT-AUDIT.md"
+        }
+      ],
+      "visual": "pcb",
+      "image": {
+        "src": "/files/variants/lcd-module-2.8/board-top.png",
+        "alt": "Straight-on main ShieldSigner carrier PCB top view with routing and silkscreen",
+        "width": 2800,
+        "height": 1400
+      }
+    },
+    {
+      "id": "assembly",
+      "chapter": "AI + hardware",
+      "title": "Model the whole assembly",
+      "summary": "Off-the-shelf modules. Deliberate interfaces.",
+      "points": [
+        "Modules modelled from drawings",
+        "Headers, spacers and mating depths",
+        "Check access before printing"
+      ],
+      "notes": "The goal was basic final assembly rather than handling a raw LCD ribbon on a custom board. The selected HOTHMI module uses eight pins, but ST7789 alone does not define a compatible pinout. The carrier header numbering reverses the vendor drawing, so orientation needs explicit checking. The main board keeps backlight enable always on. Optional dedicated PWM is a separate unpromoted candidate. A matched BOM/CPL and supplier preview are separate from soldering and continuity evidence; the current stock/readiness guide is the authority for an actual order.",
+      "sources": [
+        {
+          "label": "Modular assembly",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/MODULAR-ASSEMBLY.md"
+        },
+        {
+          "label": "Main/PWM pinout and voltage domains",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/LUCKFOX-PINOUT.md"
+        }
+      ],
+      "visual": "assembly",
+      "image": {
+        "src": "/files/variants/lcd-module-2.8/assembly-back.png",
+        "alt": "Rendered carrier back showing the smartcard socket, power connector and module mounting",
+        "width": 1568,
+        "height": 984
+      }
+    },
+    {
+      "id": "case",
+      "chapter": "AI + hardware",
+      "title": "An enclosure defined in code",
+      "summary": "Change dimensions. Regenerate parts. Check the fit.",
+      "points": [
+        "Parametric OpenSCAD source",
+        "Printable parts and service access",
+        "Regenerate and check fit"
+      ],
+      "notes": "Walk through the assembled and exploded models. A board may be electrically plausible while a header stack makes the case too thick, a connector collides or the camera cable needs an impossible bend. Model the purchased modules as documented envelopes, keep millimetres explicit, and compare mating geometry rather than eyeballing screenshots. The camera/ribbon models are adjustable envelopes and screw threads are omitted. Export and import behavior was itself an iteration target. A printed fit sample and real purchased parts remain necessary.",
+      "sources": [
+        {
+          "label": "Enclosure and printed fit",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/ENCLOSURE.md"
+        },
+        {
+          "label": "Assembly geometry checks",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/variants/lcd-module-2.8/FIT-MODEL.md"
+        }
+      ],
+      "visual": "case",
+      "image": {
+        "src": "/files/enclosure/previews/exploded.png",
+        "alt": "Exploded digital case assembly with carrier, display and enclosure parts",
+        "width": 850,
+        "height": 481
+      }
+    },
+    {
+      "id": "camera",
+      "chapter": "Software, briefly",
+      "title": "Pixels without the vendor userspace stack",
+      "summary": "Rust camera control. Native QR decoding.",
+      "points": [
+        "SC3336 + Linux ISP interfaces",
+        "Grayscale pixels → ZXing-C++",
+        "Original QR assembly stays in Python"
+      ],
+      "notes": "Keep this brief: it became a substantial side project. The Rust camera path controls the sensor/ISP through existing Linux interfaces and does not call the vendor RKAIQ userspace library. It still depends on Linux drivers and the Luckfox/Rockchip SDK; this is not a Linux-free design or complete RKAIQ parity claim. The decoder is a native ZXing-C++ worker, not a QR algorithm rewritten in Rust. Direct grayscale avoids a needless JPEG round trip and preserves binary QR payloads; the application handles animated-format assembly.",
+      "sources": [
+        {
+          "label": "Current firmware layers and scope",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/FIRMWARE-STATUS.md"
+        },
+        {
+          "label": "Rust camera code",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/tree/main/firmware/rkaiq-rs"
+        }
+      ],
+      "visual": "camera"
+    },
+    {
+      "id": "lvgl",
+      "chapter": "Software, briefly",
+      "title": "LVGL draws. Python still signs.",
+      "summary": "Move presentation without rewriting wallet logic.",
+      "points": [
+        "Native C/C++ screen renderer",
+        "Pinned Python Controller + models",
+        "Measure the whole workload"
+      ],
+      "notes": "Credit kdmukai’s portable LVGL screen work, SeedSigner and ShieldSigner. This migration reuses their work rather than claiming a new wallet implementation. The tested development image booted with usable LVGL UI and camera scanning. The post-cleanup host suite passed 245 tests. In one packaged-cache comparison Python private anonymous RAM plus logical swap measured 11,012 KiB at Home and 13,576 KiB during scan; these exclude camera, QR and renderer processes. Leave object-by-object details for questions. Pillow still has active still-image/entropy consumers.",
+      "sources": [
+        {
+          "label": "Current architecture",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/firmware/lvgl-app/docs/ARCHITECTURE.md"
+        },
+        {
+          "label": "Memory measurements and limitations",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/firmware/lvgl-app/docs/MEMORY.md"
+        },
+        {
+          "label": "kdmukai LVGL screens",
+          "url": "https://github.com/kdmukai/seedsigner-lvgl-screens"
+        }
+      ],
+      "visual": "lvgl"
+    },
+    {
+      "id": "demo",
+      "chapter": "Show the iteration",
+      "title": "One visible loop",
+      "summary": "Inspect the board. Rotate the case. Scan public data.",
+      "points": [
+        "PCB top / bottom",
+        "Assembled / exploded model",
+        "Public QR only"
+      ],
+      "notes": "Suggested live sequence: open the PCB faces, rotate the enclosure model, then show a public-QR scan if the prepared bench is available. Do not project a seed, recovery phrase, wallet QR or private camera frame. Have the static assembly images as fallback. Be explicit that the working bench is a standard 240×240 display/button board; it is not the new 2.8-inch carrier. If the live device fails, name the observed failure and continue with recorded scope rather than claiming the demo passed.",
+      "sources": [
+        {
+          "label": "Firmware test scope",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/FIRMWARE-STATUS.md"
+        },
+        {
+          "label": "Carrier compatibility",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/PCB-SOFTWARE-COMPATIBILITY.md"
+        }
+      ],
+      "visual": "demo",
+      "image": {
+        "src": "/files/enclosure/previews/assembled.png",
+        "alt": "Public digital rendering of the assembled ShieldSigner enclosure",
+        "width": 850,
+        "height": 481
+      }
+    },
+    {
+      "id": "verification",
+      "chapter": "What we learned",
+      "title": "A pass needs a boundary",
+      "summary": "Source checks, rendered views and hardware answer different questions.",
+      "points": [
+        "Native checks + provenance",
+        "Continuity + rails + actual pinmux",
+        "Tested bench ≠ qualified carrier"
+      ],
+      "notes": "The biggest concrete lesson: the working base-fork firmware drives GPIO56/57 as LCD outputs, while the carrier uses those nets for Left/Up buttons to ground. Pressing a button can ground a driven output. The carrier net map agrees with its intended carrier profile; rewiring it to mimic the bench would be the wrong response. The new carrier needs the carrier image, 10 MHz LCD clock, 320×240 settings and physical bring-up. Frozen-image hashes and packed checks establish exact artifacts, while first-article electrical/mechanical tests establish different facts. AI accelerated finding this mismatch; it did not exempt us from checking it.",
+      "sources": [
+        {
+          "label": "Exact unsafe mappings and required carrier profile",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/PCB-SOFTWARE-COMPATIBILITY.md"
+        },
+        {
+          "label": "Firmware artifact identity and verification",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/FIRMWARE-ARTIFACTS.md"
+        }
+      ],
+      "visual": "verification"
+    },
+    {
+      "id": "cost",
+      "chapter": "First article",
+      "title": "Roughly $100 is a planning number",
+      "summary": "Historical estimates — not a fresh quote.",
+      "points": [
+        "Earlier five-PCB quote basis",
+        "Modules + carrier + printed case",
+        "Shipping, tax, battery and card excluded"
+      ],
+      "notes": "Present approximately $100 as the earlier project-level estimate, not a guaranteed landed per-unit price or a current supplier checkout. The old five-PCB quote and earlier component/module estimates have different dates and assumptions; do not silently divide a five-board assembly total into an independent one-off order price. Battery, smartcard, shipping and tax are outside this estimate. Stock, attrition, setup charges and spares can change the result; the current readiness guide records a socket sourcing gate. The point is learning and an affordable first article, not a production cost claim.",
+      "sources": [
+        {
+          "label": "Current order gates and historical quote scope",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/PCB-ORDER-READINESS.md"
+        },
+        {
+          "label": "Self-assembly planning",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/SELF-ASSEMBLY.md"
+        }
+      ],
+      "visual": "cost"
+    },
+    {
+      "id": "next",
+      "chapter": "Next",
+      "title": "Build the first carrier",
+      "summary": "Make the next iteration easier to inspect and repeat.",
+      "points": [
+        "Qualify the carrier first article",
+        "Practice recovery with disposable keys",
+        "Contribute a reproducible improvement"
+      ],
+      "notes": "Close with the actual next step: one powered carrier first article with the correct profile, continuity/rail/button/display/camera checks, and a printed fit test. Real-wallet end-to-end acceptance remains pending. Invite review of a net, a footprint, a source guard, an enclosure clearance or a repeatable test rather than generic trust in the prototype. Thank SeedSigner, ShieldSigner, kdmukai/LVGL, Linux, Luckfox and the wider open-source contributors. Link the project and Denver.space. The useful artifact is not only a board: it is a workflow that makes the next question cheaper to answer.",
+      "sources": [
+        {
+          "label": "Project source",
+          "url": "https://github.com/lightningspore/shieldsigner-dev"
+        },
+        {
+          "label": "SeedSigner",
+          "url": "https://github.com/SeedSigner/seedsigner"
+        },
+        {
+          "label": "ShieldSigner upstream application",
+          "url": "https://github.com/3rdIteration/seedsigner"
+        },
+        {
+          "label": "kdmukai LVGL screens",
+          "url": "https://github.com/kdmukai/seedsigner-lvgl-screens"
+        },
+        {
+          "label": "LVGL",
+          "url": "https://github.com/lvgl/lvgl"
+        },
+        {
+          "label": "Luckfox SDK",
+          "url": "https://github.com/LuckfoxTECH/luckfox-pico"
+        },
+        {
+          "label": "Denver.space",
+          "url": "https://denver.space"
+        },
+        {
+          "label": "The Space logo source",
+          "url": "https://denver.space/assets/branding/Logos/TheSpace_Logos_Full_3.webp"
+        }
+      ],
+      "visual": "closing"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block head %}<link rel="stylesheet" href="/static/css/talk.css?v={{ site_revision }}">{% endblock %}
+{% block scripts %}<script src="/static/js/talk.js?v={{ site_revision }}" defer></script>{% endblock %}
+{% block content %}
+<div id="talk" class="talk-page">
+  <div class="talk-toolbar" hidden aria-label="Presentation controls">
+    <a class="talk-wordmark" href="/">ShieldSigner<span> / the build</span></a>
+    <label class="talk-jump-label">Section <select id="talk-index" aria-label="Jump to section">{% for slide in talk.slides %}<option value="{{ slide.id }}">{{ '%02d'|format(loop.index) }} · {{ slide.title }}</option>{% endfor %}</select></label>
+    <div class="talk-buttons">
+      <button id="talk-prev" type="button" aria-label="Previous section">←</button>
+      <output id="talk-position" aria-live="polite">1 / {{ talk.slides|length }}</output>
+      <button id="talk-next" type="button" aria-label="Next section">→</button>
+      <button id="talk-notes" type="button" aria-pressed="false">Notes</button>
+      <button id="talk-fullscreen" type="button" aria-pressed="false">Fullscreen</button>
+      <button id="talk-start" class="talk-primary" type="button">Present</button>
+      <button id="talk-exit" type="button" hidden>Reading view</button>
+    </div>
+  </div>
+  <div class="talk-reading-intro">
+    <p class="eyebrow">A LIGHTNINGSPORE BUILD · DENVER.SPACE</p>
+    <p>{{ talk.duration }} · Draft 01 · {{ talk.asOf }} <span>Read below or select Present. Arrow keys navigate in presentation mode; N opens notes.</span></p>
+    <details class="talk-contents"><summary>Jump to a section</summary><ol>{% for slide in talk.slides %}<li><a href="#{{ slide.id }}">{{ slide.title }}</a></li>{% endfor %}</ol></details>
+    <noscript><p>All sections, sources and presenter notes are readable below. Presentation controls and interactive 3D need JavaScript.</p></noscript>
+  </div>
+  <div class="talk-slides">
+  {% for slide in talk.slides %}
+    <section class="talk-slide talk-{{ slide.visual }}" id="{{ slide.id }}" aria-labelledby="title-{{ slide.id }}">
+      <div class="talk-chapter"><span>{{ '%02d'|format(loop.index) }} / {{ '%02d'|format(talk.slides|length) }}</span><span>{{ slide.chapter }}</span></div>
+      <div class="talk-body">
+        <div class="talk-copy">
+          {% if loop.first %}<h1 id="title-{{ slide.id }}" tabindex="-1">{{ talk.title }}</h1>{% else %}<h2 id="title-{{ slide.id }}" tabindex="-1">{{ slide.title }}</h2>{% endif %}
+          <p class="talk-summary">{{ slide.summary }}</p>
+          <ul class="talk-points">{% for point in slide.points %}<li>{{ point }}</li>{% endfor %}</ul>
+        </div>
+        <div class="talk-visual">
+        {% if slide.id == 'trust' %}
+          <ol class="talk-trust-chain"><li><span>01</span><strong>Generate the secret</strong><small>Entropy & implementation</small></li><li><span>02</span><strong>Receive the device</strong><small>Hardware & distribution</small></li><li><span>03</span><strong>Approve a transaction</strong><small>Display & verification</small></li><li><span>04</span><strong>Recover the wallet</strong><small>Backups & policy</small></li></ol>
+        {% elif slide.visual == 'incidents' %}
+          <div class="talk-incident-list"><div><time datetime="2026-07-30">JULY 2026</time><h3>COLDCARD</h3><p>Weakened seed generation</p><span>Firmware / entropy boundary</span></div><div><time datetime="2026-10">OCTOBER 2026</time><h3>Ledger reseller incident</h3><p>Physical implants capture recovery phrases</p><span>Hardware / distribution boundary</span></div></div>
+          <p class="talk-caption">Different failure paths. Primary incident sources below.</p>
+        {% elif slide.visual == 'multisig' %}
+          <div class="talk-threshold" data-threshold-demo>
+            <p class="talk-visual-label">2-OF-3 APPROVAL RULE</p>
+            <div class="talk-signers">{% for letter in ['A','B','C'] %}<button type="button" data-cosigner aria-pressed="false" disabled><span>Key {{ letter }}</span><strong>Signer {{ letter }}</strong><small>Distinct seed</small></button>{% endfor %}</div>
+            <p class="talk-threshold-result" aria-live="polite"><strong data-threshold-count>0 / 3</strong><span data-threshold-status>Select any two signers</span></p>
+            <p class="talk-caption">Separate keys, implementations and purchasing paths. Shared dependencies can still correlate failures.</p>
+          </div>
+        {% elif slide.visual == 'workflow' %}
+          <blockquote class="talk-prompt">“Add denver.space to the silkscreen.”</blockquote>
+          <ol class="talk-loop"><li><strong>Describe</strong><span>Constraints & desired change</span></li><li><strong>Change code</strong><span>Repeatable edit, pinned input</span></li><li><strong>Render</strong><span>Inspect the native artifact</span></li><li><strong>Check</strong><span>Compare against the baseline</span></li></ol>
+          <pre class="talk-code"><code>WIDTH_MM = 30
+CENTER = (184.5, 106.5)</code></pre>
+          <p class="talk-caption">Real parameters from <a href="https://github.com/lightningspore/shieldsigner-dev/blob/main/scripts/add-denver-branding.py">the silkscreen generator</a>. AI helped write the tools as well as the edits.</p>
+        {% elif slide.visual == 'assembly' %}
+          <div class="enclosure-preview talk-model">
+            <div data-enclosure-viewer data-defer-viewer data-pcb="{{ fit_models['shieldsigner-pcb-fit.glb'] }}" data-fit="{{ fit_models['shieldsigner-case-fit.glb'] }}" data-assembled="{{ enclosure_models.assembled }}" data-exploded="{{ enclosure_models.exploded }}" data-viewer-script="/static/enclosure-viewer.js?v={{ site_revision }}">
+              <div class="talk-model-controls"><button type="button" data-mode="assembled" aria-pressed="true">Assembled</button><button type="button" data-mode="exploded" aria-pressed="false">Exploded</button><button type="button" data-mode="pcb" aria-pressed="false">PCB assembly</button><button type="button" data-mode="fit" aria-pressed="false">Case fit</button><button type="button" data-reset>Reset</button></div>
+              <p data-fit-controls hidden><label><input type="checkbox" data-layer="display_module" checked> Display</label> <label><input type="checkbox" data-layer="luckfox_module" checked> Luckfox</label> <label><input type="checkbox" data-layer="case_" checked> Shell</label></p>
+              <canvas aria-label="Interactive ShieldSigner assembly: drag to rotate and scroll to zoom" tabindex="0"></canvas>
+              <p role="status" class="talk-caption">3D loads when this section comes into view.</p>
+              <div class="enclosure-fallback"><img src="{{ slide.image.src }}?v={{ site_revision }}" alt="{{ slide.image.alt }}" width="1600" height="1000" loading="lazy"></div>
+            </div>
+            <p class="talk-caption">Nominal stack: 35.52 mm. Purchased header tolerances and physical fit still need checking. <a href="{{ fit_models['shieldsigner-pcb-fit.glb'] }}">Download the PCB assembly ↗</a></p>
+          </div>
+        {% elif slide.visual == 'case' %}
+          <figure class="talk-image"><img src="{{ slide.image.src }}?v={{ site_revision }}" alt="{{ slide.image.alt }}" width="850" height="480" loading="lazy"><figcaption>Digital assembly · adjustable camera/ribbon envelopes</figcaption></figure>
+          <details class="talk-code-disclosure"><summary>Show the case parameters</summary><pre class="talk-code"><code>button_switch_height = 2.7;
+button_gap = 0.15;
+button_stroke = 0.40;
+wall = 2.4;
+outer_size = [176,82];</code></pre><p class="talk-caption">Millimetres. Actual <a href="https://github.com/lightningspore/shieldsigner-dev/blob/main/enclosure/case.scad">OpenSCAD source</a>; change parameters, regenerate parts, then check fit.</p></details>
+        {% elif slide.visual == 'camera' %}
+          <ol class="talk-pipeline"><li><small>INPUT</small><strong>SC3336 sensor</strong><span>Linux sensor + ISP drivers</span></li><li><small>CONTROL</small><strong>Rust camera owner</strong><span>Exposure · white balance · frames</span></li><li><small>DECODE</small><strong>Grayscale → ZXing-C++</strong><span>Original QR bytes → Python app</span></li></ol>
+          <p class="talk-caption">AI-assisted interface investigation, implementation and repeated hardware tests. The supported path still uses Linux and the Luckfox SDK.</p>
+        {% elif slide.visual == 'lvgl' %}
+          <div class="talk-renderer"><div><small>APPLICATION</small><strong>Python wallet logic</strong><p>Pinned Controller, Views and models</p></div><span aria-hidden="true">↓</span><div><small>PRESENTATION</small><strong>Native LVGL screens</strong><p>C/C++ renderer → LCD</p></div></div>
+          <p class="talk-caption">AI helped adapt the screen boundary and measure memory. The wallet algorithms remain upstream; the UI migration builds on kdmukai’s LVGL screen work.</p>
+        {% elif slide.visual == 'verification' %}
+          <figure class="talk-image"><img src="/files/variants/lcd-module-2.8/board-bottom.png?v={{ site_revision }}" alt="Native rear PCB view with The Space logo and denver.space silkscreen" width="2800" height="1400" loading="lazy"><figcaption>Actual native PCB render · artwork revision 0.0.9</figcaption></figure>
+          <div class="talk-proof"><strong>0</strong><span>protected PCB objects changed</span><a href="/files/variants/lcd-module-2.8/branding-audit.json">Inspect the artwork-only comparison ↗</a></div>
+        {% elif slide.visual == 'cost' %}
+          <div class="talk-cost"><span class="talk-visual-label">COMPLETE UNIT · PLANNING ESTIMATE</span><strong>~$100</strong><dl><div><dt>Assembled carrier¹</dt><dd>$39.11</dd></div><div><dt>Luckfox Mini A + headers</dt><dd>$12</dd></div><div><dt>Camera</dt><dd>$13</dd></div><div><dt>2.8-inch LCD</dt><dd>$15.47</dd></div><div><dt>microSD allowance</dt><dd>~$10</dd></div><div><dt>Hardware + printed case allowance</dt><dd>~$8–13</dd></div></dl><p class="talk-caption">¹ Historical five-board quote, per board. Shipping, tax, battery, smartcard, tools and labour excluded. <a href="/guides/pcb-order-readiness/">Check current order gates.</a></p></div>
+        {% elif slide.visual == 'closing' %}
+          <div class="talk-closing"><a href="https://shieldsigner.dev">shieldsigner.dev</a><a href="https://github.com/lightningspore/shieldsigner-dev">Get the source ↗</a><p>PCB · mechanical models · firmware · repeatable tools</p><p class="talk-credits">Built on SeedSigner, ShieldSigner, kdmukai’s screen work, LVGL, Linux and Luckfox.</p><a class="talk-space" href="https://denver.space"><img src="/files/assets/branding/denver-space-silkscreen.svg" alt="The Space — denver.space" width="240" height="77"></a></div>
+        {% elif slide.image %}
+          <figure class="talk-image"><img src="{{ slide.image.src }}?v={{ site_revision }}" alt="{{ slide.image.alt }}" width="{{ slide.image.width }}" height="{{ slide.image.height }}" {% if loop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}><figcaption>{% if slide.visual == 'hero' %}Digital carrier assembly · physical first article pending{% elif slide.visual == 'demo' %}Use the working 240×240 bench setup for the live segment. This is a digital case preview.{% else %}Native KiCad render · 35 fitted SMT parts / 17 SKUs{% endif %}</figcaption></figure>
+          {% if slide.visual == 'demo' %}<div class="talk-demo-links"><a href="#pcb">Inspect the PCB ↑</a><a href="#assembly">Rotate the assembly ↑</a><a href="/guides/firmware-status/">Bench demo & test scope ↗</a></div>{% endif %}
+        {% endif %}
+        </div>
+      </div>
+      <div class="talk-slide-foot">
+        <details class="talk-sources"><summary>Sources & further reading</summary><ul>{% for source in slide.sources %}<li><a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.label }} ↗</a></li>{% endfor %}</ul></details>
+        <a class="talk-section-link" href="#{{ slide.id }}" aria-label="Link to {{ slide.title }}">#{{ slide.id }}</a>
+      </div>
+      <details class="talk-notes"><summary>Presenter notes</summary><p>{{ slide.notes }}</p></details>
+    </section>
+  {% endfor %}
+  </div>
+  <p id="talk-status" class="talk-announcement" role="status"></p>
+</div>
+{% endblock %}

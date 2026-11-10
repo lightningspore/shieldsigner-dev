@@ -60,7 +60,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--variant', choices=['standard', 'pill'], default='standard')
     args = parser.parse_args()
-    source = ROOT / ('variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb' if args.variant == 'pill' else 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb')
+    source = ROOT / ('kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb' if args.variant == 'pill' else 'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb')
     source_bytes = source.read_bytes()
     pcb = parse(source_bytes.decode())
     edges, circles = [], []

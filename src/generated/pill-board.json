@@ -1,7 +1,7 @@
 {
   "source": {
-    "path": "variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb",
-    "sha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32"
+    "path": "kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb",
+    "sha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d"
   },
   "origin": {
     "x": 128.0,

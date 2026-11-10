@@ -1,5 +1,5 @@
 {
-  "boardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+  "boardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
   "stage": "carrier_image_built_and_packed_verified_not_booted",
   "cameraBundle": {
     "path": "dist/firmware/staging/carrier-first-article-camera-alias-compatible-20261110",
@@ -116,5 +116,11 @@
     "currentImageChanged": false,
     "imageBootQualified": false,
     "physicalOperationVerified": false
+  },
+  "cosmeticBoardCompatibility": {
+    "builtForBoardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+    "currentBoardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
+    "audit": "variants/lcd-module-2.8/silkscreen-label-audit.json",
+    "scope": "One silkscreen label removed; all other native board objects exactly unchanged. Existing firmware evidence preserved."
   }
 }

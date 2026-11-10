@@ -3,7 +3,7 @@
 import collections,json,re,uuid
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
-DIR=ROOT/'kicad'
+DIR=ROOT/'variants/standard-fpc/kicad'
 def expressions(text):
     stack=[];quoted=False;escaped=False
     for i,c in enumerate(text):

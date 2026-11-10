@@ -5,7 +5,7 @@ import { createHash } from "node:crypto"
 import { Circuit } from "@tscircuit/core"
 import { compileBoard } from "./build"
 import reference from "../src/generated/reference-board.json"
-import Preview from "../src/index"
+import Preview from "../src/StandardFpcReference"
 
 assert.equal(reference.source.sha256, createHash("sha256").update(readFileSync(reference.source.path)).digest("hex"), "KiCad changed: run mise run generate before checking the port")
 assert.deepEqual(reference.components.filter(p=>p.dnp).map(p=>p.name).sort(), ["J302", "R404", "R408"])

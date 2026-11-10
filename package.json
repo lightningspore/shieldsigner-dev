@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "generate": "uv run scripts/generate-reference.py",
-    "build": "bun scripts/build.tsx",
-    "check": "bun scripts/check.tsx",
-    "dev": "bun scripts/dev.ts",
+    "build": "bun scripts/build.tsx --pill",
+    "check": "bun scripts/check-pill.tsx",
+    "dev": "bun scripts/dev.ts --pill",
     "dev:source": "tsci dev src/index.tsx --port 3022"
   },
   "dependencies": {

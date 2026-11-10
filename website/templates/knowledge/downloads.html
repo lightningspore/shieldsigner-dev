@@ -6,8 +6,8 @@
   <p class="lede">Choose the matching set for your carrier. Modular and standard FPC files describe different PCBs; do not mix their BOMs, placement files or Gerbers.</p>
   <div class="actions"><a class="button" href="/files/shieldsigner-modular-order.zip">Eight-pin pill order kit ↓</a><a href="/guides/modular-assembly/">Header & module assembly →</a></div>
   <h2>Eight-pin pill · {{ modular_version }}</h2>
-  <p>160 × 70 mm capsule, 35 SMT placements, single-row LCD. Matched prototype quote files, native KiCad, schematic PDF and 3D assemblies. Physical qualification remains open.</p>
-  <p><strong>Order review required:</strong> the 0.0.9 revision adds denver.space artwork; five assembled units are currently short of the selected smartcard sockets. Read <a href="/guides/pcb-order-readiness/">current sourcing and supplier gates</a> and the <a href="/guides/pcb-software-compatibility/">carrier firmware requirements</a> before ordering or powering modules.</p>
+  <p>160 × 70 mm capsule, 43 SMT placements / 18 SKUs, four copper layers, single-row LCD. Matched prototype quote files, native KiCad, schematic PDF and 3D assemblies. Physical qualification remains open.</p>
+  <p><strong>Order review required:</strong> the 0.0.11 four-layer revision adds factory Keystone points and M2.5 bracket mounts; exact switch, socket and UR2 reader sourcing still needs confirmation. Read <a href="/guides/pcb-order-readiness/">current sourcing and supplier gates</a> and the <a href="/guides/pcb-software-compatibility/">carrier firmware requirements</a> before ordering or powering modules.</p>
   <div class="downloads">{% for file in modular_files %}<a href="/files/{{ file.name }}?v={{ file.sha256[:12] }}"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>
   <h2>Printed enclosure · {{ enclosure_version }}</h2>
   <p>Flat print orientations, a removable service cover and captured buttons. <a href="/guides/enclosure/">Inspect the assembled and exploded models and read the assembly guide →</a></p>

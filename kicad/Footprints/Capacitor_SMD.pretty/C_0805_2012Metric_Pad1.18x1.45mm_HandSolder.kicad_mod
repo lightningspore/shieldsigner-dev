@@ -147,7 +147,13 @@
 		(uuid "de112736-fae1-410c-8c5c-c5d419849202")
 	)
 	(embedded_fonts no)
-	(model "${KICAD10_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0805_2012Metric.step"
+	
+
+
+
+
+
+(model "${KIPRJMOD}/3dmodels/kicad/Capacitor_SMD.3dshapes/C_0805_2012Metric.step"
 		(offset
 			(xyz 0 0 0)
 		)

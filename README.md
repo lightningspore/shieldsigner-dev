@@ -2,6 +2,8 @@
 
 ![Modular ShieldSigner assembly](variants/lcd-module-2.8/assembly-front.png)
 
+**Main PCB: [eight-pin 2.8-inch, four-layer carrier](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro).** Open it with `mise run kicad:open`; validate it with `mise run kicad:check`. The former 40-pin FPC design is preserved in [`variants/standard-fpc/kicad/`](variants/standard-fpc/README.md). Current assembly/review metadata remains under `variants/lcd-module-2.8/`; its `kicad` link is a compatibility alias to the main project.
+
 Native KiCad is the preferred editing workflow. This repository publishes the reviewed ShieldSigner carrier variant, tools and knowledge site. Separate experimental tscircuit ports preserve the standard carrier and current pill carrier for comparison.
 
 Hardware component PDFs are collected in the top-level [datasheets directory](datasheets/README.md). The current [display/button electrical review](docs/DISPLAY-BUTTON-REVIEW.md) records wiring, startup checks and first-article tests.
@@ -49,9 +51,9 @@ Read these in order:
 
 The [component guide](docs/COMPONENTS.md) covers all 53 PCB references and pad/net maps. [Hardware guide](docs/HARDWARE.md) explains the blocks; [port status](docs/PORT-STATUS.md) explains the experimental tscircuit limitations. Native KiCad is the preferred workflow.
 
-## Standard FPC native workflow
+## Historical standard FPC workflow
 
-See [KiCad setup, exports and remaining DRC work](KICAD.md). Use `mise run kicad:open` to open the complete native project, `mise run kicad:export` for review files and `mise run kicad:check` for ERC/DRC. The native schematic has zero ERC errors/warnings. The PCB has zero active DRC errors/warnings and zero unconnected/parity issues. Two documented courtyard exceptions apply only to mutually exclusive DNP mode straps; population checks enforce that assumption.
+See [KiCad setup, exports and remaining DRC work](KICAD.md). Use `mise run kicad:standard:check` for the preserved historical project. The default `kicad:*` commands target the main eight-pin carrier. The native schematic has zero ERC errors/warnings. The PCB has zero active DRC errors/warnings and zero unconnected/parity issues. Two documented courtyard exceptions apply only to mutually exclusive DNP mode straps; population checks enforce that assumption.
 
 ## Experimental tscircuit workflow
 

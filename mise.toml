@@ -8,23 +8,23 @@ run = "bun install --frozen-lockfile"
 
 [tasks.generate]
 description = "Extract geometry, nets and assembly metadata from the current native KiCad board"
-run = "uv run scripts/generate-reference.py"
+run = ["uv run scripts/generate-reference.py --variant pill", "uv run python scripts/extract-pill-details.py", "uv run scripts/generate-reference.py --variant standard"]
 
 [tasks.build]
 description = "Build native PCB and attach checked reference copper"
-run = "bun run build"
+run = "mise run tscircuit:pill:reference:build"
 
 [tasks.check]
 description = "Check PCB fidelity, assembly defaults and TypeScript"
-run = ["bun run check", "bunx tsc --noEmit"]
+run = ["bun run check", "bun scripts/check.tsx", "bunx tsc --noEmit"]
 
 [tasks.docs]
 description = "Regenerate the component guide from reference data and authored explanations"
-run = "uv run scripts/generate-component-docs.py"
+run = ["uv run --with 'pypdf[crypto]' python scripts/collect-datasheets.py", "uv run python scripts/audit-module-pinouts.py"]
 
 [tasks.dev]
 description = "Build and preview the routed tscircuit port on localhost:3020"
-run = ["uv run scripts/generate-reference.py", "bun run build", "bun run dev"]
+run = "mise run tscircuit:pill:reference:dev"
 
 [settings]
 task.run_auto_install = false
@@ -55,7 +55,7 @@ run = "uv run scripts/refresh-jlc.py"
 
 [tasks."bom:generate"]
 description = "Export native positions and generate matching JLCPCB carrier BOM/CPL"
-run = ["uv run scripts/kicad.py export", "uv run scripts/generate-bom.py"]
+run = "mise run variant:lcd:fab"
 
 [tasks."review:build"]
 description = "Build readable local documentation and hardware-only review bundle"
@@ -960,3 +960,15 @@ run = "uv run --with 'pypdf[crypto]' python scripts/collect-datasheets.py"
 [tasks."variant:lcd:kernel-pinmux"]
 description = "Audit the retained compiled SPI/reset/button pinmux snapshot; not installed-image qualification"
 run = ["uv run python -m unittest discover -s scripts/tests -p test_carrier_pinmux.py", "uv run --with pyelftools python scripts/audit-carrier-kernel.py --dtb dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/out/bin/board_uclibc_rv1106/rv1103g-luckfox-pico-mini.dtb --config dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/source/objs_kernel/.config --report variants/lcd-module-2.8/compiled-pinmux-audit.json"]
+
+[tasks."kicad:standard:check"]
+description = "Validate the preserved historical 40-pin FPC design and DNP exceptions"
+run = "uv run scripts/kicad.py check --standard-fpc"
+
+[tasks."bom:standard:generate"]
+description = "Generate the historical FPC reference BOM/CPL"
+run = ["uv run scripts/kicad.py export --standard-fpc", "uv run scripts/generate-bom.py"]
+
+[tasks."docs:standard"]
+description = "Regenerate the historical FPC component guide"
+run = "uv run scripts/generate-component-docs.py"

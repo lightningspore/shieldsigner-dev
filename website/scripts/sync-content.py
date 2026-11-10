@@ -22,12 +22,12 @@ for directory in [content, public]:
     directory.mkdir()
 url_map = {str((ROOT / source).resolve()): f"/guides/{slug}/" for slug, source, *_ in GUIDES}
 files = ["assets/talk/tscircuit/assembly-3d.png", "assets/talk/tscircuit/pcb-bottom.png", "assets/branding/denver-space-silkscreen.svg", "reverse-engineering/rkaiq/memory/python-deep-2026-10-29/allocations.png", "reverse-engineering/rkaiq/memory/python-deep-2026-10-29/summary.json", "reverse-engineering/rkaiq/memory/memory-packed-image-1200.png", "reverse-engineering/rkaiq/memory/gui-packed-image-1200-result.json", *(f"reference/pdfs/{p.name}" for p in sorted((ROOT / "reference/pdfs").glob("*.pdf"))),
-"docs/luckfox-mini-pinout.json", "docs/luckfox-pinout-check.json", "docs/workflows.json", "docs/system-parts.json", "docs/card-workflows.json", "docs/os-build-benchmark.json", "docs/pdf-references.json", "docs/drc-assembly-exceptions.json",
+*(f"datasheets/{p.name}" for p in sorted((ROOT/"datasheets").glob("*")) if p.suffix in {".pdf",".md",".json"}), "docs/luckfox-mini-pinout.json", "docs/luckfox-pinout-check.json", "docs/workflows.json", "docs/system-parts.json", "docs/card-workflows.json", "docs/os-build-benchmark.json", "docs/pdf-references.json", "docs/drc-assembly-exceptions.json",
 "enclosure/previews/assembled.png", "enclosure/previews/exploded.png",
 "manufacturing/jlcpcb/bom-carrier-jlcpcb.csv", "manufacturing/jlcpcb/cpl-carrier-jlcpcb.csv"]
 # Hardware-only review bundle produced by review:build; no firmware/private archives.
 for name in ["shieldsigner-luckfox-kicad.zip", "shieldsigner-carrier-gerbers.zip", "pcb-top.svg", "pcb-bottom.svg", "schematic.pdf"]:
-    source = ROOT / "dist/kicad" / name
+    source = ROOT / "dist/standard-fpc" / name
     if not source.exists() and name in {'shieldsigner-carrier-gerbers.zip','shieldsigner-luckfox-kicad.zip','schematic.pdf'}:
         artifact = next(a for a in json.loads((ROOT/'assets/downloads.json').read_text())['assets'] if a['name']==name)
         cache = ROOT/'.tools/website-downloads'/artifact['sha256']/name
@@ -68,6 +68,11 @@ for source in variant.rglob("*"):
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, target)
         url_map[str(source.resolve())] = f"/files/{name}" + (f"?v={hashlib.sha256(source.read_bytes()).hexdigest()[:12]}" if source.suffix == '.png' else '')
+# Keep old direct project links usable; the primary public project is /files/kicad/.
+for source in (ROOT/'kicad').rglob('*'):
+    if source.is_file() and (source.suffix in {'.kicad_pcb','.kicad_sch','.kicad_pro','.kicad_sym','.kicad_mod'} or source.name in {'fp-lib-table','sym-lib-table'}):
+        target=public/'variants/lcd-module-2.8/kicad'/source.relative_to(ROOT/'kicad')
+        target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
 # Release-pinned modular outputs remain reproducible in a fresh public checkout.
 modular_manifest = json.loads((ROOT / "assets/modular-downloads.json").read_text())
 board = ROOT / "variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb"
@@ -174,15 +179,15 @@ with (variant/'manufacturing/bom-jlcpcb.csv').open() as file:
             'mpn':part['componentModelEn'], 'manufacturer':part['componentBrandEn'],
             'package':row['Footprint'], 'source':part['url'], 'checkedAt':part['checkedAt'][:10],
             'library':'Basic' if part['componentLibraryType']=='base' else 'Extended'})
-assert len(modular_rows)==17 and sum(p['qty'] for p in modular_rows)==35
+assert len(modular_rows)==18 and sum(p['qty'] for p in modular_rows)==43
 (content/'modular-carrier-parts.json').write_text(json.dumps(modular_rows,indent=2)+'\n')
 shutil.copyfile(variant/'system-parts.json', content/'modular-system-parts.json')
 mechanics = json.loads((variant/'mechanical.json').read_text())
 (content/'modular-pcb-spec.json').write_text(json.dumps({'width':mechanics['board']['width'],
-    'height':mechanics['board']['height'], 'thickness':1.6, 'layers':2,
+    'height':mechanics['board']['height'], 'thickness':1.6, 'layers':4,
     'boardSha256':modular_manifest['boardSha256']},indent=2)+'\n')
 readiness = json.loads((ROOT/'manufacturing/jlcpcb/readiness.json').read_text())
-board_sha = hashlib.sha256((ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest()
+board_sha = hashlib.sha256((ROOT/'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest()
 assert readiness['boardSha256']==board_sha, 'BOM/CPL readiness belongs to another board revision'
 geometry=json.loads((ROOT/'src/generated/reference-board.json').read_text())
 assert geometry['source']['sha256']==board_sha, 'Regenerate geometry before publishing'

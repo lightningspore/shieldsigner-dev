@@ -14,11 +14,11 @@ for entry in tree['tree']:
  if entry['type']!='blob' or not path.startswith(PREFIX):continue
  relative=path[len(PREFIX):]
  if relative.startswith('jlcpcb/') or relative=='example-phohotos.jpg':continue
- target=ROOT/'kicad'/relative
+ target=ROOT/'variants/standard-fpc/kicad'/relative
  if target.exists():raise RuntimeError(f'Refusing to overwrite existing working file: {target}')
  target.parent.mkdir(parents=True,exist_ok=True)
  with urllib.request.urlopen(f'https://raw.githubusercontent.com/3rdIteration/seedsigner/{COMMIT}/{path}') as response:data=response.read()
  target.write_bytes(data)
  manifest.append({'path':relative,'upstreamGitBlob':entry['sha'],'sha256':hashlib.sha256(data).hexdigest()})
-(ROOT/'kicad/provenance.json').write_text(json.dumps({'repository':'https://github.com/3rdIteration/seedsigner','commit':COMMIT,'files':manifest},indent=2)+'\n')
+(ROOT/'variants/standard-fpc/kicad/provenance.json').write_text(json.dumps({'repository':'https://github.com/3rdIteration/seedsigner','commit':COMMIT,'files':manifest},indent=2)+'\n')
 print(f'Fetched {len(manifest)} native project/library files.')

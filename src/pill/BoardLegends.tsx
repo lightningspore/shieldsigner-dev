@@ -17,7 +17,6 @@ export function BoardLegends() { return <>
   <silkscreentext text={"D"} pcbX={-59.53} pcbY={-4.426} layer="top" pcbRotation={0.0} fontSize={0.8} />
   <silkscreentext text={"OK"} pcbX={-51.5} pcbY={-5.421} layer="top" pcbRotation={0.0} fontSize={0.8} />
   <silkscreentext text={"R"} pcbX={-49.08} pcbY={6.0} layer="top" pcbRotation={0.0} fontSize={0.8} />
-  <silkscreentext text={"2.8 SPI  /  0.0.9-dev"} pcbX={6.0} pcbY={-31.421} layer="top" pcbRotation={0.0} fontSize={0.8} />
   <silkscreentext text={"1"} pcbX={58.88} pcbY={16.284} layer="top" pcbRotation={0.0} fontSize={0.8} />
   <silkscreentext text={"2"} pcbX={58.88} pcbY={6.014} layer="top" pcbRotation={0.0} fontSize={0.8} />
   <silkscreentext text={"3"} pcbX={65.0} pcbY={-10.316} layer="top" pcbRotation={0.0} fontSize={0.8} />

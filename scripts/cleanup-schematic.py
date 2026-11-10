@@ -9,13 +9,13 @@ def spans(text,prefix):return [(a,b,v) for a,b,v in s.expressions(text) if v.sta
 def pins(text):
  node=s.parse(text)
  return sorted((s.one(p,'number')[1],s.one(p,'at')) for sym in s.children(node,'symbol') for p in s.children(sym,'pin'))
-paths=[ROOT/'kicad/rpi_interface.kicad_sch',ROOT/'kicad/smartcard_reader.kicad_sch',ROOT/'kicad/symbols/Library.kicad_sym',ROOT/'kicad/symbols/SeedSigner.kicad_sym']
+paths=[ROOT/'variants/standard-fpc/kicad/rpi_interface.kicad_sch',ROOT/'variants/standard-fpc/kicad/smartcard_reader.kicad_sch',ROOT/'variants/standard-fpc/kicad/symbols/Library.kicad_sym',ROOT/'variants/standard-fpc/kicad/symbols/SeedSigner.kicad_sym']
 original={p:p.read_text() for p in paths}
 try:
  for p,text in original.items():
   shutil.copy2(p,backup/p.name);updated=text
   if p.name=='rpi_interface.kicad_sch':
-   lib=(ROOT/'kicad/symbols/power.kicad_sym').read_text()
+   lib=(ROOT/'variants/standard-fpc/kicad/symbols/power.kicad_sym').read_text()
    for name in ['GND','+3.3V']:
     replacement=spans(lib,f'(symbol "{name}"')[0][2].replace(f'(symbol "{name}"',f'(symbol "power:{name}"',1)
     for a,b,v in reversed(spans(updated,f'(symbol "power:{name}"')):

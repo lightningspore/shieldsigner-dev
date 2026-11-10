@@ -1,5 +1,7 @@
 # Board status and why the tscircuit view looked incomplete
 
+The default repository preview now follows the main four-layer KiCad board through `src/PillCarrierReference.tsx`. The independent source-authored tscircuit experiment below remains a separate layout; its explicit `tscircuit:pill:*` commands do not replace the fabrication reference. The historical FPC snapshot now reads `variants/standard-fpc/kicad/`.
+
 The native KiCad project is the preferred design. The original tscircuit version is an experimental port of the standard FPC native board, with a recorded source SHA-256 and stale-source checks. Native checks have now run: zero ERC errors/warnings, zero active DRC errors/warnings and zero PCB unconnected items/parity issues, with two explicit DNP strap courtyard exceptions. See [native check details](../KICAD.md). Neither design is fabrication-approved.
 
 ## Source-authored pill design
@@ -102,7 +104,7 @@ mise run tscircuit:pill:reference:dev
 ```
 
 Build regenerates `src/generated/pill-board.json` from
-`variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb`, records
+`kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb`, records
 its SHA-256 and rejects stale data. Outputs are in `dist/pill-tscircuit/`:
 Circuit JSON, top/bottom PCB SVGs, a generic-symbol connectivity schematic,
 assembly BOM and validation report. Dev serves the routed JSON on port 3020.

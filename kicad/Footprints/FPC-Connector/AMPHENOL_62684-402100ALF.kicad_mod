@@ -133,4 +133,10 @@
   )
   (fp_line (start -12.75 -3.275) (end -10.22 -3.275) (layer F.SilkS) (width 0.127))
   (fp_line (start 12.75 -3.275) (end 10.22 -3.275) (layer F.SilkS) (width 0.127))
+
+
+
+
+
+
 )

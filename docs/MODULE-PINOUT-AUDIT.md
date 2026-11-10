@@ -1,6 +1,6 @@
 # Luckfox Mini and HOTHMI pinout audit
 
-Reviewed 2026-11-09 against working pill PCB **0.0.11-dev**, SHA-256 `aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32`. The regenerated pinout report checks all eight switches and LCD/header mappings. The [interactive pinout and revision comparison](LUCKFOX-PINOUT.md) also covers the separate PWM candidate.
+Reviewed 2026-11-09 against working pill PCB **0.0.11-dev**, SHA-256 `2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d`. The regenerated pinout report checks all eight switches and LCD/header mappings. The [interactive pinout and revision comparison](LUCKFOX-PINOUT.md) also covers the separate PWM candidate.
 
 **PCB signal assignments and supply topology pass. Carrier firmware must use 10 MHz SPI, bank-label GPIO aliases and the HOTHMI panel initializer.** No PCB change is indicated by this audit. This is a drawing/netlist review, not a powered hardware test. The checkout files remain the same revision.
 

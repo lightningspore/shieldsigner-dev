@@ -50,7 +50,11 @@ def report_summary():
     return summary
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('action',choices=['setup','open','check','export','fabricate']);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('action',choices=['setup','open','check','export','fabricate']);parser.add_argument('--standard-fpc',action='store_true',help='Use the historical 40-pin FPC reference');args=parser.parse_args()
+    global PROJECT,PCB,SCH,OUT
+    if args.standard_fpc:
+        PROJECT=ROOT/'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pro'
+        PCB=PROJECT.with_suffix('.kicad_pcb');SCH=PROJECT.with_suffix('.kicad_sch');OUT=ROOT/'dist/standard-fpc'
     os.chdir(ROOT);command=cli(setup=args.action=='setup');OUT.mkdir(parents=True,exist_ok=True)
     env=os.environ.copy();support=command.parent.parent/'SharedSupport'
     for version in ['9','10']:env[f'KICAD{version}_3DMODEL_DIR']=str(support/'3dmodels')
@@ -62,7 +66,7 @@ def main():
         import importlib.util
         spec=importlib.util.spec_from_file_location('sexpr',ROOT/'scripts/kicad-sexpr.py');sx=importlib.util.module_from_spec(spec);spec.loader.exec_module(sx)
         tree=sx.parse(PCB.read_text());fps={next(x[2] for x in sx.children(f,'property') if x[1]=='Reference'):f for f in sx.children(tree,'footprint')}
-        exceptions=json.loads((ROOT/'docs/drc-assembly-exceptions.json').read_text())
+        exceptions=json.loads((ROOT/'docs/drc-assembly-exceptions.json').read_text()) if args.standard_fpc else []
         for exception in exceptions:
             assert 'dnp' in sx.one(fps[exception['dnp']],'attr'),f"Invalid DNP exception: {exception['dnp']}"
             assert 'dnp' not in sx.one(fps[exception['fitted']],'attr'),f"Expected fitted strap: {exception['fitted']}"
@@ -85,13 +89,13 @@ def main():
         run([command,'pcb','export','pos','--format','csv','--units','mm','--exclude-dnp','--output',OUT/'positions.csv',PCB],env=env)
         print('Native review files:',OUT)
     if args.action=='fabricate':
-        run([sys.executable,__file__,'check'])
+        run([sys.executable,__file__,'check',*(['--standard-fpc'] if args.standard_fpc else [])])
         folder=OUT/'fabrication';folder.mkdir(exist_ok=True)
-        layers='F.Cu,B.Cu,F.Paste,B.Paste,F.SilkS,B.SilkS,F.Mask,B.Mask,Edge.Cuts'
+        layers=('F.Cu,B.Cu' if args.standard_fpc else 'F.Cu,In1.Cu,In2.Cu,B.Cu')+',F.Paste,B.Paste,F.SilkS,B.SilkS,F.Mask,B.Mask,Edge.Cuts'
         run([command,'pcb','export','gerbers','--layers',layers,'--check-zones','--output',str(folder)+'/',PCB],env=env)
         run([command,'pcb','export','drill','--format','excellon','--excellon-units','mm','--excellon-separate-th','--output',str(folder)+'/',PCB],env=env)
         files={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in folder.iterdir() if p.is_file()}
-        manifest={'pcbSha256':hashlib.sha256(PCB.read_bytes()).hexdigest(),'activeDrcErrors':0,'documentedDnpExceptions':2,'qualification':'Fabrication geometry exported; assembly rotations, paste/reflow, LCD fit and bench operation require qualification','files':files}
+        manifest={'pcbSha256':hashlib.sha256(PCB.read_bytes()).hexdigest(),'activeDrcErrors':0,'documentedDnpExceptions':2 if args.standard_fpc else 0,'qualification':'Fabrication geometry exported; assembly rotations, paste/reflow, LCD fit and bench operation require qualification','files':files}
         (OUT/'fabrication-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
         with ZipFile(OUT/'shieldsigner-carrier-gerbers.zip','w',ZIP_DEFLATED) as archive:
             for path in sorted(folder.iterdir()):

@@ -1,8 +1,14 @@
 # Native KiCad board
 
-For the **current eight-pin pill**, start with [its project](variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pro) and `mise run variant:lcd:open`. Its complete workflow is at the end of this guide. The standard `kicad:*` tasks and reference discussion below target the separate original FPC carrier.
+The **main PCB** is the [eight-pin 2.8-inch four-layer carrier](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro).
+It lives directly in `kicad/`, with its local symbols, footprints and models.
+`mise run kicad:open`, `kicad:check`, `kicad:export` and `kicad:fab` use it by default.
+Its native ERC/DRC have zero violations, unconnected items, parity issues or exclusions.
+The [carrier guide](docs/LCD-MODULE-VARIANT.md) covers assembly and the matched factory kit.
 
-Open [the complete KiCad project](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro). It includes the hierarchical schematic, routed PCB, project settings, and project-local symbol/footprint libraries. Native KiCad is now the preferred editor. The original tscircuit work remains for comparison.
+The old 40-pin FPC project is preserved in `variants/standard-fpc/kicad/`.
+Use `mise run kicad:standard:check` for that design and its two documented DNP exceptions.
+The old `variants/lcd-module-2.8/kicad` path is a compatibility link to the main project.
 
 ## Use mise
 
@@ -20,9 +26,13 @@ The source requires KiCad 10. The existing installed KiCad 9 cannot open it. Set
 
 The project tasks deliberately disable auto-installing the parent monorepo's unrelated infrastructure tools. Bun and uv are pinned in `mise.toml`; `op` for Telegram remains supplied by the existing monorepo configuration. KiCad itself is managed by the project wrapper because the GUI/CLI bundle is distributed as a macOS disk image.
 
+## Historical FPC reference notes
+
+The sections below through the historical editing workflow describe the preserved FPC design; they do not redefine the main carrier’s pinout, layer count or DNP policy.
+
 ## What changed
 
-See [native variant changelog](kicad/CHANGELOG.md). The working project starts from the pinned upstream PCB, preserving its geometry, routing, hierarchy, DNP settings and original drawings. Its complete local libraries now remove missing-library setup dependencies. This is a refinement of the upstream design, not a fresh autorouted layout.
+See [historical native changelog](variants/standard-fpc/kicad/CHANGELOG.md). The working project starts from the pinned upstream PCB, preserving its geometry, routing, hierarchy, DNP settings and original drawings. Its complete local libraries now remove missing-library setup dependencies. This is a refinement of the upstream design, not a fresh autorouted layout.
 
 Native fixes add explicit no-connect declarations, correct SEC1210 power-output pin types, annotate USB power entry, and declare the unused alternative header/testpoint as schematic-only. C603/C604 change from 100 nF to 1 µF to align nominal output decoupling with the [SEC1210 datasheet](https://www.microchip.com/content/dam/mchp/documents/UNG/ProductDocuments/DataSheets/00001561D.pdf), table 6-4 notes 6-2 and 6-3. The full [component guide](docs/COMPONENTS.md) reflects those changes and explains each part, selection rationale and pad/net usage.
 
@@ -75,7 +85,7 @@ Library paths use the exact tracked `Footprints/` capitalization. This prevents 
 
 The working pill board now has four copper layers with two inner GND planes. See [stackup and quote-file distinction](variants/lcd-module-2.8/README.md#four-layer-working-board).
 
-The [0.0.9-dev pill carrier](docs/LCD-MODULE-VARIANT.md) is an independent project under `variants/lcd-module-2.8/kicad/`. Use `mise run variant:lcd:open`. It follows the existing Luckfox eight-pin interface, keeps a 160×70 mm capsule and places a 2.8-inch module between the controls. A dedicated AP2112 supplies LCD_3V3. The obsolete bare-panel sheet/lands and Pico-format bay are removed.
+The [0.0.9-dev pill carrier](docs/LCD-MODULE-VARIANT.md) is an independent project under `kicad/`. Use `mise run variant:lcd:open`. It follows the existing Luckfox eight-pin interface, keeps a 160×70 mm capsule and places a 2.8-inch module between the controls. A dedicated AP2112 supplies LCD_3V3. The obsolete bare-panel sheet/lands and Pico-format bay are removed.
 
 `variant:lcd:check` runs native ERC/DRC/connectivity/parity with zero permitted exclusions. `variant:lcd:models` checks 22 model hashes, reviewed solder lands, exact connector mapping, capsule edges, supports and both-side hardware clearance. `variant:lcd:fab` builds 35-part/17-line matched Gerbers/drills/BOM/CPL. `variant:lcd:review` produces both assembled views, a complete schematic PDF and STEP/GLB exports. `variant:lcd:package` pins public release outputs. LCD/socket/support models are explicit dimensional envelopes.
 

@@ -3,7 +3,7 @@
 import json,re,runpy,uuid
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
-DIR=ROOT/'kicad'
+DIR=ROOT/'variants/standard-fpc/kicad'
 # Use the expression scanner, without executing the library-building script.
 source=(ROOT/'scripts/prepare-kicad-project.py').read_text()
 namespace={};exec(source[source.index('def expressions'):source.index('\nsymbols=')],namespace)
@@ -26,7 +26,7 @@ apply(DIR/'smartcard_reader.kicad_sch',fix_pins)
 apply(DIR/'symbols/Library.kicad_sym',fix_pins)
 
 # Explicit unused-pin declarations based on baseline native ERC locations.
-report=json.loads((ROOT/'dist/kicad/erc-baseline.json').read_text())
+report=json.loads((ROOT/'dist/standard-fpc/erc-baseline.json').read_text())
 files={'/RPi Interface/':'rpi_interface.kicad_sch','/Screen/':'screen.kicad_sch','/Smartcard Interface/':'smartcard_reader.kicad_sch'}
 for sheet in report['sheets']:
  if sheet['path'] not in files:continue

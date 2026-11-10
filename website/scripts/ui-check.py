@@ -48,7 +48,7 @@ with sync_playwright() as p:
         download.value.save_as(target)
         with ZipFile(target) as archive:
             bom = list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
-            assert len(bom)==17
+            assert len(bom)==18
         for slug in slugs:
             page.goto(base+f'/build/{slug}/')
             page.locator('h1').wait_for()
@@ -57,12 +57,12 @@ with sync_playwright() as p:
             if slug in {'pcb','parts','compile','flash','cards'}:
                 page.screenshot(path=str(artifacts/f'{slug}-{width}.png'), full_page=True)
         page.goto(base+'/build/parts/?scope=carrier')
-        assert page.locator('#parts-results tbody tr').count()==17
+        assert page.locator('#parts-results tbody tr').count()==18
         page.locator('#board-variant').select_option('standard')
         page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===21")
         assert '43 fitted pieces' in page.locator('#parts-results').inner_text()
         page.locator('#board-variant').select_option('modular')
-        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===17")
+        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===18")
         page.locator('#part-query').fill('C603')
         page.locator('#board-quantity').fill('5')
         page.locator('#board-quantity').dispatch_event('change')
@@ -74,7 +74,7 @@ with sync_playwright() as p:
         page.locator('#part-query').fill('not-a-part')
         page.wait_for_function("document.querySelector('#parts-results').innerText.includes('No matching parts')")
         page.locator('#part-query').fill('')
-        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===17")
+        page.wait_for_function("document.querySelectorAll('#parts-results tbody tr').length===18")
         page.locator('#part-scope').select_option('system')
         page.wait_for_function("document.querySelectorAll('#parts-results .system-part').length===16")
         page.goto(base+'/build/compile/')
@@ -133,7 +133,7 @@ with sync_playwright() as p:
         download.value.save_as(target)
         with ZipFile(target) as archive:
             bom = list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
-            assert len(bom)==17 and sum(len(row['Designator'].split(',')) for row in bom)==35
+            assert len(bom)==18 and sum(len(row['Designator'].split(',')) for row in bom)==43
         assert not errors, errors
         context.close()
     context = browser.new_context(java_script_enabled=False,viewport={'width':390,'height':844})
@@ -142,7 +142,7 @@ with sync_playwright() as p:
     for slug in slugs:
         assert page.locator(f'.task-card[href="/build/{slug}/"]').count()==1
     page.locator('.task-card[href="/build/parts/"]').click()
-    assert page.locator('#parts-results tbody tr').count()==17
+    assert page.locator('#parts-results tbody tr').count()==18
     assert page.locator('#parts-results .system-part').count()==16
     assert 'C28323' in page.locator('#parts-results').inner_text()
     assert 'Filtering and quantity calculations need JavaScript' in page.locator('noscript').inner_text()

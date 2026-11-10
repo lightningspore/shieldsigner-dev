@@ -1,7 +1,7 @@
 {
   "passed": true,
   "revision": "0.0.11-dev",
-  "boardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+  "boardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
   "baselineBoardSha256": "bcd38b64cffab4e5818576532d2e51f45df37868f67307751ea5a2ff7a105df8",
   "retainedElectricalMechanicalFootprintsUnchanged": [
     "C201",

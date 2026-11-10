@@ -244,7 +244,13 @@
 		(uuid "07e902ef-91d8-4c19-8b8b-e090a5590173")
 	)
 	(embedded_fonts no)
-	(model "${KICAD10_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x02_P2.54mm_Vertical.step"
+	
+
+
+
+
+
+(model "${KIPRJMOD}/3dmodels/kicad/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x02_P2.54mm_Vertical.step"
 		(offset
 			(xyz 0 0 0)
 		)

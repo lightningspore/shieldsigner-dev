@@ -1,0 +1,10 @@
+{
+  "scope": "Remove one clipped front silkscreen label only",
+  "beforeBoardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+  "boardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
+  "removedText": "2.8 SPI  /  0.0.11-dev 4L",
+  "removedUuid": "612a8422-c41f-4934-9285-79eccafe9b23",
+  "allOtherBoardObjectsExactlyUnchanged": true,
+  "copperFootprintsNetsAndOutlineUnchanged": true,
+  "physicalQualificationInferred": false
+}

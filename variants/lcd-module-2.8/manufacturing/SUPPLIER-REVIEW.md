@@ -2,7 +2,7 @@
 
 Prepared locally; not sent, uploaded, quoted or approved.
 
-PCB SHA-256: `aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32`. Match all replies and placement previews to this
+PCB SHA-256: `2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d`. Match all replies and placement previews to this
 revision and the checked Gerber/BOM/CPL file hashes in `readiness.json`.
 Prototype basis: five bare PCBs; quote one populated first article and the
 incremental cost for five populated boards separately. Do not release repeat

@@ -1,5 +1,5 @@
 {
-  "boardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+  "boardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
   "reviewed": "2026-11-09",
   "qualification": "0.0.11 service revision: exact retained footprint and original routing checks; corrected parts unchanged. New Keystone footprints are symmetric single-pad SMT lands. Supplier preview and final DFM are still required.",
   "corrections": {
@@ -72,6 +72,6 @@
   "historicalPreview": "manufacturing/history/0.0.7-preview/",
   "serviceCompatibility": {
     "audit": "serviceability-audit.json",
-    "auditSha256": "1a6374894a2e64a257c3c359817f8c45886600b4b86da2e2b42ed6d344e62b8d"
+    "auditSha256": "9a27d17bb5ef29364b66c1cb008442e64c8f58343f7954c3e8b01bf399560425"
   }
 }

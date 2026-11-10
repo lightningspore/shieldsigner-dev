@@ -74,3 +74,14 @@ report={'boardSha256':manifest['boardSha256'],'sourceGlbSha256':hashlib.sha256(s
  'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
 (out/'printable-fit-check.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report,indent=2))
+
+# Refresh only the newly generated mockup entries in the matched download set.
+fit_path=root/'assets/fit-downloads.json'
+if fit_path.exists():
+    fit=json.loads(fit_path.read_text())
+    assert fit['boardSha256']==manifest['boardSha256'],'Fit manifest targets another PCB'
+    for entry in fit['assets']:
+        if entry['name'] in {'shieldsigner-printable-fit-mm.stl','printable-fit-check.json'}:
+            artifact=out/entry['name']
+            entry.update(size=artifact.stat().st_size,sha256=hashlib.sha256(artifact.read_bytes()).hexdigest())
+    fit_path.write_text(json.dumps(fit,indent=2)+'\n')

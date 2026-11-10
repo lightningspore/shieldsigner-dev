@@ -519,7 +519,7 @@
         "candidate": "LCD_PWM"
       },
       "use": {
-        "released": "Unused on main 0.0.9",
+        "released": "Unused on main 0.0.11",
         "candidate": "Optional LCD backlight PWM"
       },
       "note": {
@@ -822,8 +822,8 @@
     }
   ],
   "revisionLabels": {
-    "released": "ShieldSigner 0.0.9 \u00b7 review kit",
+    "released": "ShieldSigner 0.0.11 \u00b7 review kit",
     "candidate": "ShieldSigner 0.0.10 \u00b7 optional PWM candidate"
   },
-  "revisionScope": "Compatibility keys released/candidate are retained. Main 0.0.9 review kit is not an approved or synchronized JLC cart; optional PWM 0.0.10 is not the main order target. Both require carrier-profile firmware, not the tested base-fork bench image."
+  "revisionScope": "Compatibility keys released/candidate are retained. Main 0.0.11 review kit is not an approved or synchronized JLC cart; optional PWM 0.0.10 is not the main order target. Both require carrier-profile firmware, not the tested base-fork bench image."
 }

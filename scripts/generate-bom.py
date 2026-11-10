@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
 runpy.run_path(str(ROOT/'scripts/check-bom-values.py'))
 m=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));parse,children,one=[m[k] for k in ['parse','children','one']]
-pcb=parse((ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_text())
+pcb=parse((ROOT/'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_text())
 overrides=json.loads((ROOT/'docs/native-overrides.json').read_text())
 selection=json.loads((ROOT/'docs/bom-selection.json').read_text())
 catalog={p['code']:p for p in json.loads((ROOT/'docs/jlc-catalog.json').read_text())['parts']}
@@ -33,7 +33,7 @@ with (OUT/'bom-carrier-jlcpcb.csv').open('w',newline='') as file:
   chosen=catalog[code];writer.writerow([items[0]['value']+'; '+items[0]['mpn'],','.join(sorted(p['ref'] for p in items)),chosen['componentSpecificationEn'],code])
 with (OUT/'population-audit.csv').open('w',newline='') as file:
  writer=csv.DictWriter(file,fieldnames=list(parts[0]),lineterminator="\n");writer.writeheader();writer.writerows(sorted(parts,key=lambda p:p['ref']))
-with (ROOT/'dist/kicad/positions.csv').open() as file:positions=list(csv.DictReader(file))
+with (ROOT/'dist/standard-fpc/positions.csv').open() as file:positions=list(csv.DictReader(file))
 expected={p['ref'] for p in assembled};placed=[]
 for row in positions:
  if row['Ref'] in expected:
@@ -45,7 +45,7 @@ lines=['# JLCPCB sourcing table','','Generated from the native KiCad PCB plus th
 for code,items in sorted(groups.items()):
  p=catalog[code];lines.append(f"| {', '.join(x['ref'] for x in items)} | {values['nominal'](items[0]['value'],[x['ref'] for x in items])} | {values['ratings'](p,[x['ref'] for x in items]) or '—'} | {len(items)} | {p['componentBrandEn']} / {p['componentModelEn']} | [{code}]({p['url']}) | {p.get('canPresaleNumber','unavailable')} | {p.get('componentLibraryType','unknown')} | {p['checkedAt'][:19]} |")
 (ROOT/'docs/BOM-TABLE.md').write_text('\n'.join(lines)+'\n')
-checks=json.loads((ROOT/'dist/kicad/checks-summary.json').read_text())
-manifest={'boardSha256':hashlib.sha256((ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest(),'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'variant':'carrier_without_luckfox','fittedPieces':43,'uniqueCatalogParts':len(groups),'bomCplRefsMatch':True,'stockReserved':False,'placementRotationsQualified':False,'activeDrcErrors':checks['drc']['bySeverity'].get('error',0),'documentedDnpExceptions':checks['drc'].get('excluded',0),'releaseStatus':'review_only','remainingItems':['XKB extended switch land/stencil and actuator-height qualification','LCD contact orientation and backlight current','SEC1210 UR2 runtime reader configuration','JLCPCB placement preview, quote/DFM and stock reservation','physical bring-up']}
+checks=json.loads((ROOT/'dist/standard-fpc/checks-summary.json').read_text())
+manifest={'boardSha256':hashlib.sha256((ROOT/'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest(),'generatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'variant':'carrier_without_luckfox','fittedPieces':43,'uniqueCatalogParts':len(groups),'bomCplRefsMatch':True,'stockReserved':False,'placementRotationsQualified':False,'activeDrcErrors':checks['drc']['bySeverity'].get('error',0),'documentedDnpExceptions':checks['drc'].get('excluded',0),'releaseStatus':'review_only','remainingItems':['XKB extended switch land/stencil and actuator-height qualification','LCD contact orientation and backlight current','SEC1210 UR2 runtime reader configuration','JLCPCB placement preview, quote/DFM and stock reservation','physical bring-up']}
 (OUT/'readiness.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(f'Generated carrier BOM/CPL: {len(groups)} catalog lines, 43 placed pieces, all 53 footprints accounted for.')

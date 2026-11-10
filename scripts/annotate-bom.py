@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parent.parent
 m=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));expressions=m['expressions']
 selection=json.loads((ROOT/'docs/bom-selection.json').read_text())
 renames={'Q401','D302','J301','U601',*[f'SW50{i}' for i in range(1,9)]}
-for file in [ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb',*(ROOT/'kicad').glob('*.kicad_sch')]:
+for file in [ROOT/'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb',*(ROOT/'variants/standard-fpc/kicad').glob('*.kicad_sch')]:
  text=file.read_text();changes=[]
  for start,end,expr in expressions(text):
   pcb=expr.startswith('(footprint ')

@@ -7,7 +7,7 @@ ordering and preparing first articles; measurements follow their delivery.
 
 ## Current files
 
-- [Native KiCad project](../variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pro)
+- [Native KiCad project](../kicad/SeedSigner-Plus-smartcard-pico.kicad_pro)
 - [Datasheets: all 18 factory BOM SKUs, modules and retained references](../datasheets/README.md)
 - [Current build-input preparation record](../variants/lcd-module-2.8/carrier-build-preparation.json)
 - [Factory sourcing and first-article order review](PCB-ORDER-READINESS.md)

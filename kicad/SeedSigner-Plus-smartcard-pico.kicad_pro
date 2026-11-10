@@ -76,16 +76,7 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [
-        [
-          "courtyards_overlap|187095000|85915000|15bd8605-fe39-46e3-b6be-dd05330203dd|5583a160-a077-4e84-b004-3575bb60cdb0",
-          "R403/R404: mutually exclusive mode straps; R404 DNP; population guarded by project checks."
-        ],
-        [
-          "courtyards_overlap|187095000|88155000|4e83b843-f530-4280-bdba-57be3f29bc2a|7fcafd34-d9bc-42ce-ba0c-58d6ee71b5b0",
-          "R409/R408: mutually exclusive mode straps; R408 DNP; population guarded by project checks."
-        ]
-      ],
+      "drc_exclusions": [],
       "meta": {
         "version": 2
       },

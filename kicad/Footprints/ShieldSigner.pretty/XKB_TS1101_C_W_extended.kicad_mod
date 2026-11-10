@@ -318,7 +318,13 @@
 		(uuid "be7505b8-9458-48db-90d3-ad124e7c94a8")
 	)
 	(embedded_fonts no)
-	(model "${KICAD10_3DMODEL_DIR}/Button_Switch_SMD.3dshapes/SW_SPST_FSMSM.step"
+	
+
+
+
+
+
+(model "${KIPRJMOD}/3dmodels/kicad/Button_Switch_SMD.3dshapes/SW_SPST_FSMSM.step"
 		(offset
 			(xyz 0 0 0)
 		)

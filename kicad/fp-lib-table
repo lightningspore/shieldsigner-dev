@@ -11,5 +11,5 @@
 (lib (name "Resistor_SMD") (type "KiCad") (uri "${KIPRJMOD}/Footprints/Resistor_SMD.pretty") (options "") (descr "Pinned native board footprint"))
 (lib (name "Seedsigner-plus-library") (type "KiCad") (uri "${KIPRJMOD}/Footprints/Seedsigner-plus-library.pretty") (options "") (descr "Pinned native board footprint"))
 
-(lib (name "ShieldSigner") (type "KiCad") (uri "${KIPRJMOD}/Footprints/ShieldSigner.pretty") (options "") (descr "ShieldSigner datasheet-derived assembly envelope; extended copper lands"))
-)
+(lib (name "ShieldSigner") (type "KiCad") (uri "${KIPRJMOD}/Footprints/ShieldSigner.pretty") (options "") (descr "ShieldSigner supplier-drawing reflow lands and module interface"))
+(lib (name "MountingHole") (type "KiCad") (uri "${KIPRJMOD}/Footprints/MountingHole.pretty") (options "") (descr "M2.5 module mounting clearance holes")))

@@ -1,3 +1,11 @@
+# 0.0.6-dev — power entry
+
+- Select GCT USB4125-GF-A-0190 / C5246813, shared with DigiKey; same lands and 1.9 mm shell stakes.
+- Add J302, optional customer-fitted 1×2 2.54 mm power header at (105,120) mm, pin 1 +5V / pin 2 GND; 0.5 mm front track and one 0.6/0.3 mm via connect to the existing input rail.
+- Label 5V and GND on top silk. Use one regulated 5V input at a time; sources are directly connected with no isolation/reverse-polarity circuit.
+- Keep HOTHMI LCD geometry, card circuit and button positions. Factory population remains 35 SMT pieces / 17 lines. J302 adds two optional customer joints.
+- Supersedes 0.0.5-dev Gerbers/BOM/CPL for ordering; old USB-omitting JLC quote must not be ordered as the new revision.
+
 # Native KiCad variant changes
 
 The baseline is upstream commit `efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f`; file hashes are recorded in provenance.json. The unchanged source PCB and schematics remain in ../reference/.
@@ -47,3 +55,19 @@ Native verification: zero ERC errors (10 warnings); zero unconnected PCB items; 
 ## 12 October 2026 — purchase metadata correction
 
 C603/C604 already had the reviewed 1 µF circuit value, but their purchase properties/selection still described the old 100 nF component. Corrected both to C28323 / Samsung CL21B105KBFNNNE, matching C602. Geometry and electrical connections are unchanged. Regenerated BOM/CPL, native reports and Gerbers; added a guard against losing approved value/catalog corrections. Supersedes the earlier preview’s incorrect purchase metadata.
+
+## Modular 2.8-inch variant — 0.0.3-dev
+
+Added a manufacturer-derived Pico-ResTouch-LCD-2.8 header interface and four mounting holes. The complete assembled display uses the separate upper bay; existing Luckfox/smartcard/buttons remain. Bare-panel connector/backlight/mode parts are DNP and have no paste/model in this assembly. Customer-mounted Luckfox castellated lands also have no reflow paste.
+
+The XKB switch uses 1.2×1.0 mm lands at ±3.7 mm. The SHOUHAN 6P(073) USB lands use 1.2 mm height and corrected shield slots; a nearby +5 V route moves clear of the corrected shield land. USB ground A12 has an explicit ground connection and local solid plane connection, retaining the global design rules. The Amphenol socket uses 1.2×1.9 mm contacts at ±12.05 mm and 1.4×1.9 mm switch contacts at the manufacturer offsets. SEC1210 peripheral lands are 0.35 mm wide and 0.65 mm long, with 4.0 mm inner gap; the exposed-pad copper/paste windows remain.
+
+Added 17 portable model files with source/hash records, including the complete Waveshare model, selected catalog device models, host and mating connectors. Socket and support envelopes are labeled simplified geometry. Updated silk identifies 0.0.3-dev and preserves upstream attribution. The native auxiliary origin is (50,130) mm for matching modular Gerbers, drills and CPL.
+
+Native ERC/DRC/connectivity/parity and independent land/model checks pass. The only courtyard exclusions remain the two inherited strap pairs, all four DNP. No physical or assembler qualification is implied.
+
+## 0.0.4-dev: eight-pin pill
+
+Replaced the Pico-format LCD bay with the user's reference eight-pin SPI interface and a 160×70 mm capsule. Centered controls around a larger 2.8-inch HTM-TFT028A16-SPI module. Added independent AP2112K-3.3 power with two 10 µF capacitors, four 12 mm supports, both-side 6 mm hardware keepouts and ground stitching. Moved input components clear of the lower-left support. Removed the obsolete bare-panel sheet/lands, J302 and inherited DNP courtyard exclusions. Refined routing without reducing clearance rules. Native ERC/DRC/connectivity/parity are clean with zero exclusions. The LCD power sheet uses conventional capacitors and visible wiring.
+
+Native model/land/geometry gates cover the revised interface and support clearance. New supplier/dimensional models replace the Pico display models, with local paths and provenance. Manufacturing changes from 32/16 to 35 SMT pieces/17 catalog lines; 47 total footprints. Physical fit, thermal/display bring-up and assembler placement/DFM qualification remain open.

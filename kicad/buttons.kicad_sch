@@ -287,7 +287,7 @@
 	)
 	(global_label "JoystickDown"
 		(shape input)
-		(at 115.57 118.11 180)
+		(at 95.25000 107.95000 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -297,7 +297,7 @@
 		)
 		(uuid "4b8b4752-a4bb-44c3-9c8e-0a3900a8e7e2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 100.1268 118.11 0)
+			(at 79.80680 107.95000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -311,7 +311,7 @@
 	)
 	(global_label "JoystickLeft"
 		(shape input)
-		(at 83.82 96.52 180)
+		(at 63.50000 86.36000 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -321,7 +321,7 @@
 		)
 		(uuid "5c723312-a5c7-4a58-b99d-ef46dc7d9540")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 69.7072 96.52 0)
+			(at 49.38720 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -335,7 +335,7 @@
 	)
 	(global_label "JoystickPress"
 		(shape input)
-		(at 115.57 96.52 180)
+		(at 95.25000 86.36000 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -345,7 +345,7 @@
 		)
 		(uuid "7f16707d-c816-49f4-9d2f-112cef366254")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 99.8243 96.52 0)
+			(at 79.50430 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -359,7 +359,7 @@
 	)
 	(global_label "JoystickUp"
 		(shape input)
-		(at 115.57 74.93 180)
+		(at 95.25000 64.77000 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -369,7 +369,7 @@
 		)
 		(uuid "807d6ff0-9b27-4610-8148-9654fe5a7bba")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 102.5458 74.93 0)
+			(at 82.22580 64.77000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -383,7 +383,7 @@
 	)
 	(global_label "Key1"
 		(shape input)
-		(at 198.12 86.36 180)
+		(at 177.80000 76.20000 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -393,7 +393,7 @@
 		)
 		(uuid "c386988a-7a18-4bc3-b9c9-405dade3324f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 190.5991 86.36 0)
+			(at 170.27910 76.20000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -407,7 +407,7 @@
 	)
 	(global_label "Key3"
 		(shape input)
-		(at 198.12 109.22 180)
+		(at 177.80000 99.06000 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -417,7 +417,7 @@
 		)
 		(uuid "d3408f11-6d0e-4f39-bd77-dd8195aba0af")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 190.5991 109.22 0)
+			(at 170.27910 99.06000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -431,7 +431,7 @@
 	)
 	(global_label "Key2"
 		(shape input)
-		(at 198.12 97.79 180)
+		(at 177.80000 87.63000 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -441,7 +441,7 @@
 		)
 		(uuid "e4619561-55e2-4476-9331-bca28916c001")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 190.5991 97.79 0)
+			(at 170.27910 87.63000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -455,7 +455,7 @@
 	)
 	(global_label "JoystickRight"
 		(shape input)
-		(at 147.32 96.52 180)
+		(at 127.00000 86.36000 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -465,7 +465,7 @@
 		)
 		(uuid "f935899a-1a06-4b94-9a8f-dd217f8b98a8")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 131.8768 96.52 0)
+			(at 111.55680 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -479,7 +479,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 93.98 96.52 0)
+		(at 73.66000 86.36000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -490,7 +490,7 @@
 		(fields_autoplaced yes)
 		(uuid "04e2f025-766c-43e7-9c1b-4da6e57a22a6")
 		(property "Reference" "#PWR0501"
-			(at 93.98 102.87 0)
+			(at 73.66000 92.71000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -501,17 +501,16 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 93.98 101.6 0)
+			(at 73.66000 91.44000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
+			 (hide yes)))
 		(property "Footprint" ""
-			(at 93.98 96.52 0)
+			(at 73.66000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -522,7 +521,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 93.98 96.52 0)
+			(at 73.66000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -533,7 +532,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 93.98 96.52 0)
+			(at 73.66000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -557,7 +556,7 @@
 	)
 	(symbol
 		(lib_id "Switch:SW_Push")
-		(at 120.65 118.11 0)
+		(at 100.33000 107.95000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -567,7 +566,7 @@
 		(dnp no)
 		(uuid "142d11b7-7e9b-48b6-a9e0-b50d823dd1e4")
 		(property "Reference" "SW504"
-			(at 120.65 110.49 0)
+			(at 100.33000 104.14000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -576,18 +575,17 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
-			(at 120.65 113.03 0)
+		(property "Value" "PTS636SK25SMTRLFS"
+			(at 100.33000 102.87000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_extended"
-			(at 120.65 113.03 0)
+			 (hide yes)))
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
+			(at 100.33000 102.87000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -597,8 +595,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
-			(at 120.65 113.03 0)
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
+			(at 100.33000 102.87000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -609,7 +607,7 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
-			(at 120.65 118.11 0)
+			(at 100.33000 107.95000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -619,8 +617,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
-			(at 120.65 110.49 0)
+		(property "LCSC" "C2689642"
+			(at 100.33000 100.33000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -644,14 +642,14 @@
 				)
 			)
 		)
-	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
+
+(property "Manufacturer" "XKB Connection" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_id "Switch:SW_Push")
-		(at 120.65 74.93 0)
+		(at 100.33000 64.77000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -662,7 +660,7 @@
 		(fields_autoplaced yes)
 		(uuid "18783fab-f6a7-44d2-b8c1-a924dfa0d739")
 		(property "Reference" "SW502"
-			(at 120.65 67.31 0)
+			(at 100.33000 60.96000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -671,18 +669,17 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
-			(at 120.65 69.85 0)
+		(property "Value" "PTS636SK25SMTRLFS"
+			(at 100.33000 59.69000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_extended"
-			(at 120.65 69.85 0)
+			 (hide yes)))
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
+			(at 100.33000 59.69000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -692,8 +689,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
-			(at 120.65 69.85 0)
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
+			(at 100.33000 59.69000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -704,7 +701,7 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
-			(at 120.65 74.93 0)
+			(at 100.33000 64.77000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -714,8 +711,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
-			(at 120.65 67.31 0)
+		(property "LCSC" "C2689642"
+			(at 100.33000 57.15000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -739,14 +736,14 @@
 				)
 			)
 		)
-	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
+
+(property "Manufacturer" "XKB Connection" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_id "power:GND")
-		(at 208.28 109.22 0)
+		(at 187.96000 99.06000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -757,7 +754,7 @@
 		(fields_autoplaced yes)
 		(uuid "1a3b2afb-32d2-4cdd-97ef-5f437d3c3cb4")
 		(property "Reference" "#PWR0508"
-			(at 208.28 115.57 0)
+			(at 187.96000 105.41000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -768,17 +765,16 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 208.28 114.3 0)
+			(at 187.96000 104.14000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
+			 (hide yes)))
 		(property "Footprint" ""
-			(at 208.28 109.22 0)
+			(at 187.96000 99.06000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -789,7 +785,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 208.28 109.22 0)
+			(at 187.96000 99.06000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -800,7 +796,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 208.28 109.22 0)
+			(at 187.96000 99.06000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -824,7 +820,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 125.73 118.11 0)
+		(at 105.41000 107.95000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -835,7 +831,7 @@
 		(fields_autoplaced yes)
 		(uuid "3113781a-ad00-4daa-a37d-de697568ee4f")
 		(property "Reference" "#PWR0504"
-			(at 125.73 124.46 0)
+			(at 105.41000 114.30000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -846,17 +842,16 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 125.73 123.19 0)
+			(at 105.41000 113.03000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
+			 (hide yes)))
 		(property "Footprint" ""
-			(at 125.73 118.11 0)
+			(at 105.41000 107.95000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -867,7 +862,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 125.73 118.11 0)
+			(at 105.41000 107.95000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -878,7 +873,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 125.73 118.11 0)
+			(at 105.41000 107.95000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -902,7 +897,7 @@
 	)
 	(symbol
 		(lib_id "Switch:SW_Push")
-		(at 88.9 96.52 0)
+		(at 68.58000 86.36000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -913,7 +908,7 @@
 		(fields_autoplaced yes)
 		(uuid "3c7e0d9d-2082-4a17-9305-e3c371595ca7")
 		(property "Reference" "SW501"
-			(at 88.9 88.9 0)
+			(at 68.58000 82.55000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -922,18 +917,17 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
-			(at 88.9 91.44 0)
+		(property "Value" "PTS636SK25SMTRLFS"
+			(at 68.58000 81.28000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_extended"
-			(at 88.9 91.44 0)
+			 (hide yes)))
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
+			(at 68.58000 81.28000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -943,8 +937,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
-			(at 88.9 91.44 0)
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
+			(at 68.58000 81.28000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -955,7 +949,7 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
-			(at 88.9 96.52 0)
+			(at 68.58000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -965,8 +959,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
-			(at 88.9 88.9 0)
+		(property "LCSC" "C2689642"
+			(at 68.58000 78.74000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -990,14 +984,14 @@
 				)
 			)
 		)
-	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
+
+(property "Manufacturer" "XKB Connection" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_id "power:GND")
-		(at 125.73 74.93 0)
+		(at 105.41000 64.77000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1008,7 +1002,7 @@
 		(fields_autoplaced yes)
 		(uuid "49fbf954-b0e6-43b2-ab50-ee341de1ea7d")
 		(property "Reference" "#PWR0502"
-			(at 125.73 81.28 0)
+			(at 105.41000 71.12000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1019,17 +1013,16 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 125.73 80.01 0)
+			(at 105.41000 69.85000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
+			 (hide yes)))
 		(property "Footprint" ""
-			(at 125.73 74.93 0)
+			(at 105.41000 64.77000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1040,7 +1033,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 125.73 74.93 0)
+			(at 105.41000 64.77000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1051,7 +1044,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 125.73 74.93 0)
+			(at 105.41000 64.77000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1075,7 +1068,7 @@
 	)
 	(symbol
 		(lib_id "Switch:SW_Push")
-		(at 203.2 97.79 0)
+		(at 182.88000 87.63000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1086,7 +1079,7 @@
 		(fields_autoplaced yes)
 		(uuid "50a3d35d-7ed2-49c2-92b9-53f9760a1bc1")
 		(property "Reference" "SW507"
-			(at 203.2 90.17 0)
+			(at 182.88000 83.82000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1095,18 +1088,17 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
-			(at 203.2 92.71 0)
+		(property "Value" "PTS636SK25SMTRLFS"
+			(at 182.88000 82.55000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_extended"
-			(at 203.2 92.71 0)
+			 (hide yes)))
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
+			(at 182.88000 82.55000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1116,8 +1108,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
-			(at 203.2 92.71 0)
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
+			(at 182.88000 82.55000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1128,7 +1120,7 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
-			(at 203.2 97.79 0)
+			(at 182.88000 87.63000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1138,8 +1130,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
-			(at 203.2 90.17 0)
+		(property "LCSC" "C2689642"
+			(at 182.88000 80.01000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1163,14 +1155,14 @@
 				)
 			)
 		)
-	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
+
+(property "Manufacturer" "XKB Connection" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_id "Switch:SW_Push")
-		(at 120.65 96.52 0)
+		(at 100.33000 86.36000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1181,7 +1173,7 @@
 		(fields_autoplaced yes)
 		(uuid "6e59a123-0e04-47f3-ab1a-7dc9d0238aa5")
 		(property "Reference" "SW503"
-			(at 120.65 88.9 0)
+			(at 100.33000 82.55000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1190,18 +1182,17 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
-			(at 120.65 91.44 0)
+		(property "Value" "PTS636SK25SMTRLFS"
+			(at 100.33000 81.28000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_extended"
-			(at 120.65 91.44 0)
+			 (hide yes)))
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
+			(at 100.33000 81.28000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1211,8 +1202,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
-			(at 120.65 91.44 0)
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
+			(at 100.33000 81.28000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1223,7 +1214,7 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
-			(at 120.65 96.52 0)
+			(at 100.33000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1233,8 +1224,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
-			(at 120.65 88.9 0)
+		(property "LCSC" "C2689642"
+			(at 100.33000 78.74000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1258,14 +1249,14 @@
 				)
 			)
 		)
-	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
+
+(property "Manufacturer" "XKB Connection" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_id "power:GND")
-		(at 125.73 96.52 0)
+		(at 105.41000 86.36000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1276,7 +1267,7 @@
 		(fields_autoplaced yes)
 		(uuid "c06e6413-abe1-4336-8409-77a8dfff029c")
 		(property "Reference" "#PWR0503"
-			(at 125.73 102.87 0)
+			(at 105.41000 92.71000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1287,17 +1278,16 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 125.73 101.6 0)
+			(at 105.41000 91.44000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
+			 (hide yes)))
 		(property "Footprint" ""
-			(at 125.73 96.52 0)
+			(at 105.41000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1308,7 +1298,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 125.73 96.52 0)
+			(at 105.41000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1319,7 +1309,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 125.73 96.52 0)
+			(at 105.41000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1343,7 +1333,7 @@
 	)
 	(symbol
 		(lib_id "Switch:SW_Push")
-		(at 203.2 86.36 0)
+		(at 182.88000 76.20000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1354,7 +1344,7 @@
 		(fields_autoplaced yes)
 		(uuid "c4254a90-ce64-433b-a107-c3bf9a21fedc")
 		(property "Reference" "SW506"
-			(at 203.2 78.74 0)
+			(at 182.88000 72.39000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1363,18 +1353,17 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
-			(at 203.2 81.28 0)
+		(property "Value" "PTS636SK25SMTRLFS"
+			(at 182.88000 71.12000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_extended"
-			(at 203.2 81.28 0)
+			 (hide yes)))
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
+			(at 182.88000 71.12000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1384,8 +1373,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
-			(at 203.2 81.28 0)
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
+			(at 182.88000 71.12000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1396,7 +1385,7 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
-			(at 203.2 86.36 0)
+			(at 182.88000 76.20000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1406,8 +1395,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
-			(at 203.2 78.74 0)
+		(property "LCSC" "C2689642"
+			(at 182.88000 68.58000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1431,14 +1420,14 @@
 				)
 			)
 		)
-	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
+
+(property "Manufacturer" "XKB Connection" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_id "power:GND")
-		(at 157.48 96.52 0)
+		(at 137.16000 86.36000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1449,7 +1438,7 @@
 		(fields_autoplaced yes)
 		(uuid "c955084a-e9de-445b-ba8d-462341439dd6")
 		(property "Reference" "#PWR0505"
-			(at 157.48 102.87 0)
+			(at 137.16000 92.71000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1460,17 +1449,16 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 157.48 101.6 0)
+			(at 137.16000 91.44000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
+			 (hide yes)))
 		(property "Footprint" ""
-			(at 157.48 96.52 0)
+			(at 137.16000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1481,7 +1469,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 157.48 96.52 0)
+			(at 137.16000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1492,7 +1480,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 157.48 96.52 0)
+			(at 137.16000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1516,7 +1504,7 @@
 	)
 	(symbol
 		(lib_id "Switch:SW_Push")
-		(at 152.4 96.52 0)
+		(at 132.08000 86.36000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1527,7 +1515,7 @@
 		(fields_autoplaced yes)
 		(uuid "cf3637fa-010d-4e77-a31f-9141e2bdcc9c")
 		(property "Reference" "SW505"
-			(at 152.4 88.9 0)
+			(at 132.08000 82.55000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1536,18 +1524,17 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
-			(at 152.4 91.44 0)
+		(property "Value" "PTS636SK25SMTRLFS"
+			(at 132.08000 81.28000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_extended"
-			(at 152.4 91.44 0)
+			 (hide yes)))
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
+			(at 132.08000 81.28000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1557,8 +1544,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
-			(at 152.4 91.44 0)
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
+			(at 132.08000 81.28000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1569,7 +1556,7 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
-			(at 152.4 96.52 0)
+			(at 132.08000 86.36000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1579,8 +1566,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
-			(at 152.4 88.9 0)
+		(property "LCSC" "C2689642"
+			(at 132.08000 78.74000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1604,14 +1591,14 @@
 				)
 			)
 		)
-	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
+
+(property "Manufacturer" "XKB Connection" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_id "power:GND")
-		(at 208.28 86.36 0)
+		(at 187.96000 76.20000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1622,7 +1609,7 @@
 		(fields_autoplaced yes)
 		(uuid "e9e70ce2-651d-4165-9357-53ecd75d538a")
 		(property "Reference" "#PWR0506"
-			(at 208.28 92.71 0)
+			(at 187.96000 82.55000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1633,17 +1620,16 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 208.28 91.44 0)
+			(at 187.96000 81.28000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
+			 (hide yes)))
 		(property "Footprint" ""
-			(at 208.28 86.36 0)
+			(at 187.96000 76.20000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1654,7 +1640,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 208.28 86.36 0)
+			(at 187.96000 76.20000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1665,7 +1651,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 208.28 86.36 0)
+			(at 187.96000 76.20000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1689,7 +1675,7 @@
 	)
 	(symbol
 		(lib_id "Switch:SW_Push")
-		(at 203.2 109.22 0)
+		(at 182.88000 99.06000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1700,7 +1686,7 @@
 		(fields_autoplaced yes)
 		(uuid "ec61e024-fece-4c2e-9ae5-ee551ebb675b")
 		(property "Reference" "SW508"
-			(at 203.2 101.6 0)
+			(at 182.88000 95.25000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1709,18 +1695,17 @@
 				)
 			)
 		)
-		(property "Value" "TS-1101-C-W"
-			(at 203.2 104.14 0)
+		(property "Value" "PTS636SK25SMTRLFS"
+			(at 182.88000 93.98000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
-		(property "Footprint" "ShieldSigner:XKB_TS1101_C_W_extended"
-			(at 203.2 104.14 0)
+			 (hide yes)))
+		(property "Footprint" "ShieldSigner:CK_PTS636_SK25_G"
+			(at 182.88000 93.98000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1730,8 +1715,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2002271735_XKB-Connection-TS-1101-C-W_C318938.pdf"
-			(at 203.2 104.14 0)
+		(property "Datasheet" "https://www.littelfuse.com/assetdocs/littelfuse-ck-tactile-pts636-series-datasheet?assetguid=8a16fd39-1f87-4545-ab06-9e057a0fe304"
+			(at 182.88000 93.98000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1742,7 +1727,7 @@
 			)
 		)
 		(property "Description" "Push button switch, generic, two pins"
-			(at 203.2 109.22 0)
+			(at 182.88000 99.06000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1752,8 +1737,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C318938"
-			(at 203.2 101.6 0)
+		(property "LCSC" "C2689642"
+			(at 182.88000 91.44000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1777,14 +1762,14 @@
 				)
 			)
 		)
-	
-(property "MPN" "TS-1101-C-W" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
 
-(property "Manufacturer" "XKB Connection" (at 0 0 0) (effects (font (size 1 1)) (hide yes)))
+(property "MPN" "PTS636SK25SMTRLFS" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
+
+(property "Manufacturer" "XKB Connection" (at -20.32000 -10.16000 0) (effects (font (size 1 1)) (hide yes)))
 )
 	(symbol
 		(lib_id "power:GND")
-		(at 208.28 97.79 0)
+		(at 187.96000 87.63000 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1795,7 +1780,7 @@
 		(fields_autoplaced yes)
 		(uuid "fa1fbee1-bd43-44eb-89bf-777c702da191")
 		(property "Reference" "#PWR0507"
-			(at 208.28 104.14 0)
+			(at 187.96000 93.98000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1806,17 +1791,16 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 208.28 102.87 0)
+			(at 187.96000 92.71000 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-			)
-		)
+			 (hide yes)))
 		(property "Footprint" ""
-			(at 208.28 97.79 0)
+			(at 187.96000 87.63000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1827,7 +1811,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 208.28 97.79 0)
+			(at 187.96000 87.63000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1838,7 +1822,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 208.28 97.79 0)
+			(at 187.96000 87.63000 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1860,4 +1844,11 @@
 			)
 		)
 	)
+
+(title_block (title "Navigation and action keys") (date "2026-11-08") (rev "0.0.11-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
+(text "User controls: five navigation contacts + three keys" (at 25.4 25.4 0) (effects (font (size 2 2) (bold yes)) (justify left)) (uuid "035d18d6-357c-54f9-b65e-6cf2dc107b1b"))
+(text "Every switch pulls its named host signal to GND when pressed. Configure host pull-ups and software debounce." (at 25.4 33.02 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "71ee6ca4-8296-5d26-8878-8fdbf1fd6531"))
+(text "NAVIGATION" (at 38.1 48.26 0) (effects (font (size 1.5 1.5) (bold yes)) (justify left)) (uuid "844531a2-caa6-54f3-96be-782b06ea5412"))
+(text "ACTION KEYS" (at 203.2 48.26 0) (effects (font (size 1.5 1.5) (bold yes)) (justify left)) (uuid "868c37d7-91e5-58f7-9c44-49ffde98bb58"))
+(text "SW501-SW508: C&K PTS636SK25SMTRLFS momentary switches.\nThe placement below follows the physical control arrangement. Net names match the host sheet." (at 25.4 152.4 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "7ee98d72-e325-5710-b406-b4a952ce6743"))
 )

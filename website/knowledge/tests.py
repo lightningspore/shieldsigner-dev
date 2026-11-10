@@ -135,7 +135,7 @@ class StaticSiteTests(unittest.TestCase):
     def test_both_order_bundles_match_native_populations(self):
         for name, count, lines, bom_name, cpl_name in [
             ('shieldsigner-jlcpcb-order.zip',43,21,'bom-carrier-jlcpcb.csv','cpl-carrier-jlcpcb.csv'),
-            ('shieldsigner-modular-order.zip',35,17,'bom-jlcpcb.csv','cpl-jlcpcb.csv')]:
+            ('shieldsigner-modular-order.zip',43,18,'bom-jlcpcb.csv','cpl-jlcpcb.csv')]:
             with ZipFile(DIST/'files'/name) as archive:
                 bom=list(csv.DictReader(io.StringIO(archive.read(bom_name).decode())))
                 cpl=list(csv.DictReader(io.StringIO(archive.read(cpl_name).decode())))
@@ -145,7 +145,7 @@ class StaticSiteTests(unittest.TestCase):
                 self.assertFalse(refs & {'U202','J701','J302','R404','R408'})
                 caps=next(p for p in bom if p['LCSC Part #']=='C28323')
                 self.assertEqual(set(caps['Designator'].split(',')),{'C602','C603','C604'})
-                if count==35:
+                if name=='shieldsigner-modular-order.zip':
                     readiness=json.loads(archive.read('readiness.json'))
                     board=DIST/'files/variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
                     self.assertEqual(readiness['boardSha256'],hashlib.sha256(board.read_bytes()).hexdigest())

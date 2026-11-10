@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sx = runpy.run_path(str(ROOT / 'scripts/kicad-sexpr.py'))
 one, children = sx['one'], sx['children']
-board = ROOT / 'variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+board = ROOT / 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 tree = sx['parse'](board.read_text())
 fps = {next(p[2] for p in children(f, 'property') if p[1] == 'Reference'): f
        for f in children(tree, 'footprint')}

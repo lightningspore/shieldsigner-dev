@@ -62,7 +62,7 @@ assert 'ensure_gpiochip_symlinks()' in startup
 assert 'ln -sf /dev/gpiochip3 /dev/gpiochip4' in startup
 reader = texts['ccid_serial.c']
 assert 'SEC1210UR2' in reader and 'SEC1210URT' in reader
-board = ROOT/'variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+board = ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 report = {'boardSha256':hashlib.sha256(board.read_bytes()).hexdigest(),
           'scope':'Pinned source and virtual-time startup checks only; no installed-image or physical timing claim',
           'sources':sources,

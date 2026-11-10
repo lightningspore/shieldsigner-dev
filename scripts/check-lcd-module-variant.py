@@ -5,7 +5,7 @@ from pathlib import Path
 from zipfile import ZipFile,ZIP_DEFLATED
 ROOT=Path(__file__).resolve().parents[1]
 config=runpy.run_path(str(ROOT/'scripts/kicad.py'));cli=config['cli']()
-folder=ROOT/'variants/lcd-module-2.8';board=folder/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb';out=ROOT/'dist/lcd-module-2.8';out.mkdir(parents=True,exist_ok=True)
+folder=ROOT/'variants/lcd-module-2.8';board=ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb';out=ROOT/'dist/lcd-module-2.8';out.mkdir(parents=True,exist_ok=True)
 for args in [['sch','erc','--format','json','--severity-all','--output',out/'erc.json',board.with_suffix('.kicad_sch')],['pcb','drc','--format','json','--schematic-parity','--severity-all','--refill-zones','--output',out/'drc.json',board]]:
  subprocess.run([str(cli),*[str(v) for v in args]],check=True)
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));tree=sx['parse'](board.read_text());fps={next(x[2] for x in sx['children'](f,'property') if x[1]=='Reference'):f for f in sx['children'](tree,'footprint')}

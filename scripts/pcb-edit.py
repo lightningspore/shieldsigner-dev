@@ -11,9 +11,10 @@ import wx
 wx.Log.SetLogLevel(wx.LOG_Error)
 app=wx.App(False)
 import pcbnew as p
-parser=argparse.ArgumentParser();parser.add_argument('recipe',type=Path);args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('recipe',type=Path);parser.add_argument('--standard-fpc',action='store_true');args=parser.parse_args()
 recipe=json.loads(args.recipe.read_text())
-pcb=ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb';pro=pcb.with_suffix('.kicad_pro')
+directory=ROOT/('variants/standard-fpc/kicad' if args.standard_fpc else 'kicad')
+pcb=directory/'SeedSigner-Plus-smartcard-pico.kicad_pcb';pro=pcb.with_suffix('.kicad_pro')
 backup=ROOT/'.tools/pcb-edits'/str(time.time_ns());backup.mkdir(parents=True)
 before=pcb.read_bytes();project_before=pro.read_bytes()
 if 'expectedBeforeSha256' in recipe:
@@ -84,7 +85,7 @@ try:
  p.ZONE_FILLER(b).Fill(b.Zones())
  tmp=backup/'edited.kicad_pcb';p.SaveBoard(str(tmp),b)
  tmp.with_suffix('.kicad_pro').write_bytes(project_before)
- (backup/'fp-lib-table').write_text((ROOT/'kicad/fp-lib-table').read_text().replace('${KIPRJMOD}',str(ROOT/'kicad')))
+ (backup/'fp-lib-table').write_text((directory/'fp-lib-table').read_text().replace('${KIPRJMOD}',str(directory)))
  # Check serialized object counts before replacing the working board.
  check=p.LoadBoard(str(tmp));assert len(list(check.GetFootprints()))==len(fps)
  def drc(path,name):
@@ -107,8 +108,8 @@ try:
  assert original_pads==checked_pads,'Pad identities or net assignments changed'
  pcb.write_bytes(tmp.read_bytes())
  for ref in recipe.get('syncFootprints',[]):
-  fp=fps[ref];lib=str(fp.GetFPID().GetLibNickname());directory=ROOT/'kicad/Footprints'/(lib+'.pretty');directory.mkdir(parents=True,exist_ok=True)
-  p.PCB_IO_KICAD_SEXPR().FootprintSave(str(directory),fp)
+  fp=fps[ref];lib=str(fp.GetFPID().GetLibNickname());library_dir=pcb.parent/'Footprints'/(lib+'.pretty');library_dir.mkdir(parents=True,exist_ok=True)
+  p.PCB_IO_KICAD_SEXPR().FootprintSave(str(library_dir),fp)
  (backup/'audit.json').write_text(json.dumps({'beforeSha256':hashlib.sha256(before).hexdigest(),'afterSha256':hashlib.sha256(pcb.read_bytes()).hexdigest(),'edits':audit},indent=2)+'\n')
  print('Applied',len(audit),'edits. Backup/audit:',backup.relative_to(ROOT))
 except Exception:

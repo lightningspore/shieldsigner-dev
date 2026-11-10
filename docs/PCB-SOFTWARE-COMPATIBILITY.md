@@ -219,7 +219,7 @@ and regenerated checks belong to the final manufacturing/readiness record.
 ## Current electrical review and image guard
 
 The regenerated `variant:lcd:pinouts` report is bound to current PCB SHA-256
-`aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32`.
+`2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d`.
 It now checks exact net membership for every one of SW501–SW508, not just the
 two 1.8 V keys. Each must have only its intended host input and normally-open
 contact to GND. All eight match the pinned carrier application configuration.

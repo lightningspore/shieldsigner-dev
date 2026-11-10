@@ -15,7 +15,7 @@ import wx
 wx.Log.SetLogLevel(wx.LOG_Error)
 app = wx.App(False)
 import pcbnew as p
-source = ROOT/'variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+source = ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 before = source.read_bytes()
 b = p.LoadBoard(str(source))
 reference = json.loads((ROOT/'src/generated/pill-board.json').read_text())

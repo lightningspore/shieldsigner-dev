@@ -1,5 +1,7 @@
 # Electrical review — ShieldSigner Luckfox Plus
 
+> Historical 40-pin FPC reference. The [main eight-pin carrier](../kicad/SeedSigner-Plus-smartcard-pico.kicad_pro) uses the [current electrical review](DISPLAY-BUTTON-REVIEW.md).
+
 > **Standard FPC reference:** The current eight-pin pill carrier has its own [design, component changes and power review](LCD-MODULE-VARIANT.md), [35-part BOM](../variants/lcd-module-2.8/manufacturing/BOM.md) and [assembly guide](MODULAR-ASSEMBLY.md). The detailed standard-carrier reference below remains separate.
 
 Reviewed 2026-10-11 against the native KiCad working project, pinned upstream sources, supplier drawings and controller datasheets. This is a **desk review**: no physical board, load measurement, oscilloscope capture or card transaction has been tested in this session.

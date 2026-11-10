@@ -55,9 +55,9 @@ else:
         cache.write_text(json.dumps({'sha256':key})+'\n')
     supplier=out/'supplier-reference';supplier.mkdir(exist_ok=True)
     for name in ['README.md','bom-jlcpcb.csv','cpl-jlcpcb.csv','population.csv']:
-        shutil.copyfile(board.parent.parent/'manufacturing'/name,supplier/name)
+        shutil.copyfile(ROOT/'variants/lcd-module-2.8/manufacturing'/name,supplier/name)
     for name in ['check-results.json','header-map.json','mechanical.json','branding.json','branding-audit.json']:
-        shutil.copyfile(board.parent.parent/name,out/f'native-{name}')
+        shutil.copyfile(ROOT/'variants/lcd-module-2.8'/name,out/f'native-{name}')
     for kind in ['erc','drc']:
         path=ROOT/'dist/lcd-module-2.8'/f'{kind}.json'
         if path.exists(): shutil.copyfile(path,out/f'native-{kind}.json')
@@ -72,7 +72,7 @@ else:
     with ZipFile(out/'shieldsigner-pill-tscircuit.zip','w',ZIP_DEFLATED) as archive:
         for path in sorted(out.rglob('*')):
             if path.is_file() and path.suffix!='.zip':archive.write(path,path.relative_to(out))
-        for path in ['src/PillCarrier.tsx','src/ShieldSignerPlus.tsx','src/generated/pill-board.json','src/generated/pill-details.json','scripts/build.tsx','scripts/pill-details.ts','scripts/generate-reference.py','scripts/extract-pill-details.py','scripts/convert-pill-models.mjs','scripts/render-pill-previews.mjs','scripts/package-pill-port.py','scripts/check-pill.tsx','scripts/check-pill-artwork.mjs','scripts/check-pill-geometry.py','scripts/kicad.py','scripts/kicad-sexpr.py','scripts/dev.ts','package.json','bun.lock','mise.toml','tsconfig.json','docs/PORT-STATUS.md']:
+        for path in ['src/PillCarrierReference.tsx','src/index.tsx','src/StandardFpcReference.tsx','src/ShieldSignerPlus.tsx','src/generated/pill-board.json','src/generated/pill-details.json','scripts/build.tsx','scripts/pill-details.ts','scripts/generate-reference.py','scripts/extract-pill-details.py','scripts/convert-pill-models.mjs','scripts/render-pill-previews.mjs','scripts/package-pill-port.py','scripts/check-pill.tsx','scripts/check-pill-artwork.mjs','scripts/check-pill-geometry.py','scripts/kicad.py','scripts/kicad-sexpr.py','scripts/dev.ts','package.json','bun.lock','mise.toml','tsconfig.json','docs/PORT-STATUS.md']:
             file=ROOT/path
             if file.exists():archive.write(file,'tscircuit-source/'+path)
         # Reproducible pill-only checkout layout, including local libraries/models.
@@ -81,12 +81,12 @@ else:
                 rel=path.relative_to(native)
                 if str(rel)=='LICENSE': target='tscircuit-source/LICENSE'
                 elif str(rel)=='provenance.json': target='tscircuit-source/reference/provenance.json'
-                else: target=f'tscircuit-source/variants/lcd-module-2.8/kicad/{rel}'
+                else: target=f'tscircuit-source/kicad/{rel}'
                 archive.write(path,target)
         for path in supplier.iterdir():
             archive.write(path,f'tscircuit-source/variants/lcd-module-2.8/manufacturing/{path.name}')
         for name in ['check-results.json','header-map.json','mechanical.json','branding.json','branding-audit.json']:
-            archive.write(board.parent.parent/name,f'tscircuit-source/variants/lcd-module-2.8/{name}')
+            archive.write(ROOT/'variants/lcd-module-2.8'/name,f'tscircuit-source/variants/lcd-module-2.8/{name}')
         # Shared renderer still has a default import of the standard-board snapshot.
         archive.write(ROOT/'src/generated/reference-board.json','tscircuit-source/src/generated/reference-board.json')
     print(f'Packaged {len(source_manifest)} native source/library files, original rules, stackup, Gerbers, drills and complete tscircuit outputs.')

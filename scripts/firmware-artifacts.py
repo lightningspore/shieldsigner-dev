@@ -273,7 +273,7 @@ def migrate():
     return dict(migrated=True, moves=len(journal), current=current_image(), sourceSnapshot=relative(snapshot))
 
 
-def stage(name, camera=None):
+def stage(name, camera=None, display_config=None):
     name = safe_name(name)
     destination = STAGING / name
     if destination.exists():
@@ -282,13 +282,18 @@ def stage(name, camera=None):
         current = json.loads((image_directory() / 'image.json').read_text())
         camera = ROOT / current['inputs']['camera_base']
     camera = camera.resolve()
+    if display_config not in (None, 'st7789_320x240'):
+        raise ValueError('Unreviewed display configuration')
+    if display_config is not None and json.loads((camera/'manifest.json').read_text()).get('ioProfile') != 'carrier':
+        raise ValueError('320x240 carrier staging requires an explicit carrier camera base')
     subprocess.run(['mise', 'run', 'lvgl:app:build'], cwd=ROOT, check=True)
     epoch = subprocess.check_output(['git', 'show', '-s', '--format=%ct', 'HEAD'], cwd=ROOT, text=True).strip()
     runtime, overlay, combined = [destination / name for name in ('runtime', 'overlay', 'camera-bundle')]
     subprocess.run(['mise', 'run', 'lvgl:app:bundle', '--output', str(runtime)], cwd=ROOT, check=True)
-    subprocess.run(['mise', 'run', 'lvgl:app:image-draft', '--runtime', str(runtime), '--output', str(overlay), '--source-date-epoch', epoch, '--default-frontend', 'lvgl'], cwd=ROOT, check=True)
+    subprocess.run(['mise', 'run', 'lvgl:app:image-draft', '--runtime', str(runtime), '--output', str(overlay), '--source-date-epoch', epoch, '--default-frontend', 'lvgl', *(['--display-config',display_config] if display_config else [])], cwd=ROOT, check=True)
     subprocess.run(['mise', 'run', 'lvgl:app:image-attach', '--camera', str(camera), '--draft', str(overlay), '--output', str(combined)], cwd=ROOT, check=True)
     record = dict(schema=1, name=name, runtime=relative(runtime), overlay=relative(overlay), camera_bundle=relative(combined), camera_base=relative(camera), imageBuilt=False)
+    if display_config is not None:record['displayConfiguration']=display_config
     (destination / 'stage.json').write_text(json.dumps(record, indent=2) + '\n')
     return record
 
@@ -300,6 +305,7 @@ def main():
     commands.add_parser('migrate-legacy')
     verify = commands.add_parser('verify');verify.add_argument('name', nargs='?', default='current')
     staging = commands.add_parser('stage');staging.add_argument('--name', required=True);staging.add_argument('--camera', type=Path)
+    staging.add_argument('--display-config',choices=['st7789_320x240'])
     args = parser.parse_args()
     if args.command == 'where':
         result = current_image()
@@ -311,7 +317,7 @@ def main():
     elif args.command == 'migrate-legacy':
         result = migrate()
     else:
-        result = stage(args.name, args.camera)
+        result = stage(args.name, args.camera, args.display_config)
     print(json.dumps(result, indent=2))
 
 

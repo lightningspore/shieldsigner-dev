@@ -1,0 +1,157 @@
+{
+  "revision": "0.0.11-dev",
+  "part": {
+    "manufacturer": "Keystone",
+    "mpn": "5015",
+    "lcsc": "C2906768",
+    "footprint": "ShieldSigner:Keystone_5015",
+    "assembly": "factory SMT",
+    "source": "https://www.keyelco.com/product-pdf.cfm?p=1353"
+  },
+  "testpoints": [
+    {
+      "ref": "TP901",
+      "label": "+5V",
+      "net": "+5V",
+      "xy": [
+        105,
+        120
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "ref": "TP902",
+      "label": "GND",
+      "net": "GND",
+      "xy": [
+        112,
+        120
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "ref": "TP903",
+      "label": "HOST3V3",
+      "net": "+3.3V",
+      "xy": [
+        174,
+        79.5
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "ref": "TP904",
+      "label": "GND",
+      "net": "GND",
+      "xy": [
+        174,
+        87
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "ref": "TP905",
+      "label": "LCD3V3",
+      "net": "LCD_3V3",
+      "xy": [
+        108,
+        59.5
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "ref": "TP906",
+      "label": "GND",
+      "net": "GND",
+      "xy": [
+        114,
+        59.5
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "ref": "TP907",
+      "label": "TX>SC",
+      "net": "UART_TX",
+      "xy": [
+        120,
+        59.5
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "ref": "TP908",
+      "label": "RX<SC",
+      "net": "UART_RX",
+      "xy": [
+        126,
+        59.5
+      ],
+      "layer": "B.Cu"
+    }
+  ],
+  "bracketMounts": [
+    {
+      "ref": "H705",
+      "xy": [
+        78,
+        65.679
+      ],
+      "drillMm": 2.7,
+      "keepoutDiameterMm": 6,
+      "fastener": "M2.5; head/washer OD <= 5 mm",
+      "caseFrameMm": [
+        -50,
+        23.9
+      ]
+    },
+    {
+      "ref": "H706",
+      "xy": [
+        187,
+        65.679
+      ],
+      "drillMm": 2.7,
+      "keepoutDiameterMm": 6,
+      "fastener": "M2.5; head/washer OD <= 5 mm",
+      "caseFrameMm": [
+        59,
+        23.9
+      ]
+    },
+    {
+      "ref": "H707",
+      "xy": [
+        78,
+        113.479
+      ],
+      "drillMm": 2.7,
+      "keepoutDiameterMm": 6,
+      "fastener": "M2.5; head/washer OD <= 5 mm",
+      "caseFrameMm": [
+        -50,
+        -23.9
+      ]
+    },
+    {
+      "ref": "H708",
+      "xy": [
+        187,
+        113.479
+      ],
+      "drillMm": 2.7,
+      "keepoutDiameterMm": 6,
+      "fastener": "M2.5; head/washer OD <= 5 mm",
+      "caseFrameMm": [
+        59,
+        -23.9
+      ]
+    }
+  ],
+  "mountSpacingMm": [
+    109,
+    47.8
+  ],
+  "existingEnclosure": "Existing four LCD support holes unchanged; new mounts are for custom brackets, not new posts in the existing shell.",
+  "caseCoordinateFrame": "X=PCB_X-128; Y=89.579-PCB_Y; Z=0 carrier front. Millimetres."
+}

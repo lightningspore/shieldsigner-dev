@@ -70,6 +70,18 @@ end-to-end acceptance with a real wallet, which is pending. Automated public
 wallet signing/export fixtures already passed; the cleanup does not require the
 user to have a wallet handy.
 
+## Eight-pin carrier first-article candidate
+
+`lvgl-dev.e4c4ec6a5760` is a separate HOTHMI carrier candidate in
+`images/lvgl-dev.e4c4ec6a5760/`. Its OS build, packed readback and ARM userspace
+QEMU checks passed. The installed configuration uses 320×240, the HOTHMI
+initializer, 10 MHz SPI, kernel-label GPIO aliases and the SEC1210 UR2 reader.
+See [the electrical review](DISPLAY-BUTTON-REVIEW.md#prepared-first-article-build-inputs)
+for filenames, hashes and remaining physical tests.
+
+Verify it with `mise run firmware:verify lvgl-dev.e4c4ec6a5760`.
+It has not been flashed or booted, and it is not selected by `images/current`.
+
 ## Commands and migration
 
 - `mise run firmware:where` prints JSON containing the selected version, directory,

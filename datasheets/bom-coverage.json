@@ -1,0 +1,177 @@
+{
+  "bomSha256": "fbb39cb97881709a136f6b420c8a2fdcf0085fb74d95173e0e9e7b49e0004f27",
+  "factorySkus": 18,
+  "factoryPlacements": 43,
+  "coverage": [
+    {
+      "lcsc": "C107115",
+      "mpn": "CC0805JRNPO9BN330",
+      "references": [
+        "C605",
+        "C606"
+      ],
+      "document": "C107115.pdf"
+    },
+    {
+      "lcsc": "C149504",
+      "mpn": "0805W8F1003T5E",
+      "references": [
+        "R601",
+        "R606"
+      ],
+      "document": "C149504.pdf"
+    },
+    {
+      "lcsc": "C15850",
+      "mpn": "CL21A106KAYNNNE",
+      "references": [
+        "C201",
+        "C302",
+        "C701",
+        "C702"
+      ],
+      "document": "Samsung-CL21A106KAYNNNE-spec.pdf"
+    },
+    {
+      "lcsc": "C17408",
+      "mpn": "0805W8F1000T5E",
+      "references": [
+        "R602",
+        "R603"
+      ],
+      "document": "C17408.pdf"
+    },
+    {
+      "lcsc": "C17414",
+      "mpn": "0805W8F1002T5E",
+      "references": [
+        "R605",
+        "R607"
+      ],
+      "document": "C17414.pdf"
+    },
+    {
+      "lcsc": "C17714",
+      "mpn": "0805W8F470JT5E",
+      "references": [
+        "R604"
+      ],
+      "document": "C17714.pdf"
+    },
+    {
+      "lcsc": "C19077498",
+      "mpn": "SMF5.0CA",
+      "references": [
+        "D301"
+      ],
+      "document": "C19077498-current.pdf"
+    },
+    {
+      "lcsc": "C2297",
+      "mpn": "KT-0805G",
+      "references": [
+        "D302"
+      ],
+      "document": "C2297.pdf"
+    },
+    {
+      "lcsc": "C2689642",
+      "mpn": "PTS636SK25SMTRLFS",
+      "references": [
+        "SW501",
+        "SW502",
+        "SW503",
+        "SW504",
+        "SW505",
+        "SW506",
+        "SW507",
+        "SW508"
+      ],
+      "document": "CK-PTS636.pdf"
+    },
+    {
+      "lcsc": "C27834",
+      "mpn": "0805W8F5101T5E",
+      "references": [
+        "R301",
+        "R302"
+      ],
+      "document": "C27834.pdf"
+    },
+    {
+      "lcsc": "C28323",
+      "mpn": "CL21B105KBFNNNE",
+      "references": [
+        "C602",
+        "C603",
+        "C604"
+      ],
+      "document": "C28323.pdf"
+    },
+    {
+      "lcsc": "C28636",
+      "mpn": "0805W8F5600T5E",
+      "references": [
+        "R303"
+      ],
+      "document": "C28636.pdf"
+    },
+    {
+      "lcsc": "C2906768",
+      "mpn": "5015",
+      "references": [
+        "TP901",
+        "TP902",
+        "TP903",
+        "TP904",
+        "TP905",
+        "TP906",
+        "TP907",
+        "TP908"
+      ],
+      "document": "Keystone-5015.pdf"
+    },
+    {
+      "lcsc": "C49678",
+      "mpn": "CC0805KRX7R9BB104",
+      "references": [
+        "C301",
+        "C601"
+      ],
+      "document": "C49678.pdf"
+    },
+    {
+      "lcsc": "C51118",
+      "mpn": "AP2112K-3.3TRG1",
+      "references": [
+        "U701"
+      ],
+      "document": "Diodes-AP2112.pdf"
+    },
+    {
+      "lcsc": "C5246813",
+      "mpn": "USB4125-GF-A-0190",
+      "references": [
+        "J301"
+      ],
+      "document": "GCT-USB4125.pdf"
+    },
+    {
+      "lcsc": "C5417011",
+      "mpn": "7312P0225A13LF",
+      "references": [
+        "J601"
+      ],
+      "document": "C5417011.pdf"
+    },
+    {
+      "lcsc": "C633309",
+      "mpn": "SEC1210/PV-UR2",
+      "references": [
+        "U601"
+      ],
+      "document": "SEC1210-DS00001561D.pdf"
+    }
+  ],
+  "qualification": "Local document coverage only; not electrical or manufacturer qualification"
+}

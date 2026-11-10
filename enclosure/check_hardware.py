@@ -43,7 +43,7 @@ for name,a in parts.items():
         intersection=trimesh.boolean.intersection([a,b],engine='manifold')
         volume=abs(intersection.volume) if len(intersection.faces) else 0
         if volume>.001:findings.append({'part':name,'hardware_index':i,'intersection_mm3':volume,'hardware_bounds':b.bounds.tolist()})
-report={'closed_native_components':len(closed),'open_surface_components_reserved_by_envelope':len(open_parts),'individual_surface_proxies_outside_luckfox':len(surface_proxies),'findings':findings}
+report={'board_sha256':metadata['board_sha256'],'step_sha256':metadata['step_sha256'],'closed_native_components':len(closed),'open_surface_components_reserved_by_envelope':len(open_parts),'individual_surface_proxies_outside_luckfox':len(surface_proxies),'findings':findings}
 (root/'dist/enclosure/hardware-fit.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report,indent=2))
 assert not findings,'Hardware interference requires geometry revision'

@@ -1,0 +1,22 @@
+{
+  "sources": {
+    "gpiolib.c": {
+      "url": "https://raw.githubusercontent.com/3rdIteration/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/gpio/gpiolib.c",
+      "sha256": "f6e2d1780ae4a192a15442bbfb5228f706903b152fdb753233a29bb163910098"
+    },
+    "gpio-rockchip.c": {
+      "url": "https://raw.githubusercontent.com/3rdIteration/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/drivers/gpio/gpio-rockchip.c",
+      "sha256": "a5462946d5ca4b9d736566115c1dfc3b2f251e35a66320e34f0c2ca29caea375"
+    },
+    "gpio.h": {
+      "url": "https://raw.githubusercontent.com/3rdIteration/luckfox-pico/0b5c1f30ca6333b7ec5af70d26511da9ef8d39af/sysdrv/source/kernel/include/uapi/linux/gpio.h",
+      "sha256": "78fe51661e771c0b2ac6a50a65c1dc6d93153db44336dea3a4ad03f6dcd3c34b"
+    }
+  },
+  "findings": [
+    "GPIO character-device IDs are allocated dynamically; bank number is not the device index.",
+    "Rockchip chip labels use bank names gpio0, gpio1, gpio3, gpio4 on the retained Mini DTB.",
+    "GPIO_GET_CHIPINFO_IOCTL reads a 68-byte name/label/lines structure; it does not request GPIO lines."
+  ],
+  "hardwareQualificationInferred": false
+}

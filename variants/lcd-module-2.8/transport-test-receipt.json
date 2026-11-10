@@ -1,0 +1,22 @@
+{
+  "scope": "Pinned source classes with simulated GPIO/SPI, board detection and time; not physical acceptance",
+  "command": "mise run lvgl:app:test",
+  "suiteTestsPassed": 254,
+  "transportCases": [
+    "real SPI class: carrier output pins, mode 0 / 10 MHz, HOTHMI init, inversion, right-edge RGBW bytes",
+    "real button class and LVGL polling: all eight pull-up inputs, press/release, 5/10 ms initial bounce and release chatter"
+  ],
+  "sourceSha256": {
+    "firmware/lvgl-app/tests/test_carrier_transport.py": "fb3ccf9d081fc1d3fa9d058e035ef0e1ea0f236d69f7d4c23240c0ecd86d4cee",
+    "firmware/lvgl-app/python/hothmi.py": "c8de76c25621ca8bef7d2964cf8ac04c8ff0bfa46bfe433425c2a78f05b70802",
+    "firmware/lvgl-app/python/luckfox.py": "590ead1fed072a151bdd7121aad8a759d930d88cd4b97b65321ad7eb81685ab4",
+    "firmware/lvgl-app/python/runtime.py": "f80787a01d29e6b29c2cb7bdcef53aec45569c3257b838d7fb14249fac494227",
+    "scripts/configure-image-io-profile.py": "8af04f9edabb6dfad67491ef4ad8a9dd85143defd954db933c6a54eb4fa74a43",
+    "reference/research/firmware/carrier-runtime-sources.json": "a722e82bda613fdaac52973027bfafc75f87702536cac6ab94da4de967adaa74",
+    "reference/research/firmware/hothmi-init.json": "8041c36d618deaac0a6972533ade6c4946b6465c6035529cc792f5085e856c10"
+  },
+  "logSha256": "25deeb4b5a2d4fd7b4f58655381baa2ac07da8324045c86536ceea6e19bd1888",
+  "physicalOperationVerified": false,
+  "gpioSelection": "Bank-label aliases; cdev enumeration is not assumed",
+  "gpioAliasRegression": "Sparse and reordered devices plus upstream gpiochip4 symlink; metadata-only resolution"
+}

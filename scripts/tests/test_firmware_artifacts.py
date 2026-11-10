@@ -212,6 +212,15 @@ class ArtifactTests(unittest.TestCase):
         for key, child in (('runtime', 'runtime'), ('overlay', 'overlay'), ('camera_bundle', 'camera-bundle')):
             self.assertEqual(self.root / result[key], destination / child)
 
+    def test_carrier_geometry_cannot_use_bench_camera_profile(self):
+        camera = self.root / 'public-bench-camera'
+        camera.mkdir()
+        (camera/'manifest.json').write_text(json.dumps({'ioProfile':'base-fork'}))
+        with patch.object(manager,'STAGING',self.root/'staging'), patch.object(manager.subprocess,'run') as run:
+            with self.assertRaisesRegex(ValueError,'carrier camera base'):
+                manager.stage('carrier-review',camera,'st7789_320x240')
+            run.assert_not_called()
+
     def test_stage_rejects_existing_destination_without_starting_a_build(self):
         staging = self.root / 'staging'
         (staging / 'existing').mkdir(parents=True)

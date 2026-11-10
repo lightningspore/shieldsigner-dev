@@ -848,3 +848,115 @@ run = "uv run python scripts/firmware-artifacts.py stage"
 [tasks."firmware:test"]
 description = "Test artifact paths, provenance and staging without device access"
 run = "uv run python -m unittest discover -s scripts/tests -p test_firmware_artifacts.py"
+
+[tasks."tscircuit:pill:generate"]
+description = "Extract the current 0.0.9 pill carrier without replacing the standard port"
+run = "uv run scripts/generate-reference.py --variant pill"
+
+[tasks."tscircuit:pill:reference:build"]
+description = "Build pill carrier Circuit JSON, PCB SVGs, connectivity schematic and BOM"
+depends = ["tscircuit:pill:generate"]
+run = ["uv run python scripts/extract-pill-details.py", "uv run python scripts/package-pill-port.py --assets-only", "bun scripts/convert-pill-models.mjs", "bun scripts/build.tsx --pill", "bun scripts/render-pill-previews.mjs", "uv run python scripts/package-pill-port.py"]
+
+[tasks."tscircuit:pill:reference:check"]
+description = "Check pill source fidelity, schema, pinout and assembly metadata"
+run = ["bun scripts/check-pill.tsx", "uv run scripts/check-pill-geometry.py", "bun scripts/check-pill-artwork.mjs", "bunx tsc --noEmit"]
+
+[tasks."tscircuit:pill:reference:dev"]
+description = "Build and preview the routed pill carrier on localhost:3020"
+depends = ["tscircuit:pill:reference:build"]
+run = "bun scripts/dev.ts --pill"
+
+[tasks."tscircuit:pill:details"]
+description = "Extract native lettering, logo, fabrication, courtyard, mask/paste geometry and model metadata"
+run = "uv run python scripts/extract-pill-details.py"
+
+[tasks."tscircuit:pill:build"]
+description = "Compile source-authored pill carrier with native routing, pours, artwork and models"
+run = ["bun scripts/build-pill.tsx", "bun scripts/render-pill-native.mjs", "uv run scripts/package-pill-native.py"]
+
+[tasks."tscircuit:pill:check"]
+description = "Check source architecture, native pin/land parity, netlist, schematic/PCB placement, copper shorts and routing style"
+depends = ["tscircuit:pill:build"]
+env = { TSCI_TEST_MODE = "true" }
+run = ["bun scripts/check-pill-native.tsx", "uv run scripts/check-pill-native-parity.py", "bunx tsc --noEmit", "bunx tsci check netlist src/PillCarrier.tsx", "bunx tsci check schematic-placement src/PillCarrier.tsx", "bunx tsci check placement dist/pill-native/board.circuit.json", "bunx tsci check shorts dist/pill-native/board.circuit.json", "bunx tsci check pcb-style dist/pill-native/board.circuit.json"]
+
+[tasks."tscircuit:pill:dev"]
+description = "Preview the editable pill TSX source on localhost:3020"
+run = "bun scripts/dev-pill.ts"
+
+[tasks."variant:lcd:four-layer"]
+description = "One-time pill conversion to four copper layers with two GND planes; backup and refill"
+run = "uv run python scripts/upgrade-pill-four-layer.py"
+
+[tasks."variant:lcd:schematic:readability"]
+description = "One-time native schematic presentation cleanup with source backups"
+run = "uv run python scripts/readable-pill-schematic.py"
+
+[tasks."variant:lcd:schematic:refine"]
+description = "Apply the recorded schematic visual-review refinements once"
+run = "uv run python scripts/refine-pill-schematic.py"
+
+[tasks."variant:lcd:schematic:review"]
+description = "Compare native pre/post-cleanup netlists and export the readable schematic PDF/SVGs"
+run = "uv run python scripts/review-pill-schematic.py"
+
+[tasks."variant:lcd:testpoints:catalog"]
+description = "Refresh the selected factory-assembled Keystone SMT test point"
+run = "uv run python scripts/refresh-jlc.py --only C2906768 --output variants/lcd-module-2.8/jlc-catalog.json"
+
+[tasks."variant:lcd:keystone:model"]
+description = "Generate the manufacturer-dimensioned Keystone 5015 occupied envelope"
+run = "uv run --python 3.11 --with cadquery==2.8.0 python scripts/model-keystone.py"
+
+[tasks."variant:lcd:service:upgrade"]
+description = "Apply the recorded native factory-testpoint and independent bracket mounting revision once"
+run = "uv run python scripts/upgrade-pill-service.py"
+
+[tasks."variant:lcd:service:refine"]
+description = "Apply reviewed service spur routing while preserving all original tracks"
+run = "uv run python scripts/refine-pill-service.py"
+
+[tasks."variant:lcd:catalog:critical"]
+description = "Refresh assembly stock of the smartcard socket, switches and reader IC"
+run = "uv run python scripts/refresh-jlc.py --only C5417011 C2689642 C633309 --output variants/lcd-module-2.8/jlc-catalog.json"
+
+[tasks."variant:lcd:service:review"]
+description = "Verify retained native circuitry/routing and re-pin supplier placement evidence"
+run = "uv run python scripts/review-pill-service.py"
+
+[tasks."variant:lcd:service:labels"]
+description = "Print service point designators/net names and manufacturing-sized silk strokes"
+run = "uv run python scripts/label-pill-service.py"
+
+[tasks."enclosure:clearance"]
+description = "Check the fresh native hardware cache against existing printed case parts without changing UI assets"
+run = "uv run --python 3.11 --with trimesh --with networkx --with manifold3d python enclosure/check_hardware.py"
+
+[tasks."variant:lcd:sourcing:options"]
+description = "Read-only stock snapshot of the industrial-temperature dual-UART SEC1210 option; does not substitute it"
+run = "uv run python scripts/refresh-jlc.py --only C633307 --output variants/lcd-module-2.8/sourcing-options.json"
+
+[tasks."tscircuit:pill:reference:electrical"]
+description = "Check the regenerated reference netlist, schematic/PCB placement and Gerber-derived shorts"
+run = ["bun scripts/check-pill-reference-electrical.ts", "TSCI_TEST_MODE=true bunx tsci check shorts dist/pill-tscircuit/shieldsigner-plus.circuit.json"]
+
+[tasks."firmware:io:check"]
+description = "Verify carrier/base-fork IO transforms and kernel-proof isolation"
+run = ["uv run python -m unittest discover -s scripts/tests -p test_io_image_profile.py", "uv run python -m unittest discover -s scripts/tests -p test_carrier_pinmux.py", "uv run python scripts/test_image_io_profile.py", "uv run python -m unittest discover -s scripts/tests -p test_gpio_bank_aliases.py"]
+
+[tasks."variant:lcd:runtime-audit"]
+description = "Check pinned display reset/wake timing, carrier button setup and reader identities without hardware"
+run = "uv run python scripts/audit-carrier-runtime.py"
+
+[tasks."datasheets:fetch"]
+description = "Fetch missing current-BOM datasheets from fresh public supplier links and index coverage"
+run = "uv run --with 'pypdf[crypto]' python scripts/collect-datasheets.py --fetch"
+
+[tasks."datasheets:check"]
+description = "Verify local PDF hashes, readability and coverage of every current factory BOM SKU"
+run = "uv run --with 'pypdf[crypto]' python scripts/collect-datasheets.py"
+
+[tasks."variant:lcd:kernel-pinmux"]
+description = "Audit the retained compiled SPI/reset/button pinmux snapshot; not installed-image qualification"
+run = ["uv run python -m unittest discover -s scripts/tests -p test_carrier_pinmux.py", "uv run --with pyelftools python scripts/audit-carrier-kernel.py --dtb dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/out/bin/board_uclibc_rv1106/rv1103g-luckfox-pico-mini.dtb --config dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/source/objs_kernel/.config --report variants/lcd-module-2.8/compiled-pinmux-audit.json"]

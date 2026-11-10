@@ -166,6 +166,19 @@
       "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
       "sha256": "ea4d0799007ebdd3945072bf255d673d2fe87eb05fda85fd8d7993ad9397da41",
       "bytes": 75616
+    },
+    "vendor/Keystone-5015-envelope.step": {
+      "provider": "Drawing-derived nominal envelope",
+      "source": "https://www.keyelco.com/product-pdf.cfm?p=1353",
+      "license": "Project-authored dimensional envelope; manufacturer drawing remains Keystone property",
+      "sha256": "e42bccb2d236981a76680f01cebc8301adb1ba30142bc8a72da86bf9299d8d53",
+      "bytes": 29965,
+      "dimensionsMm": [
+        2.67,
+        1.02,
+        1.52
+      ],
+      "limitations": "Nominal rectangular loop with 0.25 mm walls, not detailed formed-metal CAD; confirm purchased part and clip clearance"
     }
   }
 }

@@ -1,8 +1,8 @@
 # Luckfox Mini and HOTHMI pinout audit
 
-Reviewed again 2026-10-25 against released pill PCB **0.0.7-dev**, SHA-256 `b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7`. The [interactive pinout and revision comparison](LUCKFOX-PINOUT.md) also covers the separate 0.0.8 PWM candidate.
+Reviewed 2026-11-09 against working pill PCB **0.0.11-dev**, SHA-256 `aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32`. The regenerated pinout report checks all eight switches and LCD/header mappings. The [interactive pinout and revision comparison](LUCKFOX-PINOUT.md) also covers the separate PWM candidate.
 
-**PCB signal assignments and supply topology pass. One firmware correction is required: use 10 MHz SPI for the selected HOTHMI display.** No PCB change is indicated by this audit. This is a drawing/netlist review, not a powered hardware test. The checkout files remain the same revision.
+**PCB signal assignments and supply topology pass. Carrier firmware must use 10 MHz SPI, bank-label GPIO aliases and the HOTHMI panel initializer.** No PCB change is indicated by this audit. This is a drawing/netlist review, not a powered hardware test. The checkout files remain the same revision.
 
 ## Sources and method
 
@@ -19,7 +19,7 @@ These are **physical module pins**, viewed using the manufacturer's component-si
 
 | Pin | Manufacturer function | Carrier assignment | Result |
 |---|---|---|---|
-| 1 | VBUS | +5V from USB-C or J302 | Correct input |
+| 1 | VBUS | +5V from USB-C or TP901/TP902 | Correct input |
 | 2 | GND | GND | Correct |
 | 3 | 3V3 OUT | +3.3V; backlight-enable pull-high only | Correct output; not LCD power |
 | 4 | GPIO1_B2 / UART2 TX | UART_TX → R602 → SEC1210 pin 11 RX | Correct direction |
@@ -27,20 +27,24 @@ These are **physical module pins**, viewed using the manufacturer's component-si
 | 6 | GPIO1_C0 / SPI0 CS0 | JP203 → JP205 → LCD CS | Correct default path |
 | 7 | GPIO1_C1 / SPI0 CLK | LCD_SCLK | Correct |
 | 8 | GPIO1_C2 / SPI0 MOSI | LCD_MOSI | Correct |
-| 9 | GPIO1_C3 / SPI0 MISO | LCD_RST, gpiochip1 line 19 | Correct GPIO reuse; omit MISO pinmux |
-| 10 | GPIO1_C4 | LCD_DC, gpiochip1 line 20 | Correct |
-| 11 | GPIO1_C5 | Key3, gpiochip1 line 21 | Correct |
-| 12 | GPIO1_D0 | Left, gpiochip1 line 24 | Correct |
-| 13 | GPIO1_D1 | Up, gpiochip1 line 25 | Correct |
+| 9 | GPIO1_C3 / SPI0 MISO | LCD_RST, gpiochip-bank1 line 19 | Correct GPIO reuse; omit MISO pinmux |
+| 10 | GPIO1_C4 | LCD_DC, gpiochip-bank1 line 20 | Correct |
+| 11 | GPIO1_C5 | Key3, gpiochip-bank1 line 21 | Correct |
+| 12 | GPIO1_D0 | Left, gpiochip-bank1 line 24 | Correct |
+| 13 | GPIO1_D1 | Up, gpiochip-bank1 line 25 | Correct |
 | 14 | GPIO1_D2 / I2C3 SDA | I2C-SDA label only, no other endpoint | Unused, no conflict |
 | 15 | GPIO1_D3 / I2C3 SCL | I2C-SCL label only, no other endpoint | Unused, no conflict |
-| 16 | GPIO1_C6 | Press, gpiochip1 line 22 | Correct |
-| 17 | GPIO1_C7 | Down, gpiochip1 line 23 | Correct |
-| 18 | GPIO0_A4 | Right, gpiochip0 line 4 | Correct |
-| 19 | GPIO4_C0, **1.8V** | Key1 switch to GND, gpiochip4 line 16 | Correct; internal pull-up only |
-| 20 | GPIO4_C1, **1.8V** | Key2 switch to GND, gpiochip4 line 17 | Correct; internal pull-up only |
+| 16 | GPIO1_C6 | Press, gpiochip-bank1 line 22 | Correct |
+| 17 | GPIO1_C7 | Down, gpiochip-bank1 line 23 | Correct |
+| 18 | GPIO0_A4 | Right, gpiochip-bank0 line 4 | Correct |
+| 19 | GPIO4_C0, **1.8V** | Key1 switch to GND, gpiochip-bank4 line 16 | Correct; internal pull-up only |
+| 20 | GPIO4_C1, **1.8V** | Key2 switch to GND, gpiochip-bank4 line 17 | Correct; internal pull-up only |
 | 21 | GND | GND | Correct |
 | 22 | 1V8 OUT | Explicitly unconnected | Correct; never tie to 3.3V |
+
+The `gpiochip-bankN` names are aliases created from kernel bank labels before
+app startup. Linux character-device indices can differ from bank numbers; bank 4
+may be exposed as device 3. See [the runtime review](DISPLAY-BUTTON-REVIEW.md#buttons-all-eight-paths).
 
 The LCD signals are all on the Mini's 3.3 V GPIO bank. Pins 19/20 have no external pull-up or supply connection: their only carrier load is a normally-open switch to ground. The app requests pull-ups and the OS Mini setup configures the corresponding GPIO4 inputs. Do not add 3.3 V pull-ups, or use these as 3.3 V outputs. Other buttons likewise depend on firmware pull-ups. I2C3 is not used for this SPI display.
 
@@ -65,9 +69,9 @@ SDA/SCL here mean **SPI**, not I2C. The display is write-only; there is no missi
 
 ## Power rails
 
-- USB-C VBUS and J302 pin 1 feed **the same regulated +5V rail**, supplying Mini pin 1, SEC1210 and U701. J302 pin 2 is ground. Use one input source at a time, including the Mini's own USB connector; there is no source isolation or reverse-polarity protection.
+- USB-C VBUS and factory Keystone TP901 feed **the same +5V rail**, supplying Mini pin 1, SEC1210 and U701. TP902 is the matching ground loop. J302 is removed in 0.0.11-dev. The input source must provide regulated 5 V. Use one input source at a time, including the Mini's own USB connector; there is no source isolation or reverse-polarity protection.
 - U701 AP2112K pin 1 VIN and pin 3 EN are +5V; pin 2 is GND; pin 4 NC; pin 5 supplies **LCD_3V3**. Input/output capacitors C701/C702 are 10 µF nominal, each to ground. This is the correct regulator pinout.
-- LCD_3V3 has exactly four component endpoints: U701 output, C702, J701 VCC and TP803. It is **not joined to Mini pin 3**. Neither 5 V nor 1.8 V is connected to the LCD supply or its data pins.
+- LCD_3V3 has exactly five component endpoints: U701 output, C702, J701 VCC, bare probe TP803 and factory Keystone TP905. TP906 is the nearby ground loop. It is **not joined to Mini pin 3**. Neither 5 V nor 1.8 V is connected to the LCD supply or its data pins.
 - The LCD requires 3.1–3.6 V, nominal 3.3 V. HOTHMI specifies signal inputs no higher than IOVCC + 0.3 V and no higher than 3.6 V. Both host GPIO and LCD use nominal 3.3 V; measure startup/shutdown as well as steady-state levels because the supplies come from different regulators.
 - AP2112's 600 mA headline rating is not a thermal guarantee here. At 150 mA, 5→3.3 V dissipates about 0.255 W. HOTHMI's 120 mA typical figure is the backlight, not guaranteed maximum total module current. Current, rail droop, regulator temperature and enclosure ambient remain first-article acceptance measurements.
 
@@ -94,6 +98,6 @@ mise run variant:lcd:pinouts
 mise run variant:lcd:check
 ```
 
-The first command checks all module/LCD pad nets, default jumper paths, separated rails, 1.8 V button endpoints, UART directions and pinned app mappings. It also verifies that the 10 MHz patch is idempotent and changes no other config. Results are retained in `variants/lcd-module-2.8/pinout-audit.json`. Native ERC/DRC/parity ran with zero violations, zero unconnected items and zero exclusions.
+The first command checks all module/LCD pad nets, default jumper paths, separated rails, 1.8 V button endpoints, UART directions, pinned app mappings and generated carrier bank-label selectors. It also verifies that the 10 MHz patch is idempotent and changes no other config. Results are retained in `variants/lcd-module-2.8/pinout-audit.json`. Native ERC/DRC/parity ran with zero violations, zero unconnected items and zero exclusions.
 
 Before first power, check continuity from actual module VCC/GND and all eight LCD pins to the identified carrier endpoints. Confirm the purchased modules match these drawings. Then verify final-image FOX_22 selection, `/dev/spidev0.0`, reset as GPIO rather than MISO, actual SPI clock/CS/DC/reset waveforms, all eight buttons, LCD initialization/rotation/colors, and the power/thermal measurements above. These remaining checks are physical bring-up work, not evidence of a known PCB miswire.

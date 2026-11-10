@@ -9,6 +9,11 @@ folder=ROOT/'variants/lcd-module-2.8';board=folder/'kicad/SeedSigner-Plus-smartc
 for args in [['sch','erc','--format','json','--severity-all','--output',out/'erc.json',board.with_suffix('.kicad_sch')],['pcb','drc','--format','json','--schematic-parity','--severity-all','--refill-zones','--output',out/'drc.json',board]]:
  subprocess.run([str(cli),*[str(v) for v in args]],check=True)
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));tree=sx['parse'](board.read_text());fps={next(x[2] for x in sx['children'](f,'property') if x[1]=='Reference'):f for f in sx['children'](tree,'footprint')}
+assert [n[1] for n in sx['one'](tree,'layers')[1:] if isinstance(n,list) and n[1].endswith('.Cu')]==['F.Cu','In1.Cu','In2.Cu','B.Cu']
+for layer in ['In1.Cu','In2.Cu']:
+ planes=[z for z in sx['children'](tree,'zone') if sx['one'](z,'layer')==['layer',layer]]
+ assert len(planes)==1 and sx['one'](planes[0],'net')[-1]=='GND'
+ assert sx['children'](planes[0],'filled_polygon'),layer+' plane must be filled'
 manifest=json.loads((folder/'header-map.json').read_text())
 for ref in manifest['dnp']: assert 'dnp' in sx['one'](fps[ref],'attr'),ref+' must remain DNP'
 # Assert the exact purchased-module pinout independently of schematic/PCB parity.
@@ -22,11 +27,16 @@ for ref,nets in {'U701':{'1':'+5V','2':'GND','3':'+5V','5':'LCD_3V3'},'C701':{'1
  for pad in sx['children'](fps[ref],'pad'):
   if pad[1] in nets:assert sx['one'](pad,'net')[-1]==nets[pad[1]],(ref,pad[1])
 
-# Independent power-entry assertions: a customer header must not become a factory SMT placement.
-assert fps['J302'][1]=='ShieldSigner:PowerHeader_1x02_P2.54mm'
-assert 'exclude_from_bom' in sx['one'](fps['J302'],'attr') and 'dnp' not in sx['one'](fps['J302'],'attr')
-for pad in sx['children'](fps['J302'],'pad'):
- assert sx['one'](pad,'net')[-1]=={'1':'+5V','2':'GND'}[pad[1]]
+# Factory-assembled power/test points replace the optional header.
+service=json.loads((folder/'serviceability.json').read_text())
+assert 'J302' not in fps
+for point in service['testpoints']:
+ f=fps[point['ref']];props={q[1]:q[2] for q in sx['children'](f,'property')}
+ assert f[1]==service['part']['footprint']
+ assert props['LCSC']=='C2906768' and props['MPN']=='5015'
+ assert 'exclude_from_bom' not in sx['one'](f,'attr')
+ assert sx['one'](sx['children'](f,'pad')[0],'net')[-1]==point['net']
+ assert any('Paste' in layer for layer in sx['one'](sx['children'](f,'pad')[0],'layers')[1:])
 assert next(p[2] for p in sx['children'](fps['J301'],'property') if p[1]=='MPN')=='USB4125-GF-A-0190'
 drc=json.loads((out/'drc.json').read_text())
 assert not any(issue.get('excluded') for issue in drc['violations']),'Pill carrier has no permitted DRC exclusions'
@@ -37,7 +47,7 @@ for kind in ['erc','drc']:
  summary['checks'][kind]={'active':dict(collections.Counter(v['severity'] for v in active)),'excluded':sum(bool(v.get('excluded')) for v in allitems),'unconnected':len(j.get('unconnected_items',[])),'parity':len(j.get('schematic_parity',[]))}
 (folder/'check-results.json').write_text(json.dumps(summary,indent=2)+'\n')
 for side,layers in [('top','F.Cu,F.SilkS,Edge.Cuts,Dwgs.User'),('bottom','B.Cu,B.SilkS,Edge.Cuts')]:
- subprocess.run([str(cli),'pcb','export','svg','--layers',layers,'--mode-single','--fit-page-to-board','--exclude-drawing-sheet','--output',str(folder/f'pcb-{side}.svg'),str(board)],check=True)
+ subprocess.run([str(cli),'pcb','export','svg','--layers',layers,'--mode-single','--fit-page-to-board','--exclude-drawing-sheet',*(['--mirror'] if side=='bottom' else []),'--output',str(folder/f'pcb-{side}.svg'),str(board)],check=True)
 for side in ['top','bottom']:
  path=folder/f'pcb-{side}.svg';path.write_text('\n'.join(line.rstrip() for line in path.read_text().splitlines())+'\n')
 print(json.dumps(summary,indent=2))

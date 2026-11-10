@@ -43,7 +43,7 @@ assert not any(v['active'] or v['excluded'] or v['unconnected'] or v['parity'] f
 report = {
     'boardSha256': native['boardSha256'], 'capabilityProfileCheckedDate': '2026-10-22',
     'status': 'Selected nominal fabrication features screen within published limits; factory DFM and assembly preparation remain open.',
-    'profile': {'material': 'FR4', 'copperLayers': 2, 'copperThicknessMm': .035,
+    'profile': {'material': 'FR4', 'copperLayers': 4, 'copperThicknessMm': .035,
                 'boardThicknessMm': 1.6, 'outline': '160x70mm capsule, as checked by mechanical gate'},
     'measurements': {'minimumRoutedTrackWidthMm': track_min,
                      'configuredMinimumClearanceMm': rules['min_clearance'],

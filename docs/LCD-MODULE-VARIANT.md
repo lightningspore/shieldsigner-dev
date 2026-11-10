@@ -1,20 +1,27 @@
 # ShieldSigner pill: 2.8-inch, eight-pin SPI LCD
 
-This is the **0.0.9-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
+This is the **0.0.11-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
 
 ![Assembled pill carrier, front](../variants/lcd-module-2.8/assembly-front.png)
 
-JLCPCB assembles **35 SMT pieces across 17 catalog lines**. Customer soldering is ordinary **2.54 mm headers**: 30 joints on the carrier, plus up to 30 on unheadered LCD/Luckfox modules. There is no customer LCD ribbon connection, fine-pitch connector, QFN or smartcard-contact soldering. The camera retains its normal Luckfox ribbon connection.
+The factory assembly BOM specifies **43 SMT pieces across 18 catalog lines**, including all eight Keystone test points. Customer soldering is ordinary **2.54 mm headers**: 30 joints on the carrier, plus up to 30 on unheadered LCD/Luckfox modules. There is no customer LCD ribbon connection, fine-pitch connector, QFN or smartcard-contact soldering. The camera retains its normal Luckfox ribbon connection.
 
 The rear silkscreen now includes the official The Space logo and `denver.space`.
-An [artwork-only audit](../variants/lcd-module-2.8/branding-audit.json) confirms
-that all electrical/mechanical PCB data is preserved. Read the
+The historical [0.0.9 artwork-only audit](../variants/lcd-module-2.8/branding-audit.json)
+applies to that earlier revision. The current [service audit](../variants/lcd-module-2.8/serviceability-audit.json)
+checks the retained circuitry and the documented service changes. Read the
 [order-readiness review](PCB-ORDER-READINESS.md) for current sourcing and supplier
 gates. The tested 240×240 bench firmware must not be used unchanged on this
 carrier: [its LCD outputs conflict with carrier button nets](PCB-SOFTWARE-COMPATIBILITY.md).
 A carrier-profile image, 320×240 display setup and 10 MHz clock are required.
 
 ## Get the matching files
+
+For current 0.0.11-dev files, run `mise run variant:lcd:fab`,
+`mise run variant:lcd:review` and `mise run variant:lcd:package`. The matched
+local review kit is in `dist/lcd-module-2.8/`, with hashes in
+`review-downloads.json`. The published download links below retain historical
+0.0.9 files; they are not the current four-layer service revision.
 
 - [Complete JLCPCB prototype quote kit](https://www.shieldsigner.dev/files/shieldsigner-modular-order.zip): Gerber ZIP, BOM, CPL, population and customer-parts list.
 - [Full schematic PDF](https://www.shieldsigner.dev/files/shieldsigner-modular-schematic.pdf).
@@ -111,3 +118,12 @@ USB-C remains a power-only input with separate 5.1 kΩ CC pull-downs. J301 is no
 ## Layout and probe revision 0.0.7-dev
 
 The reader controller/support cluster moves 17 mm toward the top edge. The socket, module headers, mounting holes, USB-C and board outline stay fixed. Twelve labelled copper test pads add access to power rails, UART and card signals without adding purchased parts. ShieldSigner and LightningSpore marks use single-colour silkscreen. See the [test-point table](BRINGUP.md#pcb-007-test-points). This describes the 0.0.7 layout change; current 0.0.9 adds artwork only. Use the current matched kit and request a fresh supplier preview.
+
+## 0.0.11 service and mounting revision
+
+The native working board has four copper layers, eight factory-fitted Keystone
+5015 loops and four independent bracket mounts. J302 is removed; TP901/TP902
+are the regulated 5 V bench-power pair. Original LCD support positions, signal
+routing and component poses are retained; two isolated GND stitching vias were
+removed to clear a new service point/spur. Full details, coordinates and the
+assembly boundary are in the [current carrier guide](../variants/lcd-module-2.8/README.md#factory-service-points-and-independent-bracket-mounting).

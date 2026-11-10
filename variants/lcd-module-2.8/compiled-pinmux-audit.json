@@ -1,0 +1,69 @@
+{
+  "scope": "Retained compiled snapshot audit, not the installed or selected carrier image",
+  "installedImageVerified": false,
+  "dtb": {
+    "path": "dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/out/bin/board_uclibc_rv1106/rv1103g-luckfox-pico-mini.dtb",
+    "sha256": "01bcf3b2bdcdc8835a190053c5415d047e7ded17385fe375f029ea32c9cb7557"
+  },
+  "kernelConfig": {
+    "path": "dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/source/objs_kernel/.config",
+    "sha256": "b210dc5fca942dc4725c6644b9b141d4a881c062e2c5f409bb9166020c92f9c6"
+  },
+  "compiledCarrierPinmux": {
+    "spi0Node": "/spi@ff500000",
+    "spidevNode": "/spi@ff500000/spidev@0",
+    "pins": [
+      [
+        1,
+        16,
+        4
+      ],
+      [
+        1,
+        17,
+        4
+      ],
+      [
+        1,
+        18,
+        6
+      ]
+    ],
+    "resetMisoConflict": false,
+    "compiledMaximumHz": 50000000,
+    "requiredRuntimeHz": 10000000,
+    "dormantConsumers": [
+      {
+        "node": "/dht11_sensor",
+        "pin": "GPIO1_C7 / Down",
+        "driver": "CONFIG_DHT11=n"
+      }
+    ],
+    "scope": "Compiled default pinctrl only; live GPIO ownership/pulls and runtime overlays require first-article checks"
+  },
+  "compiledCarrierUart": {
+    "uartNode": "/serial@ff4c0000",
+    "alias": "serial2",
+    "pins": [
+      [
+        1,
+        10,
+        2
+      ],
+      [
+        1,
+        11,
+        2
+      ]
+    ],
+    "kernelConsoleConflict": false,
+    "dormantConsumers": [
+      {
+        "node": "/fiq-debugger",
+        "serialId": 2,
+        "driver": "CONFIG_FIQ_DEBUGGER=n"
+      }
+    ],
+    "scope": "Compiled UART pinmux/bootargs/config only; bootloader output, getty, driver installation and live PC/SC are not checked"
+  }
+}

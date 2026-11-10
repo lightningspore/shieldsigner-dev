@@ -11,9 +11,12 @@
     "dev:source": "tsci dev src/index.tsx --port 3022"
   },
   "dependencies": {
-    "@tscircuit/core": "0.0.2130",
-    "@tscircuit/cli": "0.1.2298",
-    "circuit-to-svg": "0.0.447"
+    "@tscircuit/core": "0.0.2265",
+    "@tscircuit/cli": "0.1.2431",
+    "@tscircuit/props": "0.0.718",
+    "circuit-json": "0.0.543",
+    "circuit-to-svg": "0.0.455",
+    "tscircuit": "0.0.3071"
   },
   "devDependencies": {
     "@types/bun": "^1.4.2",

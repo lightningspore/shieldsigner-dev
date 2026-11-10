@@ -29,11 +29,19 @@ def page(url):
 
 class StaticSiteTests(unittest.TestCase):
     def test_talk_has_all_readable_slides_notes_and_local_presentation_assets(self):
-        expected=['intro','trust','incidents','multisig','workflow','pcb','assembly',
-                  'case','camera','lvgl','demo','verification','cost','next']
+        expected=['intro', 'signer', 'lineage', 'trust', 'incidents', 'multisig', 'software', 'libraries', 'hardware', 'swaps', 'workflow', 'pcb', 'tscircuit', 'case', 'assembly', 'camera', 'qr-decoder', 'lvgl', 'demo', 'verification', 'cost', 'next']
         content=json.loads((ROOT/'knowledge/talk.json').read_text())
         self.assertEqual([slide['id'] for slide in content['slides']],expected)
         self.assertTrue(all(slide['notes'] and slide['sources'] for slide in content['slides']))
+        by_id={slide['id']:slide for slide in content['slides']}
+        for id in ['software','hardware']:
+            diagram=by_id[id]
+            blocks=diagram.get('blocks') or [block for lane in diagram['lanes'] for block in lane['blocks']]
+            self.assertEqual(len(blocks),6)
+            self.assertTrue(all(all(block.get(key) for key in ['title','interface','role','connection']) for block in blocks))
+            self.assertTrue(diagram['hubRole'] and diagram['hubConnection'])
+        self.assertEqual({lib['name'] for lib in by_id['libraries']['libraries']},{'embit','rust-bitcoin','libwally'})
+        self.assertTrue(20*60 <= sum(slide['seconds'] for slide in content['slides']) <= 25*60)
         html=page('/talk/')
         class TalkElements(HTMLParser):
             def __init__(self):
@@ -53,7 +61,7 @@ class StaticSiteTests(unittest.TestCase):
         self.assertEqual(controls['talk-index'][0],'select')
         self.assertEqual(controls['talk-position'][0],'output')
         notes=[attrs for tag,attrs in elements if tag=='details' and 'talk-notes' in attrs.get('class','').split()]
-        self.assertEqual(len(notes),14)
+        self.assertEqual(len(notes),len(expected))
         self.assertTrue(all('open' not in note for note in notes),'Reading notes should start closed')
         for slide in expected:
             self.assertIn('#'+slide,links.urls,'Ordinary anchors must work without JavaScript')

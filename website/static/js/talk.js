@@ -93,20 +93,6 @@
     if (commands[event.key]) { event.preventDefault(); commands[event.key]() }
   })
 
-  root.querySelectorAll('[data-threshold-demo]').forEach(demo => {
-    const buttons = [...demo.querySelectorAll('[data-cosigner]')]
-    buttons.forEach(button => {
-      button.disabled = false
-      button.addEventListener('click', () => {
-        button.setAttribute('aria-pressed', String(button.getAttribute('aria-pressed') !== 'true'))
-        const count = buttons.filter(b => b.getAttribute('aria-pressed') === 'true').length
-        demo.querySelector('[data-threshold-count]').textContent = `${count} / 3`
-        demo.querySelector('[data-threshold-status]').textContent = count >= 2 ? 'Approval threshold met' : 'Two independent signatures required'
-        demo.dataset.met = String(count >= 2)
-      })
-    })
-  })
-
   root.querySelector('.talk-toolbar').hidden = false
   update()
   const observer = new IntersectionObserver(entries => {

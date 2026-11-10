@@ -1,17 +1,17 @@
 # PCB and tested firmware compatibility
 
-Reviewed 2026-10-31 against local KiCad pad nets, pinned application source,
-reviewed I/O transforms and frozen compiled-profile metadata. This is a read-only
-source/electrical compatibility audit; no board was powered, flashed or rebuilt.
+Reviewed 2026-11-09 against current 0.0.11-dev KiCad pad nets, pinned application source,
+reviewed I/O transforms and frozen compiled-profile metadata. This is a source/electrical compatibility review with carrier build-input
+preparation; no board was powered or flashed and no finished OS image was built.
 
 **The carrier mapping matches the `carrier` application profile, but the currently
 tested `lvgl-dev.cb6170a37a5a` image uses `base-fork` and must not be used unchanged
 on either carrier PCB.** This is a firmware-profile mismatch, not evidence that
 the carrier should be rewired to match the separate bench display/button board.
 
-The order target is the main `variants/lcd-module-2.8` artwork revision
-**0.0.9-dev**, retaining the main board's always-on topology and 35 fitted SMT
-components / 17 purchasing SKUs. The separate `lcd-backlight-pwm` 0.0.8-dev
+The first-article target is the main `variants/lcd-module-2.8` service revision
+**0.0.11-dev**, retaining the always-on display topology with four layers and
+43 fitted SMT components / 18 purchasing SKUs. The separate `lcd-backlight-pwm` 0.0.8-dev
 candidate is not the order target. Manufacturing exports must be regenerated and
 matched to the selected main revision; this audit does not promote a cart.
 
@@ -31,6 +31,9 @@ matched to the selected main revision; this audit does not promote a cart.
 Physical pin numbers below are **U202 module-header pad numbers**, not Linux
 GPIO numbers. GPIO global number = bank × 32 + line. `/dev/gpiochipN` must still
 be confirmed on the actual image; labels alone do not prove runtime numbering.
+Carrier firmware now resolves `/dev/gpiochip-bank0`, `-bank1` and `-bank4`
+from kernel chip labels at boot. Device indices can differ from bank numbers;
+see [the bank selection review](DISPLAY-BUTTON-REVIEW.md#buttons-all-eight-paths).
 All GPIO pins listed are 3.3 V except pins 19/20, which are **1.8 V**.
 
 | U202 pin | SoC / global GPIO | Main carrier net and intended function | `carrier` runtime |
@@ -43,18 +46,18 @@ All GPIO pins listed are 3.3 V except pins 19/20, which are **1.8 V**.
 | 6 | GPIO1_C0 / 48 | `Net-(JP203-B)` → JP203/JP205 → `RPI_SPI_CS` | SPI0 CS0, `/dev/spidev0.0` |
 | 7 | GPIO1_C1 / 49 | `LCD_SCLK` | SPI0 clock |
 | 8 | GPIO1_C2 / 50 | `LCD_MOSI` | SPI0 MOSI; display is write-only |
-| 9 | GPIO1_C3 / 51 | `LCD_RST` | gpiochip1 line19 output |
-| 10 | GPIO1_C4 / 52 | `LCD_DC` | gpiochip1 line20 output |
-| 11 | GPIO1_C5 / 53 | `Key3`, SW508 → GND | gpiochip1 line21 input/pull-up |
-| 12 | GPIO1_D0 / 56 | `JoystickLeft`, SW501 → GND | gpiochip1 line24 input/pull-up |
-| 13 | GPIO1_D1 / 57 | `JoystickUp`, SW502 → GND | gpiochip1 line25 input/pull-up |
+| 9 | GPIO1_C3 / 51 | `LCD_RST` | gpiochip-bank1 line19 output |
+| 10 | GPIO1_C4 / 52 | `LCD_DC` | gpiochip-bank1 line20 output |
+| 11 | GPIO1_C5 / 53 | `Key3`, SW508 → GND | gpiochip-bank1 line21 input/pull-up |
+| 12 | GPIO1_D0 / 56 | `JoystickLeft`, SW501 → GND | gpiochip-bank1 line24 input/pull-up |
+| 13 | GPIO1_D1 / 57 | `JoystickUp`, SW502 → GND | gpiochip-bank1 line25 input/pull-up |
 | 14 | GPIO1_D2 / 58 | `I2C-SDA`, no other main-board endpoint | Unused; candidate changes this to `LCD_PWM` |
 | 15 | GPIO1_D3 / 59 | `I2C-SCL`, no other endpoint | Unused |
-| 16 | GPIO1_C6 / 54 | `JoystickPress`, SW503 → GND | gpiochip1 line22 input/pull-up |
-| 17 | GPIO1_C7 / 55 | `JoystickDown`, SW504 → GND | gpiochip1 line23 input/pull-up |
-| 18 | GPIO0_A4 / 4 | `JoystickRight`, SW505 → GND | gpiochip0 line4 input/pull-up |
-| 19 | GPIO4_C0 / 144, **1.8 V** | `Key1`, SW506 → GND | gpiochip4 line16 input/pull-up |
-| 20 | GPIO4_C1 / 145, **1.8 V** | `Key2`, SW507 → GND | gpiochip4 line17 input/pull-up |
+| 16 | GPIO1_C6 / 54 | `JoystickPress`, SW503 → GND | gpiochip-bank1 line22 input/pull-up |
+| 17 | GPIO1_C7 / 55 | `JoystickDown`, SW504 → GND | gpiochip-bank1 line23 input/pull-up |
+| 18 | GPIO0_A4 / 4 | `JoystickRight`, SW505 → GND | gpiochip-bank0 line4 input/pull-up |
+| 19 | GPIO4_C0 / 144, **1.8 V** | `Key1`, SW506 → GND | gpiochip-bank4 line16 input/pull-up |
+| 20 | GPIO4_C1 / 145, **1.8 V** | `Key2`, SW507 → GND | gpiochip-bank4 line17 input/pull-up |
 | 21 | GND | `GND` | Return |
 | 22 | 1V8 OUT | Explicitly unconnected | Do not tie to 3.3 V |
 
@@ -132,7 +135,8 @@ but do not promise the retained PIL rollback frontend works at 320×240 unchange
 
 ## Required firmware integration
 
-No firmware was changed for this audit. The explicit selection points are:
+Carrier profile validation and staging inputs were updated during this review.
+No finished carrier OS image has been built or booted. The explicit selection points are:
 
 - `scripts/prepare-camera-image.py --io-profile carrier` selects the intended
   carrier map; use `--variant dev --app-startup automatic --memory-profile
@@ -160,7 +164,7 @@ No firmware was changed for this audit. The explicit selection points are:
 ## Separate PWM candidate
 
 The 0.0.8-dev candidate changes only the dedicated backlight route: U202 pin14 /
-GPIO1_D2 / gpiochip1 line26 / global58 becomes `LCD_PWM`, feeding JP202. R703
+GPIO1_D2 / gpiochip-bank1 line26 / global58 becomes `LCD_PWM`, feeding JP202. R703
 5.1 kΩ pulls it low. With JP201 closed and JP202 open it remains always on.
 Optional PWM uses JP201 open and JP202 closed; never close both together.
 
@@ -179,7 +183,7 @@ carrier camera connector or SPI/pin conflict was found. Existing Linux camera/IS
 and Rust/ZXing behavior can be retained with the correctly profiled kernel; it
 still needs testing with the larger display and assembled power load.
 
-J301 USB-C and optional J302 both feed +5 V; J302 pin1 is +5 V, pin2 GND. They
+J301 USB-C and Keystone TP901 (+5 V) / TP902 (GND) feed +5 V. J302 is removed. They
 have no source isolation or reverse-polarity protection. Use one regulated source
 at a time; account for the Luckfox module USB input too. USB power does not prove
 USB data/ADB connectivity through the carrier receptacle.
@@ -211,3 +215,42 @@ SHA-256: `b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7`;
 PWM candidate: `c5644d7a6eb18ef013d008f880bb0813b05b33892b87eaa982da4638e973521a`.
 The main artwork change must retain these electrical mappings; its new file hash
 and regenerated checks belong to the final manufacturing/readiness record.
+
+## Current electrical review and image guard
+
+The regenerated `variant:lcd:pinouts` report is bound to current PCB SHA-256
+`aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32`.
+It now checks exact net membership for every one of SW501–SW508, not just the
+two 1.8 V keys. Each must have only its intended host input and normally-open
+contact to GND. All eight match the pinned carrier application configuration.
+
+`prepare-camera-image.py` now rejects carrier application packaging unless the
+compiled-kernel ABI proof explicitly identifies the carrier profile and the
+single enabled UART2 node at `/serial@ff4c0000`. Older proof files without that
+evidence require a fresh kernel-only probe; they must not be relabeled. The
+kernel-only bootstrap remains available to collect this evidence. Regression
+checks run with `mise run firmware:io:check`. This guard does not inspect live
+GPIO pulls, display timing or the installed image.
+
+The compiled pinmux validator additionally checks SPI0 CLK/MOSI/CS0, leaves
+GPIO1_C3 free for reset, rejects a competing framebuffer on CS0 and detects
+default pinctrl consumers on all display/button GPIOs. The retained compiled
+snapshot has a dormant DHT11 node on Down/GPIO1_C7 with `CONFIG_DHT11=n`;
+enabling that driver without disabling its node fails carrier validation.
+New carrier packages require `compiledCarrierPinmux` in their actual kernel
+proof. See [the current detailed review](DISPLAY-BUTTON-REVIEW.md).
+
+For the current pill, `firmware:stage --display-config st7789_320x240` now
+provides an explicit first-run display template when used with a verified
+carrier camera base. The prepared combined bundle is documented in
+[the electrical review](DISPLAY-BUTTON-REVIEW.md). Existing persisted display
+settings take priority; use fresh first-article media or review that value.
+
+The current explicit pill staging option also installs the
+`hothmi_htm_tft028a16_spi` physical panel profile. It uses the manufacturer's
+initialization program rather than the generic square-panel sequence; see
+[the current review](DISPLAY-BUTTON-REVIEW.md) and its manufacturer fixture.
+The current combined stage is `carrier-first-article-hothmi-alias-compatible`.
+Earlier geometry-only stages lack the panel program, and the superseded
+`hothmi-review-v2` stage assumes bank numbers equal Linux device indices.
+Use the current stage and its bank-label startup service.

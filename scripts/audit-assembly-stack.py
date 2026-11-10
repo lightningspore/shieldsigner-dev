@@ -6,7 +6,8 @@ import numpy as np
 import trimesh
 ROOT=Path(__file__).resolve().parents[1];V=ROOT/'variants/lcd-module-2.8'
 source=ROOT/'dist/lcd-module-2.8/shieldsigner-modular-assembly.glb'
-manifest=json.loads((ROOT/'assets/modular-downloads.json').read_text())
+local=ROOT/'dist/lcd-module-2.8/review-downloads.json'
+manifest=json.loads((local if local.exists() else ROOT/'assets/modular-downloads.json').read_text())
 assert hashlib.sha256(source.read_bytes()).hexdigest()==next(a['sha256'] for a in manifest['assets'] if a['name']==source.name)
 board=V/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 assert hashlib.sha256(board.read_bytes()).hexdigest()==manifest['boardSha256']

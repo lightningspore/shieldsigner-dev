@@ -1,0 +1,26 @@
+{
+  "ST7789.py": {
+    "url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/src/seedsigner/hardware/displays/ST7789.py",
+    "sha256": "2d208968bfaad3b5aaaf4de18aca3aa44c786d2dd6a297a33919b9cea720255d"
+  },
+  "buttons.py": {
+    "url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/src/seedsigner/hardware/buttons.py",
+    "sha256": "951c7106064fc4f352de583a061d535b22686f7d2aed03f2b839df48d8450e3e"
+  },
+  "configure-gpio.sh": {
+    "url": "https://raw.githubusercontent.com/3rdIteration/seedsigner-os/e7589465aff172f4f510ad46d18776ccc8d2c203/opt/luckfox/files/configure-gpio.sh",
+    "sha256": "695d8df632f8a11610dec6c4d77c120b014d387ec3e59d332c36319dd7108ce5"
+  },
+  "ccid_serial.c": {
+    "url": "https://raw.githubusercontent.com/LudovicRousseau/CCID/1.7.1/src/ccid_serial.c",
+    "sha256": "8493c2dfec6ed1cf26bba9ab033c4ff478b0c7849beaa5570f28172c29469e2c"
+  },
+  "display_driver.py": {
+    "url": "https://raw.githubusercontent.com/3rdIteration/seedsigner/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/src/seedsigner/hardware/displays/display_driver.py",
+    "sha256": "c60815380c35e7f2c6d4ddf6387c846c6bfc8dd4803830125c696958b750842b"
+  },
+  "start-seedsigner.sh": {
+    "url": "https://raw.githubusercontent.com/3rdIteration/seedsigner-os/e7589465aff172f4f510ad46d18776ccc8d2c203/opt/luckfox/files/start-seedsigner.sh",
+    "sha256": "cf82acd223a5d1b66afcff1aed1bd1369b86f2e020d5c60c3bd08c73bf62d509"
+  }
+}

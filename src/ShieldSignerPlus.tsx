@@ -6,18 +6,28 @@ import reference from "./generated/reference-board.json"
  * Physical lands with duplicate KiCad numbers receive individual ports tied to
  * the original net (e.g. SEC1210 exposed-pad vias and Pico castellated pads).
  */
-export const ShieldSignerPlus = () => (
+type ReferencePart = Omit<(typeof reference.components)[number], 'pins'> & {
+  pins: Record<string, string[] | undefined>
+}
+export type ReferenceBoard = Omit<typeof reference, 'components'> & {
+  copperLayers?: string[]
+  components: ReferencePart[]
+  bridges?: {reference:string, ports:string[], nets:string[], layer:string, points:{x:number,y:number}[]}[]
+}
+
+export const ShieldSignerPlus = ({data = reference}: {data?: ReferenceBoard} = {}) => (
   <board
-    width={reference.width}
-    height={reference.height}
-    outline={reference.outline}
+    layers={data.copperLayers?.length === 4 ? 4 : 2}
+    width={data.width}
+    height={data.height}
+    outline={data.outline}
     routingDisabled
     schAutoLayoutEnabled={false}
   >
-    {reference.holes.map((hole,index) => <Fragment key={index}><hole pcbX={hole.x} pcbY={hole.y} diameter={hole.diameter} /></Fragment>)}
-    {reference.cutouts.map((points,index) => <Fragment key={index}><cutout shape="polygon" points={points} /></Fragment>)}
-    {reference.nets.map((net) => <Fragment key={net.name}><net name={net.name} /></Fragment>)}
-    {reference.components.map((part, index) => (
+    {data.holes.map((hole,index) => <Fragment key={index}><hole pcbX={hole.x} pcbY={hole.y} diameter={hole.diameter} /></Fragment>)}
+    {data.cutouts.map((points,index) => <Fragment key={index}><cutout shape="polygon" points={points} /></Fragment>)}
+    {data.nets.map((net) => <Fragment key={net.name}><net name={net.name} /></Fragment>)}
+    {data.components.map((part, index) => (
       <Fragment key={part.name}><chip
         name={part.name}
         manufacturerPartNumber={part.value}
@@ -29,7 +39,7 @@ export const ShieldSignerPlus = () => (
         schX={(index % 7) * 24 - 72}
         schY={-Math.floor(index / 7) * 20}
         footprint={
-          <footprint>
+          <footprint {...(data.bridges && /^(JP|J302$|J701$)/.test(part.name) ? {insertionDirection:"from_above" as const} : {})}>
             {part.pads.map((pad) => pad.type === "thru_hole" ? (
               <Fragment key={pad.port}><platedhole
                 portHints={[pad.port]}
@@ -54,7 +64,10 @@ export const ShieldSignerPlus = () => (
         }
       /></Fragment>
     ))}
-    {reference.nets.flatMap((net) => net.ports.map((port) => (
+    {data.bridges?.map(bridge => <Fragment key={bridge.reference}>
+      <trace from={`.${bridge.reference} .${bridge.ports[0]}`} to={`.${bridge.reference} .${bridge.ports[1]}`} />
+    </Fragment>)}
+    {data.nets.flatMap((net) => net.ports.map((port) => (
       <Fragment key={port}><trace from={port} to={`net.${net.name}`} schDisplayLabel={net.label} /></Fragment>
     )))}
   </board>

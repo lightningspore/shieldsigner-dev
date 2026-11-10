@@ -4,6 +4,29 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from overlay_apply import apply,verify,root_check
 from image_stage import HERE,ROOT,BASE
 class OverlayApplyTests(unittest.TestCase):
+ def add_carrier_template(self):
+  relative='payload/opt/src/settings.json';data=b'{"display_config":"st7789_320x240"}\n'
+  path=self.draft/relative;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data);path.chmod(0o644)
+  plan=json.loads((self.draft/'integration-plan.json').read_text())
+  plan.update(displayConfiguration='st7789_320x240',defaultFrontend='lvgl')
+  plan['files'][relative]=dict(sha256=hashlib.sha256(data).hexdigest(),bytes=len(data),mode=0o644)
+  (self.draft/'integration-plan.json').write_text(json.dumps(plan))
+ def test_carrier_template_installs_without_changing_persisted_settings(self):
+  self.add_carrier_template()
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp);self.fixture(root)
+   user=root/'userdata/shieldsigner-lvgl-settings.json';user.parent.mkdir();user.write_text('{"public_fixture":"retain"}')
+   apply(root,self.draft)
+   self.assertEqual(json.loads((root/'opt/src/settings.json').read_text()),{'display_config':'st7789_320x240'})
+   self.assertEqual(user.read_text(),'{"public_fixture":"retain"}')
+   self.assertTrue(verify(root,self.draft)['verified'])
+ def test_existing_template_is_rejected_before_overlay_writes(self):
+  self.add_carrier_template()
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp);self.fixture(root);template=root/'opt/src/settings.json';template.write_text('{"public_fixture":"retain"}')
+   with self.assertRaisesRegex(ValueError,'refusing overwrite'):apply(root,self.draft)
+   self.assertEqual(template.read_text(),'{"public_fixture":"retain"}')
+   self.assertFalse((root/'usr/bin/shieldsigner-launch.pil').exists())
  def setUp(self):
   temporary=tempfile.TemporaryDirectory();self.addCleanup(temporary.cleanup)
   self.draft=Path(temporary.name)/'draft';self.draft.mkdir()

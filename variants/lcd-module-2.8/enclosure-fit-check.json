@@ -1,0 +1,8 @@
+{
+  "board_sha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+  "step_sha256": "b0273ad28e6ad99659e072760167f25f4141b7ffd593ddbfdc49c692d3e8b1f2",
+  "closed_native_components": 368,
+  "open_surface_components_reserved_by_envelope": 1720,
+  "individual_surface_proxies_outside_luckfox": 0,
+  "findings": []
+}

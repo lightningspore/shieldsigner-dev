@@ -1,0 +1,77 @@
+{
+  "note": "Public catalog snapshot, not a stock reservation or confirmed assembly quote. Raw stock field names retained deliberately.",
+  "parts": [
+    {
+      "componentModelEn": "SEC1210-I/PV-UR2",
+      "componentBrandEn": "Microchip Tech",
+      "componentSpecificationEn": "QFN-24",
+      "describe": "826Kbps、3Mbps、12Mbps Interrupt generation、Wake-up function、Non-volatile configuration storage SPI、UART、JTAG QFN-24 Interface - Specialized ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 0,
+      "overseasStockCount": 0,
+      "preMinPurchaseNum": 2,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 8.528,
+      "needAuditFlag": false,
+      "dataManualUrl": "",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Data Rate",
+          "component_code": "C633307",
+          "attribute_value_name": "826Kbps、3Mbps、12Mbps"
+        },
+        {
+          "attribute_name_en": "Features",
+          "component_code": "C633307",
+          "attribute_value_name": "Interrupt generation、Wake-up function、Non-volatile configuration storage"
+        },
+        {
+          "attribute_name_en": "Interface",
+          "component_code": "C633307",
+          "attribute_value_name": "SPI、UART、JTAG"
+        }
+      ],
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 8.528
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 29,
+          "productPrice": 8.3284
+        },
+        {
+          "startNumber": 30,
+          "endNumber": 99,
+          "productPrice": 8.1959
+        },
+        {
+          "startNumber": 100,
+          "endNumber": 101,
+          "productPrice": 8.0617
+        },
+        {
+          "startNumber": 102,
+          "endNumber": 103,
+          "productPrice": 8.0617
+        },
+        {
+          "startNumber": 104,
+          "endNumber": -1,
+          "productPrice": 8.0617
+        }
+      ],
+      "code": "C633307",
+      "url": "https://jlcpcb.com/partdetail/C633307",
+      "checkedAt": "2026-11-10T03:49:03.701037+00:00",
+      "htmlSha256": "a20083f45d883cb0b438e980b09ebe1ce807acf2628215fd51349587915cb74a",
+      "status": "public_catalog_snapshot"
+    }
+  ]
+}

@@ -78,4 +78,4 @@ For a fresh design checkout, run `mise run kicad:setup`, `mise run variant:lcd:r
 
 The hardware collision check retains closed native solids and reserves conservative bounds for open supplier-model surfaces. It does not prove physical print tolerances, thermal behavior, cable durability or switch feel. Confirm those on the first assembly before treating the case as qualified hardware.
 
-The 0.0.6-dev PCB adds an optional internal J302 power header. The existing case has no dedicated wire exit for it; use USB-C for the enclosed build unless you provide a suitable wire opening and strain relief. Use one regulated 5V input at a time.
+The 0.0.11-dev PCB replaces the former J302 header with factory SMT bench contacts TP901 (+5 V) and TP902 (GND). The existing case has no wire exit or strain relief for injected power; use USB-C for enclosed operation. New H705-H708 bracket holes are for custom printed hardware and do not add posts to this case. Use only one regulated 5 V source at a time.

@@ -1,6 +1,7 @@
 {
-  "modelsVerified": 22,
+  "modelsVerified": 23,
   "assembledReferencesWithModels": [
+    "TP902",
     "H701",
     "SW503",
     "SW504",
@@ -11,8 +12,8 @@
     "SW505",
     "SW502",
     "SW508",
+    "TP901",
     "H704",
-    "J302",
     "C702",
     "SW507",
     "U701",
@@ -21,10 +22,13 @@
     "C606",
     "C201",
     "C601",
+    "TP903",
     "C302",
     "R302",
+    "TP906",
     "R607",
     "J601",
+    "TP904",
     "R603",
     "C602",
     "C604",
@@ -32,12 +36,15 @@
     "C603",
     "U202",
     "R301",
+    "TP905",
     "R605",
     "R606",
+    "TP907",
     "C301",
     "D302",
     "C605",
     "D301",
+    "TP908",
     "R303",
     "R601",
     "U601",
@@ -59,5 +66,68 @@
     "LCD, card socket, switch and USB are dimensional envelopes, not detailed manufacturer CAD",
     "Standoff model omits threads",
     "Physical first-article header/module fit remains to be confirmed"
+  ],
+  "factoryKeystonePoints": 8,
+  "independentBracketMounts": [
+    {
+      "ref": "H705",
+      "xy": [
+        78,
+        65.679
+      ],
+      "drillMm": 2.7,
+      "keepoutDiameterMm": 6,
+      "fastener": "M2.5; head/washer OD <= 5 mm",
+      "caseFrameMm": [
+        -50,
+        23.9
+      ]
+    },
+    {
+      "ref": "H706",
+      "xy": [
+        187,
+        65.679
+      ],
+      "drillMm": 2.7,
+      "keepoutDiameterMm": 6,
+      "fastener": "M2.5; head/washer OD <= 5 mm",
+      "caseFrameMm": [
+        59,
+        23.9
+      ]
+    },
+    {
+      "ref": "H707",
+      "xy": [
+        78,
+        113.479
+      ],
+      "drillMm": 2.7,
+      "keepoutDiameterMm": 6,
+      "fastener": "M2.5; head/washer OD <= 5 mm",
+      "caseFrameMm": [
+        -50,
+        -23.9
+      ]
+    },
+    {
+      "ref": "H708",
+      "xy": [
+        187,
+        113.479
+      ],
+      "drillMm": 2.7,
+      "keepoutDiameterMm": 6,
+      "fastener": "M2.5; head/washer OD <= 5 mm",
+      "caseFrameMm": [
+        59,
+        -23.9
+      ]
+    }
+  ],
+  "bracketSpacingMm": [
+    109,
+    47.8
   ]
 }

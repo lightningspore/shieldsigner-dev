@@ -1,0 +1,37 @@
+{
+  "files": {
+    "SeedSigner-Plus-smartcard-pico.kicad_sch": {
+      "beforeSha256": "d6e5841796c2746c070dd8128e62a911ade867808113257eabea2b77f7c94aca",
+      "afterSha256": "20ccfa2966d1954cd7ee8d8636c614fc2df1e501abf60162d75a6b325df145fe"
+    },
+    "rpi_interface.kicad_sch": {
+      "beforeSha256": "cfc1276cfcab3bdeeca4ad2cc260c1d49f99ebb421cff241e5a643a2faa86f79",
+      "afterSha256": "1cce3c48ebc8a5f765ba01cdae947ac0c7d963c2b96a06ca51890db55f308fca"
+    },
+    "Power.kicad_sch": {
+      "beforeSha256": "a774130799cbe2a8064349541c1c669353eab1e6e61f684e889b1a2064a05be1",
+      "afterSha256": "ba1cc5fd131f87b1393f67c80b924115e565d90cacee1b8c41c192c8246d26bf"
+    },
+    "buttons.kicad_sch": {
+      "beforeSha256": "56e79ac8aa66e103580f65f63afca1635b4e309e4ace626e2fb7dcded023b6da",
+      "afterSha256": "c4255009ac4b1c8f616ccacd82b7fde463e5f806aae6801e45ebfc45fdc89ecd"
+    },
+    "smartcard_reader.kicad_sch": {
+      "beforeSha256": "be9faa9c0ab154a34f7aece28853ab00ac5bd9fa9966b7683580c40d60c2a842",
+      "afterSha256": "6913a10b2cd42fc793f18a1618b489dcac11109d544c2f0236b6ee911209771a"
+    },
+    "lcd_module.kicad_sch": {
+      "beforeSha256": "6e0d5f55bd85842f77de638559a8f536d6d7bf5f1f9f22b486de608011a2867b",
+      "afterSha256": "36f984273fabbcc74e1bb2a9bd70576e71bb61fbc54498222a46d3a9ae55b521"
+    }
+  },
+  "scope": "Presentation only; native ERC, PCB parity and independent netlist comparison required",
+  "electricalEquivalence": {
+    "status": "pass",
+    "sha256": "692252f904bf822b90e61002480855d4903eaf6f796abcc4c7b890db9d98cc1b",
+    "method": "Independent native XML netlist export before/after; exact reference/value/footprint and complete pin partition comparison",
+    "components": 46,
+    "nets": 56
+  },
+  "visualRefinementsApplied": true
+}

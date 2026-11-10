@@ -1,6 +1,6 @@
 # Assemble the eight-pin pill carrier
 
-**JLCPCB solders the 35 SMT parts. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.9-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
+**The factory assembly BOM includes 43 SMT parts, including all eight Keystone points. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.11-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
 
 For an optional DIY build, use the separate [self-assembly guide](SELF-ASSEMBLY.md) and DigiKey purchase CSV. The original JLC kit below remains the assembled-board ordering path.
 
@@ -86,8 +86,17 @@ Revision **0.0.6-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A-01
 
 ## Alternative 5 V power header (0.0.6-dev)
 
-J302 is an optional ordinary **1×2, 2.54 mm through-hole header** beside USB-C. Solder it yourself if desired; it is excluded from the factory SMT BOM and CPL. **Pin 1 (square pad) is +5 V; pin 2 is GND**, also printed on the top silkscreen. A standard male strip or two soldered wires fits the same lands. Fitting the header adds two customer solder joints.
+The 0.0.11 board replaces J302 with **factory-assembled Keystone 5015** points:
+**TP901 is +5 V; TP902 is GND**. They are 7 mm apart and labelled on front silk.
+Use small insulated test hooks and a regulated, current-limited 5 V bench supply.
+Disconnect USB-C and the Luckfox USB supply before injection. There is no source
+isolation or reverse-polarity protection. These loops are not a permanent power
+connector or wire strain relief.
 
-Use a **regulated 5 V supply**. This is not a raw battery input. J302 and USB-C feed the same +5 V rail, including the existing TVS and input capacitors. There is no reverse-polarity or source-selection circuit: **disconnect USB power before powering J302**, and vice versa. Also disconnect the Luckfox module USB supply before applying external power. Confirm polarity before connecting. Enclosed use needs a deliberate wire exit; no case opening for J302 is provided by this PCB change.
+Six more factory loops on the rear expose host 3.3 V, LCD_3V3, host UART TX/RX
+and two local grounds. They add no customer solder joints. The original 12 small
+probe pads remain available. See `serviceability.json` for exact coordinates.
 
-J301 now uses **GCT USB4125-GF-A-0190**, JLC **C5246813** / DigiKey **2073-USB4125-GF-A-0190CT-ND**. The manufacturer drawing specifies the same lands and 1.90 mm shell stakes. Inspect actual protrusion/wetting on the 1.6 mm PCB during first article. The old no-suffix 1 mm-stake part was omitted by the 0.0.5-dev quote; that quote is superseded for ordering this revision.
+H705-H708 provide an optional 109 x 47.8 mm M2.5 bracket pattern, independent of
+the LCD's four spacers. Use head/washer OD <= 5 mm; preserve module, plug and
+card-insertion clearance. The supplied enclosure still uses its original mounts.

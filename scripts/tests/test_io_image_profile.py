@@ -20,8 +20,33 @@ class IoImageTests(unittest.TestCase):
                     dict(good, compiledUart2=good['compiledUart2']*2),
                     dict(good, compiledUart2=[{'path':'/serial@ff4c0000','status':'okay','enabled':True}])):
             with self.assertRaises(ValueError):packager.validate_io_proof(bad, 'base-fork', False)
-        packager.validate_io_proof({}, 'carrier', False)
         packager.validate_io_proof({}, 'base-fork', True)  # kernel-only; no image
+
+    def test_carrier_rejects_bench_or_unproven_kernel(self):
+        good = {'ioProfile':'carrier', 'compiledUart2':[{'path':'/serial@ff4c0000','status':'okay','enabled':True}]}
+        good['compiledCarrierPinmux'] = {'spi0Node':'/spi@ff500000','spidevNode':'/spi@ff500000/spidev@0',
+            'pins':[[1,16,4],[1,17,4],[1,18,6]],'resetMisoConflict':False,
+            'requiredRuntimeHz':10_000_000,'compiledMaximumHz':50_000_000}
+        packager.validate_io_proof(good, 'carrier', False)
+        for change in ({'compiledCarrierPinmux':None},
+                       {'compiledCarrierPinmux':dict(good['compiledCarrierPinmux'],resetMisoConflict=True)},
+                       {'compiledCarrierPinmux':dict(good['compiledCarrierPinmux'],compiledMaximumHz=1_000_000)}):
+            with self.assertRaises(ValueError):packager.validate_io_proof(dict(good,**change),'carrier',False)
+        for bad in ({}, dict(good, ioProfile='base-fork'),
+                    dict(good, compiledUart2=[]),
+                    dict(good, compiledUart2=good['compiledUart2']*2),
+                    dict(good, compiledUart2=[{'path':'/serial@ff4c0000','status':'disabled','enabled':False}]),
+                    dict(good, compiledUart2=[{'path':'/serial@ff4d0000','status':'okay','enabled':True}])):
+            with self.assertRaises(ValueError):packager.validate_io_proof(bad, 'carrier', False)
+        packager.validate_io_proof({}, 'carrier', True)
+
+    def test_real_revalidated_carrier_proof_passes(self):
+        import json
+        proof=json.loads((ROOT/'reverse-engineering/rkaiq/image-sdk-kernel-abi-development-zram-carrier-validation.json').read_text())
+        self.assertTrue(proof['passed'])
+        self.assertEqual(proof['compiledDtbSha256'],'01bcf3b2bdcdc8835a190053c5415d047e7ded17385fe375f029ea32c9cb7557')
+        packager.validate_memory_proof(proof,'zram16-lzo',False)
+        packager.validate_io_proof(proof,'carrier',False)
 
     def test_io_kernel_policy_runs_after_uart_patches_before_kernel(self):
         original='''    apply_uart2_console_dts_patch

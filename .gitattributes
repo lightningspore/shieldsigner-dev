@@ -7,3 +7,6 @@
 website/static/enclosure-viewer.js -whitespace
 # Preserve upstream license bytes exactly for their pinned checksum receipts.
 scripts/image-licenses/** -whitespace
+
+# Source-owned reusable tscircuit CAD assets.
+src/pill/models/*.glb filter=lfs diff=lfs merge=lfs -text

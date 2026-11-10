@@ -1,10 +1,10 @@
 {
-  "boardSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
+  "boardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
   "capabilityProfileCheckedDate": "2026-10-22",
   "status": "Selected nominal fabrication features screen within published limits; factory DFM and assembly preparation remain open.",
   "profile": {
     "material": "FR4",
-    "copperLayers": 2,
+    "copperLayers": 4,
     "copperThicknessMm": 0.035,
     "boardThicknessMm": 1.6,
     "outline": "160x70mm capsule, as checked by mechanical gate"
@@ -13,7 +13,7 @@
     "minimumRoutedTrackWidthMm": 0.15,
     "configuredMinimumClearanceMm": 0.15,
     "configuredCopperToEdgeClearanceMm": 0.2,
-    "viaCount": 234,
+    "viaCount": 240,
     "minimumViaDrillMm": 0.3,
     "minimumActualViaAnnularRingMm": 0.15,
     "platedSlots": [
@@ -67,26 +67,7 @@
       "textHeightMm": 0.8,
       "strokeMm": 0.15
     },
-    "smallerVisibleFootprintText": [
-      {
-        "reference": "U202",
-        "text": "U202",
-        "sizeMm": [
-          1.0,
-          1.0
-        ],
-        "strokeMm": 0.1
-      },
-      {
-        "reference": "R606",
-        "text": "R606",
-        "sizeMm": [
-          0.7,
-          0.7
-        ],
-        "strokeMm": 0.15
-      }
-    ],
+    "smallerVisibleFootprintText": [],
     "action": "Review these reference markings in the fabrication preview; these are legibility advisories, not established electrical faults. Board-level artwork/graphics are outside this text scan."
   },
   "sources": [

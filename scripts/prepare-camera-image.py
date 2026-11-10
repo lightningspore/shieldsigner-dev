@@ -49,13 +49,29 @@ def validate_memory_proof(proof, memory_profile, kernel_probe):
 
 
 def validate_io_proof(proof, io_profile, kernel_probe):
-    if io_profile == "carrier" or kernel_probe:
-        return
-    uart = proof.get("compiledUart2", [])
-    if (proof.get("ioProfile") != "base-fork" or len(uart) != 1
-            or uart[0].get("path") != "/serial@ff4c0000"
-            or uart[0].get("status") != "disabled" or uart[0].get("enabled") is not False):
-        raise ValueError("Base-fork requires its exact compiled UART2-disabled ABI proof")
+    if io_profile not in ('carrier', 'base-fork'):
+        raise ValueError('Unknown IO profile')
+    if kernel_probe:
+        return  # Kernel-only bootstrap produces proof, not an application image.
+    uart = proof.get('compiledUart2', [])
+    expected_enabled = io_profile == 'carrier'
+    accepted_status = ('okay', 'ok') if expected_enabled else ('disabled',)
+    if (proof.get('ioProfile') != io_profile or len(uart) != 1
+            or uart[0].get('path') != '/serial@ff4c0000'
+            or uart[0].get('status') not in accepted_status
+            or uart[0].get('enabled') is not expected_enabled):
+        state = 'enabled' if expected_enabled else 'disabled'
+        raise ValueError(f'{io_profile} requires its exact compiled UART2-{state} ABI proof; generate a matching kernel probe first')
+    if io_profile == 'carrier':
+        pinmux = proof.get('compiledCarrierPinmux') or {}
+        if (pinmux.get('spi0Node') != '/spi@ff500000'
+                or pinmux.get('spidevNode') != '/spi@ff500000/spidev@0'
+                or pinmux.get('pins') != [[1,16,4],[1,17,4],[1,18,6]]
+                or pinmux.get('resetMisoConflict') is not False
+                or pinmux.get('requiredRuntimeHz') != 10_000_000
+                or type(pinmux.get('compiledMaximumHz')) is not int
+                or pinmux['compiledMaximumHz'] < 10_000_000):
+            raise ValueError('Carrier requires compiled SPI0/pinmux proof; regenerate kernel ABI validation')
 
 def stage_lcd_inputs(staged, add):
     source = staged / "_lcd_vendor_inputs"
@@ -143,8 +159,8 @@ def stage(output, variant="production", kernel_probe=False, memory_profile="none
         proof_name = "image-sdk-kernel-abi-development-validation.json" if variant == "dev" and not kernel_probe else "image-sdk-kernel-abi-validation.json"
         if memory_profile == "zram16-lzo" and not kernel_probe:
             proof_name = "image-sdk-kernel-abi-development-zram-validation.json" if variant == "dev" else "image-sdk-kernel-abi-zram-validation.json"
-        if io_profile == "base-fork" and not kernel_probe:
-            proof_name = proof_name.replace("-validation.json", "-base-fork-validation.json")
+        if not kernel_probe:
+            proof_name = proof_name.replace("-validation.json", f"-{io_profile}-validation.json")
         proof_bytes = (ROOT / "reverse-engineering/rkaiq" / proof_name).read_bytes()
         validate_memory_proof(json.loads(proof_bytes), memory_profile, kernel_probe)
         validate_io_proof(json.loads(proof_bytes), io_profile, kernel_probe)

@@ -1,8 +1,8 @@
 {
   "title": "Building ShieldSigner with AI",
   "subtitle": "How AI helped design a PCB, model a case and bring a tiny Linux signer to life.",
-  "duration": "20–25 minutes",
-  "asOf": "2026-11-03",
+  "duration": "25 minutes · optional deeper discussion",
+  "asOf": "2026-11-04",
   "slides": [
     {
       "id": "intro",
@@ -26,13 +26,62 @@
         "alt": "Rendered ShieldSigner pill carrier assembly with its large LCD and controls",
         "width": 1568,
         "height": 984
-      }
+      },
+      "seconds": 25
+    },
+    {
+      "id": "signer",
+      "chapter": "Understand the system",
+      "title": "What does a Bitcoin signer do?",
+      "summary": "Review a proposed transaction. Approve a signature.",
+      "points": [
+        "The coordinator prepares the transaction",
+        "The signer displays the transaction details, then signs it after you approve",
+        "The coordinator broadcasts the result"
+      ],
+      "notes": "Start without assuming Bitcoin expertise. Coins are recorded on the network; the device holds or temporarily reconstructs keys that authorize spending. PSBT means partially signed Bitcoin transaction: a package of transaction data and signing metadata. The coordinator can prepare a proposal without having the private keys. The signer must show meaningful outputs and fees for the human to verify. SeedSigner exchanges this information through QR codes; the coordinator then collects signatures and broadcasts. A QR air gap changes the transport, but untrusted inputs and misleading transaction information still need validation. A seed is a backup secret, not a picture to project during this talk.",
+      "visual": "signing-flow",
+      "sources": [
+        {
+          "label": "SeedSigner: QR signing model",
+          "url": "https://github.com/SeedSigner/seedsigner"
+        }
+      ],
+      "seconds": 65
+    },
+    {
+      "id": "lineage",
+      "chapter": "Understand the system",
+      "title": "From SeedSigner to ShieldSigner",
+      "summary": "What we inherited, adapted and built.",
+      "points": [
+        "SeedSigner: Python signing application",
+        "ShieldSigner: Luckfox and smartcard adaptations",
+        "This project: carrier, case and integration"
+      ],
+      "notes": "Credit the lineage before discussing AI. SeedSigner provides the original application, QR workflow and Raspberry Pi hardware ecosystem. ShieldSigner adapts the project toward Luckfox and smartcards. Our work builds on those contributors, the pinned application and kdmukai’s portable LVGL screens. The custom 2.8-inch pill carrier and enclosure are new design work; the demonstrated device is the existing 240×240 bench. Distinguish reuse, adaptation and original integration. AI helped navigate these boundaries and build repeatable tools; it did not invent the Bitcoin protocol or replace the upstream signing implementation.",
+      "visual": "lineage",
+      "sources": [
+        {
+          "label": "SeedSigner",
+          "url": "https://github.com/SeedSigner/seedsigner"
+        },
+        {
+          "label": "ShieldSigner fork",
+          "url": "https://github.com/3rdIteration/seedsigner"
+        },
+        {
+          "label": "Current project scope",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/FIRMWARE-STATUS.md"
+        }
+      ],
+      "seconds": 40
     },
     {
       "id": "trust",
       "chapter": "Why build?",
-      "title": "Trust across the whole system",
-      "summary": "A signer is one part of a system.",
+      "title": "Where trust enters the system",
+      "summary": "Keys, software, hardware, distribution and recovery.",
       "points": [
         "Seed generation",
         "Device + distribution",
@@ -45,13 +94,14 @@
           "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/WALLET-BACKUPS.md"
         }
       ],
-      "visual": "multisig"
+      "visual": "multisig",
+      "seconds": 35
     },
     {
       "id": "incidents",
       "chapter": "Why build?",
-      "title": "Two failures. Different boundaries.",
-      "summary": "2026: entropy and physical distribution.",
+      "title": "Two hardware-wallet incidents",
+      "summary": "Different failures in seed generation and device distribution.",
       "points": [
         "July: weakened seed generation",
         "October: reseller hardware implants",
@@ -72,38 +122,293 @@
           "url": "https://support.ledger.com/article/Ledger-s-Response-to-the-Hardware-Implant-Attack"
         }
       ],
-      "visual": "incidents"
+      "visual": "incidents",
+      "seconds": 40
     },
     {
       "id": "multisig",
       "chapter": "Why build?",
-      "title": "2 of 3 — with independent keys",
-      "summary": "Diversity has to reach the secrets.",
+      "title": "Multi-vendor multisig",
+      "summary": "An experimental signer can participate without controlling the wallet.",
       "points": [
-        "Three distinct seeds",
-        "Test every signing pair",
-        "Keep the descriptor + recovery plan"
+        "Spread trust across vendors and implementations",
+        "One compromised signer cannot spend on its own",
+        "Keep a recovery path without the experimental device"
       ],
-      "notes": "A 2-of-3 wallet can tolerate one unavailable signer, and one exposed key alone should not satisfy its threshold. That depends on genuinely distinct seeds: loading one seed into three devices does not create three independent secrets. Different vendor names do not guarantee independent code, entropy paths or purchasing channels. Shared reseller handling and compromised coordinator/address verification can still correlate failures. A descriptor, cosigner information and tested recovery procedure matter alongside seed backups. Demonstrate this with disposable public fixtures, never audience funds or a projected secret.",
+      "notes": "The audience already understands the threshold; spend this slide on why the signers should differ. A hypothetical 2-of-3 arrangement can combine two established signers from different vendors with an experimental ShieldSigner, each holding an independently generated key. If only the experimental key is exposed, it cannot authorize a spend. If the prototype is unavailable, the other two can still sign, provided they remain available and the wallet configuration is retained. Compared with placing sole authority in that experimental device, this limits the consequences of its failure or compromise. It is not a blanket claim that any multisig arrangement is safer than every single-signer setup: correlated dependencies, compromised wallet setup, misleading addresses, operational mistakes and backup loss still matter. Verify the policy and receive/change addresses using independently trusted devices, review transactions there, retain the descriptor and test recovery. Vendor names alone do not establish implementation independence; the following library slide explains shared dependencies. This is an architecture argument, not a report of a qualified or funded ShieldSigner deployment. The next step for this prototype is practice with disposable keys and every signing pair, not assigning it sole custody.",
       "sources": [
         {
           "label": "Practice multisig and missing-key recovery",
           "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/MULTISIG-PRACTICE.md"
+        },
+        {
+          "label": "BIP129: secure setup across vendors",
+          "url": "https://github.com/bitcoin/bips/blob/master/bip-0129.mediawiki"
         }
       ],
-      "visual": "multisig"
+      "visual": "vendor-multisig",
+      "seconds": 45
+    },
+    {
+      "id": "software",
+      "chapter": "Understand the system",
+      "title": "The SeedSigner software stack",
+      "summary": "How the application, libraries, UI and drivers fit together.",
+      "points": [
+        "Application policy stays above the libraries",
+        "Bitcoin parsing and cryptography are different layers",
+        "UI, QR and drivers have their own interfaces"
+      ],
+      "notes": "Follow the three branches from the application: Bitcoin data and signing, camera and QR input, and screen rendering and user input. embit handles Bitcoin structures and operations; its cryptographic backend performs lower-level curve operations. QR readers supply decoded data to the application. Linux and board drivers support all hardware-facing services. The diagram describes responsibilities and connections; the dedicated camera and UI sections explain our implementations.",
+      "visual": "software-blocks",
+      "sources": [
+        {
+          "label": "Upstream PSBT parser imports embit",
+          "url": "https://github.com/SeedSigner/seedsigner/blob/dev/src/seedsigner/models/psbt_parser.py"
+        },
+        {
+          "label": "Upstream dependency manifest",
+          "url": "https://github.com/SeedSigner/seedsigner/blob/dev/requirements.txt"
+        },
+        {
+          "label": "Our process and UI architecture",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/firmware/lvgl-app/docs/ARCHITECTURE.md"
+        },
+        {
+          "label": "embit backend selection",
+          "url": "https://github.com/diybitcoinhardware/embit/blob/master/src/embit/util/secp256k1.py"
+        }
+      ],
+      "hub": "SeedSigner Controller · Views · models",
+      "hubDetail": "Review policy · navigation · signing orchestration",
+      "lanes": [
+        {
+          "label": "Bitcoin data → signatures",
+          "blocks": [
+            {
+              "title": "embit",
+              "interface": "PSBT · descriptors · derived keys",
+              "role": "Provides Bitcoin transaction, PSBT, descriptor and key-handling functions.",
+              "connection": "The application calls embit to interpret Bitcoin data, derive keys and create signatures."
+            },
+            {
+              "title": "Cryptographic backend",
+              "interface": "Curve operations · hashes",
+              "role": "Performs the low-level elliptic-curve operations used for public keys and signatures.",
+              "connection": "embit calls a cryptographic backend selected for its runtime environment."
+            }
+          ]
+        },
+        {
+          "label": "Camera → application data",
+          "blocks": [
+            {
+              "title": "QR and animated formats",
+              "interface": "Frames → bytes → complete payload",
+              "role": "Reads QR codes and assembles animated sequences into a complete payload.",
+              "connection": "Camera frames go to the QR decoder; decoded bytes go to the application’s format handlers."
+            },
+            {
+              "title": "Camera acquisition",
+              "interface": "Sensor / ISP → grayscale frames",
+              "role": "Captures images for the preview and QR scanning.",
+              "connection": "Sensor and ISP drivers provide frames to the camera service, which passes them to the preview and QR decoder."
+            }
+          ]
+        },
+        {
+          "label": "Screen ↔ user decisions",
+          "blocks": [
+            {
+              "title": "Screen rendering",
+              "interface": "Screen contracts ↔ typed events",
+              "role": "Draws menus, transaction details and QR codes.",
+              "connection": "The application sends screen content to the renderer and receives selections and actions in return."
+            },
+            {
+              "title": "Display and input I/O",
+              "interface": "Pixels · SPI · GPIO events",
+              "role": "Sends pixels to the display and reads button presses.",
+              "connection": "Display drivers use SPI and control GPIOs; input drivers turn switch signals into application events."
+            }
+          ]
+        }
+      ],
+      "foundation": "CPython + Linux + board-specific drivers",
+      "caption": "Parallel branches serve the application. The cryptographic backend sits beneath the Bitcoin library; QR decoding does not replace transaction parsing.",
+      "seconds": 110,
+      "hubRole": "Coordinates navigation, wallet state, transaction review and signing.",
+      "hubConnection": "Calls the Bitcoin library, QR handlers and screen services to carry out the user’s chosen workflow.",
+      "foundationRole": "CPython executes the application. Linux manages processes, memory and access to devices.",
+      "foundationConnection": "Board-specific drivers connect the software services to the camera, display and GPIO hardware."
+    },
+    {
+      "id": "libraries",
+      "chapter": "Understand the system",
+      "title": "Bitcoin libraries and shared dependencies",
+      "summary": "embit, rust-bitcoin and libwally take different approaches.",
+      "points": [
+        "embit · rust-bitcoin · libwally",
+        "APIs and supported features differ",
+        "Shared dependencies need explicit review"
+      ],
+      "notes": "Explain the distinction between a Bitcoin library and a primitive cryptography implementation. embit targets embedded Python/MicroPython applications. rust-bitcoin provides Rust Bitcoin types and serialization. libwally offers C wallet primitives and bindings. These are examples to compare, not three installed alternatives in this firmware and not drop-in replacements. embit can select a libsecp256k1-based backend; libwally includes libsecp sources, and the Rust ecosystem also has secp256k1 bindings. Different languages therefore do not establish independent cryptographic ancestry. Reuse can concentrate expert review and fixes; independent implementations can reduce some common failure modes but require serious testing. An adapter should compare descriptor/address derivation, transaction round trips, signing preimages, valid signatures, and malformed or unsupported inputs. Matching test vectors do not prove complete independence or correctness.",
+      "visual": "libraries",
+      "sources": [
+        {
+          "label": "embit scope and backends",
+          "url": "https://github.com/diybitcoinhardware/embit"
+        },
+        {
+          "label": "rust-bitcoin scope and limitations",
+          "url": "https://github.com/rust-bitcoin/rust-bitcoin"
+        },
+        {
+          "label": "libwally wallet primitives and libsecp sources",
+          "url": "https://github.com/ElementsProject/libwally-core"
+        },
+        {
+          "label": "rust-secp256k1 bindings",
+          "url": "https://github.com/rust-bitcoin/rust-secp256k1"
+        }
+      ],
+      "libraries": [
+        {
+          "name": "embit",
+          "language": "Python / MicroPython",
+          "role": "Embedded Bitcoin data, keys and signing workflows",
+          "boundary": "SeedSigner dependency"
+        },
+        {
+          "name": "rust-bitcoin",
+          "language": "Rust",
+          "role": "Bitcoin types, parsing and serialization",
+          "boundary": "Alternative integration to investigate"
+        },
+        {
+          "name": "libwally",
+          "language": "C + bindings",
+          "role": "Wallet primitives across languages",
+          "boundary": "Alternative integration to investigate"
+        }
+      ],
+      "seconds": 90
+    },
+    {
+      "id": "hardware",
+      "chapter": "Understand the system",
+      "title": "The hardware and its connections",
+      "summary": "From the Raspberry Pi reference build to our Luckfox carrier.",
+      "points": [
+        "A connector shape is not a pinout",
+        "Bus, voltage and geometry must agree",
+        "A new processor is a board + software port"
+      ],
+      "notes": "Follow each connection from the Luckfox Mini. The camera uses the module camera connector. The display uses SPI and control GPIOs; the switches use GPIO inputs. UART connects the SEC1210 smartcard controller to the host, while the controller manages card contacts. The carrier routes power and signals, and the enclosure positions the parts. USB-C is a power input. Use one 5 V power source at a time.",
+      "visual": "hardware-blocks",
+      "sources": [
+        {
+          "label": "Carrier pinout and voltage domains",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/LUCKFOX-PINOUT.md"
+        },
+        {
+          "label": "Module interface audit",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/MODULE-PINOUT-AUDIT.md"
+        },
+        {
+          "label": "Smartcard roles",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/SMARTCARDS.md"
+        },
+        {
+          "label": "Upstream hardware overview",
+          "url": "https://github.com/SeedSigner/seedsigner"
+        }
+      ],
+      "hub": "Luckfox Mini · Linux compute module",
+      "hubDetail": "Our adaptation: Luckfox Mini + microSD boot on a custom 160 × 70 mm carrier",
+      "blocks": [
+        {
+          "title": "Camera",
+          "interface": "Module camera connector → sensor / ISP",
+          "role": "Captures images of QR codes.",
+          "connection": "The SC3336 camera connects to the Luckfox module’s dedicated camera connector and feeds its image-processing pipeline."
+        },
+        {
+          "title": "Display",
+          "interface": "SPI + reset / data-command · 3.3 V logic",
+          "role": "Shows menus, transaction details and QR codes.",
+          "connection": "The eight-pin HOTHMI module receives pixels over SPI, with GPIO signals for command selection and reset."
+        },
+        {
+          "title": "Controls",
+          "interface": "GPIO inputs with pull-ups → switches",
+          "role": "Lets the user navigate, select and confirm actions.",
+          "connection": "Joystick directions, joystick press and three keys connect to GPIO inputs with pull-ups."
+        },
+        {
+          "title": "Smartcard",
+          "interface": "UART ↔ SEC1210 ↔ card contacts",
+          "role": "Provides a contact interface for supported smartcards.",
+          "connection": "The Luckfox communicates over UART with the SEC1210, which handles card power, clock, reset and data through the socket."
+        },
+        {
+          "title": "Power",
+          "interface": "USB-C / optional header → 5 V rail",
+          "role": "Supplies power to the compute module and carrier electronics.",
+          "connection": "USB-C or the two-pin header supplies 5 V; a dedicated regulator supplies the display’s 3.3 V rail. USB-C is power-only."
+        },
+        {
+          "title": "Carrier and enclosure",
+          "interface": "Lands · headers · mounts · clearances",
+          "role": "Routes the electrical connections and holds the assembly in place.",
+          "connection": "PCB headers join the modules; enclosure mounts and spacers position the board, display, controls and camera."
+        }
+      ],
+      "caption": "These are functional connections, not a wiring diagram. Camera connects to the compute module; the carrier routes the display, controls, power and card interface.",
+      "seconds": 110,
+      "reference": "SeedSigner reference: Pi Zero · 240×240 LCD/button HAT · Pi-compatible camera",
+      "hubRole": "Runs Linux and the signing application, booting from microSD.",
+      "hubConnection": "Connects to the display, controls, smartcard interface and power through the carrier, and to the camera through its dedicated camera connector."
+    },
+    {
+      "id": "swaps",
+      "chapter": "Understand the system",
+      "title": "Replacing hardware and software",
+      "summary": "What can change, and what needs to stay compatible.",
+      "points": [
+        "LVGL: a demonstrated screen boundary",
+        "New LCD: driver + wiring + mechanical work",
+        "New Bitcoin library: semantic compatibility work"
+      ],
+      "notes": "Use these three contrasting examples. The LVGL migration demonstrates a replacement through a defined screen/event protocol while preserving the original application’s decisions. A new LCD has a familiar SPI bus but can differ in numbering, controller initialization, dimensions and electrical requirements. Replacing embit is deeper: the adapter must preserve wallet semantics, not just function names. The capability diagram shows possibilities; it does not claim every block has been replaced. Distinguish the working bench, native software checks and unqualified pill first article throughout.",
+      "visual": "swap-contracts",
+      "sources": [
+        {
+          "label": "Screen contracts and architecture",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/firmware/lvgl-app/docs/ARCHITECTURE.md"
+        },
+        {
+          "label": "Actual carrier/bench incompatibility",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/PCB-SOFTWARE-COMPATIBILITY.md"
+        },
+        {
+          "label": "Bitcoin dependency used by upstream",
+          "url": "https://github.com/SeedSigner/seedsigner/blob/dev/requirements.txt"
+        }
+      ],
+      "seconds": 55
     },
     {
       "id": "workflow",
       "chapter": "AI + hardware",
-      "title": "Ask → generate → check → inspect",
-      "summary": "Make each iteration reviewable.",
+      "title": "How I worked with AI",
+      "summary": "I set the direction. AI helped turn it into code, tools and working hardware.",
       "points": [
-        "Pin sources and assumptions",
-        "Automate repetitive edits",
-        "Measure the result"
+        "Start with a concrete change",
+        "Keep the result easy to inspect",
+        "Turn repeated work into tools"
       ],
-      "notes": "This is the center of the talk. AI was useful for navigating a large codebase, extracting component pin maps, making repeatable KiCad edits, producing documentation and comparing evidence. It also took wrong turns. The improvement was a tighter procedure: one bounded change, explicit inputs, an inspectable diff, native checks and a rendered view. Delegate independent reading/review tasks while keeping edits and ownership bounded. An attractive rendering or confident answer is not an electrical test.",
+      "notes": "My role was to choose the goals, constraints and tradeoffs, then inspect the results and test the hardware. AI helped read repositories and datasheets, trace connections, edit PCB and enclosure files, port software and write the tools to repeat those edits. The silkscreen example is small enough to follow end to end: start with official artwork, generate native KiCad polygons, render the board and check that the electrical design stayed unchanged. The same pattern scales to moving components, changing case dimensions and iterating camera software. Independent research and review can run in parallel; changes still need clear ownership. When the process wandered, a smaller task and an explicit next test brought it back. Each useful iteration left behind source, a repeatable command and evidence I could review. On the camera and UI, that included running the result on the real board.",
       "sources": [
         {
           "label": "KiCad workflow",
@@ -114,19 +419,21 @@
           "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/PCB-SOFTWARE-COMPATIBILITY.md"
         }
       ],
-      "visual": "workflow"
+      "visual": "workflow",
+      "seconds": 65
     },
     {
       "id": "pcb",
       "chapter": "AI + hardware",
-      "title": "PCB changes you can repeat",
-      "summary": "Nets, footprints and choices have reasons.",
+      "title": "Designing the carrier PCB",
+      "summary": "AI helped connect datasheet research, electrical review and repeatable manufacturing outputs.",
       "points": [
-        "Power and voltage domains",
-        "Exact LCD/header pin order",
-        "BOM + placement stay matched"
+        "Read the datasheets for every major IC and module",
+        "Match KiCad symbol pins and footprint pads to the real part",
+        "Check voltage domains, signal functions and connector order",
+        "Generate matched BOM, placement, Gerber and drill files"
       ],
-      "notes": "Use the PCB image to point at the LCD header, Luckfox header, USB power and card-reader section. The main 0.0.9 review kit has 35 fitted SMT parts across 17 supplier SKUs. It preserves the main always-on electrical topology; the Denver.space artwork was checked separately against the protected electrical tree. Manufacturer land patterns and module drawings matter more than a generic symbol. Native ERC/DRC and schematic parity found no outstanding findings in the recorded checks, but do not establish powered first-article qualification.",
+      "notes": "Start by collecting the manufacturer datasheets and mechanical drawings for the major components: the Luckfox module, LCD, camera, smartcard controller, regulators and connectors. AI helps extract pin tables, supply limits, interface requirements and recommended support circuitry into a reviewable component guide. Check each KiCad symbol pin number, name and electrical type against the datasheet, then follow it through the footprint pad and board net to the physical part. Check connector viewing direction and pin-one orientation as well as signal names. This caught concrete issues: SEC1210 power-output pin types needed correcting, and its output decoupling changed from 100 nF to 1 µF to match the datasheet recommendation. Review voltage domains, module pinmux, bus signals and power paths together. Use scripts for repeatable native edits, then run schematic ERC, PCB DRC, connectivity and schematic-to-PCB parity checks. Generate the BOM with readable values, manufacturer part numbers and supplier references, the CPL pick-and-place file, and Gerbers and drill files from the same revision. Keep DNP choices and assembly rotations explicit. The main review kit has 35 fitted SMT parts across 17 supplier SKUs. Automated checks and a manufacturing package still require a physical first article to qualify assembly, fit and powered operation.",
       "sources": [
         {
           "label": "Order readiness",
@@ -135,6 +442,14 @@
         {
           "label": "Component and net audit",
           "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/MODULE-PINOUT-AUDIT.md"
+        },
+        {
+          "label": "Component roles, datasheets and pad/net usage",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/COMPONENTS.md"
+        },
+        {
+          "label": "Repeatable KiCad checks and fabrication exports",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/KICAD.md"
         }
       ],
       "visual": "pcb",
@@ -143,19 +458,83 @@
         "alt": "Straight-on main ShieldSigner carrier PCB top view with routing and silkscreen",
         "width": 2800,
         "height": 1400
-      }
+      },
+      "seconds": 75,
+      "caption": "Datasheets → pin and pad audit → checked design → manufacturing package. Scripted edits and exports make revisions repeatable and keep the parts list and placement files tied to the same PCB revision."
+    },
+    {
+      "id": "tscircuit",
+      "chapter": "AI + hardware",
+      "title": "Porting the board to tscircuit",
+      "summary": "TypeScript could make tscircuit a more AI-native PCB tool in the future. I still prefer KiCad today.",
+      "points": [
+        "Components and connections expressed in TypeScript",
+        "Seven sheets, editable silk and 3D models",
+        "Check footprints and electrical connections"
+      ],
+      "notes": "Show a concrete AI iteration: the first port reproduced appearance using imported native geometry and copper, which was useful for comparison but not idiomatic source authoring. The rebuilt version uses semantic tscircuit primitives, functional sheets, local footprints and assets, and fresh built-in autorouting. Compare 190 physical lands within 0.005 mm and electrical partitions in both directions, then run placement, shorts and routing-style checks. That establishes specific software evidence, not hardware qualification or equal routed copper. This example demonstrates tool translation; KiCad remains the native reference and preferred workflow. There are recorded upstream core/schema incompatibilities and unresolved generic-header part-selection warnings; do not claim a perfect exporter or production-ready new layout. The longer-term possibility is a more AI-native PCB workflow: components, connections and layout are expressed in TypeScript, giving AI familiar source code to read, edit and review with normal diffs. That is a promising direction rather than a claim that tscircuit is already a more mature PCB editor.",
+      "visual": "port-proof",
+      "sources": [
+        {
+          "label": "Source-authored tscircuit entry",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/src/PillCarrier.tsx"
+        },
+        {
+          "label": "Method, checks and limitations",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/PORT-STATUS.md"
+        },
+        {
+          "label": "Independent comparison",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/scripts/check-pill-native-parity.py"
+        }
+      ],
+      "seconds": 65
+    },
+    {
+      "id": "case",
+      "chapter": "AI + hardware",
+      "title": "Designing the enclosure in OpenSCAD",
+      "summary": "OpenSCAD creates 3D models from code: shapes, dimensions and operations.",
+      "points": [
+        "Combine shapes; subtract holes and openings",
+        "Use parameters for walls, clearances and mounting posts",
+        "Change the code, preview the model, export parts to print"
+      ],
+      "notes": "OpenSCAD is a code-based 3D CAD tool. You describe solids such as boxes and cylinders, position them with transforms, and combine or subtract them. A case wall can begin as an outer box with an inner box removed; another cut creates a connector opening. Variables and reusable modules control dimensions and repeated features such as screw posts. Preview the model as you edit, then render and export a mesh for slicing and printing. This gives AI concrete source code to work with and gives us readable diffs and repeatable geometry. For this project, the PCB supplies the outline, mounting holes and component positions; module drawings supply the remaining dimensions. Adjust the case around those constraints, then inspect the complete assembly in the next section. Camera and ribbon models are adjustable envelopes and screw threads are omitted.",
+      "sources": [
+        {
+          "label": "Enclosure and printed fit",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/ENCLOSURE.md"
+        },
+        {
+          "label": "Assembly geometry checks",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/variants/lcd-module-2.8/FIT-MODEL.md"
+        },
+        {
+          "label": "OpenSCAD: the programmers’ solid 3D CAD modeller",
+          "url": "https://openscad.org/"
+        }
+      ],
+      "visual": "case",
+      "image": {
+        "src": "/files/enclosure/previews/exploded.png",
+        "alt": "Exploded digital case assembly with carrier, display and enclosure parts",
+        "width": 850,
+        "height": 481
+      },
+      "seconds": 75
     },
     {
       "id": "assembly",
       "chapter": "AI + hardware",
-      "title": "Model the whole assembly",
-      "summary": "Off-the-shelf modules. Deliberate interfaces.",
+      "title": "Does the complete assembly fit?",
+      "summary": "Bring the PCB, modules and enclosure together to inspect the fit.",
       "points": [
-        "Modules modelled from drawings",
-        "Headers, spacers and mating depths",
-        "Check access before printing"
+        "Inspect header heights and mating depths",
+        "Look for collisions and blocked connectors",
+        "Use the model to plan a printed fit test"
       ],
-      "notes": "The goal was basic final assembly rather than handling a raw LCD ribbon on a custom board. The selected HOTHMI module uses eight pins, but ST7789 alone does not define a compatible pinout. The carrier header numbering reverses the vendor drawing, so orientation needs explicit checking. The main board keeps backlight enable always on. Optional dedicated PWM is a separate unpromoted candidate. A matched BOM/CPL and supplier preview are separate from soldering and continuity evidence; the current stock/readiness guide is the authority for an actual order.",
+      "notes": "Now inspect the result of the PCB and enclosure work together. Rotate the assembled model, open the exploded view, and use PCB assembly and transparent case-fit modes to inspect interfaces. Check that display and Luckfox headers mate at the intended depth, spacers support the stack, and connectors and buttons remain accessible. Look at camera placement and cable clearance. If a header makes the case too thick or an opening is blocked, return to the PCB or case parameters and regenerate. A digital model helps identify problems before printing; a printed fit sample and real purchased components are still needed to verify tolerances. Finish the hardware story here, then move on to the camera and UI software.",
       "sources": [
         {
           "label": "Modular assembly",
@@ -172,48 +551,20 @@
         "alt": "Rendered carrier back showing the smartcard socket, power connector and module mounting",
         "width": 1568,
         "height": 984
-      }
-    },
-    {
-      "id": "case",
-      "chapter": "AI + hardware",
-      "title": "An enclosure defined in code",
-      "summary": "Change dimensions. Regenerate parts. Check the fit.",
-      "points": [
-        "Parametric OpenSCAD source",
-        "Printable parts and service access",
-        "Regenerate and check fit"
-      ],
-      "notes": "Walk through the assembled and exploded models. A board may be electrically plausible while a header stack makes the case too thick, a connector collides or the camera cable needs an impossible bend. Model the purchased modules as documented envelopes, keep millimetres explicit, and compare mating geometry rather than eyeballing screenshots. The camera/ribbon models are adjustable envelopes and screw threads are omitted. Export and import behavior was itself an iteration target. A printed fit sample and real purchased parts remain necessary.",
-      "sources": [
-        {
-          "label": "Enclosure and printed fit",
-          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/ENCLOSURE.md"
-        },
-        {
-          "label": "Assembly geometry checks",
-          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/variants/lcd-module-2.8/FIT-MODEL.md"
-        }
-      ],
-      "visual": "case",
-      "image": {
-        "src": "/files/enclosure/previews/exploded.png",
-        "alt": "Exploded digital case assembly with carrier, display and enclosure parts",
-        "width": 850,
-        "height": 481
-      }
+      },
+      "seconds": 70
     },
     {
       "id": "camera",
-      "chapter": "Software, briefly",
-      "title": "Pixels without the vendor userspace stack",
-      "summary": "Rust camera control. Native QR decoding.",
+      "chapter": "AI + firmware",
+      "title": "Controlling the camera in Rust",
+      "summary": "AI helped investigate the vendor interfaces and build a camera service we could inspect and change.",
       "points": [
-        "SC3336 + Linux ISP interfaces",
-        "Grayscale pixels → ZXing-C++",
-        "Original QR assembly stays in Python"
+        "Trace sensor and image-processing controls",
+        "Implement exposure, white balance and frame delivery",
+        "Inspect captures and test each change on hardware"
       ],
-      "notes": "Keep this brief: it became a substantial side project. The Rust camera path controls the sensor/ISP through existing Linux interfaces and does not call the vendor RKAIQ userspace library. It still depends on Linux drivers and the Luckfox/Rockchip SDK; this is not a Linux-free design or complete RKAIQ parity claim. The decoder is a native ZXing-C++ worker, not a QR algorithm rewritten in Rust. Direct grayscale avoids a needless JPEG round trip and preserves binary QR payloads; the application handles animated-format assembly.",
+      "notes": "Bridge from physical fit to software: even with the camera connected, the application needs correctly exposed frames it can decode. AI helped investigate the vendor interfaces, implement a Rust camera service and iterate against images and QR tests on the real camera. The useful loop was inspect a capture, identify a specific problem, change the implementation and test again. Exposure, white balance and the frame path mattered more than a successful build. The service uses existing Linux sensor and ISP drivers without calling the RKAIQ userspace library; this is not complete RKAIQ parity or a Linux-free design. ZXing-C++ is the existing QR decoder. It consumes grayscale frames directly, avoiding an unnecessary JPEG conversion, and returns bytes for the Python application to assemble and interpret. The next section addresses how the application displays its interface. Keep QR decoder selection for the next slide: this section ends at delivering usable camera frames.",
       "sources": [
         {
           "label": "Current firmware layers and scope",
@@ -224,19 +575,48 @@
           "url": "https://github.com/lightningspore/shieldsigner-dev/tree/main/firmware/rkaiq-rs"
         }
       ],
-      "visual": "camera"
+      "visual": "camera",
+      "seconds": 50
+    },
+    {
+      "id": "qr-decoder",
+      "chapter": "AI + firmware",
+      "title": "Replacing ZBar with ZXing-C++",
+      "summary": "Another AI-assisted library swap: preserve the decoded bytes, change the reader.",
+      "points": [
+        "Compare readers on identical camera frames",
+        "Adapt the grayscale input and binary-byte output",
+        "Keep animated QR assembly in the application"
+      ],
+      "notes": "The existing app used ZBar through pyzbar. AI helped build decoder comparisons, investigate preprocessing, cross-compile ZXing-C++ and connect the native worker to the app. The shared pipeline tried a raw frame, a center crop and finally local thresholding. On the same four saved VGA camera frames, repeated six times each, both pipelines reached 24/24 matching reads. ZXing succeeded on the raw frames; ZBar needed the final threshold stage. Median complete prototype pipeline time was 35.1 ms for ZXing and 174.8 ms for ZBar. This includes preprocessing, process startup and I/O, with capture stopped; it is not live app FPS or a universal decoder ranking. The final threshold helper uses ZXing’s HybridBinarizer, so the successful ZBar pipeline also depends on that preprocessing component. Binary fixtures passed 9/9 for each reader, including NUL and all 256 byte values. The adaptation must preserve bytes rather than force text decoding. Python continues to assemble animated QR formats and interpret application payloads. The QR algorithm itself was not rewritten in Rust.",
+      "sources": [
+        {
+          "label": "Decoder investigation, comparison table and limits",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/firmware/rkaiq-rs/README.md"
+        },
+        {
+          "label": "Recorded successful-pipeline comparison",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/reverse-engineering/rkaiq/qr-successful-pipeline-comparison.json"
+        },
+        {
+          "label": "Current camera and QR integration",
+          "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/FIRMWARE-STATUS.md"
+        }
+      ],
+      "visual": "qr-decoder",
+      "seconds": 55
     },
     {
       "id": "lvgl",
-      "chapter": "Software, briefly",
-      "title": "LVGL draws. Python still signs.",
-      "summary": "Move presentation without rewriting wallet logic.",
+      "chapter": "AI + firmware",
+      "title": "Moving the interface to LVGL",
+      "summary": "Build on Keith’s longstanding work bringing SeedSigner’s interface to LVGL for microcontrollers.",
       "points": [
-        "Native C/C++ screen renderer",
-        "Pinned Python Controller + models",
-        "Measure the whole workload"
+        "LVGL provides graphics and widgets for embedded devices",
+        "Adapt Keith’s screens to the Luckfox Linux platform",
+        "Use AI to integrate, test behavior and investigate memory"
       ],
-      "notes": "Credit kdmukai’s portable LVGL screen work, SeedSigner and ShieldSigner. This migration reuses their work rather than claiming a new wallet implementation. The tested development image booted with usable LVGL UI and camera scanning. The post-cleanup host suite passed 245 tests. In one packaged-cache comparison Python private anonymous RAM plus logical swap measured 11,012 KiB at Home and 13,576 KiB during scan; these exclude camera, QR and renderer processes. Leave object-by-object details for questions. Pillow still has active still-image/entropy consumers.",
+      "notes": "Keith (kdmukai) has longstanding work porting SeedSigner interfaces to LVGL for microcontrollers. Make that foundation explicit before describing our contribution. LVGL supplies embedded graphics and widgets. We adapted Keith’s screen work to the Luckfox Linux platform and connected it to the existing Python application. AI helped map screen contracts, integrate the native renderer, preserve input/navigation behavior, audit dependencies and measure memory. The Python Controller and models still manage application and wallet logic. The tested development image booted with usable menus and camera scanning on the standard bench hardware. Memory comparisons must account for the same workload and all processes, including Python, the camera, QR worker and renderer. Pillow still has still-image and entropy consumers. Credit SeedSigner, ShieldSigner and Keith’s portable screens; this is adaptation and integration built on their work. The next slide demonstrates those pieces together.",
       "sources": [
         {
           "label": "Current architecture",
@@ -249,21 +629,26 @@
         {
           "label": "kdmukai LVGL screens",
           "url": "https://github.com/kdmukai/seedsigner-lvgl-screens"
+        },
+        {
+          "label": "Keith’s SeedSigner MicroPython builder",
+          "url": "https://github.com/kdmukai/seedsigner-micropython-builder"
         }
       ],
-      "visual": "lvgl"
+      "visual": "lvgl",
+      "seconds": 50
     },
     {
       "id": "demo",
-      "chapter": "Show the iteration",
-      "title": "One visible loop",
-      "summary": "Inspect the board. Rotate the case. Scan public data.",
+      "chapter": "Show it working",
+      "title": "Try the camera and interface together",
+      "summary": "A short demonstration on the working Luckfox bench device.",
       "points": [
-        "PCB top / bottom",
-        "Assembled / exploded model",
-        "Public QR only"
+        "Navigate the LVGL menus with the buttons",
+        "Open the camera and scan a public test QR",
+        "Return to the menu and repeat the scan"
       ],
-      "notes": "Suggested live sequence: open the PCB faces, rotate the enclosure model, then show a public-QR scan if the prepared bench is available. Do not project a seed, recovery phrase, wallet QR or private camera frame. Have the static assembly images as fallback. Be explicit that the working bench is a standard 240×240 display/button board; it is not the new 2.8-inch carrier. If the live device fails, name the observed failure and continue with recorded scope rather than claiming the demo passed.",
+      "notes": "The PCB and enclosure have already been shown; use this section to demonstrate the firmware behavior just discussed. On the prepared Luckfox bench device, navigate the LVGL interface, enter camera scanning, scan a non-secret public test QR in a format the app supports, then leave and enter the scanner again. Explain what is visible rather than claiming broader wallet coverage from a QR scan. The bench uses the standard 240×240 display/button board; the new 2.8-inch carrier still needs first-article qualification. If the device is unavailable, explain the recorded test scope using the linked firmware status rather than presenting the case render as working hardware. Keep seeds, recovery phrases and private wallet data off the projector.",
       "sources": [
         {
           "label": "Firmware test scope",
@@ -275,18 +660,13 @@
         }
       ],
       "visual": "demo",
-      "image": {
-        "src": "/files/enclosure/previews/assembled.png",
-        "alt": "Public digital rendering of the assembled ShieldSigner enclosure",
-        "width": 850,
-        "height": 481
-      }
+      "seconds": 90
     },
     {
       "id": "verification",
       "chapter": "What we learned",
-      "title": "A pass needs a boundary",
-      "summary": "Source checks, rendered views and hardware answer different questions.",
+      "title": "What we have verified",
+      "summary": "Software checks, bench results and remaining carrier tests.",
       "points": [
         "Native checks + provenance",
         "Continuity + rails + actual pinmux",
@@ -303,13 +683,14 @@
           "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/FIRMWARE-ARTIFACTS.md"
         }
       ],
-      "visual": "verification"
+      "visual": "verification",
+      "seconds": 65
     },
     {
       "id": "cost",
       "chapter": "First article",
-      "title": "Roughly $100 is a planning number",
-      "summary": "Historical estimates — not a fresh quote.",
+      "title": "Estimated build cost: about $100",
+      "summary": "Earlier estimates, with shipping and other exclusions.",
       "points": [
         "Earlier five-PCB quote basis",
         "Modules + carrier + printed case",
@@ -326,13 +707,14 @@
           "url": "https://github.com/lightningspore/shieldsigner-dev/blob/main/docs/SELF-ASSEMBLY.md"
         }
       ],
-      "visual": "cost"
+      "visual": "cost",
+      "seconds": 30
     },
     {
       "id": "next",
       "chapter": "Next",
-      "title": "Build the first carrier",
-      "summary": "Make the next iteration easier to inspect and repeat.",
+      "title": "Next: assemble and test the carrier",
+      "summary": "Check the real board, fit the case and verify the complete workflow.",
       "points": [
         "Qualify the carrier first article",
         "Practice recovery with disposable keys",
@@ -373,7 +755,9 @@
           "url": "https://denver.space/assets/branding/Logos/TheSpace_Logos_Full_3.webp"
         }
       ],
-      "visual": "closing"
+      "visual": "closing",
+      "seconds": 35
     }
-  ]
+  ],
+  "revision": "02"
 }

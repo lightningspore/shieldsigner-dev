@@ -44,7 +44,7 @@ archive of the static document root and Caddy/container deployment files.
   PDFs, matching fabrication kits and enclosure models.
 - `/healthz` is a generated JSON file with hosting mode, version and source revision.
 - `/talk/` is the illustrated presentation: reading mode, fullscreen/keyboard
-  presentation mode, source links, presenter notes, a 2-of-3 threshold example
+  presentation mode, source links, presenter notes, a multi-vendor multisig example
   and the existing assembly viewer. Its model loads when the section is visible.
 
 Edit presentation content in `knowledge/talk.json`, layout in
@@ -56,6 +56,19 @@ at the selected section, and URL fragments preserve section links. `Fullscreen`
 is optional; normal presentation mode works without that browser API. Print
 styles keep sections separate. The bench demo segment is a presenter handoff;
 no video or live camera feed is implied by the static case rendering.
+
+Draft 02 has 21 sections, with roughly 21 minutes of speaking cues and room for
+interactive exploration in a 25-minute slot. The introduction explains QR signing,
+project lineage and the software/hardware boundaries before the build examples.
+Expandable block diagrams show interfaces, baseline implementations, replacement
+ideas and compatibility checks; the processor/application and OS blocks expand too.
+Page 6 explains vendor diversity and the limited authority of an experimental
+cosigner rather than reteaching the threshold. The library comparison separates
+embit, rust-bitcoin and libwally from their
+cryptographic backends. Labels distinguish demonstrated bench changes from design
+candidates and integration exercises. KiCad remains the preferred design tool; the
+tscircuit translation is a separate AI-assisted case study. Source links and
+presenter notes accompany every section. Block details work without JavaScript.
 
 ```sh
 UI_BASE_URL=http://127.0.0.1:8030 mise run ui:talk

@@ -89,7 +89,7 @@
 .talk-renderer p { margin:0; font-size:16px; }
 .talk-renderer>span { display:block; font-size:35px; color:var(--lime); margin:12px 0; }
 .talk-demo-links { display:flex; flex-wrap:wrap; gap:12px 25px; margin-top:20px; font-size:15px; color:var(--lime); }
-.talk-proof { display:grid; grid-template-columns:70px 1fr; align-items:center; gap:0 18px; margin-top:20px; }
+.talk-proof { display:grid; grid-template-columns:max-content minmax(0,1fr); align-items:center; gap:6px 18px; margin-top:20px; }
 .talk-proof strong { grid-row:span 2; font-size:80px; line-height:1; font-weight:500; color:var(--lime); }
 .talk-proof span { font-size:21px; }
 .talk-proof a { color:var(--muted); font-size:13px; }
@@ -165,3 +165,61 @@ body.talk-presenting .talk-slide-foot { margin-top:20px; }
   .talk-model .enclosure-fallback { display:block!important; }
   .talk-notes { display:none!important; }
 }
+/* Functional diagrams stay readable and expandable without JavaScript. */
+.talk-timing { margin-left:auto; white-space:nowrap; font-size:10px; }
+.talk-software-blocks .talk-body,.talk-hardware-blocks .talk-body { grid-template-columns:minmax(0,.65fr) minmax(0,1.65fr); gap:30px; }
+.talk-block-hub,.talk-block-foundation { padding:16px 18px; border:1px solid var(--lime); background:#1b2515; text-align:center; }
+.talk-block-hub strong { display:block; font-size:21px; font-weight:550; }
+.talk-block-hub span { display:block; color:var(--muted); margin-top:6px; font-size:12px; line-height:1.5; }
+.talk-diagram-instruction { font-size:12px; color:var(--muted); margin:12px 0; }
+.talk-block-lanes { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.talk-bus-label { font:11px/1.5 monospace; color:var(--lime); margin:0 0 12px; min-height:34px; }
+.talk-block { border:1px solid #637155; background:var(--panel); min-width:0; }
+.talk-block summary { padding:14px 12px; cursor:pointer; overflow-wrap:anywhere; }
+.talk-block summary::marker { color:var(--lime); }
+.talk-block summary strong { font-size:16px; font-weight:550; }
+.talk-interface { display:block; margin-top:8px; color:#c7d5ba; font:12px/1.5 monospace; }
+.talk-swap-status { display:inline-block; font-size:10px; line-height:1.5; margin-top:10px; padding:3px 6px; border:1px solid #637155; color:var(--lime); }
+.talk-block dl { margin:0; padding:0 12px 14px; font-size:12px; line-height:1.6; }
+.talk-block dt { font-weight:650; margin-top:10px; color:var(--lime); }
+.talk-block dd { margin:3px 0 0; color:#d3d9cb; }
+.talk-block-arrow { text-align:center; color:var(--lime); font-size:24px; margin:4px 0; }
+.talk-block-foundation { margin-top:16px; font-size:13px; color:#c7d5ba; border-color:#637155; }
+.talk-block-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; border-top:2px solid #637155; padding-top:16px; }
+.talk-block-grid>.talk-block { position:relative; }
+.talk-block-grid>.talk-block::before { content:''; position:absolute; height:16px; width:1px; background:#637155; left:50%; top:-17px; }
+.talk-library-list { display:grid; gap:14px; }
+.talk-library-list article { border-left:3px solid var(--lime); padding:8px 18px; }
+.talk-library-list small { font:11px monospace; color:var(--lime); }
+.talk-library-list h3 { margin:6px 0; font-size:27px; font-weight:550; }
+.talk-library-list p { margin:0 0 6px; font-size:16px; }
+.talk-library-list span { color:var(--muted); font-size:12px; }
+.talk-shared-dependency { margin-top:18px; padding:15px; background:#1b2515; font-size:14px; line-height:1.6; }
+.talk-shared-dependency p { margin-bottom:0; }
+.talk-port>div { padding:20px; border:1px solid #637155; }
+.talk-port strong,.talk-port span { display:block; }
+.talk-port strong { font-size:29px; font-weight:550; }
+.talk-port span { margin-top:8px; color:var(--muted); font-size:15px; }
+@media(max-width:1100px) { .talk-block-lanes,.talk-block-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:760px) { .talk-block-lanes,.talk-block-grid { grid-template-columns:1fr; } .talk-block-lane+.talk-block-lane { margin-top:18px; } .talk-bus-label { min-height:0; } .talk-timing { font-size:9px; } }
+@media print { .talk-block,.talk-block-hub,.talk-block-foundation,.talk-shared-dependency { background:white; color:#111; border-color:#555; } .talk-interface,.talk-swap-status,.talk-block-hub span,.talk-block dd,.talk-block dt { color:#111; } }
+.talk-block-hub summary,.talk-block-foundation summary { cursor:pointer; }
+.talk-block-hub summary::marker,.talk-block-foundation summary::marker { color:var(--lime); }
+.talk-block-hub p,.talk-block-foundation p { text-align:left; font-size:13px; line-height:1.65; color:#d3d9cb; }
+.talk-reference { margin:0 0 14px; color:#c7d5ba; font:12px/1.6 monospace; }
+.talk-block-grid { align-items:start; }
+.talk-vendor-signers { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:24px 0; }
+.talk-vendor-signers article { padding:22px 14px; border:1px solid #637155; }
+.talk-vendor-signers small { color:var(--lime); font:10px monospace; }
+.talk-vendor-signers strong { display:block; font-size:23px; font-weight:550; margin:14px 0; overflow-wrap:anywhere; }
+.talk-vendor-signers span { color:var(--muted); font-size:13px; line-height:1.6; }
+.talk-vendor-signers .talk-experimental { border-style:dashed; }
+@media(max-width:760px) { .talk-vendor-signers { grid-template-columns:1fr; } .talk-vendor-signers article { padding:16px; } .talk-vendor-signers strong { margin:8px 0; } }
+
+/* Equal preview frames; preserve each drawing's proportions. */
+.talk-port-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.talk-port-gallery figure { margin:0; min-width:0; }
+.talk-port-gallery figure>a { display:block; position:relative; aspect-ratio:16 / 9; background:#080c07; border:1px solid var(--line); }
+.talk-port-gallery img { display:block; position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+.talk-port-gallery figcaption { margin-top:7px; color:var(--muted); font:11px/1.5 monospace; }
+@media(max-width:760px) { .talk-port-gallery { grid-template-columns:1fr; } }

@@ -3,6 +3,7 @@
 # dependencies = ["shapely>=2,<3"]
 # ///
 """Extract a pinned KiCad PCB into editable tscircuit component and routing data."""
+import argparse
 import hashlib
 import collections
 import json
@@ -52,10 +53,14 @@ def arc_points(node, steps=36):
     if (mid-start) % (2*math.pi) > span:
         span -= 2*math.pi
     radius = math.hypot(ax-ux, ay-uy)
+    if steps is None: steps = 4*max(1,math.ceil(abs(span)/(8*math.acos(1-.002/radius))))
     return [[ux+radius*math.cos(start+span*i/steps), uy+radius*math.sin(start+span*i/steps)] for i in range(steps+1)]
 
 def main():
-    source = ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--variant', choices=['standard', 'pill'], default='standard')
+    args = parser.parse_args()
+    source = ROOT / ('variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb' if args.variant == 'pill' else 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb')
     source_bytes = source.read_bytes()
     pcb = parse(source_bytes.decode())
     edges, circles = [], []
@@ -63,7 +68,7 @@ def main():
         if not isinstance(node, list) or one(node,'layer') != ['layer','Edge.Cuts']:
             continue
         if node[0] == 'gr_line': edges.append([point(node,'start'),point(node,'end')])
-        elif node[0] == 'gr_arc': edges.append(arc_points(node))
+        elif node[0] == 'gr_arc': edges.append(arc_points(node, None if args.variant == 'pill' else 36))
         elif node[0] == 'gr_circle': circles.append({'center':point(node,'center'),'diameter':2*math.dist(point(node,'center'),point(node,'end'))})
         else: raise ValueError(f'Unhandled board outline primitive: {node[0]}')
     loops = []
@@ -83,10 +88,17 @@ def main():
     ox, oy = (min(xs)+max(xs))/2, (min(ys)+max(ys))/2
     def xy(p): return {'x':round(p[0]-ox,6),'y':round(oy-p[1],6)}
     components, nets = [], collections.defaultdict(list)
+    bridges = []
     for f in children(pcb,'footprint'):
         props = {x[1]:x[2] for x in children(f,'property')}
         at = one(f,'at'); fx,fy = map(float,at[1:3]); theta = math.radians(float(at[3]) if len(at)>3 else 0)
         ref = props['Reference']; pads = []; pins = {}
+        if args.variant == 'pill':
+            for circle in children(f,'fp_circle'):
+                if one(circle,'layer') != ['layer','Edge.Cuts']: continue
+                px,py = point(circle,'center')
+                circles.append({'center':[fx+px*math.cos(theta)+py*math.sin(theta),fy-px*math.sin(theta)+py*math.cos(theta)],
+                                'diameter':2*math.dist(point(circle,'center'),point(circle,'end')), 'reference':ref})
         for i,p in enumerate(children(f,'pad')):
             layers = one(p,'layers')[1:]
             if not any(l in ('F.Cu','B.Cu','*.Cu') for l in layers): continue
@@ -103,13 +115,15 @@ def main():
             size = point(p,'size'); drill = one(p,'drill')
             holes = [float(v) for v in drill[1:] if isinstance(v,str) and re.fullmatch(r'[\d.]+',v)]
             if p[2] == 'np_thru_hole':
-                circles.append({'center':[gx,gy],'diameter':holes[0]})
+                circles.append({'center':[gx,gy],'diameter':holes[0],**({'reference':ref} if args.variant=='pill' else {})})
                 continue
             label = one(p,'pinfunction')
             pins[port] = [f'pad_{pin}_{i+1}', label[1] if label else f'pad_{pin}']
             radius = min(size)*float(one(p,'roundrect_rratio',['_', '0'])[1])
             geometry = box(-size[0]/2,-size[1]/2,size[0]/2,size[1]/2)
-            if p[3] == 'roundrect' and radius:
+            if p[3] == 'circle' or (p[3] == 'custom' and one(one(p,'options'),'anchor') == ['anchor','circle']):
+                geometry = Point(0,0).buffer(size[0]/2,quad_segs=16)
+            elif p[3] == 'roundrect' and radius:
                 geometry = box(-size[0]/2+radius,-size[1]/2+radius,size[0]/2-radius,size[1]/2-radius).buffer(radius,quad_segs=8)
             elif p[3] == 'custom':
                 primitives = []
@@ -123,6 +137,7 @@ def main():
                 if primitives: geometry = unary_union([geometry,*primitives])
             geometry = rotate(geometry,float(pa[3]) if len(pa)>3 else 0,origin=(0,0))
             pads.append({'port':port,'number':pin,'type':p[2],'shape':p[3],
+                         **({'uuid':one(p,'uuid')[1]} if args.variant == 'pill' else {}),
                          'x':round(gx-fx,6),'y':round(fy-gy,6), 'absolute':xy([gx,gy]),
                          'width':size[0],'height':size[1],
                          'rotation':float(pa[3]) if len(pa)>3 else 0,
@@ -130,6 +145,18 @@ def main():
                          'drill':holes,'net':net,
                          'radius':radius,'polygon':[{'x':round(x,6),'y':round(y,6)} for x,y in list(geometry.exterior.coords)[:-1]],
                          'primitives':one(p,'primitives')[1:]})
+        if args.variant == 'pill':
+            for graphic in children(f, 'fp_poly'):
+                layer = one(graphic, 'layer')
+                if layer[1:] not in (['F.Cu'], ['B.Cu']): continue
+                if one(graphic, 'fill') != ['fill', 'yes']: raise ValueError('Unfilled copper graphic')
+                if not one(f, 'net_tie_pad_groups'): raise ValueError(f'Unassociated copper graphic: {ref}')
+                points = []
+                for pt in children(one(graphic, 'pts'), 'xy'):
+                    px, py = map(float, pt[1:])
+                    points.append(xy([fx+px*math.cos(theta)+py*math.sin(theta), fy-px*math.sin(theta)+py*math.cos(theta)]))
+                bridges.append({'reference':ref, 'ports':[p['port'] for p in pads], 'nets':[p['net'] for p in pads],
+                                'layer':'top' if layer[1]=='F.Cu' else 'bottom', 'points':points})
         components.append({'name':ref,'value':props.get('Value',''),'footprint':f[1],
                            'layer':'bottom' if one(f,'layer')[1]=='B.Cu' else 'top',
                            'dnp':'dnp' in one(f,'attr'),
@@ -143,19 +170,30 @@ def main():
                  'width':float(one(s,'width')[1]),'layer':'top' if one(s,'layer')[1]=='F.Cu' else 'bottom'} for s in children(pcb,'segment')]
     vias = [{'net':one(v,'net')[-1], **xy(point(v,'at')), 'outerDiameter':float(one(v,'size')[1]),
              'holeDiameter':float(one(v,'drill')[1])} for v in children(pcb,'via')]
+    layer_names = {'F.Cu':'top','In1.Cu':'inner1','In2.Cu':'inner2','B.Cu':'bottom'}
     fills = []
     for zone in children(pcb,'zone'):
         for polygon in children(zone,'filled_polygon'):
-            fills.append({'net':one(zone,'net')[-1], 'layer':'top' if one(polygon,'layer')[1]=='F.Cu' else 'bottom',
+            fills.append({'net':one(zone,'net')[-1], 'layer':layer_names[one(polygon,'layer')[1]],
                           'points':[xy(list(map(float,p[1:]))) for p in children(one(polygon,'pts'),'xy')]})
-    data = {'source': {'path': str(source.relative_to(ROOT)), 'sha256': hashlib.sha256(source_bytes).hexdigest()}, 'origin':{'x':ox,'y':oy},'width':max(xs)-min(xs),'height':max(ys)-min(ys),
+    if args.variant == 'pill':
+        for graphic in children(pcb,'gr_poly'):
+            layer = one(graphic,'layer')
+            if layer[1:] in (['F.Cu'],['B.Cu']):
+                fills.append({'net':one(graphic,'net')[-1], 'layer':'top' if layer[1]=='F.Cu' else 'bottom',
+                              'points':[xy(list(map(float,pt[1:]))) for pt in children(one(graphic,'pts'),'xy')]})
+    data = {'source': {'path': str(source.relative_to(ROOT)), 'sha256': hashlib.sha256(source_bytes).hexdigest()}, 'origin':{'x':ox,'y':oy},'width':round(max(xs)-min(xs),6),'height':round(max(ys)-min(ys),6),
             'outline':[xy(p) for p in outline[:-1]],
-            'holes':[dict(xy(c['center']),diameter=c['diameter']) for c in circles],
+            'holes':[dict(xy(c['center']),diameter=c['diameter'],**({'reference':c['reference']} if c.get('reference') else {})) for c in circles],
             'cutouts':[[xy(p) for p in loop[:-1]] for loop in loops[1:]],'components':components,
             'nets':[{'name':net_names[n],'label':n,'ports':nets[n]} for n in sorted(nets)],
             'segments':segments,'vias':vias,'fills':fills}
+    if args.variant == 'pill':
+        data['bridges'] = bridges
+        data['copperLayers'] = [layer_names[n[1]] for n in one(pcb,'layers')[1:] if isinstance(n,list) and n[1] in layer_names]
     (ROOT/'src/generated').mkdir(parents=True,exist_ok=True)
-    (ROOT/'src/generated/reference-board.json').write_text(json.dumps(data,indent=2)+'\n')
+    target = ROOT/'src/generated'/('pill-board.json' if args.variant == 'pill' else 'reference-board.json')
+    target.write_text(json.dumps(data,indent=2)+'\n')
     print(f'Extracted {len(components)} components, {len(nets)} nets, {len(segments)} tracks, {len(vias)} vias, {len(fills)} filled polygons.')
 
 if __name__ == '__main__': main()

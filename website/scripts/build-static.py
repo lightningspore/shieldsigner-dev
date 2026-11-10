@@ -1,5 +1,6 @@
 """Render the explicit public content into an ordinary static document root."""
 import json
+import hashlib
 from pathlib import Path
 import shutil
 import sys
@@ -23,7 +24,8 @@ shutil.copytree(SITE/'static', OUT/'static')
 env = Environment(loader=FileSystemLoader(SITE/'templates'), autoescape=select_autoescape(['html','svg']))
 env.filters['pluralize'] = lambda count: '' if count == 1 else 's'
 version = workflows.load('site-version')
-common = dict(site_version=version['version'], site_revision=version['revision'][:7],
+talk_asset_revision = hashlib.sha256((SITE/'static/css/talk.css').read_bytes() + (SITE/'static/js/talk.js').read_bytes()).hexdigest()[:12]
+common = dict(talk_asset_revision=talk_asset_revision, site_version=version['version'], site_revision=version['revision'][:7],
               site_dirty=version['dirty'], site_revision_url='https://github.com/lightningspore/shieldsigner-dev/commit/'+version['revision'])
 paths = []
 

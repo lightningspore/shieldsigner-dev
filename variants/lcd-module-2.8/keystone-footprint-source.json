@@ -1,0 +1,17 @@
+{
+  "provider": "KiCad 10.0.7 official footprint snapshot",
+  "source": "https://gitlab.com/kicad/libraries/kicad-footprints/-/blob/10.0.7/TestPoint.pretty/TestPoint_Keystone_5015_Micro_Mini.kicad_mod",
+  "sourceSha256": "f14e0e7d28a0a75298142634f99f433f44d1ae9130852870e630df717f3bf647",
+  "localFootprintSha256": "ef64d15129afa9df6ccdd2e1ff543096df9165336992b98d398dee951acd24ce",
+  "license": "CC-BY-SA-4.0 with KiCad library exception; existing local library notices retained",
+  "localChanges": [
+    "Local library identity",
+    "Project-local nominal model path"
+  ],
+  "manufacturerDrawing": "https://www.keyelco.com/product-pdf.cfm?p=1353",
+  "padMm": [
+    3.4,
+    1.8
+  ],
+  "manufacturing": "Paste aperture retained; factory SMT"
+}

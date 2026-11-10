@@ -110,7 +110,7 @@ const unsigned int image_extra_layout[]={offsetof(struct isp32_isp_params_cfg,ot
             size = int(re.search(r'pub const BYTES: usize = (\d+)', rust)[1])
             assert extra[index*2:index*2+2] == (offset, size), module
     config_text = args.kernel_config.read_text()
-    config = dict(re.findall(r'^(CONFIG_\w+)=(\S+)$', config_text, re.M))
+    config = dict(re.findall(r'^(CONFIG_\w+)=(.+)$', config_text, re.M))
     for key in re.findall(r'^# (CONFIG_\w+) is not set$', config_text, re.M):
         assert key not in config, 'Conflicting kernel configuration: ' + key
         config[key] = 'n'
@@ -136,6 +136,15 @@ const unsigned int image_extra_layout[]={offsetof(struct isp32_isp_params_cfg,ot
         uart2.append({'path': path, 'status': strings(properties.get('status', b'okay\0'))[0], 'enabled': enabled})
     if args.io_profile == 'base-fork':
         assert len(uart2) == 1 and not uart2[0]['enabled'], 'Base-fork buttons require UART2 disabled in the actual compiled DTB'
+    carrier_pinmux = None
+    carrier_uart = None
+    if args.io_profile == 'carrier':
+        import sys
+        sys.path.insert(0, str(ROOT/'scripts'))
+        from carrier_pinmux import audit_carrier_pinmux,audit_carrier_uart
+        carrier_pinmux = audit_carrier_pinmux(dtb, config)
+        carrier_uart = audit_carrier_uart(dtb, config)
+        assert len(uart2) == 1 and uart2[0]['enabled'], 'Carrier requires UART2 enabled in compiled DTB'
     media = []
     for path, properties in dtb.items():
         compatible = strings(properties.get('compatible', b''))
@@ -183,7 +192,7 @@ const unsigned int image_extra_layout[]={offsetof(struct isp32_isp_params_cfg,ot
     for name in ['isp','cif']:
         assert 'module_param_call(clr_unready_dev,' in drivers['drivers/media/platform/rockchip/'+name+'/dev.c']
     report = {'kind':'image-sdk-kernel-camera-abi-validation','passed':True,'sdkRevision':args.sdk_revision,
-              'kernelVersion':kernel_version,'memoryProfile':args.memory_profile,'ioProfile':args.io_profile,'compiledUart2':uart2,'imageVariant':args.image_variant,'compiledUsbMode':usb_mode,'actualSdkHeaderHashes':headers,
+              'kernelVersion':kernel_version,'memoryProfile':args.memory_profile,'ioProfile':args.io_profile,'compiledUart2':uart2,'compiledCarrierPinmux':carrier_pinmux,'compiledCarrierUart':carrier_uart,'imageVariant':args.image_variant,'compiledUsbMode':usb_mode,'actualSdkHeaderHashes':headers,
               'armCompiledKernelAssertions':len(re.findall(r'_Static_assert\(', source.read_text()))+6,
               'parameterBytes':parameters[0],'awbGainOffset':parameters[1],'awbGainBytes':parameters[2],
               'statisticsLayout':statistics,'additionalIspBlockLayout':extra,'requiredKernelConfig':required,

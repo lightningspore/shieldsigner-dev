@@ -56,6 +56,18 @@ def preflight(root,draft):
     for relative in plan['files']:
         if not relative.startswith('payload/'):raise ValueError('Unexpected payload prefix')
         inside(root,relative.removeprefix('payload/'))
+    if plan.get('displayConfiguration') is not None:
+        if plan['displayConfiguration']!='st7789_320x240' or plan['defaultFrontend']!='lvgl':raise ValueError('Unreviewed image display defaults')
+        template=inside(root,'opt/src/settings.json')
+        if template.exists():raise ValueError('Existing settings template requires review; refusing overwrite')
+        source=inside(draft,'payload/opt/src/settings.json')
+        if json.loads(source.read_text())!={'display_config':plan['displayConfiguration']}:raise ValueError('Display template differs from plan')
+        if plan.get('panelProfile') is not None:
+            if plan['panelProfile']!='hothmi_htm_tft028a16_spi':raise ValueError('Unreviewed physical panel profile')
+            profile=inside(root,'usr/share/shieldsigner-lvgl/panel-profile.json')
+            if profile.exists():raise ValueError('Existing physical panel profile requires review; refusing overwrite')
+            source=inside(draft,'payload/usr/share/shieldsigner-lvgl/panel-profile.json')
+            if json.loads(source.read_text())!={'profile':plan['panelProfile']}:raise ValueError('Physical panel profile differs from plan')
     return root,plan
 
 def apply(root,draft):

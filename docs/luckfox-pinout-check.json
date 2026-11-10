@@ -2,7 +2,7 @@
   "reviewed": "2026-10-31",
   "boards": {
     "released": {
-      "sha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
+      "sha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
       "physicalPins": 22,
       "padInstancesChecked": 44
     },
@@ -24,7 +24,7 @@
     },
     {
       "kind": "documentation_correction",
-      "detail": "LCD_3V3 has four component endpoints including TP803, not three."
+      "detail": "Current service carrier LCD_3V3 has five endpoints including TP803 and TP905; the separate PWM candidate retains four."
     }
   ],
   "remaining": [

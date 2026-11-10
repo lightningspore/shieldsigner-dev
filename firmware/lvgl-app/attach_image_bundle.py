@@ -25,6 +25,7 @@ def attach(camera,draft,output):
     spec=importlib.util.spec_from_file_location('camera_bundle_tools',ROOT/'scripts/prepare-camera-image.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
     original=module.verify(camera);verify_draft(draft)
     plan=json.loads((draft/'integration-plan.json').read_text())
+    if plan.get('displayConfiguration') is not None and original.get('ioProfile')!='carrier':raise ValueError('320x240 carrier display defaults require the carrier pin profile')
     if original.get('kernelProofPending') or original.get('lcdBackend')!='rust' or original.get('memoryProfile')!='zram16-lzo' or original.get('frontendBackend')!='rust':raise ValueError('LVGL draft requires a complete Rust LCD/frontend + zram16 camera bundle')
     if original.get('lvglOverlay') or any(name.startswith('lvgl-overlay/') for name in original['files']):raise ValueError('Camera bundle already has an LVGL layer')
     output.mkdir(parents=True,exist_ok=False)

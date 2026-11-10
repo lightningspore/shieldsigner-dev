@@ -46,7 +46,9 @@ for revision,folder in [('released','lcd-module-2.8'),('candidate','lcd-backligh
   expected_pin='4' if a=='R602' else '5'
   assert next(one(p,'net')[-1] for p in children(fps[a],'pad') if p[1]=='1')==data['pins'][int(expected_pin)-1]['net'][revision]
   assert next(one(p,'net')[-1] for p in children(fps[a],'pad') if p[1]=='2')==next(one(p,'net')[-1] for p in children(fps['U601'],'pad') if p[1]==b)
- assert nets['LCD_3V3']=={'U701.5','C702.1','J701.8','TP803.1'}
+ expected_lcd={'U701.5','C702.1','J701.8','TP803.1'}
+ if revision=='released':expected_lcd.add('TP905.1')
+ assert nets['LCD_3V3']==expected_lcd
  if revision=='candidate':
   assert nets['LCD_PWM']=={'U202.14','JP202.1','R703.1'}
  boards[revision]={'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'physicalPins':22,'padInstancesChecked':count}
@@ -66,7 +68,7 @@ for key,n in [('rst',9),('dc',10)]:
 report={'reviewed':data['reviewed'],'boards':boards,'sdkMuxAlternativesChecked':sum(len(p['alternatives']) for p in data['pins']),
  'gpioNumberingChecked':sum(p['bank'] is not None for p in data['pins']),'appButtonMappingsChecked':len(buttons),'appDisplayGpioMappingsChecked':2,'upstream1v8ButtonTopologyMatches':True,
  'findings':[{'kind':'manufacturer_diagram_discrepancy','detail':'Official Mini GPIO image places SPI0_CS1_M0 on pin 15 / GPIO1_D3. Retained schematic and pinned SDK spi0m0_cs1 assign GPIO1_D2 / physical pin 14. Diagram uses the corroborated pin 14 assignment; neither ShieldSigner revision uses a second SPI CS.'},
- {'kind':'documentation_correction','detail':'LCD_3V3 has four component endpoints including TP803, not three.'}],
+ {'kind':'documentation_correction','detail':'Current service carrier LCD_3V3 has five endpoints including TP803 and TP905; the separate PWM candidate retains four.'}],
  'remaining':['Confirm live GPIO chip identities, device-tree muxes and SPI timing on the final image.','Physical voltage/continuity, module revision and optional BL_E PWM response remain bench checks.']}
 (ROOT/'docs/luckfox-pinout-check.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report,indent=2))

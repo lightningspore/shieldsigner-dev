@@ -1,0 +1,182 @@
+{
+  "source": "datasheets/HOTHMI-HTM-TFT028A16-SPI.pdf",
+  "sha256": "f83b8c12452eb9bd504ea3b6e7fac35ae2564f12ed56d7fd8f638771509fe002",
+  "pages": [
+    17,
+    18,
+    19
+  ],
+  "method": "Extracted manufacturer Panel_initial_code; values visually checked against rendered pages",
+  "resetMinimumMs": [
+    1,
+    10,
+    120
+  ],
+  "commands": [
+    {
+      "command": 17,
+      "data": [],
+      "minimumDelayMs": 120
+    },
+    {
+      "command": 178,
+      "data": [
+        12,
+        12,
+        0,
+        51,
+        51
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 183,
+      "data": [
+        53
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 176,
+      "data": [
+        0,
+        224
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 187,
+      "data": [
+        43
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 192,
+      "data": [
+        44
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 194,
+      "data": [
+        1
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 195,
+      "data": [
+        17
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 196,
+      "data": [
+        32
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 198,
+      "data": [
+        15
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 208,
+      "data": [
+        164,
+        161
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 224,
+      "data": [
+        208,
+        0,
+        5,
+        14,
+        21,
+        13,
+        55,
+        67,
+        71,
+        9,
+        21,
+        18,
+        22,
+        25
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 225,
+      "data": [
+        208,
+        0,
+        5,
+        13,
+        12,
+        6,
+        45,
+        68,
+        64,
+        14,
+        28,
+        24,
+        22,
+        25
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 42,
+      "data": [
+        0,
+        0,
+        0,
+        239
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 43,
+      "data": [
+        0,
+        0,
+        1,
+        63
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 33,
+      "data": [],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 54,
+      "data": [
+        160
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 58,
+      "data": [
+        85
+      ],
+      "minimumDelayMs": 0
+    },
+    {
+      "command": 41,
+      "data": [],
+      "minimumDelayMs": 20
+    }
+  ]
+}

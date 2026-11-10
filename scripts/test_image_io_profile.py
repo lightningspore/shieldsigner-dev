@@ -35,8 +35,8 @@ class ImageIoProfileTests(unittest.TestCase):
                 self.assertEqual(helper.verify(path,receipt,profile),receipt)
                 self.assertEqual(helper.other_models(json.loads(path.read_bytes())),helper.other_models(json.loads(self.original)))
                 display=helper.selected(json.loads(path.read_bytes()))['display']
-                self.assertEqual(display['dc'],['/dev/gpiochip1',24 if profile=='base-fork' else 20])
-                self.assertEqual(display['rst'],['/dev/gpiochip1',25 if profile=='base-fork' else 19])
+                self.assertEqual(display['dc'],['/dev/gpiochip1' if profile=='base-fork' else '/dev/gpiochip-bank1',24 if profile=='base-fork' else 20])
+                self.assertEqual(display['rst'],['/dev/gpiochip1' if profile=='base-fork' else '/dev/gpiochip-bank1',25 if profile=='base-fork' else 19])
                 self.assertEqual(display['spi_hz'],10_000_000)
                 self.assertEqual(display['bl'],'disabled')
 

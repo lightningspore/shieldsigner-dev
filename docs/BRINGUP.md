@@ -170,3 +170,24 @@ The 1.2 mm circular pads are bare copper with solder-mask openings, not componen
 Coordinates and exact net names are recorded in [testpoints.json](../variants/lcd-module-2.8/testpoints.json). Pads lie directly on existing tracks/vias, rather than on added signal stubs. The native checks validate copper clearance and connectivity; actual rail levels, clock edges and card operation still require first-article measurements.
 
 The SEC1210 support cluster moves 17 mm toward the top edge, retaining its relative part positions and local decoupling/damping. C604 remains at the socket-side power route. Longer interconnects are rerouted with ground pours refilled; no pin mapping, module position, mounting hole, socket, USB connector, or purchased component changes. A longer clock path makes edge quality an explicit bring-up check.
+
+## Factory Keystone service loops (0.0.11-dev)
+
+These eight Keystone 5015 / C2906768 parts are fitted by the PCB assembler.
+The existing TP801-TP812 bare probe pads remain separate.
+
+| Reference | Signal | Board side | Use |
+|---|---|---|---|
+| TP901 | +5 V | Front | Current-limited bench injection or input monitoring |
+| TP902 | GND | Front | Bench supply return |
+| TP903 | Host 3.3 V | Rear | Luckfox regulator rail monitoring |
+| TP904 | GND | Rear | Nearby scope/probe return |
+| TP905 | LCD_3V3 | Rear | Dedicated display regulator monitoring |
+| TP906 | GND | Rear | LCD/UART scope return |
+| TP907 | UART_TX | Rear | Host TX into the reader's 100 Ohm series resistor |
+| TP908 | UART_RX | Rear | Host RX from the reader's 100 Ohm series resistor |
+
+Follow the existing staged bring-up sequence. Before injecting power, disconnect
+all USB supplies and verify clip polarity. These contacts do not add reverse
+polarity protection, supply selection or a current rating for a permanent cable.
+Confirm actual clip clearance on the first assembled board.

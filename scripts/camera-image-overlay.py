@@ -345,6 +345,8 @@ exec python3 -u /usr/lib/shieldsigner-camera/python/shieldsigner_integration.py 
         changes.append(root / "etc/init.d/S50usbdevice")
     if io_profile == "base-fork":
         changes.append(root / "etc/init.d/S60pcscd")
+    elif io_resource_receipt is not None:
+        changes.extend(root/name for name in io_resource_receipt.get('files',{}))
     record = {"kind": "shieldsigner-rust-camera-rootfs-install", "version": data["version"],
               "imageVariant": data.get("imageVariant", "production"), "appStartup": app_startup(data),
               "frontendBackend": data.get("frontendBackend", "python"),

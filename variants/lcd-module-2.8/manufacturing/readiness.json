@@ -1,10 +1,10 @@
 {
   "variant": "modular-lcd-2.8",
-  "boardSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
-  "fittedSmtPieces": 35,
-  "catalogLines": 17,
+  "boardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+  "fittedSmtPieces": 43,
+  "catalogLines": 18,
   "bomCplRefsMatch": true,
-  "layers": 2,
+  "layers": 4,
   "thicknessMm": 1.6,
   "originMm": {
     "x": 50,
@@ -16,20 +16,38 @@
   "catalogStockSufficientForFive": false,
   "stockBlockers": [
     {
+      "code": "C2689642",
+      "mpn": "PTS636SK25SMTRLFS",
+      "refs": "SW501,SW502,SW503,SW504,SW505,SW506,SW507,SW508",
+      "requiredInstalled": 40,
+      "canPresaleNumber": 0,
+      "overseasStockCount": 1797,
+      "shortfallBeforeAttrition": 40
+    },
+    {
       "code": "C5417011",
       "mpn": "7312P0225A13LF",
       "refs": "J601",
       "requiredInstalled": 5,
-      "canPresaleNumber": 2,
+      "canPresaleNumber": 0,
       "overseasStockCount": 9,
-      "shortfallBeforeAttrition": 3
+      "shortfallBeforeAttrition": 5
+    },
+    {
+      "code": "C633309",
+      "mpn": "SEC1210/PV-UR2",
+      "refs": "U601",
+      "requiredInstalled": 5,
+      "canPresaleNumber": 0,
+      "overseasStockCount": 0,
+      "shortfallBeforeAttrition": 5
     }
   ],
   "attritionConfirmed": false,
   "stockFieldPolicy": "canPresaleNumber used for standard assembly snapshot; overseasStockCount retained separately, never summed",
   "placementRotationsQualifiedByAssembler": false,
   "status": "stock_review_required",
-  "boardRevision": "0.0.9-dev",
+  "boardRevision": "0.0.11-dev",
   "supplierPreviewForCurrentBoard": false,
   "cartUpdatedForCurrentBoard": false,
   "nativeErcErrors": 0,
@@ -37,7 +55,7 @@
   "nativeUnconnected": 0,
   "nativeParityIssues": 0,
   "dnpCourtyardExclusions": 0,
-  "mechanicalModelsVerified": 22,
+  "mechanicalModelsVerified": 23,
   "limitations": [
     "Physical header/module fit and powered bring-up not tested",
     "LCD, smartcard socket, switch, USB and spacer models are drawing-derived envelopes",
@@ -45,22 +63,24 @@
     "Supplier preview/quote status recorded in supplierPlacementCompensation; final assembler DFM and placement confirmation pending"
   ],
   "files": {
-    "shieldsigner-modular-gerbers.zip": "60a604294a0ddf7b8f1d18d67fbd35e743832d902296cb66e7329c1384c8e9ac",
-    "bom-jlcpcb.csv": "94e9e76f2058dbd5fdea56c022649cb37a1d2b820ff943a17bc2b5b29174e4ab",
-    "cpl-jlcpcb.csv": "66c24509336b04deac2cfbbdd64fc0117898ff4c51b1360b457794343bcdd7aa",
-    "population.csv": "ecdf0e28bf1e133322bc59294279306e35e767bbb55e7df916e5fdb55f8491cf"
+    "shieldsigner-modular-gerbers.zip": "e08ae2c308bfbca4e44ce94d2f7f6d11ddcad1756218d7e0c902cbcd92816c50",
+    "bom-jlcpcb.csv": "fbb39cb97881709a136f6b420c8a2fdcf0085fb74d95173e0e9e7b49e0004f27",
+    "cpl-jlcpcb.csv": "d8b981e803d10e8815e1ab9550d3920a65b25f6191330c7bea640c75cdeb4c4d",
+    "population.csv": "ad4a1663e65249a14f7e88c14a0d965a4a693e8802d4d28e1354186f0a83297b"
   },
   "compatibilityProof": {
-    "file": "branding-audit.json",
-    "sha256": "41fdd803142063f5bafcfa109bfb05913b24f3808657f560463d6189ba23c033",
-    "scope": "Exact protected PCB geometry unchanged by artwork"
+    "file": "serviceability-audit.json",
+    "sha256": "1a6374894a2e64a257c3c359817f8c45886600b4b86da2e2b42ed6d344e62b8d",
+    "scope": "Retained component poses, original tracks and projected schematic connectivity; two standalone GND vias removed"
   },
   "historicalSupplierEvidence": "history/0.0.7-preview/",
   "testPoints": {
+    "factoryKeystone5015": 8,
     "copperOnly": 12,
-    "pasteApertures": 0,
-    "assemblyPlacements": 0,
-    "map": "testpoints.json"
+    "factoryPasteApertures": 8,
+    "assemblyPlacements": 8,
+    "map": "serviceability.json",
+    "barePadMap": "testpoints.json"
   },
   "supplierPlacementCompensation": {
     "file": "placement-review/cpl-corrections.json",
@@ -71,5 +91,12 @@
     ],
     "uploadedCsvPreviewChecked": false,
     "assemblerQualified": false
-  }
+  },
+  "deliveryStage": "first_article_supplier_review",
+  "physicalValidationStage": "after_first_article_delivery_before_repeat_builds",
+  "checkoutReleaseRequires": [
+    "Exact-part sourcing and attrition confirmation",
+    "Supplier panel/tooling and stackup approval",
+    "Current placement/DFM approval and quote"
+  ]
 }

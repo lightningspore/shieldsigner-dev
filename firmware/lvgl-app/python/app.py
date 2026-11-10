@@ -12,11 +12,13 @@ from contextlib import ExitStack,contextmanager
 import signal
 
 def options(argv=None):
+    from hothmi import PROFILE,image_profile
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--app-root',default='/opt/src',type=Path)
     parser.add_argument('--camera-root',default='/usr/lib/shieldsigner-camera/python',type=Path)
     parser.add_argument('--binary',default='/tmp/shieldsigner-lvgl-host',type=Path)
     parser.add_argument('--locale-root',type=Path,help='Verified pinned locale asset directory')
+    parser.add_argument('--panel-profile',choices=[PROFILE],default=image_profile(),help='Physical panel initialization; image profile used when present')
     parser.add_argument('--native-manifest',type=Path,help='Native build manifest; defaults to BINARY.manifest.json')
     parser.add_argument('--settings',required=True,type=Path,help='Separate LVGL settings file; original settings are rejected')
     parser.add_argument('--check',action='store_true',help='Verify source/settings paths without acquiring devices')
@@ -128,7 +130,8 @@ def run_application(args):
     from seedsigner.controller import Controller
     with ExitStack() as stack:
         stack.enter_context(termination_signals())
-        hardware=LuckfoxHardware();stack.callback(hardware.close)
+        hardware=LuckfoxHardware(panel_profile=args.panel_profile) if getattr(args,'panel_profile',None) else LuckfoxHardware()
+        stack.callback(hardware.close)
         runtime=Runtime(str(args.binary),hardware.pixels,hardware.read_buttons,hardware.buttons.update_last_input_time,locale_root=args.locale_root)
         stack.callback(runtime.close)
         stack.callback(install_view_dispatch(runtime,args.app_root,manifest_path()))

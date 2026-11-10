@@ -75,11 +75,13 @@ report = {
             'Establish hidden-pad inspection and rework capability; a working UART alone does not inspect the pad.'
         ]
     },
-    'firstArticleProcessCandidate': {
-        'bottom': 'Reflow the 24 bottom-side parts once with the component side up, subject to every part/paste thermal limits.',
-        'top': 'Then hand-solder the eight accessible switches, SOT-25 LDO and two capacitors with local heat; verify access on a dry fit.',
-        'benefit': 'Avoids requiring a second full-board reflow and inverted heavy socket retention for a one-off build.',
-        'notYetProven': 'Operator/equipment, socket heat limits, USB shell solder fill and actual print/reflow profile.'
+    'factoryAssemblyPlan': {
+        'service': 'JLC Standard double-sided SMT; all 43 placements are factory fitted.',
+        'top': '13 fitted parts, including TP901/TP902 Keystone power loops.',
+        'bottom': '30 fitted parts, including six Keystone rail/UART/GND loops.',
+        'processQualification': 'Supplier must confirm two-sided reflow sequence, heavy socket retention, stencil/paste and actual part thermal limits.',
+        'customerAssembly': 'Only the documented module headers, modules and mechanical hardware; no test-point hand soldering.',
+        'notYetProven': 'Supplier DFM/placement approval, QFN hidden-pad inspection, USB shell solder fill and first-article powered operation.'
     },
     'sources': [
         {'path': 'reference/pdfs/Microchip-AN2089-QFN-assembly.pdf',

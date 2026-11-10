@@ -1,0 +1,207 @@
+{
+  "scope": "Retained hardware datasheets, supplier drawings and application notes; historical alternatives included",
+  "files": [
+    {
+      "file": "AO3400A.pdf",
+      "source": "reference/pdfs/AO3400A.pdf",
+      "sha256": "9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033"
+    },
+    {
+      "file": "C107115.pdf",
+      "source": "https://jlcpcb.com/partdetail/C107115",
+      "catalogCode": "C107115",
+      "catalogMpn": "CC0805JRNPO9BN330",
+      "pages": 23,
+      "sha256": "495287fc811dc714366f2edd3bc974d98d2d80133266a0a73bb01ac01237e3eb",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C149504.pdf",
+      "source": "https://jlcpcb.com/partdetail/C149504",
+      "catalogCode": "C149504",
+      "catalogMpn": "0805W8F1003T5E",
+      "pages": 9,
+      "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C17408.pdf",
+      "source": "https://jlcpcb.com/partdetail/C17408",
+      "catalogCode": "C17408",
+      "catalogMpn": "0805W8F1000T5E",
+      "pages": 9,
+      "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C17414.pdf",
+      "source": "https://jlcpcb.com/partdetail/C17414",
+      "catalogCode": "C17414",
+      "catalogMpn": "0805W8F1002T5E",
+      "pages": 9,
+      "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C17714.pdf",
+      "source": "https://jlcpcb.com/partdetail/C17714",
+      "catalogCode": "C17714",
+      "catalogMpn": "0805W8F470JT5E",
+      "pages": 9,
+      "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C19077498-current.pdf",
+      "source": "https://jlcpcb.com/partdetail/C19077498",
+      "catalogCode": "C19077498",
+      "catalogMpn": "SMF5.0CA",
+      "pages": 5,
+      "sha256": "c8f137df222c1c36b0356096e10d601434b420c2f65407c222229dbd725df74a",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C19077498.pdf",
+      "source": "reference/pdfs/C19077498.pdf",
+      "sha256": "c8f137df222c1c36b0356096e10d601434b420c2f65407c222229dbd725df74a"
+    },
+    {
+      "file": "C2297.pdf",
+      "source": "https://jlcpcb.com/partdetail/C2297",
+      "catalogCode": "C2297",
+      "catalogMpn": "KT-0805G",
+      "pages": 11,
+      "sha256": "853e6752f600e247475ba548092207fa4fc707a3f8a0b1562a834bc9a901a8d9",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C27834.pdf",
+      "source": "https://jlcpcb.com/partdetail/C27834",
+      "catalogCode": "C27834",
+      "catalogMpn": "0805W8F5101T5E",
+      "pages": 9,
+      "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C28323.pdf",
+      "source": "https://jlcpcb.com/partdetail/C28323",
+      "catalogCode": "C28323",
+      "catalogMpn": "CL21B105KBFNNNE",
+      "pages": 84,
+      "sha256": "96baebe4bd0ce363e87be28b5b003f511f1502e084a6fc4f02333ded56c808f6",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C28636.pdf",
+      "source": "https://jlcpcb.com/partdetail/C28636",
+      "catalogCode": "C28636",
+      "catalogMpn": "0805W8F5600T5E",
+      "pages": 9,
+      "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C2931360.pdf",
+      "source": "reference/pdfs/C2931360.pdf",
+      "sha256": "db5cce2a20ec2c04c545dfe7316ac220e8210442845547f6cad3ed8a1697fea3"
+    },
+    {
+      "file": "C2939938.pdf",
+      "source": "reference/pdfs/C2939938.pdf",
+      "sha256": "96811636f099962f48140096ebce2ac228e62cb0e421ca2ecea0bd7f14bad168"
+    },
+    {
+      "file": "C318938.pdf",
+      "source": "reference/pdfs/C318938.pdf",
+      "sha256": "e7d601aea4c19a0afadd6818dda3136957abf0371b422559d55dd991920e8151"
+    },
+    {
+      "file": "C49678.pdf",
+      "source": "https://jlcpcb.com/partdetail/C49678",
+      "catalogCode": "C49678",
+      "catalogMpn": "CC0805KRX7R9BB104",
+      "pages": 29,
+      "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+      "scope": "Supplier-linked exact-product PDF; document may cover a part family"
+    },
+    {
+      "file": "C5417011.pdf",
+      "source": "reference/pdfs/C5417011.pdf",
+      "sha256": "12a17d19f8a76b04b896529b786c3208bc36fdb336a24522f9b309150fb0dd2f"
+    },
+    {
+      "file": "C668623.pdf",
+      "source": "reference/pdfs/C668623.pdf",
+      "sha256": "98756b6026c3ad625679d384f382df5910246c3bf98a7d85897eb9f5d603b504"
+    },
+    {
+      "file": "CK-PTS636.pdf",
+      "source": "reference/pdfs/CK-PTS636.pdf",
+      "sha256": "2015aeeef741ee7eff1ec5bdb3c2229233d4b0605be9a8cfe73bff851ef5dceb"
+    },
+    {
+      "file": "Diodes-AP2112.pdf",
+      "source": "reference/pdfs/Diodes-AP2112.pdf",
+      "sha256": "ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f"
+    },
+    {
+      "file": "GCT-USB4125.pdf",
+      "source": "reference/pdfs/GCT-USB4125.pdf",
+      "sha256": "ea33e0b40545e545bf698cbac3bb1c0f5a3fc7ca6b5b7fda83a63134d4affaa7"
+    },
+    {
+      "file": "GCT-USB4135.pdf",
+      "source": "reference/pdfs/GCT-USB4135.pdf",
+      "sha256": "96941ffad52b3ee61a6388db4229b02cba07e2a47bb2bf9f94a3d751dfc20ac4"
+    },
+    {
+      "file": "HOTHMI-HTM-TFT028A16-SPI.pdf",
+      "source": "reference/pdfs/HOTHMI-HTM-TFT028A16-SPI.pdf",
+      "sha256": "f83b8c12452eb9bd504ea3b6e7fac35ae2564f12ed56d7fd8f638771509fe002"
+    },
+    {
+      "file": "Keystone-5015.pdf",
+      "source": "https://jlcpcb.com/partdetail/Keystone-5015/C2906768",
+      "manufacturerDrawing": "https://www.keyelco.com/product-pdf.cfm?p=1353",
+      "sha256": "42a518e92e77b056d45e81c11360d92096ed456a5b43f6267817590cbbf27eb8"
+    },
+    {
+      "file": "Kingbright-APT2012LZGCK.pdf",
+      "source": "reference/pdfs/Kingbright-APT2012LZGCK.pdf",
+      "sha256": "e0ef6d7073f40ce3a3db6a61ccb87fafd056bf00026942ada2fbe177b1fc49a8"
+    },
+    {
+      "file": "Luckfox-Pico-Mini.pdf",
+      "source": "reference/pdfs/Luckfox-Pico-Mini.pdf",
+      "sha256": "67d8730d4d636df3dd4d8df2ac8d0c1615a35092b8cdcdd11e98d76b2934461d"
+    },
+    {
+      "file": "Microchip-AN2089-QFN-assembly.pdf",
+      "source": "reference/pdfs/Microchip-AN2089-QFN-assembly.pdf",
+      "sha256": "7c26409bf899f79a1b5a251c1d4709c70c4604ce759f6362a983500253134ab8"
+    },
+    {
+      "file": "SEC1210-DS00001561D.pdf",
+      "source": "reference/pdfs/SEC1210-DS00001561D.pdf",
+      "sha256": "f3e8c11a747c3d15fe684662938342763b81943b84ff9c41fe3bf6255255515d"
+    },
+    {
+      "file": "Samsung-CL21A106KAYNNNE-characteristics.pdf",
+      "source": "https://media.digikey.com/pdf/Data%20Sheets/Samsung%20PDFs/CL21A106KAYNNNE_Char.pdf",
+      "sha256": "8a03285c8b7134980b9d12c67fe0ac6567633109c859dd37628c462b41e4f80f",
+      "scope": "Manufacturer-authored exact capacitor document hosted by distributor"
+    },
+    {
+      "file": "Samsung-CL21A106KAYNNNE-spec.pdf",
+      "source": "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/5545/CL21A106KAYNNNE%20Spec.pdf",
+      "sha256": "8921d5828082edacfe5c7517d142ac66c31904ad81524c8333f7341d2ff7ae47",
+      "scope": "Manufacturer-authored exact capacitor document hosted by distributor"
+    },
+    {
+      "file": "Waveshare-Pico-ResTouch-LCD-2.8-Schematic.pdf",
+      "source": "reference/pdfs/Waveshare-Pico-ResTouch-LCD-2.8-Schematic.pdf",
+      "sha256": "c4dd50fdb36ec299424a879c321e91a6f5ea74bf296ea9fffb3feccd0471c1e2"
+    }
+  ]
+}

@@ -51,14 +51,12 @@
     ]
   },
   "backlight": "Always on by default; host CS/default firmware does not promise independent PWM",
-  "powerHeader": {
-    "reference": "J302",
-    "pitchMm": 2.54,
-    "pins": {
-      "1": "+5V",
-      "2": "GND"
-    },
-    "assembly": "customer through-hole; optional population",
-    "sourceRule": "Use one regulated 5V input at a time; no source isolation or reverse-polarity protection."
+  "powerTestPoints": {
+    "positive": "TP901",
+    "return": "TP902",
+    "part": "Keystone 5015 / C2906768",
+    "assembly": "Factory SMT",
+    "replaces": "J302",
+    "sourceRule": "Regulated current-limited 5 V bench source only; disconnect all USB power first. No source isolation or reverse-polarity protection."
   }
 }

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% block head %}<link rel="stylesheet" href="/static/css/talk.css?v={{ site_revision }}">{% endblock %}
-{% block scripts %}<script src="/static/js/talk.js?v={{ site_revision }}" defer></script>{% endblock %}
+{% block head %}<link rel="stylesheet" href="/static/css/talk.css?v={{ talk_asset_revision }}">{% endblock %}
+{% block scripts %}<script src="/static/js/talk.js?v={{ talk_asset_revision }}" defer></script>{% endblock %}
 {% block content %}
 <div id="talk" class="talk-page">
   <div class="talk-toolbar" hidden aria-label="Presentation controls">
@@ -18,14 +18,14 @@
   </div>
   <div class="talk-reading-intro">
     <p class="eyebrow">A LIGHTNINGSPORE BUILD · DENVER.SPACE</p>
-    <p>{{ talk.duration }} · Draft 01 · {{ talk.asOf }} <span>Read below or select Present. Arrow keys navigate in presentation mode; N opens notes.</span></p>
+    <p>{{ talk.duration }} · Draft {{ talk.revision }} · {{ talk.asOf }} <span>Read below or select Present. Arrow keys navigate in presentation mode; N opens notes.</span></p>
     <details class="talk-contents"><summary>Jump to a section</summary><ol>{% for slide in talk.slides %}<li><a href="#{{ slide.id }}">{{ slide.title }}</a></li>{% endfor %}</ol></details>
     <noscript><p>All sections, sources and presenter notes are readable below. Presentation controls and interactive 3D need JavaScript.</p></noscript>
   </div>
   <div class="talk-slides">
   {% for slide in talk.slides %}
     <section class="talk-slide talk-{{ slide.visual }}" id="{{ slide.id }}" aria-labelledby="title-{{ slide.id }}">
-      <div class="talk-chapter"><span>{{ '%02d'|format(loop.index) }} / {{ '%02d'|format(talk.slides|length) }}</span><span>{{ slide.chapter }}</span></div>
+      <div class="talk-chapter"><span>{{ '%02d'|format(loop.index) }} / {{ '%02d'|format(talk.slides|length) }}</span><span>{{ slide.chapter }}</span><span class="talk-timing">~{{ slide.seconds }}s</span></div>
       <div class="talk-body">
         <div class="talk-copy">
           {% if loop.first %}<h1 id="title-{{ slide.id }}" tabindex="-1">{{ talk.title }}</h1>{% else %}<h2 id="title-{{ slide.id }}" tabindex="-1">{{ slide.title }}</h2>{% endif %}
@@ -35,22 +35,60 @@
         <div class="talk-visual">
         {% if slide.id == 'trust' %}
           <ol class="talk-trust-chain"><li><span>01</span><strong>Generate the secret</strong><small>Entropy & implementation</small></li><li><span>02</span><strong>Receive the device</strong><small>Hardware & distribution</small></li><li><span>03</span><strong>Approve a transaction</strong><small>Display & verification</small></li><li><span>04</span><strong>Recover the wallet</strong><small>Backups & policy</small></li></ol>
+        {% elif slide.visual == 'signing-flow' %}
+          <ol class="talk-pipeline"><li><small>COORDINATOR → QR → SIGNER</small><strong>Proposed transaction</strong><span>PSBT: transaction + signing metadata</span></li><li><small>HUMAN REVIEW</small><strong>Check outputs and fees</strong><span>Keys authorize spending; coins stay on the network</span></li><li><small>SIGNER → QR → COORDINATOR</small><strong>Signed transaction data</strong><span>Collect signatures, finalize and broadcast</span></li></ol>
+        {% elif slide.visual == 'lineage' %}
+          <ol class="talk-pipeline"><li><small>FOUNDATION</small><strong>SeedSigner</strong><span>Python app · QR exchange · Raspberry Pi ecosystem</span></li><li><small>HARDWARE ADAPTATION</small><strong>ShieldSigner</strong><span>Luckfox platform · smartcard integration</span></li><li><small>THIS BUILD</small><strong>Carrier + case + firmware</strong><span>Reuse upstream signing logic; improve the surrounding interfaces</span></li></ol>
+        {% elif slide.visual in ['software-blocks','hardware-blocks'] %}
+          <div class="talk-block-diagram" aria-label="{{ slide.id|capitalize }} block diagram">
+            {% if slide.reference %}<p class="talk-reference">{{ slide.reference }}</p>{% endif %}
+            <details class="talk-block-hub"><summary><strong>{{ slide.hub }}</strong><span>{{ slide.hubDetail }}</span></summary><p>{{ slide.hubRole }}</p><p>{{ slide.hubConnection }}</p></details>
+            <p class="talk-diagram-instruction">Open a block to see what it does and how it connects.</p>
+            {% if slide.lanes %}
+            <div class="talk-block-lanes">{% for lane in slide.lanes %}<div class="talk-block-lane"><p class="talk-bus-label">↕ {{ lane.label }}</p>{% for block in lane.blocks %}{% include 'knowledge/talk-block.html' %}{% if not loop.last %}<div class="talk-block-arrow" aria-hidden="true">↕</div>{% endif %}{% endfor %}</div>{% endfor %}</div>
+            <details class="talk-block-foundation"><summary>{{ slide.foundation }}</summary><p>{{ slide.foundationRole }}</p><p>{{ slide.foundationConnection }}</p></details>
+            {% else %}
+            <div class="talk-block-grid">{% for block in slide.blocks %}{% include 'knowledge/talk-block.html' %}{% endfor %}</div>
+            {% endif %}
+            <p class="talk-caption">{{ slide.caption }}</p>
+          </div>
+        {% elif slide.visual == 'libraries' %}
+          <div class="talk-library-list">{% for library in slide.libraries %}<article><small>{{ library.language }}</small><h3>{{ library.name }}</h3><p>{{ library.role }}</p><span>{{ library.boundary }}</span></article>{% endfor %}</div>
+          <div class="talk-shared-dependency"><strong>Trace the cryptographic backend ↓</strong><p>Separate APIs can converge on libsecp256k1-based code. Inspect the actual versions, build options and loaded backend.</p></div>
+          <p class="talk-caption">Examples of library ecosystems, not drop-in replacements or proof of independent implementations.</p>
+        {% elif slide.visual == 'swap-contracts' %}
+          <ol class="talk-pipeline"><li><small>DEMONSTRATED · BENCH</small><strong>Python screens → LVGL</strong><span>Keep screen content, events and confirmation semantics</span></li><li><small>DESIGN + HARDWARE QUALIFICATION</small><strong>Small LCD → 2.8-inch module</strong><span>Adapt driver, pinout, power and mounting</span></li><li><small>INTEGRATION EXERCISE</small><strong>embit → another library</strong><span>Compare derivation, parsing, sighashes and invalid inputs</span></li></ol>
+        {% elif slide.visual == 'port-proof' %}
+          <div class="talk-port-gallery" aria-label="tscircuit PCB and schematic previews">
+            {% for name, caption, alt in [('assembly-3d','tscircuit · 3D assembly','tscircuit 3D preview of the carrier PCB with display, buttons and component models'),('pcb-bottom','PCB · The Space silkscreen side','tscircuit PCB bottom layer showing The Space logo, routed traces and component pads')] %}
+            <figure><a href="/files/assets/talk/tscircuit/{{ name }}.png" target="_blank" rel="noopener"><img src="/files/assets/talk/tscircuit/{{ name }}.png?v={{ site_revision }}" alt="{{ alt }}" loading="lazy"></a><figcaption>{{ caption }} · <a href="/files/assets/talk/tscircuit/{{ name }}.png" target="_blank" rel="noopener">Open full size ↗</a></figcaption></figure>
+            {% endfor %}
+          </div>
+          <p class="talk-caption">We checked that the tscircuit version preserved the component footprints and electrical connections. <a href="https://github.com/lightningspore/shieldsigner-dev/blob/main/scripts/check-pill-native-parity.py">See the comparison checks ↗</a></p>
+          <p class="talk-caption">An early visual port became a source-authored circuit. Both representations remain useful; the new routing is not hardware-qualified.</p>
         {% elif slide.visual == 'incidents' %}
           <div class="talk-incident-list"><div><time datetime="2026-07-30">JULY 2026</time><h3>COLDCARD</h3><p>Weakened seed generation</p><span>Firmware / entropy boundary</span></div><div><time datetime="2026-10">OCTOBER 2026</time><h3>Ledger reseller incident</h3><p>Physical implants capture recovery phrases</p><span>Hardware / distribution boundary</span></div></div>
           <p class="talk-caption">Different failure paths. Primary incident sources below.</p>
-        {% elif slide.visual == 'multisig' %}
-          <div class="talk-threshold" data-threshold-demo>
-            <p class="talk-visual-label">2-OF-3 APPROVAL RULE</p>
-            <div class="talk-signers">{% for letter in ['A','B','C'] %}<button type="button" data-cosigner aria-pressed="false" disabled><span>Key {{ letter }}</span><strong>Signer {{ letter }}</strong><small>Distinct seed</small></button>{% endfor %}</div>
-            <p class="talk-threshold-result" aria-live="polite"><strong data-threshold-count>0 / 3</strong><span data-threshold-status>Select any two signers</span></p>
-            <p class="talk-caption">Separate keys, implementations and purchasing paths. Shared dependencies can still correlate failures.</p>
+        {% elif slide.visual == 'vendor-multisig' %}
+          <div class="talk-vendor-quorum">
+            <p class="talk-visual-label">ONE WALLET · SEPARATE VENDORS AND KEYS</p>
+            <div class="talk-vendor-signers">
+              <article><small>ESTABLISHED</small><strong>Vendor A</strong><span>Independent key and implementation</span></article>
+              <article><small>ESTABLISHED</small><strong>Vendor B</strong><span>Different vendor and signing stack</span></article>
+              <article class="talk-experimental"><small>EXPERIMENTAL</small><strong>ShieldSigner</strong><span>One key; never sole authority</span></article>
+            </div>
+            <div class="talk-shared-dependency"><strong>Limit how much any one signer must be trusted.</strong><p>Use the experimental signer when available. Retain a tested signing path through the other two.</p></div>
+            <p class="talk-caption">Illustrative 2-of-3 setup. Independent seeds, verified wallet policy and addresses, descriptor backup and recovery testing remain essential. Different brands can share underlying code.</p>
           </div>
         {% elif slide.visual == 'workflow' %}
-          <blockquote class="talk-prompt">“Add denver.space to the silkscreen.”</blockquote>
-          <ol class="talk-loop"><li><strong>Describe</strong><span>Constraints & desired change</span></li><li><strong>Change code</strong><span>Repeatable edit, pinned input</span></li><li><strong>Render</strong><span>Inspect the native artifact</span></li><li><strong>Check</strong><span>Compare against the baseline</span></li></ol>
-          <pre class="talk-code"><code>WIDTH_MM = 30
-CENTER = (184.5, 106.5)</code></pre>
-          <p class="talk-caption">Real parameters from <a href="https://github.com/lightningspore/shieldsigner-dev/blob/main/scripts/add-denver-branding.py">the silkscreen generator</a>. AI helped write the tools as well as the edits.</p>
+          <blockquote class="talk-prompt">“Add the denver.space logo to the PCB silkscreen.”</blockquote>
+          <ol class="talk-loop">
+            <li><strong>Set the constraints</strong><span>Use the official artwork. Keep copper, components and the board outline unchanged.</span></li>
+            <li><strong>Investigate and implement</strong><span>AI reads the existing design and writes a script to generate native KiCad artwork.</span></li>
+            <li><strong>Inspect and correct</strong><span>I review the rendered board, give feedback on placement and legibility, and ask for another pass.</span></li>
+            <li><strong>Check and keep the tool</strong><span>Compare the electrical design, run the board checks and save the generator for the next revision.</span></li>
+          </ol>
+          <p class="talk-caption">One request leaves behind a reusable <a href="https://github.com/lightningspore/shieldsigner-dev/blob/main/scripts/add-denver-branding.py">silkscreen generator</a>. The same workflow applies to PCB edits, case dimensions and firmware—with physical tests for fit and behavior.</p>
         {% elif slide.visual == 'assembly' %}
           <div class="enclosure-preview talk-model">
             <div data-enclosure-viewer data-defer-viewer data-pcb="{{ fit_models['shieldsigner-pcb-fit.glb'] }}" data-fit="{{ fit_models['shieldsigner-case-fit.glb'] }}" data-assembled="{{ enclosure_models.assembled }}" data-exploded="{{ enclosure_models.exploded }}" data-viewer-script="/static/enclosure-viewer.js?v={{ site_revision }}">
@@ -64,17 +102,25 @@ CENTER = (184.5, 106.5)</code></pre>
           </div>
         {% elif slide.visual == 'case' %}
           <figure class="talk-image"><img src="{{ slide.image.src }}?v={{ site_revision }}" alt="{{ slide.image.alt }}" width="850" height="480" loading="lazy"><figcaption>Digital assembly · adjustable camera/ribbon envelopes</figcaption></figure>
+          <p class="talk-caption">The enclosure is a program: edit its dimensions and regenerate the geometry. Next, inspect how the PCB, modules and shell fit together.</p>
           <details class="talk-code-disclosure"><summary>Show the case parameters</summary><pre class="talk-code"><code>button_switch_height = 2.7;
 button_gap = 0.15;
 button_stroke = 0.40;
 wall = 2.4;
 outer_size = [176,82];</code></pre><p class="talk-caption">Millimetres. Actual <a href="https://github.com/lightningspore/shieldsigner-dev/blob/main/enclosure/case.scad">OpenSCAD source</a>; change parameters, regenerate parts, then check fit.</p></details>
         {% elif slide.visual == 'camera' %}
-          <ol class="talk-pipeline"><li><small>INPUT</small><strong>SC3336 sensor</strong><span>Linux sensor + ISP drivers</span></li><li><small>CONTROL</small><strong>Rust camera owner</strong><span>Exposure · white balance · frames</span></li><li><small>DECODE</small><strong>Grayscale → ZXing-C++</strong><span>Original QR bytes → Python app</span></li></ol>
-          <p class="talk-caption">AI-assisted interface investigation, implementation and repeated hardware tests. The supported path still uses Linux and the Luckfox SDK.</p>
+          <ol class="talk-pipeline"><li><small>UNDERSTAND</small><strong>Camera + image processing</strong><span>Trace the vendor interfaces for sensor settings and frame delivery.</span></li><li><small>IMPLEMENT</small><strong>Rust camera service</strong><span>Control exposure and white balance through existing Linux drivers.</span></li><li><small>TEST + ITERATE</small><strong>Inspect real captures</strong><span>Use the hardware to check the result of each change.</span></li></ol>
+          <p class="talk-caption">This service replaces the RKAIQ userspace path. It still uses Linux drivers and the Luckfox SDK. Next: turn camera frames into QR data.</p>
+        {% elif slide.visual == 'qr-decoder' %}
+          <div class="talk-renderer"><div><small>ORIGINAL READER</small><strong>ZBar through pyzbar</strong><p>Camera image → Python binding → decoded QR bytes.</p></div><span aria-hidden="true">↓</span><div><small>REPLACEMENT READER</small><strong>ZXing-C++ native worker</strong><p>Grayscale frame → decoder → the same application byte interface.</p></div></div>
+          <p class="talk-caption">Recorded test: both pipelines read 24/24 attempts on four saved camera frames. ZBar needed preprocessing; ZXing read the raw frames. All nine binary-payload fixtures passed for each reader.</p>
         {% elif slide.visual == 'lvgl' %}
-          <div class="talk-renderer"><div><small>APPLICATION</small><strong>Python wallet logic</strong><p>Pinned Controller, Views and models</p></div><span aria-hidden="true">↓</span><div><small>PRESENTATION</small><strong>Native LVGL screens</strong><p>C/C++ renderer → LCD</p></div></div>
-          <p class="talk-caption">AI helped adapt the screen boundary and measure memory. The wallet algorithms remain upstream; the UI migration builds on kdmukai’s LVGL screen work.</p>
+          <div class="talk-renderer"><div><small>APPLICATION</small><strong>Python decides what to show</strong><p>Navigation, wallet state and transaction review.</p></div><span aria-hidden="true">↕</span><div><small>DISPLAY + INPUT</small><strong>LVGL draws the interface</strong><p>Native C/C++ screens receive content and return user actions.</p></div></div>
+          <p class="talk-caption">Built on Keith’s (kdmukai) longstanding LVGL work for SeedSigner on microcontrollers. Our contribution: adapting and integrating it on Luckfox Linux.</p>
+        {% elif slide.visual == 'demo' %}
+          <ol class="talk-pipeline"><li><small>01 · NAVIGATE</small><strong>Use the menus</strong><span>Show the display updating and the buttons responding.</span></li><li><small>02 · SCAN</small><strong>Read a public test QR</strong><span>Show the camera preview and the application receiving the decoded result.</span></li><li><small>03 · REPEAT</small><strong>Leave and reopen the scanner</strong><span>Check the camera and UI working together through another cycle.</span></li></ol>
+          <p class="talk-caption">Working bench: Luckfox + standard 240×240 display/button board. The new 2.8-inch carrier is awaiting physical qualification.</p>
+          <div class="talk-demo-links"><a href="/guides/firmware-status/">Firmware test scope ↗</a></div>
         {% elif slide.visual == 'verification' %}
           <figure class="talk-image"><img src="/files/variants/lcd-module-2.8/board-bottom.png?v={{ site_revision }}" alt="Native rear PCB view with The Space logo and denver.space silkscreen" width="2800" height="1400" loading="lazy"><figcaption>Actual native PCB render · artwork revision 0.0.9</figcaption></figure>
           <div class="talk-proof"><strong>0</strong><span>protected PCB objects changed</span><a href="/files/variants/lcd-module-2.8/branding-audit.json">Inspect the artwork-only comparison ↗</a></div>
@@ -84,6 +130,7 @@ outer_size = [176,82];</code></pre><p class="talk-caption">Millimetres. Actual <
           <div class="talk-closing"><a href="https://shieldsigner.dev">shieldsigner.dev</a><a href="https://github.com/lightningspore/shieldsigner-dev">Get the source ↗</a><p>PCB · mechanical models · firmware · repeatable tools</p><p class="talk-credits">Built on SeedSigner, ShieldSigner, kdmukai’s screen work, LVGL, Linux and Luckfox.</p><a class="talk-space" href="https://denver.space"><img src="/files/assets/branding/denver-space-silkscreen.svg" alt="The Space — denver.space" width="240" height="77"></a></div>
         {% elif slide.image %}
           <figure class="talk-image"><img src="{{ slide.image.src }}?v={{ site_revision }}" alt="{{ slide.image.alt }}" width="{{ slide.image.width }}" height="{{ slide.image.height }}" {% if loop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}><figcaption>{% if slide.visual == 'hero' %}Digital carrier assembly · physical first article pending{% elif slide.visual == 'demo' %}Use the working 240×240 bench setup for the live segment. This is a digital case preview.{% else %}Native KiCad render · 35 fitted SMT parts / 17 SKUs{% endif %}</figcaption></figure>
+          {% if slide.visual == 'pcb' %}<p class="talk-caption">{{ slide.caption }}</p>{% endif %}
           {% if slide.visual == 'demo' %}<div class="talk-demo-links"><a href="#pcb">Inspect the PCB ↑</a><a href="#assembly">Rotate the assembly ↑</a><a href="/guides/firmware-status/">Bench demo & test scope ↗</a></div>{% endif %}
         {% endif %}
         </div>

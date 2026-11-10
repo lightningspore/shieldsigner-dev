@@ -19,20 +19,25 @@ def set_window(display,area):
     display.command(0x2c)
 
 class LuckfoxHardware:
-    def __init__(self):
+    def __init__(self,panel_profile=None):
+        from hothmi import PROFILE,image_profile
+        if panel_profile is None:panel_profile=image_profile()
+        if panel_profile not in (None,PROFILE):raise ValueError('Unsupported physical panel profile')
+        self.panel_profile=panel_profile
         from seedsigner.hardware.buttons import HardwareButtons
         self.lock=threading.Lock()
         self.lcd=None
         self.scaler=None
         self.buttons=None
         try:
-            self.configure_display(240,240,False)
+            self.configure_display(320 if panel_profile else 240,240,False)
             self.buttons=HardwareButtons.get_instance()
         except BaseException:
             self.close();raise
 
     def configure_display(self,width,height,inverted):
         """Caller must quiesce the native pixel reader before changing geometry."""
+        if getattr(self,'panel_profile',None) is not None and (width,height)!=(320,240):raise ValueError('Selected physical HOTHMI panel requires 320x240 settings')
         if (width,height) not in ((240,240),(320,240),(128,128)):raise ValueError('Unsupported display geometry')
         if (width,height)==(128,128):
             from seedsigner.hardware.displays.ST7735 import ST7735 as Driver
@@ -46,6 +51,9 @@ class LuckfoxHardware:
             if previous is not None:previous.close()
             display=Driver(width,height)
             try:
+                if getattr(self,'panel_profile',None) is not None:
+                    from hothmi import install
+                    install(display)
                 display._ensure_initialized();display.set_color_inversion(inverted)
                 scaler=None
                 if (width,height)==(128,128):

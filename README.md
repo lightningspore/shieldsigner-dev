@@ -2,7 +2,9 @@
 
 ![Modular ShieldSigner assembly](variants/lcd-module-2.8/assembly-front.png)
 
-Native KiCad is the preferred editing workflow. This repository publishes the reviewed ShieldSigner carrier variant, tools and knowledge site. A separate experimental tscircuit port preserves the standard carrier for comparison.
+Native KiCad is the preferred editing workflow. This repository publishes the reviewed ShieldSigner carrier variant, tools and knowledge site. Separate experimental tscircuit ports preserve the standard carrier and current pill carrier for comparison.
+
+Hardware component PDFs are collected in the top-level [datasheets directory](datasheets/README.md). The current [display/button electrical review](docs/DISPLAY-BUTTON-REVIEW.md) records wiring, startup checks and first-article tests.
 
 ## Firmware and repository navigation
 
@@ -16,13 +18,15 @@ Native KiCad is the preferred editing workflow. This repository publishes the re
 
 ## Eight-pin 2.8-inch pill build
 
-PCB **0.0.9-dev** adds the official The Space logo and **denver.space** rear silkscreen. The [artwork audit](variants/lcd-module-2.8/branding-audit.json) confirms every non-silkscreen PCB object is unchanged from 0.0.7. The matched 35-part/17-SKU kit passes native electrical, pinout and manufacturing-file checks. **Five assembled boards are not checkout-ready:** fresh JLC assembly stock lists only two selected smartcard sockets, and this revision needs a new supplier placement/DFM review. See [order readiness](docs/PCB-ORDER-READINESS.md).
+**Working PCB: 0.0.11-dev.** Four copper layers with two GND planes, eight factory-assembled Keystone 5015 service points, four additional M2.5 bracket mounts and a readable native schematic. The current kit has 43 SMT placements / 18 SKUs. J302 is removed; TP901/TP902 provide bench +5V/GND. See the [service revision](variants/lcd-module-2.8/README.md#factory-service-points-and-independent-bracket-mounting). Supplier review is required, and the selected switches/reader IC/socket currently lack standard assembly stock. Released 0.0.9 ZIPs remain historical two-layer files.
+
+The historical PCB **0.0.9-dev** added the official The Space logo and **denver.space** rear silkscreen. The [artwork audit](variants/lcd-module-2.8/branding-audit.json) confirms every non-silkscreen PCB object is unchanged from 0.0.7. The matched 35-part/17-SKU kit passes native electrical, pinout and manufacturing-file checks. **Five assembled boards are not checkout-ready:** fresh JLC assembly stock lists only two selected smartcard sockets, and this revision needs a new supplier placement/DFM review. See [order readiness](docs/PCB-ORDER-READINESS.md).
 
 **Use carrier-profile firmware before power-up.** The working 240×240 bench image drives two carrier button nets as LCD outputs. [The compatibility audit](docs/PCB-SOFTWARE-COMPATIBILITY.md) maps every pin and explains the required 320×240/10 MHz carrier configuration. The board keeps its always-on backlight default.
 
-Start with the [pill carrier guide](docs/LCD-MODULE-VARIANT.md) and [customer assembly steps](docs/MODULAR-ASSEMBLY.md). This **160×70 mm capsule** follows the eight-pin SPI module interface in the existing Luckfox design, with the larger 2.8-inch display between the controls. JLCPCB handles 35 SMT placements across 17 catalog lines. Customer soldering is ordinary headers: 30 carrier joints, plus up to 30 if both modules arrive bare.
+Start with the [pill carrier guide](docs/LCD-MODULE-VARIANT.md) and [customer assembly steps](docs/MODULAR-ASSEMBLY.md). This **160×70 mm capsule** follows the eight-pin SPI module interface in the existing Luckfox design, with the larger 2.8-inch display between the controls. The current factory assembly BOM specifies 43 SMT placements across 18 catalog lines. Customer soldering is ordinary headers: 30 carrier joints, plus up to 30 if both modules arrive bare.
 
-The PCB uses a dedicated 3.3 V display regulator, supported display mounts and 22 local 3D models. Native ERC/DRC/connectivity/parity pass with zero exclusions. Open with `mise run variant:lcd:open`; build matched prototype quote files with `mise run variant:lcd:fab`. Physical fit, firmware/display behavior and powered bring-up remain unqualified.
+The PCB uses a dedicated 3.3 V display regulator, supported display mounts and 23 local 3D models. Native ERC/DRC/connectivity/parity pass with zero exclusions. Open with `mise run variant:lcd:open`; build matched prototype quote files with `mise run variant:lcd:fab`. Physical fit, firmware/display behavior and powered bring-up remain unqualified.
 
 The former 0.0.3-dev Pico-format display bay is superseded. Sections below also retain the separate standard FPC carrier and its experimental tscircuit port; do not mix their manufacturing files with the pill kit.
 
@@ -64,6 +68,21 @@ mise run dev
 `generate` requires `uv` and regenerates geometry from the current native KiCad PCB, recording its SHA-256. Builds/checks reject stale extracted data. `src/ShieldSignerPlus.tsx` defines the native board. `scripts/build.tsx` verifies every physical pad against the reference before attaching the original tracks, vias, and filled copper. `src/index.tsx` exposes the native components for tscircuit preview. `mise run dev` regenerates/builds and previews routed circuit JSON on http://localhost:3020. After changing KiCad or TSX, run generate/build again to refresh that output. `mise run dev:source` previews editable TSX without imported copper on port 3022.
 
 Outputs in `dist/`: circuit JSON, top/bottom PCB SVGs, schematic SVG, and BOM JSON. The schematic is a generated connectivity view, not a reproduction of the original schematic sheet arrangement. Components use generic chip symbols with original values and pin aliases.
+
+The current **0.0.9 pill carrier** has a source-authored tscircuit design at
+[`src/PillCarrier.tsx`](src/PillCarrier.tsx). Run
+`mise run tscircuit:pill:check` to build and validate it, then
+`mise run tscircuit:pill:dev` for the editable source preview on port 3020.
+Resistors, capacitors, switches, connectors and solder jumpers use their native
+component primitives. Seven functional schematic sheets, reusable footprint
+components, editable silkscreen, local 3D models, fresh autorouting and copper
+pours compile directly from TSX. Builds do not read KiCad or geometry snapshots.
+Outputs and the portable source ZIP are under `dist/pill-native/`.
+
+The earlier exact-copper reference renderer remains at
+`src/PillCarrierReference.tsx`, with `tscircuit:pill:reference:build/check/dev`
+tasks and outputs under `dist/pill-tscircuit/`. See
+[scope, validation and upstream limitations](docs/PORT-STATUS.md#source-authored-pill-design).
 
 ## Standard FPC hardware reference
 

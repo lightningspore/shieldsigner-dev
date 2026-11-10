@@ -11,8 +11,10 @@ def configure(path):
     if len(profiles) != 1:
         raise ValueError('Expected exactly one FOX_22 profile')
     display = profiles[0]['display']
-    expected = {'dc': ['/dev/gpiochip1', 20], 'rst': ['/dev/gpiochip1', 19],
-                'bl': 'disabled', 'spi_bus': 0, 'spi_device': 0}
+    expected = {'bl': 'disabled', 'spi_bus': 0, 'spi_device': 0}
+    for name,line in [('dc',20),('rst',19)]:
+        if display.get(name) not in (['/dev/gpiochip1',line],['/dev/gpiochip-bank1',line]):
+            raise ValueError('Display pin assignment differs from reviewed carrier')
     if any(display.get(k) != v for k, v in expected.items()):
         raise ValueError('Display pin assignment differs from reviewed carrier')
     if display.get('cs') == 'disabled':

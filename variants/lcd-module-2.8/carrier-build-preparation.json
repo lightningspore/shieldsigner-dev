@@ -1,0 +1,120 @@
+{
+  "boardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+  "stage": "carrier_image_built_and_packed_verified_not_booted",
+  "cameraBundle": {
+    "path": "dist/firmware/staging/carrier-first-article-camera-alias-compatible-20261110",
+    "manifestSha256": "07cbb862040617aa3fef1e6af22f032342055e887c19912375a3ae892ec02279",
+    "verifiedFiles": 1392,
+    "ioProfile": "carrier",
+    "memoryProfile": "zram16-lzo",
+    "imageVariant": "dev"
+  },
+  "kernelProof": {
+    "path": "reverse-engineering/rkaiq/image-sdk-kernel-abi-development-zram-carrier-validation.json",
+    "sha256": "e5bd9f9f889a3a780ef7a76f7c837ab5261f2dae7d90a3c58628f97a4259c4ca",
+    "armAssertions": 190,
+    "uart2Enabled": true,
+    "pinmuxChecked": true
+  },
+  "imageBuilt": true,
+  "installedImageVerified": false,
+  "flashed": false,
+  "physicalOperationVerified": false,
+  "requiredDisplayConfig": {
+    "profile": "carrier",
+    "spiHz": 10000000,
+    "display_config": "st7789_320x240",
+    "panelProfile": "hothmi_htm_tft028a16_spi"
+  },
+  "combinedStage": {
+    "path": "dist/firmware/staging/carrier-first-article-hothmi-alias-compatible",
+    "stageManifestSha256": "3f8021e57222017586dea9ac80de03f6f5d219aa0a992abb26ff4c5df6af14e2",
+    "cameraManifestSha256": "97d96bef70b9457803ffe23253216e2eb5dbecdf37f6ad1905b4d9f57387f556",
+    "verifiedFiles": 1654,
+    "defaultFrontend": "lvgl",
+    "panelProfile": "hothmi_htm_tft028a16_spi",
+    "panelProfileSha256": "c3c66d329fb0b83ef927a9211029abdf5abd954a0225627462509f31b833e6ad",
+    "firstRunTemplate": {
+      "path": "opt/src/settings.json",
+      "sha256": "bc0314a1083ecf47e1f7a9cd66b9bf45fed4f91808c8c2ff717e5a66a99a9b02",
+      "display_config": "st7789_320x240"
+    },
+    "persistedSettingsOverwritten": false
+  },
+  "supersededGeometryOnlyStage": "dist/firmware/staging/carrier-first-article-320x240-review",
+  "readerKernelAudit": {
+    "path": "variants/lcd-module-2.8/compiled-pinmux-audit.json",
+    "sha256": "3d0981d14731818228073c67010b8ea1cd5a2f55e7cc3a249fbc44cdcf46a70c",
+    "sameCompiledInputsAsPreparedProof": true,
+    "kernelConsoleConflict": false,
+    "installedReaderServicesVerified": false,
+    "packedReaderServiceVerified": true
+  },
+  "gpioBankSelection": {
+    "policy": "Kernel-label-derived /dev/gpiochip-bankN aliases; no cdev index assumption",
+    "requiredLabels": [
+      "gpio0",
+      "gpio1",
+      "gpio4"
+    ],
+    "startup": "etc/init.d/S41shieldsigner-gpio-banks",
+    "ioConfigSha256": "02bc415276c37dbf3332a2d7535284ade431e42173d472c41f7798b3bb4d8f4b",
+    "sourceEvidence": "reference/research/firmware/gpio-cdev-sources.json",
+    "physicalOperationVerified": false,
+    "numericSymlinksIgnored": true,
+    "upstreamMiniNumericAliasPreserved": true
+  },
+  "candidateImageJob": {
+    "name": "carrier-first-article-hothmi-alias-compatible-20261110",
+    "status": "build exit 0; packed readback and ARM QEMU passed",
+    "packedImageVerified": true,
+    "flashed": false,
+    "jobRecord": "dist/firmware/jobs/carrier-first-article-hothmi-alias-compatible-20261110.json",
+    "bundleManifestSha256": "97d96bef70b9457803ffe23253216e2eb5dbecdf37f6ad1905b4d9f57387f556",
+    "packedReadback": {
+      "policy": "Wait for build exit 0, require exactly one SD image from this attempt, run static and ARM QEMU checks",
+      "verifier": "scripts/verify-os-image.py",
+      "verifierSha256": "32c0187ea07770b749e423c33a258b3da99951b2e71d93388e2bc363282f1d70",
+      "workerStarted": true,
+      "resultPending": false,
+      "imageBootQualified": false,
+      "flashed": false,
+      "passed": true,
+      "report": "variants/lcd-module-2.8/carrier-image-verification.json",
+      "reportSha256": "0841dad1ce6f04cff96770091cdc482b304bb9abe0601c980d8f260467bd336e",
+      "firstReadbackFailure": "Verifier wrapper omitted geometry arguments; wrapper fixed and regression-tested; same image passed repeat readback"
+    },
+    "buildExitCode": 0
+  },
+  "supersededBankLabelStage": {
+    "path": "dist/firmware/staging/carrier-first-article-hothmi-bank-labels",
+    "reason": "Discovery counted upstream numeric symlinks as duplicate chips on service restart",
+    "candidateTerminalExit": 137,
+    "flashed": false
+  },
+  "supersededInitialGpioStage": {
+    "path": "dist/firmware/staging/carrier-first-article-hothmi-review-v2",
+    "reason": "Superseded bank-index profile; upstream Mini-specific gpiochip4 alias exists, but current policy resolves kernel labels. Candidate stopped before completion with exit 137; not a flashable result."
+  },
+  "verifiedImage": {
+    "version": "lvgl-dev.e4c4ec6a5760",
+    "directory": "dist/firmware/images/lvgl-dev.e4c4ec6a5760",
+    "compressed": {
+      "file": "shieldsigner-lvgl-dev-e4c4ec6a5760-hothmi-carrier.img.xz",
+      "sha256": "8f13e96081bddeb45b987607adbfa3b73aaf04b5da17849261833542955dff02",
+      "bytes": 64350808
+    },
+    "raw": {
+      "file": "shieldsigner-lvgl-dev-e4c4ec6a5760-hothmi-carrier.img",
+      "sha256": "ce35f7cea5684f9668a1ab849185d6e7d6cc8e800078d393cef4a945d8fcd697",
+      "bytes": 363786240
+    },
+    "verification": {
+      "file": "packed-verification.json",
+      "sha256": "0841dad1ce6f04cff96770091cdc482b304bb9abe0601c980d8f260467bd336e"
+    },
+    "currentImageChanged": false,
+    "imageBootQualified": false,
+    "physicalOperationVerified": false
+  }
+}

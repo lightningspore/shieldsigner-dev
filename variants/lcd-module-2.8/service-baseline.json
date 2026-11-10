@@ -1,0 +1,18 @@
+{
+  "boardSha256": "bcd38b64cffab4e5818576532d2e51f45df37868f67307751ea5a2ff7a105df8",
+  "retainedFittedRefs": [
+    "SW501",
+    "SW502",
+    "SW503",
+    "SW504",
+    "SW505",
+    "SW506",
+    "SW507",
+    "SW508",
+    "J301",
+    "J601",
+    "U601",
+    "U701"
+  ],
+  "previousRevision": "0.0.9-dev base artwork with four-layer conversion"
+}

@@ -1,9 +1,116 @@
 {
-  "boardSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
+  "boardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
   "scope": "Manufacturer pin mapping and default electrical topology; not physical qualification",
   "hostPinsChecked": 22,
   "lcdPinsChecked": 8,
-  "result": "PCB mapping passes; upstream firmware SPI speed requires correction",
+  "buttonsChecked": 8,
+  "buttons": [
+    {
+      "key": "KEY_LEFT",
+      "reference": "SW501",
+      "hostPin": "12",
+      "net": "JoystickLeft",
+      "gpioBank": 1,
+      "runtimeDeviceAlias": "/dev/gpiochip-bank1",
+      "line": 24,
+      "domainV": 3.3,
+      "released": "high with domain-correct pull-up",
+      "pressed": "low",
+      "externalPullUp": false
+    },
+    {
+      "key": "KEY_UP",
+      "reference": "SW502",
+      "hostPin": "13",
+      "net": "JoystickUp",
+      "gpioBank": 1,
+      "runtimeDeviceAlias": "/dev/gpiochip-bank1",
+      "line": 25,
+      "domainV": 3.3,
+      "released": "high with domain-correct pull-up",
+      "pressed": "low",
+      "externalPullUp": false
+    },
+    {
+      "key": "KEY_PRESS",
+      "reference": "SW503",
+      "hostPin": "16",
+      "net": "JoystickPress",
+      "gpioBank": 1,
+      "runtimeDeviceAlias": "/dev/gpiochip-bank1",
+      "line": 22,
+      "domainV": 3.3,
+      "released": "high with domain-correct pull-up",
+      "pressed": "low",
+      "externalPullUp": false
+    },
+    {
+      "key": "KEY_DOWN",
+      "reference": "SW504",
+      "hostPin": "17",
+      "net": "JoystickDown",
+      "gpioBank": 1,
+      "runtimeDeviceAlias": "/dev/gpiochip-bank1",
+      "line": 23,
+      "domainV": 3.3,
+      "released": "high with domain-correct pull-up",
+      "pressed": "low",
+      "externalPullUp": false
+    },
+    {
+      "key": "KEY_RIGHT",
+      "reference": "SW505",
+      "hostPin": "18",
+      "net": "JoystickRight",
+      "gpioBank": 0,
+      "runtimeDeviceAlias": "/dev/gpiochip-bank0",
+      "line": 4,
+      "domainV": 3.3,
+      "released": "high with domain-correct pull-up",
+      "pressed": "low",
+      "externalPullUp": false
+    },
+    {
+      "key": "KEY1",
+      "reference": "SW506",
+      "hostPin": "19",
+      "net": "Key1",
+      "gpioBank": 4,
+      "runtimeDeviceAlias": "/dev/gpiochip-bank4",
+      "line": 16,
+      "domainV": 1.8,
+      "released": "high with domain-correct pull-up",
+      "pressed": "low",
+      "externalPullUp": false
+    },
+    {
+      "key": "KEY2",
+      "reference": "SW507",
+      "hostPin": "20",
+      "net": "Key2",
+      "gpioBank": 4,
+      "runtimeDeviceAlias": "/dev/gpiochip-bank4",
+      "line": 17,
+      "domainV": 1.8,
+      "released": "high with domain-correct pull-up",
+      "pressed": "low",
+      "externalPullUp": false
+    },
+    {
+      "key": "KEY3",
+      "reference": "SW508",
+      "hostPin": "11",
+      "net": "Key3",
+      "gpioBank": 1,
+      "runtimeDeviceAlias": "/dev/gpiochip-bank1",
+      "line": 21,
+      "domainV": 3.3,
+      "released": "high with domain-correct pull-up",
+      "pressed": "low",
+      "externalPullUp": false
+    }
+  ],
+  "result": "PCB mapping and generated carrier profile pass; packed image and physical operation remain to verify",
   "checks": [
     "All U202 pad nets",
     "All J701 pad nets",
@@ -11,10 +118,13 @@
     "Separate LCD and host 3.3V outputs",
     "LDO supply/enable/decoupling",
     "Unused host I2C and 1.8V output",
-    "1.8V button inputs have no external pull-up",
+    "All eight normally-open button paths and exact net membership; no external pull-ups",
     "UART crossed through series resistors",
+    "Reader VDD5/VDD33/card supply separation and nominal 1uF capacitors",
+    "UR2 identity, first socket numbered contacts, presence and series card clock",
     "Pinned FOX_22 display and button settings",
-    "10MHz patch changes only FOX_22 SPI speed and is idempotent"
+    "10MHz patch changes only FOX_22 SPI speed and is idempotent",
+    "Generated carrier profile uses kernel bank-label aliases for display and all eight buttons"
   ],
   "firmware": {
     "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f",
@@ -23,12 +133,14 @@
     "hothmiMinimumWriteCycleNs": 66,
     "requiredHz": 10000000,
     "patchTested": true,
+    "carrierIoConfigSha256": "02bc415276c37dbf3332a2d7535284ade431e42173d472c41f7798b3bb4d8f4b",
+    "gpioBankSelection": "kernel-label-aliases",
     "installedOrBuiltImageVerified": false
   },
   "remaining": [
     "LCD total current and LDO thermal qualification",
     "Supply startup/shutdown and logic timing measurements",
     "Actual module/header revision and orientation continuity check",
-    "Apply 10MHz patch to image; verify live SPI clock and display operation"
+    "Verify packed carrier bank-label profile and 10MHz selection; measure live SPI and display operation"
   ]
 }

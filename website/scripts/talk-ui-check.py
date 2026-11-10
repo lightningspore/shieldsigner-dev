@@ -5,8 +5,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 BASE = os.environ.get('UI_BASE_URL', 'http://127.0.0.1:8034').rstrip('/')
-IDS = ['intro', 'trust', 'incidents', 'multisig', 'workflow', 'pcb', 'assembly',
-       'case', 'camera', 'lvgl', 'demo', 'verification', 'cost', 'next']
+IDS = ['intro', 'signer', 'lineage', 'trust', 'incidents', 'multisig', 'software', 'libraries', 'hardware', 'swaps', 'workflow', 'pcb', 'tscircuit', 'case', 'assembly', 'camera', 'qr-decoder', 'lvgl', 'demo', 'verification', 'cost', 'next']
 OUT = Path('artifacts')
 OUT.mkdir(exist_ok=True)
 
@@ -37,14 +36,14 @@ def current(page, slide):
         ['auto', 'scroll'].includes(getComputedStyle(section).overflowY)'''), 'Tall presentation content cannot scroll'
     assert page.evaluate('location.hash') == '#' + slide
     position = page.locator('#talk-position').inner_text()
-    assert str(IDS.index(slide) + 1) in position and '14' in position, position
+    assert str(IDS.index(slide) + 1) in position and str(len(IDS)) in position, position
     no_overflow(page)
 
 
 def reading(page):
     assert not page.locator('body').evaluate('(body) => body.classList.contains("talk-presenting")')
     assert page.locator('#talk .talk-slide').evaluate_all('(slides) => slides.map(s => s.id)') == IDS
-    assert page.locator('.talk-slide:visible').count() == 14
+    assert page.locator('.talk-slide:visible').count() == len(IDS)
     for slide in page.locator('.talk-slide').all():
         assert slide.locator('h1,h2,h3').count(), 'Slide needs a readable heading'
     no_overflow(page)
@@ -84,13 +83,13 @@ with sync_playwright() as playwright:
         assert not page.locator('#talk-next').is_disabled()
         assert page.evaluate('document.activeElement.closest("#talk") !== null'), 'Presentation focus escaped the talk'
         page.locator('#talk-next').click()
-        current(page, 'trust')
+        current(page, 'signer')
         # Move focus away from controls before exercising document navigation.
         page.locator('.talk-slide:visible').evaluate('(slide) => {slide.tabIndex = -1; slide.focus();}')
         page.keyboard.press('PageDown')
-        current(page, 'incidents')
+        current(page, 'lineage')
         page.keyboard.press('ArrowLeft')
-        current(page, 'trust')
+        current(page, 'signer')
         page.keyboard.press('PageUp')
         current(page, 'intro')
         page.keyboard.press('End')
@@ -101,17 +100,36 @@ with sync_playwright() as playwright:
 
         page.locator('#talk-index').select_option('multisig')
         current(page, 'multisig')
-        threshold = page.locator('[data-threshold-demo]')
-        signers = threshold.locator('[data-cosigner]')
-        assert signers.count() == 3
-        signers.nth(0).click()
-        assert threshold.locator('[data-threshold-count]').inner_text() == '1 / 3'
-        assert threshold.get_attribute('data-met') == 'false'
-        signers.nth(2).click()
-        assert threshold.locator('[data-threshold-count]').inner_text() == '2 / 3'
-        assert threshold.get_attribute('data-met') == 'true'
-        signers.nth(0).click()
-        assert threshold.get_attribute('data-met') == 'false'
+        vendors=page.locator('#multisig .talk-vendor-signers article')
+        assert vendors.count()==3
+        assert 'Vendor A' in vendors.nth(0).inner_text()
+        assert 'Vendor B' in vendors.nth(1).inner_text()
+        assert 'ShieldSigner' in vendors.nth(2).inner_text()
+        assert 'never sole authority' in vendors.nth(2).inner_text()
+        capture(page, OUT / f'talk-vendors-{width}.png')
+
+        for diagram in ['software', 'hardware']:
+            page.locator('#talk-index').select_option(diagram)
+            current(page, diagram)
+            hub=page.locator('#'+diagram+' .talk-block-hub')
+            hub.locator('summary').click()
+            assert hub.evaluate('(node)=>node.open')
+            assert hub.locator('p').count()==2
+            hub.locator('summary').click()
+            blocks=page.locator('#'+diagram+' .talk-block')
+            assert blocks.count()==6
+            for block in blocks.all():
+                block.locator('summary').click()
+                assert block.evaluate('(node)=>node.open')
+                assert 'What it does' in block.inner_text()
+                assert 'How it connects' in block.inner_text()
+                no_overflow(page)
+                block.locator('summary').click()
+            blocks.first.locator('summary').focus()
+            page.keyboard.press('Enter')
+            assert blocks.first.evaluate('(node)=>node.open')
+            capture(page,OUT / f'talk-diagram-{diagram}-{width}.png')
+            blocks.first.locator('summary').click()
 
         page.locator('#talk-index').select_option('assembly')
         current(page, 'assembly')
@@ -156,9 +174,20 @@ with sync_playwright() as playwright:
         assert not notes.evaluate('(node) => node.open')
         page.locator('#talk-fullscreen').click()
         assert page.evaluate('window.__talkFullscreenRequests') == 1
-        for slide in ['pcb', 'camera', 'demo']:
+        for slide in ['signer', 'software', 'libraries', 'hardware', 'swaps', 'tscircuit', 'pcb', 'camera', 'demo']:
             page.locator('#talk-index').select_option(slide)
             current(page, slide)
+            if slide == 'tscircuit':
+                assert page.locator('#tscircuit .talk-proof').count()==0
+                frames=page.locator('#tscircuit .talk-port-gallery figure>a').all()
+                assert len(frames)==2
+                sizes=[frame.bounding_box() for frame in frames]
+                assert max(s['width'] for s in sizes)-min(s['width'] for s in sizes)<1
+                assert max(s['height'] for s in sizes)-min(s['height'] for s in sizes)<1
+                if width>=1280:
+                    assert page.locator('#tscircuit').evaluate('(s)=>s.scrollHeight<=s.clientHeight+2'), 'Gallery adds unnecessary slide scrolling'
+
+                assert 'preserved the component footprints and electrical connections' in page.locator('#tscircuit').inner_text()
             capture(page, OUT / f'talk-present-{slide}-{width}.png')
 
         page.locator('#talk-exit').click()
@@ -189,6 +218,11 @@ with sync_playwright() as playwright:
         for control in ['talk-prev', 'talk-next', 'talk-exit', 'talk-index', 'talk-notes', 'talk-fullscreen']:
             assert not page.locator('#' + control).is_visible(), f'No-JS control visible: {control}'
         assert page.locator('.talk-notes[open]').count() == 0
+        for diagram in ['software','hardware']:
+            block=page.locator('#'+diagram+' .talk-block').first
+            block.locator('summary').click()
+            assert block.evaluate('(node)=>node.open'), 'Block explanations require a no-JS fallback'
+            assert 'How it connects' in block.inner_text()
         page.locator('#camera .talk-notes summary').click()
         assert page.locator('#camera .talk-notes').evaluate('(node) => node.open')
         page.locator('#talk a[href="#verification"]:visible').first.click()
@@ -198,8 +232,8 @@ with sync_playwright() as playwright:
         context.close()
     browser.close()
 
-print(json.dumps(dict(passed=True, slides=14, viewports=['1440x900', '390x844'],
+print(json.dumps(dict(passed=True, slides=len(IDS), viewports=['1440x900', '390x844'],
     checks=['reading', 'presentation', 'boundaries', 'keyboard', 'input/canvas ownership',
-            'hash/deep links', 'notes', 'fullscreen request', '2-of-3 threshold',
+            'hash/deep links', 'notes', 'fullscreen request', 'multi-vendor trust and experimental signer',
             'lazy 3D / PCB / case fit / layer visibility', 'visible image decoding',
-            'no-JS', 'horizontal overflow']), indent=2))
+            'expandable software/hardware blocks', 'no-JS', 'horizontal overflow']), indent=2))

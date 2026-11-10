@@ -23,7 +23,9 @@ esac
 # Exact reviewed camera-image memory/device setup, before Python imports.
 '''+prefix+'\nexec '+shlex.quote(str(lvgl))+' "$@"\n'
 
-def prepare(runtime,output,epoch,default='pil'):
+def prepare(runtime,output,epoch,default='pil',display_config=None):
+    if display_config not in (None,'st7789_320x240'):raise ValueError('Unreviewed image display configuration')
+    if display_config is not None and default!='lvgl':raise ValueError('320x240 image defaults require the LVGL frontend')
     runtime=runtime.resolve();verify_runtime(runtime)
     original=json.loads((runtime/'runtime-manifest.json').read_text())
     if original.get('localesIncluded'):raise ValueError('Current image milestone is English only; stage without locale assets')
@@ -44,11 +46,19 @@ def prepare(runtime,output,epoch,default='pil'):
         'usr/bin/shieldsigner-launch.pil':(BASE.read_bytes(),0o755),
         'opt/src/seedsigner/version.json':((json.dumps(version,indent=2,sort_keys=True)+'\n').encode(),0o644),
     }
+    if display_config is not None:
+        # Public first-run template, not persisted /userdata settings. Existing
+        # templates are rejected by offline preflight rather than overwritten.
+        files['opt/src/settings.json']=((json.dumps({'display_config':display_config},indent=2)+'\n').encode(),0o644)
+        files['usr/share/shieldsigner-lvgl/panel-profile.json']=((json.dumps({'profile':'hothmi_htm_tft028a16_spi'},indent=2)+'\n').encode(),0o644)
     for relative,(data,mode) in files.items():
         path=output/'payload'/relative;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data);path.chmod(mode)
     entries={str(path.relative_to(output)):dict(sha256=sha256(path),bytes=path.stat().st_size,mode=stat.S_IMODE(path.stat().st_mode)) for path in sorted((output/'payload').rglob('*')) if path.is_file()}
     helper=output/'overlay-apply.py';shutil.copyfile(HERE/'overlay_apply.py',helper);helper.chmod(0o755)
     record=dict(applyHelperSha256=sha256(helper),kind='shieldsigner-lvgl-image-overlay-draft',schema=1,imageBuilt=False,installed=False,releaseReady=False,defaultFrontend=default,rollbackFile=ROLLBACK,runtimeManifestSha256=identity,runtimeManifest=original,baseLauncherSha256=lock['sha256'],baseRepositoryCommit=base_commit,worktreeDirty=dirty,sourceDateEpoch=epoch,version=version,scope=dict(language='en',smartcardWorkExcluded=True),files=entries,requiresExistingSupervisor=True,requiresExistingCameraRuntime=True,activationGate='Migration/current-flow/resource/soak acceptance must pass before OS image build; flashing last')
+    if display_config is not None:
+        record['displayConfiguration']=display_config
+        record['panelProfile']='hothmi_htm_tft028a16_spi'
     (output/'integration-plan.json').write_text(json.dumps(record,sort_keys=True,indent=2)+'\n')
     return verify(output)
 
@@ -75,12 +85,19 @@ def verify(directory):
         subprocess.run(['sh','-n',str(directory/'payload'/relative)],check=True)
     if sha256(directory/'payload/usr/bin/shieldsigner-launch.pil')!=record['baseLauncherSha256']:raise ValueError('Rollback launcher mismatch')
     if json.loads((directory/'payload/opt/src/seedsigner/version.json').read_text())!=record['version']:raise ValueError('Version identity mismatch')
+    if record.get('displayConfiguration') is not None:
+        if record['displayConfiguration']!='st7789_320x240' or record['defaultFrontend']!='lvgl':raise ValueError('Unreviewed display/frontend defaults')
+        if json.loads((directory/'payload/opt/src/settings.json').read_text())!={'display_config':record['displayConfiguration']}:raise ValueError('Display template differs from plan')
+        if record.get('panelProfile') is not None:
+            if record['panelProfile']!='hothmi_htm_tft028a16_spi':raise ValueError('Unreviewed physical panel profile')
+            if json.loads((directory/'payload/usr/share/shieldsigner-lvgl/panel-profile.json').read_text())!={'profile':record['panelProfile']}:raise ValueError('Physical panel profile differs from plan')
     return dict(verified=True,files=len(record['files']),bytes=sum(row['bytes'] for row in record['files'].values()),defaultFrontend=record['defaultFrontend'],imageBuilt=False,installed=False,releaseReady=False)
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);group=parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--output',type=Path);group.add_argument('--verify',type=Path)
-    parser.add_argument('--runtime',type=Path);parser.add_argument('--source-date-epoch',type=int);parser.add_argument('--default-frontend',choices=['pil','lvgl'],default='pil');args=parser.parse_args()
+    parser.add_argument('--runtime',type=Path);parser.add_argument('--source-date-epoch',type=int);parser.add_argument('--default-frontend',choices=['pil','lvgl'],default='pil')
+    parser.add_argument('--display-config',choices=['st7789_320x240']);args=parser.parse_args()
     if args.output and (args.runtime is None or args.source_date_epoch is None):parser.error('Preparing requires --runtime and explicit --source-date-epoch')
-    print(json.dumps(verify(args.verify) if args.verify else prepare(args.runtime,args.output,args.source_date_epoch,args.default_frontend),indent=2))
+    print(json.dumps(verify(args.verify) if args.verify else prepare(args.runtime,args.output,args.source_date_epoch,args.default_frontend,args.display_config),indent=2))
 if __name__=='__main__':main()

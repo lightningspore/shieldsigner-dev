@@ -30,6 +30,79 @@ def fdt_properties(data):
             return nodes
         elif token != 4:
             raise ValueError('Unsupported DTB token')
+
+def qemu_arm_wrapper(binary):
+    """Forward runtime geometry and other arguments to the packed ARM binary."""
+    import shlex
+    return '#!/bin/sh\nexec qemu-arm -cpu cortex-a7 '+shlex.quote(str(binary.resolve()))+' "$@"\n'
+
+def verify_carrier_rootfs(root,bundle,pcsc_service_sha='51d83ab6cb5f8e532818fb4fa59c02c25bca367233f4204a8523521579cb32a6'):
+    """Check packed configuration, never acquire GPIO/SPI or start services."""
+    import shlex
+    root=pathlib.Path(root).resolve();bundle=pathlib.Path(bundle)
+    manifest=json.loads((bundle/'manifest.json').read_text())
+    if manifest.get('ioProfile')!='carrier':return None
+    def require(condition,message):
+        if not condition:raise ValueError(message)
+    data=json.loads((root/'opt/src/seedsigner/hardware/io_config.json').read_text())
+    profiles=[p for p in data['models'] if p.get('shortname')=='FOX_22']
+    require(len(profiles)==1,'Packed image requires exactly one carrier FOX_22 profile')
+    profile=profiles[0];display=profile['display']
+    expected={'dc':['/dev/gpiochip-bank1',20],'rst':['/dev/gpiochip-bank1',19],
+              'bl':'disabled','spi_bus':0,'spi_device':0,'spi_hz':10_000_000}
+    require(all(display.get(k)==v for k,v in expected.items()) and display.get('cs')!='disabled','Packed carrier display pin/clock/CS mismatch')
+    pins={'KEY_UP':(1,25),'KEY_DOWN':(1,23),'KEY_LEFT':(1,24),'KEY_RIGHT':(0,4),
+          'KEY_PRESS':(1,22),'KEY1':(4,16),'KEY2':(4,17),'KEY3':(1,21)}
+    require(profile['buttons']=={k:[f'/dev/gpiochip-bank{b}',n,'pull_up'] for k,(b,n) in pins.items()},'Packed carrier button map/bias mismatch')
+    bank_init=root/'etc/init.d/S41shieldsigner-gpio-banks'
+    require(bank_init.is_file() and bank_init.stat().st_mode & 0o111 and '--gpio-aliases' in bank_init.read_text(),'Packed GPIO bank startup missing')
+    require((root/'usr/lib/shieldsigner-camera/gpio-bank-profile.py').read_bytes()==(bundle/'configure-image-io-profile.py').read_bytes(),'Packed bank-label helper differs from reviewed bundle')
+    pulls=root/'usr/bin/configure-gpio.sh'
+    require(pulls.is_file() and hashlib.sha256(pulls.read_bytes()).hexdigest()=='695d8df632f8a11610dec6c4d77c120b014d387ec3e59d332c36319dd7108ce5' and pulls.stat().st_mode & 0o111,'Packed button pull-up setup differs from pinned source')
+    startup=(root/'start-seedsigner.sh').read_text()
+    require('/usr/bin/configure-gpio.sh 2>&1' in startup and '/usr/bin/shieldsigner-launch >>' in startup and startup.index('/usr/bin/configure-gpio.sh 2>&1')<startup.index('/usr/bin/shieldsigner-launch >>'),'Packed button pull-up setup must precede application launch')
+    plan_path=bundle/'lvgl-overlay/integration-plan.json'
+    plan=json.loads(plan_path.read_text()) if plan_path.exists() else {}
+    panel=plan.get('panelProfile');geometry=plan.get('displayConfiguration')
+    if geometry=='st7789_320x240':
+        require(panel=='hothmi_htm_tft028a16_spi','Packed pill stage requires explicit HOTHMI panel profile')
+        require(json.loads((root/'usr/share/shieldsigner-lvgl/panel-profile.json').read_text())=={'profile':panel},'Packed HOTHMI profile mismatch')
+        require(json.loads((root/'opt/src/settings.json').read_text())=={'display_config':geometry},'Packed display first-run template mismatch')
+    def fields(path):
+        result={}
+        for line in path.read_text().splitlines():
+            words=shlex.split(line,comments=True)
+            if words:
+                require(words[0] not in result,'Duplicate reader configuration field')
+                result[words[0]]=words[1:]
+        return result
+    reader=fields(root/'etc/reader.conf.d/sec1210')
+    require(reader.get('DEVICENAME')==['/dev/ttyS2:SEC1210UR2'],'Packed reader must select UART2 SEC1210UR2')
+    legacy=root/'etc/readers.d/sec1210'
+    if legacy.exists():require(fields(legacy)==reader,'Packed legacy reader configuration disagrees')
+    library=reader.get('LIBPATH',[])
+    require(len(library)==1 and library[0].startswith('/'),'Missing reader library path')
+    lib=root/library[0].lstrip('/')
+    for _ in range(16):
+        if not lib.is_symlink():break
+        target=lib.readlink();lib=root/str(target).lstrip('/') if target.is_absolute() else lib.parent/target
+    lib=lib.resolve();require(root in lib.parents and lib.is_file(),'Reader library missing or outside extracted rootfs')
+    library_bytes=lib.read_bytes();header=library_bytes[:20]
+    require(header[:6]==b'\x7fELF\x01\x01' and len(header)==20 and struct.unpack_from('<H',header,18)[0]==40,'Packed reader library is not 32-bit little-endian ARM ELF')
+    require(b'SEC1210UR2' in library_bytes,'Packed reader library lacks the selected UR2 identity')
+    service=root/'etc/init.d/S60pcscd'
+    require(hashlib.sha256(service.read_bytes()).hexdigest()==pcsc_service_sha,'Packed PCSC startup differs from reviewed active service')
+    require(service.stat().st_mode & 0o111,'Packed PCSC service is not executable')
+    inittab=root/'etc/inittab'
+    active='\n'.join(line.split('#',1)[0] for line in inittab.read_text().splitlines())
+    require(not re.search(r'\b(?:ttyS2|ttyFIQ0)\b',active),'Packed getty/init still uses reader UART')
+    return {'ioProfile':'carrier','displayHz':display['spi_hz'],'buttonsChecked':8,
+            'gpioSelectorPolicy':'kernel-label-aliases','gpioBankStartupVerified':True,
+            'buttonPullUpSetupSourceVerified':True,'pullUpSetupBeforeApp':True,
+            'firstRunDisplayConfiguration':geometry,'panelProfile':panel,
+            'readerDevice':reader['DEVICENAME'][0],'readerLibraryArmElf':True,'readerUr2IdentityPresent':True,
+            'pcscServiceSha256':pcsc_service_sha,'serialGettyConflict':False,
+            'scope':'Packed configuration and library architecture, not boot, GPIO voltages or card operation'}
 p = argparse.ArgumentParser()
 p.add_argument('--image', type=pathlib.Path, required=True)
 p.add_argument('--bundle', type=pathlib.Path, required=True)
@@ -129,6 +202,8 @@ subprocess.run(['unsquashfs', '-no-xattrs', '-d', str(root), str(sq)], check=Tru
 result = subprocess.run(['python3', str(a.bundle / 'image-overlay.py'), '--verify', str(root)], check=True, text=True, stdout=subprocess.PIPE)
 report['rootfsVerification'] = json.loads(result.stdout)
 profile_manifest = json.loads((a.bundle / 'manifest.json').read_text())
+carrier_config=verify_carrier_rootfs(root,a.bundle)
+if carrier_config is not None:report['carrierConfigurationVerification']=carrier_config
 for key, value, helper, field in [
     ('memoryProfile', 'zram16-lzo', 'zram-image-profile.py', 'memoryProfileVerification'),
     ('lcdBackend', 'rust', 'lcd-image-profile.py', 'lcdProfileVerification'),
@@ -183,7 +258,7 @@ print(json.dumps({'passed':True,'nativeAbiImport':True,'originalPillowRgb565Equi
         import shlex
         native = root / 'usr/lib/shieldsigner-lvgl/shieldsigner-lvgl'
         wrapper = a.output / 'packed-lvgl-qemu'
-        wrapper.write_text('#!/bin/sh\nexec qemu-arm -cpu cortex-a7 ' + shlex.quote(str(native.resolve())) + '\n')
+        wrapper.write_text(qemu_arm_wrapper(native))
         wrapper.chmod(0o700)
         smoke = a.output / 'public-lvgl-packed-smoke.py'
         smoke.write_text("""import json,sys
@@ -192,12 +267,29 @@ root=Path(sys.argv[1]);wrapper=Path(sys.argv[2]);work=Path(sys.argv[3])
 prefix=root/'usr/lib/shieldsigner-lvgl'
 sys.path[:0]=[str(prefix/'python'),str(root/'opt/src'),str(root/'usr/lib/shieldsigner-camera/python')]
 from app import options,check
-count=check(options(['--app-root',str(root/'opt/src'),'--camera-root',str(root/'usr/lib/shieldsigner-camera/python'),'--binary',str(prefix/'shieldsigner-lvgl'),'--settings',str(work/'unused-public-settings.json'),'--check']))
+from hothmi import image_profile
+panel=image_profile(root/'usr/share/shieldsigner-lvgl/panel-profile.json')
+arguments=['--app-root',str(root/'opt/src'),'--camera-root',str(root/'usr/lib/shieldsigner-camera/python'),'--binary',str(prefix/'shieldsigner-lvgl'),'--settings',str(work/'unused-public-settings.json'),'--check']
+if panel:arguments.extend(['--panel-profile',panel])
+count=check(options(arguments))
+width=320 if panel else 240
+template_loaded=False
+if panel:
+ import os
+ from seedsigner.models.settings import Settings
+ before=Path.cwd()
+ try:
+  os.chdir(root/'opt/src');Settings.SETTINGS_FILENAME=str(work/'unused-public-settings.json')
+  settings=Settings.get_instance()
+  assert settings.get_value('display_config',default_if_none=True)=='st7789_320x240'
+  template_loaded=True
+ finally:os.chdir(before)
 from transport import NativeHost
 from contracts import configuration
-rectangles=[0]
-def pixels(area,data):rectangles[0]+=1
-host=NativeHost(wrapper,pixels,timeout=30)
+rectangles=[0];extents=[-1,-1]
+def pixels(area,data):
+ rectangles[0]+=1;extents[0]=max(extents[0],area[2]);extents[1]=max(extents[1],area[3])
+host=NativeHost(wrapper,pixels,timeout=30,width=width,height=240)
 try:
  host.send('screen',name='button_list_screen',request=1,config=dict(top_nav=dict(title='Public packed fixture'),button_list=['One','Two']))
  assert host.next_event()==dict(event='screen_ready',request=1)
@@ -212,9 +304,10 @@ try:
  assert host.next_event()==dict(event='passphrase_result',text=value,back=False)
  host.send('clear');assert host.next_event()==dict(event='screen_cleared')
  assert rectangles[0]>0
+ assert extents==[width-1,239]
 finally:host.close()
 assert not (work/'unused-public-settings.json').exists()
-print(json.dumps(dict(passed=True,sourceGuards=count,nativeManifestVerified=True,packedPythonAndRenderer=True,publicMenuSelection=True,nulPassphraseExact=True,renderedRectangles=rectangles[0],noDevicesAcquired=True,noSettingsWritten=True,imageBootQualified=False,scope='Packed ARM Python/adapters/native renderer under userspace QEMU; no GPIO/SPI/camera/boot claim')))
+print(json.dumps(dict(passed=True,sourceGuards=count,nativeManifestVerified=True,packedPythonAndRenderer=True,publicMenuSelection=True,nulPassphraseExact=True,renderedRectangles=rectangles[0],maxRenderedCoordinate=extents,panelProfile=panel,displayWidth=width,firstRunTemplateLoaded=template_loaded,noDevicesAcquired=True,noSettingsWritten=True,imageBootQualified=False,scope='Packed ARM Python/adapters/native renderer under userspace QEMU; no GPIO/SPI/camera/boot claim')))
 """)
         checked = subprocess.run(command[:-2] + [str(smoke), str(root), str(wrapper.resolve()), str(a.output)], check=True, text=True, stdout=subprocess.PIPE)
         report['qemuLvglSmoke'] = json.loads(checked.stdout)

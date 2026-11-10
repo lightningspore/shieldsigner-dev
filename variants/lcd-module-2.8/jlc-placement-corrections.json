@@ -1,7 +1,7 @@
 {
-  "boardSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
-  "reviewed": "2026-11-01",
-  "qualification": "PCB 0.0.9 artwork-only compatibility reviewed against exact protected-tree proof. Existing component poses, identities, pads, copper, layers, outline and manufacturing origin preserved. Supplier compensation retained; new Gerbers/CPL have not been uploaded or placement-approved.",
+  "boardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+  "reviewed": "2026-11-09",
+  "qualification": "0.0.11 service revision: exact retained footprint and original routing checks; corrected parts unchanged. New Keystone footprints are symmetric single-pad SMT lands. Supplier preview and final DFM are still required.",
   "corrections": {
     "J301": {
       "lcsc": "C5246813",
@@ -67,11 +67,11 @@
     "D301": "Bidirectional TVS; no polarity-dependent 180deg change required."
   },
   "uploadedCsvPreviewChecked": false,
-  "previousBoardSha256": "b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7",
+  "previousBoardSha256": "bcd38b64cffab4e5818576532d2e51f45df37868f67307751ea5a2ff7a105df8",
   "reviewStatus": "review_required",
   "historicalPreview": "manufacturing/history/0.0.7-preview/",
-  "artworkCompatibility": {
-    "audit": "branding-audit.json",
-    "auditSha256": "41fdd803142063f5bafcfa109bfb05913b24f3808657f560463d6189ba23c033"
+  "serviceCompatibility": {
+    "audit": "serviceability-audit.json",
+    "auditSha256": "1a6374894a2e64a257c3c359817f8c45886600b4b86da2e2b42ed6d344e62b8d"
   }
 }

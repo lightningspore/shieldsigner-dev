@@ -19,6 +19,7 @@ for ref,f in fps.items():
  if dnp:assert not models,f'{ref} DNP model must not appear in assembled views'
  if dnp or ref=='U202':
   for pad in children(f,'pad'):assert not {'F.Paste','B.Paste'} & set(one(pad,'layers')[1:]),f'Customer/DNP part {ref} must not receive reflow paste'
+ if ref in {'H705','H706','H707','H708'}:continue
  if ref.startswith('JP'):copper_jumpers.append(ref);continue
  if ref.startswith('TP8'):
   assert {'board_only','exclude_from_bom','exclude_from_pos_files'} <= set(one(f,'attr')[1:])
@@ -91,9 +92,9 @@ for ref,xy in zip(['H701','H702','H703','H704'],mechanical['display']['mountingC
    w,h=map(float,one(pad,'size')[1:3]);distance=math.hypot(px-xy[0],py-xy[1])-math.hypot(w,h)/2
    assert distance>=2.75,f'{other_ref} pad {pad[1]} intrudes into {ref} hardware clearance'
 keepouts=[z for z in children(tree,'zone') if one(z,'keepout')]
-assert len(keepouts)==4,'Four both-side support keepouts are required'
+assert len(keepouts)==8,'Four LCD supports and four bracket mounts require keepouts'
 for zone in keepouts:
- assert one(zone,'layers')[1:]==['F.Cu','B.Cu']
+ assert set(one(zone,'layers')[1:]) in [{'F.Cu','B.Cu'},{'F.Cu','In1.Cu','In2.Cu','B.Cu'}]
  assert one(one(zone,'keepout'),'tracks')[1:] == ['not_allowed']
  assert one(one(zone,'keepout'),'vias')[1:] == ['not_allowed']
 # PCB edits and reusable library footprints must agree, so updating from libraries
@@ -112,3 +113,24 @@ regulator=children(fps['U701'],'model')[0];near(one(one(regulator,'offset'),'xyz
 host=next(m for m in children(fps['U202'],'model') if 'Luckfox-Pico-Mini' in m[1]);near(one(one(host,'offset'),'xyz')[1:],mechanical['luckfox']['moduleModelOffset'])
 report={'modelsVerified':len(provenance),'assembledReferencesWithModels':modeled,'copperOnlyJumpers':copper_jumpers,'landPatterns':'C&K, GCT, Amphenol, Microchip and Diodes recommended land dimensions asserted','boardShape':'160 x 70 mm capsule; no rectangular bay or module cutout','displayMounts':'Four M2.5 clearance holes match HOTHMI manufacturer drawing','modelLimitations':['LCD, card socket, switch and USB are dimensional envelopes, not detailed manufacturer CAD','Standoff model omits threads','Physical first-article header/module fit remains to be confirmed']}
 (V/'mechanical-check-results.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
+
+# Independently assert the factory points and all custom bracket hardware clearances.
+service=json.loads((V/'serviceability.json').read_text())
+for entry in service['testpoints']:
+ f=fps[entry['ref']];near(one(f,'at')[1:3],entry['xy']);assert one(f,'layer')[1]==entry['layer']
+ pad=children(f,'pad')[0];near(one(pad,'size')[1:3],[3.4,1.8]);assert pad[2]=='smd'
+ assert set(one(pad,'layers')[1:])==({entry['layer'],entry['layer'].replace('.Cu','.Paste'),entry['layer'].replace('.Cu','.Mask')})
+ assert one(pad,'net')[-1]==entry['net']
+ assert not {'exclude_from_bom','exclude_from_pos_files','dnp'} & set(one(f,'attr')[1:])
+for entry in service['bracketMounts']:
+ f=fps[entry['ref']];near(one(f,'at')[1:3],entry['xy']);near(one(children(f,'pad')[0],'drill')[1:],[entry['drillMm']])
+ assert not children(f,'model'),'Unfitted custom bracket mounts must not invent fitted spacers'
+ for ref,other in fps.items():
+  if ref.startswith('H70'):continue
+  at=one(other,'at');fx,fy=map(float,at[1:3]);angle=math.radians(float(at[3]) if len(at)>3 else 0)
+  for pad in children(other,'pad'):
+   dx,dy=map(float,one(pad,'at')[1:3]);px=fx+math.cos(angle)*dx+math.sin(angle)*dy;py=fy-math.sin(angle)*dx+math.cos(angle)*dy
+   w,h=map(float,one(pad,'size')[1:3]);assert math.hypot(px-entry['xy'][0],py-entry['xy'][1])-math.hypot(w,h)/2>=2.75,(entry['ref'],ref,pad[1])
+report.update(factoryKeystonePoints=8,independentBracketMounts=service['bracketMounts'],bracketSpacingMm=service['mountSpacingMm'])
+(V/'mechanical-check-results.json').write_text(json.dumps(report,indent=2)+'\n')
+print('Verified eight factory Keystone points and four independent M2.5 bracket mounts.')

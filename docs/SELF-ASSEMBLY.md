@@ -1,3 +1,8 @@
+> Working-board update: 0.0.11-dev adds eight factory Keystone 5015 / C2906768
+> SMT test points and removes J302. The purchase kit below is the earlier
+> self-assembly revision; use the current native BOM and serviceability map for
+> any new purchase. The current request is for factory assembly of all test points.
+
 # Optional self-assembly with DigiKey parts
 
 **JLCPCB remains the primary route:** order the existing assembled pill carrier, then fit the headers and modules using the [assembly guide](MODULAR-ASSEMBLY.md). Revision 0.0.6-dev adds shared-supplier switches and USB-C. Use matching revision files.

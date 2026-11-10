@@ -11,10 +11,14 @@ import json
 from pathlib import Path
 import stat
 import subprocess
+import os
+import struct
+import fcntl
+import re
 
 UPSTREAM_SHA256 = '6444ae780d74e346c5a52b239fb3871c95a05f5f4fd609a9bb11bdb00f6f472a'
 TEMPLATE_SHA256 = '605adfc756018897c72544cfb669156efd9e97cca6cb44684c2a55283ca16c94'
-OUTPUT_SHA256 = {'carrier': 'c2319b39618467da8e187fdcccf08a6895c8076fd4b64ae9f960ce560dc68a7f',
+OUTPUT_SHA256 = {'carrier': '02bc415276c37dbf3332a2d7535284ade431e42173d472c41f7798b3bb4d8f4b',
                  'base-fork': TEMPLATE_SHA256}
 DEFAULT_TEMPLATE = Path(__file__).resolve().parents[1] / 'firmware/bench-profiles/base-fork-io-config.json'
 
@@ -67,6 +71,12 @@ def configure(path, profile='carrier', template=None):
         target.update(copy.deepcopy(replacement))
     else:
         target['display']['spi_hz'] = 10_000_000
+        # These numbers denote Rockchip banks, not Linux cdev enumeration IDs.
+        # GPIO2 is absent on the Mini; resolve stable aliases by kernel label.
+        for selector in [*target['display'].values(), *target['buttons'].values()]:
+            if isinstance(selector,list) and selector and isinstance(selector[0],str):
+                match=re.fullmatch(r'/dev/gpiochip(\d+)',selector[0])
+                if match:selector[0]='/dev/gpiochip-bank'+match[1]
     if other_models(output) != other_models(original):
         raise ValueError('IO transform changed an unrelated model')
     encoded = (json.dumps(output, indent=2) + '\n').encode()
@@ -123,6 +133,52 @@ case "${1:-start}" in
     *) echo "pcscd UART2 autostart held by base-fork IO resource policy"; exit 0 ;;
 esac
 '''
+
+GPIO_BANK_HELPER = 'usr/lib/shieldsigner-camera/gpio-bank-profile.py'
+GPIO_BANK_INIT = 'etc/init.d/S41shieldsigner-gpio-banks'
+GPIO_BANK_INIT_BYTES = b'''#!/bin/sh
+set -eu
+case "${1:-start}" in
+ start) exec python3 /usr/lib/shieldsigner-camera/gpio-bank-profile.py --gpio-aliases ;;
+ stop) exit 0 ;;
+ *) echo "Usage: $0 {start|stop}" >&2; exit 1 ;;
+esac
+'''
+
+def gpio_chip_info(path):
+    """Linux GPIO_GET_CHIPINFO_IOCTL; metadata only, no line requested."""
+    fd=os.open(path,os.O_RDONLY|os.O_CLOEXEC)
+    try:
+        data=bytearray(68)
+        fcntl.ioctl(fd,0x8044B401,data,True)
+        name,label,lines=struct.unpack('32s32sI',data)
+        return {'name':name.split(b'\0',1)[0].decode(),
+                'label':label.split(b'\0',1)[0].decode(),'lines':lines}
+    finally:os.close(fd)
+
+def create_gpio_aliases(dev=Path('/dev'),reader=gpio_chip_info):
+    """Resolve all banks before changing only our named device symlinks."""
+    dev=Path(dev);chips=[]
+    for path in sorted(dev.glob('gpiochip*')):
+        if re.fullmatch(r'gpiochip\d+',path.name) and not path.is_symlink():chips.append((path,reader(path)))
+    selected={}
+    for bank,minimum in [(0,5),(1,26),(4,18)]:
+        matches=[path for path,info in chips if info['label']==f'gpio{bank}' and info['lines']>=minimum]
+        if len(matches)!=1:raise ValueError(f'Require one GPIO bank label gpio{bank} with at least {minimum} lines; no GPIO lines opened')
+        selected[bank]=matches[0]
+    for bank in selected:
+        link=dev/f'gpiochip-bank{bank}'
+        if link.exists() and not link.is_symlink():raise ValueError('Refusing to replace a non-symlink GPIO alias')
+    for bank,path in selected.items():
+        link=dev/f'gpiochip-bank{bank}'
+        if link.is_symlink() and link.readlink()==Path(path.name):continue
+        temporary=dev/(link.name+f'.tmp-{os.getpid()}')
+        temporary.symlink_to(path.name)
+        try:os.replace(temporary,link)
+        finally:
+            if temporary.is_symlink():temporary.unlink()
+    return {'gpioBankAliases':{str(bank):str(dev/f'gpiochip-bank{bank}') for bank in selected},
+            'targets':{str(bank):str(path) for bank,path in selected.items()},'gpioLinesRequested':False}
 
 
 def sdk_revision(sdk):
@@ -188,7 +244,16 @@ def configure_resources(root, profile='carrier'):
     if profile not in OUTPUT_SHA256:
         raise ValueError('IO profile must be carrier or base-fork')
     if profile == 'carrier':
-        return {'kind': 'shieldsigner-io-resource-policy', 'ioProfile': 'carrier', 'changed': False}
+        root=Path(root);helper=regular_bytes(Path(__file__))
+        items=[(GPIO_BANK_HELPER,helper,0o644),(GPIO_BANK_INIT,GPIO_BANK_INIT_BYTES,0o755)]
+        for name,data,mode in items:
+            path=root/name
+            if path.is_symlink() or (path.exists() and regular_bytes(path)!=data):raise ValueError('Unreviewed existing GPIO bank startup asset')
+        for name,data,mode in items:
+            path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data);path.chmod(mode)
+        return {'kind':'shieldsigner-io-resource-policy','ioProfile':'carrier','changed':True,
+                'gpioBankPolicy':'kernel-label-aliases','gpioBanks':[0,1,4],
+                'files':{name:{'sha256':digest(data),'mode':mode} for name,data,mode in items}}
     service = Path(root) / 'etc/init.d/S60pcscd'
     original = regular_bytes(service)
     if digest(original) != PCSCD_SOURCE_SHA256 and original != PCSCD_HOLD:
@@ -207,9 +272,15 @@ def configure_resources(root, profile='carrier'):
 
 def verify_resources(root, receipt, profile):
     if profile == 'carrier':
-        expected = {'kind': 'shieldsigner-io-resource-policy', 'ioProfile': 'carrier', 'changed': False}
+        expected={'kind':'shieldsigner-io-resource-policy','ioProfile':'carrier','changed':True,
+                  'gpioBankPolicy':'kernel-label-aliases','gpioBanks':[0,1,4],
+                  'files':{GPIO_BANK_HELPER:{'sha256':digest(regular_bytes(Path(__file__))),'mode':0o644},
+                           GPIO_BANK_INIT:{'sha256':digest(GPIO_BANK_INIT_BYTES),'mode':0o755}}}
         if receipt != expected:
             raise ValueError('Carrier resource policy receipt changed')
+        for name,row in expected['files'].items():
+            path=Path(root)/name
+            if digest(regular_bytes(path))!=row['sha256'] or stat.S_IMODE(path.stat().st_mode)!=row['mode']:raise ValueError('Carrier GPIO bank startup asset changed')
         return receipt
     if profile != 'base-fork':
         raise ValueError('IO profile must be carrier or base-fork')
@@ -233,11 +304,17 @@ if __name__ == '__main__':
     action = parser.add_mutually_exclusive_group()
     action.add_argument('--kernel-sdk', type=Path)
     action.add_argument('--rootfs', type=Path)
+    action.add_argument('--gpio-aliases',action='store_true',help='Create runtime bank-label device aliases; no GPIO lines requested')
     parser.add_argument('--profile', choices=OUTPUT_SHA256, default='carrier')
     parser.add_argument('--template', type=Path)
-    parser.add_argument('--receipt', type=Path, required=True)
+    parser.add_argument('--receipt', type=Path)
     parser.add_argument('--verify', action='store_true')
     args = parser.parse_args()
+    if args.gpio_aliases:
+        if args.io_config or args.receipt or args.verify or args.profile!='carrier':parser.error('GPIO alias startup is a separate carrier-only action')
+        print(json.dumps(create_gpio_aliases(),indent=2))
+        raise SystemExit(0)
+    if args.receipt is None:parser.error('--receipt is required for offline configuration/verification')
     if args.io_config and (args.kernel_sdk or args.rootfs):
         parser.error("Select exactly one IO configuration, kernel or rootfs action")
     if args.kernel_sdk:

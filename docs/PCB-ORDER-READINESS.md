@@ -1,3 +1,40 @@
+# Current 0.0.11-dev order-review status
+
+The four-layer working pill revision has **43 factory SMT placements / 18 SKUs**,
+including eight Keystone 5015 / C2906768 service points. The four new bracket
+holes are optional M2.5 hardware anchors; modules/headers/screws remain customer
+assembly. J302 is removed. Use the freshly generated order ZIP; all 0.0.9 and
+0.0.7 release/preview files below are historical.
+
+**First-article fabrication and assembly review package prepared.** Submit the
+matched files for sourcing, DFM and a prototype quote. Physical first-article
+results are acceptance work **after delivery**, before repeat builds; they are
+not a prerequisite to ordering the prototypes. Checkout still requires supplier
+confirmation of exact parts, tooling and placement.
+
+The 2026-11-09 public catalog snapshot reports:
+
+| Selected component | LCSC | Per board | Standard-assembly stock |
+|---|---|---:|---:|
+| Keystone 5015 | C2906768 | 8 | 77,077 |
+| C&K PTS636SK25SMTRLFS | C2689642 | 8 | 0 |
+| Microchip SEC1210/PV-UR2 | C633309 | 1 | 0 |
+| Amphenol 7312P0225A13LF | C5417011 | 1 | 0 |
+
+These are dated public fields, not a stock reservation. Overseas inventory is
+not confirmed assembly allocation. Resolve exact-MPN sourcing and attrition with
+JLC before paying or substituting parts. Supplier placement/DFM review must use
+the current board hash and matched compensated CPL, including all eight loops.
+Confirm the nominal 1.6 mm four-layer stackup. Native ERC/DRC and pinout checks
+are software gates; first-article fit, power/thermal/rail tests, correct carrier
+firmware, display operation and smartcard transactions remain required.
+
+Rebuild with `mise run variant:lcd:service:review` and
+`mise run variant:lcd:fab`. The generated `manufacturing/readiness.json` records
+current stock blockers and file hashes. No order or account change is implied.
+
+## Historical 0.0.9 artwork review record
+
 # PCB first-article order readiness
 
 The target is the **main eight-pin pill carrier, 0.0.9-dev**, with added

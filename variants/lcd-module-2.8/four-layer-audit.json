@@ -1,0 +1,24 @@
+{
+  "beforeSha256": "59abf9a976ff8960a9f1f4c37245fe000f67a4bdce78db8634145cc372b2ace5",
+  "afterSha256": "bcd38b64cffab4e5818576532d2e51f45df37868f67307751ea5a2ff7a105df8",
+  "copperLayers": 4,
+  "innerNets": [
+    "GND",
+    "GND"
+  ],
+  "thicknessMm": 1.6,
+  "nominalDielectricsMm": [
+    0.2,
+    1.04,
+    0.2
+  ],
+  "copperThicknessMm": 0.035,
+  "supplierStackupApproved": false,
+  "preserved": [
+    "footprints",
+    "tracks",
+    "vias",
+    "outline",
+    "silkscreen"
+  ]
+}

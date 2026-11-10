@@ -1,10 +1,11 @@
-# JLCPCB placement review — PCB 0.0.9-dev
+# JLCPCB placement review — PCB 0.0.11-dev
 
-Assembly package **0.0.9 r1** is an artwork-only first-article kit with
-**review_required** status. Exact protected-tree comparison against the 0.0.7
-board preserves component poses/identities, pads, copper, outline and the export
-datum. This supports retaining the reviewed compensation; it does not establish
-a new supplier preview, cart update or assembler placement approval.
+This is the four-layer service revision: **43 factory SMT placements / 18
+catalog lines**, including eight Keystone 5015 loops. Status is
+**stock_review_required**. `serviceability-audit.json` binds the retained
+component poses and circuitry to the current board hash. The original three
+placement corrections below are retained exactly once; this is not a new
+supplier placement approval.
 
 The former 0.0.7 preview/quote is preserved under `../history/0.0.7-preview/`.
 No order/payment is submitted by generating these files.
@@ -12,8 +13,8 @@ No order/payment is submitted by generating these files.
 ## Upload and confirm
 
 1. Upload this package's Gerber ZIP, BOM and **compensated `cpl-jlcpcb.csv`**
-   together. Select 1.6 mm, both-side assembly. Expect 35 SMT placements across
-   17 catalog lines, with customer-fitted modules and through-hole headers.
+   together. Select four copper layers, 1.6 mm, both-side assembly. Expect 43 SMT placements across
+   18 catalog lines, with customer-fitted modules and through-hole headers.
 2. Do not repeat old manual rotations/offsets: they are already in the upload
    CSV. `cpl-native-reference.csv` is diagnostic only.
 3. Explicitly include J301 **USB4125-GF-A-0190 / C5246813** if the importer leaves
@@ -30,8 +31,9 @@ No order/payment is submitted by generating these files.
 | J601 | 88.620000 | 20.050000 | 0° | −0.8 mm X; +180° |
 | U601 | 85.000000 | 60.700000 | 0° | +180° |
 
-Other 32 placement rows are unchanged. The exporter verifies current board hash,
-artwork compatibility proof, identities, bottom side and native datum before
+The other 32 original placement rows are unchanged; eight new Keystone rows
+are included (TP901/TP902 top, TP903–TP908 bottom). The exporter verifies current board hash,
+service compatibility proof, identities, bottom side and native datum before
 applying compensation exactly once. D302's native/catalog pad-1 baseline needs
 no extra rotation; a blanket bottom-side rule would be wrong. U701 stays on top
 with its original pin-1 orientation; D301 is bidirectional.

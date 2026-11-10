@@ -29,3 +29,6 @@ tools/telegram/private/
 
 # Finder metadata is not a source or release artifact.
 .DS_Store
+
+# Generated tscircuit CLI diagnostic images.
+checks/

@@ -1,92 +1,56 @@
-# Native KiCad board
+# Working with KiCad
 
-The **main PCB** is the [eight-pin 2.8-inch four-layer carrier](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro).
-It lives directly in `kicad/`, with its local symbols, footprints and models.
-`mise run kicad:open`, `kicad:check`, `kicad:export` and `kicad:fab` use it by default.
-Its native ERC/DRC have zero violations, unconnected items, parity issues or exclusions.
-The [carrier guide](docs/LCD-MODULE-VARIANT.md) covers assembly and the matched factory kit.
+The main design is [`kicad/SeedSigner-Plus-smartcard-pico.kicad_pro`](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro): the **0.0.12-dev, four-layer, eight-pin display carrier**. Its inherited filename preserves schematic annotation paths. Supporting files live in [`hardware/`](hardware/README.md), including the [matched assembly data](hardware/manufacturing/README.md).
 
-The old 40-pin FPC project is preserved in `variants/standard-fpc/kicad/`.
-Use `mise run kicad:standard:check` for that design and its two documented DNP exceptions.
-The old `variants/lcd-module-2.8/kicad` path is a compatibility link to the main project.
-
-## Use mise
+## Setup and open
 
 ```sh
 mise install bun@1.2.21 uv@0.12.7
 mise run kicad:setup
 mise run kicad:open
-mise run kicad:export
-mise run kicad:check
-mise run docs
-mise run kicad:preview
 ```
 
-The source requires KiCad 10. The existing installed KiCad 9 cannot open it. Setup caches the official KiCad **10.0.7** macOS image (~1.34 GB) in ignored `.tools/` and mounts it read-only. The wrapper mounts the cached image again when needed after restart. Your installed application is preserved. Alternatively set `KICAD_CLI` to the absolute path of your own KiCad 10 CLI. The open task launches the corresponding app. This cached setup is macOS-specific.
+The source requires KiCad 10. The wrapper caches the official **10.0.7** macOS image in ignored `.tools/` and mounts it read-only, preserving the installed application. The initial download is approximately 1.34 GB. On other setups, set `KICAD_CLI` to your KiCad 10 CLI. The cached disk-image workflow is macOS-specific.
 
-The project tasks deliberately disable auto-installing the parent monorepo's unrelated infrastructure tools. Bun and uv are pinned in `mise.toml`; `op` for Telegram remains supplied by the existing monorepo configuration. KiCad itself is managed by the project wrapper because the GUI/CLI bundle is distributed as a macOS disk image.
+All local symbols, footprints and models are kept with the project. Preserve the exact `Footprints/` capitalization for Linux compatibility. PDFs and STEP models use Git LFS; hydrate them with `git lfs pull` when needed.
 
-## Historical FPC reference notes
+## Validate and export
 
-The sections below through the historical editing workflow describe the preserved FPC design; they do not redefine the main carrier’s pinout, layer count or DNP policy.
+```sh
+mise run hardware:check
+mise run hardware:fab
+mise run hardware:review
+mise run hardware:package
+```
 
-## What changed
+`hardware:check` checks native ERC/DRC/connectivity/parity, local models and mechanical geometry, the recorded service/rear-placement edits, and module pinouts. The current board permits **zero DRC exclusions**.
 
-See [historical native changelog](variants/standard-fpc/kicad/CHANGELOG.md). The working project starts from the pinned upstream PCB, preserving its geometry, routing, hierarchy, DNP settings and original drawings. Its complete local libraries now remove missing-library setup dependencies. This is a refinement of the upstream design, not a fresh autorouted layout.
+`hardware:fab` creates a matched four-layer Gerber/drill/BOM/CPL set. `hardware:review` exports the complete schematic PDF, its front-page PNG, assembly renders and STEP/GLB files. The front-page render uses Poppler (`pdftoppm`; `brew install poppler` on macOS). `hardware:package` packages existing, matching exports. These generated outputs are under `dist/lcd-module-2.8/`; tracked assembly data is under `hardware/manufacturing/`.
 
-Native fixes add explicit no-connect declarations, correct SEC1210 power-output pin types, annotate USB power entry, and declare the unused alternative header/testpoint as schematic-only. C603/C604 change from 100 nF to 1 µF to align nominal output decoupling with the [SEC1210 datasheet](https://www.microchip.com/content/dam/mchp/documents/UNG/ProductDocuments/DataSheets/00001561D.pdf), table 6-4 notes 6-2 and 6-3. The full [component guide](docs/COMPONENTS.md) reflects those changes and explains each part, selection rationale and pad/net usage.
+`kicad:check`, `kicad:export` and `kicad:fab` also target the main native project. `kicad:fab` exports bare-board fabrication data; use `hardware:fab` for the matched assembly kit. Existing `variant:lcd:*` tasks remain compatible aliases for current-board tooling.
 
-## Native checks and remaining work
+Passing software checks does not qualify physical fit, reflow, thermal operation or powered behavior. Supplier review and first-article measurements remain necessary; see [order readiness](docs/PCB-ORDER-READINESS.md).
 
-Current results from KiCad 10.0.7:
+## Editing workflow
 
-| Check | Result |
-|---|---|
-| Schematic ERC | 0 errors; 0 warnings |
-| PCB connectivity | 0 unconnected items |
-| Schematic/PCB parity | 0 issues |
-| Layout DRC | 0 active errors; 0 warnings; 2 documented exclusions |
+Edit the native project first, then regenerate the experimental reference data:
 
-Native reports retain the two excluded courtyard findings with their comments. R403/R404 and R409/R408 are mutually exclusive mode straps sharing lands. R404 and R408 must remain DNP in the current variant. `docs/drc-assembly-exceptions.json` records the rationale, and `mise run kicad:check` fails if that population changes. No clearance or thermal-spoke limits were reduced. These exclusions are an explicit assembly decision, not physical separation of the alternate footprints.
+```sh
+mise run kicad:check
+mise run generate
+mise run build
+mise run check
+mise run tscircuit:pill:reference:check
+```
 
-Small placement changes separate C301/C302 and R607/C603 and shift the optional J302 header left. The selected XKB switch has its own native footprint identity and a 9.1 × 6.5 mm assembly envelope; all button centers remain fixed. Extended copper lands remain as inherited and need paste/reflow qualification. Decorative outlines that collided with labels/pads moved to fabrication layers; signal labels remain on silkscreen. The LCD connector mounting lands now have mask openings and paste apertures.
+For scripted edits, `mise run kicad:edit path/to/recipe.json` creates a backup and applies explicit reference/UUID edits through the pinned KiCad Python API. Move recipes require their original positions; a stale recipe must fail. Candidate checks reject newly introduced DRC/connectivity issues and preserve original pad/track nets. Backups and audit logs remain in ignored `.tools/pcb-edits/`.
 
-`mise run kicad:check` returns success for this documented default variant. DRC is a geometry/connectivity check; it does not establish module fit, effective capacitance, backlight current, assembly rotations or physical bring-up results. `mise run kicad:fab` reruns the gate and exports Gerbers/separate PTH/NPTH drill files under `dist/kicad/fabrication/`, plus a ZIP and hash manifest. Assembly is still subject to the qualifications listed in BOM.md.
+The `docs/pcb-*-edits.json` files record edits already applied. Do not replay them blindly. Preserve project rules, local library snapshots, attribution and the upstream reference. After edits, regenerate the matched assembly files and review views, and check the resulting placement sides and rotations.
 
-## Review files
+## Historical designs
 
-`mise run kicad:export` generates the hierarchical schematic PDF, native top/bottom PCB SVGs and XML netlist under `dist/kicad/`. The export command succeeds independently of DRC; a successful export is not a passed layout check. No production Gerbers are presented as approved manufacturing files.
+The old **40-pin FPC carrier** is preserved in [`variants/standard-fpc/kicad/`](variants/standard-fpc/README.md). Run `mise run kicad:standard:check` for it. Its two documented DNP courtyard exceptions apply only to that design; R404 and R408 remain DNP. Its assembly data is separate from the main board's kit.
 
-The board bundle contains the native project, local libraries, rationale docs and review reports. It excludes Telegram account credentials and message history. All work remains in this project folder.
+The [backlight PWM candidate](variants/lcd-backlight-pwm/README.md) is an optional experiment. Always-on backlight remains the main-board default.
 
-`mise run kicad:preview` serves the native review page at http://localhost:3021/board.html. This is a browser preview of native exports; editing takes place in the KiCad desktop application.
-
-## Board-edge correction — 11 October 2026
-
-U202 SMD pads 1/2 were shortened from 2.25 to 2.05 mm along their long axis; their local centers moved from −1.65 to −1.55 mm. This removes 0.20 mm from the outer end while keeping the inner edge unchanged. Pad height, module placement, PTH lands/drills, routing and board outline are unchanged. The project-local module footprint matches the edited board. KiCad zone fills were regenerated and saved.
-
-The two edge-clearance violations and the adjacent starved thermal violation are absent from the updated DRC report. No manufacturing rules or minimum spoke counts were relaxed. At that stage, ten courtyard overlaps remained; the later completion work above resolves them or documents the two DNP exceptions. These shortened solder lands still require physical module/solder-joint qualification before manufacturing approval.
-
-## Repeatable native editing
-
-Use `mise run kicad:edit path/to/recipe.json`. The tool launches the pinned KiCad Python interpreter, snapshots the board/project, and applies named operations by reference or UUID. Move operations require an explicit `from` position so replay cannot shift a component twice. Recipes can also declare an expected board SHA-256.
-
-Before installing a candidate, the tool reloads it, verifies the footprint count, runs native DRC against the same project rules/libraries, rejects newly introduced violations or broken connectivity, and checks original track net assignments. Any exception restores the original board bytes. Backups, recipes, candidate reports and hash audits are in ignored `.tools/pcb-edits/`. A deliberate overlapping-placement test was rejected with the working board SHA-256 unchanged; an idempotent reference-text edit passed.
-
-Use the committed `docs/pcb-*-edits.json` files as the record of changes already applied, not a command to replay all edits. Save/reload checks may normalize native file ordering/metadata. The original source snapshots remain unchanged in `reference/`. `scripts/cleanup-schematic.py` preserves wire/junction/no-connect geometry while normalizing cached symbol overrides and ERC metadata. Avoid direct `LIB_ID` UTF8 methods and SWIG graphics Add/Remove loops; the tool uses the tested string setter and modifies existing graphics in place.
-
-`mise run kicad:tools:check` repeats the accepted no-op, stale move and deliberately bad-placement integration checks, and confirms board/project bytes are preserved.
-
-After an accepted edit, run `mise run kicad:check`, `mise run bom:generate`, and `mise run review:build`. The final parity check and manufacturing exports use the working project, not the candidate-only layout check.
-
-Library paths use the exact tracked `Footprints/` capitalization. This prevents a case-insensitive Mac checkout from masking missing libraries in Linux checkouts.
-
-## Eight-pin pill carrier
-
-The working pill board now has four copper layers with two inner GND planes. See [stackup and quote-file distinction](variants/lcd-module-2.8/README.md#four-layer-working-board).
-
-The [0.0.9-dev pill carrier](docs/LCD-MODULE-VARIANT.md) is an independent project under `kicad/`. Use `mise run variant:lcd:open`. It follows the existing Luckfox eight-pin interface, keeps a 160×70 mm capsule and places a 2.8-inch module between the controls. A dedicated AP2112 supplies LCD_3V3. The obsolete bare-panel sheet/lands and Pico-format bay are removed.
-
-`variant:lcd:check` runs native ERC/DRC/connectivity/parity with zero permitted exclusions. `variant:lcd:models` checks 22 model hashes, reviewed solder lands, exact connector mapping, capsule edges, supports and both-side hardware clearance. `variant:lcd:fab` builds 35-part/17-line matched Gerbers/drills/BOM/CPL. `variant:lcd:review` produces both assembled views, a complete schematic PDF and STEP/GLB exports. `variant:lcd:package` pins public release outputs. LCD/socket/support models are explicit dimensional envelopes.
-
-Standard `kicad:*` tasks and the experimental tscircuit port still target the separate standard FPC carrier. Its two DNP courtyard exclusions do not apply to the pill PCB. Keep the two manufacturing sets separate.
+`hardware/kicad` and the former `variants/lcd-module-2.8` directory are compatibility links. The single editable main project lives in `kicad/`.

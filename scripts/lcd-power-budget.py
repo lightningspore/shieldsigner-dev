@@ -21,7 +21,7 @@ for current in [.12, .15, .2, .3, .6]:
     rows.append({'lcdCurrentMa': current * 1000, 'ldoDissipationW': round(power, 4),
                  'illustrativeRiseC': round(power * 184, 2),
                  'illustrativeJunctionC': round(args.ambient_c + power * 184, 2)})
-pcb = ROOT / 'variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+pcb = ROOT / 'hardware/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 report = {
     'boardSha256': hashlib.sha256(pcb.read_bytes()).hexdigest(),
     'qualification': 'Planning sensitivity calculation only; actual thermal resistance, load and temperature are unmeasured.',
@@ -51,7 +51,7 @@ report = {
     ],
     'decision': 'Do not justify the present LCD supply using the 600mA headline rating. Measure actual load and thermal behavior before repeat builds; consider a revised supply if margin is inadequate.'
 }
-out = ROOT / 'variants/lcd-module-2.8/manufacturing/lcd-power-budget.json'
+out = ROOT / 'hardware/manufacturing/lcd-power-budget.json'
 out.write_text(json.dumps(report, indent=2) + '\n')
 for row in rows:
     print(f"{row['lcdCurrentMa']:.0f}mA: {row['ldoDissipationW']:.3f}W, illustrative Tj {row['illustrativeJunctionC']:.1f}C (not qualification)")

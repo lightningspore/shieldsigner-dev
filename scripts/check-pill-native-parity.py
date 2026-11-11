@@ -55,7 +55,7 @@ for part in ref['components']:
   m=re.fullmatch(r'([0-9.]+)([pnuUmMkKRG]?)(?:[fFΩ])?',value);assert m,part['value']
   factor={'p':1e-12,'n':1e-9,'u':1e-6,'U':1e-6,'m':1e-3,'k':1e3,'K':1e3,'M':1e6,'G':1e9,'R':1,'':1}[m[2]]
   assert math.isclose(actual_part[field],float(m[1])*factor,rel_tol=1e-9),part['name']
-for row in csv.DictReader((ROOT/'variants/lcd-module-2.8/manufacturing/bom-jlcpcb.csv').open()):
+for row in csv.DictReader((ROOT/'hardware/manufacturing/bom-jlcpcb.csv').open()):
  for name in row['Designator'].split(','):
   part=source_parts[name.strip()]
   assert part['manufacturer_part_number']==row['Comment'].split('; ',1)[1],name

@@ -2,7 +2,7 @@
 """Resolve the first native DRC review of service spurs; retain baseline routing."""
 from pathlib import Path
 import runpy,subprocess,sys,json
-ROOT=Path(__file__).resolve().parents[1];V=ROOT/'variants/lcd-module-2.8';PCB=V/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+ROOT=Path(__file__).resolve().parents[1];V=ROOT/'hardware';PCB=V/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));base=sorted((ROOT/'.tools/pcb-edits').glob('service-*'))[-1]/PCB.name;t=sx['parse'](base.read_text());ids={sx['one'](n,'uuid')[1] for k in ['segment','via'] for n in sx['children'](t,k)}
 # Two standalone stitching vias occupy the new pad/spur; nearby planes and new GND points retain returns.
 for n in sx['children'](t,'via'):

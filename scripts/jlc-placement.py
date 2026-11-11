@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VARIANT = ROOT / 'variants/lcd-module-2.8'
+VARIANT = ROOT / 'hardware'
 
 
 def correct(rows, parts):

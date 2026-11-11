@@ -16,7 +16,7 @@ import numpy as np
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-VARIANT = ROOT / 'variants/lcd-module-2.8'
+VARIANT = ROOT / 'hardware'
 BOARD = VARIANT / 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 ASSETS = ROOT / 'assets/branding'
 BASE_SHA = 'b4eb7a7cef3f026bfc332a19980727a165de9ea826e4eb25dcc68e2c458004b7'

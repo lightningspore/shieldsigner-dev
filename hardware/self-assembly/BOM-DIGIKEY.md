@@ -62,7 +62,7 @@ Stock is a dated observation, not reserved inventory. Counts marked “not recor
 
 ## Retained reference
 
-[Kingbright LED drawing and ratings](../../../reference/pdfs/Kingbright-APT2012LZGCK.pdf). The [Littelfuse SMF manufacturer data sheet](https://www.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smf_datasheet.pdf.pdf) is the online TVS reference. The original JLC TVS drawing is retained separately.
+[Kingbright LED drawing and ratings](../../reference/pdfs/Kingbright-APT2012LZGCK.pdf). The [Littelfuse SMF manufacturer data sheet](https://www.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smf_datasheet.pdf.pdf) is the online TVS reference. The original JLC TVS drawing is retained separately.
 
 ## Board identity
 

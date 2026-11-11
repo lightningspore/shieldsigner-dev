@@ -1,7 +1,7 @@
 """Final service silk: designator + net, with 0.15 mm strokes."""
 from pathlib import Path
 import json,runpy,subprocess,sys
-ROOT=Path(__file__).resolve().parents[1];V=ROOT/'variants/lcd-module-2.8';PCB=V/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+ROOT=Path(__file__).resolve().parents[1];V=ROOT/'hardware';PCB=V/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 if '--worker' not in sys.argv:
  cli=runpy.run_path(str(ROOT/'scripts/kicad.py'))['cli']();sys.exit(subprocess.call([str(cli.parent.parent/'Frameworks/Python.framework/Versions/3.9/bin/python3'),__file__,'--worker']))
 import wx

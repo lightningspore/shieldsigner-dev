@@ -180,6 +180,6 @@ report = {
                   'Actual module/header revision and orientation continuity check',
                   'Verify packed carrier bank-label profile and 10MHz selection; measure live SPI and display operation']
 }
-out = ROOT / 'variants/lcd-module-2.8/pinout-audit.json'
+out = ROOT / 'hardware/pinout-audit.json'
 out.write_text(json.dumps(report, indent=2) + '\n')
 print(json.dumps(report, indent=2))

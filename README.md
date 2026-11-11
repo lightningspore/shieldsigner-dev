@@ -1,118 +1,85 @@
-# ShieldSigner — modular Luckfox smartcard carrier
+# ShieldSigner
 
-![Modular ShieldSigner assembly](variants/lcd-module-2.8/assembly-front.png)
+An open-hardware smartcard signing device built around the Luckfox Pico Mini, a 2.8-inch SPI display, and physical controls.
 
-**Main PCB: [eight-pin 2.8-inch, four-layer carrier](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro).** Open it with `mise run kicad:open`; validate it with `mise run kicad:check`. The former 40-pin FPC design is preserved in [`variants/standard-fpc/kicad/`](variants/standard-fpc/README.md). Current assembly/review metadata remains under `variants/lcd-module-2.8/`; its `kicad` link is a compatibility alias to the main project.
+[Hardware](hardware/README.md) · [Build guides](docs/README.md) · [Firmware](docs/FIRMWARE-ARTIFACTS.md) · [Website](https://shieldsigner.dev/) · [Contributing](CONTRIBUTING.md)
 
-Native KiCad is the preferred editing workflow. This repository publishes the reviewed ShieldSigner carrier variant, tools and knowledge site. Separate experimental tscircuit ports preserve the standard carrier and current pill carrier for comparison.
+![ShieldSigner assembly](hardware/assembly-front.png)
 
-Hardware component PDFs are collected in the top-level [datasheets directory](datasheets/README.md). The current [display/button electrical review](docs/DISPLAY-BUTTON-REVIEW.md) records wiring, startup checks and first-article tests.
+The **main PCB is the four-layer, eight-pin display carrier in [`kicad/`](kicad/)**. Open [the KiCad project](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro) to edit its schematic or layout. Its previews, assembly data, sourcing information and review reports live in [`hardware/`](hardware/README.md).
 
-## Firmware and repository navigation
+## Current hardware
 
-- [Firmware artifacts](docs/FIRMWARE-ARTIFACTS.md): one home for verified images,
-  staging, reusable build data and provenance; find the current image with
-  `mise run firmware:where`.
-- [LVGL firmware](firmware/lvgl-app/README.md): runtime architecture, memory work
-  and scoped hardware/fixture validation.
-- [Repository cleanup goal](docs/REPO-CLEANUP-PLAN.md): phased organization work
-  and acceptance checks that preserve the working build.
+**0.0.12-dev** is a 160 × 70 mm capsule with two inner ground planes, an independently regulated display supply, eight buttons, a SEC1210 smartcard interface, and eight M2.5 mounting holes. The regulator and reader electronics are on the back. Nine factory-assembled Keystone loops provide service access, including a **GND — +5 V — GND** power clip row at 15 mm pitch.
 
-## Eight-pin 2.8-inch pill build
+The factory population is **44 SMT placements / 18 SKUs**, split **11 front / 33 back**. Modules, ordinary headers and mechanical hardware are fitted separately. See the [assembly guide](docs/MODULAR-ASSEMBLY.md) and [supplier-review instructions](hardware/manufacturing/README.md).
 
-**Working PCB: 0.0.12-dev.** Four copper layers with two GND planes, nine factory-assembled Keystone 5015 service points, four additional M2.5 bracket mounts, rear-side regulator electronics and a readable native schematic. The current kit has 44 SMT placements / 18 SKUs. J302 is removed; TP901/TP902 provide bench +5V/GND. See the [service revision](variants/lcd-module-2.8/README.md#factory-service-points-and-independent-bracket-mounting). Supplier review is required, and the selected switches/reader IC/socket currently lack standard assembly stock. Released 0.0.9 ZIPs remain historical two-layer files.
+Native ERC, DRC, connectivity and schematic parity pass with zero violations or exclusions. This is a first-article development design: supplier sourcing/DFM approval and physical, thermal and powered bring-up remain open. [Order readiness](docs/PCB-ORDER-READINESS.md) tracks those limits. Older release ZIPs describe their tagged revisions; use the working tree's matched exports when reviewing 0.0.12-dev.
 
-The historical PCB **0.0.9-dev** added the official The Space logo and **denver.space** rear silkscreen. The [artwork audit](variants/lcd-module-2.8/branding-audit.json) confirms every non-silkscreen PCB object is unchanged from 0.0.7. The matched 35-part/17-SKU kit passes native electrical, pinout and manufacturing-file checks. **Five assembled boards are not checkout-ready:** fresh JLC assembly stock lists only two selected smartcard sockets, and this revision needs a new supplier placement/DFM review. See [order readiness](docs/PCB-ORDER-READINESS.md).
+## Schematic and PCB views
 
-**Use carrier-profile firmware before power-up.** The working 240×240 bench image drives two carrier button nets as LCD outputs. [The compatibility audit](docs/PCB-SOFTWARE-COMPATIBILITY.md) maps every pin and explains the required 320×240/10 MHz carrier configuration. The board keeps its always-on backlight default.
+The schematic starts with a system overview and a reading map for the six native sheets. Click a preview to open it at full resolution.
 
-Start with the [pill carrier guide](docs/LCD-MODULE-VARIANT.md) and [customer assembly steps](docs/MODULAR-ASSEMBLY.md). This **160×70 mm capsule** follows the eight-pin SPI module interface in the existing Luckfox design, with the larger 2.8-inch display between the controls. The current factory assembly BOM specifies 44 SMT placements across 18 catalog lines. Customer soldering is ordinary headers: 30 carrier joints, plus up to 30 if both modules arrive bare.
+[![Schematic front page: system overview and reading map](hardware/schematic-overview.png)](hardware/schematic-overview.png)
 
-The PCB uses a dedicated 3.3 V display regulator, supported display mounts and 23 local 3D models. Native ERC/DRC/connectivity/parity pass with zero exclusions. Open with `mise run variant:lcd:open`; build matched prototype quote files with `mise run variant:lcd:fab`. Physical fit, firmware/display behavior and powered bring-up remain unqualified.
+| Front PCB | Rear PCB |
+|---|---|
+| [![Front PCB with controls, display header and power clip row](hardware/board-top.png)](hardware/board-top.png) | [![Rear PCB with regulator, reader electronics and service points](hardware/board-bottom.png)](hardware/board-bottom.png) |
 
-The former 0.0.3-dev Pico-format display bay is superseded. Sections below also retain the separate standard FPC carrier and its experimental tscircuit port; do not mix their manufacturing files with the pill kit.
+[Schematic source](kicad/SeedSigner-Plus-smartcard-pico.kicad_sch) · [PCB source](kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb) · [Rear assembly view](hardware/assembly-back.png)
 
-The [printed enclosure guide](docs/ENCLOSURE.md) includes the screw list, camera clamp, button mechanisms and first-fit checks. Inspect the [assembled and exploded models](https://www.shieldsigner.dev/guides/enclosure/) on the site. The [enclosure prototype release](https://github.com/lightningspore/shieldsigner-dev/releases/tag/enclosure-preview-0.0.3-dev) contains portable STL, SCAD and 3MF files for the 0.0.6-dev PCB. Run `mise run enclosure:verify` to regenerate and check the case.
+## Open and check the board
 
-The optional [DigiKey self-assembly guide](docs/SELF-ASSEMBLY.md) provides a separate purchase BOM for the same pill board. JLC remains the primary PCBA route.
-
-## Backlight PWM revision candidate
-
-The [0.0.10-dev backlight candidate](variants/lcd-backlight-pwm/README.md) adds a dedicated Luckfox PWM path and one pull-down resistor. **Always-on remains the factory default**; PWM is selected with the existing backlight straps. Native ERC/DRC/connectivity/parity and both mode checks pass. This candidate is separate from the main 0.0.9 artwork/ordering kit; neither new revision has a current cart approval; module PWM response still needs a bench check. Rebuild it with `mise run variant:lcd:pwm`.
-
-## Standard FPC reference documentation
-
-Read these in order:
-
-1. [Electrical review](docs/ELECTRICAL-REVIEW.md): checked circuitry, corrected reset interpretation and open bench/assembly items.
-2. [JLCPCB BOM plan](docs/BOM.md) and [sourcing table](docs/BOM-TABLE.md): 43 carrier placements, exact catalog identities and dated availability.
-3. [Bring-up guide](docs/BRINGUP.md) and [results template](docs/BRINGUP-RESULTS.md): staged prototype measurements and tests.
-4. [Smartcard choices](docs/SMARTCARDS.md): contact compatibility, SeedKeeper versus Satochip, DIY and conditional applets.
-
-The [component guide](docs/COMPONENTS.md) covers all 53 PCB references and pad/net maps. [Hardware guide](docs/HARDWARE.md) explains the blocks; [port status](docs/PORT-STATUS.md) explains the experimental tscircuit limitations. Native KiCad is the preferred workflow.
-
-## Historical standard FPC workflow
-
-See [KiCad setup, exports and remaining DRC work](KICAD.md). Use `mise run kicad:standard:check` for the preserved historical project. The default `kicad:*` commands target the main eight-pin carrier. The native schematic has zero ERC errors/warnings. The PCB has zero active DRC errors/warnings and zero unconnected/parity issues. Two documented courtyard exceptions apply only to mutually exclusive DNP mode straps; population checks enforce that assumption.
-
-## Experimental tscircuit workflow
+Use [mise](https://mise.jdx.dev/) for project tasks. The project manages KiCad 10.0.7 separately from any installed KiCad 9; see [KiCad setup](KICAD.md).
 
 ```sh
 mise install bun@1.2.21 uv@0.12.7
 mise run setup
-mise run generate
-mise run docs
-mise run build
-mise run check
-mise run dev
+mise run kicad:open
+mise run hardware:check
 ```
 
-`generate` requires `uv` and regenerates geometry from the current native KiCad PCB, recording its SHA-256. Builds/checks reject stale extracted data. `src/ShieldSignerPlus.tsx` defines the native board. `scripts/build.tsx` verifies every physical pad against the reference before attaching the original tracks, vias, and filled copper. `src/index.tsx` exposes the native components for tscircuit preview. `mise run dev` regenerates/builds and previews routed circuit JSON on http://localhost:3020. After changing KiCad or TSX, run generate/build again to refresh that output. `mise run dev:source` previews editable TSX without imported copper on port 3022.
+To regenerate review and supplier files:
 
-Outputs in `dist/`: circuit JSON, top/bottom PCB SVGs, schematic SVG, and BOM JSON. The schematic is a generated connectivity view, not a reproduction of the original schematic sheet arrangement. Components use generic chip symbols with original values and pin aliases.
+```sh
+mise run hardware:fab       # matched Gerbers, drills, BOM and CPL
+mise run hardware:review    # schematic PDF, assembly renders, STEP and GLB
+mise run hardware:package   # portable project and local review bundles
+```
 
-The current **0.0.9 pill carrier** has a source-authored tscircuit design at
-[`src/PillCarrier.tsx`](src/PillCarrier.tsx). Run
-`mise run tscircuit:pill:check` to build and validate it, then
-`mise run tscircuit:pill:dev` for the editable source preview on port 3020.
-Resistors, capacitors, switches, connectors and solder jumpers use their native
-component primitives. Seven functional schematic sheets, reusable footprint
-components, editable silkscreen, local 3D models, fresh autorouting and copper
-pours compile directly from TSX. Builds do not read KiCad or geometry snapshots.
-Outputs and the portable source ZIP are under `dist/pill-native/`.
+Outputs are written to `dist/lcd-module-2.8/`; this retained output name keeps existing tooling compatible. [`hardware/manufacturing/`](hardware/manufacturing/README.md) contains the tracked supplier data. The native project and local libraries remain the design authority.
 
-The earlier exact-copper reference renderer remains at
-`src/PillCarrierReference.tsx`, with `tscircuit:pill:reference:build/check/dev`
-tasks and outputs under `dist/pill-tscircuit/`. See
-[scope, validation and upstream limitations](docs/PORT-STATUS.md#source-authored-pill-design).
+## Build the device
 
-## Standard FPC hardware reference
+| Task | Start here |
+|---|---|
+| Understand the circuit and pinout | [Hardware guide](docs/LCD-MODULE-VARIANT.md), [pinout and firmware compatibility](docs/PCB-SOFTWARE-COMPATIBILITY.md) |
+| Source parts and assemble | [Factory kit](hardware/manufacturing/README.md), [assembly steps](docs/MODULAR-ASSEMBLY.md), [self-assembly option](docs/SELF-ASSEMBLY.md) |
+| Find or build firmware | [Verified artifacts](docs/FIRMWARE-ARTIFACTS.md), [LVGL application](firmware/lvgl-app/README.md), [OS build](docs/OS-BUILD.md) |
+| Print and fit the enclosure | [Enclosure guide](docs/ENCLOSURE.md), [CAD import and fit model](hardware/FIT-MODEL.md) |
+| Review first-article behavior | [Display and button review](docs/DISPLAY-BUTTON-REVIEW.md), [bring-up](docs/BRINGUP.md) |
+| Find component documentation | [Datasheets](datasheets/README.md) |
 
-Pinned upstream commit: `efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f` in [3rdIteration/seedsigner](https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero). Original board, hierarchical schematics, README, license and provenance are in `reference/`.
+Use the **carrier firmware profile** before powering this PCB. The older bench profile drives two carrier button nets as display outputs. The [compatibility guide](docs/PCB-SOFTWARE-COMPATIBILITY.md) records the required 320 × 240 display configuration and GPIO mappings.
 
-The port contains 53 components, 86 named nets (including unconnected physical pin groups), 479 tracks, 314 vias, and 33 filled copper polygons. It includes the SEC1210 smartcard interface, combined SIM/full-size card socket, USB-C power, buttons, and 40-pin 2.8-inch ST7789 LCD interface. Use the upstream BOM and assembly instructions to select exact parts. The Luckfox Pico mounts microSD side upward, USB end toward the edge; insulate protruding pins beneath the LCD and follow the reference jumper defaults.
+## Repository map
 
-The [OS compilation guide](docs/OS-BUILD.md) records pinned inputs, the Proxmox builder setup, build commands, monitoring and artifact retrieval. See [the bring-up guide](docs/BRINGUP.md) for hardware and first boot. Firmware selection and secure boot are separate from the PCB port. B13's signed Mini SD image uses a public development key; signing alone does not enable secure boot. Do not fuse a device as part of PCB setup.
+| Directory | Contents |
+|---|---|
+| [`kicad/`](kicad/) | Main native schematic, PCB, local libraries and 3D models |
+| [`hardware/`](hardware/README.md) | Current-board previews, assembly files, sourcing and audits |
+| [`datasheets/`](datasheets/README.md) | Component PDFs, provenance and BOM coverage |
+| [`docs/`](docs/README.md) | Build, electrical, firmware and validation guides |
+| [`firmware/`](firmware/) | Application, display, camera and image tooling |
+| [`enclosure/`](enclosure/) | Printable enclosure and mechanical checks |
+| [`scripts/`](scripts/) | Reproducible generation, export and verification tools |
+| [`src/`](src/) | Experimental tscircuit projects and native reference preview |
+| [`website/`](website/README.md) | Static knowledge site generated from an explicit content allowlist |
+| [`variants/`](variants/README.md) | Historical FPC design and optional backlight experiment |
+| [`reference/`](reference/) | Preserved upstream sources, research and attribution |
 
-## Validation and limitations
+`mise run build`, `check` and `dev` use the main board's native reference preview. The independently routed tscircuit experiment has explicit `tscircuit:pill:*` tasks; it is separate from fabrication. See [port status](docs/PORT-STATUS.md).
 
-The build writes `dist/validation-report.json` with preserved renderer warnings and the exact validation scope. The port checks physical land coordinates/polygons and preserves original copper rather than invoking a new autorouter. Roundrects and board arcs are polygon approximations; a 0.02 mm tolerance closes tiny source outline gaps. Original silkscreen, paste-only exposed-pad stencil subdivisions, full manufacturing stackup and fabrication outputs have not been migrated. Two known component body bounding-box warnings (SW503 and U202 near the module notch) are excluded from compiled output; actual pad geometry is still checked. This is a reproducible editable port and preview, not a manufacturing sign-off. Review the original KiCad design and run manufacturing DRC before ordering.
+## Attribution
 
-
-## Public documentation website
-
-[shieldsigner.dev](https://shieldsigner.dev/) presents the hardware, smartcards, firmware and build guides. The [static website implementation and deployment guide](website/README.md) follows the SeedPills Caddy pattern. Public HTML and assets are generated from these docs; private ingestion data is excluded.
-
-## License and provenance
-
-Derived from 3rdIteration/SeedSigner at the pinned revision in [reference/provenance.json](reference/provenance.json). The upstream MIT notice is retained in [LICENSE](LICENSE). Supplier PDFs remain their publishers’ documents; footprint-library notices are retained in place. This is a development variant, not a tested production signer.
-
-## Public repository
-
-Canonical source: [lightningspore/shieldsigner-dev](https://github.com/lightningspore/shieldsigner-dev). See the [build overview](docs/BUILD-OVERVIEW.md) for the broader module/camera/case/firmware workflow. The [0.0.9-dev pill package](https://github.com/lightningspore/shieldsigner-dev/releases/tag/pill-assembly-0.0.9-r1) contains the current native project, schematic, matched quote kit and 3D exports. The older workflow preview remains a separate standard FPC reference. These are prototype review files, not physically qualified production hardware.
-
-## Build and use workflows
-
-The public site now starts with six tasks: [PCB order](https://shieldsigner.dev/build/pcb/), [parts](https://shieldsigner.dev/build/parts/), [compile](https://shieldsigner.dev/build/compile/), [flash](https://shieldsigner.dev/build/flash/), [SeedSigner use](https://shieldsigner.dev/build/use/) and [smartcards](https://shieldsigner.dev/build/cards/). The website development version and source revision are visible in its footer. Passives show explicit units and catalog ratings. For the standard FPC reference, `mise run bom:check` validates its 28 fitted passive values. The pill manufacturing gate validates its own fitted passives against its catalog. C603/C604 purchase identities are now the 1 µF C28323 parts, superseding the initial preview’s incorrect 100 nF metadata.
-
-Revision **0.0.6-dev** replaces the eight XKB switches with C&K PTS636SK25SMTRLFS and the SHOUHAN USB-C with GCT USB4125-GF-A-0190, using new manufacturer lands and exact shared JLC/DigiKey MPNs. Use its matched BOM/CPL and Gerbers together. The [mechanical review](docs/MECHANICAL-SUBSTITUTIONS.md) records the baseline comparison; [self-assembly documentation](docs/SELF-ASSEMBLY.md) explains sourcing and measured-height plungers.
+Derived from [3rdIteration/SeedSigner](https://github.com/3rdIteration/seedsigner/tree/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/electronics/SeedSigner-Plus-smartcard-luckfoxpicozero), pinned at `efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f`. Original sources and provenance are preserved in [`reference/`](reference/provenance.json). The upstream [MIT license](LICENSE), local-library notices and supplier document attribution are retained.

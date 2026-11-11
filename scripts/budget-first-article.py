@@ -6,7 +6,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = ROOT / 'variants/lcd-module-2.8/self-assembly'
+BASE = ROOT / 'hardware/self-assembly'
 data = json.loads((BASE / 'pricing-current.json').read_text())
 with (BASE / 'bom-digikey.csv').open() as file:
     bom = list(csv.DictReader(file))

@@ -2,13 +2,13 @@
 
 This is the **0.0.11-dev pill carrier**: a larger plug-in display between the controls, the Luckfox Pico Mini underneath, and the SEC1210 smartcard reader on the back. It follows the eight-pin module interface in your existing Luckfox hardware design. The PCB is a **160 × 70 mm horizontal capsule**, with two semicircular ends and no rectangular display bay.
 
-![Assembled pill carrier, front](../variants/lcd-module-2.8/assembly-front.png)
+![Assembled pill carrier, front](../hardware/assembly-front.png)
 
 The factory assembly BOM specifies **43 SMT pieces across 18 catalog lines**, including all eight Keystone test points. Customer soldering is ordinary **2.54 mm headers**: 30 joints on the carrier, plus up to 30 on unheadered LCD/Luckfox modules. There is no customer LCD ribbon connection, fine-pitch connector, QFN or smartcard-contact soldering. The camera retains its normal Luckfox ribbon connection.
 
 The rear silkscreen now includes the official The Space logo and `denver.space`.
-The historical [0.0.9 artwork-only audit](../variants/lcd-module-2.8/branding-audit.json)
-applies to that earlier revision. The current [service audit](../variants/lcd-module-2.8/serviceability-audit.json)
+The historical [0.0.9 artwork-only audit](../hardware/branding-audit.json)
+applies to that earlier revision. The current [service audit](../hardware/serviceability-audit.json)
 checks the retained circuitry and the documented service changes. Read the
 [order-readiness review](PCB-ORDER-READINESS.md) for current sourcing and supplier
 gates. The tested 240×240 bench firmware must not be used unchanged on this
@@ -26,9 +26,9 @@ local review kit is in `dist/lcd-module-2.8/`, with hashes in
 - [Complete JLCPCB prototype quote kit](https://www.shieldsigner.dev/files/shieldsigner-modular-order.zip): Gerber ZIP, BOM, CPL, population and customer-parts list.
 - [Full schematic PDF](https://www.shieldsigner.dev/files/shieldsigner-modular-schematic.pdf).
 - [Portable KiCad project and local libraries/models](https://www.shieldsigner.dev/files/shieldsigner-modular-kicad.zip).
-- [Customer assembly and first-power steps](MODULAR-ASSEMBLY.md), [readable SMT BOM](../variants/lcd-module-2.8/manufacturing/BOM.md), [manufacturing notes](../variants/lcd-module-2.8/manufacturing/README.md).
-- [Complete STEP assembly](https://www.shieldsigner.dev/files/shieldsigner-modular-assembly.step), [GLB assembly](https://www.shieldsigner.dev/files/shieldsigner-modular-assembly.glb), [front drawing](../variants/lcd-module-2.8/pcb-top.svg), [back drawing](../variants/lcd-module-2.8/pcb-bottom.svg).
-- [Native results](../variants/lcd-module-2.8/check-results.json), [footprint/model results](../variants/lcd-module-2.8/mechanical-check-results.json), [quote readiness](../variants/lcd-module-2.8/manufacturing/readiness.json).
+- [Customer assembly and first-power steps](MODULAR-ASSEMBLY.md), [readable SMT BOM](../hardware/manufacturing/BOM.md), [manufacturing notes](../hardware/manufacturing/README.md).
+- [Complete STEP assembly](https://www.shieldsigner.dev/files/shieldsigner-modular-assembly.step), [GLB assembly](https://www.shieldsigner.dev/files/shieldsigner-modular-assembly.glb), [front drawing](../hardware/pcb-top.svg), [back drawing](../hardware/pcb-bottom.svg).
+- [Native results](../hardware/check-results.json), [footprint/model results](../hardware/mechanical-check-results.json), [quote readiness](../hardware/manufacturing/readiness.json).
 
 These are matched **prototype quotation files**. Native ERC, DRC, connectivity and schematic parity pass with **zero exclusions**. Physical module fit, powered bring-up, assembler rotation/DFM approval and enclosure qualification remain first-article work. The previous 0.0.3-dev Pico-format bay and the separate standard FPC carrier use different manufacturing files; do not mix them with this kit.
 
@@ -71,7 +71,7 @@ The LCD takes **3.3 V**, not the former Pico module's 5 V VSYS. **U701, AP2112K-
 
 The AP2112's 600 mA rating is not a promise of 600 mA usable at 5→3.3 V in this layout. Dissipation is approximately **1.7 × LCD current** watts. At a planning load of 150 mA, that is 0.255 W; the datasheet's SOT25 184 °C/W figure implies roughly 47 °C junction rise under its test conditions. The LCD drawing's 120 mA figure describes the backlight, not a guaranteed maximum whole-module load. Measure total module current, regulator temperature and supply margin before treating the prototype as qualified.
 
-The [power sensitivity calculation](../variants/lcd-module-2.8/manufacturing/lcd-power-budget.json), regenerated with `mise run variant:lcd:power-budget`, uses explicitly selected 5.25 V input, 3.1 V output and 40 °C local ambient to test margin. At 150 mA the regulator dissipates about 0.323 W; at 300 mA it dissipates about 0.645 W. Applying the datasheet's 184 °C/W value gives illustrative junction temperatures of roughly 99 °C and 159 °C respectively. These are **not predictions or measured bounds for this PCB**, and the latter case is already beyond the 150 °C absolute maximum in that simplified calculation. The 600 mA headline rating cannot establish safe 5-to-3.3 V operation here.
+The [power sensitivity calculation](../hardware/manufacturing/lcd-power-budget.json), regenerated with `mise run variant:lcd:power-budget`, uses explicitly selected 5.25 V input, 3.1 V output and 40 °C local ambient to test margin. At 150 mA the regulator dissipates about 0.323 W; at 300 mA it dissipates about 0.645 W. Applying the datasheet's 184 °C/W value gives illustrative junction temperatures of roughly 99 °C and 159 °C respectively. These are **not predictions or measured bounds for this PCB**, and the latter case is already beyond the 150 °C absolute maximum in that simplified calculation. The 600 mA headline rating cannot establish safe 5-to-3.3 V operation here.
 
 For the first article, capture the LCD supply minimum/maximum at startup and under display/camera/card activity against the module's **3.1–3.6 V operating range**. Measure whole-module current and U701 case temperature at recorded local ambient, both open and in the intended enclosure, until temperature stabilizes. Case temperature is not junction temperature; establish the thermal margin for the intended ambient before approving repeats. The LCD specification leaves total operating current unspecified, so its 120 mA typical backlight current cannot close this budget.
 
@@ -93,7 +93,7 @@ The modeled 8.5 mm female socket, 2.54 mm male insulator and 6 mm posts give abo
 
 There are **22 portable STEP models** with recorded sources and hashes. Supplier/upstream models represent the Luckfox, switches, USB, bridge and regulator. **The LCD, card socket and threadless supports are clearly identified dimensional envelopes**, not detailed manufacturer STEP files. The LCD envelope is regenerated from the saved drawing by `scripts/model-pill-display.py`. Native checks verify reviewed solder lands, the eight-pin interface, capsule edges, mounting centers and module/button separation. Physical tolerances and complete enclosure fit remain untested.
 
-![Assembled pill carrier, back](../variants/lcd-module-2.8/assembly-back.png)
+![Assembled pill carrier, back](../hardware/assembly-back.png)
 
 ## Reproduce the design
 
@@ -126,4 +126,4 @@ The native working board has four copper layers, eight factory-fitted Keystone
 are the regulated 5 V bench-power pair. Original LCD support positions, signal
 routing and component poses are retained; two isolated GND stitching vias were
 removed to clear a new service point/spur. Full details, coordinates and the
-assembly boundary are in the [current carrier guide](../variants/lcd-module-2.8/README.md#factory-service-points-and-independent-bracket-mounting).
+assembly boundary are in the [current carrier guide](../hardware/README.md#factory-service-points-and-independent-bracket-mounting).

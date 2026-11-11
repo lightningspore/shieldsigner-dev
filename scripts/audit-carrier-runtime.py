@@ -127,5 +127,5 @@ report['gpioBankSelection']={'policy':'kernel-label-aliases','ioConfigSha256':re
     'metadataIoctl':'GPIO_GET_CHIPINFO_IOCTL','metadataBytes':68,
     'sourceEvidence':'reference/research/firmware/gpio-cdev-sources.json',
     'physicalOperationVerified':False}
-(ROOT/'variants/lcd-module-2.8/carrier-runtime-audit.json').write_text(json.dumps(report,indent=2)+'\n')
+(ROOT/'hardware/carrier-runtime-audit.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps({k:v for k,v in report.items() if k != 'sources'}, indent=2))

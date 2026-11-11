@@ -2,7 +2,7 @@
 """One-time, presentation-only native schematic cleanup, retaining symbol UUIDs."""
 from pathlib import Path
 import hashlib,json,re,runpy,time,uuid
-ROOT=Path(__file__).resolve().parents[1];K=ROOT/'variants/lcd-module-2.8/kicad'
+ROOT=Path(__file__).resolve().parents[1];K=ROOT/'hardware/kicad'
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));parse,one,children=sx['parse'],sx['one'],sx['children']
 backup=ROOT/'.tools/schematic-edits'/str(time.time_ns());backup.mkdir(parents=True)
 def uid(key):return str(uuid.uuid5(uuid.NAMESPACE_URL,'shieldsigner-readable:'+key))
@@ -142,5 +142,5 @@ for filename,title in titles.items():
  before=before.rstrip()[:-1]+'\n'+tb+'\n'+'\n'.join(notes[filename])+'\n)\n'
  path.write_text('\n'.join(line.rstrip() for line in before.splitlines())+'\n')
  audit[filename]={'beforeSha256':hashlib.sha256((backup/filename).read_bytes()).hexdigest(),'afterSha256':hashlib.sha256(path.read_bytes()).hexdigest()}
-(ROOT/'variants/lcd-module-2.8/schematic-readability-audit.json').write_text(json.dumps({'files':audit,'scope':'Presentation only; native ERC, PCB parity and independent netlist comparison required'},indent=2)+'\n')
+(ROOT/'hardware/schematic-readability-audit.json').write_text(json.dumps({'files':audit,'scope':'Presentation only; native ERC, PCB parity and independent netlist comparison required'},indent=2)+'\n')
 print('Updated six native sheets; originals at',backup)

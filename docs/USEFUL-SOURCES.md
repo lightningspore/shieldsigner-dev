@@ -15,7 +15,7 @@ Use primary documentation for the part, platform and software revision you actua
 | [Satochip guide](https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/docs/satochip.md) | On-card signing workflows | Distinct from SeedKeeper storage |
 | [Bundled JavaCard applets](https://github.com/3rdIteration/seedsigner/blob/efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f/docs/javacard_applets.md) | Applet identities and versions | Does not prove an arbitrary JavaCard is compatible |
 
-For physical design, use the saved [manufacturer PDFs](PDF-REFERENCES.md), [current carrier BOM](../variants/lcd-module-2.8/manufacturing/BOM.md), and [electrical review](ELECTRICAL-REVIEW.md). For firmware provenance and reproducibility, use our [OS build record](OS-BUILD.md); the original project and fork use different platform build paths.
+For physical design, use the saved [manufacturer PDFs](PDF-REFERENCES.md), [current carrier BOM](../hardware/manufacturing/BOM.md), and [electrical review](ELECTRICAL-REVIEW.md). For firmware provenance and reproducibility, use our [OS build record](OS-BUILD.md); the original project and fork use different platform build paths.
 
 ## Reading historical advice
 

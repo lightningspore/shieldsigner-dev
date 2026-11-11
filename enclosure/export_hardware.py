@@ -21,7 +21,7 @@ shape = cq.importers.importStep(str(source)).val().translate((-128,89.579,-1.595
 vertices, faces = shape.tessellate(.08)
 mesh = trimesh.Trimesh(vertices=[v.toTuple() for v in vertices], faces=faces)
 mesh.export(target)
-board=root/'variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+board=root/'hardware/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 target.with_suffix('.json').write_text(json.dumps({
     'step_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
     'board_sha256':hashlib.sha256(board.read_bytes()).hexdigest(),

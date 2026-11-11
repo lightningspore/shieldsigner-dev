@@ -1,7 +1,7 @@
 """Nominal Keystone 5015 envelope; dimensions from manufacturer's 5015 drawing."""
 from pathlib import Path
 import hashlib,json,cadquery as cq
-ROOT=Path(__file__).resolve().parents[1];K=ROOT/'variants/lcd-module-2.8/kicad'
+ROOT=Path(__file__).resolve().parents[1];K=ROOT/'hardware/kicad'
 p=K/'3dmodels/vendor/Keystone-5015-envelope.step'
 # Nominal occupied envelope, intentionally not a detailed formed-metal model.
 outer=cq.Workplane('XY').box(2.67,1.02,1.52,centered=(True,True,False))

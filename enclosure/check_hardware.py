@@ -13,7 +13,7 @@ import trimesh
 root=Path(__file__).resolve().parents[1]
 metadata=json.loads((root/'.tools/enclosure/hardware.json').read_text())
 for key,path in [('step_sha256','dist/lcd-module-2.8/shieldsigner-modular-assembly.step'),
-                 ('board_sha256','variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'),
+                 ('board_sha256','hardware/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'),
                  ('mesh_sha256','.tools/enclosure/hardware.stl')]:
     assert hashlib.sha256((root/path).read_bytes()).hexdigest()==metadata[key],'Stale hardware mesh; regenerate before fit checks'
 parts=runpy.run_path(str(root/'enclosure/check_assembly.py'))['parts']

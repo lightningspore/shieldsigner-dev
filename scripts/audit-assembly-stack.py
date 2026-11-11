@@ -4,7 +4,7 @@ import hashlib,json,runpy
 from pathlib import Path
 import numpy as np
 import trimesh
-ROOT=Path(__file__).resolve().parents[1];V=ROOT/'variants/lcd-module-2.8'
+ROOT=Path(__file__).resolve().parents[1];V=ROOT/'hardware'
 source=ROOT/'dist/lcd-module-2.8/shieldsigner-modular-assembly.glb'
 local=ROOT/'dist/lcd-module-2.8/review-downloads.json'
 manifest=json.loads((local if local.exists() else ROOT/'assets/modular-downloads.json').read_text())

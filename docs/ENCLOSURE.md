@@ -4,7 +4,7 @@ This prototype case fits the 160 × 70 mm pill carrier with the eight-pin HOTHMI
 
 ## PCB assembly fit model
 
-The [full PCB fit kit](../variants/lcd-module-2.8/FIT-MODEL.md) includes a case-aligned STEP assembly, standard-unit GLBs, and case STL parts already positioned for assembly. The website's **PCB assembly** view removes the shell; **Case fit** makes it transparent. Hide the display or Luckfox body to inspect mating headers.
+The [full PCB fit kit](../hardware/FIT-MODEL.md) includes a case-aligned STEP assembly, standard-unit GLBs, and case STL parts already positioned for assembly. The website's **PCB assembly** view removes the shell; **Case fit** makes it transparent. Hide the display or Luckfox body to inspect mating headers.
 
 Nominal exported stack: **35.52 mm** high, **12 mm** display spacers, **8.5 mm** female socket bodies, **2.54 mm** pitch. The LCD header inserts 5.04 mm with a 0.96 mm housing gap; Luckfox headers insert 6 mm with housings touching. Exact purchased header contact depth and tolerances remain unverified. Read the fit-kit guide before selecting sockets or moving the assembly into another case.
 

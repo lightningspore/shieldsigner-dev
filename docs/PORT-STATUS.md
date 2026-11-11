@@ -1,12 +1,12 @@
-# Board status and why the tscircuit view looked incomplete
+# Native reference and experimental tscircuit status
 
-The default repository preview now follows the main four-layer KiCad board through `src/PillCarrierReference.tsx`. The independent source-authored tscircuit experiment below remains a separate layout; its explicit `tscircuit:pill:*` commands do not replace the fabrication reference. The historical FPC snapshot now reads `variants/standard-fpc/kicad/`.
+The default repository preview follows the main **0.0.12-dev, four-layer KiCad board** in `kicad/` through `src/PillCarrierReference.tsx`. Current assembly data and audits live in `hardware/`; the main board has 72 footprints, 44 factory placements and nine Keystone service loops. Its native ERC/DRC/connectivity/parity checks permit zero exclusions. The independent source-authored tscircuit experiment below remains a separate layout; its explicit `tscircuit:pill:*` commands do not replace the fabrication reference. The historical FPC snapshot now reads `variants/standard-fpc/kicad/`.
 
-The native KiCad project is the preferred design. The original tscircuit version is an experimental port of the standard FPC native board, with a recorded source SHA-256 and stale-source checks. Native checks have now run: zero ERC errors/warnings, zero active DRC errors/warnings and zero PCB unconnected items/parity issues, with two explicit DNP strap courtyard exceptions. See [native check details](../KICAD.md). Neither design is fabrication-approved.
+The native KiCad project is the preferred design. The original tscircuit version is an experimental port of the standard FPC native board, with a recorded source SHA-256 and stale-source checks. The historical FPC board has recorded zero ERC errors/warnings, zero active DRC errors/warnings and zero unconnected/parity issues, with its two explicit DNP strap courtyard exceptions. See [native check details](../KICAD.md). Neither design is fabrication-approved.
 
-## Source-authored pill design
+## Independent source-authored experiment
 
-`src/PillCarrier.tsx` is the default pill entry. It imports ordinary TSX circuit
+`src/PillCarrier.tsx` is the explicit experimental pill entry. It is separate from the default native reference preview. It imports ordinary TSX circuit
 blocks from `src/pill/sections/`, shared net names, reusable manufacturer
 footprints, symbols, artwork and local GLB models. It has no runtime dependency
 on KiCad files, extracted pad/net snapshots, imported tracks or patched Circuit
@@ -91,7 +91,7 @@ routing for manufacture.
 
 These checks do not prove that appended copper reaches every required pad, has correct clearance, includes solder jumper bridge connections, uses a qualified stackup, meets a power budget or can be manufactured. Reference copper is appended after native renderer checks; manufacturing DRC is not run on that output by the tscircuit checks.
 
-## Eight-pin pill carrier tscircuit port (0.0.9-dev)
+## Native reference preview
 
 The current 160×70 mm pill carrier has a separate entry point,
 `src/PillCarrierReference.tsx`. The standard FPC entry point and generated reference remain
@@ -110,7 +110,7 @@ Circuit JSON, top/bottom PCB SVGs, a generic-symbol connectivity schematic,
 assembly BOM and validation report. Dev serves the routed JSON on port 3020.
 The source-only entry point shows component placement without imported copper.
 
-The port retains all 60 footprints, 56 named nets, 538 tracks, 234 vias,
+The original 0.0.9 port retained all 60 footprints, 56 named nets, 538 tracks, 234 vias,
 14 zone polygons, one board copper graphic and three closed jumper copper
 bridges (JP201/JP203/JP205). Closed jumpers also connect their two ports in the
 electrical source model. The other three jumpers remain open. There are no DNP

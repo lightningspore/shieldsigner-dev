@@ -6,7 +6,7 @@ The main 0.0.9 board and its quote assets are never overwritten.
 from pathlib import Path
 import hashlib,json,re,runpy,shutil,subprocess,sys,uuid
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE=ROOT/'variants/lcd-module-2.8/kicad'
+SOURCE=ROOT/'hardware/kicad'
 DEST=ROOT/'variants/lcd-backlight-pwm/kicad'
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));children,one,parse=sx['children'],sx['one'],sx['parse']
 def uid(name):return str(uuid.uuid5(uuid.NAMESPACE_URL,'shieldsigner-pwm:'+name))

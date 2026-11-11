@@ -23,5 +23,5 @@ def verify():
  for ref in record['flippedReferences']:assert o(fps[ref],'layer')[1]=='B.Cu'
  for ref in [*[f'SW{i}' for i in range(501,509)],'J701','TP901','TP902','TP909']:assert o(fps[ref],'layer')[1]=='F.Cu'
  report={'passed':True,'boardSha256':hashlib.sha256(pcb.read_bytes()).hexdigest(),'editRecord':'docs/pcb-rear-placement-edits.json','editRecordSha256':hashlib.sha256((ROOT/'docs/pcb-rear-placement-edits.json').read_bytes()).hexdigest(),'regulatorClusterOnRear':record['flippedReferences'],'changedFootprints':list(record['changes']['footprint']),'factorySmtPlacementsBySide':{'front':11,'back':33},'rulesAndSetupUnchanged':True,'qualification':'Native geometry and exact source comparison; physical fit, rework access and thermal operation require first articles.'}
- (ROOT/'variants/lcd-module-2.8/rear-layout-audit.json').write_text(json.dumps(report,indent=2)+'\n');return report
+ (ROOT/'hardware/rear-layout-audit.json').write_text(json.dumps(report,indent=2)+'\n');return report
 if __name__=='__main__':print(json.dumps(verify(),indent=2))

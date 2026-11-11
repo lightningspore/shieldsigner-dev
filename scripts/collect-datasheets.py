@@ -16,7 +16,7 @@ from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT/'datasheets'
-VARIANT = ROOT/'variants/lcd-module-2.8'
+VARIANT = ROOT/'hardware'
 FILES = {
     'C15850':'Samsung-CL21A106KAYNNNE-spec.pdf',
     'C19077498':'C19077498-current.pdf',

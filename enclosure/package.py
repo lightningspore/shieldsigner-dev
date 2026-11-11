@@ -30,7 +30,7 @@ for name,source in [('shieldsigner-enclosure-assembled.glb','assembled.glb'),
 names=['shieldsigner-enclosure-print.zip','shieldsigner-enclosure-assembled.glb',
        'shieldsigner-enclosure-exploded.glb','shieldsigner-enclosure-plate.3mf']
 manifest={'version':'0.0.6-dev','status':'Digital prototype; physical first fit pending',
-          'boardSha256':sha(root/'variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'),
+          'boardSha256':sha(root/'hardware/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'),
           'scadSha256':sha(root/'enclosure/case.scad'),'assets':[]}
 for name in names:
     path=out/name

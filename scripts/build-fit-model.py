@@ -50,10 +50,10 @@ bounds=shape.BoundingBox()
 assert abs(bounds.zlen-35.52)<.05,(bounds.zmin,bounds.zmax)
 readback=cq.importers.importStep(str(out/'shieldsigner-pcb-fit.step')).val().BoundingBox()
 assert abs(readback.zlen-bounds.zlen)<.001
-readme=root/'variants/lcd-module-2.8/FIT-MODEL.md'
+readme=root/'hardware/FIT-MODEL.md'
 with zipfile.ZipFile(out/'shieldsigner-fit-kit.zip','w',zipfile.ZIP_DEFLATED) as bundle:
     bundle.write(readme,'README.md')
-    bundle.write(root/'variants/lcd-module-2.8/assembly-fit-check.json','assembly-fit-check.json')
+    bundle.write(root/'hardware/assembly-fit-check.json','assembly-fit-check.json')
     for path in sorted(out.glob('*.step')):bundle.write(path,path.name)
     for path in sorted(out.glob('*.glb')):bundle.write(path,path.name)
     for path in sorted((out/'case').glob('*.stl')):bundle.write(path,'case/'+path.name)

@@ -8,7 +8,7 @@ import runpy
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VARIANT = ROOT / 'variants/lcd-module-2.8'
+VARIANT = ROOT / 'hardware'
 PCB = VARIANT / 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 sx = runpy.run_path(str(ROOT / 'scripts/kicad-sexpr.py'))
 one, children = sx['one'], sx['children']

@@ -6,7 +6,7 @@ import json
 import runpy
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-V=ROOT/'variants/lcd-module-2.8'
+V=ROOT/'hardware'
 DEST=V/'self-assembly'
 parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--check',action='store_true');args=parser.parse_args()
 data=json.loads((DEST/'selection.json').read_text())

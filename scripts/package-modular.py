@@ -6,7 +6,7 @@ from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 
 ROOT = Path(__file__).resolve().parents[1]
-VARIANT = ROOT / 'variants/lcd-module-2.8'
+VARIANT = ROOT / 'hardware'
 OUT = ROOT / 'dist/lcd-module-2.8'
 board_sha = hashlib.sha256((VARIANT / 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest()
 readiness = json.loads((VARIANT / 'manufacturing/readiness.json').read_text())

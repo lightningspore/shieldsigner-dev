@@ -11,9 +11,9 @@ reproduces it from the hash-pinned source and adds native filled polygons plus
 hairlines are removed at the 30 mm print width; the monochrome lettering and
 main orbit remain. The PCB geometry is mirrored for normal reading from below.
 
-[Branding metadata](../../variants/lcd-module-2.8/branding.json) records the
+[Branding metadata](../../hardware/branding.json) records the
 source hash, conversion and placement. The
-[independent artwork audit](../../variants/lcd-module-2.8/branding-audit.json)
+[independent artwork audit](../../hardware/branding-audit.json)
 proves the non-silkscreen PCB data remains unchanged.
 
 The existing ShieldSigner mark is repository-authored vector artwork. Its

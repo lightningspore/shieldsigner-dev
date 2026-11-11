@@ -2,7 +2,7 @@
 """Recorded native serviceability revision: SMT Keystone points and bracket mounts."""
 from pathlib import Path
 import hashlib,json,math,re,runpy,shutil,subprocess,sys,time,uuid
-ROOT=Path(__file__).resolve().parents[1];V=ROOT/'variants/lcd-module-2.8';K=V/'kicad';PCB=K/'SeedSigner-Plus-smartcard-pico.kicad_pcb'
+ROOT=Path(__file__).resolve().parents[1];V=ROOT/'hardware';K=V/'kicad';PCB=K/'SeedSigner-Plus-smartcard-pico.kicad_pcb'
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));parse,one,children=sx['parse'],sx['one'],sx['children']
 def uid(key):return str(uuid.uuid5(uuid.NAMESPACE_URL,'shieldsigner-service:'+key))
 POINTS=[('TP901','+5V','+5V',105,120,'F.Cu'),('TP902','GND','GND',112,120,'F.Cu'),('TP903','HOST3V3','+3.3V',174,79.5,'B.Cu'),('TP904','GND','GND',174,85.5,'B.Cu'),('TP905','LCD3V3','LCD_3V3',108,59.5,'B.Cu'),('TP906','GND','GND',114,59.5,'B.Cu'),('TP907','TX>SC','UART_TX',120,59.5,'B.Cu'),('TP908','RX<SC','UART_RX',126,59.5,'B.Cu')]

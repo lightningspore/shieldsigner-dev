@@ -98,6 +98,6 @@ mise run variant:lcd:pinouts
 mise run variant:lcd:check
 ```
 
-The first command checks all module/LCD pad nets, default jumper paths, separated rails, 1.8 V button endpoints, UART directions, pinned app mappings and generated carrier bank-label selectors. It also verifies that the 10 MHz patch is idempotent and changes no other config. Results are retained in `variants/lcd-module-2.8/pinout-audit.json`. Native ERC/DRC/parity ran with zero violations, zero unconnected items and zero exclusions.
+The first command checks all module/LCD pad nets, default jumper paths, separated rails, 1.8 V button endpoints, UART directions, pinned app mappings and generated carrier bank-label selectors. It also verifies that the 10 MHz patch is idempotent and changes no other config. Results are retained in `hardware/pinout-audit.json`. Native ERC/DRC/parity ran with zero violations, zero unconnected items and zero exclusions.
 
 Before first power, check continuity from actual module VCC/GND and all eight LCD pins to the identified carrier endpoints. Confirm the purchased modules match these drawings. Then verify final-image FOX_22 selection, `/dev/spidev0.0`, reset as GPIO rather than MISO, actual SPI clock/CS/DC/reset waveforms, all eight buttons, LCD initialization/rotation/colors, and the power/thermal measurements above. These remaining checks are physical bring-up work, not evidence of a known PCB miswire.

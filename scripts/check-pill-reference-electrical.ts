@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto'
 import {runAllNetlistChecks,checkSchematicPlacement,runAllPlacementChecks} from '@tscircuit/checks'
 import reference from '../src/generated/pill-board.json'
 const circuit=JSON.parse(readFileSync('dist/pill-tscircuit/shieldsigner-plus.circuit.json','utf8'))
-const native=JSON.parse(readFileSync('variants/lcd-module-2.8/check-results.json','utf8'))
+const native=JSON.parse(readFileSync('hardware/check-results.json','utf8'))
 assert.equal(native.boardSha256,reference.source.sha256)
 assert.equal(createHash('sha256').update(readFileSync(reference.source.path)).digest('hex'),reference.source.sha256)
 for(const check of Object.values(native.checks) as any[]) assert(!Object.keys(check.active).length&&!check.excluded&&!check.unconnected&&!check.parity)

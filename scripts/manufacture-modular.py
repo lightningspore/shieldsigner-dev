@@ -3,7 +3,7 @@
 import collections,csv,datetime,hashlib,json,math,re,runpy,subprocess,sys
 from pathlib import Path
 from zipfile import ZipFile,ZIP_DEFLATED
-ROOT=Path(__file__).resolve().parents[1];V=ROOT/'variants/lcd-module-2.8';K=V/'kicad';PCB=K/'SeedSigner-Plus-smartcard-pico.kicad_pcb';OUT=ROOT/'dist/lcd-module-2.8';FAB=OUT/'fabrication';M=V/'manufacturing'
+ROOT=Path(__file__).resolve().parents[1];V=ROOT/'hardware';K=V/'kicad';PCB=K/'SeedSigner-Plus-smartcard-pico.kicad_pcb';OUT=ROOT/'dist/lcd-module-2.8';FAB=OUT/'fabrication';M=V/'manufacturing'
 for script in ['check-lcd-module-variant.py','check-modular-mechanics.py']:subprocess.run([sys.executable,str(ROOT/'scripts'/script)],check=True)
 cli=runpy.run_path(str(ROOT/'scripts/kicad.py'))['cli']();sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));one=sx['one'];children=sx['children'];tree=sx['parse'](PCB.read_text());values=runpy.run_path(str(ROOT/'scripts/part-values.py'))
 assert list(map(float,one(one(tree,'setup'),'aux_axis_origin')[1:]))==[50,130],'Manufacturing origin changed'

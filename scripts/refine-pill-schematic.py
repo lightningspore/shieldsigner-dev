@@ -2,14 +2,14 @@
 """Visual-review refinements for the readable pill sheets."""
 from pathlib import Path
 import runpy,re,json
-ROOT=Path(__file__).resolve().parents[1];K=ROOT/'variants/lcd-module-2.8/kicad'
+ROOT=Path(__file__).resolve().parents[1];K=ROOT/'hardware/kicad'
 s=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));o,c,p=s['one'],s['children'],s['parse']
 def shift(e,dx,dy):return re.sub(r'\(at (-?[\d.]+) (-?[\d.]+)',lambda m:f'(at {float(m[1])+dx:.5f} {float(m[2])+dy:.5f}',e)
 def hide(e):
  if '(hide yes)' not in e:
   pos=e.rfind(')');q=e[:pos].rstrip();last=q.rfind(')');e=q[:last]+' (hide yes)'+q[last:]+e[pos:]
  return e
-audit=ROOT/'variants/lcd-module-2.8/schematic-readability-audit.json'
+audit=ROOT/'hardware/schematic-readability-audit.json'
 record=json.loads(audit.read_text())
 assert not record.get('visualRefinementsApplied'),'Already refined; do not replay'
 for path in K.glob('*.kicad_sch'):

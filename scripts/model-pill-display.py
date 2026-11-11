@@ -9,7 +9,7 @@ import hashlib
 import json
 import cadquery as cq
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'variants/lcd-module-2.8/kicad/3dmodels/vendor'
+OUT = ROOT / 'hardware/kicad/3dmodels/vendor'
 
 def box(x, y, z, dx, dy, dz):
     return cq.Workplane('XY').box(dx, dy, dz, centered=False).translate((x, y, z))

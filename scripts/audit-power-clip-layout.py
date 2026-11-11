@@ -2,7 +2,7 @@
 """Verify clip spacing and bound every routing/placement change to the power row."""
 from pathlib import Path
 import hashlib,json,math,runpy,subprocess
-ROOT=Path(__file__).resolve().parents[1];V=ROOT/'variants/lcd-module-2.8';pcb=ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+ROOT=Path(__file__).resolve().parents[1];V=ROOT/'hardware';pcb=ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));c,o=sx['children'],sx['one']
 before=subprocess.check_output(['git','show','b431865:kicad/'+pcb.name],cwd=ROOT);after=pcb.read_bytes();a=sx['parse'](before.decode());b=sx['parse'](after.decode())
 assert hashlib.sha256(before).hexdigest()=='2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d'

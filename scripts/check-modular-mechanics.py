@@ -2,7 +2,7 @@
 """Gate exact modular land patterns, purchased-module interfaces and portable models."""
 import hashlib,json,math,runpy
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1];V=ROOT/'variants/lcd-module-2.8';K=V/'kicad'
+ROOT=Path(__file__).resolve().parents[1];V=ROOT/'hardware';K=V/'kicad'
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));one=sx['one'];children=sx['children'];parse=sx['parse']
 tree=parse((K/'SeedSigner-Plus-smartcard-pico.kicad_pcb').read_text());fps={next(x[2] for x in children(f,'property') if x[1]=='Reference'):f for f in children(tree,'footprint')}
 provenance=json.loads((K/'3dmodels/provenance.json').read_text())['models'];mechanical=json.loads((V/'mechanical.json').read_text())

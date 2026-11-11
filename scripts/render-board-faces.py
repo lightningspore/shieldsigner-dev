@@ -8,7 +8,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VARIANT = ROOT / 'variants/lcd-module-2.8'
+VARIANT = ROOT / 'hardware'
 board = VARIANT / 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 original = board.read_bytes()
 sx = runpy.run_path(str(ROOT / 'scripts/kicad-sexpr.py'))

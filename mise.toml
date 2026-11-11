@@ -903,7 +903,7 @@ run = "uv run python scripts/review-pill-schematic.py"
 
 [tasks."variant:lcd:testpoints:catalog"]
 description = "Refresh the selected factory-assembled Keystone SMT test point"
-run = "uv run python scripts/refresh-jlc.py --only C2906768 --output variants/lcd-module-2.8/jlc-catalog.json"
+run = "uv run python scripts/refresh-jlc.py --only C2906768 --output hardware/jlc-catalog.json"
 
 [tasks."variant:lcd:keystone:model"]
 description = "Generate the manufacturer-dimensioned Keystone 5015 occupied envelope"
@@ -919,7 +919,7 @@ run = "uv run python scripts/refine-pill-service.py"
 
 [tasks."variant:lcd:catalog:critical"]
 description = "Refresh assembly stock of the smartcard socket, switches and reader IC"
-run = "uv run python scripts/refresh-jlc.py --only C5417011 C2689642 C633309 --output variants/lcd-module-2.8/jlc-catalog.json"
+run = "uv run python scripts/refresh-jlc.py --only C5417011 C2689642 C633309 --output hardware/jlc-catalog.json"
 
 [tasks."variant:lcd:service:review"]
 description = "Verify retained native circuitry/routing and re-pin supplier placement evidence"
@@ -935,7 +935,7 @@ run = "uv run --python 3.11 --with trimesh --with networkx --with manifold3d pyt
 
 [tasks."variant:lcd:sourcing:options"]
 description = "Read-only stock snapshot of the industrial-temperature dual-UART SEC1210 option; does not substitute it"
-run = "uv run python scripts/refresh-jlc.py --only C633307 --output variants/lcd-module-2.8/sourcing-options.json"
+run = "uv run python scripts/refresh-jlc.py --only C633307 --output hardware/sourcing-options.json"
 
 [tasks."tscircuit:pill:reference:electrical"]
 description = "Check the regenerated reference netlist, schematic/PCB placement and Gerber-derived shorts"
@@ -959,7 +959,7 @@ run = "uv run --with 'pypdf[crypto]' python scripts/collect-datasheets.py"
 
 [tasks."variant:lcd:kernel-pinmux"]
 description = "Audit the retained compiled SPI/reset/button pinmux snapshot; not installed-image qualification"
-run = ["uv run python -m unittest discover -s scripts/tests -p test_carrier_pinmux.py", "uv run --with pyelftools python scripts/audit-carrier-kernel.py --dtb dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/out/bin/board_uclibc_rv1106/rv1103g-luckfox-pico-mini.dtb --config dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/source/objs_kernel/.config --report variants/lcd-module-2.8/compiled-pinmux-audit.json"]
+run = ["uv run python -m unittest discover -s scripts/tests -p test_carrier_pinmux.py", "uv run --with pyelftools python scripts/audit-carrier-kernel.py --dtb dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/out/bin/board_uclibc_rv1106/rv1103g-luckfox-pico-mini.dtb --config dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/source/objs_kernel/.config --report hardware/compiled-pinmux-audit.json"]
 
 [tasks."kicad:standard:check"]
 description = "Validate the preserved historical 40-pin FPC design and DNP exceptions"
@@ -984,3 +984,19 @@ run = "uv run python scripts/audit-power-clip-layout.py"
 [tasks."variant:lcd:rear-audit"]
 description = "Verify the recorded rear placement edits, assembly sides and unchanged rules"
 run = "uv run python scripts/rear-layout-audit.py"
+
+[tasks."hardware:check"]
+description = "Validate the main PCB, models, recorded edits and module pinouts"
+run = ["mise run kicad:check", "uv run python scripts/check-lcd-module-variant.py", "uv run python scripts/check-modular-mechanics.py", "uv run python scripts/audit-power-clip-layout.py", "uv run python scripts/review-pill-service.py", "uv run python scripts/audit-module-pinouts.py"]
+
+[tasks."hardware:fab"]
+description = "Generate the main board's matched Gerbers, drills, BOM and CPL"
+run = "uv run python scripts/manufacture-modular.py"
+
+[tasks."hardware:review"]
+description = "Render the main assembly and export schematic PDF, STEP and GLB"
+run = "uv run python scripts/render-modular.py"
+
+[tasks."hardware:package"]
+description = "Package the main board's matched local supplier-review files"
+run = "uv run python scripts/package-modular.py"

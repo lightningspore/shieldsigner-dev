@@ -1,6 +1,6 @@
-# ShieldSigner eight-pin pill — 0.0.12-dev
+# Main ShieldSigner hardware — 0.0.12-dev
 
-Open `kicad/SeedSigner-Plus-smartcard-pico.kicad_pro`. The inherited basename preserves hierarchical annotation paths; this is an independent native project. See [design and exact wiring](../../docs/LCD-MODULE-VARIANT.md), [customer assembly](../../docs/MODULAR-ASSEMBLY.md) and [quote instructions](manufacturing/README.md).
+Open [the main KiCad project](../kicad/SeedSigner-Plus-smartcard-pico.kicad_pro). The inherited basename preserves hierarchical annotation paths; this is the main native project. See [design and exact wiring](../docs/LCD-MODULE-VARIANT.md), [customer assembly](../docs/MODULAR-ASSEMBLY.md) and [quote instructions](manufacturing/README.md).
 
 The **160×70 mm capsule** centers a 2.8-inch HOTHMI HTM-TFT028A16-SPI between the controls. A single eight-pin 2.54 mm socket follows the user's existing Luckfox carrier numbering. There is no Pico-format LCD connector or projecting rectangular bay. A dedicated AP2112K-3.3 supplies LCD_3V3 independently of the Luckfox's 3.3 V output.
 
@@ -10,12 +10,12 @@ The released two-layer revision adds the official The Space logo and `denver.spa
 silkscreen. The [artwork audit](branding-audit.json) proves that all non-silk
 PCB data is unchanged from 0.0.7. Always-on backlight remains the factory
 default; the optional PWM candidate is separate. See the
-[order-readiness review](../../docs/PCB-ORDER-READINESS.md) for current stock
+[order-readiness review](../docs/PCB-ORDER-READINESS.md) for current stock
 and supplier gates. **Do not use the bench firmware unchanged:** its LCD
 outputs conflict with carrier buttons. Use the
-[carrier-profile guide](../../docs/PCB-SOFTWARE-COMPATIBILITY.md).
+[carrier-profile guide](../docs/PCB-SOFTWARE-COMPATIBILITY.md).
 
-Run `mise run variant:lcd:fab` for native/model/footprint checks and matched Gerbers/BOM/CPL. `variant:lcd:review` renders both sides and exports assembly STEP/GLB; `variant:lcd:package` bundles the portable project and pins release hashes. Manufacturing uses the shared auxiliary origin (50,130) mm. Standard carrier files do not apply.
+Run `mise run hardware:fab` for native/model/footprint checks and matched Gerbers/BOM/CPL. `hardware:review` renders both sides and exports assembly STEP/GLB; `hardware:package` bundles the portable project and pins release hashes. Manufacturing uses the shared auxiliary origin (50,130) mm. Standard carrier files do not apply.
 
 Twenty-two retained local STEP models have source/hash records. LCD, socket, switch, USB and threadless supports are dimensional envelopes. `mechanical.json` records the stack, mounting centers and drawing discrepancies; `header-map.json` records both numbering conventions. Run `git lfs pull` in a fresh checkout.
 
@@ -100,4 +100,4 @@ are unchanged; see [the layout audit](power-clip-layout-audit.json).
 
 U701 and its 10 µF input/output capacitors C701/C702 are now on the back, keeping the regulator and reader electronics accessible from the same side. The switches, display header and front power clip row retain their positions and sides. The reader reset resistor is horizontal above the aligned reset/input capacitors; the reader filter passives and jumper rows have been regularized. Rear reference labels use consistent 0.8 mm lettering with 0.15 mm strokes, with a vertical R607 reference where space is constrained.
 
-Factory assembly is **11 front / 33 back**, still 44 placements and 18 SKUs. The [exact edit record](../../docs/pcb-rear-placement-edits.json) and [rear audit](rear-layout-audit.json) cover the placement and local routing changes; original pad nets and board/project rules are preserved. Supplier placement/DFM review must use the regenerated CPL. Mechanical models and native electrical/clearance checks do not establish physical rework access or thermal performance.
+Factory assembly is **11 front / 33 back**, still 44 placements and 18 SKUs. The [exact edit record](../docs/pcb-rear-placement-edits.json) and [rear audit](rear-layout-audit.json) cover the placement and local routing changes; original pad nets and board/project rules are preserved. Supplier placement/DFM review must use the regenerated CPL. Mechanical models and native electrical/clearance checks do not establish physical rework access or thermal performance.

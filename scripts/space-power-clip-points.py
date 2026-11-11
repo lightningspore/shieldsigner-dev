@@ -2,7 +2,7 @@
 """Widen the factory power clip row and add a second Keystone ground loop."""
 from pathlib import Path
 import hashlib,json,re,runpy,shutil,subprocess,sys,uuid
-ROOT=Path(__file__).resolve().parents[1];PCB=ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb';V=ROOT/'variants/lcd-module-2.8'
+ROOT=Path(__file__).resolve().parents[1];PCB=ROOT/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb';V=ROOT/'hardware'
 sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));one,children,parse=sx['one'],sx['children'],sx['parse']
 def uid(key):return str(uuid.uuid5(uuid.NAMESPACE_URL,'shieldsigner-power-clips:'+key))
 def expression(text,predicate):return next(raw for _,_,raw in sx['expressions'](text) if predicate(parse(raw)))

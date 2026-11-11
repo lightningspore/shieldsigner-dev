@@ -39,7 +39,7 @@ current stock blockers and file hashes. No order or account change is implied.
 
 The target is the **main eight-pin pill carrier, 0.0.9-dev**, with added
 `denver.space` artwork and the existing always-on backlight topology. This is an
-artwork revision of `variants/lcd-module-2.8/`, not promotion of the separate
+artwork revision of `hardware/`, not promotion of the separate
 `variants/lcd-backlight-pwm/` candidate. The target remains 35 fitted SMT pieces
 across 17 supplier SKUs; LCD, Luckfox, camera, headers and supports are separate.
 

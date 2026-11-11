@@ -9,7 +9,7 @@ tested `lvgl-dev.cb6170a37a5a` image uses `base-fork` and must not be used uncha
 on either carrier PCB.** This is a firmware-profile mismatch, not evidence that
 the carrier should be rewired to match the separate bench display/button board.
 
-The first-article target is the main `variants/lcd-module-2.8` service revision
+The first-article target is the main `hardware` service revision
 **0.0.12-dev**, retaining the always-on display topology with four layers and
 44 fitted SMT components / 18 purchasing SKUs. The separate `lcd-backlight-pwm` 0.0.8-dev
 candidate is not the order target. Manufacturing exports must be regenerated and
@@ -198,10 +198,10 @@ or physical timing. A first article remains necessary.
 
 ## Evidence
 
-- [Carrier pinout audit](../variants/lcd-module-2.8/pinout-audit.json),
-  [header map](../variants/lcd-module-2.8/header-map.json),
+- [Carrier pinout audit](../hardware/pinout-audit.json),
+  [header map](../hardware/header-map.json),
   [module audit](MODULE-PINOUT-AUDIT.md), [host pin data](luckfox-mini-pinout.json)
-- [Main native checks](../variants/lcd-module-2.8/check-results.json) and
+- [Main native checks](../hardware/check-results.json) and
   [PWM candidate checks](../variants/lcd-backlight-pwm/check-results.json)
 - [Earlier fork mapping audit](../reverse-engineering/rkaiq/fork-display-button-map-audit.json)
   and [base-fork physical observation](../reverse-engineering/rkaiq/base-fork-display-hardware-validation.json)

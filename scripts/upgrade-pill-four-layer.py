@@ -3,7 +3,7 @@
 from pathlib import Path
 import hashlib,json,runpy,subprocess,sys,time,uuid
 ROOT=Path(__file__).resolve().parents[1]
-BOARD=ROOT/'variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+BOARD=ROOT/'hardware/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 if '--worker' not in sys.argv:
  cli=runpy.run_path(str(ROOT/'scripts/kicad.py'))['cli']()
  sys.exit(subprocess.call([str(cli.parent.parent/'Frameworks/Python.framework/Versions/3.9/bin/python3'),__file__,'--worker']))
@@ -48,7 +48,7 @@ try:
  for kind in ['footprint','segment','via','gr_line','gr_arc','gr_text','gr_poly']:
   assert normalized(sorted(children(tree,kind),key=lambda n:one(n,'uuid')))==normalized(sorted(children(after,kind),key=lambda n:one(n,'uuid'))),f'Unexpected {kind} change'
  audit={'beforeSha256':hashlib.sha256(before).hexdigest(),'afterSha256':hashlib.sha256(BOARD.read_bytes()).hexdigest(),'copperLayers':4,'innerNets':['GND','GND'],'thicknessMm':1.6,'nominalDielectricsMm':[.2,1.04,.2],'copperThicknessMm':.035,'supplierStackupApproved':False,'preserved':['footprints','tracks','vias','outline','silkscreen']}
- (ROOT/'variants/lcd-module-2.8/four-layer-audit.json').write_text(json.dumps(audit,indent=2)+'\n')
+ (ROOT/'hardware/four-layer-audit.json').write_text(json.dumps(audit,indent=2)+'\n')
  print(json.dumps(audit,indent=2))
 except BaseException:
  (backup/'candidate.kicad_pcb').write_bytes(BOARD.read_bytes())

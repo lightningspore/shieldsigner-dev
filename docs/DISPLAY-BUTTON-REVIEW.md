@@ -9,7 +9,7 @@ ordering and preparing first articles; measurements follow their delivery.
 
 - [Native KiCad project](../kicad/SeedSigner-Plus-smartcard-pico.kicad_pro)
 - [Datasheets: all 18 factory BOM SKUs, modules and retained references](../datasheets/README.md)
-- [Current build-input preparation record](../variants/lcd-module-2.8/carrier-build-preparation.json)
+- [Current build-input preparation record](../hardware/carrier-build-preparation.json)
 - [Factory sourcing and first-article order review](PCB-ORDER-READINESS.md)
 
 The PCB hash in the electrical reports must match the selected native board.
@@ -107,7 +107,7 @@ The 0.0.12 front row is **GND (TP902) — +5 V (TP901) — GND (TP909)**,
 at 15 mm centres. The three factory Keystone loops replace the previous 7 mm
 spacing of the power pair. Native land-edge gap is 11.6 mm; actual alligator
 clip clearance, insulation and mechanical strain remain first-article checks.
-[The bounded layout audit](../variants/lcd-module-2.8/power-clip-layout-audit.json)
+[The bounded layout audit](../hardware/power-clip-layout-audit.json)
 records the moved points, rerouted service spurs and unchanged retained pad nets.
 No LCD, GPIO/button or reader signals changed, so the existing carrier image
 remains the software candidate; its recorded readback evidence is preserved.
@@ -118,7 +118,7 @@ The LCD operating range is 3.1–3.6 V. Its typical backlight current is not a
 maximum total-module current, and U701's 600 mA headline rating is not a thermal
 budget at 5 V input. Measure total module load, rail minima/maxima and regulator
 temperature at recorded ambient and enclosure conditions. The
-[power sensitivity calculation](../variants/lcd-module-2.8/manufacturing/lcd-power-budget.json)
+[power sensitivity calculation](../hardware/manufacturing/lcd-power-budget.json)
 is planning evidence only.
 
 C701/C702 use Samsung CL21A106KAYNNNE. Its local typical DC-bias curves show
@@ -172,7 +172,7 @@ first-article media or review its display setting separately.
 
 The replacement candidate job is `carrier-first-article-hothmi-alias-compatible-20261110`.
 It finished with exit 0. Packed-image readback and all four ARM userspace QEMU
-checks passed; [the exact readback report](../variants/lcd-module-2.8/carrier-image-verification.json)
+checks passed; [the exact readback report](../hardware/carrier-image-verification.json)
 records the installed DTB, carrier IO mapping, pull-up startup, reader library
 and HOTHMI settings. The actual packed renderer reached `(319,239)`. The first
 readback exposed a verifier wrapper that dropped geometry arguments; its fix
@@ -204,12 +204,12 @@ mise run lvgl:app:test
 mise run lvgl:app:test:host frames geometry
 ```
 
-[Pinout report](../variants/lcd-module-2.8/pinout-audit.json) checks all 22 host
+[Pinout report](../hardware/pinout-audit.json) checks all 22 host
 pins, eight LCD pins and every button's exact net membership.
-[Runtime audit](../variants/lcd-module-2.8/carrier-runtime-audit.json) exercises
+[Runtime audit](../hardware/carrier-runtime-audit.json) exercises
 pinned reset/wake methods and the selected manufacturer program with virtual
 time and GPIO/SPI substitutes.
-[Compiled pinmux audit](../variants/lcd-module-2.8/compiled-pinmux-audit.json)
+[Compiled pinmux audit](../hardware/compiled-pinmux-audit.json)
 identifies its retained kernel snapshot; it is not the installed image.
 The new carrier kernel ABI report validates archived input hashes, 190 ARM ABI
 assertions, camera/memory configuration, enabled UART2 and carrier pinmux.

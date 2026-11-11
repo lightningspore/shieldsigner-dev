@@ -9,7 +9,7 @@ values=runpy.run_path(str(ROOT/'scripts/part-values.py'))
 parse=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'))
 parser=argparse.ArgumentParser();parser.add_argument('--standard-fpc',action='store_true');args=parser.parse_args()
 board=parse['parse']((ROOT/('variants/standard-fpc/kicad' if args.standard_fpc else 'kicad')/'SeedSigner-Plus-smartcard-pico.kicad_pcb').read_text())
-catalog={p['code']:p for p in json.loads((ROOT/('docs/jlc-catalog.json' if args.standard_fpc else 'variants/lcd-module-2.8/jlc-catalog.json')).read_text())['parts']}
+catalog={p['code']:p for p in json.loads((ROOT/('docs/jlc-catalog.json' if args.standard_fpc else 'hardware/jlc-catalog.json')).read_text())['parts']}
 
 def normalized(value):
     return re.sub(r'\s+','',value.replace('µ','u').replace('μ','u')).casefold()

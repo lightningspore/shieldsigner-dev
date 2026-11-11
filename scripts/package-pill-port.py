@@ -55,9 +55,9 @@ else:
         cache.write_text(json.dumps({'sha256':key})+'\n')
     supplier=out/'supplier-reference';supplier.mkdir(exist_ok=True)
     for name in ['README.md','bom-jlcpcb.csv','cpl-jlcpcb.csv','population.csv']:
-        shutil.copyfile(ROOT/'variants/lcd-module-2.8/manufacturing'/name,supplier/name)
+        shutil.copyfile(ROOT/'hardware/manufacturing'/name,supplier/name)
     for name in ['check-results.json','header-map.json','mechanical.json','branding.json','branding-audit.json']:
-        shutil.copyfile(ROOT/'variants/lcd-module-2.8'/name,out/f'native-{name}')
+        shutil.copyfile(ROOT/'hardware'/name,out/f'native-{name}')
     for kind in ['erc','drc']:
         path=ROOT/'dist/lcd-module-2.8'/f'{kind}.json'
         if path.exists(): shutil.copyfile(path,out/f'native-{kind}.json')
@@ -84,9 +84,9 @@ else:
                 else: target=f'tscircuit-source/kicad/{rel}'
                 archive.write(path,target)
         for path in supplier.iterdir():
-            archive.write(path,f'tscircuit-source/variants/lcd-module-2.8/manufacturing/{path.name}')
+            archive.write(path,f'tscircuit-source/hardware/manufacturing/{path.name}')
         for name in ['check-results.json','header-map.json','mechanical.json','branding.json','branding-audit.json']:
-            archive.write(ROOT/'variants/lcd-module-2.8'/name,f'tscircuit-source/variants/lcd-module-2.8/{name}')
+            archive.write(ROOT/'hardware'/name,f'tscircuit-source/hardware/{name}')
         # Shared renderer still has a default import of the standard-board snapshot.
         archive.write(ROOT/'src/generated/reference-board.json','tscircuit-source/src/generated/reference-board.json')
     print(f'Packaged {len(source_manifest)} native source/library files, original rules, stackup, Gerbers, drills and complete tscircuit outputs.')

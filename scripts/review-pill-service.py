@@ -2,7 +2,7 @@
 """Native service revision audit: retained circuitry, placement and sourcing evidence."""
 from pathlib import Path
 import hashlib,json,runpy,subprocess,xml.etree.ElementTree as E
-ROOT=Path(__file__).resolve().parents[1];V=ROOT/'variants/lcd-module-2.8';K=V/'kicad';name='SeedSigner-Plus-smartcard-pico';board=K/(name+'.kicad_pcb');out=ROOT/'dist/lcd-module-2.8/service-review';out.mkdir(parents=True,exist_ok=True)
+ROOT=Path(__file__).resolve().parents[1];V=ROOT/'hardware';K=V/'kicad';name='SeedSigner-Plus-smartcard-pico';board=K/(name+'.kicad_pcb');out=ROOT/'dist/lcd-module-2.8/service-review';out.mkdir(parents=True,exist_ok=True)
 base=sorted((ROOT/'.tools/pcb-edits').glob('service-*'))[-1];cli=runpy.run_path(str(ROOT/'scripts/kicad.py'))['cli']();sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));c,o=sx['children'],sx['one']
 def fps(path):return {next(q[2] for q in c(f,'property') if q[1]=='Reference'):f for f in c(sx['parse'](path.read_text()),'footprint')}
 a,b=fps(base/board.name),fps(board)

@@ -9,7 +9,7 @@ from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
-V = ROOT / 'variants/lcd-module-2.8'
+V = ROOT / 'hardware'
 M = V / 'manufacturing'
 OUT = ROOT / 'dist/lcd-module-2.8/bottom-only'
 PCB = V / 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'

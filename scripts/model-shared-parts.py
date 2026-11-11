@@ -5,7 +5,7 @@ Not manufacturer CAD: omits internal details, contacts and tolerances.
 from pathlib import Path
 import hashlib,json
 import cadquery as cq
-R=Path(__file__).resolve().parents[1];K=R/'variants/lcd-module-2.8/kicad';D=K/'3dmodels/local';D.mkdir(exist_ok=True)
+R=Path(__file__).resolve().parents[1];K=R/'hardware/kicad';D=K/'3dmodels/local';D.mkdir(exist_ok=True)
 def box(w,d,h,x=0,y=0,z=0):return cq.Workplane('XY').box(w,d,h,centered=(True,True,False)).translate((x,y,z)).val()
 switch=cq.Compound.makeCompound([box(6.1,3.7,1.9),box(2.7,1.3,.6,z=1.9),box(.7,.6,.15,x=-3.65),box(.7,.6,.15,x=3.65)])
 # KiCad STEP +Y is opposite footprint Y. Shell slots remain y=-2.7,+1.1.

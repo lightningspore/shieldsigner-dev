@@ -38,7 +38,7 @@
 (text "J701 is the module header, not a 40-pin bare-panel FPC. Display power is independent of the Luckfox 3.3 V output." (at 25.4 33.02 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "bc5d687d-bf2a-503a-a281-5aee26350fbe"))
 (text "DISPLAY SUPPLY" (at 45.72 48.26 0) (effects (font (size 1.5 1.5) (bold yes)) (justify left)) (uuid "046ab75d-1b1d-51c4-b02a-89c1a56db901"))
 (text "J701: CARRIER PIN NUMBERS" (at 177.8 48.26 0) (effects (font (size 1.5 1.5) (bold yes)) (justify left)) (uuid "4bbdcc07-ea78-520d-8a81-f3b8f3434908"))
-(text "C701 / C702: 10 uF, 25 V X5R\nMaintain at least 1 uF effective capacitance.\nMeasure regulator dissipation during bring-up." (at 38.1 109.22 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "515f7e21-d519-55e1-9958-921a748f9565"))
+(text "C701 / C702: 10 uF, 25 V X5R\nMaintain at least 1 uF effective capacitance.\nU701 / C701 / C702 are on the rear for service access.\nMeasure regulator dissipation during bring-up." (at 38.1 109.22 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "515f7e21-d519-55e1-9958-921a748f9565"))
 (text "MODULE MATING / NUMBERING\nCarrier pin 1 (BL) mates to module J1 pin 8 (BL_E).\nCarrier pin 8 (3V3) mates to module J1 pin 1 (VCC).\nUse the 2.54 mm J1 row, not the 2 mm J2 connector." (at 154.94 109.22 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "e333131f-ab08-5700-bc2d-ca55a662bd66"))
 (text "Factory straps: JP201 / JP203 / JP205 closed; JP202 / JP204 / JP206 open.\nBacklight is always on. The separate PWM candidate has different hardware; see its own schematic." (at 38.1 147.32 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "ffce20e3-145e-55a5-bb80-aeb385123318"))
 )

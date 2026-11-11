@@ -72,6 +72,6 @@
   "historicalPreview": "manufacturing/history/0.0.7-preview/",
   "serviceCompatibility": {
     "audit": "serviceability-audit.json",
-    "auditSha256": "66d4070f1aad5755cfaf8bfbbee73f0926821a3381990f2befda037357a452cf"
+    "auditSha256": "72c77fdc6991b4d357ee7e28ddd761d3230d543aa1a917af85b9a13c9eb8d82d"
   }
 }

@@ -94,11 +94,11 @@
   ],
   "netlistComparison": "Exact retained reference/value/footprint and projected pin partitions; only J302 replaced by nine factory Keystone test points",
   "schematicFiles": {
-    "lcd_module.kicad_sch": "cf768e0e0d08a82692d057e813073bd4429729ac7e7019f2699798d9f6598f0d",
-    "Power.kicad_sch": "beaf3fed7929c2058c91e963e476c7f40df7a777664d61bbbfbb7bb17d27f552",
+    "lcd_module.kicad_sch": "2d40effaac22b8b03652fe05d995b0d685a06adca09258efd9a36e4f58639751",
+    "Power.kicad_sch": "985ae21e7488c07961100785fdf52f792b3ad41bde6b0d6b2693d0bbc411be4a",
     "SeedSigner-Plus-smartcard-pico.kicad_sch": "151d929595ca407b276d1a340651fe54ae8584973f2542125f0996a9cb0431bd",
-    "buttons.kicad_sch": "1937d48db405219bcb0169a13e1a4936a36902d1a92fca08d0aa796128f9b28f",
-    "smartcard_reader.kicad_sch": "b6410a519941d4bf5b82505ba92bee989c3d868858abb3e406c06f2d2745576c",
+    "buttons.kicad_sch": "be2a223a9d2250e9c74419e0a7b0446350cdc1b4c6356ce2fe11204fc184097a",
+    "smartcard_reader.kicad_sch": "7375f982b6b0cb548c0f9adba30d82161bb74f3e3d0341ff83e4dc86ef49e10d",
     "rpi_interface.kicad_sch": "cce527cf93b35d4440daf761d7d75698b8a754cc51da78220ea201d8a0a376aa"
   },
   "factorySmtPlacements": 44,

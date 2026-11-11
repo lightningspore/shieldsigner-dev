@@ -1847,7 +1847,7 @@
 
 (title_block (title "Navigation and action keys") (date "2026-11-08") (rev "0.0.12-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
 (text "User controls: five navigation contacts + three keys" (at 25.4 25.4 0) (effects (font (size 2 2) (bold yes)) (justify left)) (uuid "035d18d6-357c-54f9-b65e-6cf2dc107b1b"))
-(text "Every switch pulls its named host signal to GND when pressed. Configure host pull-ups and software debounce." (at 25.4 33.02 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "71ee6ca4-8296-5d26-8878-8fdbf1fd6531"))
+(text "Every switch pulls its named host signal to GND when pressed. Configure host pull-ups and software debounce.\nKey1 / Key2 use 1.8 V GPIO4_C0 / GPIO4_C1; other button inputs use 3.3 V. Do not pull Key1 / Key2 up to 3.3 V." (at 25.4 33.02 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "71ee6ca4-8296-5d26-8878-8fdbf1fd6531"))
 (text "NAVIGATION" (at 38.1 48.26 0) (effects (font (size 1.5 1.5) (bold yes)) (justify left)) (uuid "844531a2-caa6-54f3-96be-782b06ea5412"))
 (text "ACTION KEYS" (at 203.2 48.26 0) (effects (font (size 1.5 1.5) (bold yes)) (justify left)) (uuid "868c37d7-91e5-58f7-9c44-49ffde98bb58"))
 (text "SW501-SW508: C&K PTS636SK25SMTRLFS momentary switches.\nThe placement below follows the physical control arrangement. Net names match the host sheet." (at 25.4 152.4 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "7ee98d72-e325-5710-b406-b4a952ce6743"))

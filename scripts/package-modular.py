@@ -43,6 +43,8 @@ with ZipFile(OUT / 'shieldsigner-modular-order.zip', 'w', ZIP_DEFLATED) as archi
     archive.writestr('READ-FIRST-PLACEMENT.md', guide.replace('(smartcard-contact-audit.json)', '(placement-review/smartcard-contact-audit.json)'))
     archive.write(VARIANT/'testpoints.json','testpoints.json')
     archive.write(VARIANT/'serviceability-audit.json','serviceability-audit.json')
+    archive.write(VARIANT/'schematic-once-over-audit.json','schematic-once-over-audit.json')
+    archive.write(ROOT/'docs/SCHEMATIC-REVIEW.md','SCHEMATIC-REVIEW.md')
     archive.write(VARIANT/'silkscreen-label-audit.json','silkscreen-label-audit.json')
     archive.write(VARIANT/'power-clip-layout-audit.json','power-clip-layout-audit.json')
     archive.write(VARIANT/'rear-layout-audit.json','rear-layout-audit.json')
@@ -74,7 +76,7 @@ with ZipFile(OUT / 'shieldsigner-modular-kicad.zip', 'w', ZIP_DEFLATED) as archi
     for source in sorted(VARIANT.rglob('*')):
         if source.is_file() and (source.suffix in allowed or source.name in {'fp-lib-table', 'sym-lib-table'}):
             archive.write(source, source.relative_to(ROOT))
-    for source in [ROOT / 'LICENSE', ROOT / 'docs/LCD-MODULE-VARIANT.md', ROOT / 'docs/MODULAR-ASSEMBLY.md', ROOT / 'docs/BRINGUP.md', ROOT / 'docs/BRINGUP-RESULTS.md', ROOT / 'docs/PCB-ORDER-READINESS.md', ROOT / 'docs/PCB-SOFTWARE-COMPATIBILITY.md', ROOT / 'docs/DISPLAY-BUTTON-REVIEW.md', ROOT / 'docs/MODULE-PINOUT-AUDIT.md', *sorted((ROOT / 'reference/pdfs').glob('*.pdf'))]:
+    for source in [ROOT / 'LICENSE', ROOT / 'docs/LCD-MODULE-VARIANT.md', ROOT / 'docs/MODULAR-ASSEMBLY.md', ROOT / 'docs/BRINGUP.md', ROOT / 'docs/BRINGUP-RESULTS.md', ROOT / 'docs/PCB-ORDER-READINESS.md', ROOT / 'docs/PCB-SOFTWARE-COMPATIBILITY.md', ROOT / 'docs/DISPLAY-BUTTON-REVIEW.md', ROOT / 'docs/MODULE-PINOUT-AUDIT.md', ROOT / 'docs/SCHEMATIC-REVIEW.md', *sorted((ROOT / 'reference/pdfs').glob('*.pdf'))]:
         archive.write(source, source.relative_to(ROOT))
 tag = 'pill-assembly-0.0.12-review'
 names = ['shieldsigner-modular-order.zip', 'shieldsigner-modular-gerbers.zip', 'shieldsigner-modular-kicad.zip', 'shieldsigner-modular-assembly.step', 'shieldsigner-modular-assembly.glb', 'shieldsigner-modular-schematic.pdf']

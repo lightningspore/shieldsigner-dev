@@ -1,7 +1,7 @@
-# JLCPCB placement review — PCB 0.0.11-dev
+# JLCPCB placement review — PCB 0.0.12-dev
 
-This is the four-layer service revision: **43 factory SMT placements / 18
-catalog lines**, including eight Keystone 5015 loops. Status is
+This is the four-layer service revision: **44 factory SMT placements / 18
+catalog lines**, including nine Keystone 5015 loops. Status is
 **stock_review_required**. `serviceability-audit.json` binds the retained
 component poses and circuitry to the current board hash. The original three
 placement corrections below are retained exactly once; this is not a new
@@ -13,7 +13,7 @@ No order/payment is submitted by generating these files.
 ## Upload and confirm
 
 1. Upload this package's Gerber ZIP, BOM and **compensated `cpl-jlcpcb.csv`**
-   together. Select four copper layers, 1.6 mm, both-side assembly. Expect 43 SMT placements across
+   together. Select four copper layers, 1.6 mm, both-side assembly. Expect 44 SMT placements across
    18 catalog lines, with customer-fitted modules and through-hole headers.
 2. Do not repeat old manual rotations/offsets: they are already in the upload
    CSV. `cpl-native-reference.csv` is diagnostic only.
@@ -31,12 +31,11 @@ No order/payment is submitted by generating these files.
 | J601 | 88.620000 | 20.050000 | 0° | −0.8 mm X; +180° |
 | U601 | 85.000000 | 60.700000 | 0° | +180° |
 
-The other 32 original placement rows are unchanged; eight new Keystone rows
-are included (TP901/TP902 top, TP903–TP908 bottom). The exporter verifies current board hash,
+The protected J301/J601/U601 poses retain the corrections above. The rear-placement audit records the other intentional moves. Nine Keystone rows
+are included (TP901/TP902/TP909 top, TP903–TP908 bottom). The exporter verifies current board hash,
 service compatibility proof, identities, bottom side and native datum before
 applying compensation exactly once. D302's native/catalog pad-1 baseline needs
-no extra rotation; a blanket bottom-side rule would be wrong. U701 stays on top
-with its original pin-1 orientation; D301 is bidirectional.
+no extra rotation; a blanket bottom-side rule would be wrong. U701 and C701/C702 are now on the bottom; use their current native bottom-side rotations; D301 is bidirectional.
 
 ## Smartcard numbered-contact review
 

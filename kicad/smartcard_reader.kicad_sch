@@ -4898,7 +4898,7 @@
 
 (title_block (title "SEC1210 UART smartcard reader") (date "2026-11-08") (rev "0.0.12-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
 (text "SEC1210 UART reader and smartcard contacts" (at 17.78 22.86 0) (effects (font (size 2 2) (bold yes)) (justify left)) (uuid "2053fe6e-4c3d-5758-8ac1-fdaee903addd"))
-(text "Host UART at left; card channel 1 at right. Channel 2, USB and JTAG pins are intentionally unused." (at 17.78 30.48 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "8e3e4260-ab43-5182-90ad-c0cf13282ca0"))
+(text "Host UART at left; card channel 1 at right. Channel 2, USB and JTAG pins are intentionally unused.\nUART_TX is host TX to U601 RX (pin 11); UART_RX is host RX from U601 TX (pin 14)." (at 17.78 30.48 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "8e3e4260-ab43-5182-90ad-c0cf13282ca0"))
 (text "RESET AND TEST\nR601 / C601: reset pull-up and delay\nR607: TEST pull-down" (at 17.78 155 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "d947b57b-461f-5927-872f-4c4396fe25e2"))
 (text "LOCAL BYPASS\nC602: 5 V input, 1 uF\nC603: VDD33 output, 1 uF\nC604: card supply, 1 uF" (at 91.44 158.75 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "8a4bf2fa-5d02-5888-9a53-9c7f69f0da66"))
 (text "CARD INTERFACE\nR604: 47 Ohm clock series damping\nC605 / C606: 33 pF; R605 / R606: bias\nJ601: combined SIM / full-size card socket" (at 167.64 155 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "9ad49f05-da57-5cb8-aa99-a751016abdd7"))

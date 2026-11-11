@@ -1,0 +1,48 @@
+{
+  "reviewed": "2026-11-11",
+  "revision": "0.0.12-dev",
+  "scope": "All six native schematic pages, native ERC/DRC, module pinout checks and exact electrical equivalence",
+  "boardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
+  "boardUnchanged": true,
+  "allComponentsUnchanged": 54,
+  "allNetPinPartitionsUnchanged": 56,
+  "electricalEquivalenceSha256": "107bb062db8e223d41acf5af40565c5bd724efc587e510b9bc65748a87b90887",
+  "mcpHeuristicBefore": {
+    "visualFindings": 49,
+    "cosmeticScore": 16,
+    "acceptanceCriterion": false
+  },
+  "changes": [
+    "Re-spaced nine service symbol/wire/label groups inside Power sheet border",
+    "Documented Key1/Key2 1.8 V inputs",
+    "Documented host UART direction and U601 RX/TX pins",
+    "Documented rear regulator/capacitor placement"
+  ],
+  "schematicFiles": {
+    "lcd_module.kicad_sch": {
+      "beforeSha256": "cf768e0e0d08a82692d057e813073bd4429729ac7e7019f2699798d9f6598f0d",
+      "afterSha256": "2d40effaac22b8b03652fe05d995b0d685a06adca09258efd9a36e4f58639751"
+    },
+    "Power.kicad_sch": {
+      "beforeSha256": "beaf3fed7929c2058c91e963e476c7f40df7a777664d61bbbfbb7bb17d27f552",
+      "afterSha256": "985ae21e7488c07961100785fdf52f792b3ad41bde6b0d6b2693d0bbc411be4a"
+    },
+    "SeedSigner-Plus-smartcard-pico.kicad_sch": {
+      "beforeSha256": "151d929595ca407b276d1a340651fe54ae8584973f2542125f0996a9cb0431bd",
+      "afterSha256": "151d929595ca407b276d1a340651fe54ae8584973f2542125f0996a9cb0431bd"
+    },
+    "buttons.kicad_sch": {
+      "beforeSha256": "1937d48db405219bcb0169a13e1a4936a36902d1a92fca08d0aa796128f9b28f",
+      "afterSha256": "be2a223a9d2250e9c74419e0a7b0446350cdc1b4c6356ce2fe11204fc184097a"
+    },
+    "smartcard_reader.kicad_sch": {
+      "beforeSha256": "b6410a519941d4bf5b82505ba92bee989c3d868858abb3e406c06f2d2745576c",
+      "afterSha256": "7375f982b6b0cb548c0f9adba30d82161bb74f3e3d0341ff83e4dc86ef49e10d"
+    },
+    "rpi_interface.kicad_sch": {
+      "beforeSha256": "cce527cf93b35d4440daf761d7d75698b8a754cc51da78220ea201d8a0a376aa",
+      "afterSha256": "cce527cf93b35d4440daf761d7d75698b8a754cc51da78220ea201d8a0a376aa"
+    }
+  },
+  "physicalQualification": false
+}

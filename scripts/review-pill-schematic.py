@@ -18,7 +18,7 @@ def electrical(path,project=False):
  # Net numbering, ordering and auto-generated names can change with presentation.
  nets=sorted(sorted((n.attrib['ref'],n.attrib['pin']) for n in net.findall('node')) for net in t.findall('./nets/net'))
  if project:
-  drop={'J302',*[f'TP{i}' for i in range(901,909)]}
+  drop={'J302',*[f'TP{i}' for i in range(901,910)]}
   parts={k:v for k,v in parts.items() if k not in drop}
   nets=sorted(sorted(p for p in net if p[0] not in drop) for net in nets if any(p[0] not in drop for p in net))
  return parts,nets
@@ -35,5 +35,5 @@ for filename,item in data['files'].items():item['afterSha256']=hashlib.sha256((K
 data['electricalEquivalence']={'status':'pass','sha256':signature,'method':'Independent native XML netlist export before/after; exact reference/value/footprint and complete pin partition comparison','components':len(electrical(OUT/'after.xml')[0]),'nets':len(electrical(OUT/'after.xml')[1])}
 if service:
  audit=ROOT/'hardware/service-schematic-audit.json'
- data['electricalEquivalence']['scope']='Retained circuitry matches original; J302 replaced by TP901-TP908'
+ data['electricalEquivalence']['scope']='Retained circuitry matches original; J302 replaced by TP901-TP909'
 audit.write_text(json.dumps(data,indent=2)+'\n');print(json.dumps(data['electricalEquivalence'],indent=2))

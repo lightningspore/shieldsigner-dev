@@ -1,0 +1,19 @@
+{
+  "observedAt": "2026-11-11",
+  "supplier": "HOTHMI",
+  "product": "HTM-TFT028A16-SPI",
+  "description": "2.8 inch Display High Brightness ST7789 SPI",
+  "touchscreenType": "None",
+  "productUrl": "https://www.hothmi.com/product/2-8-inch-display-high-brightness-st7789-spi/",
+  "currency": "USD",
+  "quantity": 10,
+  "unitPrice": 12.89,
+  "subtotal": 128.90,
+  "shippingMethod": "Flexible Shipping",
+  "shipping": 70.00,
+  "checkoutTotal": 198.90,
+  "shippingPerUnit": 7.00,
+  "totalPerUnit": 19.89,
+  "status": "Purchased; user confirmed purchase on 2026-11-11.",
+  "notes": "User requested retaining the ten-unit purchase cost and $70 shipping. No separate tax or duty line was displayed. Personal checkout details are intentionally omitted."
+}

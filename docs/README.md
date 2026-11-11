@@ -8,7 +8,7 @@ The current board is the **four-layer, eight-pin display carrier**, revision 0.0
 | Circuit and wiring | [Main carrier](LCD-MODULE-VARIANT.md), [module pinouts](MODULE-PINOUT-AUDIT.md), [firmware compatibility](PCB-SOFTWARE-COMPATIBILITY.md), [Luckfox pinout](LUCKFOX-PINOUT.md) |
 | Firmware | [Artifacts and verified images](FIRMWARE-ARTIFACTS.md), [LVGL application](../firmware/lvgl-app/README.md), [OS compilation](OS-BUILD.md) |
 | Mechanical | [Enclosure](ENCLOSURE.md), [fit model](../hardware/FIT-MODEL.md), [mechanical substitutions](MECHANICAL-SUBSTITUTIONS.md) |
-| Validation | [Display/buttons](DISPLAY-BUTTON-REVIEW.md), [bring-up](BRINGUP.md), [results template](BRINGUP-RESULTS.md) |
+| Validation | [Schematic review](SCHEMATIC-REVIEW.md), [Display/buttons](DISPLAY-BUTTON-REVIEW.md), [bring-up](BRINGUP.md), [results template](BRINGUP-RESULTS.md) |
 | Parts | [Datasheets](../datasheets/README.md), [main BOM](../hardware/manufacturing/BOM.md), [self-assembly](SELF-ASSEMBLY.md) |
 | Smartcards | [Card choices](SMARTCARDS.md) |
 | Development | [Contributing](../CONTRIBUTING.md), [tscircuit status](PORT-STATUS.md), [website](../website/README.md) |

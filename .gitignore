@@ -32,3 +32,6 @@ tools/telegram/private/
 
 # Generated tscircuit CLI diagnostic images.
 checks/
+
+# Local KiCad MCP history metadata.
+kicad/.history/

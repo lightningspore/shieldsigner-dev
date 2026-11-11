@@ -133,4 +133,4 @@ for entry in service['bracketMounts']:
    w,h=map(float,one(pad,'size')[1:3]);assert math.hypot(px-entry['xy'][0],py-entry['xy'][1])-math.hypot(w,h)/2>=2.75,(entry['ref'],ref,pad[1])
 report.update(factoryKeystonePoints=8,independentBracketMounts=service['bracketMounts'],bracketSpacingMm=service['mountSpacingMm'])
 (V/'mechanical-check-results.json').write_text(json.dumps(report,indent=2)+'\n')
-print('Verified eight factory Keystone points and four independent M2.5 bracket mounts.')
+print('Verified nine factory Keystone points and four independent M2.5 bracket mounts.')

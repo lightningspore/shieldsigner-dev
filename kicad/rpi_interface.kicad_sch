@@ -5939,7 +5939,7 @@
 
 (no_connect (at 264.16000 85.09000) (uuid "182dee47-025b-59c9-8a58-994f78ff2a26"))
 
-(title_block (title "Host module and configuration") (date "2026-11-08") (rev "0.0.11-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
+(title_block (title "Host module and configuration") (date "2026-11-08") (rev "0.0.12-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
 (text "Host module, signal mapping and assembly straps" (at 17.78 20.32 0) (effects (font (size 2 2) (bold yes)) (justify left)) (uuid "4f33c416-81f4-5a60-9052-e348b90b661b"))
 (text "U202 is fitted. U201 is a schematic-only legacy interface reference; it is not a second module or an assembly part." (at 17.78 27.94 0) (effects (font (size 1.1 1.1) ) (justify left)) (uuid "3ead2edd-df6e-57db-abbf-1e2a7b38277c"))
 (text "LEGACY INTERFACE REFERENCE ONLY\nU201 and TP201 have no PCB footprint." (at 17.78 58.42 0) (effects (font (size 1.1 1.1) (bold yes)) (justify left)) (uuid "bb4e35b2-00b3-5cba-90f8-b35fdafb20c2"))

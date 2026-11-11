@@ -76,9 +76,9 @@ report = {
         ]
     },
     'factoryAssemblyPlan': {
-        'service': 'JLC Standard double-sided SMT; all 43 placements are factory fitted.',
-        'top': '13 fitted parts, including TP901/TP902 Keystone power loops.',
-        'bottom': '30 fitted parts, including six Keystone rail/UART/GND loops.',
+        'service': 'JLC Standard double-sided SMT; all 44 placements are factory fitted.',
+        'top': '11 fitted parts, including TP901/TP902/TP909 Keystone power loops.',
+        'bottom': '33 fitted parts, including the regulator and its capacitors, and six Keystone rail/UART/GND loops.',
         'processQualification': 'Supplier must confirm two-sided reflow sequence, heavy socket retention, stencil/paste and actual part thermal limits.',
         'customerAssembly': 'Only the documented module headers, modules and mechanical hardware; no test-point hand soldering.',
         'notYetProven': 'Supplier DFM/placement approval, QFN hidden-pad inspection, USB shell solder fill and first-article powered operation.'

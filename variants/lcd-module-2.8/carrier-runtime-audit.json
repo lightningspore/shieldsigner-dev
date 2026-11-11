@@ -1,5 +1,5 @@
 {
-  "boardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
+  "boardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
   "scope": "Pinned source and virtual-time startup checks only; no installed-image or physical timing claim",
   "sources": {
     "ST7789.py": {

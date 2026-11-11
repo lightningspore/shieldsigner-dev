@@ -1,7 +1,7 @@
 # Hardware datasheets
 
-Local PDF references cover all **18 SKUs / 43 placements** in the current
-0.0.11-dev factory BOM, plus the host/LCD modules and historical alternatives.
+Local PDF references cover all **18 SKUs / 44 placements** in the current
+0.0.12-dev factory BOM, plus the host/LCD modules and historical alternatives.
 `manifest.json` records original paths or public source pages and SHA-256;
 `bom-coverage.json` binds the table below to the exact BOM bytes.
 Some documents cover a component family; coverage is not physical qualification.
@@ -26,7 +26,7 @@ Run `mise run datasheets:check` to validate the collection, or
 | 0805W8F5101T5E | C27834 | R301, R302 | [C27834.pdf](C27834.pdf) |
 | CL21B105KBFNNNE | C28323 | C602, C603, C604 | [C28323.pdf](C28323.pdf) |
 | 0805W8F5600T5E | C28636 | R303 | [C28636.pdf](C28636.pdf) |
-| 5015 | C2906768 | TP901, TP902, TP903, TP904, TP905, TP906, TP907, TP908 | [Keystone-5015.pdf](Keystone-5015.pdf) |
+| 5015 | C2906768 | TP901, TP902, TP903, TP904, TP905, TP906, TP907, TP908, TP909 | [Keystone-5015.pdf](Keystone-5015.pdf) |
 | CC0805KRX7R9BB104 | C49678 | C301, C601 | [C49678.pdf](C49678.pdf) |
 | AP2112K-3.3TRG1 | C51118 | U701 | [Diodes-AP2112.pdf](Diodes-AP2112.pdf) |
 | USB4125-GF-A-0190 | C5246813 | J301 | [GCT-USB4125.pdf](GCT-USB4125.pdf) |

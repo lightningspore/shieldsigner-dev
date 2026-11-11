@@ -1,6 +1,6 @@
 # Assemble the eight-pin pill carrier
 
-**The factory assembly BOM includes 43 SMT parts, including all eight Keystone points. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.11-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
+**The factory assembly BOM includes 44 SMT parts, including all nine Keystone points. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.12-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
 
 For an optional DIY build, use the separate [self-assembly guide](SELF-ASSEMBLY.md) and DigiKey purchase CSV. The original JLC kit below remains the assembled-board ordering path.
 
@@ -40,7 +40,7 @@ For the [printed enclosure](ENCLOSURE.md), use its screw list in place of the ei
 
 ## 1. Get a matched PCBA quote
 
-Unzip the [pill order kit](https://www.shieldsigner.dev/files/shieldsigner-modular-order.zip). Upload the inner **shieldsigner-modular-gerbers.zip**, then **bom-jlcpcb.csv** and **cpl-jlcpcb.csv**. Request two copper layers, 1.6 mm thickness and two-sided SMT assembly. Expect **35 placements / 17 catalog lines**: eight switches plus U701/C701/C702 on top, and 24 parts underneath.
+Unzip the [pill order kit](https://www.shieldsigner.dev/files/shieldsigner-modular-order.zip). Upload the inner **shieldsigner-modular-gerbers.zip**, then **bom-jlcpcb.csv** and **cpl-jlcpcb.csv**. Request four copper layers, 1.6 mm thickness and two-sided SMT assembly. Expect **44 placements / 18 catalog lines**: 14 placements on top, including the three power clip loops, and 30 underneath.
 
 For the current first-article plan, populate and qualify **one board first**; leave the remaining bare boards unassembled. A fabricator minimum quantity is not a requirement to assemble every board. If JLC assembly is used, confirm its minimum assembled quantity and pricing before choosing that route. Check JLC's preview for SEC1210 pin 1, card-socket entrance, USB orientation and the eight switches. Ask about socket handling and its double-sided process. The LCD, Luckfox, customer headers, supports and copper jumpers do not belong in the SMT BOM/CPL. There are no obsolete FPC/backlight parts to populate and no DNP courtyard exceptions to approve.
 
@@ -87,7 +87,7 @@ Revision **0.0.6-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A-01
 ## Alternative 5 V power header (0.0.6-dev)
 
 The 0.0.11 board replaces J302 with **factory-assembled Keystone 5015** points:
-**TP901 is +5 V; TP902 is GND**. They are 7 mm apart and labelled on front silk.
+**TP902 GND — TP901 +5 V — TP909 GND** form the front power clip row at 15 mm pitch. All three are factory-assembled Keystone loops, labelled on front silk.
 Use small insulated test hooks and a regulated, current-limited 5 V bench supply.
 Disconnect USB-C and the Luckfox USB supply before injection. There is no source
 isolation or reverse-polarity protection. These loops are not a permanent power
@@ -100,3 +100,5 @@ probe pads remain available. See `serviceability.json` for exact coordinates.
 H705-H708 provide an optional 109 x 47.8 mm M2.5 bracket pattern, independent of
 the LCD's four spacers. Use head/washer OD <= 5 mm; preserve module, plug and
 card-insertion clearance. The supplied enclosure still uses its original mounts.
+
+The regulator U701 and capacitors C701/C702 are on the rear in the working 0.0.12-dev placement, alongside the reader electronics. Factory assembly is 11 front / 33 rear placements. Use the regenerated bottom-side CPL and current PCB hash for supplier review.

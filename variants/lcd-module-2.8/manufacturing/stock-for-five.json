@@ -218,9 +218,9 @@
   {
     "code": "C2906768",
     "mpn": "5015",
-    "refs": "TP901,TP902,TP903,TP904,TP905,TP906,TP907,TP908",
-    "perBoard": 8,
-    "forFiveBoards": 40,
+    "refs": "TP901,TP902,TP903,TP904,TP905,TP906,TP907,TP908,TP909",
+    "perBoard": 9,
+    "forFiveBoards": 45,
     "assemblyStock": 77077,
     "canPresaleNumber": 77077,
     "overseasStockCount": 79109,

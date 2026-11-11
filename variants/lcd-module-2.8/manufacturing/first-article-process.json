@@ -1,9 +1,9 @@
 {
-  "boardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
+  "boardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
   "qualification": "Geometry/process review only; no physical assembly or yield evidence.",
   "smtPiecesBySide": {
-    "B.Cu": 30,
-    "F.Cu": 13
+    "B.Cu": 33,
+    "F.Cu": 11
   },
   "qfn": {
     "reference": "U601",
@@ -36,9 +36,9 @@
     ]
   },
   "factoryAssemblyPlan": {
-    "service": "JLC Standard double-sided SMT; all 43 placements are factory fitted.",
-    "top": "13 fitted parts, including TP901/TP902 Keystone power loops.",
-    "bottom": "30 fitted parts, including six Keystone rail/UART/GND loops.",
+    "service": "JLC Standard double-sided SMT; all 44 placements are factory fitted.",
+    "top": "11 fitted parts, including TP901/TP902/TP909 Keystone power loops.",
+    "bottom": "33 fitted parts, including the regulator and its capacitors, and six Keystone rail/UART/GND loops.",
     "processQualification": "Supplier must confirm two-sided reflow sequence, heavy socket retention, stencil/paste and actual part thermal limits.",
     "customerAssembly": "Only the documented module headers, modules and mechanical hardware; no test-point hand soldering.",
     "notYetProven": "Supplier DFM/placement approval, QFN hidden-pad inspection, USB shell solder fill and first-article powered operation."

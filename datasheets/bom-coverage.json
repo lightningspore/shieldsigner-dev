@@ -1,7 +1,7 @@
 {
-  "bomSha256": "fbb39cb97881709a136f6b420c8a2fdcf0085fb74d95173e0e9e7b49e0004f27",
+  "bomSha256": "604f2dbe2b9a9b82fd4e8532b6e821c0ff57dcd6210d191ed406c1260dd8251b",
   "factorySkus": 18,
-  "factoryPlacements": 43,
+  "factoryPlacements": 44,
   "coverage": [
     {
       "lcsc": "C107115",
@@ -127,7 +127,8 @@
         "TP905",
         "TP906",
         "TP907",
-        "TP908"
+        "TP908",
+        "TP909"
       ],
       "document": "Keystone-5015.pdf"
     },

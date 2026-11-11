@@ -1,5 +1,5 @@
 {
-  "boardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
+  "boardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
   "stage": "carrier_image_built_and_packed_verified_not_booted",
   "cameraBundle": {
     "path": "dist/firmware/staging/carrier-first-article-camera-alias-compatible-20261110",
@@ -117,10 +117,23 @@
     "imageBootQualified": false,
     "physicalOperationVerified": false
   },
-  "cosmeticBoardCompatibility": {
+  "previousCosmeticCompatibility": {
     "builtForBoardSha256": "aed3c21115ce28efa26a2609798bec3272e3077d0a4fe804864d1c743207ed32",
     "currentBoardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
     "audit": "variants/lcd-module-2.8/silkscreen-label-audit.json",
     "scope": "One silkscreen label removed; all other native board objects exactly unchanged. Existing firmware evidence preserved."
+  },
+  "powerClipLayoutCompatibility": {
+    "baselineBoardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
+    "currentBoardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
+    "audit": "variants/lcd-module-2.8/power-clip-layout-audit.json",
+    "auditSha256": "fd2f9be6744fcbf5d9fdd09bc099910a02adb24ee672a0040f71de4ad428f00d",
+    "scope": "Existing pad nets and GPIO/LCD/UART assignments retained; one GND loop added, clip spurs rerouted, rear component placement and local routing explicitly audited. No physical qualification inferred."
+  },
+  "rearPlacementCompatibility": {
+    "currentBoardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
+    "audit": "variants/lcd-module-2.8/rear-layout-audit.json",
+    "auditSha256": "450877d7439f908444b503ee55c786d50ffeb71269eba30cb39e614833aacc78",
+    "scope": "Regulator and capacitors flipped to rear; exact pad nets retained. Existing firmware evidence preserved; no new powered/thermal/physical qualification."
   }
 }

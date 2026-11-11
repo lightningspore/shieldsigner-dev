@@ -1,7 +1,7 @@
-# Current 0.0.11-dev order-review status
+# Current 0.0.12-dev order-review status
 
-The four-layer working pill revision has **43 factory SMT placements / 18 SKUs**,
-including eight Keystone 5015 / C2906768 service points. The four new bracket
+The four-layer working pill revision has **44 factory SMT placements / 18 SKUs**,
+including nine Keystone 5015 / C2906768 service points. The four new bracket
 holes are optional M2.5 hardware anchors; modules/headers/screws remain customer
 assembly. J302 is removed. Use the freshly generated order ZIP; all 0.0.9 and
 0.0.7 release/preview files below are historical.
@@ -24,7 +24,7 @@ The 2026-11-09 public catalog snapshot reports:
 These are dated public fields, not a stock reservation. Overseas inventory is
 not confirmed assembly allocation. Resolve exact-MPN sourcing and attrition with
 JLC before paying or substituting parts. Supplier placement/DFM review must use
-the current board hash and matched compensated CPL, including all eight loops.
+the current board hash and matched compensated CPL, including all nine loops.
 Confirm the nominal 1.6 mm four-layer stackup. Native ERC/DRC and pinout checks
 are software gates; first-article fit, power/thermal/rail tests, correct carrier
 firmware, display operation and smartcard transactions remain required.
@@ -135,7 +135,7 @@ The CPL datum is `(50, 130)` mm in the native board. Exported X is native X minu
 
 The generated upload CPL already contains these changes. The diagnostic native
 CPL does not. Do not apply a blanket bottom-side rotation: the green LED D302
-needs no extra rotation, D301 is bidirectional, and top-side U701 is unchanged.
+needs no extra rotation, D301 is bidirectional, and U701 now uses its native bottom-side position/rotation. The prior top-side regulator preview is superseded.
 Confirm USB mouth/tails/stakes, all numbered smartcard contacts and SEC1210 pin 1
 in the new preview. Retain the old preview as explicitly historical evidence.
 

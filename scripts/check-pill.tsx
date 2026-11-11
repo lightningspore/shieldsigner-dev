@@ -16,7 +16,7 @@ for (const layer of ['inner1','inner2']) {
 }
 assert.equal(reference.width, 160)
 assert.equal(reference.height, 70)
-assert.equal(reference.components.length, 71)
+assert.equal(reference.components.length, 72)
 assert.deepEqual(reference.components.filter(p=>p.dnp).map(p=>p.name), [])
 const header = reference.components.find(p=>p.name === 'J701')!
 const expected = ['RPI_BACKLIGHT','LCD_RST','LCD_DC','RPI_SPI_CS','LCD_SCLK','LCD_MOSI','GND','LCD_3V3']
@@ -24,7 +24,7 @@ assert.equal(header.pads.length, 8)
 for (const pad of header.pads) assert.equal(pad.net, expected[Number(pad.number)-1])
 assert.deepEqual(reference.bridges.map(b=>b.reference).sort(), ['JP201','JP203','JP205'])
 assert(!reference.components.some(p=>p.name === 'J302'))
-for (let i=901;i<=908;i++) assert.equal(reference.components.find(p=>p.name === `TP${i}`)?.lcsc,'C2906768')
+for (let i=901;i<=909;i++) assert.equal(reference.components.find(p=>p.name === `TP${i}`)?.lcsc,'C2906768')
 const circuit = await compileBoard({data:reference, allowedOutside:[]})
 for (const e of circuit) schemas.any_circuit_element.parse(e)
 const count = (type: string) => circuit.filter(e => e.type === type).length

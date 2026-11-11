@@ -33,7 +33,7 @@ args = parser.parse_args()
 rows = list(csv.DictReader((VARIANT/'manufacturing/bom-jlcpcb.csv').open()))
 codes = {r['LCSC Part #'] for r in rows}
 assert len(rows) == len(codes) == 18
-assert sum(len(r['Designator'].split(',')) for r in rows) == 43
+assert sum(len(r['Designator'].split(',')) for r in rows) == 44
 for code in codes:
     FILES.setdefault(code, code+'.pdf')
 manifest_path = DEST/'manifest.json'
@@ -98,12 +98,12 @@ for row in rows:
 for name, record in records.items():
     assert hashlib.sha256((DEST/name).read_bytes()).hexdigest() == record['sha256'], name
 report = {'bomSha256':hashlib.sha256((VARIANT/'manufacturing/bom-jlcpcb.csv').read_bytes()).hexdigest(),
-          'factorySkus':18,'factoryPlacements':43,'coverage':coverage,
+          'factorySkus':18,'factoryPlacements':44,'coverage':coverage,
           'qualification':'Local document coverage only; not electrical or manufacturer qualification'}
 (DEST/'bom-coverage.json').write_text(json.dumps(report,indent=2)+'\n')
 lines = ['# Hardware datasheets', '',
-         'Local PDF references cover all **18 SKUs / 43 placements** in the current',
-         '0.0.11-dev factory BOM, plus the host/LCD modules and historical alternatives.',
+         'Local PDF references cover all **18 SKUs / 44 placements** in the current',
+         '0.0.12-dev factory BOM, plus the host/LCD modules and historical alternatives.',
          '`manifest.json` records original paths or public source pages and SHA-256;',
          '`bom-coverage.json` binds the table below to the exact BOM bytes.',
          'Some documents cover a component family; coverage is not physical qualification.',

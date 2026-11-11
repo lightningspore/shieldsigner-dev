@@ -972,3 +972,15 @@ run = ["uv run scripts/kicad.py export --standard-fpc", "uv run scripts/generate
 [tasks."docs:standard"]
 description = "Regenerate the historical FPC component guide"
 run = "uv run scripts/generate-component-docs.py"
+
+[tasks."variant:lcd:clip-layout"]
+description = "Apply the guarded 0.0.12 power clip spacing revision once"
+run = "uv run python scripts/space-power-clip-points.py"
+
+[tasks."variant:lcd:clip-audit"]
+description = "Verify power clip spacing, exact retained circuitry and bounded service routing changes"
+run = "uv run python scripts/audit-power-clip-layout.py"
+
+[tasks."variant:lcd:rear-audit"]
+description = "Verify the recorded rear placement edits, assembly sides and unchanged rules"
+run = "uv run python scripts/rear-layout-audit.py"

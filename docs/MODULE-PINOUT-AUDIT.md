@@ -1,6 +1,6 @@
 # Luckfox Mini and HOTHMI pinout audit
 
-Reviewed 2026-11-09 against working pill PCB **0.0.11-dev**, SHA-256 `2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d`. The regenerated pinout report checks all eight switches and LCD/header mappings. The [interactive pinout and revision comparison](LUCKFOX-PINOUT.md) also covers the separate PWM candidate.
+Reviewed 2026-11-09 against working pill PCB **0.0.12-dev**, SHA-256 `5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08`. The regenerated pinout report checks all eight switches and LCD/header mappings. The [interactive pinout and revision comparison](LUCKFOX-PINOUT.md) also covers the separate PWM candidate.
 
 **PCB signal assignments and supply topology pass. Carrier firmware must use 10 MHz SPI, bank-label GPIO aliases and the HOTHMI panel initializer.** No PCB change is indicated by this audit. This is a drawing/netlist review, not a powered hardware test. The checkout files remain the same revision.
 
@@ -69,7 +69,7 @@ SDA/SCL here mean **SPI**, not I2C. The display is write-only; there is no missi
 
 ## Power rails
 
-- USB-C VBUS and factory Keystone TP901 feed **the same +5V rail**, supplying Mini pin 1, SEC1210 and U701. TP902 is the matching ground loop. J302 is removed in 0.0.11-dev. The input source must provide regulated 5 V. Use one input source at a time, including the Mini's own USB connector; there is no source isolation or reverse-polarity protection.
+- USB-C VBUS and factory Keystone TP901 feed **the same +5V rail**, supplying Mini pin 1, SEC1210 and U701. TP902 and TP909 are the two matching ground loops, 15 mm either side of TP901. J302 is removed in 0.0.12-dev. The input source must provide regulated 5 V. Use one input source at a time, including the Mini's own USB connector; there is no source isolation or reverse-polarity protection.
 - U701 AP2112K pin 1 VIN and pin 3 EN are +5V; pin 2 is GND; pin 4 NC; pin 5 supplies **LCD_3V3**. Input/output capacitors C701/C702 are 10 µF nominal, each to ground. This is the correct regulator pinout.
 - LCD_3V3 has exactly five component endpoints: U701 output, C702, J701 VCC, bare probe TP803 and factory Keystone TP905. TP906 is the nearby ground loop. It is **not joined to Mini pin 3**. Neither 5 V nor 1.8 V is connected to the LCD supply or its data pins.
 - The LCD requires 3.1–3.6 V, nominal 3.3 V. HOTHMI specifies signal inputs no higher than IOVCC + 0.3 V and no higher than 3.6 V. Both host GPIO and LCD use nominal 3.3 V; measure startup/shutdown as well as steady-state levels because the supplies come from different regulators.

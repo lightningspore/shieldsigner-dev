@@ -1,4 +1,4 @@
-# Display and buttons: 0.0.11-dev electrical review
+# Display and buttons: 0.0.12-dev electrical review
 
 The current target is the native **eight-pin HOTHMI pill carrier**. The local
 source, netlist and compiled-input checks below pass. No assembled carrier has
@@ -13,7 +13,7 @@ ordering and preparing first articles; measurements follow their delivery.
 - [Factory sourcing and first-article order review](PCB-ORDER-READINESS.md)
 
 The PCB hash in the electrical reports must match the selected native board.
-The main reference uses four layers, eight factory Keystone points and four
+The main reference uses four layers, nine factory Keystone points and four
 additional M2.5 holes. The standard 40-pin FPC board, PWM candidate and existing
 bench display/button assembly are separate designs.
 
@@ -100,6 +100,17 @@ with `CONFIG_DHT11=n`. Enabling that driver while retaining its node can compete
 with the button. New carrier validation rejects that condition, SPI MISO on LCD
 reset, competing CS0 devices and other default pinctrl claims on these pins.
 Live overlays and GPIO ownership still need inspection on the finished image.
+
+## Power clip row
+
+The 0.0.12 front row is **GND (TP902) — +5 V (TP901) — GND (TP909)**,
+at 15 mm centres. The three factory Keystone loops replace the previous 7 mm
+spacing of the power pair. Native land-edge gap is 11.6 mm; actual alligator
+clip clearance, insulation and mechanical strain remain first-article checks.
+[The bounded layout audit](../variants/lcd-module-2.8/power-clip-layout-audit.json)
+records the moved points, rerouted service spurs and unchanged retained pad nets.
+No LCD, GPIO/button or reader signals changed, so the existing carrier image
+remains the software candidate; its recorded readback evidence is preserved.
 
 ## Power and footprints
 

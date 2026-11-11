@@ -1,6 +1,6 @@
 # PCB and tested firmware compatibility
 
-Reviewed 2026-11-09 against current 0.0.11-dev KiCad pad nets, pinned application source,
+Reviewed 2026-11-09 against current 0.0.12-dev KiCad pad nets, pinned application source,
 reviewed I/O transforms and frozen compiled-profile metadata. This is a source/electrical compatibility review with carrier build-input
 preparation; no board was powered or flashed and no finished OS image was built.
 
@@ -10,8 +10,8 @@ on either carrier PCB.** This is a firmware-profile mismatch, not evidence that
 the carrier should be rewired to match the separate bench display/button board.
 
 The first-article target is the main `variants/lcd-module-2.8` service revision
-**0.0.11-dev**, retaining the always-on display topology with four layers and
-43 fitted SMT components / 18 purchasing SKUs. The separate `lcd-backlight-pwm` 0.0.8-dev
+**0.0.12-dev**, retaining the always-on display topology with four layers and
+44 fitted SMT components / 18 purchasing SKUs. The separate `lcd-backlight-pwm` 0.0.8-dev
 candidate is not the order target. Manufacturing exports must be regenerated and
 matched to the selected main revision; this audit does not promote a cart.
 
@@ -219,7 +219,7 @@ and regenerated checks belong to the final manufacturing/readiness record.
 ## Current electrical review and image guard
 
 The regenerated `variant:lcd:pinouts` report is bound to current PCB SHA-256
-`2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d`.
+`5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08`.
 It now checks exact net membership for every one of SW501–SW508, not just the
 two 1.8 V keys. Each must have only its intended host input and normally-open
 contact to GND. All eight match the pinned carrier application configuration.

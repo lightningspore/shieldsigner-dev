@@ -1,5 +1,5 @@
 {
-  "revision": "0.0.11-dev",
+  "revision": "0.0.12-dev",
   "part": {
     "manufacturer": "Keystone",
     "mpn": "5015",
@@ -14,7 +14,7 @@
       "label": "+5V",
       "net": "+5V",
       "xy": [
-        105,
+        128,
         120
       ],
       "layer": "F.Cu"
@@ -24,7 +24,7 @@
       "label": "GND",
       "net": "GND",
       "xy": [
-        112,
+        113,
         120
       ],
       "layer": "F.Cu"
@@ -88,6 +88,16 @@
         59.5
       ],
       "layer": "B.Cu"
+    },
+    {
+      "ref": "TP909",
+      "label": "GND",
+      "net": "GND",
+      "xy": [
+        143,
+        120
+      ],
+      "layer": "F.Cu"
     }
   ],
   "bracketMounts": [
@@ -153,5 +163,18 @@
     47.8
   ],
   "existingEnclosure": "Existing four LCD support holes unchanged; new mounts are for custom brackets, not new posts in the existing shell.",
-  "caseCoordinateFrame": "X=PCB_X-128; Y=89.579-PCB_Y; Z=0 carrier front. Millimetres."
+  "caseCoordinateFrame": "X=PCB_X-128; Y=89.579-PCB_Y; Z=0 carrier front. Millimetres.",
+  "powerClipRow": {
+    "leftToRight": [
+      "TP902",
+      "TP901",
+      "TP909"
+    ],
+    "pitchMm": 15,
+    "previousPitchMm": 7,
+    "purpose": "Small alligator clips; two ground attachment positions",
+    "padWidthMm": 3.4,
+    "adjacentPadEdgeGapMm": 11.6,
+    "physicalClipFitVerified": false
+  }
 }

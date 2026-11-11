@@ -1,8 +1,8 @@
-# Supplier review request — ShieldSigner 0.0.11-dev
+# Supplier review request — ShieldSigner 0.0.12-dev
 
 Prepared locally; not sent, uploaded, quoted or approved.
 
-PCB SHA-256: `2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d`. Match all replies and placement previews to this
+PCB SHA-256: `5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08`. Match all replies and placement previews to this
 revision and the checked Gerber/BOM/CPL file hashes in `readiness.json`.
 Prototype basis: five bare PCBs; quote one populated first article and the
 incremental cost for five populated boards separately. Do not release repeat
@@ -13,8 +13,8 @@ assemblies until the first article passes the supplied bring-up record.
 160 × 70 mm capsule, four copper layers, nominal 1.6 mm finished thickness.
 F.Cu and B.Cu carry signals/components; both inner layers are GND planes.
 Confirm the production stackup and finished thickness tolerance. Double-sided
-SMT: 43 placements / 18 SKUs, 13 top and 30 bottom. All eight Keystone
-5015 / C2906768 points must be factory fitted: TP901–TP902 top,
+SMT: 44 placements / 18 SKUs, 11 top and 33 bottom. All nine Keystone
+5015 / C2906768 points must be factory fitted: TP901, TP902 and TP909 top,
 TP903–TP908 bottom. J302 is absent. Customer module headers and hardware
 are excluded; copper-only jumpers/probe pads are not purchased components.
 
@@ -44,7 +44,7 @@ Do not substitute the reader firmware suffix or package without design review.
   exact component thermal limits and USB shell-stake solder-fill process.
 - Review the compensated CPL once. Inspect J301 mouth/stakes/tails, J601
   numbered contacts and U601 pin 1 against `placement-review/README.md`.
-  Confirm all eight Keystone rows and sides. Do not apply historical manual
+  Confirm all nine Keystone rows and sides. Do not apply historical manual
   corrections a second time. Return a current placement preview.
 - Report any silk, paste, solder-mask, edge or tooling changes for review.
   Native ERC/DRC pass, but this is not supplier DFM or physical qualification.

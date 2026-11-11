@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "baselineCommit": "b431865",
+  "baselineBoardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
+  "boardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
+  "revision": "0.0.12-dev",
+  "clipRowLeftToRight": [
+    "TP902 GND",
+    "TP901 +5V",
+    "TP909 GND"
+  ],
+  "centerPitchMm": 15,
+  "previousCenterPitchMm": 7,
+  "adjacentPadEdgeGapMm": 11.6,
+  "factoryKeystonePoints": 9,
+  "factorySmtPlacements": 44,
+  "newGroundReference": "TP909",
+  "retainedFootprintsUnchangedExceptPowerRowAndRecordedRearEdits": true,
+  "allExistingPadNetsUnchanged": true,
+  "removedPowerAndGroundServiceSpurs": [
+    "56fd2af8-79db-4d41-927a-c41409eb5d2f",
+    "8fdb18c6-8b0b-4276-861e-2915c93aa190",
+    "c0599721-6440-47b9-af8d-88d82928a6bf"
+  ],
+  "reroutedOriginal5VSpurs": [
+    "56fd2af8-79db-4d41-927a-c41409eb5d2f",
+    "8fdb18c6-8b0b-4276-861e-2915c93aa190"
+  ],
+  "movedGroundServiceVia": "699b489a-78d6-49d1-b040-dfa3ee8a44b7",
+  "newTracks": 5,
+  "newGroundVias": 1,
+  "allOtherTracksAndViasUnchangedExceptRecordedRearEdits": true,
+  "rearPlacementAudit": "rear-layout-audit.json",
+  "viasTentedBothSides": true,
+  "physicalClipFitVerified": false,
+  "scope": "Layout/source comparison; actual clip jaws, insulation and strain require physical first-article verification"
+}

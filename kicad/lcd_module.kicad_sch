@@ -33,7 +33,7 @@
 
 
 (embedded_fonts no)
-(title_block (title "Eight-pin SPI display and regulator") (date "2026-11-08") (rev "0.0.11-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
+(title_block (title "Eight-pin SPI display and regulator") (date "2026-11-08") (rev "0.0.12-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
 (text "Eight-pin SPI display and dedicated 3.3 V supply" (at 25.4 25.4 0) (effects (font (size 2 2) (bold yes)) (justify left)) (uuid "cbb6f3f9-2f68-5df0-aeb5-2e18cef9e769"))
 (text "J701 is the module header, not a 40-pin bare-panel FPC. Display power is independent of the Luckfox 3.3 V output." (at 25.4 33.02 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "bc5d687d-bf2a-503a-a281-5aee26350fbe"))
 (text "DISPLAY SUPPLY" (at 45.72 48.26 0) (effects (font (size 1.5 1.5) (bold yes)) (justify left)) (uuid "046ab75d-1b1d-51c4-b02a-89c1a56db901"))

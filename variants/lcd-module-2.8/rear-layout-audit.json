@@ -1,0 +1,44 @@
+{
+  "passed": true,
+  "boardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
+  "editRecord": "docs/pcb-rear-placement-edits.json",
+  "editRecordSha256": "198fbc285638e66818cd65f2728332a709722002d239d015631ccc66377da6b8",
+  "regulatorClusterOnRear": [
+    "U701",
+    "C701",
+    "C702"
+  ],
+  "changedFootprints": [
+    "C301",
+    "C302",
+    "C601",
+    "C602",
+    "C603",
+    "C605",
+    "C606",
+    "C701",
+    "C702",
+    "JP201",
+    "JP202",
+    "JP203",
+    "JP204",
+    "JP206",
+    "R301",
+    "R302",
+    "R601",
+    "R602",
+    "R603",
+    "R604",
+    "R605",
+    "R606",
+    "R607",
+    "U601",
+    "U701"
+  ],
+  "factorySmtPlacementsBySide": {
+    "front": 11,
+    "back": 33
+  },
+  "rulesAndSetupUnchanged": true,
+  "qualification": "Native geometry and exact source comparison; physical fit, rework access and thermal operation require first articles."
+}

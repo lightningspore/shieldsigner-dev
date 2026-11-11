@@ -4,22 +4,30 @@ uv = "0.12.7"
 task.run_auto_install = false
 disable_tools = ["ansible", "cloudflared", "helm", "kubectl", "opentofu", "packer"]
 [tasks.setup]
+description = "Install locked website build dependencies"
 run = "uv sync --locked"
 [tasks.content]
+description = "Synchronize the explicit public documentation and download allowlist"
 run = "uv run python scripts/sync-content.py"
 [tasks.dev]
+description = "Build and serve the static website on localhost:8030"
 depends = ["build"]
 run = "uv run python scripts/serve-static.py"
 [tasks.build]
+description = "Synchronize public sources and render the static website"
 run = ["uv run python scripts/sync-content.py", "uv run python scripts/build-static.py"]
 [tasks.check]
+description = "Build the website and check routes, links, assets and public-file boundaries"
 depends = ["build"]
 run = "uv run python -m unittest knowledge.tests"
 [tasks."ui:test"]
+description = "Test desktop/mobile website flows against UI_BASE_URL (requires a running site)"
 run = "uv run python scripts/ui-check.py"
 [tasks."ui:enclosure"]
+description = "Test the enclosure viewer against UI_BASE_URL (requires a running site)"
 run = "uv run python scripts/enclosure-ui-check.py"
 [tasks.package]
+description = "Check and package a content-addressed static website release"
 depends = ["check"]
 run = "uv run python scripts/package-release.py"
 [tasks.deploy]
@@ -31,7 +39,9 @@ depends = ["package"]
 run = "uv run python scripts/deploy.py"
 
 [tasks."ui:pinout"]
+description = "Test the interactive pinout diagram against UI_BASE_URL (requires a running site)"
 run = "uv run python scripts/pinout-ui-check.py"
 
 [tasks."ui:talk"]
+description = "Test presentation controls against UI_BASE_URL (requires a running site)"
 run = "uv run python scripts/talk-ui-check.py"

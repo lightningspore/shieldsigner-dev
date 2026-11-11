@@ -32,7 +32,7 @@ without an impedance-control claim. Outer support keepouts remain unchanged.
 
 The 0.0.12-dev silkscreen identifies this service revision; released two-layer quote
 ZIPs and old artwork-only audits do **not** describe this working four-layer
-revision. Regenerate fabrication files with `mise run variant:lcd:fab`, select
+revision. Regenerate fabrication files with `mise run hardware:fab`, select
 four layers in the supplier quote and obtain a new supplier review. The separate
 PWM candidate and source-authored tscircuit layout have not been converted.
 
@@ -45,7 +45,7 @@ TP201 are explicitly labelled schematic-only legacy references. Component
 identities, values, footprints and complete pin-to-net partitions are unchanged;
 `schematic-readability-audit.json` records the native netlist comparison.
 
-Run `mise run variant:lcd:schematic:review` to verify the electrical fingerprint
+Run `mise run hardware:schematic:review` to verify the electrical fingerprint
 and export the six-page PDF and individual SVGs under
 `dist/lcd-module-2.8/schematic-review/`. Native schematic changes are editable in
 KiCad; these are not images pasted over the design. The one-time conversion
@@ -101,3 +101,5 @@ are unchanged; see [the layout audit](power-clip-layout-audit.json).
 U701 and its 10 µF input/output capacitors C701/C702 are now on the back, keeping the regulator and reader electronics accessible from the same side. The switches, display header and front power clip row retain their positions and sides. The reader reset resistor is horizontal above the aligned reset/input capacitors; the reader filter passives and jumper rows have been regularized. Rear reference labels use consistent 0.8 mm lettering with 0.15 mm strokes, with a vertical R607 reference where space is constrained.
 
 Factory assembly is **11 front / 33 back**, still 44 placements and 18 SKUs. The [exact edit record](../docs/pcb-rear-placement-edits.json) and [rear audit](rear-layout-audit.json) cover the placement and local routing changes; original pad nets and board/project rules are preserved. Supplier placement/DFM review must use the regenerated CPL. Mechanical models and native electrical/clearance checks do not establish physical rework access or thermal performance.
+
+See the [11 November schematic review](../docs/SCHEMATIC-REVIEW.md) for the latest six-sheet pass and presentation corrections.

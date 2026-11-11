@@ -11,15 +11,15 @@ description = "Extract geometry, nets and assembly metadata from the current nat
 run = ["uv run scripts/generate-reference.py --variant pill", "uv run python scripts/extract-pill-details.py", "uv run scripts/generate-reference.py --variant standard"]
 
 [tasks.build]
-description = "Build native PCB and attach checked reference copper"
+description = "Build the tscircuit preview from the main native KiCad board"
 run = "mise run tscircuit:pill:reference:build"
 
 [tasks.check]
 description = "Check PCB fidelity, assembly defaults and TypeScript"
-run = ["bun run check", "bun scripts/check.tsx", "bunx tsc --noEmit"]
+run = ["mise run tasks:check", "bun run check", "bun scripts/check.tsx", "bunx tsc --noEmit"]
 
 [tasks.docs]
-description = "Regenerate the component guide from reference data and authored explanations"
+description = "Check current-BOM datasheets and regenerate the module pinout audit"
 run = ["uv run --with 'pypdf[crypto]' python scripts/collect-datasheets.py", "uv run python scripts/audit-module-pinouts.py"]
 
 [tasks.dev]
@@ -50,16 +50,16 @@ description = "Serve native KiCad review outputs on localhost:3021"
 run = "uv run --python 3.11 python -m http.server 3021 --bind 127.0.0.1 --directory dist/kicad"
 
 [tasks."bom:refresh"]
-description = "Refresh public JLCPCB catalog identities and availability (no account writes)"
+description = "Refresh main factory-BOM catalog identities and availability; --dry-run lists codes without fetching"
 run = "uv run scripts/refresh-jlc.py"
 
 [tasks."bom:generate"]
 description = "Export native positions and generate matching JLCPCB carrier BOM/CPL"
-run = "mise run variant:lcd:fab"
+run = "mise run hardware:fab"
 
 [tasks."review:build"]
-description = "Build readable local documentation and hardware-only review bundle"
-run = "uv run scripts/build-review.py"
+description = "Render and package the main board review kit (requires matching hardware:fab outputs)"
+run = ["mise run hardware:review", "mise run hardware:package"]
 
 [tasks."os:build"]
 description = "Build pinned Luckfox Mini microSD with Rust camera/QR runtime (x86_64 Docker host)"
@@ -101,35 +101,59 @@ run = "SHIELDSIGNER_PREPARE_ONLY=1 bash scripts/build-os.sh"
 description = "Verify fitted passive nominal values agree with their selected catalog parts"
 run = "uv run scripts/check-bom-values.py"
 
-[tasks."variant:lcd:check"]
-description = "Check and export the separate 2.8-inch header-module carrier"
+[tasks."hardware:validate"]
+description = "Check native ERC/DRC, four-layer geometry and eight-pin LCD interface; refresh board SVGs"
 run = "uv run python scripts/check-lcd-module-variant.py"
 
-[tasks."variant:lcd:pinouts"]
+[tasks."variant:lcd:check"]
+description = "Compatibility alias for hardware:validate"
+hide = true
+run = "mise run hardware:validate"
+
+[tasks."hardware:pinouts"]
 description = "Audit all Luckfox/LCD pad nets, rail separation and pinned firmware assignments"
 run = "uv run python scripts/audit-module-pinouts.py"
 
-[tasks."variant:lcd:models"]
+[tasks."variant:lcd:pinouts"]
+description = "Compatibility alias for hardware:pinouts"
+hide = true
+run = "mise run hardware:pinouts"
+
+[tasks."hardware:models"]
 description = "Check manufacturer land patterns, mounting geometry and all portable 3D model hashes"
 run = "uv run python scripts/check-modular-mechanics.py"
 
+[tasks."variant:lcd:models"]
+description = "Compatibility alias for hardware:models"
+hide = true
+run = "mise run hardware:models"
+
 [tasks."variant:lcd:fab"]
-description = "Build matched modular Gerbers/drills/BOM/CPL and five-board sourcing audit"
-run = "uv run python scripts/manufacture-modular.py"
+description = "Compatibility alias for hardware:fab"
+hide = true
+run = "mise run hardware:fab"
 
 [tasks."variant:lcd:review"]
-description = "Render the assembled modular carrier and export STEP/GLB models"
-run = "uv run python scripts/render-modular.py"
+description = "Compatibility alias for hardware:review"
+hide = true
+run = "mise run hardware:review"
+
+[tasks."hardware:open"]
+description = "Open the modular carrier in pinned KiCad 10"
+run = "mise run kicad:open"
 
 [tasks."variant:lcd:open"]
-description = "Open the modular carrier in pinned KiCad 10"
-run = "uv run python scripts/open-modular.py"
+description = "Compatibility alias for hardware:open"
+hide = true
+run = "mise run hardware:open"
 
 [tasks."variant:lcd:package"]
-description = "Package existing modular fabrication/review outputs and pin release checksums"
-run = "uv run python scripts/package-modular.py"
+description = "Compatibility alias for hardware:package"
+hide = true
+run = "mise run hardware:package"
 
 [tasks."variant:lcd:display-model"]
+hide = true
 description = "Regenerate drawing-based LCD/support envelopes and hashes; follow with review/package"
 run = "uv run --python 3.11 --with cadquery==2.8.0 python scripts/model-pill-display.py"
 
@@ -177,29 +201,50 @@ run = ["uv run tools/telegram/ingest.py", "uv run python tools/telegram/knowledg
 description = "Generate/check the separate DigiKey self-assembly sourcing overlay"
 run = "uv run python scripts/generate-self-assembly.py"
 
-[tasks."variant:lcd:first-article"]
+[tasks."hardware:first-article"]
 description = "Measure native QFN stencil/via geometry and report first-article assembly process questions"
 run = "uv run python scripts/audit-first-article.py"
+
+[tasks."variant:lcd:first-article"]
+description = "Compatibility alias for hardware:first-article"
+hide = true
+run = "mise run hardware:first-article"
 
 [tasks."bom:first-article-budget"]
 description = "Calculate one-article/spares/three-board parts baskets; keep missing landed costs unknown"
 run = "uv run python scripts/budget-first-article.py"
 
 [tasks."variant:lcd:bottom-quote"]
+hide = true
 description = "Package an unsubmitted bottom-only first-article assembly option from pinned Gerbers and matched BOM/CPL"
 run = "uv run python scripts/package-bottom-assembly.py"
 
-[tasks."variant:lcd:power-budget"]
+[tasks."hardware:power-budget"]
 description = "Calculate LCD LDO heat sensitivity and retain first-article measurement gates"
 run = "uv run python scripts/lcd-power-budget.py"
 
-[tasks."variant:lcd:fab-audit"]
+[tasks."variant:lcd:power-budget"]
+description = "Compatibility alias for hardware:power-budget"
+hide = true
+run = "mise run hardware:power-budget"
+
+[tasks."hardware:fab-audit"]
 description = "Screen actual native geometry against dated JLC fabrication limits and flag assembly tooling gaps"
 run = "uv run python scripts/audit-fabrication.py"
 
-[tasks."variant:lcd:faces"]
+[tasks."variant:lcd:fab-audit"]
+description = "Compatibility alias for hardware:fab-audit"
+hide = true
+run = "mise run hardware:fab-audit"
+
+[tasks."hardware:faces"]
 description = "Render unobstructed high-resolution top and bottom PCB views"
 run = "uv run python scripts/render-board-faces.py"
+
+[tasks."variant:lcd:faces"]
+description = "Compatibility alias for hardware:faces"
+hide = true
+run = "mise run hardware:faces"
 
 [tasks."pcb:denver"]
 description = "Recreate the attributed denver.space rear silkscreen from the pinned official logo"
@@ -209,25 +254,46 @@ run = "uv run --python 3.12 --with pillow==11.3.0 --with numpy==2.2.6 --with ope
 description = "Verify the artwork-only audit rejects changes to electrical and mechanical PCB data"
 run = "uv run python -m unittest discover -s scripts/tests -p test_pcb_artwork_audit.py"
 
-[tasks."variant:lcd:stack"]
+[tasks."hardware:stack"]
 description = "Measure exported header mating alignment, insertion and module stack geometry"
 run = "uv run --python 3.11 --with trimesh --with numpy python scripts/audit-assembly-stack.py"
 
-[tasks."variant:lcd:fit-model"]
+[tasks."variant:lcd:stack"]
+description = "Compatibility alias for hardware:stack"
+hide = true
+run = "mise run hardware:stack"
+
+[tasks."hardware:fit-model"]
 description = "Export full case-aligned PCB STEP, standard-unit GLBs and assembled case STL fit kit"
 run = "uv run --python 3.11 --with cadquery==2.8.0 --with trimesh --with manifold3d python scripts/build-fit-model.py"
 
-[tasks."variant:lcd:printable-fit"]
+[tasks."variant:lcd:fit-model"]
+description = "Compatibility alias for hardware:fit-model"
+hide = true
+run = "mise run hardware:fit-model"
+
+[tasks."hardware:printable-fit"]
 description = "Create one watertight millimetre STL fit mockup and a bare carrier STL"
 run = "uv run --python 3.11 --with trimesh --with manifold3d --with networkx python scripts/build-printable-fit.py"
 
+[tasks."variant:lcd:printable-fit"]
+description = "Compatibility alias for hardware:printable-fit"
+hide = true
+run = "mise run hardware:printable-fit"
+
 [tasks."variant:lcd:pwm"]
+hide = true
 description = "Build the dedicated-backlight PWM revision candidate and run native checks"
 run = "uv run python scripts/build-backlight-pwm.py"
 
-[tasks."variant:lcd:pinout-diagram"]
+[tasks."hardware:pinout-diagram"]
 description = "Check public Mini pin diagram against both native revisions, pinned SDK muxes and app"
 run = "uv run python scripts/audit-pinout-diagram.py"
+
+[tasks."variant:lcd:pinout-diagram"]
+description = "Compatibility alias for hardware:pinout-diagram"
+hide = true
+run = "mise run hardware:pinout-diagram"
 
 [tasks."camera:re:prepare"]
 description = "Fetch and verify pinned RKAIQ binaries and Ghidra; build Mac native decompiler if needed"
@@ -767,7 +833,7 @@ run = "uv run --python 3.11 --with matplotlib==3.11.2 python scripts/camera-memo
 
 [tasks."lcd:rust:test"]
 description = "Check Rust LCD frame encoding, SPI failures and Python shim lifecycle"
-run = ["cargo test --locked --manifest-path firmware/lcd-rs/Cargo.toml", "uv run --python 3.11 --with pillow python -m unittest discover -s firmware/lcd-rs/python -p 'test_*.py'"]
+run = ["mise exec rust@1.93.1 -- cargo test --locked --manifest-path firmware/lcd-rs/Cargo.toml", "uv run --python 3.11 --with pillow python -m unittest discover -s firmware/lcd-rs/python -p 'test_*.py'"]
 
 [tasks."camera:button"]
 description = "Send a named press to the explicitly enabled diagnostic app; pass KEY_PRESS or KEY_LEFT --hold-ms 500"
@@ -850,7 +916,7 @@ description = "Test artifact paths, provenance and staging without device access
 run = "uv run python -m unittest discover -s scripts/tests -p test_firmware_artifacts.py"
 
 [tasks."tscircuit:pill:generate"]
-description = "Extract the current 0.0.9 pill carrier without replacing the standard port"
+description = "Extract the current main KiCad board without replacing the historical FPC reference"
 run = "uv run scripts/generate-reference.py --variant pill"
 
 [tasks."tscircuit:pill:reference:build"]
@@ -872,7 +938,7 @@ description = "Extract native lettering, logo, fabrication, courtyard, mask/past
 run = "uv run python scripts/extract-pill-details.py"
 
 [tasks."tscircuit:pill:build"]
-description = "Compile source-authored pill carrier with native routing, pours, artwork and models"
+description = "Compile the experimental source-authored pill with tscircuit routing, pours, artwork and models"
 run = ["bun scripts/build-pill.tsx", "bun scripts/render-pill-native.mjs", "uv run scripts/package-pill-native.py"]
 
 [tasks."tscircuit:pill:check"]
@@ -886,46 +952,73 @@ description = "Preview the editable pill TSX source on localhost:3020"
 run = "bun scripts/dev-pill.ts"
 
 [tasks."variant:lcd:four-layer"]
+hide = true
 description = "One-time pill conversion to four copper layers with two GND planes; backup and refill"
 run = "uv run python scripts/upgrade-pill-four-layer.py"
 
 [tasks."variant:lcd:schematic:readability"]
+hide = true
 description = "One-time native schematic presentation cleanup with source backups"
 run = "uv run python scripts/readable-pill-schematic.py"
 
 [tasks."variant:lcd:schematic:refine"]
+hide = true
 description = "Apply the recorded schematic visual-review refinements once"
 run = "uv run python scripts/refine-pill-schematic.py"
 
-[tasks."variant:lcd:schematic:review"]
+[tasks."hardware:schematic:review"]
 description = "Compare native pre/post-cleanup netlists and export the readable schematic PDF/SVGs"
 run = "uv run python scripts/review-pill-schematic.py"
 
-[tasks."variant:lcd:testpoints:catalog"]
+[tasks."variant:lcd:schematic:review"]
+description = "Compatibility alias for hardware:schematic:review"
+hide = true
+run = "mise run hardware:schematic:review"
+
+[tasks."hardware:testpoints:catalog"]
 description = "Refresh the selected factory-assembled Keystone SMT test point"
 run = "uv run python scripts/refresh-jlc.py --only C2906768 --output hardware/jlc-catalog.json"
 
+[tasks."variant:lcd:testpoints:catalog"]
+description = "Compatibility alias for hardware:testpoints:catalog"
+hide = true
+run = "mise run hardware:testpoints:catalog"
+
 [tasks."variant:lcd:keystone:model"]
+hide = true
 description = "Generate the manufacturer-dimensioned Keystone 5015 occupied envelope"
 run = "uv run --python 3.11 --with cadquery==2.8.0 python scripts/model-keystone.py"
 
 [tasks."variant:lcd:service:upgrade"]
+hide = true
 description = "Apply the recorded native factory-testpoint and independent bracket mounting revision once"
 run = "uv run python scripts/upgrade-pill-service.py"
 
 [tasks."variant:lcd:service:refine"]
+hide = true
 description = "Apply reviewed service spur routing while preserving all original tracks"
 run = "uv run python scripts/refine-pill-service.py"
 
-[tasks."variant:lcd:catalog:critical"]
+[tasks."hardware:catalog:critical"]
 description = "Refresh assembly stock of the smartcard socket, switches and reader IC"
 run = "uv run python scripts/refresh-jlc.py --only C5417011 C2689642 C633309 --output hardware/jlc-catalog.json"
 
-[tasks."variant:lcd:service:review"]
+[tasks."variant:lcd:catalog:critical"]
+description = "Compatibility alias for hardware:catalog:critical"
+hide = true
+run = "mise run hardware:catalog:critical"
+
+[tasks."hardware:service:review"]
 description = "Verify retained native circuitry/routing and re-pin supplier placement evidence"
 run = "uv run python scripts/review-pill-service.py"
 
+[tasks."variant:lcd:service:review"]
+description = "Compatibility alias for hardware:service:review"
+hide = true
+run = "mise run hardware:service:review"
+
 [tasks."variant:lcd:service:labels"]
+hide = true
 description = "Print service point designators/net names and manufacturing-sized silk strokes"
 run = "uv run python scripts/label-pill-service.py"
 
@@ -934,6 +1027,7 @@ description = "Check the fresh native hardware cache against existing printed ca
 run = "uv run --python 3.11 --with trimesh --with networkx --with manifold3d python enclosure/check_hardware.py"
 
 [tasks."variant:lcd:sourcing:options"]
+hide = true
 description = "Read-only stock snapshot of the industrial-temperature dual-UART SEC1210 option; does not substitute it"
 run = "uv run python scripts/refresh-jlc.py --only C633307 --output hardware/sourcing-options.json"
 
@@ -945,9 +1039,14 @@ run = ["bun scripts/check-pill-reference-electrical.ts", "TSCI_TEST_MODE=true bu
 description = "Verify carrier/base-fork IO transforms and kernel-proof isolation"
 run = ["uv run python -m unittest discover -s scripts/tests -p test_io_image_profile.py", "uv run python -m unittest discover -s scripts/tests -p test_carrier_pinmux.py", "uv run python scripts/test_image_io_profile.py", "uv run python -m unittest discover -s scripts/tests -p test_gpio_bank_aliases.py"]
 
-[tasks."variant:lcd:runtime-audit"]
+[tasks."hardware:runtime-audit"]
 description = "Check pinned display reset/wake timing, carrier button setup and reader identities without hardware"
 run = "uv run python scripts/audit-carrier-runtime.py"
+
+[tasks."variant:lcd:runtime-audit"]
+description = "Compatibility alias for hardware:runtime-audit"
+hide = true
+run = "mise run hardware:runtime-audit"
 
 [tasks."datasheets:fetch"]
 description = "Fetch missing current-BOM datasheets from fresh public supplier links and index coverage"
@@ -958,6 +1057,7 @@ description = "Verify local PDF hashes, readability and coverage of every curren
 run = "uv run --with 'pypdf[crypto]' python scripts/collect-datasheets.py"
 
 [tasks."variant:lcd:kernel-pinmux"]
+hide = true
 description = "Audit the retained compiled SPI/reset/button pinmux snapshot; not installed-image qualification"
 run = ["uv run python -m unittest discover -s scripts/tests -p test_carrier_pinmux.py", "uv run --with pyelftools python scripts/audit-carrier-kernel.py --dtb dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/out/bin/board_uclibc_rv1106/rv1103g-luckfox-pico-mini.dtb --config dist/firmware/archive/os-legacy/camera-review/zram-kernel-probe-20261029-01/sysdrv/source/objs_kernel/.config --report hardware/compiled-pinmux-audit.json"]
 
@@ -974,16 +1074,27 @@ description = "Regenerate the historical FPC component guide"
 run = "uv run scripts/generate-component-docs.py"
 
 [tasks."variant:lcd:clip-layout"]
+hide = true
 description = "Apply the guarded 0.0.12 power clip spacing revision once"
 run = "uv run python scripts/space-power-clip-points.py"
 
-[tasks."variant:lcd:clip-audit"]
+[tasks."hardware:clip-audit"]
 description = "Verify power clip spacing, exact retained circuitry and bounded service routing changes"
 run = "uv run python scripts/audit-power-clip-layout.py"
 
-[tasks."variant:lcd:rear-audit"]
+[tasks."variant:lcd:clip-audit"]
+description = "Compatibility alias for hardware:clip-audit"
+hide = true
+run = "mise run hardware:clip-audit"
+
+[tasks."hardware:rear-audit"]
 description = "Verify the recorded rear placement edits, assembly sides and unchanged rules"
 run = "uv run python scripts/rear-layout-audit.py"
+
+[tasks."variant:lcd:rear-audit"]
+description = "Compatibility alias for hardware:rear-audit"
+hide = true
+run = "mise run hardware:rear-audit"
 
 [tasks."hardware:check"]
 description = "Validate the main PCB, models, recorded edits and module pinouts"
@@ -1000,3 +1111,23 @@ run = "uv run python scripts/render-modular.py"
 [tasks."hardware:package"]
 description = "Package the main board's matched local supplier-review files"
 run = "uv run python scripts/package-modular.py"
+
+[tasks."tasks:check"]
+description = "Check task commands, local script paths and task dependency cycles without running workflows"
+run = "uv run --python 3.13 python scripts/check-tasks.py"
+
+[tasks."website:build"]
+description = "Build the static website using website/mise.toml"
+run = "mise -C website run build"
+
+[tasks."website:check"]
+description = "Build and check website routes, links and public-file boundaries"
+run = "mise -C website run check"
+
+[tasks."website:dev"]
+description = "Build and serve the static website on localhost:8030"
+run = "mise -C website run dev"
+
+[tasks."bom:standard:refresh"]
+description = "Refresh the historical FPC public catalog snapshot"
+run = "uv run scripts/refresh-jlc.py --standard-fpc"

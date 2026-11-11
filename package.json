@@ -8,7 +8,7 @@
     "build": "bun scripts/build.tsx --pill",
     "check": "bun scripts/check-pill.tsx",
     "dev": "bun scripts/dev.ts --pill",
-    "dev:source": "tsci dev src/index.tsx --port 3022"
+    "dev:source": "bun scripts/dev-pill.ts --reference"
   },
   "dependencies": {
     "@tscircuit/core": "0.0.2265",

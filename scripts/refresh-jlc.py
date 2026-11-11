@@ -1,13 +1,28 @@
 #!/usr/bin/env python3
 """Snapshot public JLCPCB catalog identities/availability without account writes."""
-import argparse,concurrent.futures,datetime,hashlib,json,re,time,urllib.request,urllib.error
+import argparse,csv,concurrent.futures,datetime,hashlib,json,re,time,urllib.request,urllib.error
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
-board=json.loads((ROOT/'src/generated/reference-board.json').read_text())
-ids={c['lcsc'] for c in board['components'] if c.get('lcsc')}
-ids.update(['C2931360','C7278475','C633310'])
-parser=argparse.ArgumentParser();parser.add_argument('--only',nargs='+');parser.add_argument('--output',type=Path,default=ROOT/'docs/jlc-catalog.json');args=parser.parse_args()
-if args.only:ids=set(args.only)
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--only',nargs='+',help='Refresh only these LCSC codes, preserving other existing records')
+parser.add_argument('--output',type=Path,help='Override the selected board catalog path')
+parser.add_argument('--standard-fpc',action='store_true',help='Use historical FPC identities and catalog instead of the main board')
+parser.add_argument('--dry-run',action='store_true',help='Print codes and output path without network requests or writes')
+args=parser.parse_args()
+if args.only:
+ ids=set(args.only)
+elif args.standard_fpc:
+ board=json.loads((ROOT/'src/generated/reference-board.json').read_text())
+ ids={c['lcsc'] for c in board['components'] if c.get('lcsc')}
+ ids.update(['C2931360','C7278475','C633310'])
+else:
+ with (ROOT/'hardware/manufacturing/bom-jlcpcb.csv').open(newline='') as file:
+  ids={r['LCSC Part #'] for r in csv.DictReader(file)}
+args.output=args.output or ROOT/('docs/jlc-catalog.json' if args.standard_fpc else 'hardware/jlc-catalog.json')
+assert ids and all(re.fullmatch(r'C[0-9]+',code) for code in ids),'Expected LCSC codes such as C633309'
+if args.dry_run:
+ print(json.dumps({'codes':sorted(ids),'output':str(args.output)},indent=2))
+ raise SystemExit(0)
 CACHE=ROOT/'reference/research/catalog-cache';CACHE.mkdir(parents=True,exist_ok=True)
 
 def snapshot(code):

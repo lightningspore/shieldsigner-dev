@@ -14,6 +14,19 @@ The source requires KiCad 10. The wrapper caches the official **10.0.7** macOS i
 
 All local symbols, footprints and models are kept with the project. Preserve the exact `Footprints/` capitalization for Linux compatibility. PDFs and STEP models use Git LFS; hydrate them with `git lfs pull` when needed.
 
+## KiCad MCP
+
+We use [KiCad MCP Pro](https://github.com/oaslananka/kicad-mcp-pro), currently installed as version 4.12.0, for inspecting and editing the native design from an MCP client.
+
+1. Install with `uv tool install --python 3.13 kicad-mcp-pro==4.12.0` and connect your client to the `kicad-mcp-pro` stdio command.
+2. Set `KICAD_MCP_WORKSPACE_ROOT` to this repository, `KICAD_MCP_PROJECT_DIR` to its `kicad/` directory, `KICAD_MCP_PROFILE=full` and `KICAD_MCP_OPERATING_MODE=write`. Set `KICAD_MCP_KICAD_CLI` to your KiCad 10 CLI and `KICAD_MCP_OUTPUT_DIR` to the repository’s ignored `dist/mcp/` directory.
+3. Open the main PCB in KiCad 10 and enable **Preferences → Scripting → Enable IPC API Server**. Reload the MCP connection after changing its settings.
+4. Start with `kicad_get_version()`, select the main project with `kicad_set_project()`, then use `project_get_next_action()` or `kicad_get_server_info()` to check available capabilities.
+
+The MCP can inspect the schematic, run checks, edit the PCB and export manufacturing files. Live PCB edits require the open editor/API connection; a working CLI alone does not prove live editing is available. If tools are missing, check the profile, write mode and API connection. Keep personal client configuration outside Git.
+
+After edits, save in KiCad and follow the validation, reference regeneration and matched-export workflow below. MCP results do not replace those checks or first-article testing.
+
 ## Validate and export
 
 ```sh

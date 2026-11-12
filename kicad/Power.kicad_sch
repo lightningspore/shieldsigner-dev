@@ -3579,7 +3579,7 @@
  (property "Footprint" "" (at 55.88000 97.79000 0) (effects (font (size 1.27 1.27)) (hide yes)))
  (instances (project "SeedSigner-Plus-smartcard-pico" (path "/8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f/b5a93c28-270e-4d44-a4df-5a2de1184382" (reference "#FLG0302") (unit 1)))))
 
-(title_block (title "USB-C power input and protection") (date "2026-11-08") (rev "0.0.12-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
+(title_block (title "USB-C power input and protection") (date "2026-11-08") (rev "0.0.13-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
 (text "USB-C 5 V input, bypass and protection" (at 25.4 25.4 0) (effects (font (size 2 2) (bold yes)) (justify left)) (uuid "5524cecd-0ad3-5ea5-b89e-bbcbdaf850a3"))
 (text "Power only: USB data is not connected. Follow +5V to the host, reader and display regulator." (at 25.4 33.02 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "238105b9-6a3c-5cd9-b8e0-eb559fbded9e"))
 (text "USB-C sink identification\nR301 / R302: 5.1 kOhm to GND\nEach CC pin has its own pull-down." (at 25.4 109.22 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "5efd111a-51a7-5b45-a8a7-5ce0f2800b20"))
@@ -3617,4 +3617,91 @@
 (symbol (lib_id "Connector:TestPoint") (at 254.00000 139.7 0) (unit 1) (in_bom yes) (on_board yes) (in_pos_files yes) (dnp no) (uuid "7b348821-13a1-593f-a265-5ffba5869941") (property "Reference" "TP909" (at 256.54000 134.61999999999998 0) (effects (font (size 1.1 1.1)) (justify left))) (property "Value" "5015" (at 256.54000 137.16 0) (effects (font (size 1.1 1.1)) (justify left))) (property "Footprint" "ShieldSigner:Keystone_5015" (at 254.00000 139.7 0) (effects (font (size 1 1)) (hide yes))) (property "LCSC" "C2906768" (at 254.00000 139.7 0) (effects (font (size 1 1)) (hide yes))) (property "MPN" "5015" (at 254.00000 139.7 0) (effects (font (size 1 1)) (hide yes))) (pin "1" (uuid "be28a9f1-54c4-59e3-86fb-7eb9dc410360")) (instances (project "SeedSigner-Plus-smartcard-pico" (path "/8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f/dd2ceaf9-87b1-40a7-9ece-7767bfc1c03a" (reference "TP909") (unit 1)))))
 (wire (pts (xy 254.00000 139.7) (xy 254.00000 144.78)) (stroke (width 0) (type default)) (uuid "515dd354-491d-5a7c-829b-20a30e8c97fa"))
 (global_label "GND" (shape bidirectional) (at 254.00000 144.78 0) (effects (font (size 1.0 1.0)) (justify left)) (uuid "921ace3c-8ba6-5fc4-9ab0-85ae5bd1df93"))
+
+(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 187.96 86.36 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "c0dfbddc-3ac8-4da0-a902-44d1c77ba4bb")
+		(property "Reference" "J302"
+			(at 192.786 80.772 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "5V_MODULE"
+			(at 189.738 83.058 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ShieldSigner:Battery5VHeader_1x02_P2.54mm_Horizontal"
+			(at 187.96 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 187.96 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 187.96 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3f0e31c0-6e8d-4204-80fc-c4c4910f9291")
+		)
+		(pin "2"
+			(uuid "553bb780-cfb5-4b12-a682-5ddd23296d1d")
+		)
+		(instances
+			(project "SeedSigner-Plus-smartcard-pico"
+				(path "/8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f/dd2ceaf9-87b1-40a7-9ece-7767bfc1c03a"
+					(reference "J302")
+					(unit 1)
+				)
+			)
+		)
+	)
+(wire (pts (xy 193.04 86.36) (xy 200.66 86.36)) (stroke (width 0) (type default)) (uuid "bd926a85-7dd9-5fe1-96ed-3a5001186151"))
+(global_label "+5V" (shape bidirectional) (at 200.66 86.36 0) (effects (font (size 1 1)) (justify left)) (uuid "7f75eb51-99db-57cc-b682-387f42c2a7f4"))
+(wire (pts (xy 193.04 88.9) (xy 200.66 88.9)) (stroke (width 0) (type default)) (uuid "3501b8ba-d7cf-5417-8646-adaae3d5f1fd"))
+(global_label "GND" (shape bidirectional) (at 200.66 88.9 0) (effects (font (size 1 1)) (justify left)) (uuid "05e52066-abb0-57e5-985d-05c44f323822"))
+(text "J302: future regulated 5 V battery-module output, front side under LCD.
+Pin 1 = +5V; pin 2 = GND. No charger, boost or source isolation on carrier.
+Disconnect USB before using this input. Do not connect a bare Li-ion cell." (at 180.34 101.6 0) (effects (font (size 1 1)) (justify left)) (uuid "5a9e4bb1-4a9d-500d-a339-3227dedbcdbd"))
 )

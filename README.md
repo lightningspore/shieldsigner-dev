@@ -10,11 +10,11 @@ The **main PCB is the four-layer, eight-pin display carrier in [`kicad/`](kicad/
 
 ## Current hardware
 
-**0.0.12-dev** is a 160 × 70 mm capsule with two inner ground planes, an independently regulated display supply, eight buttons, a SEC1210 smartcard interface, and eight M2.5 mounting holes. The regulator and reader electronics are on the back. Nine factory-assembled Keystone loops provide service access, including a **GND — +5 V — GND** power clip row at 15 mm pitch.
+**0.0.13-dev** is a 160 × 70 mm capsule with two inner ground planes, an independently regulated display supply, eight buttons, a SEC1210 smartcard interface, and eight M2.5 mounting holes. The regulator and reader electronics are on the back. Nine factory-assembled Keystone loops provide service access, including a **GND — +5 V — GND** power clip row at 15 mm pitch.
 
 The factory population is **44 SMT placements / 18 SKUs**, split **11 front / 33 back**. Modules, ordinary headers and mechanical hardware are fitted separately. See the [assembly guide](docs/MODULAR-ASSEMBLY.md) and [supplier-review instructions](hardware/manufacturing/README.md).
 
-Native ERC, DRC, connectivity and schematic parity pass with zero violations or exclusions. This is a first-article development design: supplier sourcing/DFM approval and physical, thermal and powered bring-up remain open. [Order readiness](docs/PCB-ORDER-READINESS.md) tracks those limits. Older release ZIPs describe their tagged revisions; use the working tree's matched exports when reviewing 0.0.12-dev.
+Native ERC, DRC, connectivity and schematic parity pass with zero violations or exclusions. This is a first-article development design: supplier sourcing/DFM approval and physical, thermal and powered bring-up remain open. [Order readiness](docs/PCB-ORDER-READINESS.md) tracks those limits. Older release ZIPs describe their tagged revisions; use the working tree's matched exports when reviewing 0.0.13-dev.
 
 ## Schematic and PCB views
 

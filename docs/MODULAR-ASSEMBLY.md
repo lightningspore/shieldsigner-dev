@@ -1,6 +1,6 @@
 # Assemble the eight-pin pill carrier
 
-**The factory assembly BOM includes 44 SMT parts, including all nine Keystone points. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.12-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
+**The factory assembly BOM includes 44 SMT parts, including all nine Keystone points. You solder ordinary headers, plug in the modules and install screws.** Use the [0.0.13-dev pill design](LCD-MODULE-VARIANT.md) and its matched files. The old Pico-format LCD carrier and standard FPC kit are different boards.
 
 For an optional DIY build, use the separate [self-assembly guide](SELF-ASSEMBLY.md) and DigiKey purchase CSV. The original JLC kit below remains the assembled-board ordering path.
 
@@ -84,7 +84,11 @@ Record module revision, header/spacer measurements, firmware version, measured c
 
 Revision **0.0.6-dev** uses shared-supplier C&K switches and GCT USB4125-GF-A-0190 with revised native lands. Use matched revision files and the measured-height button setup in [self-assembly](SELF-ASSEMBLY.md). Physical first-article fit and powered bring-up remain pending.
 
-## Alternative 5 V power header (0.0.6-dev)
+## Optional 5 V battery-module header (0.0.13-dev)
+
+J302 is restored on the front beneath the LCD: a customer-fitted 1x2 right-angle 2.54 mm header, pin 1 +5V and pin 2 GND. It adds two solder joints and remains outside the factory BOM/CPL. Keep the Keystone clips. See [the placement and regulated-input requirements](PCB-ANGLE-HEADER-REVISION.md).
+
+### Historical 0.0.11 change
 
 The 0.0.11 board replaces J302 with **factory-assembled Keystone 5015** points:
 **TP902 GND — TP901 +5 V — TP909 GND** form the front power clip row at 15 mm pitch. All three are factory-assembled Keystone loops, labelled on front silk.
@@ -101,4 +105,4 @@ H705-H708 provide an optional 109 x 47.8 mm M2.5 bracket pattern, independent of
 the LCD's four spacers. Use head/washer OD <= 5 mm; preserve module, plug and
 card-insertion clearance. The supplied enclosure still uses its original mounts.
 
-The regulator U701 and capacitors C701/C702 are on the rear in the working 0.0.12-dev placement, alongside the reader electronics. Factory assembly is 11 front / 33 rear placements. Use the regenerated bottom-side CPL and current PCB hash for supplier review.
+The regulator U701 and capacitors C701/C702 are on the rear in the working 0.0.13-dev placement, alongside the reader electronics. Factory assembly is 11 front / 33 rear placements. Use the regenerated bottom-side CPL and current PCB hash for supplier review.

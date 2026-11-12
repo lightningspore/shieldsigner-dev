@@ -1,6 +1,6 @@
 {
   "variant": "modular-lcd-2.8",
-  "boardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
+  "boardSha256": "bc8b42ec8e41e1f4e304ecc353cf0fca7ea2862945dd5a4ea3e10726124d1523",
   "fittedSmtPieces": 44,
   "catalogLines": 18,
   "bomCplRefsMatch": true,
@@ -47,7 +47,7 @@
   "stockFieldPolicy": "canPresaleNumber used for standard assembly snapshot; overseasStockCount retained separately, never summed",
   "placementRotationsQualifiedByAssembler": false,
   "status": "stock_review_required",
-  "boardRevision": "0.0.12-dev",
+  "boardRevision": "0.0.13-dev",
   "supplierPreviewForCurrentBoard": false,
   "cartUpdatedForCurrentBoard": false,
   "nativeErcErrors": 0,
@@ -55,7 +55,7 @@
   "nativeUnconnected": 0,
   "nativeParityIssues": 0,
   "dnpCourtyardExclusions": 0,
-  "mechanicalModelsVerified": 23,
+  "mechanicalModelsVerified": 24,
   "limitations": [
     "Physical header/module fit and powered bring-up not tested",
     "LCD, smartcard socket, switch, USB and spacer models are drawing-derived envelopes",
@@ -63,15 +63,15 @@
     "Supplier preview/quote status recorded in supplierPlacementCompensation; final assembler DFM and placement confirmation pending"
   ],
   "files": {
-    "shieldsigner-modular-gerbers.zip": "2989c34ca2fdb38ef4d9eaf6f0523c43a7324ef62227152a7d77aa086566b3b9",
+    "shieldsigner-modular-gerbers.zip": "af475f47476776c5e6314ff0097d32522e81eaaf28717c293ee88329fb873c0c",
     "bom-jlcpcb.csv": "604f2dbe2b9a9b82fd4e8532b6e821c0ff57dcd6210d191ed406c1260dd8251b",
     "cpl-jlcpcb.csv": "fb1d144f17b9673545678ac17599f20c1b258e8f674fa7ad19c1adc992405afb",
-    "population.csv": "a1bf49cb56bde60bf4501c7e9ae67316023bd5ab67ba349cf376501ac11da7cf"
+    "population.csv": "4611213779a5a74acfced43e734e8c26d562d925cb444d035ccfda55bfca9ce6"
   },
   "compatibilityProof": {
-    "file": "serviceability-audit.json",
-    "sha256": "72c77fdc6991b4d357ee7e28ddd761d3230d543aa1a917af85b9a13c9eb8d82d",
-    "scope": "Exact recorded rear placement/routing edits, retained pad nets and projected schematic connectivity; explicitly audited power clip spurs rerouted; two historical standalone GND vias removed"
+    "file": "angle-header-audit.json",
+    "sha256": "725e985dbd4c500a31389ab48ddcd1ae7f63dda0c4aa0b286aa637618e45d935",
+    "scope": "All prior footprints/pad nets and signal endpoints retained; 45-degree conversion, documented GND via clearance edits and customer 5V header independently audited"
   },
   "historicalSupplierEvidence": "history/0.0.7-preview/",
   "testPoints": {

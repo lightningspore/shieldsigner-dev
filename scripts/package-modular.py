@@ -10,7 +10,7 @@ VARIANT = ROOT / 'hardware'
 OUT = ROOT / 'dist/lcd-module-2.8'
 board_sha = hashlib.sha256((VARIANT / 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest()
 readiness = json.loads((VARIANT / 'manufacturing/readiness.json').read_text())
-assert readiness['boardSha256'] == board_sha, 'Run variant:lcd:fab first'
+assert readiness['boardSha256'] == board_sha, 'Run hardware:fab first'
 assert readiness['status'] in {'review_required', 'stock_review_required'}
 for name, expected in readiness['files'].items():
     source = (OUT if name.endswith('.zip') else VARIANT / 'manufacturing') / name
@@ -43,6 +43,8 @@ with ZipFile(OUT / 'shieldsigner-modular-order.zip', 'w', ZIP_DEFLATED) as archi
     archive.writestr('READ-FIRST-PLACEMENT.md', guide.replace('(smartcard-contact-audit.json)', '(placement-review/smartcard-contact-audit.json)'))
     archive.write(VARIANT/'testpoints.json','testpoints.json')
     archive.write(VARIANT/'serviceability-audit.json','serviceability-audit.json')
+    archive.write(VARIANT/'angle-header-audit.json','angle-header-audit.json')
+    archive.write(ROOT/'docs/PCB-ANGLE-HEADER-REVISION.md','PCB-ANGLE-HEADER-REVISION.md')
     archive.write(VARIANT/'schematic-once-over-audit.json','schematic-once-over-audit.json')
     archive.write(ROOT/'docs/SCHEMATIC-REVIEW.md','SCHEMATIC-REVIEW.md')
     archive.write(VARIANT/'silkscreen-label-audit.json','silkscreen-label-audit.json')
@@ -69,18 +71,18 @@ allowed = {'.kicad_pcb', '.kicad_sch', '.kicad_pro', '.kicad_mod', '.kicad_sym',
 with ZipFile(OUT / 'shieldsigner-modular-kicad.zip', 'w', ZIP_DEFLATED) as archive:
     add_datasheets(archive)
     add_electrical_sources(archive)
-    archive.writestr('README.txt', 'ShieldSigner eight-pin pill, 0.0.12-dev\nOpen kicad/SeedSigner-Plus-smartcard-pico.kicad_pro in KiCad 10.\nLocal footprints, symbols and STEP models are included.\nRead docs/LCD-MODULE-VARIANT.md and docs/MODULAR-ASSEMBLY.md.\nAutomated mise workflows require a checkout of https://github.com/lightningspore/shieldsigner-dev\nPrototype quotation/review design; physical fit and powered bring-up remain unqualified.\n')
+    archive.writestr('README.txt', 'ShieldSigner eight-pin pill, 0.0.13-dev\nOpen kicad/SeedSigner-Plus-smartcard-pico.kicad_pro in KiCad 10.\nLocal footprints, symbols and STEP models are included.\nRead docs/LCD-MODULE-VARIANT.md and docs/MODULAR-ASSEMBLY.md.\nAutomated mise workflows require a checkout of https://github.com/lightningspore/shieldsigner-dev\nPrototype quotation/review design; physical fit and powered bring-up remain unqualified.\n')
     for source in sorted((ROOT/'kicad').rglob('*')):
         if source.is_file() and (source.suffix in allowed or source.name in {'fp-lib-table','sym-lib-table'}):
             archive.write(source,source.relative_to(ROOT))
     for source in sorted(VARIANT.rglob('*')):
         if source.is_file() and (source.suffix in allowed or source.name in {'fp-lib-table', 'sym-lib-table'}):
             archive.write(source, source.relative_to(ROOT))
-    for source in [ROOT / 'LICENSE', ROOT / 'docs/LCD-MODULE-VARIANT.md', ROOT / 'docs/MODULAR-ASSEMBLY.md', ROOT / 'docs/BRINGUP.md', ROOT / 'docs/BRINGUP-RESULTS.md', ROOT / 'docs/PCB-ORDER-READINESS.md', ROOT / 'docs/PCB-SOFTWARE-COMPATIBILITY.md', ROOT / 'docs/DISPLAY-BUTTON-REVIEW.md', ROOT / 'docs/MODULE-PINOUT-AUDIT.md', ROOT / 'docs/SCHEMATIC-REVIEW.md', *sorted((ROOT / 'reference/pdfs').glob('*.pdf'))]:
+    for source in [ROOT / 'LICENSE', ROOT / 'docs/LCD-MODULE-VARIANT.md', ROOT / 'docs/MODULAR-ASSEMBLY.md', ROOT / 'docs/BRINGUP.md', ROOT / 'docs/BRINGUP-RESULTS.md', ROOT / 'docs/PCB-ORDER-READINESS.md', ROOT / 'docs/PCB-SOFTWARE-COMPATIBILITY.md', ROOT / 'docs/DISPLAY-BUTTON-REVIEW.md', ROOT / 'docs/MODULE-PINOUT-AUDIT.md', ROOT / 'docs/SCHEMATIC-REVIEW.md', ROOT / 'docs/PCB-ANGLE-HEADER-REVISION.md', ROOT / 'docs/pcb-angle-header-edits.json', *sorted((ROOT / 'reference/pdfs').glob('*.pdf'))]:
         archive.write(source, source.relative_to(ROOT))
-tag = 'pill-assembly-0.0.12-review'
+tag = 'pill-assembly-0.0.13-review'
 names = ['shieldsigner-modular-order.zip', 'shieldsigner-modular-gerbers.zip', 'shieldsigner-modular-kicad.zip', 'shieldsigner-modular-assembly.step', 'shieldsigner-modular-assembly.glb', 'shieldsigner-modular-schematic.pdf']
-manifest = {'release': tag, 'boardRevision':'0.0.12-dev', 'status':readiness['status'], 'publicationStatus':'local_review_only_not_published', 'boardSha256': board_sha, 'assets': []}
+manifest = {'release': tag, 'boardRevision':'0.0.13-dev', 'status':readiness['status'], 'publicationStatus':'local_review_only_not_published', 'boardSha256': board_sha, 'assets': []}
 for name in names:
     source = OUT / name
     manifest['assets'].append({'name': name, 'path': name, 'sha256': hashlib.sha256(source.read_bytes()).hexdigest()})

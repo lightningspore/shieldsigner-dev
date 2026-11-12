@@ -11,7 +11,7 @@ selection=json.loads((ROOT/'docs/bom-selection.json').read_text());selection.upd
 parts=[];groups=collections.defaultdict(list);expected=set()
 for f in children(tree,'footprint'):
  props={p[1]:p[2] for p in children(f,'property')};ref=props['Reference'];dnp='dnp' in one(f,'attr')
- role='copper test point' if ref.startswith('TP8') else 'DNP' if dnp else 'PCB copper jumper' if ref.startswith('JP') else 'customer 1x8 display socket/header' if ref=='J701' else 'customer Luckfox module and headers' if ref=='U202' else 'customer M2.5 supports' if ref.startswith('H70') else 'JLCPCB SMT assembly'
+ role='copper test point' if ref.startswith('TP8') else 'DNP' if dnp else 'PCB copper jumper' if ref.startswith('JP') else 'customer 1x8 display socket/header' if ref=='J701' else 'customer optional regulated 5V module header' if ref=='J302' else 'customer Luckfox module and headers' if ref=='U202' else 'customer M2.5 supports' if ref.startswith('H70') else 'JLCPCB SMT assembly'
  row={'ref':ref,'value':props['Value'],'footprint':f[1],'side':one(f,'layer')[1],'role':role,'lcsc':props.get('LCSC',''),'mpn':props.get('MPN','')};parts.append(row)
  if role=='JLCPCB SMT assembly':
   chosen=selection[ref];assert row['lcsc']==chosen['lcsc'] and row['mpn']==chosen['mpn'],f'{ref} purchase identity drift'
@@ -23,7 +23,7 @@ for f in children(tree,'footprint'):
    assert normalize(values['nominal'](row['value'],[ref]))==normalize(attributes[key]),f'{ref} value/catalog mismatch'
   groups[row['lcsc']].append(row);expected.add(ref)
 assert len(expected)==44 and len(groups)==18,(len(expected),len(groups))
-assert len(parts)==72,len(parts)
+assert len(parts)==73,len(parts)
 M.mkdir(exist_ok=True,parents=True);OUT.mkdir(exist_ok=True,parents=True);FAB.mkdir(exist_ok=True,parents=True)
 with (M/'bom-jlcpcb.csv').open('w',newline='') as file:
  writer=csv.writer(file,lineterminator='\n');writer.writerow(['Comment','Designator','Footprint','LCSC Part #'])
@@ -61,11 +61,11 @@ lines=['# Modular carrier sourcing table','','44 fitted SMT pieces, 18 catalog l
 for code,items in sorted(groups.items()):
  p=catalog[code];refs=[a['ref'] for a in items];lines.append(f"| {', '.join(refs)} | {values['nominal'](items[0]['value'],refs)} | {values['ratings'](p,refs) or '—'} | {len(refs)} | {p['componentModelEn']} | [{code}]({p['url']}) | {p['canPresaleNumber']} | {p['checkedAt'][:19]} |")
 (M/'BOM.md').write_text('\n'.join(lines)+'\n')
-manifest={'variant':'modular-lcd-2.8','boardSha256':hashlib.sha256(PCB.read_bytes()).hexdigest(),'fittedSmtPieces':44,'catalogLines':18,'bomCplRefsMatch':True,'layers':4,'thicknessMm':1.6,'originMm':{'x':50,'y':130,'cplY':'130 minus board y; bottom X is not mirrored'},'proposedPrototypeQuantity':5,'stockReserved':False,'catalogStockSufficientForFive':not stock_blockers,'stockBlockers':stock_blockers,'attritionConfirmed':False,'stockFieldPolicy':'canPresaleNumber used for standard assembly snapshot; overseasStockCount retained separately, never summed','placementRotationsQualifiedByAssembler':False,'status':'stock_review_required' if stock_blockers else 'review_required','boardRevision':'0.0.12-dev','supplierPreviewForCurrentBoard':False,'cartUpdatedForCurrentBoard':False,'nativeErcErrors':0,'nativeActiveDrcErrors':0,'nativeUnconnected':0,'nativeParityIssues':0,'dnpCourtyardExclusions':0,'mechanicalModelsVerified':json.loads((V/'mechanical-check-results.json').read_text())['modelsVerified'],'limitations':['Assembler placement preview/DFM/quote not submitted','Physical header/module fit and powered bring-up not tested','LCD, smartcard socket, switch, USB and spacer models are drawing-derived envelopes','Stock snapshot is not a reservation'],'files':{}}
+manifest={'variant':'modular-lcd-2.8','boardSha256':hashlib.sha256(PCB.read_bytes()).hexdigest(),'fittedSmtPieces':44,'catalogLines':18,'bomCplRefsMatch':True,'layers':4,'thicknessMm':1.6,'originMm':{'x':50,'y':130,'cplY':'130 minus board y; bottom X is not mirrored'},'proposedPrototypeQuantity':5,'stockReserved':False,'catalogStockSufficientForFive':not stock_blockers,'stockBlockers':stock_blockers,'attritionConfirmed':False,'stockFieldPolicy':'canPresaleNumber used for standard assembly snapshot; overseasStockCount retained separately, never summed','placementRotationsQualifiedByAssembler':False,'status':'stock_review_required' if stock_blockers else 'review_required','boardRevision':'0.0.13-dev','supplierPreviewForCurrentBoard':False,'cartUpdatedForCurrentBoard':False,'nativeErcErrors':0,'nativeActiveDrcErrors':0,'nativeUnconnected':0,'nativeParityIssues':0,'dnpCourtyardExclusions':0,'mechanicalModelsVerified':json.loads((V/'mechanical-check-results.json').read_text())['modelsVerified'],'limitations':['Assembler placement preview/DFM/quote not submitted','Physical header/module fit and powered bring-up not tested','LCD, smartcard socket, switch, USB and spacer models are drawing-derived envelopes','Stock snapshot is not a reservation'],'files':{}}
 with ZipFile(OUT/'shieldsigner-modular-gerbers.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(FAB.iterdir()):z.write(p,p.name)
 for p in [OUT/'shieldsigner-modular-gerbers.zip',M/'bom-jlcpcb.csv',M/'cpl-jlcpcb.csv',M/'population.csv']:manifest['files'][p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
-manifest['compatibilityProof']={'file':'serviceability-audit.json','sha256':hashlib.sha256((V/'serviceability-audit.json').read_bytes()).hexdigest(),'scope':'Exact recorded rear placement/routing edits, retained pad nets and projected schematic connectivity; explicitly audited power clip spurs rerouted; two historical standalone GND vias removed'}
+manifest['compatibilityProof']={'file':'angle-header-audit.json','sha256':hashlib.sha256((V/'angle-header-audit.json').read_bytes()).hexdigest(),'scope':'All prior footprints/pad nets and signal endpoints retained; 45-degree conversion, documented GND via clearance edits and customer 5V header independently audited'}
 manifest['historicalSupplierEvidence']='history/0.0.7-preview/'
 manifest['testPoints']={'factoryKeystone5015':9,'copperOnly':12,'factoryPasteApertures':9,'assemblyPlacements':9,'map':'serviceability.json','barePadMap':'testpoints.json'}
 manifest['supplierPlacementCompensation']={'file':'placement-review/cpl-corrections.json','references':['J301','J601','U601'],'uploadedCsvPreviewChecked':json.loads((V/'jlc-placement-corrections.json').read_text()).get('uploadedCsvPreviewChecked',False),'assemblerQualified':False}
@@ -86,4 +86,4 @@ with ZipFile(OUT/'shieldsigner-modular-order.zip','w',ZIP_DEFLATED) as z:
  z.write(V/'jlc-placement-corrections.json','placement-review/cpl-corrections.json')
  z.write(ROOT/'docs/PCB-ORDER-READINESS.md','PCB-ORDER-READINESS.md')
  z.write(ROOT/'docs/PCB-SOFTWARE-COMPATIBILITY.md','PCB-SOFTWARE-COMPATIBILITY.md')
-print('Matched 0.0.12 first-article kit: 44 SMT placements, 18 dated catalog lines; stock blockers='+str(len(stock_blockers))+'; supplier stock/attrition/preview/DFM review required.')
+print('Matched 0.0.13 first-article kit: 44 SMT placements, 18 dated catalog lines; stock blockers='+str(len(stock_blockers))+'; supplier stock/attrition/preview/DFM review required.')

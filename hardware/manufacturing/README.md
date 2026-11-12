@@ -2,14 +2,14 @@
 
 The working PCB is now four-layer. Historical 0.0.9 ZIPs remain two-layer; do not mix them with new exports. Confirm the nominal 1.6 mm stackup with the fabricator.
 
-**0.0.12-dev: stock_review_required.** Four copper layers, nine factory Keystone SMT points and four new bracket mounts. The current `serviceability-audit.json` verifies retained circuitry, protected supplier component poses and explicitly recorded rear placement edits; `branding-audit.json` is historical 0.0.9 evidence. The selected switches, reader IC and socket have zero standard-assembly stock as of 2026-11-09. Confirm sourcing, attrition and new placement/DFM review before checkout.
+**0.0.13-dev: stock_review_required.** Four copper layers, nine factory Keystone SMT points and four new bracket mounts. The current `angle-header-audit.json` verifies retained footprints/pad nets, protected supplier component poses, 45-degree routing and the restored customer header; `branding-audit.json` is historical 0.0.9 evidence. The selected switches, reader IC and socket have zero standard-assembly stock as of 2026-11-09. Confirm sourcing, attrition and new placement/DFM review before checkout.
 
 Unzip the outer order ZIP once. Upload **shieldsigner-modular-gerbers.zip**, then
 its matching **bom-jlcpcb.csv** and **cpl-jlcpcb.csv**. For freshly regenerated working-board Gerbers, request four copper layers,
 1.6 mm thickness and both-side SMT assembly for the 160×70 mm pill. Do not mix
 standard FPC, former Pico-bay or separate PWM-candidate files into this order.
 
-There are **44 SMT placements / 18 catalog lines**: 11 on top and 33 underneath, including all nine Keystone 5015 / C2906768 service points. Modules, customer headers/supports, six copper jumpers and 12 copper-only probe pads are outside the SMT population. J302 is removed. TP901/TP902 provide factory-fitted +5 V/GND bench clips.
+There are **44 SMT placements / 18 catalog lines**: 11 on top and 33 underneath, including all nine Keystone 5015 / C2906768 service points. Modules, customer headers/supports, six copper jumpers and 12 copper-only probe pads are outside the SMT population. J302 is a customer-fitted front-side right-angle 5 V/GND header under the LCD, excluded from factory assembly. TP901/TP902 provide factory-fitted +5 V/GND bench clips.
 
 Gerbers, plated/nonplated drills and CPL use the same auxiliary origin (50,130)
 mm. CPL Y is 130 minus native PCB Y; bottom X is not mirrored. Supplier

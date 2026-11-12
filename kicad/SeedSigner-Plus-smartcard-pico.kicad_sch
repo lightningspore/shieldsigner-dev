@@ -202,7 +202,7 @@
       (property "Sheetfile" "lcd_module.kicad_sch" (at 195.58 74.92999999999999 0) (effects (font (size 1.27 1.27)) (justify left top)))
       (instances (project "SeedSigner-Plus-smartcard-pico" (path "/8c9c54c8-0cfa-43ef-b1ba-3cda1bca877f" (page "6")))))
 
-(title_block (title "System overview and reading map") (date "2026-11-08") (rev "0.0.12-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
+(title_block (title "System overview and reading map") (date "2026-11-08") (rev "0.0.13-dev") (company "ShieldSigner / LightningSpore") (comment 1 "Derived from 3rdIteration/SeedSigner; original design: Stephen Rothy") (comment 2 "Prototype: physical fit, powered operation and assembly not qualified"))
 (text "ShieldSigner | eight-pin pill carrier" (at 22.86 22.86 0) (effects (font (size 2.54 2.54) (bold yes)) (justify left)) (uuid "909f6942-ec27-5a56-9fda-f2759ecae4f3"))
 (text "Native KiCad reference | 160 x 70 mm | four copper layers | 1.6 mm nominal thickness" (at 22.86 33.02 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "63a2f7b7-ca30-590d-8f51-586d7e4d6430"))
 (text "READING MAP  (lines below describe system flow; connections use named nets on the circuit sheets)" (at 22.86 44.45 0) (effects (font (size 1.1 1.1) ) (justify left)) (uuid "a7f8c975-f82e-5c9b-a875-10b1e63ef773"))
@@ -222,5 +222,5 @@
 (polyline (pts (xy 147.32 73.66) (xy 147.32 99.06)) (stroke (width 0.254) (type default)) (uuid "af88e435-52f9-5cb3-8932-06da26095230"))
 (text "UART" (at 149.86 88.9 0) (effects (font (size 1 1) ) (justify left)) (uuid "2571cb6a-b120-54b4-b3e5-65d63da4953f"))
 (text "ASSEMBLY DEFAULT\nJP201 / JP203 / JP205 closed\nJP202 / JP204 / JP206 open\nBacklight always on; eight-pin J701." (at 203.2 104.14 0) (effects (font (size 1.27 1.27) ) (justify left)) (uuid "1b957ff7-ff34-5a1f-bdba-2ab57a983884"))
-(text "STACKUP / REVIEW\nF.Cu signals / In1.Cu GND / In2.Cu GND / B.Cu signals. Confirm the nominal stackup with the fabricator.\n0.0.12-dev uses nine factory service points and four independent M2.5 bracket anchors.\nERC / DRC are software checks. Module fit, powered operation and supplier assembly remain unqualified." (at 22.86 153.67 0) (effects (font (size 1.1 1.1) ) (justify left)) (uuid "ef6b0108-df8c-5bdb-a42f-fef28cec288f"))
+(text "STACKUP / REVIEW\nF.Cu signals / In1.Cu GND / In2.Cu GND / B.Cu signals. Confirm the nominal stackup with the fabricator.\n0.0.13-dev uses nine factory service points and four independent M2.5 bracket anchors.\nERC / DRC are software checks. Module fit, powered operation and supplier assembly remain unqualified." (at 22.86 153.67 0) (effects (font (size 1.1 1.1) ) (justify left)) (uuid "ef6b0108-df8c-5bdb-a42f-fef28cec288f"))
 )

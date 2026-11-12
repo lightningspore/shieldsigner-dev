@@ -1,7 +1,7 @@
 {
-  "boardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
-  "reviewed": "2026-11-09",
-  "qualification": "0.0.12 service/rear placement revision: exact retained circuitry and recorded placement/routing checks; corrected parts unchanged. New Keystone footprints are symmetric single-pad SMT lands. Supplier preview and final DFM are still required.",
+  "boardSha256": "bc8b42ec8e41e1f4e304ecc353cf0fca7ea2862945dd5a4ea3e10726124d1523",
+  "reviewed": "2026-11-11",
+  "qualification": "0.0.13 routing/header revision; all original footprints and pad nets unchanged, including corrected USB, socket and reader. Fresh supplier placement/DFM review required.",
   "corrections": {
     "J301": {
       "lcsc": "C5246813",
@@ -67,11 +67,11 @@
     "D301": "Bidirectional TVS; no polarity-dependent 180deg change required."
   },
   "uploadedCsvPreviewChecked": false,
-  "previousBoardSha256": "bcd38b64cffab4e5818576532d2e51f45df37868f67307751ea5a2ff7a105df8",
+  "previousBoardSha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
   "reviewStatus": "review_required",
   "historicalPreview": "manufacturing/history/0.0.7-preview/",
   "serviceCompatibility": {
-    "audit": "serviceability-audit.json",
-    "auditSha256": "72c77fdc6991b4d357ee7e28ddd761d3230d543aa1a917af85b9a13c9eb8d82d"
+    "audit": "angle-header-audit.json",
+    "auditSha256": "725e985dbd4c500a31389ab48ddcd1ae7f63dda0c4aa0b286aa637618e45d935"
   }
 }

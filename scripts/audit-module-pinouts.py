@@ -64,7 +64,7 @@ for p, n in {'1': '+5V', '2': 'GND', '3': '+5V', '5': 'LCD_3V3'}.items():
     assert pins['U701'][p] == n
 for ref, rail in [('C701', '+5V'), ('C702', 'LCD_3V3')]:
     assert pins[ref] == {'1': rail, '2': 'GND'}
-assert 'J302' not in pins
+assert pins['J302']=={'1':'+5V','2':'GND'}
 for ref,net in [('TP901','+5V'),('TP902','GND'),('TP909','GND'),('TP903','+3.3V'),('TP905','LCD_3V3'),('TP907','UART_TX'),('TP908','UART_RX')]:assert pins[ref]=={'1':net}
 for p in ('14', '15', '22'):
     assert nets[pins['U202'][p]] == {f'U202.{p}'}, p

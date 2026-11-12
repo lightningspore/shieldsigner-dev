@@ -15,7 +15,7 @@ F.Cu and B.Cu carry signals/components; both inner layers are GND planes.
 Confirm the production stackup and finished thickness tolerance. Double-sided
 SMT: 44 placements / 18 SKUs, 11 top and 33 bottom. All nine Keystone
 5015 / C2906768 points must be factory fitted: TP901, TP902 and TP909 top,
-TP903–TP908 bottom. J302 is absent. Customer module headers and hardware
+TP903–TP908 bottom. J302 is customer-fitted: do not factory assemble the front-side 1x2 right-angle 5 V/GND header. Customer module headers and hardware
 are excluded; copper-only jumpers/probe pads are not purchased components.
 
 ## Sourcing answers required

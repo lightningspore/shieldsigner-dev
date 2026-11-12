@@ -29,7 +29,9 @@ for ref,nets in {'U701':{'1':'+5V','2':'GND','3':'+5V','5':'LCD_3V3'},'C701':{'1
 
 # Factory-assembled power/test points replace the optional header.
 service=json.loads((folder/'serviceability.json').read_text())
-assert 'J302' not in fps
+assert 'J302' in fps
+assert {p[1]:sx['one'](p,'net')[-1] for p in sx['children'](fps['J302'],'pad')}=={'1':'+5V','2':'GND'}
+assert 'exclude_from_bom' in sx['one'](fps['J302'],'attr')
 for point in service['testpoints']:
  f=fps[point['ref']];props={q[1]:q[2] for q in sx['children'](f,'property')}
  assert f[1]==service['part']['footprint']

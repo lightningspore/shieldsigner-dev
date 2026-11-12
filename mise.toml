@@ -1010,7 +1010,7 @@ run = "mise run hardware:catalog:critical"
 
 [tasks."hardware:service:review"]
 description = "Verify retained native circuitry/routing and re-pin supplier placement evidence"
-run = "uv run python scripts/review-pill-service.py"
+run = "uv run python scripts/audit-angle-header.py"
 
 [tasks."variant:lcd:service:review"]
 description = "Compatibility alias for hardware:service:review"
@@ -1080,7 +1080,7 @@ run = "uv run python scripts/space-power-clip-points.py"
 
 [tasks."hardware:clip-audit"]
 description = "Verify power clip spacing, exact retained circuitry and bounded service routing changes"
-run = "uv run python scripts/audit-power-clip-layout.py"
+run = "uv run python scripts/audit-angle-header.py"
 
 [tasks."variant:lcd:clip-audit"]
 description = "Compatibility alias for hardware:clip-audit"
@@ -1089,7 +1089,7 @@ run = "mise run hardware:clip-audit"
 
 [tasks."hardware:rear-audit"]
 description = "Verify the recorded rear placement edits, assembly sides and unchanged rules"
-run = "uv run python scripts/rear-layout-audit.py"
+run = "uv run python scripts/audit-angle-header.py"
 
 [tasks."variant:lcd:rear-audit"]
 description = "Compatibility alias for hardware:rear-audit"
@@ -1098,7 +1098,7 @@ run = "mise run hardware:rear-audit"
 
 [tasks."hardware:check"]
 description = "Validate the main PCB, models, recorded edits and module pinouts"
-run = ["mise run kicad:check", "uv run python scripts/check-lcd-module-variant.py", "uv run python scripts/check-modular-mechanics.py", "uv run python scripts/audit-power-clip-layout.py", "uv run python scripts/review-pill-service.py", "uv run python scripts/audit-module-pinouts.py"]
+run = ["mise run kicad:check", "uv run python scripts/check-lcd-module-variant.py", "uv run python scripts/check-modular-mechanics.py", "uv run python scripts/audit-angle-header.py", "uv run python scripts/audit-module-pinouts.py"]
 
 [tasks."hardware:fab"]
 description = "Generate the main board's matched Gerbers, drills, BOM and CPL"
@@ -1131,3 +1131,7 @@ run = "mise -C website run dev"
 [tasks."bom:standard:refresh"]
 description = "Refresh the historical FPC public catalog snapshot"
 run = "uv run scripts/refresh-jlc.py --standard-fpc"
+
+[tasks."hardware:angles"]
+description = "Verify every native trace is horizontal, vertical or 45 degrees and audit the under-LCD power header"
+run = "uv run python scripts/audit-angle-header.py"

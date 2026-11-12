@@ -1,10 +1,10 @@
-# Main ShieldSigner hardware — 0.0.12-dev
+# Main ShieldSigner hardware — 0.0.13-dev
 
 Open [the main KiCad project](../kicad/SeedSigner-Plus-smartcard-pico.kicad_pro). The inherited basename preserves hierarchical annotation paths; this is the main native project. See [design and exact wiring](../docs/LCD-MODULE-VARIANT.md), [customer assembly](../docs/MODULAR-ASSEMBLY.md) and [quote instructions](manufacturing/README.md).
 
 The **160×70 mm capsule** centers a 2.8-inch HOTHMI HTM-TFT028A16-SPI between the controls. A single eight-pin 2.54 mm socket follows the user's existing Luckfox carrier numbering. There is no Pico-format LCD connector or projecting rectangular bay. A dedicated AP2112K-3.3 supplies LCD_3V3 independently of the Luckfox's 3.3 V output.
 
-There are **72 footprints** and **44 factory SMT placements across 18 catalog lines**. Nine Keystone 5015 / C2906768 service loops replace the optional J302 power header and add clip access to host/LCD 3.3 V, UART and local grounds. Four additional 2.7 mm M2.5 bracket holes supplement the four original LCD support holes. The six copper jumpers and 12 small probe pads are retained. Modules, their headers and screws remain customer assembly; the Keystone points are factory assembled.
+There are **73 footprints** and **44 factory SMT placements across 18 catalog lines**. Nine Keystone 5015 / C2906768 service loops provide clip access to host/LCD 3.3 V, UART and local grounds. Four additional 2.7 mm M2.5 bracket holes supplement the four original LCD support holes. The six copper jumpers and 12 small probe pads are retained. Modules, their headers and screws remain customer assembly; the Keystone points are factory assembled.
 
 The released two-layer revision adds the official The Space logo and `denver.space` on the rear
 silkscreen. The [artwork audit](branding-audit.json) proves that all non-silk
@@ -17,7 +17,7 @@ outputs conflict with carrier buttons. Use the
 
 Run `mise run hardware:fab` for native/model/footprint checks and matched Gerbers/BOM/CPL. `hardware:review` renders both sides and exports assembly STEP/GLB; `hardware:package` bundles the portable project and pins release hashes. Manufacturing uses the shared auxiliary origin (50,130) mm. Standard carrier files do not apply.
 
-Twenty-two retained local STEP models have source/hash records. LCD, socket, switch, USB and threadless supports are dimensional envelopes. `mechanical.json` records the stack, mounting centers and drawing discrepancies; `header-map.json` records both numbering conventions. Run `git lfs pull` in a fresh checkout.
+Twenty-three retained local STEP models have source/hash records. LCD, socket, switch, USB and threadless supports are dimensional envelopes. `mechanical.json` records the stack, mounting centers and drawing discrepancies; `header-map.json` records both numbering conventions. Run `git lfs pull` in a fresh checkout.
 
 This is a prototype quote/review design, not a physically qualified signer. Assembler preview/DFM, purchased-module fit, rail/thermal measurements, firmware/display behavior, smartcard transactions and enclosure fit remain to be tested.
 
@@ -30,7 +30,7 @@ existing GND through-vias and plated pads. The first conversion preserved outer 
 0.01 mm masks. This is a nominal stackup requiring fabricator confirmation,
 without an impedance-control claim. Outer support keepouts remain unchanged.
 
-The 0.0.12-dev silkscreen identifies this service revision; released two-layer quote
+The 0.0.13-dev silkscreen identifies this service revision; released two-layer quote
 ZIPs and old artwork-only audits do **not** describe this working four-layer
 revision. Regenerate fabrication files with `mise run hardware:fab`, select
 four layers in the supplier quote and obtain a new supplier review. The separate
@@ -82,7 +82,7 @@ PCB Y), the new hole centers are (-50, +23.9), (+59, +23.9), (-50, -23.9),
 printed bracket insert, not threads cut into the FR4. Choose screw lengths from
 the actual bracket stack and reserve the module/connector access paths.
 
-## Power clips — 0.0.12-dev
+## Power clips — 0.0.13-dev
 
 The front service row is **TP902 GND — TP901 +5V — TP909 GND**,
 with **15 mm centre spacing** (previously 7 mm between the original pair).
@@ -103,3 +103,5 @@ U701 and its 10 µF input/output capacitors C701/C702 are now on the back, keepi
 Factory assembly is **11 front / 33 back**, still 44 placements and 18 SKUs. The [exact edit record](../docs/pcb-rear-placement-edits.json) and [rear audit](rear-layout-audit.json) cover the placement and local routing changes; original pad nets and board/project rules are preserved. Supplier placement/DFM review must use the regenerated CPL. Mechanical models and native electrical/clearance checks do not establish physical rework access or thermal performance.
 
 See the [11 November schematic review](../docs/SCHEMATIC-REVIEW.md) for the latest six-sheet pass and presentation corrections.
+
+See [the 0.0.13 routing and battery-header revision](../docs/PCB-ANGLE-HEADER-REVISION.md). J302 is restored as a customer-fitted right-angle 5 V/GND header on the front, under the LCD.

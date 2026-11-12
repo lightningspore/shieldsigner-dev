@@ -1,5 +1,5 @@
 {
-  "modelsVerified": 23,
+  "modelsVerified": 24,
   "assembledReferencesWithModels": [
     "TP902",
     "H701",
@@ -14,6 +14,7 @@
     "SW508",
     "TP901",
     "H704",
+    "J302",
     "SW507",
     "SW506",
     "J701",

@@ -179,6 +179,13 @@
         1.52
       ],
       "limitations": "Nominal rectangular loop with 0.25 mm walls, not detailed formed-metal CAD; confirm purchased part and clip clearance"
+    },
+    "kicad/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Horizontal.step": {
+      "provider": "KiCad packages3D 10.0.7",
+      "source": "https://gitlab.com/kicad/libraries/kicad-packages3D",
+      "license": "CC-BY-SA-4.0 with KiCad exception; see kicad/LICENSE.md",
+      "sha256": "433bdeece09baa59c6447f154b95f20145c63547819a58e8e01460bcbfb3fb2f",
+      "bytes": 86820
     }
   }
 }

@@ -7,3 +7,4 @@ LCD module,1,2.8-inch ST7789V; no touch; J1 2.54 mm row; 88x53.3 mm,HOTHMI HTM-T
 H701-H704,4,M2.5 female-female spacer; 12 mm body; 5 mm outside diameter,Commodity M2.5x12 spacer,,No factory bosses assumed
 Mounting screws,8,M2.5x4 screw; washers as needed; hardware OD no more than 5 mm,Commodity M2.5x4 screw,,Check thread engagement and enclosure clearances
 H705-H708,4 optional,Independent custom bracket anchors; 2.7 mm holes; M2.5 head/washer OD <= 5 mm,Bracket-specific M2.5 screws and standoffs,,No new hardware needed for existing enclosure; check actual printed bracket and screw engagement
+J302,1 optional,1x2 right-angle male header; 2.54 mm pitch; 1 mm drill; 6 mm horizontal pins,Commodity low-profile header matching KiCad drawing,,Customer fitted; verify height and insulated wire clearance under LCD; regulated 5V only

@@ -35,5 +35,5 @@ for filename,item in data['files'].items():item['afterSha256']=hashlib.sha256((K
 data['electricalEquivalence']={'status':'pass','sha256':signature,'method':'Independent native XML netlist export before/after; exact reference/value/footprint and complete pin partition comparison','components':len(electrical(OUT/'after.xml')[0]),'nets':len(electrical(OUT/'after.xml')[1])}
 if service:
  audit=ROOT/'hardware/service-schematic-audit.json'
- data['electricalEquivalence']['scope']='Retained circuitry matches original; J302 replaced by TP901-TP909'
+ data['electricalEquivalence']['scope']='Retained circuitry matches original; TP901-TP909 and optional restored J302 are excluded from the projection'
 audit.write_text(json.dumps(data,indent=2)+'\n');print(json.dumps(data['electricalEquivalence'],indent=2))

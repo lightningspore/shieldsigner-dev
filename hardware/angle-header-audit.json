@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "revision": "0.0.13-dev",
+  "boardSha256": "bc8b42ec8e41e1f4e304ecc353cf0fca7ea2862945dd5a4ea3e10726124d1523",
+  "baselineCommit": "8245461",
+  "replacedSegments": 172,
+  "removedZeroLengthSegments": 15,
+  "tracksChecked": 905,
+  "allowedAnglesDegrees": [
+    0,
+    45,
+    90,
+    135,
+    180,
+    225,
+    270,
+    315
+  ],
+  "coordinateToleranceNm": 2,
+  "existingFootprintsAndPadNetsUnchanged": true,
+  "smartcardIcAndSocketUnchanged": true,
+  "correctedComponentsUnchanged": [
+    "J301",
+    "J601",
+    "U601"
+  ],
+  "signalTrackEndpointsNetsWidthsLayersPreserved": true,
+  "groundViaClearanceChanges": {
+    "removedStandalone": [
+      "8ee7c502-7fce-4b29-88bf-1d8f333f1385",
+      "ff311c55-409d-4bd4-ad59-3bce6167479b"
+    ],
+    "moved": {
+      "uuid": "f096cbba-d75f-47a9-8e2a-60760f59a9ae",
+      "from": [
+        142.519,
+        63.899
+      ],
+      "to": [
+        142.6,
+        62.5
+      ],
+      "reason": "Move GND drill clear of C601 paste land"
+    }
+  },
+  "existingSignalViasUnchanged": true,
+  "projectAndBoardRulesUnchanged": true,
+  "schematicProjectedPinPartitionsUnchanged": true,
+  "header": {
+    "reference": "J302",
+    "footprint": "ShieldSigner:Battery5VHeader_1x02_P2.54mm_Horizontal",
+    "positionMm": [
+      177.3,
+      107.8
+    ],
+    "side": "F.Cu",
+    "pinNets": {
+      "1": "+5V",
+      "2": "GND"
+    },
+    "factoryAssembly": false,
+    "lcdBoundsMm": [
+      90,
+      62.929,
+      178,
+      116.229
+    ],
+    "batteryModuleSelected": false,
+    "rotationDeg": 180,
+    "matingDirection": "Left/inward; daughterboard slides right to mate"
+  },
+  "factoryPlacements": 44,
+  "catalogLines": 18,
+  "supplierPlacementReviewRequired": true,
+  "qualification": "Source geometry and netlist checks; run native ERC/DRC separately. Battery module, cable fit, source isolation and powered operation are not qualified."
+}

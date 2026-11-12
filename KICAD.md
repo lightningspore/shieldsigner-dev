@@ -1,6 +1,6 @@
 # Working with KiCad
 
-The main design is [`kicad/SeedSigner-Plus-smartcard-pico.kicad_pro`](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro): the **0.0.12-dev, four-layer, eight-pin display carrier**. Its inherited filename preserves schematic annotation paths. Supporting files live in [`hardware/`](hardware/README.md), including the [matched assembly data](hardware/manufacturing/README.md).
+The main design is [`kicad/SeedSigner-Plus-smartcard-pico.kicad_pro`](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro): the **0.0.13-dev, four-layer, eight-pin display carrier**. Its inherited filename preserves schematic annotation paths. Supporting files live in [`hardware/`](hardware/README.md), including the [matched assembly data](hardware/manufacturing/README.md).
 
 ## Setup and open
 

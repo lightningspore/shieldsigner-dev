@@ -82,5 +82,23 @@
       208,
       124.579
     ]
+  },
+  "batteryModulePlanning": {
+    "location": "Front side beneath LCD; exact battery/module not selected",
+    "header": "J302",
+    "headerPositionMm": [
+      177.3,
+      107.8
+    ],
+    "headerModelAboveCarrierMm": 2.54,
+    "lcdWorstCaseRearClearanceMm": 6.8,
+    "nominalVerticalMarginMm": 4.26,
+    "headerModelRightExtentMm": 177.62,
+    "batteryKeepoutDefined": false,
+    "physicalFitVerified": false,
+    "headerModelLeftExtentMm": 167.26,
+    "headerRotationDeg": 180,
+    "matingDirection": "Pins face left/inward; mating board slides right",
+    "insertionPathQualified": false
   }
 }

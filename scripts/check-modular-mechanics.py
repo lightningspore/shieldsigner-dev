@@ -17,7 +17,7 @@ modeled=[];copper_jumpers=[]
 for ref,f in fps.items():
  dnp='dnp' in one(f,'attr');models=children(f,'model')
  if dnp:assert not models,f'{ref} DNP model must not appear in assembled views'
- if dnp or ref=='U202':
+ if dnp or ref in {'U202','J302'}:
   for pad in children(f,'pad'):assert not {'F.Paste','B.Paste'} & set(one(pad,'layers')[1:]),f'Customer/DNP part {ref} must not receive reflow paste'
  if ref in {'H705','H706','H707','H708'}:continue
  if ref.startswith('JP'):copper_jumpers.append(ref);continue

@@ -1,6 +1,6 @@
 # Native reference and experimental tscircuit status
 
-The default repository preview follows the main **0.0.12-dev, four-layer KiCad board** in `kicad/` through `src/PillCarrierReference.tsx`. Current assembly data and audits live in `hardware/`; the main board has 72 footprints, 44 factory placements and nine Keystone service loops. Its native ERC/DRC/connectivity/parity checks permit zero exclusions. The independent source-authored tscircuit experiment below remains a separate layout; its explicit `tscircuit:pill:*` commands do not replace the fabrication reference. The historical FPC snapshot now reads `variants/standard-fpc/kicad/`.
+The default repository preview follows the main **0.0.13-dev, four-layer KiCad board** in `kicad/` through `src/PillCarrierReference.tsx`. Current assembly data and audits live in `hardware/`; the main board has 73 footprints, 44 factory placements and nine Keystone service loops. Its native ERC/DRC/connectivity/parity checks permit zero exclusions. The independent source-authored tscircuit experiment below remains a separate layout; its explicit `tscircuit:pill:*` commands do not replace the fabrication reference. The historical FPC snapshot now reads `variants/standard-fpc/kicad/`.
 
 The native KiCad project is the preferred design. The original tscircuit version is an experimental port of the standard FPC native board, with a recorded source SHA-256 and stale-source checks. The historical FPC board has recorded zero ERC errors/warnings, zero active DRC errors/warnings and zero unconnected/parity issues, with its two explicit DNP strap courtyard exceptions. See [native check details](../KICAD.md). Neither design is fabrication-approved.
 
@@ -206,3 +206,7 @@ The converted reference retains both inner GND planes, 12 bare probe pads and
 the original functional routing, with two standalone GND stitches removed.
 The separately source-authored experimental layout remains the older two-layer
 0.0.9 design; it must not be used for the current order kit.
+
+## 0.0.13 native routing/header update
+
+The main native carrier now has 73 footprints and a customer-fitted right-angle J302 under the LCD. All straight tracks use 45-degree increments; the SEC1210/socket and all existing pad nets remain unchanged. See [revision details and battery-module limits](PCB-ANGLE-HEADER-REVISION.md). The independent source-authored experiment remains historical.

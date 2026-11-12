@@ -56,7 +56,15 @@
     "return": "TP902",
     "part": "Keystone 5015 / C2906768",
     "assembly": "Factory SMT",
-    "replaces": "J302",
     "sourceRule": "Regulated current-limited 5 V bench source only; disconnect all USB power first. No source isolation or reverse-polarity protection."
+  },
+  "batteryModuleHeader": {
+    "reference": "J302",
+    "pin1": "+5V",
+    "pin2": "GND",
+    "side": "front under LCD",
+    "factoryAssembly": false,
+    "requirement": "Regulated 5V output; no bare cell or simultaneous USB input; module and battery dimensions not yet selected",
+    "matingDirection": "Pins left/inward; mating board slides right beneath LCD"
   }
 }

@@ -1,8 +1,8 @@
-# JLCPCB placement review — PCB 0.0.12-dev
+# JLCPCB placement review — PCB 0.0.13-dev
 
 This is the four-layer service revision: **44 factory SMT placements / 18
 catalog lines**, including nine Keystone 5015 loops. Status is
-**stock_review_required**. `serviceability-audit.json` binds the retained
+**stock_review_required**. `angle-header-audit.json` binds the retained
 component poses and circuitry to the current board hash. The original three
 placement corrections below are retained exactly once; this is not a new
 supplier placement approval.

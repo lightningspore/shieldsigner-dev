@@ -4,7 +4,7 @@ This is the **0.0.11-dev pill carrier**: a larger plug-in display between the co
 
 ![Assembled pill carrier, front](../hardware/assembly-front.png)
 
-The factory assembly BOM specifies **43 SMT pieces across 18 catalog lines**, including all eight Keystone test points. Customer soldering is ordinary **2.54 mm headers**: 30 joints on the carrier, plus up to 30 on unheadered LCD/Luckfox modules. There is no customer LCD ribbon connection, fine-pitch connector, QFN or smartcard-contact soldering. The camera retains its normal Luckfox ribbon connection.
+The factory assembly BOM specifies **44 SMT pieces across 18 catalog lines**, including all nine Keystone test points. Customer soldering is ordinary **2.54 mm headers**: 30 module-header joints on the carrier (32 with optional J302), plus up to 30 on unheadered LCD/Luckfox modules. There is no customer LCD ribbon connection, fine-pitch connector, QFN or smartcard-contact soldering. The camera retains its normal Luckfox ribbon connection.
 
 The rear silkscreen now includes the official The Space logo and `denver.space`.
 The historical [0.0.9 artwork-only audit](../hardware/branding-audit.json)
@@ -91,7 +91,7 @@ Four M2.5 supports use manufacturer-drawn hole centers. **12 mm female-female sp
 
 The modeled 8.5 mm female socket, 2.54 mm male insulator and 6 mm posts give about **5.04 mm insertion** with the module back 12 mm above the carrier. The module's rear connector has 6.8 mm nominal clearance. The Luckfox retains its separate socket stack and outward-facing microSD. The screen sits higher than the 2.5 mm switch actuators, so an enclosure needs suitable button plungers and a new camera/card opening layout.
 
-There are **22 portable STEP models** with recorded sources and hashes. Supplier/upstream models represent the Luckfox, switches, USB, bridge and regulator. **The LCD, card socket and threadless supports are clearly identified dimensional envelopes**, not detailed manufacturer STEP files. The LCD envelope is regenerated from the saved drawing by `scripts/model-pill-display.py`. Native checks verify reviewed solder lands, the eight-pin interface, capsule edges, mounting centers and module/button separation. Physical tolerances and complete enclosure fit remain untested.
+There are **23 portable STEP models** with recorded sources and hashes. Supplier/upstream models represent the Luckfox, switches, USB, bridge and regulator. **The LCD, card socket and threadless supports are clearly identified dimensional envelopes**, not detailed manufacturer STEP files. The LCD envelope is regenerated from the saved drawing by `scripts/model-pill-display.py`. Native checks verify reviewed solder lands, the eight-pin interface, capsule edges, mounting centers and module/button separation. Physical tolerances and complete enclosure fit remain untested.
 
 ![Assembled pill carrier, back](../hardware/assembly-back.png)
 
@@ -127,3 +127,5 @@ are the regulated 5 V bench-power pair. Original LCD support positions, signal
 routing and component poses are retained; two isolated GND stitching vias were
 removed to clear a new service point/spur. Full details, coordinates and the
 assembly boundary are in the [current carrier guide](../hardware/README.md#factory-service-points-and-independent-bracket-mounting).
+
+The current 0.0.13 revision also restores the customer-fitted J302 horizontal 5 V/GND header for a future slide-in battery daughterboard under the LCD. Its pins face left/inward. See [routing, mating direction and power-module requirements](PCB-ANGLE-HEADER-REVISION.md).

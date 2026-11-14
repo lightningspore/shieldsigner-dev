@@ -8,6 +8,17 @@ extern int bm_i2c_init(void);
 extern int bm_i2c_read(uint32_t,uint32_t,uint8_t *,size_t);
 extern int bm_i2c_write(uint32_t,uint32_t,const uint8_t *,size_t);
 extern int bm_spi_transfer(uint32_t,const uint8_t *,uint8_t *,size_t);
+extern uint32_t bm_led_status(uint32_t);
+static mp_obj_t led_status(void) {
+    mp_obj_t result=mp_obj_new_dict(0);
+    mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(MP_QSTR_enabled),mp_obj_new_bool(bm_led_status(0)));
+    mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(MP_QSTR_transitions),mp_obj_new_int_from_uint(bm_led_status(1)));
+    mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(MP_QSTR_pad_errors),mp_obj_new_int_from_uint(bm_led_status(2)));
+    mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(MP_QSTR_state),mp_obj_new_int_from_uint(bm_led_status(3)));
+    mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(MP_QSTR_hz),mp_obj_new_int_from_uint(bm_led_status(4)));
+    return result;
+}
+static MP_DEFINE_CONST_FUN_OBJ_0(led_status_obj,led_status);
 static void checked(int status) {if(status<0)mp_raise_OSError(MP_EIO);}
 typedef struct {mp_obj_base_t base;uint32_t id;} pin_obj;
 static mp_obj_t pin_new(const mp_obj_type_t *type,size_t n,size_t kw,const mp_obj_t *args) {
@@ -82,6 +93,7 @@ static MP_DEFINE_CONST_OBJ_TYPE(spi_type,MP_QSTR_SPI,MP_TYPE_FLAG_NONE,make_new,
 static const mp_rom_map_elem_t machine_globals_table[]={
     {MP_ROM_QSTR(MP_QSTR___name__),MP_ROM_QSTR(MP_QSTR_machine)},
     {MP_ROM_QSTR(MP_QSTR_Pin),MP_ROM_PTR(&pin_type)},
+    {MP_ROM_QSTR(MP_QSTR_led_status),MP_ROM_PTR(&led_status_obj)},
     {MP_ROM_QSTR(MP_QSTR_I2C),MP_ROM_PTR(&i2c_type)},
     {MP_ROM_QSTR(MP_QSTR_SPI),MP_ROM_PTR(&spi_type)}};
 static MP_DEFINE_CONST_DICT(machine_globals,machine_globals_table);

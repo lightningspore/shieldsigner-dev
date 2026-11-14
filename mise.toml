@@ -1231,3 +1231,11 @@ run = "uv run --python 3.13 python baremetal/tools/boot_ram_gate.py"
 [tasks."baremetal:camera:timing:gate"]
 description = "Measure three on-demand camera acquisitions on the loaded runtime; excludes boot and app"
 run = "uv run --python 3.13 python baremetal/tools/console.py baremetal/micropython/phase10_camera_timing.py --timeout 50"
+
+[tasks."baremetal:boot:sd:gate"]
+description = "Capture a warm SD boot without USB download; start from running DUT REPL"
+run = "uv run --python 3.13 python baremetal/tools/sd_boot_gate.py"
+
+[tasks."baremetal:led:gate"]
+description = "Verify5Hz onboard LED transitions and pad readbacks on running DUT"
+run = "uv run --python 3.13 python baremetal/tools/console.py baremetal/micropython/led_gate.py --timeout 5"

@@ -125,6 +125,8 @@ extern "C" fn rust_irq() {
         if id == 29 || id == 30 {
             asm!("mcr p15, 0, {0}, c14, c2, 0", in(reg) read_volatile(addr_of!(PERIOD)), options(nostack));
             write_volatile(addr_of_mut!(TICKS), ticks().wrapping_add(1));
+            #[cfg(feature = "runtime-board")]
+            super::led::tick();
         } else if id == 54 {
             #[cfg(feature = "i2c-test")]
             super::i2c::irq();

@@ -1,8 +1,10 @@
 # Phase10 standalone boot work
 
-Status: fast-start payload passed the complete Phase9 hardware API script after
-RAM download. Experimental microSD image prepared and validated on host; no card
-written and no standalone boot or power-on timing gate passed yet.
+Status: the runtime now boots from the user-provided4GB microSD, with unchanged
+vendor DDR followed directly by our code. Controlled SD resets and the complete
+peripheral/camera/GC gate passed. The5Hz LED test also passed during camera work.
+Cold power-edge timing, power-on-to-first-frame and app readiness remain open.
+Receipt: [evidence/phase-10-sd-boot.json](evidence/phase-10-sd-boot.json).
 
 ## User-visible timing requirement
 
@@ -22,7 +24,7 @@ original Phase10 gate also remains required, independently of usable-app timing.
 | --- | --- |
 | Current boot to running app | User reports at least about30s; exact start/end not instrumented |
 | Replacement power-on to usable app | Not implemented or measured |
-| Replacement power-on to REPL | Not measured; standalone SD boot untested |
+| Replacement power-on to REPL | Cold power-on not measured; SD warm reset to REPL marker about195ms |
 | Replacement power-on to usable app camera frame | Not implemented or measured |
 | Payload entry to initialized MicroPython | About13.1ms, measured on DUT and independently polled by REF; excludes earlier boot stages and app |
 
@@ -45,11 +47,10 @@ separate events. Do not label interpreter initialization as application readines
   source-manifest checksum and explicit unverified assumptions.
 
 This is a raw disk image, not a file to copy onto an ordinary FAT-formatted card.
-The candidate currently has856064bytes of ID block (including an830288-byte
+The candidate currently has856064bytes of ID block (including an831188-byte
 runtime). Unlike the SDK layout it does not reserve a512KiB partition and place
-U-Boot afterward. The ROM's acceptance of this larger second stage still needs
-an actual SD boot. If rejected, investigate the documented format/ROM load limits
-and an original minimal loading path; do not silently insert U-Boot.
+U-Boot afterward. The ROM accepted this second stage on the real DUT and booted it successfully.
+This proves this image size/profile, not an unrestricted ROM maximum.
 
 The packager retains NEWIDB, SHA256 header/stage hashes and untouched DDR. It
 validates both stage extents, ordering, input identities, padding and hashes.
@@ -71,16 +72,27 @@ excluding ROM/card discovery and vendor DDR initialization. No claim of a
 13ms power-on boot is made. The candidate currently reaches an idle REPL; first
 camera acquisition is requested through that REPL and is not auto-started.
 
-## Next hardware step
+## Current card state and recovery
 
-The original mission requires user approval before writing or inserting a DUT
-card. Use a spare card in a host reader, identify its physical device and size,
-confirm it is the authorized target, write the prepared image and read it back.
-Never use REF's Linux card. Keep REF powered and its UART bridge connected;
-power DUT off before inserting the verified spare card. Capture UART and REF
-GPIO timing before powering DUT. Verify REPL APIs and camera, then report both
-whole boot and payload-only timing with the actual measurement boundaries.
-First-frame timing and cold power-on measurement remain open.
+The user authorized the spare4GB card write. Direct privileged helpers were
+blocked by macOS privacy before writing. Installed balenaEtcher completed the
+write; after a later helper error, restarting Etcher and reselecting the card
+successfully wrote the final5Hz image. The user moved it to DUT and powered it.
+No independent host raw-byte readback was obtained before the move; do not
+claim one. Actual controlled boot and full API tests subsequently passed.
+
+Keep REF's original Linux card untouched. To use RAM-only USB downloads again,
+power DUT off, remove its spare card, then power DUT on into maskrom. With the
+card installed, Ctrl-] resets into the SD runtime instead of maskrom. Use
+`mise run baremetal:boot:sd:gate` for an already-running SD REPL; this issues no
+USB download or storage command. The card is a raw ROM image with no app
+filesystem yet, so Finder cannot display app files on it.
+
+Next measurement gap: cold power application was not timestamped externally.
+The captured warm-reset request to REPL marker was195140.75us on the final
+image. REF polling/UART buffering bounds its precision; it is not a cold boot
+or usable SeedSigner app benchmark. Original Phase10 power-on/first-frame
+measurement requirements and the app milestone remain open.
 
 ## Source provenance
 
@@ -128,3 +140,15 @@ Latest experimental SD candidate includes this instrumentation; startup evidence
 above and `phase-10-preparation.json` refer to the earlier candidate. Latest
 hashes and limits are in
 [evidence/phase-10-camera-timing.json](evidence/phase-10-camera-timing.json).
+
+## Visible heartbeat test
+
+The user requested a fast blink, then half the original10Hz rate. Final build
+uses5Hz:100ms on,100ms off, from the1kHz generic-timer interrupt. Only the
+onboard active-high GPIO3_C6 LED is configured; its mux/clock facts come from
+Luckfox Mini DTS and pinned RV1106 pinctrl/clock definitions. No SD A-pin mux
+is changed. `machine.led_status()` reports enabled/state/rate, transition count
+and real pad-readback errors. `mise run baremetal:led:gate` verifies10 transitions
+per second and both states. While the full API script ran two camera captures,
+108 transitions occurred in10801ms with zero pad errors. This is a diagnostic
+heartbeat, not an application watchdog.

@@ -14,6 +14,8 @@ mod runtime;
 mod camera;
 #[cfg(feature = "runtime-board")]
 mod camera_timing;
+#[cfg(feature = "runtime-board")]
+mod led;
 #[cfg(feature = "camera-test")]
 mod camera_replay_data;
 #[cfg(feature = "cpu-base")]
@@ -109,6 +111,8 @@ extern "C" fn rust_main(entry_low: u32, entry_high: u32) -> ! {
     cpu::run();
     #[cfg(feature = "gpio-test")]
     gpio::init();
+    #[cfg(feature = "runtime-board")]
+    led::init();
     #[cfg(all(feature = "i2c-test", not(feature = "camera-test")))]
     i2c::run();
     #[cfg(all(feature = "spi-test", not(feature = "runtime-repl")))]

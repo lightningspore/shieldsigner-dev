@@ -36,3 +36,8 @@ reports the current boot/app path takes at least about30s. This is a reported
 baseline, not our measured value. Internal13.1ms payload-to-interpreter timing
 excludes ROM/DDR/loading and does not include SeedSigner or demonstrate an
 end-to-end speedup. Preserve the original standalone power-to-REPL gate too.
+
+Update: standalone runtime SD boot and full API/camera tests now pass on the
+authorized spare4GB card, with a5Hz LED heartbeat. The ROM loads unchanged DDR
+and our runtime directly. Cold power-edge/first-frame timing and app/assets
+storage remain unfinished; no usable SeedSigner app boot result exists yet.

@@ -42,9 +42,19 @@ max_gap = 0
 active_gap = None
 pulse_gaps = []
 count = 0
+reset_sent_ns = None
+uart_markers = {}
+def received(data):
+    serial.extend(data)
+    observed = time.monotonic_ns() - start
+    for name, marker in [('reset', b'@@RESET'), ('ddr', b'DDR '),
+                         ('hello', b'@@PASS hello'), ('repl', b'@@REPL_READY')]:
+        if name not in uart_markers and marker in serial:
+            uart_markers[name] = observed
 print('@@BOOT_CAPTURE_READY', flush=True)
 try:
     if reset:
+        reset_sent_ns = time.monotonic_ns() - start
         os.write(fd, b'\x1d')
         termios.tcdrain(fd)
     while True:
@@ -70,11 +80,11 @@ try:
             try:
                 data = os.read(fd, 65536)
                 if data:
-                    serial.extend(data)
+                    received(data)
             except BlockingIOError:
                 pass
     try:
-        serial.extend(os.read(fd, 65536))
+        received(os.read(fd, 65536))
     except BlockingIOError:
         pass
 finally:
@@ -85,4 +95,5 @@ print('@@DATA ' + base64.b64encode(serial).decode('ascii'))
 print('@@BOOT_GPIO ' + json.dumps({'initialLevel': initial, 'edges': edges,
     'sampleCount': count, 'maxSampleGapNs': max_gap,
     'highPulseMaxSampleGapsNs': pulse_gaps, 'refDirectionHigh': hex(direction),
+    'resetRequestNs': reset_sent_ns, 'uartMarkerObservedNs': uart_markers,
     'scope': 'Polled REF GPIO1_C4; payload entry only, excludes ROM/DDR and power application'}))

@@ -129,3 +129,8 @@ The second covers the complete bounded32-frame acquisition and final output
 validation. Both start inside `camera.capture()`, exclude a separate
 `camera.init()` call and exclude boot, app imports/UI and rendering. The Python
 timing script measures `init()` and the enclosing capture call separately.
+
+The board runtime also provides a5Hz onboard LED heartbeat and
+`machine.led_status()`. It uses GPIO3_C6 (global118), with100ms on/off periods
+driven by the1kHz IRQ. The status includes rate, transitions, commanded state
+and pad-readback error count. The original Pin52/53 API bounds are unchanged.

@@ -1,13 +1,13 @@
 # Luckfox Mini bare-metal bring-up
 
-This folder contains the independent RAM-only bring-up of a Luckfox Pico Mini A/RV1103. The existing Linux camera implementation in `../firmware/rkaiq-rs/` remains the reference; its algorithm library already uses `#![no_std]` with Linux diagnostics behind a feature.
+This folder contains the independent bare-metal bring-up of a Luckfox Pico Mini A/RV1103. The existing Linux camera implementation in `../firmware/rkaiq-rs/` remains the reference; its algorithm library already uses `#![no_std]` with Linux diagnostics behind a feature.
 
 Start with [NOTES.md](NOTES.md) for the live state, [HISTORY.md](HISTORY.md) for chronological evidence, and [PLAN.txt](PLAN.txt) for the user-provided mission and phase gates.
 
 - Base decision: plain `no_std` Rust, with a portable MicroPython integration later.
 - REF: known-good Linux board with SC3336 camera, reached by explicitly selected ADB serial.
-- DUT: no microSD, Rockchip maskrom; code downloads are RAM-only.
-- No REF boot-partition writes, DUT flash writes, or SD installation without further user authorization.
+- DUT: now boots the user-authorized spare4GB microSD; remove it for RAM-only maskrom downloads.
+- REF boot partitions remain untouched. Only the user-provided spare DUT card was authorized and written; USB downloads remain RAM-only.
 - Phase success requires real-device evidence; compilation alone never closes a gate.
 
 All new source, helper tools, decisions and evidence for this effort belong here. `logs/phase-N/`, `ref-dumps/` and `.tools/` are ignored local artifacts. Tool downloads retain their original licenses. The new driver implementation will use original code; existing GPL drivers may be studied but are not copied into the permissive implementation. Closed DDR/USB blobs are used as supplied, without disassembly.
@@ -32,4 +32,4 @@ Range snapshots cover complete CRU, GRF, PMU, D-PHY, CSI0, VICAP and ISP resourc
 
 **Phase8 passed for the bounded SC3336 linear profile:**32 ISP/3A feedback frames,31 frame-IRQ parameter updates,186 gain readbacks,80 selected fixed-register matches and an inspected Linux/DUT colour comparison. See [PHASE-8-STATUS.md](PHASE-8-STATUS.md) and [evidence/phase-8.json](evidence/phase-8.json) for exact scope, convergence and limitations. Phase9 now passes the bounded MicroPython hardware/API gate, including two camera captures, GC and five RAM boots; see [PHASE-9-RUNTIME.md](PHASE-9-RUNTIME.md) and [evidence/phase-9.json](evidence/phase-9.json). Unbounded streaming and arbitrary ISP tuning are not qualified. Remaining work is tracked in [PROJECT-MILESTONES.md](PROJECT-MILESTONES.md).
 
-Phase10 preparation is recorded in [PHASE-10-BOOT.md](PHASE-10-BOOT.md). **Power-on to a usable SeedSigner app has not been measured for the replacement runtime; the app is not ported yet.** The user reports at least about30s for the current boot/app path. A separate internal measurement is about13.1ms from bare-metal payload entry to initialized MicroPython, excluding ROM, DDR, storage loading and the app. It does not establish an end-to-end speedup. The experimental SD image remains unwritten pending a spare card and user authorization. The installed app reference inventory is in [APP-REFERENCE-INVENTORY.md](APP-REFERENCE-INVENTORY.md).
+Phase10 preparation is recorded in [PHASE-10-BOOT.md](PHASE-10-BOOT.md). **Power-on to a usable SeedSigner app has not been measured for the replacement runtime; the app is not ported yet.** The user reports at least about30s for the current boot/app path. A separate internal measurement is about13.1ms from bare-metal payload entry to initialized MicroPython, excluding ROM, DDR, storage loading and the app. It does not establish an end-to-end speedup. The2MiB image now boots the spare microSD and passes the real API/camera gate, with a5Hz onboard LED heartbeat. See [evidence/phase-10-sd-boot.json](evidence/phase-10-sd-boot.json). Cold power-on and first-frame timing remain open. The installed app reference inventory is in [APP-REFERENCE-INVENTORY.md](APP-REFERENCE-INVENTORY.md).

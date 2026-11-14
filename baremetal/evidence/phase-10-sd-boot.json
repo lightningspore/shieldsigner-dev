@@ -1,0 +1,55 @@
+{
+  "phase": 10,
+  "status": "standalone-sd-and-runtime-api-passed-cold-power-timing-open",
+  "bootChain": "ROM -> unchanged vendor DDR -> original runtime; no U-Boot or Linux",
+  "imageSha256": "9406c4fcc7c795ecf519bc4a3b810b7d2b2a06c9bf2bc6ff8643a9917bc7a6b8",
+  "payloadSha256": "f825850e9580ea5fd21a85d39741e32652a9dd9879cd6c058f8b3ddb9968fadc",
+  "imageBytes": 2097152,
+  "cardBytes": 4060086272,
+  "warmResetRequestToReplMarkerUs": 195140.75,
+  "coldPowerOnTimingMeasured": false,
+  "appBootMeasured": false,
+  "led": {
+    "gpio": "GPIO3_C6",
+    "globalLine": 118,
+    "activeHigh": true,
+    "hz": 5,
+    "onMs": 100,
+    "offMs": 100,
+    "idleTestTransitionsPerSecond": 10,
+    "concurrentTestElapsedMs": 10801,
+    "concurrentTestTransitions": 108,
+    "padErrors": 0
+  },
+  "runtimePassMarkers": [
+    "phase-9-gpio",
+    "phase-9-i2c",
+    "phase-9-spi",
+    "phase-9-time",
+    "phase-9-camera",
+    "phase-9-camera-settings",
+    "phase-9-gc-exceptions",
+    "phase-9",
+    "led-during-camera"
+  ],
+  "hostTestsPassed": 12,
+  "tasksChecked": 311,
+  "limits": [
+    "Warm reset-request timing includes ROM, SD load and DDR; not a cold power-edge measurement.",
+    "No power-on-to-app or app camera readiness claim; SeedSigner is not ported yet.",
+    "No independent host byte readback after Etcher; successful fresh SD boot and real API tests recorded instead.",
+    "Camera remains bounded32-frame acquisition; no steady-state FPS claim.",
+    "Heartbeat proves timer/GPIO activity, not full app health or hardware qualification."
+  ],
+  "evidence": {
+    "logs/phase-10/sd-boot-20261114T182159Z/result.json": "db42c3907b817f79ce436b98bae3c6257d8ca92fef244e0ff9c0c10245a06c73",
+    "logs/phase-10/sd-boot-20261114T182159Z/serial.bin": "7dc0dbe9eec7b71909e246acde501e30b302ef4a563692353388aaa07d34fa17",
+    "logs/phase-9/console-20261114T182256Z/result.json": "48b0dc64d9d7cf405d9ee8e645bbbff37c277ce471a9fdfcdb8b240bc5ce9470",
+    "logs/phase-9/console-20261114T182256Z/serial.bin": "b6f2fc300d709bd405960ce2a5ee92c70959c028d53c8983e66a749e03991012",
+    "logs/phase-9/console-20261114T181916Z/result.json": "1e531d2840ede7b84e7d4b9dbdf084dad9eaeb065f8cc3d51cf763553dbf2190",
+    "logs/phase-9/console-20261114T181916Z/serial.bin": "a76b12beb9377a5d27492b49e20984060d90f4d572a60aececa916539a1b42c5",
+    "logs/phase-10/sd-led5-evidence/runtime-sd-manifest.json": "e466f56169467893d127f805175959c94dca8769adc5e577926ea6c113efc016",
+    "logs/phase-10/sd-led5-evidence/hello-manifest.json": "bc9a95f90b7e7be06a3c519d5c2f77980f11dcf075cf492ccf2939d567ea20e1",
+    "logs/phase-10/sd-led5-evidence/flash-result.json": "7bb6cbe9b70449188a4f242d1b9c964fbc98dbc9870e134e01ed8f937bb283df"
+  }
+}

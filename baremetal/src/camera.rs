@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 //! Original raw-camera diagnostic: named SC3336 and RV1103 receiver drivers.
-//! Phase7 remains open until the real scene and remaining coverage are verified.
+//! Phase7 passed; optional ISP diagnostic consumes the last completed raw buffer.
 mod receiver;
 mod sc3336;
 mod sensor_mode;
@@ -10,6 +10,10 @@ use core::ptr::{read_volatile, write_volatile};
 const CIF: usize = 0xffa10000;
 const BUFFERS: [usize; 2] = [0x03000000, 0x03400000];
 const FRAME_BYTES: usize = receiver::FRAME_BYTES;
+#[cfg(feature = "isp-3a-test")]
+pub const CONTROL_FRAME_LINES: u32 = sc3336::FRAME_LINES as u32;
+#[cfg(feature = "isp-3a-test")]
+pub const CONTROL_INITIAL_LINES: u32 = sc3336::NORMAL_EXPOSURE as u32;
 unsafe fn read(address: usize) -> u32 {
     read_volatile(address as *const u32)
 }
@@ -132,7 +136,7 @@ fn configure_camera() -> Result<(), &'static str> {
             receiver::configure();
         }
         sc3336::configure(cfg!(feature = "camera-pattern"))?;
-        sc3336::start()
+        if cfg!(feature = "isp-3a-test") { Ok(()) } else { sc3336::start() }
     }
 }
 fn stop_stream() -> Result<(), &'static str> {
@@ -141,6 +145,7 @@ fn stop_stream() -> Result<(), &'static str> {
     delay_us(10000);
     result
 }
+#[cfg(not(feature = "isp-test"))]
 fn sample(base: usize, x: usize, y: usize) -> u8 {
     let bit = x * 10;
     let address = base + y * 3072 + bit / 8;
@@ -151,6 +156,7 @@ fn sample(base: usize, x: usize, y: usize) -> u8 {
         ((word >> (bit % 8 + 2)) & 255) as u8
     }
 }
+#[cfg(not(feature = "isp-test"))]
 fn preview(base: usize) {
     const HEX: &[u8; 16] = b"0123456789abcdef";
     super::put(b"@@RGB_BEGIN 192 108\r\n");
@@ -200,7 +206,14 @@ pub fn run() {
         );
     }
     let mut last_buffer = 0;
+    #[cfg(feature = "isp-3a-test")]
+    if let Err(error)=sc3336::start() {
+        let _=writeln!(super::cpu::Console,"@@FAIL camera-start {}\r",error);
+        return;
+    }
     let mut previous_buffer = None;
+    let mut first_end = 0;
+    let mut last_end = 0;
     for frame in 0..10 {
         let start = super::cpu::counter();
         loop {
@@ -227,8 +240,21 @@ pub fn run() {
                     return;
                 }
                 last_buffer = buffer;
+                last_end = super::cpu::counter();
+                if frame == 0 {
+                    first_end = last_end;
+                }
                 previous_buffer = Some(buffer);
                 receiver::acknowledge(status);
+                // At30fps the vertical blank is shorter than a UART log line.
+                // Stop on the last frame boundary before printing, avoiding a
+                // mid-packet stop that leaves CSI/VICAP size-error state.
+                if cfg!(feature = "isp-3a-test") && frame == 9 {
+                    if let Err(error)=stop_stream() {
+                        let _=writeln!(super::cpu::Console,"@@FAIL camera-boundary-stop {}\r",error);
+                        return;
+                    }
+                }
                 let _ = writeln!(
                     super::cpu::Console,
                     "@@CAM_FRAME {} status={:#x} buffer={} us={}\r",
@@ -268,6 +294,53 @@ pub fn run() {
         super::put(b"@@FAIL camera-dma-unchanged\r\n");
         return;
     }
+    #[cfg(not(feature = "isp-test"))]
     preview(base);
     super::put(b"@@PASS camera-raw-ten-frames\r\n");
+    #[cfg(feature = "isp-test")]
+    super::isp::run(base, (last_end - first_end) / (9 * 24));
+}
+
+/// Bounded stop/configure/start cycle. Discard two frames for sensor latch
+/// settling and return the third completed buffer, rather than assuming that
+/// an I2C acknowledgement associates a setting with the immediately next frame.
+#[cfg(feature = "isp-3a-test")]
+pub fn next_raw(lines: u32, gain: u32) -> Result<usize, &'static str> {
+    sc3336::apply_linear(lines, gain)?;
+    unsafe {
+        receiver::configure();
+    }
+    sc3336::start()?;
+    let result = (|| {
+        let mut previous = None;
+        let mut last = 0;
+        for _ in 0..3 {
+            let start = super::cpu::counter();
+            loop {
+                let status = receiver::status();
+                let completed=receiver::completed_buffer(status).map_err(|error| {
+                    let _=writeln!(super::cpu::Console,"@@CAM_FEEDBACK_ERROR status={:#x} csi_err1={:#x} csi_err2={:#x}\r",status,unsafe{read(0xffa20020)},unsafe{read(0xffa20024)});
+                    error
+                })?;
+                if let Some(buffer) = completed {
+                    if previous == Some(buffer) {
+                        return Err("feedback-raw-sequence");
+                    }
+                    previous = Some(buffer);
+                    last = buffer;
+                    receiver::acknowledge(status);
+                    break;
+                }
+                if super::cpu::counter() - start > 120_000_000 {
+                    return Err("feedback-raw-timeout");
+                }
+            }
+        }
+        Ok(BUFFERS[last])
+    })();
+    let stopped = stop_stream();
+    match (result, stopped) {
+        (Ok(base), Ok(())) => Ok(base),
+        (Err(e), _) | (_, Err(e)) => Err(e),
+    }
 }

@@ -26,7 +26,7 @@ fn integer(v: &Value, p: &str, lo: i64, hi: i64) -> Result<i64, String> {
     let n = at(v, p)?
         .as_f64()
         .ok_or_else(|| format!("Expected integer at {p}"))?;
-    if n < lo as f64 || n > hi as f64 || n.fract() != 0. {
+    if n < lo as f64 || n > hi as f64 || (n - libm::trunc(n)) != 0. {
         return Err(format!("Integer out of range at {p}"));
     }
     Ok(n as i64)

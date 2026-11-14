@@ -112,7 +112,7 @@ pub fn fixed_frame(input: Input) -> Result<Bounds, InvalidInput> {
 }
 /// Bind sensor calibration and active timing without choosing flicker/override policy.
 /// Route endpoints must be taken before the route splitter mutates time knots.
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub fn from_calibration(
     sensor: &crate::calibration::SensorCalibration,
     timing: crate::calibration::RuntimeTiming,

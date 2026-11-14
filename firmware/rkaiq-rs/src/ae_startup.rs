@@ -87,7 +87,7 @@ pub fn linear(
     })
 }
 
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod profile {
     extern crate alloc;
     use super::*;

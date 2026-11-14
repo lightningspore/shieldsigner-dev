@@ -9,7 +9,7 @@ int bm_predict(const struct bm_op *ops,bm_u32 count,bm_u32 *regs,bm_u32 text_bas
     bm_read_word read_word,void *context,bm_u32 *address,bm_u32 *value)
 {
     bm_u32 i;
-    if(count>4)return -1;
+    if(count>8)return -1;
     for(i=0;i<count;i++){
         const struct bm_op *op=&ops[i];
         bm_u32 target;

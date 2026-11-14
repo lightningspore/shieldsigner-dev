@@ -87,7 +87,7 @@ impl Calibration {
         }
         Ok(Selected { frame, fps })
     }
-    #[cfg(feature = "diagnostics")]
+    #[cfg(any(feature = "diagnostics", feature = "profiles"))]
     pub fn from_scene(scene: &serde_json::Value) -> Result<Self, alloc::string::String> {
         let d = &scene["ae_calib"]["CommCtrl"]["AecFrameRateMode"];
         let fixed = match (d["isFpsFix"].as_bool(), d["isFpsFix"].as_u64()) {
@@ -104,7 +104,7 @@ impl Calibration {
         Ok(Self { fixed, requested })
     }
 }
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 extern crate alloc;
 
 #[derive(Clone, Copy, Debug)]

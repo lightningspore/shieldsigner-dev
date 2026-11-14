@@ -210,7 +210,7 @@ pub fn split_cached(
     Ok(cache.point)
 }
 
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub fn from_profile(
     value: &serde_json::Value,
 ) -> Result<alloc::vec::Vec<Point>, alloc::string::String> {
@@ -248,7 +248,7 @@ pub fn from_profile(
         })
         .collect())
 }
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 extern crate alloc;
 #[cfg(test)]
 mod tests {

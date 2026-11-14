@@ -48,7 +48,7 @@ fn startup_black_level(scene: &Value) -> Result<isp_black_level::Configuration, 
             .enumerate()
         {
             let f = constant(&blc[stage]["BLC_Data"][name])?;
-            if f.fract() != 0. || !(-32768.0..=32767.0).contains(&f) {
+            if (f - libm::truncf(f)) != 0. || !(-32768.0..=32767.0).contains(&f) {
                 return Err("BLC channel out of range".into());
             }
             out[i] = f as i16;
@@ -60,7 +60,7 @@ fn startup_black_level(scene: &Value) -> Result<isp_black_level::Configuration, 
     let offset = constant(&ob["BLC_OB_Data"]["isp_ob_Offset"])?;
     let predgain = constant(&ob["BLC_OB_Data"]["isp_ob_preDgain"])?;
     if !(0.0..=511.0).contains(&offset)
-        || offset.fract() != 0.
+        || (offset - libm::truncf(offset)) != 0.
         || !(0.0..=255.0).contains(&predgain)
     {
         return Err("optical black out of range".into());

@@ -9,8 +9,8 @@
 #include <asm/barrier.h>
 #include "live_sites.h"
 
-static struct module *owners[3];
-static const char *const device_names[]={"mipi0-csi2","ff3e8000.csi2-dphy-hw","4-0030"};
+static struct module *owners[ARRAY_SIZE(bm_modules)];
+static const char *const device_names[]={"mipi0-csi2","ff3e8000.csi2-dphy-hw","4-0030","ffa00000.rkisp"};
 void bm_preflight_release(void)
 {
     unsigned int i;

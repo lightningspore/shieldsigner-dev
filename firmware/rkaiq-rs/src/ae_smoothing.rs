@@ -15,7 +15,7 @@ pub fn counts(enabled: bool, linear: [u8; 2], hdr: [u8; 2]) -> Counts {
         Counts { linear: 0, hdr: 0 }
     }
 }
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub fn from_profile(
     scene: &serde_json::Value,
     sensor: &serde_json::Value,
@@ -40,5 +40,5 @@ pub fn from_profile(
     };
     Ok(counts(enabled, pair("Linear")?, pair("Hdr")?))
 }
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 extern crate alloc;

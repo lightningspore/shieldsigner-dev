@@ -1,0 +1,92 @@
+{
+  "phase": 8,
+  "status": "passed-bounded-linear-profile",
+  "dut": "RV1103 Pico Mini, separate SC3336",
+  "reference": "RV1103 Luckfox Pico Linux, separate SC3336",
+  "gate": "Recognizable NV12 colour output, existing calibrated Rust AE/AWB feedback, frame-IRQ updates, selected configuration comparisons and qualitative side-by-side review",
+  "imageSha256": "effdd2d963ea152cc91ce2fd7885db79128ff1045e0bbe684f53962047154343",
+  "format": {
+    "input": "2304x1296 compact BG10, stride3072",
+    "output": "640x480 NV12",
+    "thumbnail": "160x120 YCbCr triples, full-range BT.601"
+  },
+  "timing": {
+    "htsPixels": 2500,
+    "vtsLines": 1360,
+    "measuredFrameUs": 33333,
+    "effectivePixelClockMHz": 102.00102
+  },
+  "feedback": {
+    "frames": 32,
+    "irqAppliedUpdates": 31,
+    "matchingGainReadbacks": 186,
+    "finalExposureLines": 816,
+    "finalGainCode": 1065,
+    "finalWhiteBalance": [
+      1.2180655,
+      1.0,
+      1.0,
+      2.1525512
+    ],
+    "exposureWithin5PercentFromFrame": 10,
+    "whiteBalanceWithin2PercentFromFrame": 7,
+    "exactStableTailFrames": 12,
+    "visualReviewRequired": true,
+    "limits": [
+      "Bounded linear profile; no long-run allocation qualification.",
+      "Two gain2 readbacks remain unresolved; six other gain words checked each update.",
+      "Statistics association uses controlled triggers and sensor settling, not external electrical timing measurement."
+    ]
+  },
+  "configuration": {
+    "matchingSelectedRegisters": 80,
+    "unobservedOffsetsNotCompared": [
+      "0x804",
+      "0x808",
+      "0x80c",
+      "0x3004",
+      "0x3008",
+      "0x300c",
+      "0x3010",
+      "0x3014",
+      "0x3f04",
+      "0x3f08",
+      "0x3f0c",
+      "0x3f10",
+      "0x490c"
+    ],
+    "awbMapOracleWrites": 82,
+    "readbackInterpretation": "Explicit DONE/config/reserved masks; CCM11-bit coefficients agree with REF readbacks; AWB1 read/write packing differs."
+  },
+  "visualReview": {
+    "reviewed": true,
+    "result": "Printed carton/barcode recognizable; similar overall brightness and neutral colour to Linux reference. Different framing/sensors, remaining tint/noise; qualitative comparison only. Both reference and DUT use optional denoise/sharpen modules disabled."
+  },
+  "limits": [
+    "Bounded stop/configure/start RAW readback pipeline; no uninterrupted streaming or performance qualification.",
+    "Fixed SC3336 linear mode and initial static ISP profile; general module tuning, variable VTS/ISP digital gain and HDR remain unsupported.",
+    "Monotonic allocator grows about3\u20136KiB per feedback frame; replace before unbounded runtime.",
+    "No pixel-exact cross-camera colour calibration or electrical frame-timing measurement.",
+    "No interpreter or fast-boot gate passed by this receipt."
+  ],
+  "checks": {
+    "hostTests": 8,
+    "observerOfflineTests": 8,
+    "libraryTests": 114,
+    "awbMapperTests": 3,
+    "tasksChecked": 301
+  },
+  "evidence": {
+    "logs/phase-8/20261114T163158Z/serial.bin": "4f6074c0e3190468634afb25f26b2bb681b31d480f06387761f9c480cc0ae513",
+    "logs/phase-8/20261114T163158Z/result.json": "a2a5419469c828a39408b3e45fc5a2573f309c58e3c9271a044d5734972a1981",
+    "logs/phase-8/20261114T163158Z/build-manifest.json": "440747f9f97ac0a5cb6ce74e06183194691aa74728484e4adc33804568c3916e",
+    "logs/phase-8/20261114T163158Z/feedback-audit.json": "17421a03791c3b8c0bef5225f8f6f128d810dbbb7a6568bf2c6b0ff64c11b325",
+    "logs/phase-8/20261114T163158Z/fixed-register-audit.json": "b4d18b1c589091de470cfd28a60b2a55ae22099e9e3f7a7a43c58db35eb08b6d",
+    "logs/phase-8/20261114T163158Z/isp-colour.png": "8cc5a14301d20ef402b92d301c5dcb8b509592c55a43b387f1ffb8f51bd054e9",
+    "logs/phase-8/ref-comparison-capture.txt": "8df086475765c8d0e257876d2ea76a2f2430c4932899b4fb5dba9c150ffe19a5",
+    "logs/phase-8/ref-comparison.nv12": "6540aec13649309ba52c43339bb562d4cb9783bf4577e16080cd8149944cca55",
+    "logs/phase-8/comparison-final.png": "c2cc1a0abe371da0c2e499d6deb05f26083ccf4bfad811fa1184dccdd768c71d"
+  },
+  "privateScenePixelsCommitted": false,
+  "storageWrites": false
+}

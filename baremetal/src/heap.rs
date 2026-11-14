@@ -51,6 +51,11 @@ unsafe impl GlobalAlloc for BumpHeap {
 #[global_allocator]
 static HEAP: BumpHeap = BumpHeap::new();
 
+#[cfg(feature = "isp-3a-test")]
+pub fn used() -> usize {
+    HEAP.next.load(Ordering::Relaxed) - HEAP_START
+}
+
 pub fn check() -> bool {
     // Run only after ACTLR.SMP and cache/MMU setup; ARM atomics require normal cacheable memory.
     let a = Layout::from_size_align(4096, 64).unwrap();

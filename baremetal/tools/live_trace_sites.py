@@ -36,10 +36,10 @@ def memory(decoder,op):
     return {'base':reg_id(decoder,op.mem.base),'index':reg_id(decoder,op.mem.index) if op.mem.index else None,
             'shift':op.shift.value,'displacement':op.mem.disp}
 
-def store_program(text,offset,decoder):
+def store_program(text,offset,decoder,max_ops=4):
     program=[]
-    for ins in decoder.disasm(text[offset+4:offset+28],offset+4):
-        if len(program)>=4:raise ValueError('No store within four instructions')
+    for ins in decoder.disasm(text[offset+4:offset+4+max_ops*4],offset+4):
+        if len(program)>=max_ops:raise ValueError('No store within instruction bound')
         if ins.writeback:raise ValueError('Writeback not supported')
         mnemonic=ins.mnemonic.removesuffix('.w');ops=ins.operands
         entry={'pcOffset':ins.address,'bytes':ins.bytes.hex()}
@@ -56,7 +56,7 @@ def store_program(text,offset,decoder):
         if entry['kind']=='store':return program
     raise ValueError('Missing store')
 
-def read_module(name):
+def read_module(name,selected_offsets=None,max_ops=4):
     path=ROOT/'logs/phase-7/original-modules'/f'{name}.ko'
     decoder=Cs(CS_ARCH_ARM,CS_MODE_THUMB);decoder.detail=True
     with path.open('rb') as stream:
@@ -67,11 +67,12 @@ def read_module(name):
             target=symbols.get_symbol(rel['r_info_sym']).name
             if target not in TARGETS:continue
             offset=rel['r_offset']
+            if selected_offsets is not None and offset not in selected_offsets:continue
             if rel['r_info_type'] not in (10,30):raise ValueError('Expected Thumb call/tail-call relocation')
             if (name,offset) in READ_BARRIERS:
                 excluded.append({'offset':offset,'reason':'post-read barrier, no store'});continue
             site={'module':name,'offset':offset,'target':target,'kind':TARGETS[target],'link':rel['r_info_type']==10}
-            if site['kind']=='mmio':site['program']=store_program(text,offset,decoder)
+            if site['kind']=='mmio':site['program']=store_program(text,offset,decoder,max_ops)
             sites.append(site)
         return {'module':name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'textSize':len(text),'sites':sites,'excluded':excluded},text
 
@@ -110,12 +111,12 @@ def c_program_op(item):
     else:a,b=c_operand(item['left']),c_operand(item['right'])
     return '{%d,%d,%d,%s,%s,%s}'%(kind,item['register'],item['pcOffset'],a,b,mem)
 
-def generate_header(modules,destination):
+def generate_header(modules,destination,max_ops=4):
     """Emit data only. Runtime validation must still precede any redirection."""
     lines=['/* Generated from original GPL camera-module ELF relocations. */',
            '#ifndef BM_LIVE_SITES_H','#define BM_LIVE_SITES_H','#include "live_ir.h"',
            'struct bm_module_spec { const char *name,*sha256; bm_u32 text_size; };',
-           'struct bm_site_spec { bm_u32 module,offset,kind,link,count; struct bm_op ops[4]; };',
+           'struct bm_site_spec { bm_u32 module,offset,kind,link,count; struct bm_op ops[%d]; };'%max_ops,
            'static const struct bm_module_spec bm_modules[] = {']
     for module in modules:
         lines.append('{"%s","%s",%d},'%(module['module'].replace('-','_'),module['sha256'],module['textSize']))

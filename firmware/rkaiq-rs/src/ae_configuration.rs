@@ -79,7 +79,7 @@ pub fn linear(
         },
     ))
 }
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub fn from_comm(
     comm: &serde_json::Value,
     width: u32,

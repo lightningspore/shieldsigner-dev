@@ -27,6 +27,10 @@ irq_entry:
     pop {{r0-r12,lr}}
     subs pc, lr, #4
 exception_fault:
+    cpsid if
+    cps #0x13
+    movw sp, #0
+    movt sp, #0x0040
     bl rust_fault
 "#
 );
@@ -42,13 +46,14 @@ pub unsafe fn start(frequency: u32) {
     extern "C" {
         static exception_vectors: u8;
     }
-    // Banked IRQ stack; SVC stack is already at 0x00400000.
+    // Separate banked IRQ stack at2MiB; SVC grows down from4MiB. The earlier
+    // 64KiB spacing was too small for calibrated3A's large temporary records.
     asm!(
         "cps #0x12",
         // Materialize the constant directly; an inline literal pool can move
         // beyond LDR range when LTO grows the camera startup function.
         "movw sp, #0",
-        "movt sp, #0x003f",
+        "movt sp, #0x0020",
         "cps #0x13",
         options(nostack)
     );
@@ -113,6 +118,9 @@ extern "C" fn rust_irq() {
         } else if id == 54 {
             #[cfg(feature = "i2c-test")]
             super::i2c::irq();
+        } else if id == 136 || id == 137 {
+            #[cfg(feature = "isp-test")]
+            super::isp::irq();
         } else if id == 59 {
             while read(super::UART, 0x14) & 1 != 0 {
                 let byte = read(super::UART, 0) as u8;
@@ -132,6 +140,33 @@ extern "C" fn rust_irq() {
             write(CPU, 0x10, ack);
         }
     }
+}
+
+#[cfg(feature = "isp-test")]
+pub unsafe fn isp_irqs_enabled(enabled: bool) {
+    for id in [136u32, 137] {
+        let bank = (id / 32) as usize * 4;
+        let bit = 1 << (id % 32);
+        write(DIST, 0x180 + bank, bit);
+        if enabled {
+            let word = (id / 4) as usize * 4;
+            let shift = (id % 4) * 8;
+            write(DIST, 0x80 + bank, read(DIST, 0x80 + bank) | bit);
+            write(
+                DIST,
+                0x400 + word,
+                (read(DIST, 0x400 + word) & !(255 << shift)) | (128 << shift),
+            );
+            write(
+                DIST,
+                0x800 + word,
+                (read(DIST, 0x800 + word) & !(255 << shift)) | (1 << shift),
+            );
+            write(DIST, 0x280 + bank, bit);
+            write(DIST, 0x100 + bank, bit);
+        }
+    }
+    asm!("dsb sy", options(nostack));
 }
 
 #[no_mangle]

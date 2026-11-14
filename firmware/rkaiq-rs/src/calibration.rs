@@ -50,7 +50,7 @@ fn integer(value: &Value, path: &str, maximum: u32) -> Result<u32, String> {
     let n = at(value, path)?
         .as_f64()
         .ok_or_else(|| format!("Expected integer at {path}"))?;
-    if n < 0. || n > maximum as f64 || n.fract() != 0. {
+    if n < 0. || n > maximum as f64 || (n - libm::trunc(n)) != 0. {
         return Err(format!("Integer out of range at {path}"));
     }
     Ok(n as u32)

@@ -13,7 +13,7 @@ impl Calibration {
             history,
         })
     }
-    #[cfg(feature = "diagnostics")]
+    #[cfg(any(feature = "diagnostics", feature = "profiles"))]
     pub fn from_scene(scene: &serde_json::Value) -> Result<Self, alloc::string::String> {
         let d = &scene["ae_calib"]["CommCtrl"]["AecSpeed"]["DyDamp"];
         let enabled = match (d["DyDampEn"].as_bool(), d["DyDampEn"].as_u64()) {
@@ -51,5 +51,5 @@ impl Calibration {
         })
     }
 }
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 extern crate alloc;

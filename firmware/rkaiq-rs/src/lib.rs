@@ -47,13 +47,13 @@ pub mod awb_single_color_grid;
 pub mod awb_stability;
 pub mod awb_translation;
 pub mod awb_xy_selection;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod calibration;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod awb_calibration;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod awb_session;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod demosaic_calibration;
 pub mod demosaic_selection;
 pub mod demosaic_runtime;
@@ -62,7 +62,7 @@ pub mod engine;
 pub mod exposure;
 pub mod exposure_association;
 pub mod gain;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod initial_parameters;
 pub mod isp32;
 pub mod isp_ae_measurement;
@@ -72,9 +72,9 @@ pub mod isp_color;
 pub mod isp_demosaic;
 pub mod isp_dpcc;
 pub mod dpcc_selection;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod dpcc_calibration;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod dpcc_runtime;
 pub mod isp_effective;
 pub mod isp_pipeline;
@@ -325,12 +325,12 @@ pub mod ae_lifecycle;
 
 pub mod ae_startup;
 
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod ae_session;
 
 pub mod sensor_submission;
 
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod ae_runtime;
 
 pub mod awb_measurement_schedule;
@@ -351,65 +351,65 @@ pub mod ccm_runtime;
 pub mod ccm_damping;
 pub mod ccm_saturation;
 pub mod ccm_luma;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod ccm_calibration;
 pub mod ccm_input;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod ccm_automatic;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod ccm_frame;
 pub mod isp_lsc;
 pub mod lsc_geometry;
 pub mod lsc_illuminant;
 pub mod lsc_tables;
 pub mod lsc_damping;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod lsc_calibration;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod lsc_frame;
 pub mod isp_baynr;
 pub mod baynr_selection;
 pub mod baynr_quantize;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod baynr_calibration;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod baynr_frame;
 pub mod ae_cis;
 pub mod isp_cnr;
 pub mod cnr_selection;
 
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod cnr_calibration;
 pub mod cnr_quantize;
 
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod cnr_frame;
 
 pub mod isp_bay3d;
 pub mod bay3d_selection;
 pub mod bay3d_quantize;
-#[cfg(feature="diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod bay3d_calibration;
-#[cfg(feature="diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod bay3d_frame;
 
 pub mod isp_ynr;
 pub mod ynr_selection;
 pub mod ynr_quantize;
-#[cfg(feature="diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod ynr_calibration;
-#[cfg(feature="diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod ynr_frame;
 
 
 
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod sharp_calibration;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod sharp_selection;
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod sharp_quantize;
 pub mod isp_sharp;
 
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub mod sharp_frame;

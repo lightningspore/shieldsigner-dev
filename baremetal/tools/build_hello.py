@@ -11,6 +11,17 @@ ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--features', default='')
 args = parser.parse_args()
+inputs = []
+if 'isp-3a-test' in args.features.split(','):
+    for name, size, digest in [
+        ('sc3336-iq.json', 432259, '8c816c0f83c6d4d951d5d4335e9c63a0893cd4f99c501f3f3558bbbca9d2c94a'),
+        ('isp-initial-parameters.bin', 11145, '25fa983c0dfc6313290336d25614db461be205cafaf9aa7598274be80fdded82'),
+        ('isp-awb-sdk.bin', 1204, '4c081c95fe115f1c52ca84223e7a75cf647e64d3573accdcf5fa6c9c6352ccd1'),
+    ]:
+        path = ROOT/'.tools'/name
+        if not path.exists() or path.stat().st_size != size or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+            raise SystemExit(f'Missing/changed reference input {name}; see PHASE-8-STATUS.md')
+        inputs.append(path)
 rkbin = ROOT/'.tools/rkbin'
 build = ROOT/'build'
 build.mkdir(exist_ok=True)
@@ -38,6 +49,8 @@ shutil.copyfile(rkbin/'hello-download.bin', build/'hello-download.bin')
     'features': args.features,
     'note':'Entry and stack proven by Phase 2 ten-run gate; added features require their own DUT proof.',
     'files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
-             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'Cargo.toml', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').rglob('*.rs'))]}
+             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'Cargo.toml', ROOT/'Cargo.lock', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').rglob('*.rs')), *inputs]},
+    'algorithmSources': {str(p.relative_to(ROOT.parent)): hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in [ROOT.parent/'firmware/rkaiq-rs/Cargo.toml', *sorted((ROOT.parent/'firmware/rkaiq-rs/src').glob('*.rs'))]} if 'isp' in args.features else {},
 },indent=2)+'\n')
 print('Built',build/'hello-download.bin')

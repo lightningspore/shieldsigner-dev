@@ -10,6 +10,14 @@ use core::ptr::{read_volatile, write_volatile};
 mod camera;
 #[cfg(feature = "camera-test")]
 mod camera_replay_data;
+#[cfg(feature = "isp-test")]
+mod isp;
+#[cfg(feature = "isp-test")]
+mod isp_replay_data;
+#[cfg(feature = "isp-3a-test")]
+mod isp_3a;
+#[cfg(feature = "isp-3a-test")]
+mod isp_awb;
 #[cfg(feature = "cpu-base")]
 mod cpu;
 #[cfg(feature = "gpio-test")]

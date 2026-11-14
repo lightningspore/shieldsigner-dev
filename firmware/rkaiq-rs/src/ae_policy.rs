@@ -63,7 +63,7 @@ impl Calibration {
             },
         })
     }
-    #[cfg(feature = "diagnostics")]
+    #[cfg(any(feature = "diagnostics", feature = "profiles"))]
     pub fn from_scene(scene: &serde_json::Value) -> Result<Self, alloc::string::String> {
         let root = &scene["ae_calib"];
         let linear = &root["LinearAeCtrl"];
@@ -87,5 +87,5 @@ impl Calibration {
         Ok(out)
     }
 }
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 extern crate alloc;

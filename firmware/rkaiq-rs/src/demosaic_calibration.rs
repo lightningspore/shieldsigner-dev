@@ -18,9 +18,9 @@ fn array<const N: usize>(value: &Value, key: &str, kind: &str) -> Result<[f64; N
             .ok_or_else(|| format!("Expected number at {key}/{i}"))?;
         let valid = match kind {
             "f32" => (n as f32).is_finite(),
-            "u8" => n >= 0. && n <= 255. && n.fract() == 0.,
-            "u16" => n >= 0. && n <= 65535. && n.fract() == 0.,
-            _ => n >= i32::MIN as f64 && n <= i32::MAX as f64 && n.fract() == 0.,
+            "u8" => n >= 0. && n <= 255. && (n - libm::trunc(n)) == 0.,
+            "u16" => n >= 0. && n <= 65535. && (n - libm::trunc(n)) == 0.,
+            _ => n >= i32::MIN as f64 && n <= i32::MAX as f64 && (n - libm::trunc(n)) == 0.,
         };
         if !valid {
             return Err(format!("Out-of-range {kind} at {key}/{i}"));

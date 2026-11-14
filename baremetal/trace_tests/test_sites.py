@@ -9,6 +9,7 @@ from unicorn.arm_const import UC_ARM_REG_R0,UC_ARM_REG_SP,UC_ARM_REG_LR,UC_ARM_R
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from live_trace_sites import MODULES,read_module,predict,thumb_call
 from c_ir_backend import predict_c,call_c
+from isp_trace_sites import read_isp
 
 class CallEncodingTest(unittest.TestCase):
     def test_forward_backward_and_range(self):
@@ -24,10 +25,16 @@ class CallEncodingTest(unittest.TestCase):
 
 class StorePredictionTest(unittest.TestCase):
     def test_every_whitelisted_mmio_site(self):
+        self.check_modules([read_module(name) for name in MODULES],14)
+
+    def test_selected_isp_mmio_sites(self):
+        self.check_modules([read_isp()],9)
+
+    def check_modules(self,modules,expected_count):
         rng=random.Random(0x1103)
         sites_checked=0
-        for name in MODULES:
-            module,text=read_module(name)
+        for module,text in modules:
+            name=module['module']
             for site in module['sites']:
                 if site['kind']!='mmio':continue
                 sites_checked+=1
@@ -63,6 +70,6 @@ class StorePredictionTest(unittest.TestCase):
                     end=base+last['pcOffset']+len(bytes.fromhex(last['bytes']))
                     uc.emu_start(start|1,end,count=8)
                     self.assertEqual(writes,[expected],(name,site['offset'],case))
-        self.assertEqual(sites_checked,14)
+        self.assertEqual(sites_checked,expected_count)
 
 if __name__=='__main__':unittest.main()

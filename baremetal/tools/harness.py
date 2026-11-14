@@ -44,6 +44,13 @@ def main():
     image = args.image.resolve()
     report['image'] = str(image)
     report['sha256'] = hashlib.sha256(image.read_bytes()).hexdigest()
+    manifest = image.with_name('hello-manifest.json')
+    if manifest.exists():
+        content = manifest.read_bytes()
+        parsed = json.loads(content)
+        if parsed.get('files', {}).get('build/hello-download.bin') == report['sha256']:
+            (folder/'build-manifest.json').write_bytes(content)
+            report['buildManifestSha256'] = hashlib.sha256(content).hexdigest()
     tool = str(ROOT/'.tools/rkdeveloptool/rkdeveloptool')
     enumeration_start=time.monotonic()
     replug_reported=False

@@ -66,9 +66,16 @@ unsafe fn enable_memory() {
     asm!("mcr p15, 0, {0}, c1, c0, 1", "isb", in(reg) auxiliary | (1 << 6), options(nostack));
     let table = addr_of_mut!(TABLE.0) as *mut u32;
     for section in 0..4096 {
+        // Unmapped2–3MiB separates IRQ stack(top2MiB) and SVC stack(top4MiB).
+        // A growing3A/interpreter stack must fault before corrupting IRQ state.
+        if section == 2 {
+            write_volatile(table.add(section), 0);
+            continue;
+        }
         // Short-descriptor sections, domain 0, full privileged/user access.
         // DDR: normal WBWA, shareable; other addresses: shareable device, XN.
-        let attrs = if cfg!(feature = "camera-test") && (48..56).contains(&section) {
+        let dma_end = if cfg!(feature = "isp-test") { 64 } else { 56 };
+        let attrs = if cfg!(feature = "camera-test") && (48..dma_end).contains(&section) {
             // Camera DMA buffers: normal noncacheable, shareable, execute-never.
             (1 << 12) | (1 << 4)
         } else if section < 64 {

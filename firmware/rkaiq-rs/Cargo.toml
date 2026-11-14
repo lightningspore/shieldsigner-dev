@@ -9,7 +9,8 @@ name = "shieldsigner_rkaiq"
 
 [features]
 default = ["diagnostics"]
-diagnostics = ["dep:serde_json", "dep:libc"]
+diagnostics = ["profiles", "serde_json/std", "dep:libc"]
+profiles = ["dep:serde_json"]
 
 [[bin]]
 name = "camera-probe"
@@ -28,7 +29,7 @@ required-features = ["diagnostics"]
 
 [dependencies]
 libm = "=0.2.16"
-serde_json = { version = "1", optional = true }
+serde_json = { version = "1", optional = true, default-features = false, features = ["alloc"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 libc = { version = "0.2", optional = true }

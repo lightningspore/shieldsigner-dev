@@ -29,6 +29,6 @@ Do not begin Phase 4 until the Phase 3 hardware evidence covers benchmark, timer
 - Timer path uses CNTP and accepts secure/nonsecure physical timer INTIDs 29/30. One-second hardware run counted 999 IRQs against 24,000,004 counter ticks (target 1,000 Hz).
 - UART2 INTID 59 echoes RX bytes solely in the handler; polling RX is compiled out of the cpu-base main loop. A 47-byte host/REF/DUT echo test matched exactly.
 - Heap: monotonic 4 MB region `[0x00400000,0x00800000)`, aligned atomic bump allocation, no reclaim yet. Hardware check allocates and verifies distinct 4 KB/8 KB patterns and rejects an oversized request. IRQ handlers do not allocate.
-- SVC stack top 0x00400000; IRQ stack top 0x003f0000. Image, translation table and BSS constrained below 1 MB by the linker. Provisional camera reservation `[0x03000000,0x04000000)` is 16 MB; actual camera DMA mapping/coherency is Phase 7 work.
+- SVC stack top 0x00400000; IRQ stack top 0x00200000. The unmapped2–3MiB section separates the stacks. Phase8 exposed corruption with the former64KiB spacing; calibrated3A uses larger temporary records. Image, translation table and BSS constrained below 1 MB by the linker. Provisional camera reservation `[0x03000000,0x04000000)` is 16 MB; actual camera DMA mapping/coherency is Phase 7 work.
 
 Build this feature with `uv run --python 3.13 python baremetal/tools/build_hello.py --features cpu-base` (or the mise CPU build task). Default build remains minimal hello. Final combined hardware gate evidence is recorded in NOTES/HISTORY; compilation is not a gate.

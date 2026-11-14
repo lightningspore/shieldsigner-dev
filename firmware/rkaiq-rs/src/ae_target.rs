@@ -46,7 +46,7 @@ pub fn select(
     };
     Ok(target.clamp(1., 255.))
 }
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 pub fn initial_from_scene(scene: &serde_json::Value) -> Result<f32, alloc::string::String> {
     extern crate alloc;
     use alloc::{string::String, vec::Vec};
@@ -91,7 +91,7 @@ pub fn initial_from_scene(scene: &serde_json::Value) -> Result<f32, alloc::strin
     )
     .map_err(|_| "AE target inputs outside checked domain".into())
 }
-#[cfg(feature = "diagnostics")]
+#[cfg(any(feature = "diagnostics", feature = "profiles"))]
 extern crate alloc;
 #[cfg(test)]
 mod tests {

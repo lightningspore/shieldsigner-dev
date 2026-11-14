@@ -22,9 +22,10 @@ pub fn descriptor(value: u16, out: &mut [u8; 128]) -> Option<usize> {
             let text: &[u8] = match index {
                 1 => b"ShieldSigner",
                 2 => b"RV1103 USB Console",
-                3 => b"rv1103-dev-001",
+                3 => match option_env!("RV1103_USB_SERIAL") { Some(s) => s.as_bytes(), None => b"rv1103-dev-001" },
                 _ => return None,
             };
+            if text.len() > 48 || !text.is_ascii() { return None; }
             out[0] = (text.len() * 2 + 2) as u8;
             out[1] = 3;
             for (i, c) in text.iter().enumerate() {

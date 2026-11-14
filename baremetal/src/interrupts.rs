@@ -75,6 +75,7 @@ pub unsafe fn start(frequency: u32) {
         write(DIST,0x380+bank*4,u32::MAX);
     }
     for id in [29u32, 30, 59] {
+        if id == 59 && cfg!(feature = "usb-only") { continue; }
         let bank = (id / 32) as usize * 4;
         let mask = 1u32 << (id % 32);
         write(DIST, 0x180 + bank, mask); // disable while configuring
@@ -103,10 +104,13 @@ pub unsafe fn start(frequency: u32) {
     write_volatile(addr_of_mut!(PERIOD), frequency / 1000);
     asm!("mcr p15, 0, {0}, c14, c2, 0", in(reg) frequency/1000, options(nostack));
     asm!("mcr p15, 0, {0}, c14, c2, 1", in(reg) 1u32, options(nostack));
+    #[cfg(not(feature = "usb-only"))]
+    {
     // FIFO trigger one byte, RX interrupt only; all TX remains polled.
     while read(super::UART, 0x14) & 0x40 == 0 {}
     write(super::UART, 8, 3);
     write(super::UART, 4, 1);
+    }
     asm!("dsb sy", "isb", "cpsie i", options(nostack));
 }
 
@@ -216,4 +220,18 @@ pub unsafe fn i2c_irq_enabled(enabled: bool) {
         write(DIST, 0x184, bit);
     }
     asm!("dsb sy", options(nostack));
+}
+
+/// Release UART2 M1 pads42/43 as GPIO inputs before Rust console output.
+/// Closed DDR initialization still prints on UART before this entry point.
+#[cfg(feature = "usb-only")]
+pub fn release_uart_pins() {
+    unsafe {
+        write(super::UART,4,0); // stop UART RX IRQ source
+        write_volatile(0xff3ba800 as *mut u32,0x80000000); // GPIO1 PCLK
+        write_volatile(0xff530008 as *mut u32,0x0c000000); // B2/B3 input
+        write_volatile(0xff538008 as *mut u32,0xff000000); // GPIO1_B2/B3 mux0
+        write_volatile(0xff5381c4 as *mut u32,0x00f00050); // native pullups
+        asm!("dsb sy",options(nostack));
+    }
 }

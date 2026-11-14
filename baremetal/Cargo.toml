@@ -25,6 +25,7 @@ fast-boot = ["runtime-board"]
 # App build retains fast startup without driving a button as a timing probe.
 app-runtime = ["fast-boot"]
 usb-console = ["app-runtime"]
+usb-only = ["usb-console"]
 
 [dependencies]
 shieldsigner-rkaiq = { path = "../firmware/rkaiq-rs", default-features = false, optional = true }

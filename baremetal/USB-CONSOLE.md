@@ -1,6 +1,6 @@
 # RV1103 USB debug console
 
-Work in progress; no hardware pass is claimed yet. The user prioritizes USB
+RAM hardware console gates now pass on DUT0 and DUT1; see evidence/phase-11-usb.json. Standalone SD USB boot and the SeedSigner app remain open. The user prioritizes USB
 REPL/script transfer so LCD/button pins can be released from UART debug. The
 third app target is a Luckfox Pico Mini A (RV1103, no onboard flash), booting
 microSD; retain the existing REF/DUT wired fixture during development.
@@ -48,3 +48,17 @@ Control-transfer review: the driver's actual phase transitions live in
 `src/usb_control.rs`; five host tests exercise IN/OUT data, two/three-stage
 status, incorrect direction and duplicate-not-ready rejection. These tests
 complement the descriptor checks and do not prove hardware enumeration.
+
+Hardware qualification: native macOS CDC, script upload,46593 exact output bytes
+(up to32768 per block), full peripheral/two-camera/GC gate, Ctrl-C from a running
+loop and3 port reopens passed on DUT0. DUT1's distinct rv1103-dut1 identity,
+USB-only UART-pad release readbacks,3 reopens/Ctrl-C and USB warm reset to maskrom
+passed. USB-only releases pads at Rust entry; unchanged DDR still prints earlier.
+Initial IN stall was fixed by configuring bulk/interrupt endpoints at host
+SET_CONFIGURATION rather than before the initial bus reset.
+
+For DUT1, build with `mise run baremetal:usb:dut1:build`, then (when in maskrom)
+`mise run baremetal:usb:dut1:ram:gate`. Both USB devices can coexist; pass
+`--port /dev/cu.usbmodemrv1103_dut11` to the uploader/debug gate for DUT1.
+The USB debug gate's `--reset-to-maskrom 101` proves USB Ctrl-] recovery.
+Host loader location selection is documented in patches/README.md.

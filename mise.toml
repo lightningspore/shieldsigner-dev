@@ -1256,3 +1256,19 @@ run = ["mise exec rust@1.93.1 -- rustc --edition 2021 --test baremetal/src/usb_d
 [tasks."baremetal:usb:console"]
 description = "Run a script through the development USB CDC console (script path argument)"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py"
+
+[tasks."baremetal:usb:ram:gate"]
+description = "Load experimental USB console into maskrom DUT RAM and capture UART startup"
+run = "uv run --python 3.13 python baremetal/tools/harness.py --image baremetal/build/hello-download.bin --phase 11 --timeout 20 --pass-pattern '@@USB_READY'"
+
+[tasks."baremetal:usb:debug:gate"]
+description = "Prove USB serial reopen and Ctrl-C recovery from a running Python loop"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_debug_gate.py"
+
+[tasks."baremetal:usb:dut1:build"]
+description = "Build USB-only app target: unique DUT1 USB identity and UART pads released"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features usb-only --usb-serial rv1103-dut1"
+
+[tasks."baremetal:usb:dut1:ram:gate"]
+description = "Load only DUT1 at configured location and prove USB-only console/pad release"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_only_gate.py"

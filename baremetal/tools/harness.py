@@ -4,6 +4,7 @@ import base64
 import datetime
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import shlex
@@ -34,7 +35,11 @@ def main():
     report = {'phase': args.phase, 'scope': 'RAM-only db; no storage commands', 'build': args.build}
     def run(argv, timeout=30):
         started=time.monotonic()
-        r = subprocess.run(argv, cwd=ROOT, capture_output=True, timeout=timeout)
+        env = os.environ.copy()
+        env.pop('RKDEVELOPTOOL_RAM_LOCATION', None)
+        if len(argv) > 1 and str(argv[0]).endswith('/rkdeveloptool') and argv[1] == 'db':
+            env['RKDEVELOPTOOL_RAM_LOCATION'] = cfg['dutUsbLocation']
+        r = subprocess.run(argv, cwd=ROOT, capture_output=True, timeout=timeout, env=env)
         return {'argv': list(map(str, argv)), 'exitCode': r.returncode,
                 'wallTimeSeconds':time.monotonic()-started,
                 'stdout': r.stdout.decode(errors='replace'), 'stderr': r.stderr.decode(errors='replace')}
@@ -59,14 +64,15 @@ def main():
     while True:
         devices = run([tool, 'ld'])
         lines = [x for x in devices['stdout'].splitlines() if 'DevNo=' in x]
-        if devices['exitCode'] == 0 and len(lines) == 1 and re.search(r'Vid=0x2207,Pid=0x110c.*Maskrom', lines[0]):
+        targets = [line for line in lines if re.search(r'Vid=0x2207,Pid=0x110c,LocationID=' + re.escape(cfg['dutUsbLocation']) + r'\s+Maskrom', line)]
+        if devices['exitCode'] == 0 and len(targets) == 1:
             report['maskromBefore'] = devices
             break
         if time.monotonic()-enumeration_start<5:
             time.sleep(0.5)
         else:
             if not replug_reported:
-                print('Replug DUT only, leaving its microSD out; waiting for a single maskrom device.', flush=True)
+                print('Replug DUT only, leaving its microSD out; waiting for configured DUT location in maskrom.', flush=True)
                 replug_reported=True
             time.sleep(5)
     adb = ['adb', '-s', cfg['referenceAdbSerial']]

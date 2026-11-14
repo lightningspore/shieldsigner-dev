@@ -3,6 +3,8 @@ import configparser
 import argparse
 import hashlib
 import json
+import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -10,8 +12,16 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--features', default='')
+parser.add_argument('--usb-serial', help='Development USB identity:1..32 ASCII letters/digits/_/-')
 args = parser.parse_args()
+if args.usb_serial and not re.fullmatch(r'[A-Za-z0-9_-]{1,32}',args.usb_serial):
+    parser.error('Invalid USB serial')
+build_env = os.environ.copy()
+build_env.pop('RV1103_USB_SERIAL',None)
+if args.usb_serial: build_env['RV1103_USB_SERIAL']=args.usb_serial
 features=set(args.features.split(','))
+if 'usb-only' in features:
+    features.add('usb-console')
 if 'usb-console' in features:
     features.add('app-runtime')
 if 'app-runtime' in features:
@@ -34,7 +44,7 @@ rkbin = ROOT/'.tools/rkbin'
 build = ROOT/'build'
 build.mkdir(exist_ok=True)
 def run(argv, cwd=ROOT):
-    subprocess.run(argv, cwd=cwd, check=True)
+    subprocess.run(argv, cwd=cwd, check=True, env=build_env)
 if features & {'runtime-repl','runtime-board'}:
     revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT/'.tools/micropython',text=True).strip()
     if revision!='78ff170de9e32c79db6e64d3e33d2bd60002bdcd':
@@ -70,5 +80,6 @@ shutil.copyfile(rkbin/'hello-download.bin', build/'hello-download.bin')
     'algorithmSources': {str(p.relative_to(ROOT.parent)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in [ROOT.parent/'firmware/rkaiq-rs/Cargo.toml', *sorted((ROOT.parent/'firmware/rkaiq-rs/src').glob('*.rs'))]} if 'isp' in args.features or 'runtime-board' in features else {},
     'runtime':runtime_info,
+    'usbSerial':(args.usb_serial or 'rv1103-dev-001') if 'usb-console' in features else None,
 },indent=2)+'\n')
 print('Built',build/'hello-download.bin')

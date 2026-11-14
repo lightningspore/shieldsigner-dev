@@ -97,6 +97,7 @@ _start:
 const UART: usize = 0xff4c0000;
 
 fn put(bytes: &[u8]) {
+    if cfg!(feature = "usb-only") { return; }
     #[cfg(feature = "runtime-board")]
     if runtime::QUIET.load(core::sync::atomic::Ordering::Relaxed) {
         return;
@@ -111,6 +112,8 @@ fn put(bytes: &[u8]) {
 
 #[no_mangle]
 extern "C" fn rust_main(entry_low: u32, entry_high: u32) -> ! {
+    #[cfg(feature = "usb-only")]
+    interrupts::release_uart_pins();
     #[cfg(feature = "fast-boot")]
     boot::begin(entry_low, entry_high);
     #[cfg(not(feature = "fast-boot"))]

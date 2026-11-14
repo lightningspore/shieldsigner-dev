@@ -1,0 +1,41 @@
+{
+  "status": "ram-usb-console-and-dut1-pad-release-passed",
+  "scope": "Real DUT0 and DUT1 RAM boots; no storage writes. No SeedSigner app/standalone USB boot claim.",
+  "dut0": {
+    "location": "201",
+    "serial": "rv1103-dev-001",
+    "imageSha256": "ce21ac908037631eadba84405f9d669adfad0f38bb8bf0dca08a995cf712d13e",
+    "enumeration": "logs/phase-11/20261114T191709Z",
+    "fullPeripheralCameraGate": "logs/phase-11/usb-20261114T191721Z",
+    "cameraCaptures": 2,
+    "cameraFrameBytes": 460800,
+    "rustHeapAfterCapture": 0,
+    "payloadAudit": "logs/phase-11/usb-20261114T191928Z/payload-audit.json",
+    "payloadBytes": 46593,
+    "largestOutput": 32768,
+    "reopenInterruptGate": "logs/phase-11/debug-20261114T191911Z"
+  },
+  "dut1": {
+    "location": "101",
+    "serial": "rv1103-dut1",
+    "imageSha256": "f2f935184405d4b116e849221e0eb1d448c7fc870ad4443b23a513bc08292793",
+    "usbOnlyGate": "logs/phase-11/dut1-20261114T192133Z",
+    "uartPads": "GPIO inputs, mux0, output0, IER0, IRQ disabled: actual register readbacks",
+    "reopenInterruptResetGate": "logs/phase-11/debug-20261114T192218Z",
+    "currentState": "maskrom after successful USB Ctrl-] recovery; ready for next RAM load",
+    "displayBoard": "User confirmed existing Linux-tested bench240x240 LCD/button board attached",
+    "observer": "DUT0 camera points at DUT1 LCD"
+  },
+  "fix": "Configure non-control endpoint resources after host SET_CONFIGURATION, not before bus reset/connect. Added bulk full-packet ZLP termination.",
+  "limitations": [
+    "USB is serviced in foreground at VM branches/delays/output; native camera/3A blocks polling during acquisition",
+    "Closed DDR init still uses UART before Rust releases pads",
+    "No standalone USB SD image written or verified",
+    "LCD/buttons/app still pending; smartcard software excluded"
+  ],
+  "hostChecks": {
+    "usbDescriptorTests": 3,
+    "usbControlTests": 5,
+    "baremetalTests": 12
+  }
+}

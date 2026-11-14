@@ -1,0 +1,51 @@
+diff --git a/main.cpp b/main.cpp
+index 42bfbab..f509057 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -3140,13 +3140,25 @@ bool handle_command(int argc, char* argv[], CRKScan *pScan)
+ 		return (cnt>0)?true:false;
+ 	}
+ 	
++	// ShieldSigner local host-tool patch: explicit location for RAM download only.
++	const char *location = getenv("RKDEVELOPTOOL_RAM_LOCATION");
++	int selected = 0;
++	if (location) {
++		if (strCmd != "DB") { printf("Location selection permits DB only\n"); return false; }
++		char *end = NULL;
++		unsigned long loc = strtoul(location, &end, 16);
++		if (!*location || !end || *end || loc > 0xffffffffUL) { printf("Invalid location\n"); return false; }
++		selected = pScan->GetPos((UINT)loc);
++		if (selected < 0) { printf("Requested location absent\n"); return false; }
++		printf("Selected RAM download LocationID=%lx\n", loc);
++	}
+ 	if (cnt < 1) {
+ 		ERROR_COLOR_ATTR;
+ 		printf("Did not find any rockusb device, please plug device in!");
+ 		NORMAL_COLOR_ATTR;
+ 		printf("\r\n");
+ 		return bSuccess;
+-	} else if (cnt > 1) {
++	} else if (cnt > 1 && !location) {
+ 		ERROR_COLOR_ATTR;
+ 		printf("Found too many rockusb devices, please plug devices out!");
+ 		NORMAL_COLOR_ATTR;
+@@ -3154,7 +3166,7 @@ bool handle_command(int argc, char* argv[], CRKScan *pScan)
+ 		return bSuccess;
+ 	}
+ 
+-	bRet = pScan->GetDevice(dev, 0);
++	bRet = pScan->GetDevice(dev, selected);
+ 	if (!bRet) {
+ 		ERROR_COLOR_ATTR;
+ 		printf("Getting information about rockusb device failed!");
+@@ -3163,6 +3175,10 @@ bool handle_command(int argc, char* argv[], CRKScan *pScan)
+ 		return bSuccess;
+ 	}
+ 
++	if (location && (dev.usVid != 0x2207 || dev.usPid != 0x110c || dev.emUsbType != RKUSB_MASKROM)) {
++		printf("Selected target is not RV1103 maskrom\n"); return false;
++	}
++
+ 	if(strcmp(strCmd.c_str(), "RD") == 0) {
+ 		if ((argc != 2) && (argc != 3))
+ 			printf("Parameter of [RD] command is invalid, please check help!\r\n");

@@ -32,6 +32,7 @@ struct State {
     tt: usize,
     line: [u8; 7],
     trace: u32,
+    zlp_pending: bool,
 }
 static mut STATE: State = State {
     ready: false,
@@ -50,6 +51,7 @@ static mut STATE: State = State {
     tt: 0,
     line: [0, 0xc2, 1, 0, 0, 0, 8],
     trace: 0,
+    zlp_pending: false,
 };
 unsafe fn rd(off: usize) -> u32 {
     read_volatile((BASE + off) as *const u32)
@@ -179,9 +181,15 @@ unsafe fn handle_setup(s: &mut State) -> Result<(), &'static str> {
         (0, 9) if value <= 1 && len == 0 => {
             s.configured = value == 1;
             s.opened = false;
-            wr(ENABLE, if s.configured { 0x3b } else { 3 });
             if s.configured {
+                command(0, 9 | (2 << 16), 0, 0, 0)?;
+                configure(3, 3, 16, 0)?;
+                configure(4, 2, 512, 0)?;
+                configure(5, 2, 512, 0)?;
+                wr(ENABLE, 0x3b);
                 transfer(s, 4, 1, 512)?;
+            } else {
+                wr(ENABLE, 3);
             }
             s.control = Control::InStatus;
         }
@@ -237,6 +245,7 @@ unsafe fn event(s: &mut State, ev: u32) -> Result<(), &'static str> {
                 s.rt = 0;
                 s.th = 0;
                 s.tt = 0;
+                s.zlp_pending = false;
                 modify(DCFG, 0x7f << 3, 0);
                 wr(ENABLE, 3);
                 s.control = Control::Setup;
@@ -258,6 +267,7 @@ unsafe fn event(s: &mut State, ev: u32) -> Result<(), &'static str> {
     }
     let ep = ((ev >> 1) & 31) as usize;
     let kind = (ev >> 6) & 15;
+
     if ep >= 6 {
         return Err("usb-unexpected-endpoint");
     }
@@ -321,13 +331,14 @@ unsafe fn pump(s: &mut State) -> Result<(), &'static str> {
     if s.configured && !s.busy[4] && (s.rt + N - s.rh - 1) % N >= 512 {
         transfer(s, 4, 1, 512)?;
     }
-    if s.configured && s.opened && !s.busy[5] && s.tt != s.th {
+    if s.configured && s.opened && !s.busy[5] && (s.tt != s.th || s.zlp_pending) {
         let mut len = 0;
         while len < 512 && s.tt != s.th {
             write_volatile((buffer(5) + len) as *mut u8, s.tx[s.tt]);
             s.tt = (s.tt + 1) % N;
             len += 1;
         }
+        s.zlp_pending = len == 512;
         transfer(s, 5, 1, len)?;
     }
     Ok(())
@@ -386,9 +397,6 @@ pub fn init() -> Result<(), &'static str> {
         command(0, 9, 0, 0, 0)?;
         configure(0, 0, 64, 0)?;
         configure(1, 0, 64, 0)?;
-        configure(3, 3, 16, 0)?;
-        configure(4, 2, 512, 0)?;
-        configure(5, 2, 512, 0)?;
         wr(ENABLE, 3);
         STATE.ready = true;
         modify(DCTL, 0, 1 << 31);
@@ -452,3 +460,5 @@ pub fn write(data: &[u8]) {
     }
     poll();
 }
+
+pub fn is_ready() -> bool { unsafe { read_volatile(core::ptr::addr_of!(STATE.ready)) } }

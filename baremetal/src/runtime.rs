@@ -89,3 +89,19 @@ pub fn run() -> ! {
 mod board;
 #[cfg(feature = "runtime-board")]
 pub use board::{camera_completed, camera_seed, camera_target, camera_validated, QUIET};
+
+#[no_mangle]
+extern "C" fn bm_console_status(field: u32) -> u32 {
+    unsafe {
+        match field {
+            0 => cfg!(feature = "usb-only") as u32,
+            1 => core::ptr::read_volatile(0xff538008 as *const u32) & 0xff00,
+            2 => core::ptr::read_volatile(0xff530008 as *const u32) & 0x0c00,
+            3 => core::ptr::read_volatile(0xff4c0004 as *const u32) & 15,
+            4 => (core::ptr::read_volatile(0xff1f1104 as *const u32) >> 27) & 1,
+            #[cfg(feature = "usb-console")]
+            5 => super::usb::is_ready() as u32,
+            _ => 0,
+        }
+    }
+}

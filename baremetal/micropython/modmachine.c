@@ -9,6 +9,14 @@ extern int bm_i2c_read(uint32_t,uint32_t,uint8_t *,size_t);
 extern int bm_i2c_write(uint32_t,uint32_t,const uint8_t *,size_t);
 extern int bm_spi_transfer(uint32_t,const uint8_t *,uint8_t *,size_t);
 extern uint32_t bm_led_status(uint32_t);
+extern uint32_t bm_console_status(uint32_t);
+static mp_obj_t console_status(void) {
+    static const qstr names[]={MP_QSTR_usb_only,MP_QSTR_uart_pad_mux,MP_QSTR_uart_gpio_output,MP_QSTR_uart_ier,MP_QSTR_uart_irq_enabled,MP_QSTR_usb_ready};
+    mp_obj_t result=mp_obj_new_dict(0);
+    for (size_t i=0;i<6;i++) mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(names[i]),mp_obj_new_int_from_uint(bm_console_status(i)));
+    return result;
+}
+static MP_DEFINE_CONST_FUN_OBJ_0(console_status_obj,console_status);
 static mp_obj_t led_status(void) {
     mp_obj_t result=mp_obj_new_dict(0);
     mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(MP_QSTR_enabled),mp_obj_new_bool(bm_led_status(0)));
@@ -94,6 +102,7 @@ static const mp_rom_map_elem_t machine_globals_table[]={
     {MP_ROM_QSTR(MP_QSTR___name__),MP_ROM_QSTR(MP_QSTR_machine)},
     {MP_ROM_QSTR(MP_QSTR_Pin),MP_ROM_PTR(&pin_type)},
     {MP_ROM_QSTR(MP_QSTR_led_status),MP_ROM_PTR(&led_status_obj)},
+    {MP_ROM_QSTR(MP_QSTR_console_status),MP_ROM_PTR(&console_status_obj)},
     {MP_ROM_QSTR(MP_QSTR_I2C),MP_ROM_PTR(&i2c_type)},
     {MP_ROM_QSTR(MP_QSTR_SPI),MP_ROM_PTR(&spi_type)}};
 static MP_DEFINE_CONST_DICT(machine_globals,machine_globals_table);

@@ -1,0 +1,2583 @@
+{
+  "refPython": "3.12.10",
+  "unicodeVersion": "15.0.0",
+  "cases": [
+    {
+      "input": "",
+      "expected": "",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9",
+      "expected": "e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "e\u0301",
+      "expected": "e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\u334d\u30ac\u30d0\u30f4\u30a1\u3071\u3070\u3050\u309e\u3061\u3062\u5341\u4eba\u5341\u8272",
+      "expected": "\u30e1\u30fc\u30c8\u30eb\u30ab\u3099\u30cf\u3099\u30a6\u3099\u30a1\u306f\u309a\u306f\u3099\u304f\u3099\u309d\u3099\u3061\u3061\u3099\u5341\u4eba\u5341\u8272",
+      "utf8": true
+    },
+    {
+      "input": "\u0000",
+      "expected": "\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061",
+      "expected": "a",
+      "utf8": true
+    },
+    {
+      "input": "\\\\u0061",
+      "expected": "\\a",
+      "utf8": true
+    },
+    {
+      "input": "\\u005cu0061",
+      "expected": "\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\\uZ",
+      "expected": "\\uD800\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\u",
+      "expected": "\\u",
+      "utf8": true
+    },
+    {
+      "input": "\\u123",
+      "expected": "\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\U0001f600",
+      "expected": "\\U0001f600",
+      "utf8": true
+    },
+    {
+      "input": "\\n",
+      "expected": "\\n",
+      "utf8": true
+    },
+    {
+      "input": "abc\\",
+      "expected": "abc\\",
+      "utf8": true
+    },
+    {
+      "input": "\\x41",
+      "expected": "\\x41",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\ufdfa",
+      "expected": "\udfff\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": false
+    },
+    {
+      "input": "\\u0061\ufdfaa\u30ac\\uDFFF\ud83d\ude00\\u0061a\ud83d\ude00",
+      "expected": "a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\u30ab\u3099\udfff\ud83d\ude00aa\ud83d\ude00",
+      "utf8": false
+    },
+    {
+      "input": "\u0000\u0000\\uZ\\uDFFF\\uDFFF\u30ac\\u0061\\uD800\u00e9\\uD800\u0000\ufdfa\\u123\\",
+      "expected": "\u0000\u0000\\uZ\\uDFFF\\uDFFF\u30ab\u3099\\u0061\\uD800e\u0301\\uD800\u0000\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123\\",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\u00e9\\u00e9\u30ac\ud83d\ude00\\u0061U\\uDFFF\\u00e9\\\u00e9",
+      "expected": "e\u0301e\u0301e\u0301\u30ab\u3099\ud83d\ude00aU\udfffe\u0301\\e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\\u00e9\\x20\\u0061\u30ac\\u123\\u00e9\\u0061\u0000\\uZ",
+      "expected": "\\u00e9\\x20\\u0061\u30ab\u3099\\u123\\u00e9\\u0061\u0000\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\uDFFF\\u00e9u\\u0061\ud83d\ude00\ufdfa\ud83d\ude00\u00e9\u0000\\u0061\\x20\u00e9\u00e9",
+      "expected": "a\udfffe\u0301ua\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00e\u0301\u0000a\\x20e\u0301e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\\uD800\ufdfa\ufdfa\\u0061\\x20\ufdfa\\\u30ac\\uDFFF\u30ac\u00e9\\uZ\\uD800",
+      "expected": "\\uD800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\\u30ab\u3099\\uDFFF\u30ab\u3099e\u0301\\uZ\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\u30ac\\uD800a\u0000\\x20\\uD800\ud83d\ude00\ud83d\ude00\\u0061",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099\ud800a\u0000\\x20\ud800\ud83d\ude00\ud83d\ude00a",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\u00e9\u00e9\\u00e9a\\\u0000\\u00e9\u30ac",
+      "expected": "\\uZe\u0301e\u0301\\u00e9a\\\u0000\\u00e9\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\\\\\uDFFF\u30ac\\u0061\\uD800\\u00e9",
+      "expected": "\\\\\udfff\u30ab\u3099a\ud800e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\\uZ\u30acUua\\u123\u00e9\\",
+      "expected": "\\uZ\\uZ\u30ab\u3099Uua\\u123e\u0301\\",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\u0061u\\u0061\\uZu\\\ufdfa",
+      "expected": "\\x20\\u0061u\\u0061\\uZu\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\ufdfa\\u123U\ud83d\ude00\\uD800\u00e9\\u123",
+      "expected": "\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123U\ud83d\ude00\\uD800e\u0301\\u123",
+      "utf8": true
+    },
+    {
+      "input": "u\\u123a\\uZ\\u123\\u00e9",
+      "expected": "u\\u123a\\uZ\\u123\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\u00e9\u0000\\u00e9\\uZ\\uDFFF\\\u0000aa\\uZ\\uD800\\u123",
+      "expected": "\\u00e9\\u00e9\u0000\\u00e9\\uZ\\uDFFF\\\u0000aa\\uZ\\uD800\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ",
+      "expected": "\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00u\\u00e9u\u00e9",
+      "expected": "\ud83d\ude00ue\u0301ue\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\ud83d\ude00\\uZ\\u123\\uZ\u0000\u0000\u00e9\\u00e9\\u123\ufdfa\u30ac\u0000\\u00e9",
+      "expected": "e\u0301\ud83d\ude00\\uZ\\u123\\uZ\u0000\u0000e\u0301\\u00e9\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099\u0000\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\ud83d\ude00\\\\u00e9\\uD800\\u00e9\u30ac\u0000",
+      "expected": "\ud83d\ude00\ud83d\ude00\\e\u0301\ud800e\u0301\u30ab\u3099\u0000",
+      "utf8": false
+    },
+    {
+      "input": "auU\u30ac\\uDFFF\u30acU\\x20\\uD800\u00e9a\\uDFFF",
+      "expected": "auU\u30ab\u3099\udfff\u30ab\u3099U\\x20\ud800e\u0301a\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\ufdfa\\",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\\\uZ\\uZ",
+      "expected": "\\u123\\\\uZ\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\u0000U\\\ufdfa",
+      "expected": "e\u0301\u0000U\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\a\ud83d\ude00\\uZ\\x20U\u30ac\u00e9",
+      "expected": "\\a\ud83d\ude00\\uZ\\x20U\u30ab\u3099e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\u123\ufdfa\u30ac\\u0061\\u00e9\\uZa\\uDFFF\\UU",
+      "expected": "\u0000\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099\\u0061\\u00e9\\uZa\\uDFFF\\UU",
+      "utf8": true
+    },
+    {
+      "input": "U\u0000\\u0061U\\uD800",
+      "expected": "U\u0000aU\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\x20U\ud83d\ude00\u0000\\u123\\u",
+      "expected": "\\x20U\ud83d\ude00\u0000\\u123\\u",
+      "utf8": true
+    },
+    {
+      "input": "\\u123U\u30ac\\",
+      "expected": "\\u123U\u30ab\u3099\\",
+      "utf8": true
+    },
+    {
+      "input": "\\\u0000U\u30ac\u30ac\u00e9\\x20\\uDFFF",
+      "expected": "\\\u0000U\u30ab\u3099\u30ab\u3099e\u0301\\x20\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\ufdfa\\u0061\u00e9\\u00e9\\uDFFF\\x20\u30ac\\x20\u30ac\\u123\\u123\\uDFFF\\x20",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061e\u0301\\u00e9\\uDFFF\\x20\u30ab\u3099\\x20\u30ab\u3099\\u123\\u123\\uDFFF\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\uDFFF\\\\\\u00e9U\u00e9",
+      "expected": "\ud83d\ude00\udfff\\\\e\u0301Ue\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\u0000\\uDFFFUUu\\uZ\u00e9\\u123",
+      "expected": "\u0000\\uDFFFUUu\\uZe\u0301\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\\x20",
+      "expected": "\ud800\\x20",
+      "utf8": false
+    },
+    {
+      "input": "\ud83d\ude00u\\u00e9a\\u0061\u0000\\x20\ud83d\ude00\\u123\ud83d\ude00\u30ac\\u00e9u\u30ac",
+      "expected": "\ud83d\ude00u\\u00e9a\\u0061\u0000\\x20\ud83d\ude00\\u123\ud83d\ude00\u30ab\u3099\\u00e9u\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\\\uD800\\x20",
+      "expected": "\\\ud800\\x20",
+      "utf8": false
+    },
+    {
+      "input": "a\ud83d\ude00\\u0061\\\\u00e9uU\u30ac",
+      "expected": "a\ud83d\ude00a\\e\u0301uU\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\uDFFF\\uDFFF\u30ac\u0000u\u00e9\\uZ\u0000\\u00e9\\uZ",
+      "expected": "\u0000\\uDFFF\\uDFFF\u30ab\u3099\u0000ue\u0301\\uZ\u0000\\u00e9\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\u0000\\\u0000\\u00e9\\uZ",
+      "expected": "\\uDFFF\u0000\\\u0000\\u00e9\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\ufdfa\\\u00e9\\aa",
+      "expected": "e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\e\u0301\\aa",
+      "utf8": true
+    },
+    {
+      "input": "U\\uZ\u0000",
+      "expected": "U\\uZ\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\uD800\ufdfa\\u123",
+      "expected": "\\u0061\\uD800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\uZ\\\ufdfa\\\\uDFFF\\u123\u0000\\uD800\\u0061\\\\uDFFF",
+      "expected": "\\u123\\uZ\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\\\uDFFF\\u123\u0000\\uD800\\u0061\\\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "u\\u0061\ud83d\ude00\u00e9U\u30ac\u00e9\u00e9\u00e9u\\uD800",
+      "expected": "ua\ud83d\ude00e\u0301U\u30ab\u3099e\u0301e\u0301e\u0301u\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\U\\u123\\u00e9\\u123a\\u0061\u00e9",
+      "expected": "\\U\\u123\\u00e9\\u123a\\u0061e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFFaU\\u123\ufdfa\\u0061\ufdfa\u00e9\\uDFFF\\u00e9\u00e9\ufdfa\u0000",
+      "expected": "\\uDFFFaU\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301\\uDFFF\\u00e9e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\u00e9\u00e9\\uZu\\u123\u30ac",
+      "expected": "\\u0061\\u00e9e\u0301\\uZu\\u123\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\u123\\u123\ufdfaa\u30ac\\uDFFF\\u123",
+      "expected": "\u30ab\u3099\\u123\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\u30ab\u3099\\uDFFF\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\u30ac\\u123\\u00e9\\uDFFF\u30aca\\\u30ac",
+      "expected": "\ud83d\ude00\u30ab\u3099\\u123\\u00e9\\uDFFF\u30ab\u3099a\\\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\u00e9\u30ac\ud83d\ude00\u0000\\\\\\x20\ud83d\ude00\ud83d\ude00\ud83d\ude00U",
+      "expected": "\\uZ\\u00e9\u30ab\u3099\ud83d\ude00\u0000\\\\\\x20\ud83d\ude00\ud83d\ude00\ud83d\ude00U",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\u30aca\ud83d\ude00\\uZU\u00e9",
+      "expected": "\\uZ\u30ab\u3099a\ud83d\ude00\\uZUe\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\u00e9\u0000ua\\\u0000\u30ac\\u0061",
+      "expected": "\\x20e\u0301\u0000ua\\\u0000\u30ab\u3099a",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\u30ac\\\\u0061\u0000\\uD800",
+      "expected": "\u30ab\u3099\u30ab\u3099\\a\u0000\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\ufdfa\\x20\\\u00e9\\x20u",
+      "expected": "\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20\\e\u0301\\x20u",
+      "utf8": true
+    },
+    {
+      "input": "a\u0000\u00e9\\uD800\\u00e9\u30ac",
+      "expected": "a\u0000e\u0301\ud800e\u0301\u30ab\u3099",
+      "utf8": false
+    },
+    {
+      "input": "\\u123\ufdfaUu\\u123",
+      "expected": "\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645Uu\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\u0000\\x20u\\u0061\\uD800",
+      "expected": "\\u123\u0000\\x20u\\u0061\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9u\ud83d\ude00",
+      "expected": "e\u0301u\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\u0061\\uZ\\\u00e9",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\\uZ\\e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\ufdfa\u00e9\ud83d\ude00\ud83d\ude00Ua\\",
+      "expected": "e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301\ud83d\ude00\ud83d\ude00Ua\\",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\u30ac\ufdfa\\u00e9",
+      "expected": "\u30ab\u3099\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\x20\\\\u00e9\\\\uZ\\uDFFF\u0000\u00e9\u00e9\ufdfa",
+      "expected": "\\u00e9\\x20\\\\u00e9\\\\uZ\\uDFFF\u0000e\u0301e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\u123",
+      "expected": "\\u123",
+      "utf8": true
+    },
+    {
+      "input": "U\ud83d\ude00\u0000\\u123\u00e9\ufdfa\\uDFFF\u30ac\\uDFFF\\\\u0061\\uD800\\uDFFF\\x20",
+      "expected": "U\ud83d\ude00\u0000\\u123e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uDFFF\u30ab\u3099\\uDFFF\\\\u0061\\uD800\\uDFFF\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\uZ\\x20\u30ac\\uDFFF\\u0061U\\u0061\\x20a",
+      "expected": "\ud83d\ude00\\uZ\\x20\u30ab\u3099\\uDFFF\\u0061U\\u0061\\x20a",
+      "utf8": true
+    },
+    {
+      "input": "\\U\\uZ\\u123\\uD800\u0000",
+      "expected": "\\U\\uZ\\u123\\uD800\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\u00e9\\uDFFF\\uZ\\u00e9\\uDFFFu\\uZ\\uZ\\",
+      "expected": "e\u0301e\u0301\\uDFFF\\uZ\\u00e9\\uDFFFu\\uZ\\uZ\\",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFFaU\\uDFFF",
+      "expected": "\udfffaU\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\\x20a\u0000a\u30ac\u0000\u0000u\u0000\\u00e9",
+      "expected": "\udfff\\x20a\u0000a\u30ab\u3099\u0000\u0000u\u0000e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF",
+      "expected": "\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\\u0061\u00e9\\uD800a\\uDFFF\ufdfa\ufdfa\ufdfa\u00e9\\uDFFF\u30ac",
+      "expected": "ae\u0301\ud800a\udfff\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301\udfff\u30ab\u3099",
+      "utf8": false
+    },
+    {
+      "input": "\ufdfa\\uD800\u0000\\uDFFFU\\uD800\\u00e9\\uD800\u00e9\\u00e9",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud800\u0000\udfffU\ud800e\u0301\ud800e\u0301e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\\u0061\\u00e9\ufdfa\u00e9\\u00e9\u00e9",
+      "expected": "\udfffae\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301e\u0301e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "a\ud83d\ude00\\u00e9",
+      "expected": "a\ud83d\ude00e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\ufdfa\\u0061\\x20u\ufdfa\u0000",
+      "expected": "\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\\x20u\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\u123UUa\u30aca\\x20\\uD800a",
+      "expected": "\\u123UUa\u30ab\u3099a\\x20\\uD800a",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\u0061\\uZa\\u0061",
+      "expected": "\\u0061\\u0061\\uZa\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\uZ\u30ac\\u00e9",
+      "expected": "\\u123\\uZ\u30ab\u3099\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\\ufdfa\\x20\u0000\u30acU\\u0061\u0000\\uDFFFU\u30ac\u0000\u0000",
+      "expected": "\ud83d\ude00\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20\u0000\u30ab\u3099Ua\u0000\udfffU\u30ab\u3099\u0000\u0000",
+      "utf8": false
+    },
+    {
+      "input": "\ud83d\ude00\\uZ\ud83d\ude00\u00e9\\u0061\\x20\\uDFFF\u0000a\\u00e9",
+      "expected": "\ud83d\ude00\\uZ\ud83d\ude00e\u0301\\u0061\\x20\\uDFFF\u0000a\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\\\u0061\\x20a\u00e9",
+      "expected": "\\a\\x20ae\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\uD800\\uD800\u30ac\\u00e9",
+      "expected": "\\x20\ud800\ud800\u30ab\u3099e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\\x20\ufdfa\ud83d\ude00\u0000",
+      "expected": "\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00\u0000",
+      "utf8": true
+    },
+    {
+      "input": "a\\u00e9\\uD800a\\u123\\\ud83d\ude00\\u00e9\\x20",
+      "expected": "a\\u00e9\\uD800a\\u123\\\ud83d\ude00\\u00e9\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\x20\\u0061u\\u0061",
+      "expected": "\ud83d\ude00\\x20aua",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\ud83d\ude00u\\uD800\\uDFFF\u00e9\u00e9",
+      "expected": "a\ud83d\ude00u\ud800\udfffe\u0301e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\u30ac\\uDFFF\\uZaa\\uD800a",
+      "expected": "\u30ab\u3099\\uDFFF\\uZaa\\uD800a",
+      "utf8": true
+    },
+    {
+      "input": "U\\Ua",
+      "expected": "U\\Ua",
+      "utf8": true
+    },
+    {
+      "input": "U\u0000a\\u00e9\ufdfa\\uDFFF\\",
+      "expected": "U\u0000ae\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff\\",
+      "utf8": false
+    },
+    {
+      "input": "\u30ac\\uDFFF\\uZU\\u0061\ufdfa\\u123\u00e9\ufdfa\\u123\\x20UaU",
+      "expected": "\u30ab\u3099\\uDFFF\\uZU\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123\\x20UaU",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uDFFF",
+      "expected": "e\u0301\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\\u00e9a\\u00e9\\uZU\\u123\\",
+      "expected": "\\uDFFF\\u00e9a\\u00e9\\uZU\\u123\\",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\u00e9u",
+      "expected": "\ud83d\ude00e\u0301u",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\\u00e9a\\u00e9\ufdfa\\x20\\uDFFF\\uD800a\ufdfa",
+      "expected": "\\u123\\e\u0301a\\u00e9\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20\\uDFFF\\uD800a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\\\u0061\u0000\u30ac\\\u30ac",
+      "expected": "\\a\u0000\u30ab\u3099\\\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\u0061\\\\u0061\ud83d\ude00\u30ac\u30ac\\uD800\u00e9U\\u123\\",
+      "expected": "\\u0061\\u0061\\\\u0061\ud83d\ude00\u30ab\u3099\u30ab\u3099\\uD800e\u0301U\\u123\\",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfaaa\u0000\\uD800\ufdfa\\\\u123\\",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645aa\u0000\\uD800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\\\u123\\",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\u00e9\\uD800",
+      "expected": "\ud800e\u0301\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\u123\ud83d\ude00\\uDFFF\\\\u00e9\u30ac\\uD800\u0000",
+      "expected": "\\u123\ud83d\ude00\\uDFFF\\\\u00e9\u30ab\u3099\\uD800\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ",
+      "expected": "\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\\uD800a",
+      "expected": "\udfff\ud800a",
+      "utf8": false
+    },
+    {
+      "input": "\\u0061\\x20a\u30ac\\uD800",
+      "expected": "a\\x20a\u30ab\u3099\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\x20\\u0061\u00e9\\x20\\u00e9\\uD800\\u0061",
+      "expected": "\\x20ae\u0301\\x20e\u0301\ud800a",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\\u00e9U\\uZ\\aU",
+      "expected": "\\uDFFF\\u00e9U\\uZ\\aU",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\uD800aa\u00e9\\x20\u30ac\\u0061U\ud83d\ude00\u30ac\\a",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud800aae\u0301\\x20\u30ab\u3099aU\ud83d\ude00\u30ab\u3099\\a",
+      "utf8": false
+    },
+    {
+      "input": "\\\\u00e9\\u\\x20\\u00e9\\u123\\\u30ac",
+      "expected": "\\\\u00e9\\u\\x20\\u00e9\\u123\\\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061U\\x20\\uZ\\x20\\u123\\\\uDFFF\\\\x20\\u123u",
+      "expected": "\\u0061U\\x20\\uZ\\x20\\u123\\\\uDFFF\\\\x20\\u123u",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\ud83d\ude00\\x20u\\x20\\u123\\u123\\u0061",
+      "expected": "\\uDFFF\ud83d\ude00\\x20u\\x20\\u123\\u123\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\u00e9a\\\\uDFFF\u0000\\uD800\u0000",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301a\\\udfff\u0000\ud800\u0000",
+      "utf8": false
+    },
+    {
+      "input": "\\\u00e9\\u123\\u123\\uZ\u0000U\\uD800\\uZ\ud83d\ude00\\x20\\uD800",
+      "expected": "\\e\u0301\\u123\\u123\\uZ\u0000U\\uD800\\uZ\ud83d\ude00\\x20\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "u\ud83d\ude00\u0000\ufdfa\u00e9u\\u123\u30ac\\x20U\ufdfa",
+      "expected": "u\ud83d\ude00\u0000\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301u\\u123\u30ab\u3099\\x20U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\u00e9\\uD800\\\\uD800\\u123\u00e9\\u0061",
+      "expected": "\\u0061e\u0301\\uD800\\\\uD800\\u123e\u0301\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\ufdfa\\u0061\\uDFFFa\u00e9\ud83d\ude00\\u00e9\\x20\u30ac\ufdfa\ud83d\ude00\u30ac",
+      "expected": "\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\udfffae\u0301\ud83d\ude00e\u0301\\x20\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00\u30ab\u3099",
+      "utf8": false
+    },
+    {
+      "input": "uU\\uD800\\u0061\u0000",
+      "expected": "uU\ud800a\u0000",
+      "utf8": false
+    },
+    {
+      "input": "\u30ac\ufdfa\\uDFFF",
+      "expected": "\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff",
+      "utf8": false
+    },
+    {
+      "input": "u\\u0061\u30ac\\u0061\u00e9\u00e9aa\\\\uD800\\uDFFF\\uZ\\u123",
+      "expected": "u\\u0061\u30ab\u3099\\u0061e\u0301e\u0301aa\\\\uD800\\uDFFF\\uZ\\u123",
+      "utf8": true
+    },
+    {
+      "input": "U\ufdfa\\uZ\\u00e9\\x20\\u123\\uD800\\uDFFF\u30acu",
+      "expected": "U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZ\\u00e9\\x20\\u123\\uD800\\uDFFF\u30ab\u3099u",
+      "utf8": true
+    },
+    {
+      "input": "u\u30ac\\x20ua\ufdfa\\x20\\u0061U\\uZ\\",
+      "expected": "u\u30ab\u3099\\x20ua\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20\\u0061U\\uZ\\",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\u30ac",
+      "expected": "\u30ab\u3099\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "U\u00e9\\x20\\u00e9\\\\uDFFF\\uZ\u30ac",
+      "expected": "Ue\u0301\\x20\\u00e9\\\\uDFFF\\uZ\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\u00e9\u00e9\\u00e9\\u00e9\u0000\\\\u00e9",
+      "expected": "\\u123e\u0301e\u0301\\u00e9\\u00e9\u0000\\\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "a\ufdfa\u0000\\u0061",
+      "expected": "a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000a",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9U\u00e9",
+      "expected": "e\u0301Ue\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\x20a\\uZ",
+      "expected": "\\x20a\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "u\\x20\u00e9\u00e9\\u123\ufdfa\u00e9",
+      "expected": "u\\x20e\u0301e\u0301\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00a\\u00e9\ud83d\ude00\u30ac\u0000\ud83d\ude00\\u0061\u30ac\\uD800",
+      "expected": "\ud83d\ude00ae\u0301\ud83d\ude00\u30ab\u3099\u0000\ud83d\ude00a\u30ab\u3099\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\u0061\\uDFFF\\u0061\\u00e9\u30ac\\u0061\\x20\u30acU\\uZ\u0000",
+      "expected": "\\u0061\\uDFFF\\u0061\\u00e9\u30ab\u3099\\u0061\\x20\u30ab\u3099U\\uZ\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\u00e9",
+      "expected": "\\uZ\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\ufdfaau\\uZ\\u123\\u123\ud83d\ude00\u30ac",
+      "expected": "\\u00e9\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645au\\uZ\\u123\\u123\ud83d\ude00\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\u30acaU\\uD800\\uDFFF\\uD800\\uZ\\uDFFFa\\uDFFF",
+      "expected": "\u30ab\u3099aU\\uD800\\uDFFF\\uD800\\uZ\\uDFFFa\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uDFFF\\u123\ufdfa\\u123",
+      "expected": "\\u00e9\\uDFFF\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\u0000\u30ac\\u123U",
+      "expected": "\\uDFFF\u0000\u30ab\u3099\\u123U",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uD800\\\\\ufdfa\\u0061",
+      "expected": "e\u0301\ud800\\\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\u0000\\x20U\\u123\\",
+      "expected": "\\uDFFF\u0000\\x20U\\u123\\",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9U\\u00e9\ufdfa\\x20\\\\x20\\uZa\u30ac\u0000\\uZ\ufdfa\ud83d\ude00",
+      "expected": "e\u0301U\\u00e9\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20\\\\x20\\uZa\u30ab\u3099\u0000\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "u\ud83d\ude00\u0000\\u00e9\\\\uZ\\uZ",
+      "expected": "u\ud83d\ude00\u0000\\u00e9\\\\uZ\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "U\\uDFFFu",
+      "expected": "U\udfffu",
+      "utf8": false
+    },
+    {
+      "input": "\\x20aU\\x20\\x20u\\u123\\uDFFF\\\\x20u",
+      "expected": "\\x20aU\\x20\\x20u\\u123\\uDFFF\\\\x20u",
+      "utf8": true
+    },
+    {
+      "input": "u\\\\x20\u00e9\u00e9\\u0061\u0000\\u123\\uD800",
+      "expected": "u\\\\x20e\u0301e\u0301\\u0061\u0000\\u123\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "u\u0000\\",
+      "expected": "u\u0000\\",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\ud83d\ude00\u00e9\u00e9\\u00e9\\x20\\uDFFF",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00e\u0301e\u0301e\u0301\\x20\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\\u00e9\\\u30ac\\uD800\\u123\u0000\\uD800a\\u0061Uu\\x20",
+      "expected": "\\u00e9\\\u30ab\u3099\\uD800\\u123\u0000\\uD800a\\u0061Uu\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\uDFFF\ufdfau",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645u",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\\u00e9",
+      "expected": "\udfffe\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\\x20\ufdfa\\uDFFF\u30ac",
+      "expected": "\udfff\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff\u30ab\u3099",
+      "utf8": false
+    },
+    {
+      "input": "\u00e9\\u0061\u00e9\ud83d\ude00U\\uD800",
+      "expected": "e\u0301ae\u0301\ud83d\ude00U\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\uZu\u30ac\\uZU\\u0061\ufdfauu\\u0061",
+      "expected": "\\uZu\u30ab\u3099\\uZU\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645uu\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\\u0061\ufdfa\\u0061\u30ac\\u00e9\\uZ\\u123\\u0061\ufdfa\u0000\u0000\\uDFFF\u30ac",
+      "expected": "e\u0301\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\u30ab\u3099\\u00e9\\uZ\\u123\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000\u0000\\uDFFF\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\uD800\\uDFFF\\u123\\x20\\u123\\\\\\uZ\\uDFFFa",
+      "expected": "\\x20\\uD800\\uDFFF\\u123\\x20\\u123\\\\\\uZ\\uDFFFa",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\ufdfaa\\uDFFF\\u00e9\\x20\u0000\\u0061",
+      "expected": "\ud800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\udfffe\u0301\\x20\u0000a",
+      "utf8": false
+    },
+    {
+      "input": "\\u0061\\u0061a\u00e9",
+      "expected": "aaae\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\u30ac\\u00e9\u00e9\ud83d\ude00\u00e9\u0000a\\u00e9u",
+      "expected": "\ud83d\ude00\u30ab\u3099e\u0301e\u0301\ud83d\ude00e\u0301\u0000ae\u0301u",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\x20a\\u123",
+      "expected": "\\u0061\\x20a\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\uDFFFa\\u0061\\u123\u30ac\\uD800\u0000\\uZ\\uZ",
+      "expected": "\\uZ\\uDFFFa\\u0061\\u123\u30ab\u3099\\uD800\u0000\\uZ\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfaU\\\u00e9U\ud83d\ude00\\u00e9a\u30ac\\x20\\x20",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\\e\u0301U\ud83d\ude00e\u0301a\u30ab\u3099\\x20\\x20",
+      "utf8": true
+    },
+    {
+      "input": "uU\\u00e9\\uDFFF\u00e9\\u123\\uZ\ufdfa\u30ac\\uDFFF\\uZ\\uZ\\",
+      "expected": "uU\\u00e9\\uDFFFe\u0301\\u123\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099\\uDFFF\\uZ\\uZ\\",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9U\\u123",
+      "expected": "\\u00e9U\\u123",
+      "utf8": true
+    },
+    {
+      "input": "U\u0000",
+      "expected": "U\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\\uZ\ufdfa\ud83d\ude00U\\uZ\u0000\ufdfa\\uDFFF\\u0061\\uZ\\uZ",
+      "expected": "\\uDFFF\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00U\\uZ\u0000\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uDFFF\\u0061\\uZ\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\u0000a\ud83d\ude00\u00e9\\x20\\x20\ud83d\ude00\\",
+      "expected": "\u0000a\ud83d\ude00e\u0301\\x20\\x20\ud83d\ude00\\",
+      "utf8": true
+    },
+    {
+      "input": "\\uZUUU\\uZ\\u00e9\\x20\u30ac\ud83d\ude00\\\u0000\ud83d\ude00",
+      "expected": "\\uZUUU\\uZ\\u00e9\\x20\u30ab\u3099\ud83d\ude00\\\u0000\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9",
+      "expected": "e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFFUa\\u00e9",
+      "expected": "\udfffUae\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\\u123\\u00e9\\u0061\u30ac\u30ac\ud83d\ude00\\x20\u30ac\\uD800\ufdfa\\\\",
+      "expected": "\\u123\\u00e9\\u0061\u30ab\u3099\u30ab\u3099\ud83d\ude00\\x20\u30ab\u3099\\uD800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\\\",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\uDFFF\u0000\\u0061\\u0061\\x20\\",
+      "expected": "\\uZ\\uDFFF\u0000\\u0061\\u0061\\x20\\",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9uau\\u123\\x20U\u00e9\\uDFFFa\\u123\\\\x20",
+      "expected": "e\u0301uau\\u123\\x20Ue\u0301\\uDFFFa\\u123\\\\x20",
+      "utf8": true
+    },
+    {
+      "input": "u\u0000\u30ac\ud83d\ude00\\x20\\u123\\uD800\\\\u0061U\u00e9\\u0061\\u00e9",
+      "expected": "u\u0000\u30ab\u3099\ud83d\ude00\\x20\\u123\\uD800\\\\u0061Ue\u0301\\u0061\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\uZ\ud83d\ude00\\uDFFF\\u00e9\\\ufdfa\\uD800\\u0061\\\\u123\\",
+      "expected": "\\u123\\uZ\ud83d\ude00\\uDFFF\\u00e9\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uD800\\u0061\\\\u123\\",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\u0061\ufdfa\\uDFFFu\ufdfaU",
+      "expected": "\\uZ\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uDFFFu\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\u0061\\u0061\u30ac\ud83d\ude00\\uDFFF\\uZ\u00e9Uu",
+      "expected": "\u30ab\u3099\\u0061\\u0061\u30ab\u3099\ud83d\ude00\\uDFFF\\uZe\u0301Uu",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\u0061\\u00e9",
+      "expected": "aae\u0301",
+      "utf8": true
+    },
+    {
+      "input": "aa\u00e9\ufdfaa\\\\uDFFF\ufdfa\\u00e9\ufdfa\\uDFFF\u30acu\ud83d\ude00",
+      "expected": "aae\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\\\udfff\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff\u30ab\u3099u\ud83d\ude00",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\\",
+      "expected": "\\uZ\\",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\u123\\x20\ud83d\ude00\\u123U",
+      "expected": "\\uZ\\u123\\x20\ud83d\ude00\\u123U",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\\u00e9U\\uD800\\uDFFF\\u123",
+      "expected": "\\uDFFF\\u00e9U\\uD800\\uDFFF\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\u30ac\u0000U\\u00e9\\u00e9\u30acU\u00e9\\uZ\\x20",
+      "expected": "\\u123\u30ab\u3099\u0000U\\u00e9\\u00e9\u30ab\u3099Ue\u0301\\uZ\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\\u30acU\\u123\\x20\\",
+      "expected": "\u30ab\u3099\\\u30ab\u3099U\\u123\\x20\\",
+      "utf8": true
+    },
+    {
+      "input": "a\u0000\\x20\\u00e9\\x20\u30ac\ufdfa\\uDFFF\\uD800\\u00e9\\uD800\u0000\\u0061",
+      "expected": "a\u0000\\x20e\u0301\\x20\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff\ud800e\u0301\ud800\u0000a",
+      "utf8": false
+    },
+    {
+      "input": "\\uD800u\\\ud83d\ude00\ud83d\ude00\u00e9\ud83d\ude00u\\x20",
+      "expected": "\ud800u\\\ud83d\ude00\ud83d\ude00e\u0301\ud83d\ude00u\\x20",
+      "utf8": false
+    },
+    {
+      "input": "\\\\uZ\ud83d\ude00\ud83d\ude00\ufdfa\\uD800\\x20\\uD800\\\\\ud83d\ude00",
+      "expected": "\\\\uZ\ud83d\ude00\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uD800\\x20\\uD800\\\\\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\ud83d\ude00\\uZ\\u0061\\x20U",
+      "expected": "\\uD800\ud83d\ude00\\uZ\\u0061\\x20U",
+      "utf8": true
+    },
+    {
+      "input": "\\uZU\\\\uZ",
+      "expected": "\\uZU\\\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "U\ufdfa\\u123U\\uDFFF\u30ac",
+      "expected": "U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123U\\uDFFF\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "U\\uD800\\u123a",
+      "expected": "U\ud800\u123a",
+      "utf8": false
+    },
+    {
+      "input": "\u0000\\u0061\u0000a\ud83d\ude00\\uZaau\\",
+      "expected": "\u0000\\u0061\u0000a\ud83d\ude00\\uZaau\\",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uD800\\u123",
+      "expected": "\\u00e9\\uD800\\u123",
+      "utf8": true
+    },
+    {
+      "input": "U",
+      "expected": "U",
+      "utf8": true
+    },
+    {
+      "input": "a\\uD800\\u00e9u\u00e9\u30ac\ud83d\ude00\u30ac\u0000\\uD800\u0000",
+      "expected": "a\ud800e\u0301ue\u0301\u30ab\u3099\ud83d\ude00\u30ab\u3099\u0000\ud800\u0000",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\\\\u0061\\uZ\\uDFFFuu\\u00e9\u00e9\u00e9U",
+      "expected": "\\uZ\\\\u0061\\uZ\\uDFFFuu\\u00e9e\u0301e\u0301U",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\u30ac\u0000U\\x20\\u0061\u00e9\\x20\\x20\\uZ\ufdfa",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099\u0000U\\x20\\u0061e\u0301\\x20\\x20\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\uZ\\uDFFFu\\uZ\\u123\\u00e9",
+      "expected": "\\u0061\\uZ\\uDFFFu\\uZ\\u123\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\\uZ\\x20\\uD800",
+      "expected": "\\uDFFF\\uZ\\x20\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\u00e9",
+      "expected": "\u0000e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\x20a\u0000\ufdfa\u00e9U\\x20\ufdfa\\",
+      "expected": "\u30ab\u3099\\x20a\u0000\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301U\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\",
+      "utf8": true
+    },
+    {
+      "input": "u\\uD800\\x20",
+      "expected": "u\ud800\\x20",
+      "utf8": false
+    },
+    {
+      "input": "\\\\uD800\ufdfa",
+      "expected": "\\\ud800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": false
+    },
+    {
+      "input": "\u00e9\\uDFFF\\uDFFF\\u00e9\ud83d\ude00\\\\uDFFF\\u00e9\ud83d\ude00\\u0061",
+      "expected": "e\u0301\udfff\udfffe\u0301\ud83d\ude00\\\udfffe\u0301\ud83d\ude00a",
+      "utf8": false
+    },
+    {
+      "input": "\\uD800\u30ac\\x20\ufdfa\\uZ\\uD800\u00e9\u0000\ud83d\ude00\ufdfa\u0000\ud83d\ude00\\u0061a",
+      "expected": "\\uD800\u30ab\u3099\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZ\\uD800e\u0301\u0000\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000\ud83d\ude00\\u0061a",
+      "utf8": true
+    },
+    {
+      "input": "\u0000U\\x20\\u00e9\\uZ\ud83d\ude00\\uDFFF",
+      "expected": "\u0000U\\x20\\u00e9\\uZ\ud83d\ude00\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\u00e9",
+      "expected": "e\u0301e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\u30ac\u00e9\\u123a\ud83d\ude00a\\uD800\\uDFFF\\uZ\\uD800\\\ufdfa",
+      "expected": "\\u00e9\u30ab\u3099e\u0301\\u123a\ud83d\ude00a\\uD800\\uDFFF\\uZ\\uD800\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061",
+      "expected": "a",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFFU\u0000\\x20\u30ac\\u0061u",
+      "expected": "\udfffU\u0000\\x20\u30ab\u3099au",
+      "utf8": false
+    },
+    {
+      "input": "\u00e9\\u00e9u\\u0061",
+      "expected": "e\u0301e\u0301ua",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\uZ\u30ac\\uDFFF\\uD800a\u30ac\\u0061\\x20\\\\uD800\u30ac",
+      "expected": "\u0000\\uZ\u30ab\u3099\\uDFFF\\uD800a\u30ab\u3099\\u0061\\x20\\\\uD800\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uZ\u0000\\u00e9\ufdfa",
+      "expected": "\\u00e9\\uZ\u0000\\u00e9\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\uD800\\uZ\\uD800",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uD800\\uZ\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "Uu\u00e9\\u00e9uU\\u00e9\ud83d\ude00\\u123\\\ufdfa\u00e9\u00e9",
+      "expected": "Uue\u0301\\u00e9uU\\u00e9\ud83d\ude00\\u123\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\\u0061",
+      "expected": "e\u0301a",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\\u00e9",
+      "expected": "\udfffe\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\u0000\\x20\u00e9\\uD800\u0000\\uD800\\u123\\uZ\\\u30acUua\ufdfa",
+      "expected": "\u0000\\x20e\u0301\\uD800\u0000\\uD800\\u123\\uZ\\\u30ab\u3099Uua\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\u00e9a\\\ud83d\ude00\\uD800\\uZ\u0000\\u0061\ud83d\ude00",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301a\\\ud83d\ude00\\uD800\\uZ\u0000\\u0061\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\x20\u00e9\\uDFFF\u30ac",
+      "expected": "\ud83d\ude00\\x20e\u0301\udfff\u30ab\u3099",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\ufdfa\\u0061\\\\uZ\ufdfa\\uD800\\uDFFFU\u30acU\\u123\u30ac",
+      "expected": "\\uDFFF\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\\\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uD800\\uDFFFU\u30ab\u3099U\\u123\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\x20\ufdfa\u0000\\x20U\ud83d\ude00\u30acU\u0000",
+      "expected": "\u30ab\u3099\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000\\x20U\ud83d\ude00\u30ab\u3099U\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\uD800\\u0061\ud83d\ude00\ud83d\ude00\\u123a\u30ac",
+      "expected": "\\x20\ud800a\ud83d\ude00\ud83d\ude00\u123a\u30ab\u3099",
+      "utf8": false
+    },
+    {
+      "input": "U\ud83d\ude00\u00e9\\uD800\ud83d\ude00\\u00e9\u00e9\u0000\\uD800\\\\x20\\x20\u00e9\ud83d\ude00",
+      "expected": "U\ud83d\ude00e\u0301\ud800\ud83d\ude00e\u0301e\u0301\u0000\ud800\\\\x20\\x20e\u0301\ud83d\ude00",
+      "utf8": false
+    },
+    {
+      "input": "\ud83d\ude00\\uD800\u30acu\\u00e9\\uDFFF\ufdfa",
+      "expected": "\ud83d\ude00\ud800\u30ab\u3099ue\u0301\udfff\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": false
+    },
+    {
+      "input": "\ufdfa\\x20\ufdfa\u0000\ud83d\ude00\u30ac",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000\ud83d\ude00\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\u0000U\u0000\\uD800\u0000",
+      "expected": "\u0000U\u0000\ud800\u0000",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\\u123\\uD800\\uD800u\\u123\\u\ufdfa\\uu\\u123",
+      "expected": "\\uDFFF\\u123\\uD800\\uD800u\\u123\\u\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uu\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\u30acUu\ufdfa\ufdfa",
+      "expected": "\u30ab\u3099Uu\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\\\u0061\ufdfa\\x20\\",
+      "expected": "\u30ab\u3099\\a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20\\",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\\\uZ\\x20\u00e9\ufdfa\\\\u0061",
+      "expected": "\ud83d\ude00\\\\uZ\\x20e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "u\u30aca\\u0061\\uZ\\u0061\\u123\u00e9",
+      "expected": "u\u30ab\u3099a\\u0061\\uZ\\u0061\\u123e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\uDFFF\ud83d\ude00ua\\x20\\uZ\\uZ\\u00e9\u00e9\u00e9\u00e9\u0000\\uD800",
+      "expected": "\\uZ\\uDFFF\ud83d\ude00ua\\x20\\uZ\\uZ\\u00e9e\u0301e\u0301e\u0301\u0000\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\\x20u\\uZ\\uD800\\u00e9\\x20\\u0061\\uZ\\x20\\uD800\u30ac",
+      "expected": "\\x20u\\uZ\\uD800\\u00e9\\x20\\u0061\\uZ\\x20\\uD800\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\\ufdfa\\uDFFFU\u00e9\\x20\\u123",
+      "expected": "\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uDFFFUe\u0301\\x20\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\aa\\x20\\uZ\ud83d\ude00\\u00e9a\\x20\u30ac\u0000\\u0061",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\aa\\x20\\uZ\ud83d\ude00\\u00e9a\\x20\u30ab\u3099\u0000\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\uD800\u00e9aU\\u0061\\uZ",
+      "expected": "\\uZ\\uD800e\u0301aU\\u0061\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uD800UUa",
+      "expected": "e\u0301\ud800UUa",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFFu\ufdfaU\u00e9",
+      "expected": "\udfffu\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645Ue\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\ud83d\ude00\ud83d\ude00\\u0061\\u00e9",
+      "expected": "\ud83d\ude00\ud83d\ude00ae\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\uD800\\u123\\uDFFFau\\uD800\\uZ\ufdfaUa",
+      "expected": "\ud83d\ude00\\uD800\\u123\\uDFFFau\\uD800\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645Ua",
+      "utf8": true
+    },
+    {
+      "input": "a",
+      "expected": "a",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\uDFFFu\u30ac\\uDFFF\\x20u\u30ac\\",
+      "expected": "a\udfffu\u30ab\u3099\udfff\\x20u\u30ab\u3099\\",
+      "utf8": false
+    },
+    {
+      "input": "\\uD800\\u0061\\u0061\\u123\u00e9\\uZ\\uDFFFUUU\u30ac\u00e9\ud83d\ude00",
+      "expected": "\\uD800\\u0061\\u0061\\u123e\u0301\\uZ\\uDFFFUUU\u30ab\u3099e\u0301\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "U\u30ac\\u00e9",
+      "expected": "U\u30ab\u3099e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\ud83d\ude00a\\uZ\\u00e9\\uZ",
+      "expected": "\u0000\ud83d\ude00a\\uZ\\u00e9\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\u00e9\\uDFFFu\u0000\\uZ",
+      "expected": "e\u0301e\u0301\\uDFFFu\u0000\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "a\u00e9\u0000\\\u00e9",
+      "expected": "ae\u0301\u0000\\e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\uD800a\u30ac\\\\uDFFF\ud83d\ude00",
+      "expected": "\\uZ\\uD800a\u30ab\u3099\\\\uDFFF\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\u123\\",
+      "expected": "\\uZ\\u123\\",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\u00e9\\u00e9\ud83d\ude00\\uZ\u30ac",
+      "expected": "\\x20e\u0301\\u00e9\ud83d\ude00\\uZ\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uZ\\u00e9\u30acU\\u123\ud83d\ude00\\uD800\\uD800\u30ac\u30ac",
+      "expected": "\\u00e9\\uZ\\u00e9\u30ab\u3099U\\u123\ud83d\ude00\\uD800\\uD800\u30ab\u3099\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "ua\u0000\\uDFFF\ufdfa\\uDFFF\u30acaaa\\uDFFF\\",
+      "expected": "ua\u0000\udfff\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff\u30ab\u3099aaa\udfff\\",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\u30ac\u30ac\u30aca\\x20\\uZ\\uDFFF\ufdfa",
+      "expected": "\\uZ\u30ab\u3099\u30ab\u3099\u30ab\u3099a\\x20\\uZ\\uDFFF\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\ufdfa\\uDFFF\\x20\u30ac\\uD800U",
+      "expected": "\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff\\x20\u30ab\u3099\ud800U",
+      "utf8": false
+    },
+    {
+      "input": "\u30ac\ufdfaU\\x20\\uZa\\uZ\\uD800\u00e9\ud83d\ude00\u00e9\u30ac\ufdfa",
+      "expected": "\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\\x20\\uZa\\uZ\\uD800e\u0301\ud83d\ude00e\u0301\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\",
+      "expected": "\ud83d\ude00\\",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uDFFF\\u0061\u30aca\u00e9\\x20\\x20\ufdfa",
+      "expected": "e\u0301\udfffa\u30ab\u3099ae\u0301\\x20\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": false
+    },
+    {
+      "input": "\ud83d\ude00\\u00e9\u0000\\u123",
+      "expected": "\ud83d\ude00\\u00e9\u0000\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\\uZ\u0000",
+      "expected": "e\u0301\\uZ\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800u\u0000",
+      "expected": "\ud800u\u0000",
+      "utf8": false
+    },
+    {
+      "input": "u\\uDFFF\\\\uD800\\u0061\ufdfa\ufdfa\\u123",
+      "expected": "u\\uDFFF\\\\uD800\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\ufdfau\\",
+      "expected": "e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645u\\",
+      "utf8": true
+    },
+    {
+      "input": "U",
+      "expected": "U",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\ufdfa\\u0061\ufdfa\\uD800u\ufdfa\u0000\\\\uZ\\uD800\\",
+      "expected": "e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uD800u\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000\\\\uZ\\uD800\\",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\ufdfa\u00e9\\u00e9\\x20",
+      "expected": "\u0000\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301e\u0301\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\uZ\\uD800\\u00e9\\uZ\\uZ\\\u00e9\\uZ\\u00e9\ud83d\ude00\\\\uD800a",
+      "expected": "\\u123\\uZ\\uD800\\u00e9\\uZ\\uZ\\e\u0301\\uZ\\u00e9\ud83d\ude00\\\\uD800a",
+      "utf8": true
+    },
+    {
+      "input": "U\u0000\\uD800\\uZ",
+      "expected": "U\u0000\\uD800\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\uZu\u00e9\\uZ\\",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZue\u0301\\uZ\\",
+      "utf8": true
+    },
+    {
+      "input": "u\\u123\\uZ\\u123U\\uZ\ud83d\ude00U\\x20\\u00e9UUaa",
+      "expected": "u\\u123\\uZ\\u123U\\uZ\ud83d\ude00U\\x20\\u00e9UUaa",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\uZ\\x20\\",
+      "expected": "\\u123\\uZ\\x20\\",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\uZu\\u123\\x20\\uD800\\u00e9\\u00e9\\\\uD800a\ufdfa",
+      "expected": "\ud83d\ude00\\uZu\\u123\\x20\\uD800\\u00e9\\u00e9\\\\uD800a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\uZU\\u00e9UU\\\\\\uZ\\uZ\\uD800\ufdfa",
+      "expected": "\\uZU\\u00e9UU\\\\\\uZ\\uZ\\uD800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\uZ\\uZ\\uDFFFu\u00e9u\\x20\\x20\\uD800\u0000\ud83d\ude00",
+      "expected": "\u0000\\uZ\\uZ\\uDFFFue\u0301u\\x20\\x20\\uD800\u0000\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\u0061\ud83d\ude00\ufdfa\ud83d\ude00\\\u00e9",
+      "expected": "\u0000a\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00\\e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\ufdfa\\uZU\\uZ\\uZ",
+      "expected": "\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZU\\uZ\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\x20\u0000\ud83d\ude00\\uD800\\x20a\ufdfa\ufdfaU\\uDFFF\\u0061",
+      "expected": "\\x20\\x20\u0000\ud83d\ude00\ud800\\x20a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\udfffa",
+      "utf8": false
+    },
+    {
+      "input": "\\uZU\\u00e9\\uDFFF\\uZa\\u0061\\u0061\\uZ\\\u30ac\ufdfa",
+      "expected": "\\uZU\\u00e9\\uDFFF\\uZa\\u0061\\u0061\\uZ\\\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uZ",
+      "expected": "\\u00e9\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\u30ac\\u00e9",
+      "expected": "e\u0301\u30ab\u3099e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "U",
+      "expected": "U",
+      "utf8": true
+    },
+    {
+      "input": "\u0000u\\uZu\\uD800\\uZ\\\\u123\\uD800\\uZ\ud83d\ude00\u30ac\\uZ",
+      "expected": "\u0000u\\uZu\\uD800\\uZ\\\\u123\\uD800\\uZ\ud83d\ude00\u30ab\u3099\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\ufdfa\ufdfa\ud83d\ude00\\u123\u30ac\\u0061\u00e9\\x20U\\u123\\uZ",
+      "expected": "\\u00e9\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00\\u123\u30ab\u3099\\u0061e\u0301\\x20U\\u123\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\ud83d\ude00\u30ac\ud83d\ude00\\uZa",
+      "expected": "\\uDFFF\ud83d\ude00\u30ab\u3099\ud83d\ude00\\uZa",
+      "utf8": true
+    },
+    {
+      "input": "\\\\uDFFF\u0000\u30ac\ud83d\ude00u\\u0061\ud83d\ude00\ud83d\ude00\u30ac\ud83d\ude00u\\uD800",
+      "expected": "\\\udfff\u0000\u30ab\u3099\ud83d\ude00ua\ud83d\ude00\ud83d\ude00\u30ab\u3099\ud83d\ude00u\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\x20\\\\uD800",
+      "expected": "\\x20\\\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\u30ac\\x20\ud83d\ude00\ud83d\ude00U\u30ac",
+      "expected": "\\uZ\u30ab\u3099\\x20\ud83d\ude00\ud83d\ude00U\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\u30acU\\x20\u30ac\ufdfa\\u0061\\uZ\\u00e9\\uD800\\uZ\\uDFFF",
+      "expected": "\\uZ\u30ab\u3099U\\x20\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\\uZ\\u00e9\\uD800\\uZ\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "a",
+      "expected": "a",
+      "utf8": true
+    },
+    {
+      "input": "u\ud83d\ude00\u00e9u",
+      "expected": "u\ud83d\ude00e\u0301u",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9U\u30ac\\u00e9\ud83d\ude00\u00e9a",
+      "expected": "e\u0301U\u30ab\u3099e\u0301\ud83d\ude00e\u0301a",
+      "utf8": true
+    },
+    {
+      "input": "U\\\ud83d\ude00\\x20a\\u123\\x20\u0000\u00e9u\\u0061u\u30ac\\uDFFF",
+      "expected": "U\\\ud83d\ude00\\x20a\\u123\\x20\u0000e\u0301u\\u0061u\u30ab\u3099\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "Uau\ufdfa\\u123\u00e9aa\\U\u30ac\\uDFFF\ufdfa\\u0061",
+      "expected": "Uau\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123e\u0301aa\\U\u30ab\u3099\\uDFFF\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\u0061\u0000\u00e9U\\uDFFF\u0000\ud83d\ude00\\x20\\x20",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\u0000e\u0301U\udfff\u0000\ud83d\ude00\\x20\\x20",
+      "utf8": false
+    },
+    {
+      "input": "\\u0061\\uDFFF\\u123a\\x20\\uDFFF\\x20a\u00e9\ud83d\ude00\\u123\\\ud83d\ude00\ud83d\ude00",
+      "expected": "\\u0061\\uDFFF\\u123a\\x20\\uDFFF\\x20ae\u0301\ud83d\ude00\\u123\\\ud83d\ude00\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\u0000\\uDFFF\\uZ\u0000u\\u00e9\\u123u\u0000\u0000\u00e9\u00e9U",
+      "expected": "\u0000\u0000\\uDFFF\\uZ\u0000u\\u00e9\\u123u\u0000\u0000e\u0301e\u0301U",
+      "utf8": true
+    },
+    {
+      "input": "\u30acua\\uZ\\",
+      "expected": "\u30ab\u3099ua\\uZ\\",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\\ud83d\ude00\u30ac\u30ac\\u00e9\\uZ\\u0061a\\u0061\\u",
+      "expected": "\\uZ\\\ud83d\ude00\u30ab\u3099\u30ab\u3099\\u00e9\\uZ\\u0061a\\u0061\\u",
+      "utf8": true
+    },
+    {
+      "input": "UU\\u123\\u123\\x20\\u123\\u0061",
+      "expected": "UU\\u123\\u123\\x20\\u123\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\ufdfa\\uZ\\uD800UU\\uD800",
+      "expected": "\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZ\\uD800UU\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\\u00e9\ufdfa\u0000",
+      "expected": "\u30ab\u3099\\e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\ud83d\ude00\ud83d\ude00\\u0061",
+      "expected": "\udfff\ud83d\ude00\ud83d\ude00a",
+      "utf8": false
+    },
+    {
+      "input": "\\uD800aa\\u00e9\ufdfa\\uZ\\\ud83d\ude00\\u123\\u123",
+      "expected": "\\uD800aa\\u00e9\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZ\\\ud83d\ude00\\u123\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\u123a\\u123\ufdfaua\\u00e9\\x20U\\uDFFF\ud83d\ude00U\\u00e9",
+      "expected": "\ud83d\ude00\\u123a\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645ua\\u00e9\\x20U\\uDFFF\ud83d\ude00U\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\x20\\uD800\ud83d\ude00u\\u0061\\u0061\ud83d\ude00\\u00e9",
+      "expected": "\\x20\\x20\ud800\ud83d\ude00uaa\ud83d\ude00e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\\x20\ufdfa\ud83d\ude00",
+      "expected": "\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\U\\uZu\\u00e9U\u00e9\\uD800\u0000\u30ac",
+      "expected": "\\x20\\U\\uZu\\u00e9Ue\u0301\\uD800\u0000\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\ufdfa\\uZ",
+      "expected": "\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\uZU\\uDFFF\ud83d\ude00\\u0061",
+      "expected": "\\uZU\\uDFFF\ud83d\ude00\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\\ufdfa",
+      "expected": "\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "a\\\\x20",
+      "expected": "a\\\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\\u\\u00e9\\uDFFF\u00e9",
+      "expected": "\\u\\u00e9\\uDFFFe\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\u30ac\u00e9\\\u30ac\\uZ\\uDFFF\u00e9\u0000\u30ac\ufdfa\\u00e9",
+      "expected": "\\x20\u30ab\u3099e\u0301\\\u30ab\u3099\\uZ\\uDFFFe\u0301\u0000\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\\ufdfaU\\uD800\\uDFFFa\\u0061U\u0000\\\\x20\\x20",
+      "expected": "\\u123\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\\uD800\\uDFFFa\\u0061U\u0000\\\\x20\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\ufdfa\\u00e9\ud83d\ude00\\\\uD800\u0000\\u0061\\u123\\uZ\\uD800a\u00e9",
+      "expected": "\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u00e9\ud83d\ude00\\\\uD800\u0000\\u0061\\u123\\uZ\\uD800ae\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\u0000\\u0061a\u0000",
+      "expected": "e\u0301\u0000aa\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\ud83d\ude00\ud83d\ude00a\\uDFFFU\\uZ\u30ac\\uZ\\u123\\uD800a\u0000",
+      "expected": "\u0000\ud83d\ude00\ud83d\ude00a\\uDFFFU\\uZ\u30ab\u3099\\uZ\\u123\\uD800a\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFFu\u30ac\u30ac\u0000\\uDFFFa\u30ac\ud83d\ude00u\\uDFFF\\uD800\\uD800\ufdfa",
+      "expected": "\udfffu\u30ab\u3099\u30ab\u3099\u0000\udfffa\u30ab\u3099\ud83d\ude00u\udfff\ud800\ud800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": false
+    },
+    {
+      "input": "U\\u0061",
+      "expected": "Ua",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\",
+      "expected": "\u0000\\",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\uD800\\u0061",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud800a",
+      "utf8": false
+    },
+    {
+      "input": "a",
+      "expected": "a",
+      "utf8": true
+    },
+    {
+      "input": "\\\ufdfa\ud83d\ude00\ufdfaU\\\\uD800",
+      "expected": "\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\\\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\ud83d\ude00",
+      "expected": "\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "a\u00e9\\u123uua\u30ac\ud83d\ude00\u30ac\\uZ\u30ac\ud83d\ude00\\uD800\\u0061",
+      "expected": "ae\u0301\\u123uua\u30ab\u3099\ud83d\ude00\u30ab\u3099\\uZ\u30ab\u3099\ud83d\ude00\\uD800\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\u0000",
+      "expected": "e\u0301\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\u0000U\ufdfa\\uZ\\uDFFF\ud83d\ude00\u30ac\\u123a\\u0061",
+      "expected": "\u0000U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZ\\uDFFF\ud83d\ude00\u30ab\u3099\\u123a\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\u123\u30ac\u00e9\ud83d\ude00\u0000\\u00e9",
+      "expected": "\\u00e9\\u123\u30ab\u3099e\u0301\ud83d\ude00\u0000\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\uZUa\ufdfaU\\u0061",
+      "expected": "\\uZUa\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\ud83d\ude00a\u0000",
+      "expected": "a\ud83d\ude00a\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\ufdfa\\u0061\u00e9\u30ac\u30ac\\uDFFF\\u123U\u30ac\ud83d\ude00\\u123\\uD800",
+      "expected": "\\u00e9\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061e\u0301\u30ab\u3099\u30ab\u3099\\uDFFF\\u123U\u30ab\u3099\ud83d\ude00\\u123\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "u\\uD800\\",
+      "expected": "u\ud800\\",
+      "utf8": false
+    },
+    {
+      "input": "\\x20u\ufdfa\\uD800\u0000\\uD800\\u0061",
+      "expected": "\\x20u\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud800\u0000\ud800a",
+      "utf8": false
+    },
+    {
+      "input": "\ud83d\ude00\\u123U\\uZuu\ufdfa\\u00e9\\u123",
+      "expected": "\ud83d\ude00\\u123U\\uZuu\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u00e9\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfaU\ufdfa\ud83d\ude00\u0000au\u0000u\\u00e9a",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00\u0000au\u0000ue\u0301a",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\uD800a\\u123\ufdfa\\x20",
+      "expected": "\\u0061\\uD800a\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\ufdfaau\\u00e9a\\u123\\u123\ud83d\ude00\ufdfa\\u00e9\ufdfa\ud83d\ude00",
+      "expected": "\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645au\\u00e9a\\u123\\u123\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u00e9\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "a\\u00e9\u0000\u00e9\\x20\u0000a\\u0061\ud83d\ude00\\u0061\\u123\\u00e9",
+      "expected": "a\\u00e9\u0000e\u0301\\x20\u0000a\\u0061\ud83d\ude00\\u0061\\u123\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\\ud83d\ude00\\x20\\u00e9\\uD800a",
+      "expected": "\\\ud83d\ude00\\x20e\u0301\ud800a",
+      "utf8": false
+    },
+    {
+      "input": "\\u123\u30ac\u0000\ud83d\ude00\ufdfa\\u123\\uDFFF\ud83d\ude00\ufdfau",
+      "expected": "\\u123\u30ab\u3099\u0000\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123\\uDFFF\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645u",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\u00e9\\uD800\\uD800",
+      "expected": "\ud83d\ude00e\u0301\ud800\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\uD800\ud83d\ude00\\x20\\u0061\\u0061",
+      "expected": "\ud800\ud83d\ude00\\x20aa",
+      "utf8": false
+    },
+    {
+      "input": "\\\ufdfa",
+      "expected": "\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "U\\u00e9\ufdfa\\uDFFF\u0000\\u0061\\u0061\ufdfa\ud83d\ude00\u30ac",
+      "expected": "Ue\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff\u0000aa\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00\u30ab\u3099",
+      "utf8": false
+    },
+    {
+      "input": "\\u00e9\u0000\\uD800U\\u0061",
+      "expected": "e\u0301\u0000\ud800Ua",
+      "utf8": false
+    },
+    {
+      "input": "\ufdfa\ud83d\ude00\\u\\u00e9\\uZ\\uD800\\uD800",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00\\u\\u00e9\\uZ\\uD800\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\\u",
+      "expected": "\\u",
+      "utf8": true
+    },
+    {
+      "input": "\\\ud83d\ude00\u0000\\uZUa\\uZ\u0000\\uD800UU",
+      "expected": "\\\ud83d\ude00\u0000\\uZUa\\uZ\u0000\\uD800UU",
+      "utf8": true
+    },
+    {
+      "input": "a\ud83d\ude00\\U\\uD800\\uZu",
+      "expected": "a\ud83d\ude00\\U\\uD800\\uZu",
+      "utf8": true
+    },
+    {
+      "input": "U\u0000\\u123\\u123Uu\u00e9\\uDFFF\\x20",
+      "expected": "U\u0000\\u123\\u123Uue\u0301\\uDFFF\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\\u00e9\\x20\\u00e9",
+      "expected": "\ud800e\u0301\\x20e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\u30ac\\uDFFF\ufdfa\u30ac\\uD800\u0000\u00e9\\uZ\ufdfa",
+      "expected": "\u30ab\u3099\\uDFFF\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099\\uD800\u0000e\u0301\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "aa\\x20\\u00e9\\uZ\\uDFFFu",
+      "expected": "aa\\x20\\u00e9\\uZ\\uDFFFu",
+      "utf8": true
+    },
+    {
+      "input": "u",
+      "expected": "u",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061U\\uD800\\\\uD800\u0000\u00e9\\u00e9\\uD800\\\u0000\\uZ",
+      "expected": "\\u0061U\\uD800\\\\uD800\u0000e\u0301\\u00e9\\uD800\\\u0000\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061u\\x20\\uD800\\u0061\ud83d\ude00u",
+      "expected": "au\\x20\ud800a\ud83d\ude00u",
+      "utf8": false
+    },
+    {
+      "input": "\\uD800\u0000",
+      "expected": "\ud800\u0000",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\\uD800\ufdfa\\x20\\u00e9\u0000",
+      "expected": "\udfff\ud800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20e\u0301\u0000",
+      "utf8": false
+    },
+    {
+      "input": "\ud83d\ude00a\\uZ\\\\u00e9\\u00e9U\ud83d\ude00\ufdfa",
+      "expected": "\ud83d\ude00a\\uZ\\\\u00e9\\u00e9U\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\uDFFF\u00e9\\u00e9\\u123a\\uD800\\\u0000\\uD800\ud83d\ude00\\",
+      "expected": "\u0000\udfffe\u0301e\u0301\u123a\ud800\\\u0000\ud800\ud83d\ude00\\",
+      "utf8": false
+    },
+    {
+      "input": "\\uD800\ufdfa\u30ac\u0000uu\\x20\u30ac",
+      "expected": "\ud800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099\u0000uu\\x20\u30ab\u3099",
+      "utf8": false
+    },
+    {
+      "input": "\\u0061\\uD800\\uDFFF\\x20\ufdfa\\uD800u\u30ac\u00e9\\u0061\\u123\\u0061\u00e9\\x20",
+      "expected": "\\u0061\\uD800\\uDFFF\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uD800u\u30ab\u3099e\u0301\\u0061\\u123\\u0061e\u0301\\x20",
+      "utf8": true
+    },
+    {
+      "input": "u\\uZ\\x20u\\\\\ufdfa\\uD800\\\\u00e9\u30ac\\uDFFFU",
+      "expected": "u\\uZ\\x20u\\\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uD800\\\\u00e9\u30ab\u3099\\uDFFFU",
+      "utf8": true
+    },
+    {
+      "input": "U\\u00e9\\uD800\\uD800\\u0061\ud83d\ude00\\uZ\\uZ\\u00e9\\uDFFF\u30ac\ufdfa",
+      "expected": "U\\u00e9\\uD800\\uD800\\u0061\ud83d\ude00\\uZ\\uZ\\u00e9\\uDFFF\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\\uD800\\uDFFF",
+      "expected": "e\u0301\ud800\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\u0000U\ud83d\ude00",
+      "expected": "\udfff\u0000U\ud83d\ude00",
+      "utf8": false
+    },
+    {
+      "input": "\\uD800\\uD800\u00e9\ud83d\ude00\\uD800\\u123\\x20",
+      "expected": "\\uD800\\uD800e\u0301\ud83d\ude00\\uD800\\u123\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfaa\ud83d\ude00\\u00e9\\uDFFF\u0000\ud83d\ude00",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\ud83d\ude00e\u0301\udfff\u0000\ud83d\ude00",
+      "utf8": false
+    },
+    {
+      "input": "\u00e9\\uD800\\x20\u00e9\u0000\u0000\u0000\\u0061\\u123\\\\uDFFF\\u00e9",
+      "expected": "e\u0301\\uD800\\x20e\u0301\u0000\u0000\u0000\\u0061\\u123\\\\uDFFF\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\u0061\\uDFFF",
+      "expected": "e\u0301a\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\\x20\u00e9\u0000U\\uDFFF",
+      "expected": "\\x20e\u0301\u0000U\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\\u\\uD800\u0000\\\u00e9\\uZ\u30ac\ud83d\ude00",
+      "expected": "\\u\\uD800\u0000\\e\u0301\\uZ\u30ab\u3099\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\\\x20\\u00e9\u0000\u30ac\u0000\ufdfaU\u00e9\u0000u",
+      "expected": "\\\\x20e\u0301\u0000\u30ab\u3099\u0000\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645Ue\u0301\u0000u",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\x20\u0000\u30acu\\u00e9\u30ac\\\\u123\\u00e9U\\uDFFF\\x20",
+      "expected": "\u30ab\u3099\\x20\u0000\u30ab\u3099u\\u00e9\u30ab\u3099\\\\u123\\u00e9U\\uDFFF\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\u30ac\\uZ\u00e9\\u123\\u00e9\\u0061\\u00e9\u0000",
+      "expected": "\\x20\u30ab\u3099\\uZe\u0301\\u123\\u00e9\\u0061\\u00e9\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\u0000\u00e9\ufdfa\\u00e9\\u0061\ud83d\ude00\u00e9U\\u123\u00e9\ud83d\ude00",
+      "expected": "e\u0301\u0000e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u00e9\\u0061\ud83d\ude00e\u0301U\\u123e\u0301\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\ufdfa",
+      "expected": "\udfff\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": false
+    },
+    {
+      "input": "\ufdfaa\\uDFFF\\u123",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\\uDFFF\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\ufdfa\u00e9\\u0061\\\\uZ",
+      "expected": "\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301\\u0061\\\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\\uZ\\u00e9u",
+      "expected": "e\u0301\\uZ\\u00e9u",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\u30acu\u00e9",
+      "expected": "a\u30ab\u3099ue\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\uDFFF\\uZ\\u0061u\\uDFFF\ufdfa\u0000\ud83d\ude00u",
+      "expected": "\\u0061\\uDFFF\\uZ\\u0061u\\uDFFF\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000\ud83d\ude00u",
+      "utf8": true
+    },
+    {
+      "input": "\\a\u30acu\u30ac",
+      "expected": "\\a\u30ab\u3099u\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\x20u\\uZ\\u123U\u0000",
+      "expected": "\\x20u\\uZ\\u123U\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\\u0000\u30acU\\x20\\u123\ufdfaa\u00e9\\uDFFF\\uDFFF",
+      "expected": "\\\u0000\u30ab\u3099U\\x20\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645ae\u0301\\uDFFF\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\\u0061\\x20a\ufdfa\\uD800\\u0061\ufdfaUU\u0000UU",
+      "expected": "\ud800a\\x20a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud800a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645UU\u0000UU",
+      "utf8": false
+    },
+    {
+      "input": "\u0000\u30ac\\u123\\u123\\x20\\x20\\x20\ud83d\ude00u\\uDFFF",
+      "expected": "\u0000\u30ab\u3099\\u123\\u123\\x20\\x20\\x20\ud83d\ude00u\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "U\\u0061\\u123U\ufdfaauau\\uD800",
+      "expected": "U\\u0061\\u123U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645auau\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\\a",
+      "expected": "\\a",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\\uZ\u30ac\ud83d\ude00\u00e9",
+      "expected": "e\u0301\\uZ\u30ab\u3099\ud83d\ude00e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\x20",
+      "expected": "\\x20",
+      "utf8": true
+    },
+    {
+      "input": "uU\\uDFFF\\x20\\uZ\\uZ\\u00e9\\\ufdfa\u00e9a\\uZ",
+      "expected": "uU\\uDFFF\\x20\\uZ\\uZ\\u00e9\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301a\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\u00e9\\uZ\u30ac\ufdfa\\u0061\\uZu\u00e9\\\ufdfa\\u123\\u0061",
+      "expected": "\\u123\\u00e9\\uZ\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\\uZue\u0301\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\u0000\\x20\\uD800\ufdfaU\ud83d\ude00a\ufdfa\\u123u\\u123\\",
+      "expected": "\\uDFFF\u0000\\x20\\uD800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\ud83d\ude00a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123u\\u123\\",
+      "utf8": true
+    },
+    {
+      "input": "uU\u30ac",
+      "expected": "uU\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\uDFFF\\u0061",
+      "expected": "a\udfffa",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\u00e9\ufdfa",
+      "expected": "\\uZe\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "Ua\\u00e9\\u0061\\x20\\u0061U\\u0061U",
+      "expected": "Uae\u0301a\\x20aUaU",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\u00e9U\\u0061\\\u30ac",
+      "expected": "\u0000e\u0301Ua\\\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\ufdfa\u00e9",
+      "expected": "a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\u30ac\ud83d\ude00U\\uDFFFa\\uZ\\uDFFFUa",
+      "expected": "\ud83d\ude00\u30ab\u3099\ud83d\ude00U\\uDFFFa\\uZ\\uDFFFUa",
+      "utf8": true
+    },
+    {
+      "input": "U",
+      "expected": "U",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\x20U\ud83d\ude00\\uDFFF\u00e9\u30ac\\u0061a\ud83d\ude00",
+      "expected": "\\x20\\x20U\ud83d\ude00\udfffe\u0301\u30ab\u3099aa\ud83d\ude00",
+      "utf8": false
+    },
+    {
+      "input": "U\\u0061\u00e9",
+      "expected": "Uae\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\uZ\\u00e9",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZ\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "U\\u00e9\ud83d\ude00\\u123\\uD800u\\uDFFF\\\\uDFFF\\u123",
+      "expected": "U\\u00e9\ud83d\ude00\\u123\\uD800u\\uDFFF\\\\uDFFF\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\\ud83d\ude00\\x20\ud83d\ude00\\uDFFF\u30ac\\x20",
+      "expected": "\\\ud83d\ude00\\x20\ud83d\ude00\udfff\u30ab\u3099\\x20",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\u30aca\\u00e9\\u00e9\\x20\u0000a",
+      "expected": "\\uZ\u30ab\u3099a\\u00e9\\u00e9\\x20\u0000a",
+      "utf8": true
+    },
+    {
+      "input": "u\\x20\u30ac\\\\u00e9\\u123a\ud83d\ude00\u30ac\ufdfa",
+      "expected": "u\\x20\u30ab\u3099\\e\u0301\u123a\ud83d\ude00\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\u30ac\u00e9\\u123\\uDFFF\ud83d\ude00\ufdfa\u0000\\x20\\uD800\\U\u30ac",
+      "expected": "\u30ab\u3099\u30ab\u3099e\u0301\\u123\\uDFFF\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000\\x20\\uD800\\U\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\u30acU\\u0061\\u123\\x20",
+      "expected": "\u30ab\u3099U\\u0061\\u123\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\u30ac\\x20\\\\u00e9\\u00e9\u30ac\ud83d\ude00\\u0061\\x20\\uDFFF\\u00e9",
+      "expected": "\\uZ\u30ab\u3099\\x20\\\\u00e9\\u00e9\u30ab\u3099\ud83d\ude00\\u0061\\x20\\uDFFF\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\x20\\u123a\\u00e9\\uZ\\uDFFF\\uD800\\u123\ufdfaU\\uDFFFa",
+      "expected": "\\u0061\\x20\\u123a\\u00e9\\uZ\\uDFFF\\uD800\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\\uDFFFa",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9u\\a\\u\ufdfa\ud83d\ude00",
+      "expected": "\\u00e9u\\a\\u\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\u00e9\\u123\u30ac\\u0061\\uD800Uu\\uZ",
+      "expected": "\u30ab\u3099e\u0301\\u123\u30ab\u3099\\u0061\\uD800Uu\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9",
+      "expected": "e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "U\\u00e9\u00e9\u30ac\ud83d\ude00\ufdfa",
+      "expected": "Ue\u0301e\u0301\u30ab\u3099\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\ufdfa\\u00e9\ufdfa\\u00e9\u00e9\\uDFFF",
+      "expected": "\udfff\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301e\u0301\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\u00e9\\u00e9\\uDFFF\\uD800\ud83d\ude00",
+      "expected": "e\u0301e\u0301\udfff\ud800\ud83d\ude00",
+      "utf8": false
+    },
+    {
+      "input": "\ud83d\ude00\\u0061\ud83d\ude00a\u30ac\\uD800\u30ac\u0000\u30ac\\uD800a\\uD800",
+      "expected": "\ud83d\ude00a\ud83d\ude00a\u30ab\u3099\ud800\u30ab\u3099\u0000\u30ab\u3099\ud800a\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\uZ\u0000\u30ac\\uZ\\x20U\\u00e9u\u0000U\ufdfa\\u00e9\u30ac",
+      "expected": "\\uZ\u0000\u30ab\u3099\\uZ\\x20U\\u00e9u\u0000U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u00e9\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\u00e9\\u0061a\\x20\\x20\\u123\u0000\u00e9\\u123\\x20\\u00e9",
+      "expected": "\u0000e\u0301\\u0061a\\x20\\x20\\u123\u0000e\u0301\\u123\\x20\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF",
+      "expected": "\udfff",
+      "utf8": false
+    },
+    {
+      "input": "U\\x20\\uD800\\\\u0061\ufdfaU\\uD800\u0000\\u0061\\\\\ufdfa\ud83d\ude00",
+      "expected": "U\\x20\ud800\\a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\ud800\u0000a\\\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00",
+      "utf8": false
+    },
+    {
+      "input": "\\uDFFF\u30ac",
+      "expected": "\udfff\u30ab\u3099",
+      "utf8": false
+    },
+    {
+      "input": "\\x20",
+      "expected": "\\x20",
+      "utf8": true
+    },
+    {
+      "input": "u\\\\uDFFF\\\\u00e9a\ud83d\ude00\\uD800",
+      "expected": "u\\\udfff\\e\u0301a\ud83d\ude00\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\\\ufdfa\\uDFFF",
+      "expected": "\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\udfff",
+      "utf8": false
+    },
+    {
+      "input": "U\\uZa\\uZ\\\\u0061",
+      "expected": "U\\uZa\\uZ\\\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\u123",
+      "expected": "\u0000\\u123",
+      "utf8": true
+    },
+    {
+      "input": "U\\uD800\ufdfaau\ufdfa\\x20\\uZ\\x20",
+      "expected": "U\\uD800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645au\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20\\uZ\\x20",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\ud83d\ude00\u30ac\\\u30ac\\uZ\ufdfa\u00e9\u0000U\ud83d\ude00",
+      "expected": "\\uZ\ud83d\ude00\u30ab\u3099\\\u30ab\u3099\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301\u0000U\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\\\uZ\ud83d\ude00u\u00e9",
+      "expected": "\\\\uZ\ud83d\ude00ue\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800u\u0000",
+      "expected": "\ud800u\u0000",
+      "utf8": false
+    },
+    {
+      "input": "\u30ac\\\\u123",
+      "expected": "\u30ab\u3099\\\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\u00e9\\x20\\u123\u00e9\\\\\\u00e9\\u123\u30ac\\uD800",
+      "expected": "\\u00e9e\u0301\\x20\\u123e\u0301\\\\\\u00e9\\u123\u30ab\u3099\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFFu\ud83d\ude00\ufdfa\\u00e9\u30ac\\x20\ufdfa\u30acU\ufdfa\\\\u0061",
+      "expected": "\udfffu\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301\u30ab\u3099\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\a",
+      "utf8": false
+    },
+    {
+      "input": "\ufdfa\\uZ\ufdfa\ud83d\ude00\u00e9\\uZ\\",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00e\u0301\\uZ\\",
+      "utf8": true
+    },
+    {
+      "input": "u",
+      "expected": "u",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\\x20\u00e9u",
+      "expected": "\u0000\\x20e\u0301u",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\ufdfa\\u00e9a",
+      "expected": "\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301a",
+      "utf8": true
+    },
+    {
+      "input": "\\\ufdfa\\u123\\u00e9\\uD800\\u0061\\u0061",
+      "expected": "\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123\\u00e9\\uD800\\u0061\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\\x20aa\ufdfa\\u123u",
+      "expected": "\\u0061\\x20aa\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123u",
+      "utf8": true
+    },
+    {
+      "input": "u\ufdfa\\uZ\u00e9\\uZ\ud83d\ude00\ud83d\ude00\\uZ\u0000\u30ac\u00e9U",
+      "expected": "u\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uZe\u0301\\uZ\ud83d\ude00\ud83d\ude00\\uZ\u0000\u30ab\u3099e\u0301U",
+      "utf8": true
+    },
+    {
+      "input": "aUaa",
+      "expected": "aUaa",
+      "utf8": true
+    },
+    {
+      "input": "\\a\ufdfa\u0000\\u123\u0000U\\uDFFF\\u00e9\\u0061a\\u00e9\\uD800\ufdfa",
+      "expected": "\\a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0000\\u123\u0000U\\uDFFF\\u00e9\\u0061a\\u00e9\\uD800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\u00e9\\u123\\\ufdfa\\u00e9\\u00e9\\uDFFF\\uDFFF",
+      "expected": "\\x20\\u00e9\\u123\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u00e9\\u00e9\\uDFFF\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\\uDFFF\u30ac\\uZ\u30acaa\u0000UUU\ud83d\ude00",
+      "expected": "\\uD800\\uDFFF\u30ab\u3099\\uZ\u30ab\u3099aa\u0000UUU\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\u123\\u00e9\\uDFFF\u30ac\\x20\\uZ\\u123\\u123a\ufdfa\u00e9U\u00e9\\u0061",
+      "expected": "\\u123\\u00e9\\uDFFF\u30ab\u3099\\x20\\uZ\\u123\\u123a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301Ue\u0301\\u0061",
+      "utf8": true
+    },
+    {
+      "input": "\\u123U\\\u0000uU\\uD800\\u123",
+      "expected": "\\u123U\\\u0000uU\\uD800\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\\uZu\u30ac",
+      "expected": "e\u0301\\uZu\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFFau\u0000\ufdfa\u00e9",
+      "expected": "\udfffau\u0000\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "\u00e9u\\uD800\\uDFFF\\x20\ufdfau\\",
+      "expected": "e\u0301u\ud800\udfff\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645u\\",
+      "utf8": false
+    },
+    {
+      "input": "\\\\uD800UuU",
+      "expected": "\\\ud800UuU",
+      "utf8": false
+    },
+    {
+      "input": "aaU\ud83d\ude00\\u00e9u",
+      "expected": "aaU\ud83d\ude00e\u0301u",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\",
+      "expected": "e\u0301\\",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\u30ac\\x20\\uDFFF\u30ac\ufdfaU\ufdfa\u30ac\\\\u123",
+      "expected": "e\u0301\u30ab\u3099\\x20\\uDFFF\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099\\\\u123",
+      "utf8": true
+    },
+    {
+      "input": "\u0000a\\a\\uD800\u0000\\u00e9aa\ud83d\ude00\\u123\\uD800\\uD800\\u00e9",
+      "expected": "\u0000a\\a\\uD800\u0000\\u00e9aa\ud83d\ude00\\u123\\uD800\\uD800\\u00e9",
+      "utf8": true
+    },
+    {
+      "input": "U\\uZ\\\ud83d\ude00u\\u123U\\uD800\\uD800\ud83d\ude00\\uZ",
+      "expected": "U\\uZ\\\ud83d\ude00u\\u123U\\uD800\\uD800\ud83d\ude00\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\uDFFF\u30ac\ufdfa\u00e9a\u30ac",
+      "expected": "\\uZ\\uDFFF\u30ab\u3099\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645e\u0301a\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\\u123u\u0000\\\\uD800U\ufdfa\u30aca\\\ud83d\ude00",
+      "expected": "\\u123u\u0000\\\\uD800U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099a\\\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\\u00e9a\u0000\u30ac\\\u30ac\ud83d\ude00a\\\u30ac\\u00e9\ufdfaU",
+      "expected": "\\x20e\u0301a\u0000\u30ab\u3099\\\u30ab\u3099\ud83d\ude00a\\\u30ab\u3099e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\\uD800\\u00e9",
+      "expected": "e\u0301\ud800e\u0301",
+      "utf8": false
+    },
+    {
+      "input": "a\\uD800\\x20\ufdfa\\x20a\ufdfaU\ufdfaUU",
+      "expected": "a\ud800\\x20\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645UU",
+      "utf8": false
+    },
+    {
+      "input": "\u0000\\uDFFF\ud83d\ude00\\u00e9\u00e9\ud83d\ude00\\u0061\\uZ\\uDFFFu\\u\ufdfa",
+      "expected": "\u0000\\uDFFF\ud83d\ude00\\u00e9e\u0301\ud83d\ude00\\u0061\\uZ\\uDFFFu\\u\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9U\\u00e9U\ufdfa\\x20u\ufdfa\ud83d\ude00u",
+      "expected": "e\u0301Ue\u0301U\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\x20u\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00u",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\u0000a\\u0061U",
+      "expected": "\u30ab\u3099\u0000aaU",
+      "utf8": true
+    },
+    {
+      "input": "a\\\\u123\\\ufdfa",
+      "expected": "a\\\\u123\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\u0000",
+      "expected": "\\uZ\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\u0000\u0000\ud83d\ude00u\\u123\ud83d\ude00",
+      "expected": "\u0000\u0000\ud83d\ude00u\\u123\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\u0000U\u30acU\\u00e9\\x20\\\\uD800\\u00e9\\u123\u0000\\u00e9\u0000",
+      "expected": "\u0000U\u30ab\u3099U\\u00e9\\x20\\\\uD800\\u00e9\\u123\u0000\\u00e9\u0000",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\u30acU",
+      "expected": "a\u30ab\u3099U",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\u00e9\\uD800\\uD800\\uZ\\u00e9\\uZ\\uD800\\u123\ufdfa",
+      "expected": "\\uD800e\u0301\\uD800\\uD800\\uZ\\u00e9\\uZ\\uD800\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\\uD800\u0000\ufdfaU\\uD800\\u123\ud83d\ude00\\uD800\u0000\u00e9\\uD800\\u00e9\u30ac",
+      "expected": "\\uD800\u0000\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\\uD800\\u123\ud83d\ude00\\uD800\u0000e\u0301\\uD800\\u00e9\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "a\ud83d\ude00\\u0061\\u00e9\\uD800",
+      "expected": "a\ud83d\ude00ae\u0301\ud800",
+      "utf8": false
+    },
+    {
+      "input": "\u30ac\\\\x20\\u0061\u30ac\\u123\\uD800\u00e9\\u123\u30ac\\",
+      "expected": "\u30ab\u3099\\\\x20\\u0061\u30ab\u3099\\u123\\uD800e\u0301\\u123\u30ab\u3099\\",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\ufdfa\\\u00e9",
+      "expected": "e\u0301\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\\\uZ\\",
+      "expected": "\ud83d\ude00\\\\uZ\\",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9\\u00e9\\u123\\u0061\\uDFFF\u0000\u0000\ufdfa\\uDFFF\\\u30ac\\u123\u00e9",
+      "expected": "e\u0301\\u00e9\\u123\\u0061\\uDFFF\u0000\u0000\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uDFFF\\\u30ab\u3099\\u123e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "u",
+      "expected": "u",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfaU",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U",
+      "utf8": true
+    },
+    {
+      "input": "\\uDFFF\u30ac\\uZ\ud83d\ude00\\uD800\u00e9a\ufdfa\ufdfa\\uD800a",
+      "expected": "\\uDFFF\u30ab\u3099\\uZ\ud83d\ude00\\uD800e\u0301a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\uD800a",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\ud83d\ude00U\\x20\\u123\\uD800\u30ac\u00e9u\\uD800\\x20",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00U\\x20\\u123\\uD800\u30ab\u3099e\u0301u\\uD800\\x20",
+      "utf8": true
+    },
+    {
+      "input": "a\\u123\\x20\\uD800",
+      "expected": "a\\u123\\x20\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\u00e9\\x20\\x20\u00e9\\uZ\u30ac\u0000\\uZ\\uZ\\u123\u0000\\u0061a",
+      "expected": "\ud83d\ude00e\u0301\\x20\\x20e\u0301\\uZ\u30ab\u3099\u0000\\uZ\\uZ\\u123\u0000\\u0061a",
+      "utf8": true
+    },
+    {
+      "input": "\ufdfa\\u0061\\uZ\\u123\\uZ\\uD800a",
+      "expected": "\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u0061\\uZ\\u123\\uZ\\uD800a",
+      "utf8": true
+    },
+    {
+      "input": "\\uZu\\u123\\uD800a\u00e9\\u0061\ufdfau\ufdfa",
+      "expected": "\\uZu\\u123\\uD800ae\u0301\\u0061\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645u\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\\ufdfaa\ufdfaU\\uDFFF",
+      "expected": "\ud83d\ude00\\\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645U\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\\\u30ac\ud83d\ude00",
+      "expected": "\\\u30ab\u3099\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061\u00e9\\uZ\\u00e9\ufdfa\ufdfaUa",
+      "expected": "\\u0061e\u0301\\uZ\\u00e9\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645Ua",
+      "utf8": true
+    },
+    {
+      "input": "U\\u\\x20\u30ac",
+      "expected": "U\\u\\x20\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\u123\\uDFFF\\u123\u00e9au\\u123\u0000\\u123\\u00e9\\uZ\\uZ",
+      "expected": "\u30ab\u3099\\u123\\uDFFF\\u123e\u0301au\\u123\u0000\\u123\\u00e9\\uZ\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9\\uD800\\uZ\u0000\\uZaaau\ufdfa\ud83d\ude00\ud83d\ude00",
+      "expected": "\\u00e9\\uD800\\uZ\u0000\\uZaaau\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\ud83d\ude00\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\u0000a\\u123\\uZ\\uZ\\u123\ufdfa\\u123\\u00e9\\uDFFF\ud83d\ude00",
+      "expected": "\u0000a\\u123\\uZ\\uZ\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u123\\u00e9\\uDFFF\ud83d\ude00",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\uZ\\\\u00e9\\uZ\\u0061\ud83d\ude00\ufdfa",
+      "expected": "\\uZ\\uZ\\\\u00e9\\uZ\\u0061\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645",
+      "utf8": true
+    },
+    {
+      "input": "\u30ac\\uDFFF\\u00e9\\\\u123\u00e9\\u123U\\uZ",
+      "expected": "\u30ab\u3099\\uDFFF\\u00e9\\\\u123e\u0301\\u123U\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\\u123UU\\uD800\\uDFFF",
+      "expected": "\ud83d\ude00\\u123UU\\uD800\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "\u30acU\\uDFFF\\u0061\\uD800\\u00e9\u0000\u30ac\\uZ",
+      "expected": "\u30ab\u3099U\\uDFFF\\u0061\\uD800\\u00e9\u0000\u30ab\u3099\\uZ",
+      "utf8": true
+    },
+    {
+      "input": "\\uZ\\uD800\ufdfaa\\uDFFF\ud83d\ude00\\uDFFF",
+      "expected": "\\uZ\\uD800\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645a\\uDFFF\ud83d\ude00\\uDFFF",
+      "utf8": true
+    },
+    {
+      "input": "\\aa\u0000a\u0000\\u0061a\\u00e9U\u0000\\uDFFF\\uDFFF",
+      "expected": "\\aa\u0000a\u0000aae\u0301U\u0000\udfff\udfff",
+      "utf8": false
+    },
+    {
+      "input": "\\x20\\uZ\ufdfa\\",
+      "expected": "\\x20\\uZ\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\",
+      "utf8": true
+    },
+    {
+      "input": "\\u0061",
+      "expected": "a",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00\ufdfa\u30ac\u00e9\u30ac",
+      "expected": "\ud83d\ude00\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\u30ab\u3099e\u0301\u30ab\u3099",
+      "utf8": true
+    },
+    {
+      "input": "\u00e9aUa\\uZ\\x20U\u00e9\\uD800",
+      "expected": "e\u0301aUa\\uZ\\x20Ue\u0301\\uD800",
+      "utf8": true
+    },
+    {
+      "input": "\ud83d\ude00ua\\u123\ufdfa\\u00e9\u00e9",
+      "expected": "\ud83d\ude00ua\\u123\u0635\u0644\u0649 \u0627\u0644\u0644\u0647 \u0639\u0644\u064a\u0647 \u0648\u0633\u0644\u0645\\u00e9e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\u00e9a\u30ac\\u123u\u30ac\u0000\u00e9",
+      "expected": "\\u00e9a\u30ab\u3099\\u123u\u30ab\u3099\u0000e\u0301",
+      "utf8": true
+    },
+    {
+      "input": "\\x20\u00e9",
+      "expected": "\\x20e\u0301",
+      "utf8": true
+    }
+  ],
+  "sourceSeedSha256": "cb98d3d8b54b159e1c02a372be261e35d5bf47498eac201763f0de10154b8fff",
+  "scope": "Read-only REF stdlib execution of original Seed.set_passphrase codec expression; public fixtures"
+}

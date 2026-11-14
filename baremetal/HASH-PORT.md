@@ -41,6 +41,7 @@ then ran 500 further VM iterations, computed a fresh hash and returned native he
 to baseline. The host-observed response was about 0.10 s at 0.1 s serial-read
 resolution. The callback itself is not claimed to have that measurement precision.
 
-The original Seed/embit/UR/encryption models, Unicode NFKD, curve operations,
-Controller routing and SD assets remain separate unfinished work. This checkpoint
+Unicode NFKD and the actual embit BIP39 leaf now have separate native gates
+(UNICODE-PORT.md, BIP39-PORT.md, PASSPHRASE-PORT.md). The original Seed/UR/encryption
+models, curve operations, Controller routing and SD assets remain unfinished. This checkpoint
 supplies prerequisites; it does not establish seed generation or signing flows.

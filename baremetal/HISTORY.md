@@ -368,3 +368,15 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
   comparisons across1095035unlisted scalars in83586ms, native heap baseline.
   Combined with published corpus gate, completes supported UTF8 normalization
   conformance coverage. Original chr()-interning test defect documented explicitly.
+
+### 2026-11-14 — Original passphrase codec boundary
+
+- Implemented the original Seed passphrase escape/fallback/NFKD result without
+  pretending to supply full codecs/re.sub. Preserves literal/uppercase/adjacent
+  escapes and whole-input fallback; rejects surrogate results that cannotencodeUTF8.
+- Read-only REF stdlib oracle515public cases;10khost differential cases;47host
+  regressions pass. Native DUT1 passed515REF comparisons and32end-to-end actual
+  BIP39 derivations, heap check, published BIP39 and original QR/scan regressions.
+- FinalDUT1 image60f75644...,RAMload232400,gate232451. Home restored,cameraoff.
+  NoSDwrites. OriginalSeed memory-clearing/ownership policy remains real work;
+  no fake wipe/curve/model/optical-success claim. Detailed PASSPHRASE-PORT.md.

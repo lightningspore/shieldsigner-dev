@@ -343,3 +343,19 @@ rows/381480relations, supported UTF8 scalar normalization meets both published
 conformance requirements. Receipt and UNICODE-PORT.md updated. Native Unicode
 version stays15.0.0 matching REF; no wholeunicodedata/Seed/wallet claim. DUT1 USB
 reader now free. DUT0 idle but qstr-heavy until nextRAMreload.
+
+2026-11-14 exact original passphrase boundary: native helper implements original
+Seed.set_passphrase's regex+raw_unicode_escape/unicode_escape+NFKD result forUTF8
+scalars. Malformed lower-u escapes restore wholeinput; upper-U/other escapes stay
+literal; surrogate outcomes explicitlyfail (CPython cannotencodeUTF8 forseed).
+10khost differential cases+515actualREF stdlib cases;47host tests pass. Native
+DUT1 finalgate232451 passes515REFcases+32fullpassphrase→embitBIP39 derivations,
+heapbaseline. BIP39regression232455,QR/scan232524 pass; Home232458 restored,cameraoff.
+PASSPHRASE-PORT.md and phase-12-passphrase receipt record provenance/scope.
+DUT1 RAMimage60f75644...,load232400passed40senumerationwindow;sharedartifacts target
+app-ui/DUT1. NoSD/CAD/REFstoragewrites. Allconsole readers finished. DUT0 remains
+idle1d46a06native-ui image withqstrs frombadchrtest; nextDUT0 workmustcleanRAMreload.
+Next originalSeed blocker: secure_delete usesCPython ctypes/refcounts and cannot
+be silentlystubbed; need realnative memoryownership/wipe policy. RealBIP39,
+normalization andpassphrase boundaries nowproven, but originalSeed/alternate seeds,
+curves/roots/UR,Controller/Viewrouting andopticalQR success remainunfinished.

@@ -1,0 +1,20 @@
+{
+  "status": "native-ref-passphrase-and-bip39-integration-gates-passed",
+  "scope": "Original UTF8 passphrase boundary only; full Seed model and erasure unported",
+  "device": "DUT1 app-ui",
+  "downloadSha256": "60f75644f9cc78acb8cc716e6322d76bb3d051b9c3557fd7349dca0c37b92a89",
+  "load": "logs/phase-11/dut1-20261114T232400Z",
+  "refPublicCases": 515,
+  "nativeSeedComparisons": 32,
+  "gate": "logs/phase-11/usb-20261114T232451.644096Z",
+  "bip39Regression": "logs/phase-11/usb-20261114T232455.964820Z",
+  "home": "logs/phase-11/usb-20261114T232458.620080Z",
+  "hostTests": 47,
+  "sourceSha256": {
+    "app/seedsigner_port/passphrase.py": "df49a87dd92765698c2f9884bde49b4600fb6a94ca63374d22d8ba9ea4d8dd75",
+    "unicode/passphrase-ref-oracle.json": "6d02879088bc88c6f4fcaaac967f82d9fb9232d7be7c76d2e6759d94993049c2",
+    "micropython/passphrase_gate.py": "0b959126ccb5b5fe377e36cc0c2be1a4aeaefcafc0247a0bfd6759489d9c4cfb",
+    "tests/test_passphrase.py": "848fcc77588b111fcc4f92c78a3d7dc193df25ac31430ed039a0725654224bf1"
+  },
+  "originalQrScanRegression": "logs/phase-11/usb-20261114T232524.877310Z"
+}

@@ -1452,3 +1452,15 @@ run = ["uv run --python 3.13 python baremetal/tools/prepare_bip39.py", "uv run -
 [tasks."baremetal:bip39:dut1:gate"]
 description = "Check actual native BIP39 API against public vectors on DUT1"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/bip39_gate.py --serial rv1103-dut1 --timeout 60"
+
+[tasks."baremetal:passphrase:prepare"]
+description = "Prepare native public passphrase tests from the saved read-only REF oracle"
+run = "uv run --python 3.13 python baremetal/tools/prepare_passphrase_gate.py"
+
+[tasks."baremetal:passphrase:ref:oracle"]
+description = "Capture public passphrase codec fixtures with REF stdlib only, no application imports or writes"
+run = "uv run --python 3.13 python baremetal/tools/capture_passphrase_oracle.py"
+
+[tasks."baremetal:passphrase:dut1:gate"]
+description = "Compare native passphrase escape/NFKD behavior against saved REF results on DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/passphrase_gate.py --serial rv1103-dut1 --timeout 30"

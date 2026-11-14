@@ -1,0 +1,141 @@
+{
+  "status": "native-qr-public-fixtures-passed-optical-unqualified",
+  "deployment": "wired DUT0 headless native-ui, RAM only",
+  "boot": "logs/phase-12/20261114T215241Z",
+  "downloadSha256": "fe1404acdfe7e004292f2640a2ea616624db39ceaf960dd8a64a7d5802208e4e",
+  "nativeQr": {
+    "source": "https://github.com/zxing-cpp/zxing-cpp",
+    "commit": "287c85df6f961c8efbfb5ffd736cd9457b8b890e",
+    "license": "Apache-2.0",
+    "toolchain": {
+      "release": "14.3.rel1",
+      "directory": "arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi",
+      "archive": "arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi.tar.xz",
+      "url": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi.tar.xz",
+      "checksumUrl": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi.tar.xz.sha256asc",
+      "sha256": "30f4d08b219190a37cded6aa796f4549504902c53cfc3c7e044a8490b6eba1f7",
+      "scope": "Local freestanding C++ screen-library build; no system installation or firmware/toolchain replacement"
+    },
+    "archiveSha256": "8d45e91c2eb229ca38aac867ea53475a13cff6159f57efd1146e060461103a78",
+    "bridgeSha256": "b0bbd177e55a25c87f6291d07e243638112f6435960560afa41ac8f1b86ec764",
+    "adaptations": [
+      "No Threads link dependency; single foreground caller",
+      "Automatic scratch vectors in ZXConfig/LocalGrid; no TLS or retained heap"
+    ],
+    "formats": "QR family only; upstream decoding algorithms unchanged"
+  },
+  "gates": {
+    "qrFixturesFinal": {
+      "path": "logs/phase-11/usb-20261114T215316.299710Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/qr_gate.py",
+        "scriptSha256": "520005d497af18a6f06efe73690f97019ed5da3306ed0bff9c24720da41e460e",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "3cdb6689082235dd820ce0ff7c6d4590962828529efe330750814a3cdd980351"
+    },
+    "opticalDisplay": {
+      "path": "logs/phase-11/usb-20261114T215038.039314Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/logs/phase-12/public-qr-lcd.py",
+        "scriptSha256": "23b5266216c59fe094ff6005bd387f21ea3f168c0cc068c5706ced8ef96c78de",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "eab39b15a8ccc5984b81d99c9e60cbe1b3c1a84f9a28978e39d200dcb67012a0"
+    },
+    "opticalAttemptFailed": {
+      "path": "logs/phase-11/usb-20261114T215047.336622Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/logs/phase-12/public-qr-camera.py",
+        "scriptSha256": "bbdc830e206f4b131f5e7107924349f506f970f884fa436b9dc37f2a56292fdb",
+        "completed": false,
+        "error": "No USB script completion marker"
+      },
+      "serialSha256": "d9a351211cc7893b655ab7c91b4d5f21f539d3be7b03b4cb1ca690161cf900e1"
+    },
+    "opticalObserver": {
+      "path": "logs/phase-11/usb-20261114T215123.438611Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/logs/phase-12/native-home-observer.py",
+        "scriptSha256": "445e370f166c34910feef43eef7a47350eb5a9c680c50ec9541fa8ef125c16ac",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "c2f758c5391c9cbb24fd368f18686907394f0afd44a48e897e16587182206a9e"
+    },
+    "homeRestored": {
+      "path": "logs/phase-11/usb-20261114T215212.909795Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/logs/phase-12/restore-home.py",
+        "scriptSha256": "fd72db48a9d3d886aa70b1405b306b68d0e74aeb3148609a9f5be4f6af19514d",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "551caa7e159a0549b0e05f2d9da604829c814d1400b1a535304e47111d6bfaaf"
+    },
+    "previewAndLegacyCaptureRegression": {
+      "path": "logs/phase-11/usb-20261114T215322.984059Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/preview_gate.py",
+        "scriptSha256": "afa5121f1a59db2d18628d090c96dbd928a5dbe11b044bd18060a0b952cbb9b3",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "2fc821ce73938345c57137a3aa212af5c6298b1b1389ac38632953474658df8d"
+    }
+  },
+  "memory": {
+    "firstCallBefore": 3080,
+    "firstCallAfter": 39696,
+    "retainedImmutableTables": 36616,
+    "remainingCasesAndTenRepeats": "constant39696bytes"
+  },
+  "timings": {
+    "smallFixturesMs": [
+      3,
+      13
+    ],
+    "full640x480OpticalAttemptsMs": [
+      220,
+      261
+    ],
+    "scope": "decode call only, not boot or display FPS"
+  },
+  "hostTests": {
+    "task": "baremetal:check",
+    "count": 36,
+    "passed": true
+  },
+  "limits": [
+    "No optical QR pass",
+    "Original DecodeQR/animated classification and ScanView integration incomplete",
+    "DUT1 retains previous continuous-preview app-ui firmware",
+    "No SD update or cold-power timing performed"
+  ]
+}

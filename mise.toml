@@ -1376,3 +1376,11 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:camera:preview:interrupt:gate"]
 description = "Interrupt native acquisition on DUT1 over USB and verify session/heap cleanup"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/preview_interrupt_gate.py"
+
+[tasks."baremetal:qr:prepare"]
+description = "Generate public QR text/binary/rotation/inversion fixtures for DUT"
+run = "uv run --python 3.13 --with qrcode==8.2 python baremetal/tools/prepare_qr_gate.py"
+
+[tasks."baremetal:qr:gate"]
+description = "Decode public QR fixtures in the real native MicroPython runtime on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/qr_gate.py --serial rv1103-dev-001 --timeout 60"

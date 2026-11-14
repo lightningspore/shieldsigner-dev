@@ -195,3 +195,39 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
   (`usb-20261114T214652.585339Z`). Interrupt evidence:
   `logs/phase-12/preview-interrupt-final.txt`. `baremetal:check`:36tests passed.
   Receipt: `evidence/phase-12-continuous-preview.json`.
+
+## 2026-11-14 — Bare-metal ZXing QR payload decoder
+
+- Read the original plan again. The previous preview stage was concrete hardware
+  progress; the full SeedSigner/standalone storage/fast-boot objective remains
+  active. The two-minute preview demo exited after294frames/88036ms, consistent
+  with its physical center/Key3 exit path, and restored Home.
+- Reused the existing Linux decoder source, ZXing-C++3.1.1 commit
+  `287c85df6f961c8efbfb5ffd736cd9457b8b890e`, compiled for Cortex-A7 without
+  Linux. QR readers only, no writers or non-QR formats. Disposable source edits
+  remove the unused Threads link and replace scratch TLS with automatic vectors.
+  Cached upstream sources/license stay intact. C++ exceptions return across a
+  C ABI before MicroPython raises anything; no NLR through C++ frames.
+- Added `qr.decode(packed_luma,width,height)` returning exact raw bytes or None,
+  strict640x480/length bounds, no decoded payload logging. Native app builds link
+  the decoder; source/toolchain/archive manifest is retained and included in the
+  generated firmware manifest. Detailed contract: `qr/README.md`.
+- Real wired DUT0 fixture gate passed text, bytes0..127, NUL/high-bit binary,
+ 90-degree rotation, inversion, blank frame, invalid dimensions/length and ten
+  repeat decodes. Small fixture times3–13ms. Immutable ZXing version/Galois-field
+  tables added36616native heap bytes at the first decode; subsequent cases and
+  repeat decodes stayed flat39696bytes. This is a bounded retained table cost,
+  not a claim that the first decode returns to cold heap baseline.
+- Optical attempt: rendered public `ss-test-001` on DUT1 LCD; DUT0 tried20 real
+  frames. No decode. Each full640x480 attempt took220–261ms. Observer image
+  visibly contains the QR but it is small/oblique/blurred; no optical gate passed
+  and no re-aim requested. The known-good fixture gate is separate evidence.
+  DUT1 Home was restored afterward; no CAD changes, SD writes, REF changes or
+  rewiring. Original DecodeQR classification, animated assembly, ScanScreen/View
+  integration and wallet flows remain incomplete.
+- Exact final headless QR image loaded in `logs/phase-12/20261114T215241Z`;
+  fixture gate `usb-20261114T215316.299710Z` passed. Twelve-frame persistent
+  preview, heap cleanup and following legacy capture also passed with the QR
+  decoder linked (`usb-20261114T215322.984059Z`).36host checks passed.
+  Receipt: `evidence/phase-12-native-qr.json`. DUT1 Home restore receipt:
+  `usb-20261114T215212.909795Z`.

@@ -14,6 +14,9 @@ fn main() {
         println!("cargo:rustc-link-search=native={}",root.join("build/ui").display());
         println!("cargo:rustc-link-lib=static=signerui");
         println!("cargo:rerun-if-changed=build/ui/libsignerui.a");
+        println!("cargo:rustc-link-search=native={}",root.join("build/qr").display());
+        println!("cargo:rustc-link-lib=static=signerqr");
+        println!("cargo:rerun-if-changed=build/qr/libsignerqr.a");
         for name in ["stdc++", "m", "c", "gcc"] {
             let output=std::process::Command::new(&tools).args(["-mthumb","-mcpu=cortex-a7","-mfloat-abi=soft",&format!("-print-file-name=lib{}.a",name)]).output().expect("Run baremetal:cxx:setup");
             assert!(output.status.success());

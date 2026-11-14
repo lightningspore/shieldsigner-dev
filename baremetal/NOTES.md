@@ -245,3 +245,18 @@ Original settings dependency checkpoint: source-derived wholeSettingsConstants/E
 
 
 User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only PCB pads/schematic pin names establish LCD reset51/DC52/backlight43, CS48/SCK49/MOSI50; keys57/59/56/54/58/55/4/53. This differs from earlier assumed bench profile; prior dark-LCD/stuckmask64 observations were wrong-board configuration, not a proved panel fault. Reset DUT1 to release wrong56/57 outputs after restricted Pin API could not quiesce them directly. Added explicit mini-pcb-ui/mini-pcb240, GPIO0_A4 input forKey2 and high backlight43; old profile and fixtureGPIO/SPI APIs reject on app target. Physical white/Home/static-camera images now visible; user ready+k and exercised every key, monitor usb-20261114T211837.412363Z sawmask255 plus real selection/powercallbacks. Native UARTmux/IER/IRQ0; GPIOB3 intentionally backlight output0x800, so old all-input assertion superseded. FinalDUT1boot dut1-20261114T212458Z and gates212601/212602/212603/212604/212605 passed white/Home/guards/RAMsettings/camera→Home restore. Same src/display.rs hash as physical button-tested image. Current source/artifacts app-ui forcorrectMiniPCB; DUT0 still headless observer. Source board unchanged, noSDwrites. Receipt evidence/phase-12-mini-pcb.json; MINI-PCB-IO.md is current pin authority. Background RAMSettings port also passed36hosttests, original numeric/multiselect/update/getter comparisons, real board bounds/atomic native-action rejection and30GC cycles. No persisted settings or device-side effects; source prefix and explicit native policy only. FullController not wired. User now explicitly requests working preview: prioritize persistent sensor/ISP and repeated display updates, not repeated5s captures. Commit checkpoint before streaming work.
+
+2026-11-14 preview/QR continuation: persistent local camera→Mini PCB LCD now
+passed90frames at3.769FPS, with Home/heap recovery and USB Ctrl-C cleanup.
+Checkpoint1b83f0e; receipt evidence/phase-12-continuous-preview.json. Demo exited
+294frames/88036ms via its early button-exit path. New native QR foundation uses
+pinned Linux ZXing-C++3.1.1 (same source, no Linux, automatic scratch vectors).
+Real DUT0 fixture gate usb-20261114T215146.102523Z passes exact text/binary,
+rotation/inversion/bounds/no-code and heap stability after36616B immutable cold
+lookup-table allocation. No real optical QR yet:20 attempts of DUT1 public QR
+failed; observer usb-20261114T215123.438611Z shows small/oblique/blurred panel.
+Full-frame decode220–261ms vs small fixtures3–13ms. DUT1 Home restored, still
+1b83f0e app-ui preview firmware. DUT0 headless native-ui includes QR. Shared
+build artifacts are wired DUT0 identity; do not load them on DUT1. No SD writes.
+Next: actual original DecodeQR/ScanScreen/View model integration and optical
+qualification; do not replace original app workflows with a fixture menu.

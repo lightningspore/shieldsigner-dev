@@ -154,7 +154,7 @@ fn configure_camera() -> Result<(), &'static str> {
         }
     }
 }
-fn stop_stream() -> Result<(), &'static str> {
+pub(crate) fn stop_stream() -> Result<(), &'static str> {
     let result = sc3336::stop();
     receiver::stop();
     delay_us(10000);
@@ -265,7 +265,7 @@ pub fn run() {
                 // Stop on the last frame boundary before printing, avoiding a
                 // mid-packet stop that leaves CSI/VICAP size-error state.
                 if cfg!(feature = "isp-3a-test") && frame == 9 {
-                    if let Err(error) = stop_stream() {
+                    if let Err(error) = pause_or_stop() {
                         let _ = writeln!(
                             super::cpu::Console,
                             "@@FAIL camera-boundary-stop {}\r",
@@ -297,7 +297,7 @@ pub fn run() {
             }
         }
     }
-    if let Err(error) = stop_stream() {
+    if let Err(error) = pause_or_stop() {
         let _ = writeln!(super::cpu::Console, "@@FAIL camera-stop {}\r", error);
         return;
     }
@@ -368,4 +368,42 @@ pub fn next_raw(lines: u32, gain: u32) -> Result<usize, &'static str> {
         (Ok(base), Ok(())) => Ok(base),
         (Err(e), _) | (_, Err(e)) => Err(e),
     }
+}
+
+fn pause_or_stop()->Result<(),&'static str>{
+    #[cfg(feature="runtime-board")]
+    if super::camera_preview::active(){receiver::stop();return Ok(());}
+    stop_stream()
+}
+/// Sensor stays on. Capture three frames after live controls for latch settling;
+/// pause only CIF at the completed boundary, so RAW and NV12 have one owner.
+#[cfg(feature="isp-3a-test")]
+pub fn next_stream_raw(lines:u32,gain:u32)->Result<usize,&'static str>{
+    sc3336::apply_linear(lines,gain)?;
+    unsafe{receiver::resume_capture();}
+    let result=(||{
+        let mut last=0;
+        let mut previous=None;
+        for frame in 0..3 {
+            let start=super::cpu::counter();
+            loop {
+                #[cfg(feature="runtime-board")]
+                {
+                    #[cfg(feature="usb-console")] super::usb::poll();
+                    if super::runtime::interrupt_pending(){return Err("preview-interrupted");}}
+                if super::cpu::counter().wrapping_sub(start)>24_000_000{return Err("preview-raw-timeout");}
+                let status=receiver::status();
+                // The first partial packet after re-arm is discarded; later errors fail.
+                if frame==0 && status & receiver::FIFO_ERRORS!=0 {receiver::acknowledge(status);continue;}
+                if let Some(buffer)=receiver::completed_buffer(status)?{
+                    if previous==Some(buffer){return Err("preview-raw-sequence");}
+                    previous=Some(buffer);last=buffer;receiver::acknowledge(status);break;
+                }
+                if super::cpu::counter().wrapping_sub(start)>24_000_000{return Err("preview-raw-timeout");}
+            }
+        }
+        Ok(BUFFERS[last])
+    })();
+    receiver::stop();
+    result
 }

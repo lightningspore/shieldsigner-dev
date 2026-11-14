@@ -173,7 +173,11 @@ pub(crate) fn write_only(divisor: u32, tx: &[u8]) -> Result<(), &'static str> {
         let mut sent = 0;
         let mut result = Ok(());
         while sent < tx.len() {
-            if read(SPI + 0x1c) < 16 {
+            // Fill the available TX FIFO slots per poll. Polling the timer
+            // and status once per byte otherwise leaves large gaps on LCD SPI.
+            let available = 16usize.saturating_sub(read(SPI + 0x1c) as usize);
+            let end = (sent + available).min(tx.len());
+            while sent < end {
                 write(SPI + 0x400, tx[sent] as u32);
                 sent += 1;
             }

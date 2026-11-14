@@ -1360,3 +1360,19 @@ run = "uv run --python 3.13 python baremetal/tools/prepare_settings_store.py"
 [tasks."baremetal:app:settings:store:gate"]
 description = "Verify real original RAM settings validation/update/getters and explicit unavailable native actions"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/settings_store_gate.py --serial rv1103-dev-001 --timeout 15"
+
+[tasks."baremetal:camera:preview:gate"]
+description = "Check persistent Rust AE/AWB preview and legacy capture cleanup on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/preview_gate.py --serial rv1103-dev-001 --timeout 25"
+
+[tasks."baremetal:camera:preview:lcd:gate"]
+description = "Measure ninety real camera frames through the Mini PCB LCD, then restore Home"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/preview_lcd_gate.py --serial rv1103-dut1 --timeout 60"
+
+[tasks."baremetal:camera:preview:demo"]
+description = "Run two-minute local LCD preview; center or Key3 exits and restores Home"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/preview_demo.py --serial rv1103-dut1 --timeout 140"
+
+[tasks."baremetal:camera:preview:interrupt:gate"]
+description = "Interrupt native acquisition on DUT1 over USB and verify session/heap cleanup"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/preview_interrupt_gate.py"

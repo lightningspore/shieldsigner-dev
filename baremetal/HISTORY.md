@@ -160,3 +160,38 @@ Original settings dependency checkpoint: source-derived wholeSettingsConstants/E
 
 
 User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only PCB pads/schematic pin names establish LCD reset51/DC52/backlight43, CS48/SCK49/MOSI50; keys57/59/56/54/58/55/4/53. This differs from earlier assumed bench profile; prior dark-LCD/stuckmask64 observations were wrong-board configuration, not a proved panel fault. Reset DUT1 to release wrong56/57 outputs after restricted Pin API could not quiesce them directly. Added explicit mini-pcb-ui/mini-pcb240, GPIO0_A4 input forKey2 and high backlight43; old profile and fixtureGPIO/SPI APIs reject on app target. Physical white/Home/static-camera images now visible; user ready+k and exercised every key, monitor usb-20261114T211837.412363Z sawmask255 plus real selection/powercallbacks. Native UARTmux/IER/IRQ0; GPIOB3 intentionally backlight output0x800, so old all-input assertion superseded. FinalDUT1boot dut1-20261114T212458Z and gates212601/212602/212603/212604/212605 passed white/Home/guards/RAMsettings/camera→Home restore. Same src/display.rs hash as physical button-tested image. Current source/artifacts app-ui forcorrectMiniPCB; DUT0 still headless observer. Source board unchanged, noSDwrites. Receipt evidence/phase-12-mini-pcb.json; MINI-PCB-IO.md is current pin authority. Background RAMSettings port also passed36hosttests, original numeric/multiselect/update/getter comparisons, real board bounds/atomic native-action rejection and30GC cycles. No persisted settings or device-side effects; source prefix and explicit native policy only. FullController not wired. User now explicitly requests working preview: prioritize persistent sensor/ISP and repeated display updates, not repeated5s captures. Commit checkpoint before streaming work.
+
+## 2026-11-14 — Persistent camera preview on the actual Mini PCB
+
+- Replaced per-preview32-frame captures with a persistent foreground Rust AE/AWB
+  session. Initial acquisition/ISP setup happens once; subsequent frames retain
+  calibrated control state. Sensor streaming continues while CIF pauses at frame
+  boundaries for exclusive RAW/ISP/LCD ownership. Three raw frames per control
+  update preserve the existing two-frame settling rule.
+- Added MicroPython start/next/stop/status APIs and a frozen cooperative LCD
+  preview adapter, with held-button suppression and center/Key3 exit. Stop/error
+  paths release the native session. Read-only NV12 views expire on the next fetch.
+  Reinit, still capture, duplicate start and settings writes reject while active.
+- Headless DUT0 gate captured twelve changing frames, ~825ms startup and
+  ~150ms subsequent fetches, returned heap to baseline and passed legacy still
+  capture afterward (`usb-20261114T214234.079753Z`). These timings exclude boot.
+- Initial DUT1 physical preview rendered90 changing frames at2.74FPS, ~132ms
+  acquisition and235ms blit. Its first gate's final heap assertion compared a
+  blank native screen with restored Home, so the assertion was corrected to use
+  Home on both sides. TX FIFO burst filling reduced blit to~140ms. The corrected
+  ninety-frame gate passed at3.77FPS (`usb-20261114T214505.329543Z`).
+- USB Ctrl-C initially cleaned up but surfaced OSError and left a pending VM
+  interrupt. The final native path consumes that flag after returning safely from
+  Rust and raises KeyboardInterrupt in C; a USB test verifies heap/session cleanup
+  and executes500 further VM iterations without a second interrupt. No Python
+  exception unwinds through Rust.
+- RAM-only loads on DUT1; no SD writes, REF changes, CAD edits or rewiring.
+  This establishes local continuous preview, not QR decoding, camera entropy,
+  full Scan View integration, optical/color calibration or full app readiness.
+- Final deployed image: `dut1-20261114T214550Z`. Final90-frame/guard/Home/heap
+  gate: `usb-20261114T214622.693828Z`,90frames/23879ms =3.769FPS.
+  Optical observer: `usb-20261114T214626.539661Z`; visible local camera scene
+  on LCD. Frozen preview adapter:6frames/1648ms and clean timeout/Home restore
+  (`usb-20261114T214652.585339Z`). Interrupt evidence:
+  `logs/phase-12/preview-interrupt-final.txt`. `baremetal:check`:36tests passed.
+  Receipt: `evidence/phase-12-continuous-preview.json`.

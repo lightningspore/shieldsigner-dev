@@ -8,7 +8,7 @@ static TARGET: AtomicU32 = AtomicU32::new(0);
 static SEED: AtomicU32 = AtomicU32::new(122);
 static EXPOSURE: AtomicU32 = AtomicU32::new(0);
 static GAIN: AtomicU32 = AtomicU32::new(0);
-fn quiet<T>(f: impl FnOnce() -> T) -> T {
+pub(crate) fn quiet<T>(f: impl FnOnce() -> T) -> T {
     let old = QUIET.swap(true, Ordering::SeqCst);
     let result = f();
     QUIET.store(old, Ordering::SeqCst);
@@ -97,6 +97,7 @@ unsafe extern "C" fn bm_spi_transfer(hz: u32, tx: *const u8, rx: *mut u8, len: u
 }
 #[no_mangle]
 extern "C" fn bm_camera_init() -> i32 {
+    if crate::camera_preview::active(){return -1;}
     let ok = quiet(|| {
         crate::i2c::init().is_ok() && crate::i2c::read_id(0x30, false, false) == Ok(0xcc41)
     });
@@ -109,7 +110,7 @@ extern "C" fn bm_camera_init() -> i32 {
 }
 #[no_mangle]
 extern "C" fn bm_camera_capture() -> i32 {
-    if !INITIALIZED.load(Ordering::Acquire) {
+    if crate::camera_preview::active() || !INITIALIZED.load(Ordering::Acquire) {
         return -1;
     }
     FRAME_READY.store(false, Ordering::Release);
@@ -128,6 +129,7 @@ extern "C" fn bm_camera_setting(id: i32, value: i32) -> i32 {
     if value < -1 {
         return -1;
     }
+    if value >= 0 && crate::camera_preview::active() {return -1;}
     if value >= 0 {
         match id {
             0 if value == 0 || (8..=200).contains(&value) => {

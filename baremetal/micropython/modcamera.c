@@ -5,6 +5,15 @@ extern int bm_camera_init(void);
 extern int bm_camera_capture(void);
 extern int bm_camera_setting(int,int);
 extern int bm_camera_timing(unsigned int);
+extern int bm_camera_preview(unsigned int);
+static mp_obj_t camera_start_preview(void){if(bm_camera_preview(0)<0)mp_raise_OSError(MP_EIO);return mp_const_none;}
+static MP_DEFINE_CONST_FUN_OBJ_0(camera_start_preview_obj,camera_start_preview);
+static mp_obj_t camera_next_preview(void){int status=bm_camera_preview(1);if(status==-2)mp_raise_type(&mp_type_KeyboardInterrupt);if(status<0)mp_raise_OSError(MP_EIO);return mp_obj_new_memoryview('B',640*480*3/2,(void *)0x03800000);}
+static MP_DEFINE_CONST_FUN_OBJ_0(camera_next_preview_obj,camera_next_preview);
+static mp_obj_t camera_stop_preview(void){bm_camera_preview(2);return mp_const_none;}
+static MP_DEFINE_CONST_FUN_OBJ_0(camera_stop_preview_obj,camera_stop_preview);
+static mp_obj_t camera_preview_status(void){mp_obj_t a[]={mp_obj_new_bool(bm_camera_preview(3)),mp_obj_new_int(bm_camera_preview(4))};return mp_obj_new_tuple(2,a);}
+static MP_DEFINE_CONST_FUN_OBJ_0(camera_preview_status_obj,camera_preview_status);
 static mp_obj_t camera_init(void){if(bm_camera_init()<0)mp_raise_OSError(MP_EIO);return mp_const_none;}
 static MP_DEFINE_CONST_FUN_OBJ_0(camera_init_obj,camera_init);
 static mp_obj_t camera_capture(void){if(bm_camera_capture()<0)mp_raise_OSError(MP_EIO);return mp_obj_new_memoryview('B',640*480*3/2,(void *)0x03800000);}
@@ -40,6 +49,10 @@ static MP_DEFINE_CONST_FUN_OBJ_KW(camera_settings_obj,0,camera_settings);
 static const mp_rom_map_elem_t camera_globals_table[]={
     {MP_ROM_QSTR(MP_QSTR___name__),MP_ROM_QSTR(MP_QSTR_camera)},
     {MP_ROM_QSTR(MP_QSTR_init),MP_ROM_PTR(&camera_init_obj)},
+    {MP_ROM_QSTR(MP_QSTR_start_preview),MP_ROM_PTR(&camera_start_preview_obj)},
+    {MP_ROM_QSTR(MP_QSTR_next_preview),MP_ROM_PTR(&camera_next_preview_obj)},
+    {MP_ROM_QSTR(MP_QSTR_stop_preview),MP_ROM_PTR(&camera_stop_preview_obj)},
+    {MP_ROM_QSTR(MP_QSTR_preview_status),MP_ROM_PTR(&camera_preview_status_obj)},
     {MP_ROM_QSTR(MP_QSTR_capture),MP_ROM_PTR(&camera_capture_obj)},
     {MP_ROM_QSTR(MP_QSTR_timings),MP_ROM_PTR(&camera_timings_obj)},
     {MP_ROM_QSTR(MP_QSTR_settings),MP_ROM_PTR(&camera_settings_obj)}};

@@ -2,6 +2,8 @@
 use core::sync::atomic::{AtomicBool, AtomicI32, AtomicUsize, Ordering};
 static INTERRUPT_CHAR: AtomicI32 = AtomicI32::new(-1);
 static INTERRUPTED: AtomicBool = AtomicBool::new(false);
+pub fn interrupt_pending()->bool{INTERRUPTED.load(Ordering::Acquire)}
+pub fn take_interrupt()->bool{INTERRUPTED.swap(false,Ordering::AcqRel)}
 pub fn interrupt(byte: u8) -> bool {
     if byte as i32 == INTERRUPT_CHAR.load(Ordering::Relaxed) {
         INTERRUPTED.store(true, Ordering::Release); true
@@ -88,7 +90,7 @@ pub fn run() -> ! {
 }
 #[cfg(feature = "runtime-board")]
 #[path = "runtime_board.rs"]
-mod board;
+pub(crate) mod board;
 #[cfg(feature = "runtime-board")]
 pub use board::{camera_completed, camera_seed, camera_target, camera_validated, QUIET};
 

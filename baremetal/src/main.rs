@@ -37,6 +37,8 @@ mod camera;
 #[cfg(feature = "runtime-board")]
 mod camera_timing;
 #[cfg(feature = "runtime-board")]
+mod camera_preview;
+#[cfg(feature = "runtime-board")]
 mod led;
 #[cfg(feature = "camera-test")]
 mod camera_replay_data;

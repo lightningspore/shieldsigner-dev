@@ -39,3 +39,22 @@ startup, readable text from the oblique camera view or continuous preview FPS.
 
 The full Controller/View graph is still incomplete. The next user-requested step
 is a continuous preview; repeated five-second32-frame captures are insufficient.
+
+## Continuous preview
+
+`camera.start_preview()`, `next_preview()`, `stop_preview()` and
+`preview_status()` retain the existing calibrated Rust AE/AWB sessions across
+frames. The sensor stays streaming; CIF memory capture pauses at a completed
+boundary while the ISP/display consume the buffer. Two settling frames are
+discarded after live sensor control writes. NV12 views are read-only and expire
+on the next fetch, stop or capture; consumers must finish before fetching again.
+Do not retain them as snapshots. Capture/settings writes and camera reinit are
+rejected during an active preview. Always stop in `finally`.
+
+On an `app-ui` build loaded on DUT1, run
+`mise run baremetal:camera:preview:demo`. The frozen cooperative adapter runs for
+two minutes or until center/Key3, then stops the camera and restores native Home.
+USB Ctrl-C is also supported. This is a preview adapter, not yet the Scan View,
+QR decoder or entropy flow. `baremetal:camera:preview:lcd:gate` measures ninety
+camera→LCD frames; `baremetal:camera:preview:gate` checks headless frame changes,
+heap cleanup and a subsequent legacy capture on the wired DUT0.

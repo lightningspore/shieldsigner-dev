@@ -100,3 +100,6 @@ pub fn stop() {
         write(ID0_CONTROL, read(ID0_CONTROL) & !CAPTURE_ENABLE);
     }
 }
+
+/// Re-arm only memory capture while CSI/D-PHY and the sensor remain configured.
+pub unsafe fn resume_capture(){configure_vicap();}

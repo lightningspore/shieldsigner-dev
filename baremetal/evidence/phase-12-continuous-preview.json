@@ -1,0 +1,91 @@
+{
+  "status": "continuous-local-camera-lcd-preview-passed",
+  "features": "app-ui",
+  "boot": "logs/phase-11/dut1-20261114T214550Z",
+  "downloadSha256": "a22476b6c968f0455b0f2ef9a1f057ec73ade6f7d60933502b2858b8508ad251",
+  "gates": {
+    "headless": {
+      "path": "logs/phase-11/usb-20261114T214234.079753Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/preview_gate.py",
+        "scriptSha256": "afa5121f1a59db2d18628d090c96dbd928a5dbe11b044bd18060a0b952cbb9b3",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "6cad571f3502e53e58847b8f194a62ea43040d09787c83cc527b0791db5050f7"
+    },
+    "lcdFinal": {
+      "path": "logs/phase-11/usb-20261114T214622.693828Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/preview_lcd_gate.py",
+        "scriptSha256": "d3f16074502e0d2df7170f04106e5c011e904f33667267d9d4c389819bb41fdf",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "0ee01ac98b774a3ed2f06b4404ef620ed243b166cdf69afc500cc46138db2646"
+    },
+    "opticalFinal": {
+      "path": "logs/phase-11/usb-20261114T214626.539661Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/logs/phase-12/native-home-observer.py",
+        "scriptSha256": "445e370f166c34910feef43eef7a47350eb5a9c680c50ec9541fa8ef125c16ac",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "ac2735a33e1292732f7a2e67f73625b0988f3ad70b5c54f560b92fe6cbcf7649"
+    },
+    "frozenAdapter": {
+      "path": "logs/phase-11/usb-20261114T214652.585339Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/logs/phase-12/preview-adapter-gate.py",
+        "scriptSha256": "5a426e8dc524b81588d23d34a8e4006823c571d277af4406aa1c4d12d066aa41",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "b10a0444ec81d38eb77155eb91cddd2a56860dc5f66137315d66f0ba0b24ec9d"
+    }
+  },
+  "interrupt": {
+    "path": "logs/phase-12/preview-interrupt-final.txt",
+    "sha256": "c258058be76b8b5905bb384f7ced6df38536ba72f34a4a2682cd8b348f8b6d71",
+    "passed": true,
+    "exception": "KeyboardInterrupt",
+    "sessionStopped": true,
+    "heapReturned": true
+  },
+  "measurement": {
+    "frames": 90,
+    "elapsedMs": 23879,
+    "fps": 3.7690020520122283,
+    "acquisitionMsApprox": 127,
+    "blitMsApprox": 140,
+    "timingScope": "post-start preview loop; excludes ROM/app startup"
+  },
+  "hostChecks": {
+    "task": "baremetal:check",
+    "tests": 36,
+    "passed": true
+  },
+  "limitations": [
+    "Not full Scan View or QR integration",
+    "Optical observer is oblique; no color/text calibration",
+    "No renewed physical button exercise in this preview stage",
+    "No SD image update; RAM-only deployment"
+  ]
+}

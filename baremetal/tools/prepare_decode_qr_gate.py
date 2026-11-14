@@ -40,7 +40,11 @@ invalid=DecodeQR()
 assert invalid.add_data('p1of2 {\"label\":')==1
 assert invalid.add_data('p2of2 }')==5
 assert invalid.get_wallet_descriptor() is None
-for payload in ['ur:bytes/abcd','unknown public text','cHNidP8=']:
+# These three words exist in BIP39 but have an invalid mnemonic word count.
+invalid_words=DecodeQR()
+assert invalid_words.add_data('unknown public text')==DecodeQRStatus.INVALID
+assert not invalid_words.is_complete and invalid_words.qr_type=='seed__mnemonic'
+for payload in ['ur:bytes/abcd','cHNidP8=']:
     try:DecodeQR().add_data(payload)
     except FeatureUnavailable:pass
     else:raise AssertionError('missing model dependency hidden')

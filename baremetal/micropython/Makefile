@@ -14,6 +14,7 @@ endif
 CROSS_COMPILE = arm-none-eabi-
 include $(MPY_TOP)/py/mkenv.mk
 FROZEN_MANIFEST = manifest.py
+MAKE_MANIFEST = $(PYTHON) $(abspath ../tools/freeze_manifest.py) $(TOP)/tools/makemanifest.py
 QSTR_DEFS = qstrdefsport.h
 QSTR_GLOBAL_DEPENDENCIES += Makefile
 MICROPY_ROM_TEXT_COMPRESSION = 0

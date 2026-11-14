@@ -21,6 +21,8 @@ def wipe_list(value):
     if value is None:return
     # Shared wordlist contents must remain usable after a Seed is discarded.
     from embit import bip39
+    from shamir_mnemonic import wordlist
+    if value is wordlist.WORDLIST:raise ValueError('Cannot clear shared wordlist')
     if value is bip39.WORDLIST:raise ValueError('Cannot clear shared wordlist')
     for item in value:
         if isinstance(item,(bytes,bytearray)):wipe_bytes(item)

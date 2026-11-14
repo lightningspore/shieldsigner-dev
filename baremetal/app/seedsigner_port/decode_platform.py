@@ -8,7 +8,8 @@ class FeatureUnavailable(RuntimeError):
     pass
 
 def dependency(module,attribute=None):
-    aliases={'seedsigner.models.psbt_framing':'seedsigner_port.psbt_framing',
+    aliases={'seedsigner.models.aezeed':'seedsigner_port.aezeed',
+             'seedsigner.models.psbt_framing':'seedsigner_port.psbt_framing',
              'seedsigner.models.psbt_parser':'seedsigner_port.psbt_errors',
              'seedsigner.models.seed':'seedsigner_port.seed',
              'seedsigner.helpers.secure_delete':'seedsigner_port.secure_delete',

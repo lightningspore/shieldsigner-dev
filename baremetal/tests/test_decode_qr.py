@@ -46,7 +46,6 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(x,y);self.assertEqual([v[0] for v in y],[1,2,3]);self.assertEqual(b.get_wallet_descriptor(),a.get_wallet_descriptor())
     def test_unported_dependency_is_explicit(self):
         with self.assertRaises(FeatureUnavailable):port.DecodeQR().add_data('ur:bytes/abcd')
-        with self.assertRaises(FeatureUnavailable):port.DecodeQR().add_data('unknown public text')
     def test_all_classes_retained(self):
         names=[n.name for n in ast.parse(source.read_text()).body if isinstance(n,ast.ClassDef)]
         self.assertEqual(len(names),27)

@@ -408,3 +408,18 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
 - Seed/memory/originalQR-scan regressions and50hosttests pass; Home restored,
   cameraoff, allreadersfinished. DetailedPSBT-FRAMING-PORT.md andreceipt recorded.
   NoSD/CADwrites. Text/24word/compactambiguity andfullapp/curve flows remain.
+
+### 2026-11-14 — Original mnemonic formats and SLIP39 recovery
+
+- Ported the exact REF-pinned Shamir core/recovery source and whole original Aezeed
+  module, preserving licenses and verifying the frozen wordlist against REF.
+- Native gate passed 45 published recovery vectors, original classifier/share
+  decoding, 26 BIP39 fixtures in three encodings, all five word counts, CRC and
+  ambiguity checks. Parameter records are immutable; both wordlists survive wipes.
+- Corrected real platform dependencies discovered by hardware tests: dictionary
+  delegation, _asdict/_fields, mutation hooks and stale frozen-QSTR invalidation.
+  Updated the obsolete three-word missing-dependency fixture to original INVALID.
+- Final image89da26d1..., load235301; gate235538 and Seed/memory/PSBT/QR regressions
+  pass, plus52host tests. Home restored, preview stopped, no active readers.
+  MNEMONIC-PORT.md records remaining UI/optical/curve/entropy/decryption/SD gaps.
+  No SD/CAD/REF-storage changes. This does not qualify complete wallet operation.

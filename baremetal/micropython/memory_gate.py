@@ -5,6 +5,7 @@ from seedsigner_port.memory_fixtures import FROZEN_BYTES,FROZEN_TEXT
 import gc
 import camera
 from embit import bip39
+from shamir_mnemonic import wordlist
 from seedsigner_port.secure_delete import wipe_bytes,wipe_string,wipe_list
 baseline=camera.settings()['rust_heap_bytes']
 for size in (1,15,16,17,63,64,65,4096):
@@ -33,6 +34,12 @@ try:
     wipe_list(bip39.WORDLIST)
     assert False
 except ValueError:pass
+for word in wordlist.WORDLIST:assert memory.wipe(word) is False
+try:
+    wipe_list(wordlist.WORDLIST)
+    assert False
+except ValueError:pass
+assert len(wordlist.WORDLIST)==1024
 assert memory.wipe(FROZEN_TEXT) is False
 assert memory.wipe(FROZEN_BYTES) is False
 assert FROZEN_TEXT=='public-frozen-text-wipe-guard' and FROZEN_BYTES==b'public-frozen-bytes-wipe-guard'

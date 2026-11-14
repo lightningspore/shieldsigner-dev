@@ -397,3 +397,33 @@ DUT0olderUnicodeidle/qstrheavyneedsRAMreloadbeforefuturetests. Allreadersfinishe
 NoSD/CAD/REFstoragewrites. Next:actualSLIP39wordlist+importlibboundary for textseed
 classification,Aezeedchecksumfor24-wordambiguity,compact/encrypted/URdeps, full
 Controller/Viewrouting andrealcurves/entropy. Currentnumericgateinjectsdata only.
+
+2026-11-14 — Original mnemonic recognition and SLIP39 recovery
+REF's Shamir package is the OS-pinned 3rdIteration 0.3-setuptools fork (reported
+version 0.3.1), not the PyPI 0.3.0 release. Downloaded archive matches the OS SHA;
+read-only REF wordlist SHA matches exactly, saved under phase-12 logs. Full core,
+share, cipher, wordlist, recovery and original Aezeed source are frozen with
+licenses/provenance. Immutable record representation replaces unavailable typing/
+dataclasses; native setattr/_asdict features, original _fields metadata and mutation
+guards preserve parameter integrity. Initial gates found defaultdict.items,
+_asdict and _fields gaps; parameter mutation probe found an additional real
+immutability gap. Fixed those boundaries, kept all algorithm/refusal tests.
+Native source remains unchanged; freeze_manifest wrapper fixes stale frozen C
+when QSTR/manifest changes caused duplicate enums. USB capture exits early only
+on traceback plus observed REPL prompt; timeout still doesn't terminate a script.
+
+Final DUT1 RAM image 89da26d1..., load235301; gate235538 passes all45 published
+SLIP39 vectors via actual combination and RecoveryState, share round trips,
+original generic classifier/Slip39ShareDecoder, immutable record/set checks;
+26 BIP39 fixtures in mnemonic/four-letter/numeric formats (all5wordcounts),
+35 original-CPython CRC32C cases and Aezeed/BIP39 ambiguity. Entropy generation
+and Aezeed scrypt/Blake2B remain explicit FeatureUnavailable, never substitutes.
+Seed235350, memory/both-wordlists235356, PSBT235357, QR/scan235606 regressions pass;
+52 host tests pass. Old QR test incorrectly expected missing dependency for three
+actual BIP39 words; now tests original INVALID word-count result. Home235607,
+preview stopped, readers finished. MNEMONIC-PORT.md and phase-12-mnemonic receipt
+record scope. No SD/CAD/REF-storage writes. Shared artifacts target DUT1; DUT0
+still older Unicode image/qstr-heavy and needs a clean RAM reload before work.
+Next: real View/Controller scan routing and displayed results, remaining compact/
+encryption/UR dependencies, curves/entropy and SD app assets. Actual printed-code
+optical scanning and full wallet workflows remain unqualified.

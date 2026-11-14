@@ -1488,3 +1488,11 @@ run = ["uv run --python 3.13 python baremetal/tools/prepare_psbt_framing.py", "u
 [tasks."baremetal:psbt:framing:dut1:gate"]
 description = "Run strict original PSBT acceptance/refusal and numeric SeedQR through real native model code"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/psbt_framing_gate.py --serial rv1103-dut1 --timeout 30"
+
+[tasks."baremetal:mnemonic:prepare"]
+description = "Prepare REF-pinned SLIP39 core/recovery, whole original Aezeed and public recognition/recovery vectors"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_shamir.py", "uv run --python 3.13 python baremetal/tools/prepare_aezeed.py", "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_mnemonic_gate.py"]
+
+[tasks."baremetal:mnemonic:dut1:gate"]
+description = "Check published SLIP39 recovery, original mnemonic formats and Aezeed ambiguity on DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/mnemonic_gate.py --serial rv1103-dut1 --timeout 90"

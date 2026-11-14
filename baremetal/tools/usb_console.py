@@ -61,6 +61,10 @@ def main():
             deadline = time.monotonic() + args.timeout
             while time.monotonic() < deadline:
                 received.extend(console.read(4096))
+                execution = bytes(received).split(b'=== \r\n', 1)[-1]
+                if b'Traceback (most recent call last)' in execution and execution.endswith(b'>>> '):
+                    report['traceback'] = True
+                    raise RuntimeError('Script raised and returned to REPL; see serial evidence')
                 if marker in received:
                     report['completed'] = True
                     break

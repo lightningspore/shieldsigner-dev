@@ -1,0 +1,40 @@
+{
+  "status": "native-original-mnemonic-classification-and-slip39-recovery-gates-passed",
+  "scope": "Injected-data BIP39/SLIP39 recognition and core recovery; not optical scanning, full Slip39Seed UI, generation entropy or Aezeed decryption",
+  "device": "DUT1 app-ui",
+  "downloadSha256": "89da26d1f50b7e694deba68dbfe2d9ec2d0d0d64f355b6732679ec5d119e70cc",
+  "load": "logs/phase-11/dut1-20261114T235301Z",
+  "gate": "logs/phase-11/usb-20261114T235538.482395Z",
+  "publishedSlip39Vectors": 45,
+  "bip39Fixtures": 26,
+  "formatsPerBip39Fixture": 3,
+  "aezeedCrcReferenceCases": 35,
+  "aezeedAmbiguity": "Public deterministic checksum-only versus dual BIP39+Aezeed checksum fixtures; no decryption result claimed",
+  "refWordlistEvidence": "logs/phase-12/shamir-ref-wordlist-sha256.txt",
+  "regressions": {
+    "seed": "logs/phase-11/usb-20261114T235350.854317Z",
+    "memoryBothWordlists": "logs/phase-11/usb-20261114T235356.250108Z",
+    "psbt": "logs/phase-11/usb-20261114T235357.577040Z",
+    "originalQrScan": "logs/phase-11/usb-20261114T235606.083435Z",
+    "home": "logs/phase-11/usb-20261114T235607.170531Z",
+    "hostTests": 52
+  },
+  "correctedDependencies": [
+    "Pinned micropython-lib defaultdict lacked items; now delegates mapping operations to its underlying dictionary",
+    "Enable actual namedtuple._asdict and setattr hooks; preserve _fields metadata and mutation guards",
+    "Invalidate frozen C on QSTR/manifest changes; do not edit pinned upstream core",
+    "Three-word BIP39 fixture now correctly returns INVALID rather than missing-dependency error"
+  ],
+  "sourceSha256": {
+    "app/shamir-provenance.json": "20e434f59f450ad49918893e3769f8385a1e635dc022d1d3b4e3e1586a45cb7d",
+    "app/aezeed-provenance.json": "fa63803a82e0da95b0d7d38a4e2f46fbeb7dbbabf8b984757d2c4e9e9f607643",
+    "app/mnemonic-vectors-provenance.json": "beafff285f179d7934629c8336fec91ee2ead2715d89338955eea08be20b5c95",
+    "micropython/mnemonic_gate.py": "5b09e1faf09684ee0f82dc162a5bd567947fb63dc101bfadc8a7e07f8cc693e1",
+    "tools/source_records.py": "cc5a8a2d06bc96255297d7ddb3d5e375b14cac310d74d4c509e0f45456c80cee",
+    "tools/freeze_manifest.py": "d44d1848cff97c6a876638b2ad9e9719d92af93e13773c009807d1871ff2998a",
+    "tools/usb_console.py": "06e31a83f0c00c84573a4bf005338e0646a203ecd2b3b42677e5d5675fc2be47",
+    "app/importlib.py": "44d3cd1ee378b9c31cced4c0049172f4f5a809803e74b3f171d0b24121df5f5d",
+    "app/seedsigner_port/secure_delete.py": "4499ea8d104ff5475e6f7382bd4babac1f65ee2f775c2301c33b60a0bd1c106f",
+    "micropython/decode_qr_gate.py": "82cefc09037dc97725488108109215a577a68a71d2be89043b223fd99e8dae7e"
+  }
+}

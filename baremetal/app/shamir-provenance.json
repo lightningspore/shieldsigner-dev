@@ -1,0 +1,55 @@
+{
+  "sourceUrl": "https://codeload.github.com/3rdIteration/python-shamir-mnemonic/tar.gz/0.3-setuptools",
+  "archiveSha256": "6fdcfb8d4380a8427ba28805eea63511a793fdfc6732d5c44d0f91a6b273445b",
+  "refVersion": "0.3.1",
+  "osSourcePin": "python-shamir-mnemonic0.3-setuptools",
+  "files": {
+    "__init__": {
+      "sourceSha256": "efc4925a7f1c88c9d65d9788f9539a0aa11a4d86decc8b9e8240898bddfcb648",
+      "outputSha256": "50301e7df477c09a4145b97dba7fcb965651a7629b1b3cb9960137beb051b4b7"
+    },
+    "constants": {
+      "sourceSha256": "94638d1aa55bbed5a0a7c7be5c1e482aeb66c01d7f5e7027669ef6e420328d7a",
+      "outputSha256": "e340048901f4ce90dfb9ba3a423a236b656e601447313b63293caeae33201176"
+    },
+    "utils": {
+      "sourceSha256": "9bf6d2c71b11788ac1adabe156e71e43365f8c17f99cadf19aa8e78f5a066ee4",
+      "outputSha256": "25bad10d35feaa6eef321f49fadae6f249970ced8f3d92b952a2d327f690f98d"
+    },
+    "rs1024": {
+      "sourceSha256": "7527b6ab5b0de8ef90697699f24c4bd615dbc77ec988e90590bfcf80146e8391",
+      "outputSha256": "60217d2e3324440ffd069aa6f10451f4890d2617a053d33c1eefefd696c8b06f"
+    },
+    "wordlist": {
+      "sourceSha256": "f246d5c397155a377cb7344f6a3986e197210469cd575c83fbbfae2bcfe09975",
+      "outputSha256": "056091614d911659a0f1cce3ae868b4099bbc4d98c59a69c566a015e22243214"
+    },
+    "cipher": {
+      "sourceSha256": "193c0bc5d90a28fd2f139e4d17e5a6e072666765d72eb527198ec71fb128ffdc",
+      "outputSha256": "a5a89c8d9cdcba75a542c86dead84599614ac6aac256484250531c30adea1848"
+    },
+    "share": {
+      "sourceSha256": "3ee6f46415ba34dd8c1bc5f92601b17151854a35425e098d1de857ca714205c5",
+      "outputSha256": "00db059d9286418eed4fede2ae968f0deaa43757aefa2400d827c7d38db39cf5"
+    },
+    "shamir": {
+      "sourceSha256": "a7a3db954f0a3638f3e98574c2da2e8b8af1338ed3bc33aef937afbfffce465f",
+      "outputSha256": "ac694f7ba4610097c8b5e91b0ecfb3104a3f2e56b877275c86a8fb63073cc188"
+    },
+    "recovery": {
+      "sourceSha256": "8f84928d5a4d84798149148347932d7570d5b0fe6d4e87a8a85272b4b8adcc80",
+      "outputSha256": "9906fdee406cb5ef8710348376f527d24b2c17c430c661bb960f9d23f4b705e9"
+    }
+  },
+  "scope": "All core/share/cipher/recovery algorithms; actual entropy provider required for generation",
+  "wordlistSha256": "bcc4555340332d169718aed8bf31dd9d5248cb7da6e5d355140ef4f1e601eec3",
+  "refWordlistMatch": "Read-only REF sha256sum, same hash",
+  "vectorsSha256": "13ebecebdd869dd2bc2cdf69e7ce3a158cf106cac76c39d17682b1c6cdabbdc4",
+  "defaultdict": {
+    "sourceSha256": "3ae9fb97bb5ca18db4fed789055249bcd2897c949a5eb6df28196e277a197daa",
+    "outputSha256": "9f42fbc3cc72ba7095c9f5094b0a4bfd17d28ef727c8388b14f045b244ba1cec",
+    "changes": [
+      "Delegate mapping methods, iteration, length and truth to actual underlying dictionary for original RecoveryState"
+    ]
+  }
+}

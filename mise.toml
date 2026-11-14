@@ -1141,7 +1141,7 @@ description = "Read-only REF UART and DUT maskrom access checks; all evidence st
 run = "uv run --python 3.13 python baremetal/tools/doctor.py"
 
 [tasks."baremetal:check"]
-description = "Host-only UART transport checks; does not access either board"
+description = "Host-only UART transport and camera-evidence validation; does not access either board"
 run = "uv run --python 3.13 python -m unittest discover -s baremetal/tests -v"
 
 [tasks."baremetal:build"]
@@ -1163,3 +1163,19 @@ run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features i2c
 [tasks."baremetal:spi:build"]
 description = "Build RV1103 SPI0 external loopback tests with 4KB patterns at three clock rates"
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features spi-test"
+
+[tasks."baremetal:trace:check"]
+description = "Offline ARM emulation of whitelisted camera write sites and observer state preservation; no board access"
+run = "uv run --python 3.13 --with capstone==5.0.9 --with pyelftools==0.33 --with unicorn==2.1.4 python -m unittest discover -s baremetal/trace_tests -v"
+
+[tasks."baremetal:camera:build"]
+description = "Build RV1103 named raw-camera diagnostic; RAM-only, real-scene gate still required"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features camera-test"
+
+[tasks."baremetal:camera:pattern:build"]
+description = "Build sensor-generated raw pattern diagnostic; does not satisfy the real-scene gate"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features camera-pattern"
+
+[tasks."baremetal:camera:low-light:build"]
+description = "Build the long-exposure high-gain raw-camera diagnostic for darkness"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features camera-low-light"

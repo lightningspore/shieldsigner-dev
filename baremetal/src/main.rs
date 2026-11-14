@@ -6,6 +6,10 @@
 use core::arch::{asm, global_asm};
 use core::ptr::{read_volatile, write_volatile};
 
+#[cfg(feature = "camera-test")]
+mod camera;
+#[cfg(feature = "camera-test")]
+mod camera_replay_data;
 #[cfg(feature = "cpu-base")]
 mod cpu;
 #[cfg(feature = "gpio-test")]
@@ -56,10 +60,12 @@ extern "C" fn rust_main() -> ! {
     cpu::run();
     #[cfg(feature = "gpio-test")]
     gpio::init();
-    #[cfg(feature = "i2c-test")]
+    #[cfg(all(feature = "i2c-test", not(feature = "camera-test")))]
     i2c::run();
     #[cfg(feature = "spi-test")]
     spi::run();
+    #[cfg(feature = "camera-test")]
+    camera::run();
     // Keep a UART recovery path while USB is absent in this minimal payload.
     // 'R' requests a warm reset; no storage writes are involved.
     loop {

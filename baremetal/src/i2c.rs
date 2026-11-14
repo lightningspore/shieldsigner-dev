@@ -106,6 +106,50 @@ pub fn init() -> Result<(), &'static str> {
     }
 }
 
+/// Bounded sensor write: address byte + big-endian16-bit register + one data byte.
+pub fn write_sensor(register: u16, value: u8) -> Result<(), &'static str> {
+    unsafe {
+        super::interrupts::i2c_irq_enabled(false);
+        write(BASE, 0);
+        write(BASE + 0x18, 0);
+        write(BASE + 0x1c, 255);
+        let bytes = 0x60u32
+            | (((register >> 8) as u32) << 8)
+            | (((register & 255) as u32) << 16)
+            | ((value as u32) << 24);
+        write(BASE + 0x100, bytes);
+        write(BASE, 1 | 8 | 64);
+        write(BASE + 0x10, 4);
+        let result = wait(4);
+        stop();
+        result.map(|_| ())
+    }
+}
+
+/// One-byte sensor register read using the controller's combined-address RX mode.
+#[cfg(feature = "camera-test")]
+pub fn read_sensor(register: u16) -> Result<u8, &'static str> {
+    unsafe {
+        super::interrupts::i2c_irq_enabled(false);
+        write(BASE, 0);
+        write(BASE + 0x18, 0);
+        write(BASE + 0x1c, 255);
+        write(BASE + 8, (1 << 24) | 0x60);
+        let bytes = ((register >> 8) as u32) | (((register & 255) as u32) << 8);
+        write(BASE + 12, (3 << 24) | bytes);
+        write(BASE, 1 | 2 | 8 | 32 | 64);
+        write(BASE + 0x14, 1);
+        let result = wait(8);
+        let value = if result.is_ok() {
+            read(BASE + 0x200) as u8
+        } else {
+            0
+        };
+        stop();
+        result.map(|_| value)
+    }
+}
+
 fn wait(mask: u32) -> Result<u32, &'static str> {
     let start = super::cpu::counter();
     loop {
@@ -195,6 +239,7 @@ pub fn read_id(address: u8, interrupt: bool, missed_interrupt: bool) -> Result<u
     }
 }
 
+#[cfg(not(feature = "camera-test"))]
 pub fn run() {
     if let Err(e) = init() {
         let _ = writeln!(super::cpu::Console, "@@FAIL i2c-init {}\r", e);

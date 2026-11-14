@@ -1,0 +1,154 @@
+{
+  "phase": 7,
+  "passed": true,
+  "scope": "Raw Bayer camera gate and named original driver; not ISP/3A/interpreter qualification",
+  "dut": "Luckfox Pico Mini, RV1103, no microSD; RAM-only db",
+  "reference": "Standard Luckfox Pico, RV1103, original Linux modules",
+  "run": "logs/phase-7/20261114T152545Z",
+  "imageSha256": "188a28786551ec4032faac31a59fd232299b8ce10edc48f541cba430932eb33a",
+  "buildManifestSha256": "703f1447800e8381ea138580c93fd6d9364adab5da12dc7875d7fa0cac497e19",
+  "capture": {
+    "scope": "mechanical raw capture only; not a visual/phase qualification",
+    "serialSha256": "3827c388dbf9f85cfbbfc53b2021b2b3595691d04bb2692b5110106fce0e0b4b",
+    "frames": [
+      {
+        "index": 0,
+        "status": 257,
+        "buffer": 0,
+        "intervalUs": 138847
+      },
+      {
+        "index": 1,
+        "status": 514,
+        "buffer": 1,
+        "intervalUs": 799203
+      },
+      {
+        "index": 2,
+        "status": 257,
+        "buffer": 0,
+        "intervalUs": 799203
+      },
+      {
+        "index": 3,
+        "status": 514,
+        "buffer": 1,
+        "intervalUs": 799203
+      },
+      {
+        "index": 4,
+        "status": 257,
+        "buffer": 0,
+        "intervalUs": 799203
+      },
+      {
+        "index": 5,
+        "status": 514,
+        "buffer": 1,
+        "intervalUs": 799203
+      },
+      {
+        "index": 6,
+        "status": 257,
+        "buffer": 0,
+        "intervalUs": 799203
+      },
+      {
+        "index": 7,
+        "status": 514,
+        "buffer": 1,
+        "intervalUs": 799203
+      },
+      {
+        "index": 8,
+        "status": 257,
+        "buffer": 0,
+        "intervalUs": 799203
+      },
+      {
+        "index": 9,
+        "status": 514,
+        "buffer": 1,
+        "intervalUs": 799203
+      }
+    ],
+    "frameCount": 10,
+    "exposureLines": 8192,
+    "frameLines": 32767,
+    "patternEnabled": false,
+    "sensorReadbacks": {
+      "0x320e": "0x7f",
+      "0x320f": "0xff",
+      "0x3e00": "0x2",
+      "0x3e01": "0x0",
+      "0x3e02": "0x0",
+      "0x3e06": "0x0",
+      "0x3e07": "0x80",
+      "0x3e09": "0x0",
+      "0x4501": "0xc4"
+    },
+    "changedWords": 933120,
+    "mechanicalCapturePassed": true,
+    "visualReviewRequired": true
+  },
+  "selectedRegisterComparison": {
+    "compared": 32,
+    "mismatches": 0,
+    "reportSha256": "bf8753cc604ebfd65116415a25cef470f363eb7125fec97fa241ea7d012e8f04",
+    "limits": "Explicit DMA remaps/masks and polling INTEN difference; dynamic W1C status excluded. Not full-state equality."
+  },
+  "format": {
+    "fourcc": "BG10",
+    "width": 2304,
+    "height": 1296,
+    "stride": 3072,
+    "frameBytes": 3981312,
+    "previewRgb": [
+      192,
+      108
+    ]
+  },
+  "visualReview": {
+    "reviewed": true,
+    "previewSha256": "1bec4e00bc51479699ab8b5cab75fce906aa9186faf8571f8ccec1013d00397e",
+    "localPreview": "logs/phase-7/20261114T152545Z/preview.png",
+    "description": "Recognizable carton/printed label and barcodes with contrasting surrounding material; uncalibrated Bayer colour tint remains.",
+    "syntheticPattern": false,
+    "calibratedColour": false,
+    "sceneImageCommitted": false
+  },
+  "referenceTrace": {
+    "path": "logs/phase-7/live-events-2.txt",
+    "sha256": "a633c69058b7de5787bb1aabc3e4b197a02a5a92b85d570afe12b4069f983592",
+    "events": 201,
+    "dropped": 0,
+    "errors": 0,
+    "orderLimit": "MMIO observations precede stores; not a bus-completion trace."
+  },
+  "registerSnapshots": {
+    "idleManifestSha256": "f29326d8d6aa9847cd699c31da392cd6f43887cb8df131d5a9ca263a67f3a34f",
+    "streamingManifestSha256": "a6cb667a5c65fe6caf6701490b04827a7a578b50cd72eb7a524f0012373370fe",
+    "iocCoverageSha256": "30583a704e67f6faeedbfa3851d581429155c7d1a8cccd34d7bfec7147a53ebe",
+    "sdkKnownIocFieldsCovered": true,
+    "excludedResourceTail": "0xff570000\u20130xff577fff not read; first address faults. No values synthesized."
+  },
+  "implementation": [
+    "src/camera.rs",
+    "src/camera/receiver.rs",
+    "src/camera/sc3336.rs",
+    "src/camera/sensor_mode.rs"
+  ],
+  "dma": {
+    "buffers": [
+      "0x03000000",
+      "0x03400000"
+    ],
+    "mapping": "normal noncacheable48\u201356MB",
+    "changedPayloadWords": 933120
+  },
+  "limitations": [
+    "Raw preview is subsampled/uncalibrated; ISP colour/3A quality remains Phase8.",
+    "Snapshot reads are non-atomic; source-known pin fields captured with explicit IOC tail gap.",
+    "Reference first-frame/AE/AWB data does not prove DUT ISP convergence."
+  ]
+}

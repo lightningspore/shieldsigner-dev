@@ -68,7 +68,10 @@ unsafe fn enable_memory() {
     for section in 0..4096 {
         // Short-descriptor sections, domain 0, full privileged/user access.
         // DDR: normal WBWA, shareable; other addresses: shareable device, XN.
-        let attrs = if section < 64 {
+        let attrs = if cfg!(feature = "camera-test") && (48..56).contains(&section) {
+            // Camera DMA buffers: normal noncacheable, shareable, execute-never.
+            (1 << 12) | (1 << 4)
+        } else if section < 64 {
             (1 << 12) | (1 << 3) | (1 << 2)
         } else {
             (1 << 4) | (1 << 2)

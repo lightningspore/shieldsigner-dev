@@ -45,14 +45,21 @@ def main():
     report['image'] = str(image)
     report['sha256'] = hashlib.sha256(image.read_bytes()).hexdigest()
     tool = str(ROOT/'.tools/rkdeveloptool/rkdeveloptool')
+    enumeration_start=time.monotonic()
+    replug_reported=False
     while True:
         devices = run([tool, 'ld'])
         lines = [x for x in devices['stdout'].splitlines() if 'DevNo=' in x]
         if devices['exitCode'] == 0 and len(lines) == 1 and re.search(r'Vid=0x2207,Pid=0x110c.*Maskrom', lines[0]):
             report['maskromBefore'] = devices
             break
-        print('Replug DUT only, leaving its microSD out; waiting for a single maskrom device.', flush=True)
-        time.sleep(5)
+        if time.monotonic()-enumeration_start<5:
+            time.sleep(0.5)
+        else:
+            if not replug_reported:
+                print('Replug DUT only, leaving its microSD out; waiting for a single maskrom device.', flush=True)
+                replug_reported=True
+            time.sleep(5)
     adb = ['adb', '-s', cfg['referenceAdbSerial']]
     check = run(adb+['get-state'])
     if check['exitCode'] or check['stdout'].strip() != 'device':

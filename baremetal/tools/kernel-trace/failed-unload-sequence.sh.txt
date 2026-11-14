@@ -1,0 +1,51 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Runtime-only REF module swap; original files never changed.
+set -eu
+trace=/tmp/baremetal-trace
+original=/oem/usr/ko
+unload_camera() {
+    for name in phy_rockchip_csi2_dphy phy_rockchip_csi2_dphy_hw video_rkisp video_rkcif sc3336; do
+        if [ -d "/sys/module/$name" ]; then rmmod "$name" || return 1; fi
+    done
+}
+load_original() {
+    for name in sc3336 video_rkcif video_rkisp phy-rockchip-csi2-dphy-hw phy-rockchip-csi2-dphy; do
+        insmod "$original/$name.ko" || return 1
+    done
+    echo 1 > /sys/module/video_rkcif/parameters/clr_unready_dev
+    echo 1 > /sys/module/video_rkisp/parameters/clr_unready_dev
+    udevadm settle --timeout=10
+}
+restore() {
+    echo 0 > /sys/kernel/debug/baremetal_camera_trace/control || true
+    unload_camera || return 1
+    load_original || return 1
+    rmmod baremetal_trace || return 1
+    echo '@@ORIGINAL_MODULES_RESTORED'
+}
+trap 'status=$?; trap - EXIT; if ! restore; then echo "@@RESTORE_FAILED"; exit 1; fi; exit "$status"' EXIT
+unload_camera
+# Record probe/setup writes as well as streaming writes.
+echo 1 > /sys/kernel/debug/baremetal_camera_trace/control
+insmod "$trace/sc3336.ko"
+insmod "$trace/video_rkcif.ko"
+insmod "$original/video_rkisp.ko"
+insmod "$trace/phy-rockchip-csi2-dphy-hw.ko"
+insmod "$original/phy-rockchip-csi2-dphy.ko"
+echo 1 > /sys/module/video_rkcif/parameters/clr_unready_dev
+echo 1 > /sys/module/video_rkisp/parameters/clr_unready_dev
+udevadm settle --timeout=10
+v4l2-ctl -d /dev/v4l-subdev2 --set-ctrl vertical_blanking=31471
+v4l2-ctl -d /dev/v4l-subdev2 --set-ctrl exposure=4096,analogue_gain=256
+/usr/lib/shieldsigner-camera/camera-probe capture /dev/video0 "$trace/reference.raw" --buffers 2 --warmup 2 --timeout-ms 5000 --require-no-rkaiq
+echo 0 > /sys/kernel/debug/baremetal_camera_trace/control
+cat /sys/kernel/debug/baremetal_camera_trace/events > "$trace/events.txt"
+head -1 "$trace/events.txt"
+restore
+trap - EXIT
+# Re-prove original REF capture after the temporary modules are gone.
+v4l2-ctl -d /dev/v4l-subdev2 --set-ctrl vertical_blanking=31471
+v4l2-ctl -d /dev/v4l-subdev2 --set-ctrl exposure=4096,analogue_gain=256
+/usr/lib/shieldsigner-camera/camera-probe capture /dev/video0 "$trace/restored.raw" --buffers 2 --warmup 2 --timeout-ms 5000 --require-no-rkaiq
+echo '@@REF_CAPTURE_AND_RESTORE_COMPLETE'

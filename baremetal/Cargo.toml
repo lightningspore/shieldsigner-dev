@@ -11,6 +11,10 @@ cpu-base = []
 gpio-test = ["cpu-base"]
 i2c-test = ["cpu-base"]
 spi-test = ["cpu-base"]
+camera-test = ["i2c-test"]
+camera-pattern = ["camera-test"]
+camera-low-light = ["camera-test"]
+camera-replay = ["camera-test"]
 
 [profile.release]
 panic = "abort"

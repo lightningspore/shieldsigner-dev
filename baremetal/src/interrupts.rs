@@ -45,7 +45,10 @@ pub unsafe fn start(frequency: u32) {
     // Banked IRQ stack; SVC stack is already at 0x00400000.
     asm!(
         "cps #0x12",
-        "ldr sp, =0x003f0000",
+        // Materialize the constant directly; an inline literal pool can move
+        // beyond LDR range when LTO grows the camera startup function.
+        "movw sp, #0",
+        "movt sp, #0x003f",
         "cps #0x13",
         options(nostack)
     );

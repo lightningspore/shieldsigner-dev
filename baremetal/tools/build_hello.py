@@ -38,6 +38,6 @@ shutil.copyfile(rkbin/'hello-download.bin', build/'hello-download.bin')
     'features': args.features,
     'note':'Entry and stack proven by Phase 2 ten-run gate; added features require their own DUT proof.',
     'files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
-             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'Cargo.toml', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').glob('*.rs'))]}
+             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'Cargo.toml', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').rglob('*.rs'))]}
 },indent=2)+'\n')
 print('Built',build/'hello-download.bin')

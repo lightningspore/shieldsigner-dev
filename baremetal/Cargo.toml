@@ -18,10 +18,14 @@ camera-replay = ["camera-test"]
 isp-test = ["camera-test", "dep:shieldsigner-rkaiq"]
 isp-stats-test = ["isp-test"]
 isp-3a-test = ["isp-stats-test", "shieldsigner-rkaiq/profiles", "dep:serde_json"]
+reclaiming-heap = ["cpu-base", "dep:buddy_system_allocator"]
+runtime-repl = ["reclaiming-heap"]
+runtime-board = ["runtime-repl", "isp-3a-test", "gpio-test", "spi-test"]
 
 [dependencies]
 shieldsigner-rkaiq = { path = "../firmware/rkaiq-rs", default-features = false, optional = true }
 serde_json = { version = "1", default-features = false, features = ["alloc"], optional = true }
+buddy_system_allocator = { version = "=0.13.0", optional = true }
 
 [profile.release]
 panic = "abort"

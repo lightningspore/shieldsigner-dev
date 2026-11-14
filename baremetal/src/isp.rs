@@ -46,18 +46,51 @@ unsafe fn fixed_register_audit() {
     // Only documented ordinary configuration registers: no LUT/FIFO read ports.
     // Dynamic DONE/config-update bits and RAWAWB selector read normalization
     // have explicit masks. DMA addresses are checked separately by buffer role.
-    for (offset,mask) in [(0x4,u32::MAX),(0x18,u32::MAX),(0x400,!0x210),
-        (0x404,u32::MAX),(0xc00,!0x300),(0x4500,0x7fffffff),
-        (0x4600,0x7fffffff),(0x4900,0x7fffffff),(0x4a00,0x7fffffff),
-        (0x5000,0x7fff000f),(0x5004,u32::MAX)] {
-        let _=writeln!(super::cpu::Console,"@@ISP_FIXED_REG {:#06x} {:#010x} mask={:#010x}\r",offset,read(offset),mask);
+    for (offset, mask) in [
+        (0x4, u32::MAX),
+        (0x18, u32::MAX),
+        (0x400, !0x210),
+        (0x404, u32::MAX),
+        (0xc00, !0x300),
+        (0x4500, 0x7fffffff),
+        (0x4600, 0x7fffffff),
+        (0x4900, 0x7fffffff),
+        (0x4a00, 0x7fffffff),
+        (0x5000, 0x7fff000f),
+        (0x5004, u32::MAX),
+    ] {
+        let _ = writeln!(
+            super::cpu::Console,
+            "@@ISP_FIXED_REG {:#06x} {:#010x} mask={:#010x}\r",
+            offset,
+            read(offset),
+            mask
+        );
     }
-    for (start,end) in [(0x408,0x418),(0x594,0x5a4),(0x700,0x72c),(0x800,0x810),
-        (0xc04,0xc18),(0x2224,0x2240),(0x2504,0x2514),(0x3004,0x3018),
-        (0x3400,0x3420),(0x3500,0x3520),(0x3a04,0x3a18),(0x3f04,0x3f14),
-        (0x4504,0x450c),(0x4904,0x4914),(0x5008,0x5024)] {
+    for (start, end) in [
+        (0x408, 0x418),
+        (0x594, 0x5a4),
+        (0x700, 0x72c),
+        (0x800, 0x810),
+        (0xc04, 0xc18),
+        (0x2224, 0x2240),
+        (0x2504, 0x2514),
+        (0x3004, 0x3018),
+        (0x3400, 0x3420),
+        (0x3500, 0x3520),
+        (0x3a04, 0x3a18),
+        (0x3f04, 0x3f14),
+        (0x4504, 0x450c),
+        (0x4904, 0x4914),
+        (0x5008, 0x5024),
+    ] {
         for offset in (start..end).step_by(4) {
-            let _=writeln!(super::cpu::Console,"@@ISP_FIXED_REG {:#06x} {:#010x} mask=0xffffffff\r",offset,read(offset));
+            let _ = writeln!(
+                super::cpu::Console,
+                "@@ISP_FIXED_REG {:#06x} {:#010x} mask=0xffffffff\r",
+                offset,
+                read(offset)
+            );
         }
     }
 }
@@ -225,17 +258,28 @@ pub fn next_frame(raw: usize, frame: u32, parameters: u32) -> Result<usize, &'st
         if read(0x150c) != 0 {
             return Err("isp-feedback-mi-error");
         }
-        let mut matched=0;
+        let mut matched = 0;
         for i in 0..6 {
-            let expected=read_volatile(core::ptr::addr_of!(PENDING_GAINS).cast::<u32>().add(i));
-            let actual=read(0x530+i*4);
-            let same=if i<2 {
-                actual&0xfff==expected&0xfff && (actual>>12)&0xfff==(expected>>16)&0xfff
-            } else { actual==expected };
-            if same { matched+=1; }
+            let expected = read_volatile(core::ptr::addr_of!(PENDING_GAINS).cast::<u32>().add(i));
+            let actual = read(0x530 + i * 4);
+            let same = if i < 2 {
+                actual & 0xfff == expected & 0xfff
+                    && (actual >> 12) & 0xfff == (expected >> 16) & 0xfff
+            } else {
+                actual == expected
+            };
+            if same {
+                matched += 1;
+            }
         }
-        let _=writeln!(super::cpu::Console,"@@ISP_GAIN_READBACK matched={} checked=6 unresolved_gain2=2\r",matched);
-        if matched!=6 { return Err("isp-gain-readback"); }
+        let _ = writeln!(
+            super::cpu::Console,
+            "@@ISP_GAIN_READBACK matched={} checked=6 unresolved_gain2=2\r",
+            matched
+        );
+        if matched != 6 {
+            return Err("isp-gain-readback");
+        }
         let _ = writeln!(
             super::cpu::Console,
             "@@ISP_FEEDBACK_FRAME frame={} measured_parameters={} boundary_updates={}\r",
@@ -248,6 +292,11 @@ pub fn next_frame(raw: usize, frame: u32, parameters: u32) -> Result<usize, &'st
     }
 }
 pub fn run(raw: usize, frame_us: u64) {
+    FRAMES.store(0, Ordering::Release);
+    OUTPUTS.store(0, Ordering::Release);
+    PARAMETER_UPDATES.store(0, Ordering::Release);
+    PENDING_READY.store(false, Ordering::Release);
+    COMPLETED_MEASUREMENTS.store(0, Ordering::Release);
     #[cfg(not(feature = "isp-3a-test"))]
     let _ = frame_us;
     super::put(b"@@ISP_DIAGNOSTIC offline-fixed-parameters; no-3A-gate\r\n");
@@ -336,19 +385,24 @@ pub fn run(raw: usize, frame_us: u64) {
             super::put(b"@@FAIL isp-output-unchanged\r\n");
             return;
         }
-        super::put(b"@@ISP_YUV_BEGIN 160 120\r\n");
-        const HEX: &[u8] = b"0123456789abcdef";
-        for y in 0..120 {
-            super::put(b"@@ISP_YUV ");
-            for x in 0..160 {
-                let uv = OUTPUT + Y_BYTES + y * 2 * 640 + x * 4;
-                for address in [OUTPUT + y * 4 * 640 + x * 4, uv, uv + 1] {
-                    let value = read_volatile(address as *const u8);
-                    super::put(&[HEX[(value >> 4) as usize], HEX[(value & 15) as usize]]);
+        #[cfg(feature = "runtime-board")]
+        super::runtime::camera_validated();
+        #[cfg(not(feature = "runtime-board"))]
+        {
+            super::put(b"@@ISP_YUV_BEGIN 160 120\r\n");
+            const HEX: &[u8] = b"0123456789abcdef";
+            for y in 0..120 {
+                super::put(b"@@ISP_YUV ");
+                for x in 0..160 {
+                    let uv = OUTPUT + Y_BYTES + y * 2 * 640 + x * 4;
+                    for address in [OUTPUT + y * 4 * 640 + x * 4, uv, uv + 1] {
+                        let value = read_volatile(address as *const u8);
+                        super::put(&[HEX[(value >> 4) as usize], HEX[(value & 15) as usize]]);
+                    }
                 }
+                super::put(b"\r\n");
             }
-            super::put(b"\r\n");
+            super::put(b"@@ISP_YUV_END\r\n@@ISP_DIAGNOSTIC_FINISHED\r\n");
         }
-        super::put(b"@@ISP_YUV_END\r\n@@ISP_DIAGNOSTIC_FINISHED\r\n");
     }
 }

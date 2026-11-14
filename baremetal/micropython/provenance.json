@@ -1,0 +1,31 @@
+{
+  "micropython": {
+    "repository": "https://github.com/micropython/micropython",
+    "revision": "78ff170de9e32c79db6e64d3e33d2bd60002bdcd",
+    "tag": "v1.27.0",
+    "license": "MIT",
+    "licenseCopy": "micropython/LICENSE.upstream",
+    "coreModified": false
+  },
+  "rustpythonExperiment": {
+    "repository": "https://github.com/RustPython/RustPython",
+    "revision": "1d17957399ef02dab4a3ed90622d44437acc6fc1",
+    "requiredToolchain": "1.99.0",
+    "target": "armv7a-none-eabi",
+    "features": "rustpython-vm --no-default-features --features compiler",
+    "outcome": "E0463: dependency either imports std; target std unavailable",
+    "logSha256": "a39369dd3aadad3c7afb97b3aa88864cbae1c684efde7e416ec9aaa46a6f7d94"
+  },
+  "buddyAllocator": {
+    "crate": "buddy_system_allocator",
+    "version": "0.13.0",
+    "license": "MIT",
+    "repository": "https://github.com/rcore-os/buddy_system_allocator"
+  },
+  "newlibHeaders": {
+    "package": "libnewlib-dev",
+    "version": "3.3.0-1.3",
+    "distribution": "Ubuntu22.04",
+    "purpose": "Build headers only; host libc not linked"
+  }
+}

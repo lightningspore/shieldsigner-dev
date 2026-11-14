@@ -64,6 +64,16 @@ pub unsafe fn start(frequency: u32) {
     asm!("mcr p15, 0, {0}, c1, c0, 0", "isb", in(reg) control, options(nostack));
     write(DIST, 0, 0);
     write(CPU, 0, 0);
+    // Own the interrupt controller rather than inheriting ROM/previous-payload
+    // enables and active state across warm resets. Drivers enable their sources
+    // explicitly after this baseline. Stop the physical timer before clearing.
+    asm!("mcr p15, 0, {0}, c14, c2, 1",in(reg) 0u32,options(nostack));
+    let banks=(read(DIST,4)&31)+1;
+    for bank in 0..banks as usize {
+        write(DIST,0x180+bank*4,u32::MAX);
+        write(DIST,0x280+bank*4,u32::MAX);
+        write(DIST,0x380+bank*4,u32::MAX);
+    }
     for id in [29u32, 30, 59] {
         let bank = (id / 32) as usize * 4;
         let mask = 1u32 << (id % 32);
@@ -125,13 +135,29 @@ extern "C" fn rust_irq() {
             while read(super::UART, 0x14) & 1 != 0 {
                 let byte = read(super::UART, 0) as u8;
                 write_volatile(addr_of_mut!(UART_BYTES), uart_bytes().wrapping_add(1));
-                if byte == b'R' {
+                if byte
+                    == if cfg!(feature = "runtime-repl") {
+                        0x1d
+                    } else {
+                        b'R'
+                    }
+                {
+                    // Drop this UART IRQ's running priority before resetting;
+                    // do not leave an acknowledged interrupt active in the GIC.
+                    write(CPU,0x10,ack);
+                    asm!("dsb sy",options(nostack));
                     super::reset();
                 }
-                #[cfg(feature = "gpio-test")]
+                #[cfg(feature = "runtime-repl")]
+                {
+                    super::runtime::receive(byte);
+                    continue;
+                }
+                #[cfg(all(feature = "gpio-test", not(feature = "runtime-repl")))]
                 if super::gpio::command(byte) {
                     continue;
                 }
+                #[cfg(not(feature = "runtime-repl"))]
                 super::put(&[byte]);
             }
         }

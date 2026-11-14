@@ -15,8 +15,17 @@ const FINE_GAIN: u16 = 0x3e07;
 const ANALOG_GAIN: u16 = 0x3e09;
 const ORIENTATION: u16 = 0x3221;
 const TEST_PATTERN: u16 = 0x4501;
-pub const FRAME_LINES: u16 = if cfg!(feature = "isp-3a-test") { 1360 } else { 32767 };
-pub const NORMAL_EXPOSURE: u16 = if cfg!(feature = "isp-3a-test") { 122 } else { 8192 };
+pub const FRAME_LINES: u16 = if cfg!(feature = "isp-3a-test") {
+    1360
+} else {
+    32767
+};
+#[cfg(not(feature = "runtime-board"))]
+pub const NORMAL_EXPOSURE: u16 = if cfg!(feature = "isp-3a-test") {
+    122
+} else {
+    8192
+};
 
 fn set_frame_length(lines: u16) -> Result<(), &'static str> {
     if !(1304..=32767).contains(&lines) {
@@ -99,7 +108,14 @@ pub fn configure(pattern: bool) -> Result<(), &'static str> {
     } else if low_light {
         FRAME_LINES - 8
     } else {
-        NORMAL_EXPOSURE
+        #[cfg(feature = "runtime-board")]
+        {
+            super::initial_control_lines() as u16
+        }
+        #[cfg(not(feature = "runtime-board"))]
+        {
+            NORMAL_EXPOSURE
+        }
     };
     set_exposure(exposure)?;
     set_diagnostic_gain(low_light)?;

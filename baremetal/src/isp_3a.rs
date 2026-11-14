@@ -9,7 +9,20 @@ const PARAMETERS: &[u8; iq::isp32::PARAMETER_BYTES] =
 const AWB: &[u8; 1204] = include_bytes!("../.tools/isp-awb-sdk.bin");
 
 fn run(stats_address: usize, frame_us: u64) -> Result<(), &'static str> {
-    let profile: serde_json::Value = serde_json::from_slice(PROFILE).map_err(|_| "profile-json")?;
+    #[allow(unused_mut)] // runtime camera settings optionally override the profile's AE target.
+    let mut profile: serde_json::Value =
+        serde_json::from_slice(PROFILE).map_err(|_| "profile-json")?;
+    #[cfg(feature = "runtime-board")]
+    {
+        let target = super::runtime::camera_target();
+        if target != 0 {
+            let points=profile.pointer_mut("/main_scene/0/sub_scene/0/scene_isp32/ae_calib/LinearAeCtrl/DySetpoint/DySetpoint")
+                .and_then(serde_json::Value::as_array_mut).ok_or("ae-target-profile")?;
+            for point in points {
+                *point = serde_json::Value::from(target);
+            }
+        }
+    }
     let sensor = iq::calibration::SensorCalibration::from_value(&profile)
         .map_err(|_| "sensor-calibration")?;
     let hi = super::i2c::read_sensor(0x320c).map_err(|_| "hts-high")?;
@@ -43,7 +56,7 @@ fn run(stats_address: usize, frame_us: u64) -> Result<(), &'static str> {
         .map_err(|_| "ae-session")?;
     let mut current_record = {
         let codes = iq::exposure::Codes {
-            integration_time: super::camera::CONTROL_INITIAL_LINES,
+            integration_time: super::camera::initial_control_lines(),
             gain: 128,
         };
         let decoded = iq::exposure::decode_linear(codes, -1, sensor.conversion(timing))
@@ -74,7 +87,12 @@ fn run(stats_address: usize, frame_us: u64) -> Result<(), &'static str> {
     let mut active_sdk = *AWB;
     let mut address = stats_address;
     for index in 0..32u32 {
-        let _=writeln!(super::cpu::Console,"@@ISP_HEAP frame={} bytes={}\r",index,super::heap::used());
+        let _ = writeln!(
+            super::cpu::Console,
+            "@@ISP_HEAP frame={} bytes={}\r",
+            index,
+            super::heap::used()
+        );
         let bytes = unsafe {
             core::slice::from_raw_parts(address as *const u8, iq::statistics::BUFFER_BYTES)
         };
@@ -139,6 +157,14 @@ fn run(stats_address: usize, frame_us: u64) -> Result<(), &'static str> {
             result.controller_frame
         );
         if index == 31 {
+            #[cfg(feature = "runtime-board")]
+            {
+                let actual = iq::sensor_submission::linear_controls(&current_record);
+                super::runtime::camera_completed(
+                    actual.coarse_integration_time,
+                    actual.analogue_gain_code,
+                );
+            }
             break;
         }
         if controls.frame_length_lines != super::camera::CONTROL_FRAME_LINES

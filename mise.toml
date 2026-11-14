@@ -1199,3 +1199,19 @@ run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features isp
 [tasks."baremetal:isp:map:check"]
 description = "Compare original AWB register encoding with81 independently observed REF writes"
 run = ["mise exec rust@1.93.1 -- rustc --edition 2021 --test baremetal/src/isp_awb.rs -o baremetal/build/isp-awb-map-tests", "baremetal/build/isp-awb-map-tests"]
+
+[tasks."baremetal:runtime:build"]
+description = "Build RAM-only MicroPython UART REPL with reclaiming Rust allocator"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features runtime-repl"
+
+[tasks."baremetal:runtime:board:build"]
+description = "Build MicroPython UART REPL with Rust GPIO/I2C/SPI/ISP camera bindings"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features runtime-board"
+
+[tasks."baremetal:runtime:gate"]
+description = "Run the Phase9 peripheral/camera/GC script on an already loaded DUT UART REPL"
+run = "uv run --python 3.13 python baremetal/tools/console.py baremetal/micropython/phase9_gate.py --timeout 50"
+
+[tasks."baremetal:runtime:boot:gate"]
+description = "Verify five RAM-only runtime boots/reset cycles; start with DUT in maskrom and UART idle"
+run = "uv run --python 3.13 python baremetal/tools/runtime_boot_gate.py"

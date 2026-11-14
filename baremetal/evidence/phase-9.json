@@ -1,0 +1,45 @@
+{
+  "phase": 9,
+  "status": "passed-bounded-runtime-api-gate",
+  "dut": "RV1103 Pico Mini, SC3336",
+  "imageSha256": "397c486af3f60a2cc7f3b81c8d0f2861dc84eac227698ad1d6c1b868f6e62655",
+  "scriptSha256": "548f4c8facd8a4ce6a1e5bb5b26e5f2de2187f72f6328b8c01e5d4742027f844",
+  "hardwarePassMarkers": [
+    "phase-9-gpio",
+    "phase-9-i2c",
+    "phase-9-spi",
+    "phase-9-time",
+    "phase-9-camera",
+    "phase-9-camera-settings",
+    "phase-9-gc-exceptions",
+    "phase-9"
+  ],
+  "successfulRamBoots": 5,
+  "checks": [
+    "GPIO pad transitions and release",
+    "SC3336 ID and safe same-value I2C write/read",
+    "Physical SPI loopback 4096 bytes at 1/10/50MHz and in-place transfer",
+    "Hardware timer",
+    "Two real read-only 460800-byte NV12 camera captures",
+    "AE target/exposure seed and sensor exposure readback",
+    "Rust allocation bytes return to zero after both captures",
+    "Python GC, caught 9MiB allocation failure and invalid-input exceptions"
+  ],
+  "limits": [
+    "Bounded 32-frame camera acquisition; no continuous video qualification.",
+    "Only documented GPIO/I2C/SPI API subset supported.",
+    "No standalone SD boot, USB debug, LCD/button or SeedSigner app gate yet.",
+    "Warm RAM boots do not establish cold boot timing or hardware qualification."
+  ],
+  "evidence": {
+    "logs/phase-9/console-20261114T172550Z/result.json": "f0431c9df664c045977139b3a38c9705be55ae4b89b5fcd13942eaab1a775b13",
+    "logs/phase-9/console-20261114T172550Z/serial.bin": "fa2fcc044c11b6def40fcec0e087c1ae32f96841b4b5ee1780366638963fa1b2",
+    "micropython/phase9_gate.py": "548f4c8facd8a4ce6a1e5bb5b26e5f2de2187f72f6328b8c01e5d4742027f844",
+    "logs/phase-9/runtime-boot-gate.json": "2abd90f80d850c9bec5ad4369f0d0332a5398f0142b2419711c8da29d4513038",
+    "logs/phase-9/20261114T172434Z/build-manifest.json": "998c7814a3fd1829d833f8480168f1a601327b85af520d96275336dcb4aff51b"
+  },
+  "storageWrites": false,
+  "privateScenePixelsCommitted": false,
+  "payloadSha256": "ece24f4875685cacbcb2278ad83e95455ce69839adfda9d606f7db821a2e07f8",
+  "rebuildVerification": "Final rebuild has identical executable payload SHA256. Vendor download container differs between pack invocations; the hardware-tested container hash remains recorded above."
+}

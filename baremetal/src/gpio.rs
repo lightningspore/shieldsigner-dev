@@ -40,6 +40,7 @@ pub fn init() {
     super::put(b"@@GPIO_READY C4=input C5=input\r\n");
 }
 
+#[cfg(not(feature = "runtime-repl"))]
 pub fn command(byte: u8) -> bool {
     if READY.load(Ordering::Acquire) && byte == b'Z' {
         unsafe {
@@ -81,4 +82,22 @@ pub fn command(byte: u8) -> bool {
         super::put(&line);
     }
     true
+}
+
+#[cfg(feature = "runtime-board")]
+pub fn pin(id: u32, mode: Option<bool>, value: Option<bool>) -> Result<u32, &'static str> {
+    if !READY.load(Ordering::Acquire) || !(52..=53).contains(&id) {
+        return Err("pin-id");
+    }
+    let bit = 1u16 << (id - 48);
+    unsafe {
+        if let Some(value) = value {
+            masked(GPIO1 + 4, bit, if value { bit } else { 0 });
+        }
+        if let Some(output) = mode {
+            masked(GPIO1 + 0x0c, bit, if output { bit } else { 0 });
+        }
+        asm!("dsb sy", options(nostack));
+        Ok((read(GPIO1 + 0x70) >> (id - 32)) & 1)
+    }
 }

@@ -33,8 +33,10 @@ def main():
     folder.mkdir(parents=True)
     report = {'phase': args.phase, 'scope': 'RAM-only db; no storage commands', 'build': args.build}
     def run(argv, timeout=30):
+        started=time.monotonic()
         r = subprocess.run(argv, cwd=ROOT, capture_output=True, timeout=timeout)
         return {'argv': list(map(str, argv)), 'exitCode': r.returncode,
+                'wallTimeSeconds':time.monotonic()-started,
                 'stdout': r.stdout.decode(errors='replace'), 'stderr': r.stderr.decode(errors='replace')}
     if args.build:
         report['buildResult'] = run(args.build, 300)
@@ -76,10 +78,13 @@ def main():
         raise RuntimeError(push)
     report['baud'] = args.baud or cfg['provisionalBaud']
     remote = 'python3 -u /tmp/baremetal-capture.py '+shlex.join([cfg['referenceUart'], str(report['baud']), str(args.timeout)])
+    capture_started=time.monotonic()
+    milestones={}
     proc = subprocess.Popen(adb+['shell', remote], cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     ready = threading.Event()
     transport_errors = []
     def copy(stream, filename, notify=False):
+        recent=b''
         with (folder/filename).open('wb') as out:
             while True:
                 data = stream.readline()
@@ -90,7 +95,12 @@ def main():
                         ready.set()
                     elif data.startswith(b'@@DATA '):
                         try:
-                            out.write(base64.b64decode(data.split()[1], validate=True)); out.flush()
+                            decoded=base64.b64decode(data.split()[1], validate=True)
+                            out.write(decoded); out.flush()
+                            recent=(recent+decoded)[-4096:]
+                            for name,marker in [('hello',b'@@PASS hello'),('heap',b'@@PASS heap'),('irqStart',b'@@IRQ starting'),('timer',b'@@PASS timer-irq'),('repl',b'@@REPL_READY')]:
+                                if name not in milestones and marker in recent:
+                                    milestones[name]=time.monotonic()-capture_started
                         except (ValueError, IndexError) as exc:
                             transport_errors.append(str(exc))
                     else:
@@ -118,6 +128,7 @@ def main():
     serial = (folder/'serial.bin').read_bytes().decode('utf-8', errors='replace')
     (folder/'serial.txt').write_text(serial)
     report['captureExitCode'] = proc.returncode
+    report['uartObservedSecondsFromCaptureStart']=milestones
     report['passPattern'] = args.pass_pattern
     report['matched'] = bool(re.search(args.pass_pattern, serial))
     report['failedMarker'] = '@@FAIL' in serial

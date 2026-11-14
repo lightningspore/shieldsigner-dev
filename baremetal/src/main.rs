@@ -5,19 +5,13 @@
 
 use core::arch::{asm, global_asm};
 use core::ptr::{read_volatile, write_volatile};
+#[cfg(feature = "runtime-repl")]
+mod runtime;
 
 #[cfg(feature = "camera-test")]
 mod camera;
 #[cfg(feature = "camera-test")]
 mod camera_replay_data;
-#[cfg(feature = "isp-test")]
-mod isp;
-#[cfg(feature = "isp-test")]
-mod isp_replay_data;
-#[cfg(feature = "isp-3a-test")]
-mod isp_3a;
-#[cfg(feature = "isp-3a-test")]
-mod isp_awb;
 #[cfg(feature = "cpu-base")]
 mod cpu;
 #[cfg(feature = "gpio-test")]
@@ -28,6 +22,14 @@ mod heap;
 mod i2c;
 #[cfg(feature = "cpu-base")]
 mod interrupts;
+#[cfg(feature = "isp-test")]
+mod isp;
+#[cfg(feature = "isp-3a-test")]
+mod isp_3a;
+#[cfg(feature = "isp-3a-test")]
+mod isp_awb;
+#[cfg(feature = "isp-test")]
+mod isp_replay_data;
 #[cfg(feature = "spi-test")]
 mod spi;
 
@@ -53,6 +55,10 @@ _start:
 const UART: usize = 0xff4c0000;
 
 fn put(bytes: &[u8]) {
+    #[cfg(feature = "runtime-board")]
+    if runtime::QUIET.load(core::sync::atomic::Ordering::Relaxed) {
+        return;
+    }
     for &byte in bytes {
         unsafe {
             while read_volatile((UART + 0x14) as *const u32) & 0x20 == 0 {}
@@ -70,12 +76,15 @@ extern "C" fn rust_main() -> ! {
     gpio::init();
     #[cfg(all(feature = "i2c-test", not(feature = "camera-test")))]
     i2c::run();
-    #[cfg(feature = "spi-test")]
+    #[cfg(all(feature = "spi-test", not(feature = "runtime-repl")))]
     spi::run();
-    #[cfg(feature = "camera-test")]
+    #[cfg(all(feature = "camera-test", not(feature = "runtime-repl")))]
     camera::run();
+    #[cfg(feature = "runtime-repl")]
+    runtime::run();
     // Keep a UART recovery path while USB is absent in this minimal payload.
     // 'R' requests a warm reset; no storage writes are involved.
+    #[cfg(not(feature = "runtime-repl"))]
     loop {
         #[cfg(not(feature = "cpu-base"))]
         unsafe {
@@ -90,6 +99,8 @@ extern "C" fn rust_main() -> ! {
 }
 
 fn reset() -> ! {
+    #[cfg(feature = "runtime-board")]
+    runtime::QUIET.store(false, core::sync::atomic::Ordering::Relaxed);
     put(b"@@RESET\r\n");
     unsafe {
         asm!("cpsid if", options(nostack));

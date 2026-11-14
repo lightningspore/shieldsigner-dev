@@ -13,7 +13,7 @@ unsafe fn mask(a: usize, m: u16, v: u16) {
     write(a, ((m as u32) << 16) | ((m & v) as u32))
 }
 
-unsafe fn init() -> Result<u32, &'static str> {
+pub(crate) unsafe fn init() -> Result<u32, &'static str> {
     // Derive SPI clock from the inherited integer CPLL without retuning the PLL.
     let c0 = read(0xff3b0020);
     let c1 = read(0xff3b0024);
@@ -55,13 +55,17 @@ unsafe fn init() -> Result<u32, &'static str> {
     Ok((hz / 5) as u32)
 }
 
-fn transfer(divisor: u32, tx: &[u8; 4096], rx: &mut [u8; 4096]) -> Result<(), &'static str> {
+pub(crate) fn transfer(divisor: u32, tx: &[u8], rx: &mut [u8]) -> Result<(), &'static str> {
+    if tx.is_empty() || tx.len() > 4096 || tx.len() != rx.len() {
+        return Err("spi-length");
+    }
+    let count = tx.len();
     unsafe {
         write(SPI + 8, 0);
         write(SPI + 0x38, 1);
         // Mode0, MSB-first, 8-bit frames; full duplex, no DMA/interrupts/internal loopback.
         write(SPI, 1 | (1 << 13) | (1 << 11) | (1 << 10));
-        write(SPI + 4, 4095);
+        write(SPI + 4, (count - 1) as u32);
         write(SPI + 0x10, divisor);
         write(SPI + 0x14, 0);
         write(SPI + 0x18, 0);
@@ -71,9 +75,9 @@ fn transfer(divisor: u32, tx: &[u8; 4096], rx: &mut [u8; 4096]) -> Result<(), &'
         let mut sent = 0;
         let mut received = 0;
         let mut result = Ok(());
-        while received < 4096 {
+        while received < count {
             // Limit in-flight words below even the smallest supported FIFO depth.
-            while sent < 4096 && sent - received < 16 && read(SPI + 0x1c) < 16 {
+            while sent < count && sent - received < 16 && read(SPI + 0x1c) < 16 {
                 write(SPI + 0x400, tx[sent] as u32);
                 sent += 1;
             }
@@ -102,6 +106,7 @@ fn transfer(divisor: u32, tx: &[u8; 4096], rx: &mut [u8; 4096]) -> Result<(), &'
     }
 }
 
+#[cfg(not(feature = "runtime-repl"))]
 pub fn run() {
     let source = match unsafe { init() } {
         Ok(hz) => hz,

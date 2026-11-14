@@ -12,8 +12,19 @@ const BUFFERS: [usize; 2] = [0x03000000, 0x03400000];
 const FRAME_BYTES: usize = receiver::FRAME_BYTES;
 #[cfg(feature = "isp-3a-test")]
 pub const CONTROL_FRAME_LINES: u32 = sc3336::FRAME_LINES as u32;
-#[cfg(feature = "isp-3a-test")]
+#[cfg(all(feature = "isp-3a-test", not(feature = "runtime-board")))]
 pub const CONTROL_INITIAL_LINES: u32 = sc3336::NORMAL_EXPOSURE as u32;
+#[cfg(feature = "isp-3a-test")]
+pub fn initial_control_lines() -> u32 {
+    #[cfg(feature = "runtime-board")]
+    {
+        super::runtime::camera_seed()
+    }
+    #[cfg(not(feature = "runtime-board"))]
+    {
+        CONTROL_INITIAL_LINES
+    }
+}
 unsafe fn read(address: usize) -> u32 {
     read_volatile(address as *const u32)
 }
@@ -136,7 +147,11 @@ fn configure_camera() -> Result<(), &'static str> {
             receiver::configure();
         }
         sc3336::configure(cfg!(feature = "camera-pattern"))?;
-        if cfg!(feature = "isp-3a-test") { Ok(()) } else { sc3336::start() }
+        if cfg!(feature = "isp-3a-test") {
+            Ok(())
+        } else {
+            sc3336::start()
+        }
     }
 }
 fn stop_stream() -> Result<(), &'static str> {
@@ -207,8 +222,8 @@ pub fn run() {
     }
     let mut last_buffer = 0;
     #[cfg(feature = "isp-3a-test")]
-    if let Err(error)=sc3336::start() {
-        let _=writeln!(super::cpu::Console,"@@FAIL camera-start {}\r",error);
+    if let Err(error) = sc3336::start() {
+        let _ = writeln!(super::cpu::Console, "@@FAIL camera-start {}\r", error);
         return;
     }
     let mut previous_buffer = None;
@@ -250,8 +265,12 @@ pub fn run() {
                 // Stop on the last frame boundary before printing, avoiding a
                 // mid-packet stop that leaves CSI/VICAP size-error state.
                 if cfg!(feature = "isp-3a-test") && frame == 9 {
-                    if let Err(error)=stop_stream() {
-                        let _=writeln!(super::cpu::Console,"@@FAIL camera-boundary-stop {}\r",error);
+                    if let Err(error) = stop_stream() {
+                        let _ = writeln!(
+                            super::cpu::Console,
+                            "@@FAIL camera-boundary-stop {}\r",
+                            error
+                        );
                         return;
                     }
                 }
@@ -318,8 +337,14 @@ pub fn next_raw(lines: u32, gain: u32) -> Result<usize, &'static str> {
             let start = super::cpu::counter();
             loop {
                 let status = receiver::status();
-                let completed=receiver::completed_buffer(status).map_err(|error| {
-                    let _=writeln!(super::cpu::Console,"@@CAM_FEEDBACK_ERROR status={:#x} csi_err1={:#x} csi_err2={:#x}\r",status,unsafe{read(0xffa20020)},unsafe{read(0xffa20024)});
+                let completed = receiver::completed_buffer(status).map_err(|error| {
+                    let _ = writeln!(
+                        super::cpu::Console,
+                        "@@CAM_FEEDBACK_ERROR status={:#x} csi_err1={:#x} csi_err2={:#x}\r",
+                        status,
+                        unsafe { read(0xffa20020) },
+                        unsafe { read(0xffa20024) }
+                    );
                     error
                 })?;
                 if let Some(buffer) = completed {

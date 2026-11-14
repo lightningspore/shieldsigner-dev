@@ -41,6 +41,10 @@ pub fn run() {
     if frequency != 0 && elapsed != 0 {
         super::put(b"@@PASS cpu-counter\r\n");
         memory_gate();
+        #[cfg(feature = "reclaiming-heap")]
+        unsafe {
+            super::heap::init();
+        }
         if super::heap::check() {
             super::put(b"@@PASS heap\r\n");
         } else {

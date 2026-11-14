@@ -1,4 +1,4 @@
-# Copyright (c)2020 Stepan Snigirev; MIT, see ../LICENSE.embit
+# Copyright2020 Stepan Snigirev; MIT, see ../LICENSE.embit
 WORDLIST = [
     "abandon",
     "ability",

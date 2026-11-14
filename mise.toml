@@ -1476,3 +1476,15 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:seed:dut1:gate"]
 description = "Run original Seed model public derivation, passphrase-change and actual wipe gate on DUT1"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/seed_gate.py --serial rv1103-dut1 --timeout 30"
+
+[tasks."baremetal:embit:models:prepare"]
+description = "Prepare pinned actual embit parsing/model modules with an explicit deferred curve provider"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_bip39.py", "uv run --python 3.13 python baremetal/tools/prepare_embit_models.py"]
+
+[tasks."baremetal:psbt:framing:prepare"]
+description = "Prepare the whole original strict PSBT framing checker and independent CPython reference cases"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_psbt_framing.py", "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_psbt_gate.py"]
+
+[tasks."baremetal:psbt:framing:dut1:gate"]
+description = "Run strict original PSBT acceptance/refusal and numeric SeedQR through real native model code"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/psbt_framing_gate.py --serial rv1103-dut1 --timeout 30"

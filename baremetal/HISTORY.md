@@ -394,3 +394,17 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
 - SEED-PORT.md documents caller-owned/discard-only clearing, aliases/hash caveat,
   skipped sharedstorage and remaining alternate seed/curve/UI/optical work.
   FinalDUT1RAMimageab515da0...,Home restored,cameraoff. NoSD/CADwrites.
+
+### 2026-11-14 — Whole strict framing and numeric SeedQR
+
+- Ported actual embit parsing/model modules and whole original PSBT framing;
+  actual original refusal classes retained, not the full PSBTParser policy.
+  Missing curve methods/NUMS point initialization explicitly defer to a real
+  backend and raise FeatureUnavailable today. No substitute crypto/entropy.
+- Native finalimage553bfe12...,RAMload233756 passed15referenceframing cases,
+  strictrefusals and v0/v2roundtrips.12-wordnumericSeedQR nowpasses original
+  genericclassifier/decoder/Seedvalidation. Noopticalclaim. Initialparserimage
+  exposed eagerNUMScurveimport, correctedbylazyactualexpressionwithgatecoverage.
+- Seed/memory/originalQR-scan regressions and50hosttests pass; Home restored,
+  cameraoff, allreadersfinished. DetailedPSBT-FRAMING-PORT.md andreceipt recorded.
+  NoSD/CADwrites. Text/24word/compactambiguity andfullapp/curve flows remain.

@@ -28,8 +28,8 @@ with tarfile.open(fileobj=io.BytesIO(data)) as archive:
    changes=['Use actual micropython.const directly; avoid unrelated eager secp256k1 import in misc','Remove Python type annotations only']
   if name=='__init__.py':
    assert not text.strip()
-   text='from . import bip39\n';changes=['Expose only the actually frozen BIP39 leaf']
+   text='from . import bip39,bip32,ec,psbt\n';changes=['Expose actually frozen BIP39 and original parsing/model leaves; curve provider remains deferred']
   out=root/'app/embit'/name;out.parent.mkdir(parents=True,exist_ok=True)
-  out.write_text('# Copyright (c)2020 Stepan Snigirev; MIT, see ../LICENSE.embit\n'+text)
+  out.write_text('# Copyright2020 Stepan Snigirev; MIT, see ../LICENSE.embit\n'+text)
   receipt['files'][name]={'sourceSha256':hashlib.sha256(raw).hexdigest(),'outputSha256':hashlib.sha256(out.read_bytes()).hexdigest(),'changes':changes}
  (root/'app/bip39-provenance.json').write_text(json.dumps(receipt,indent=2)+'\n')

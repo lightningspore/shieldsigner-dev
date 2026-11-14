@@ -43,7 +43,7 @@ class Port(ast.NodeTransformer):
         if n.type is not None and ast.unparse(n.type)=='json.decoder.JSONDecodeError':n.type=ast.Name(id='ValueError',ctx=ast.Load())
         return self.generic_visit(n)
     def visit_Expr(self,n):
-        if isinstance(n.value,ast.Call) and isinstance(n.value.func,ast.Attribute) and isinstance(n.value.func.value,ast.Name) and n.value.func.value.id=='logger':return ast.copy_location(ast.Pass(),n)
+        if isinstance(n.value,ast.Call) and isinstance(n.value.func,ast.Attribute) and isinstance(n.value.func.value,ast.Name) and n.value.func.value.id in ('logger','logging'):return ast.copy_location(ast.Pass(),n)
         return self.generic_visit(n)
 classes=[n for n in tree.body if isinstance(n,ast.ClassDef)];provenance={}
 for cls in classes:

@@ -41,7 +41,7 @@
     "Remove logger payload calls; JSON decode exception spelling normalized",
     "Replace legacy image probes/extraction with existing native ZXing API"
   ],
-  "outputSha256": "791affb396521fc177a798a50bcff5d93f19d79bd574244edf6502b5a4174a42",
+  "outputSha256": "8b431e292c02424a1bdb516245720367e82b803b1c5f5b5a5968d4227d820d6b",
   "base64": {
     "source": "micropython-lib/python-stdlib/base64/base64.py",
     "sourceSha256": "7db45610392bf27d506b2159279c40d3fd5e5f04b6b3bcced7acaf2f9edd3852",

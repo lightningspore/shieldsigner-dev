@@ -5,7 +5,8 @@ source, matching the reference inventory. `baremetal:bip39:prepare` downloads th
 hash-pinned source distribution and public vectors, preserves the MIT license,
 and records each source/output hash. BIP39's const import goes directly to real
 micropython.const, avoiding misc's unrelated eager curve-backend import. Type
-annotations are removed. Package initialization exposes this real leaf only.
+annotations are removed. Package initialization now also exposes the actual parsing/model modules described
+in PSBT-FRAMING-PORT.md; curve methods still require a real native provider.
 
 The original mnemonic-to-entropy, entropy-to-mnemonic, checksum, candidate-search
 and full SHA512/2048 PBKDF2 algorithms remain intact. Callers own Unicode NFKD:

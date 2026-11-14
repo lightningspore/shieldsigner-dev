@@ -1,4 +1,4 @@
-# Copyright (c)2020 Stepan Snigirev; MIT, see ../LICENSE.embit
+# Copyright2020 Stepan Snigirev; MIT, see ../LICENSE.embit
 import hashlib
 from micropython import const
 from .wordlists.bip39 import WORDLIST

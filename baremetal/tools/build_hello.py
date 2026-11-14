@@ -104,6 +104,8 @@ shutil.copyfile(rkbin/'hello-download.bin', build/'hello-download.bin')
         for p in [ROOT.parent/'firmware/rkaiq-rs/Cargo.toml', *sorted((ROOT.parent/'firmware/rkaiq-rs/src').glob('*.rs'))]} if 'isp' in args.features or 'runtime-board' in features else {},
     'runtime':runtime_info,
     'nativeHashes':{'core':'hash-core','dependencyLockSha256':hashlib.sha256((ROOT/'Cargo.lock').read_bytes()).hexdigest(),'preparedLibraries':json.loads((ROOT/'app/hash-libs-provenance.json').read_text()),'note':'Streaming hashes, HMAC and service-aware PBKDF2 prerequisites; not full seed/wallet qualification'} if 'native-hashes' in features else None,
+    'nativeEmbitModels':json.loads((ROOT/'app/embit-models-provenance.json').read_text()) if 'native-ui' in features else None,
+    'nativePsbtFraming':json.loads((ROOT/'app/psbt-framing-provenance.json').read_text()) if 'native-ui' in features else None,
     'nativeBip39':json.loads((ROOT/'app/bip39-provenance.json').read_text()) if 'native-ui' in features else None,
     'nativeUnicode':json.loads((ROOT/'unicode/provenance.json').read_text()) if 'native-unicode' in features else None,
     'nativeRegex':json.loads((ROOT/'build/regex/manifest.json').read_text()) if 'native-ui' in features else None,

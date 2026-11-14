@@ -6,24 +6,24 @@
   "files": {
     "__init__.py": {
       "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "outputSha256": "f7e38f5a03a21bde9d92b9dcb7ac007da5482223128bb9b0a9364f0243181f2f",
+      "outputSha256": "44296a6d18e3964a040856cf5389b406a85d00f3fce372a4e460827b11db4ff9",
       "changes": [
-        "Expose only the actually frozen BIP39 leaf"
+        "Expose actually frozen BIP39 and original parsing/model leaves; curve provider remains deferred"
       ]
     },
     "wordlists/__init__.py": {
       "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "outputSha256": "8d6c3a62221f1197215c95a9c1e98d407ea51bd5aa83e9f48a0c52d7dbf0b154",
+      "outputSha256": "762da87d59dba5c30a30b88d2ecab8a938fe7b058a412b5ec71b23a100a9868e",
       "changes": []
     },
     "wordlists/bip39.py": {
       "sourceSha256": "c7398e797b743901822741e5a2c6010cb1ac09f7ea1bc562d6da0d8bf4d164e2",
-      "outputSha256": "784bbc2cb5202ac17a3090788283294c933d3a400810ce204a1bfd043ebd5aec",
+      "outputSha256": "06f1396226e2c07ca799170d5261a2a825b25965b438a7ca3345bd0302275e0f",
       "changes": []
     },
     "bip39.py": {
       "sourceSha256": "f19617b7ef97b80a085fd752a65a30f6d0f7e9e50a36633b2f2178e09be54076",
-      "outputSha256": "8692491a7e50af8efa78e7283bfaa5e2157a60a87d04e6557b2ae43ce94d4b16",
+      "outputSha256": "798db0bc65e21160a1e047cfeb89393d3849aad77dde4a83d459e503e9446777",
       "changes": [
         "Use actual micropython.const directly; avoid unrelated eager secp256k1 import in misc",
         "Remove Python type annotations only"

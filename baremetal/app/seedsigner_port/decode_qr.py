@@ -913,7 +913,7 @@ class SeedQrDecoder(BaseSingleFrameQrDecoder):
             except Exception as e:
                 return DecodeQRStatus.INVALID
         if qr_type == QRType.SEED__COMPACTSEEDQR:
-            logging.info('Trying CompactSeedQR')
+            pass
             try:
                 self.seed_phrase = [''.join(w) for w in _dependency('embit', 'bip39').mnemonic_from_bytes(segment).split()]
                 if not self.has_valid_word_count():

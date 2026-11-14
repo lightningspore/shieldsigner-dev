@@ -1,0 +1,27 @@
+{
+  "status": "native-original-framing-and-numeric-seedqr-gates-passed",
+  "scope": "Whole original framing + actual embit parsing/model source; not signing/curve/fullPSBTParser or optical qualification",
+  "device": "DUT1 app-ui",
+  "downloadSha256": "553bfe124eecf4292a11ea5c7e0f5aaccc432ced2069a499d900abec234bb9f9",
+  "load": "logs/phase-11/dut1-20261114T233756Z",
+  "gate": "logs/phase-11/usb-20261114T233824.657712Z",
+  "framingCases": 15,
+  "numericSeedQr": "Original generic classifier\u2192SeedQrDecoder\u2192original Seed validation, published12-word fixture",
+  "curveAndNumsCalls": "Explicit FeatureUnavailable required; no real curve backend yet",
+  "regressions": {
+    "seed": "logs/phase-11/usb-20261114T233819.380362Z",
+    "memory": "logs/phase-11/usb-20261114T233825.575511Z",
+    "originalQrScan": "logs/phase-11/usb-20261114T233826.795161Z",
+    "home": "logs/phase-11/usb-20261114T233827.760093Z",
+    "hostTests": 50
+  },
+  "sourceSha256": {
+    "app/embit-models-provenance.json": "47a53444c57fae43ae9b03309da6f668e0fabced590fb9c351b95b5952a0dcd4",
+    "app/psbt-framing-provenance.json": "4ccdc34af73ce205b4ab47312117b51e12c9be4fec9859e698d03d0bcd570619",
+    "app/psbt-framing-vectors.json": "af2b80fa4aa020bd54a88c36582e777d813b4fc6c47ff257ff3d5656d9cb803f",
+    "micropython/psbt_framing_gate.py": "deabd3843fdd58b7f2ebf50a03fbb6be9974ce0ddb54d26a8191e954425288fc",
+    "app/seedsigner_port/deferred_module.py": "5b78d7ad84d0441702be553e101ba3ea26246c9f0e564334548f2e4b4195703c",
+    "app/seedsigner_port/psbt_framing.py": "9774fbcda8a397944490216c811957fd4afaa22ac708f5dc18e49ee4350de6e1",
+    "app/seedsigner_port/psbt_errors.py": "3d1079a3730ebd467ffe0b77a074e40fa12aefc7b16dd1bee3995d73f1f414d4"
+  }
+}

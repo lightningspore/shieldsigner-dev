@@ -32,6 +32,7 @@ void bm_micropython_poll(void);
 // Native UI builds link the pinned complete newlib/libm runtime.
 #if BM_NATIVE_UI
 #define MICROPY_ENABLE_FINALISER (1)
+#define MICROPY_PY_COLLECTIONS_ORDEREDDICT (1)
 #define MICROPY_PY_ARRAY_SLICE_ASSIGN (1)
 #define MICROPY_PY_BINASCII (1)
 #define MICROPY_PY_BUILTINS_BYTES_HEX (1)

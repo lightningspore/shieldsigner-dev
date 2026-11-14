@@ -1,0 +1,14 @@
+{
+  "psbt_parser.py": {
+    "sourceSha256": "ab5bc31e372d2f008c1b0574c601801111b5f301422b89e2dcf256cd88985c7e",
+    "output": "psbt_errors.py",
+    "outputSha256": "3d1079a3730ebd467ffe0b77a074e40fa12aefc7b16dd1bee3995d73f1f414d4",
+    "scope": "Actual RejectCode/InvalidPSBTError classes only; PSBTParser remains unported"
+  },
+  "psbt_framing.py": {
+    "sourceSha256": "d75feed7b2128507b3b32428ab28aef2df720ea0770fb1b0d44987577ffd3e10",
+    "output": "psbt_framing.py",
+    "outputSha256": "9774fbcda8a397944490216c811957fd4afaa22ac708f5dc18e49ee4350de6e1",
+    "scope": "Whole original framing module; BytesIO length from seek/tell, native embit; unavailable dependencies propagate"
+  }
+}

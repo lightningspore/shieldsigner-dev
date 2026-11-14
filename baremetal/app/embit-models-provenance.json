@@ -1,0 +1,105 @@
+{
+  "version": "0.8.0",
+  "sdistSha256": "8bf4b10073c67400370ce523fb16f035fe759f6fdd987c579bdcc268d75ed770",
+  "files": {
+    "base": {
+      "sourceSha256": "7c0b75fa140abce6663fc879f811c69bc231099b962f968ed362ac1bfbe10461",
+      "outputSha256": "bdb83fa71d7644e6b5dcfb6b804d88fc5ba525c915b4af609e7f903e341f0f9d",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "base58": {
+      "sourceSha256": "9166fd6cec484bf1c14a4ca1dabc05a9cff1613a35598737945da0b5dec81d5f",
+      "outputSha256": "bfde469e9d9449bdfbdd15adda7cb72f6a7547a8bc9d24514f6308630f585f16",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "bech32": {
+      "sourceSha256": "9ad80ea66ef64f7e2c8906175fdd5bc3ba19952fea6a356edd15cf693736ba3f",
+      "outputSha256": "4e78e125521eafc09751f8c3c4798f462f6161b0241bae7167c5efc30f389b17",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "compact": {
+      "sourceSha256": "558255ead2d0c05c8c2241de6906717cee946a31ee35a1c8d99d4a3e1bb50cd8",
+      "outputSha256": "63a5006848e7ce66f4570bc8940043c142d66b93795dc87255e561c73ede5717",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "hashes": {
+      "sourceSha256": "a0fbfa6dfd9c2db718a706e20b09bbf29d0ff120d8381f2db0477f8f169b9505",
+      "outputSha256": "b2118987e2799ffb1ed9f2805e84412f00929b7d375a0faaaf2c31caa4fb62b2",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "networks": {
+      "sourceSha256": "d1ba1531c9bb5fb67e838b092a2f30153a8a3b135c61c4819ab20ea1339bd94b",
+      "outputSha256": "137a2f6c5ecd70874f9f10c1e8f2dd0ed62bc44d8cad0d10c54669c56e172876",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "script": {
+      "sourceSha256": "f35827d59a038ba9b0d11ab80697ae3f5913f6bf16d7c078b627180f5ef651e3",
+      "outputSha256": "8946b854238be6aa960624f20f858bd89c39fa2f137d06e91ed612dd18eec43a",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "transaction": {
+      "sourceSha256": "b43f0974608332268ef5fc61467fd5918f2b5015e0bc2baa7e842dbd08d05653",
+      "outputSha256": "b4031204000c428f9924f5a38c82b75c68a73ca53dd52a42a0f43e6681d04410",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "ec": {
+      "sourceSha256": "ae3b900f283fca5541d99816016c6514d37117d56135328bced688ba7f001973",
+      "outputSha256": "2223aa4722a510bcad07b04c281a38bddb86e78f1fb36c29d2bd84f25862a469",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers",
+        "Compute actual NUMS_PUBKEY lazily through module __getattr__; no fabricated point or curve result"
+      ]
+    },
+    "bip32": {
+      "sourceSha256": "584bbbd23c5e90791295ee688832510d0c1da82b932c5760472a2f6fb75cdaa2",
+      "outputSha256": "e8426f465398637ab61a2b42cc3d0db4d9c3827ea77de8a386df505f00188bc8",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "psbt": {
+      "sourceSha256": "e25bd03708e89c0209723b9cc8eddb502b1653d8afc0c9aa32efd1226793541b",
+      "outputSha256": "400e378a3d991d43889e82b2e5b91408bd0497750cdc9c86369662b3b961d944",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers"
+      ]
+    },
+    "misc": {
+      "sourceSha256": "757a60036ad83147d7f169274835d666b423272d4f1ea4c8b0dc925329db6f89",
+      "outputSha256": "437e0ebcd55945e0d4a15c045e5a22d0dfb2ab4be7b1d9c4abee3eb3f61fe60d",
+      "changes": [
+        "Remove type annotations",
+        "Propagate unavailable native dependencies before broad exception handlers",
+        "Defer unavailable secp256k1 module until an actual curve method is requested; never supply curve results or entropy"
+      ]
+    }
+  },
+  "scope": "Original parser/model source; curve and entropy operations remain unavailable until actual providers exist"
+}

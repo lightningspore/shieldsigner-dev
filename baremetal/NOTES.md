@@ -377,3 +377,23 @@ keys. Copies/temporaries/internsnotpromisederased. Noerase/walletqualification.
 SharedartifactsDUT1app-ui. DUT0olderUnicodeimageidle/qstrheavyneedsRAMreloadbefore
 futuretest. NextgenericQRdeps:PSBTframing,SLIP39wordlist/importboundary,Aezeedchecksum;
 DecodeQRcompactbranchhasleftoverlogging.info toremoveviaexistingloggingboundary.
+
+2026-11-14 originalPSBTframing/numericSeedQR: frozeactualembit0.8.0 base,compact,
+hashes,networks,Base58/Bech32,script,transaction,EC/BIP32models,PSBTsource. Curve
+moduleimportdeferred; actualmethods/NUMSpublicpoint expressionraiseFeatureUnavailable
+untilrealbackendexists, nofakekey/signature/entropy. OriginaleagerNUMSinitialization
+broke firstparserimageload ofSeed; correctedmodule__getattr__computes/cachesexact
+originalpointwhenrequested, guardgateprovesexplicitfailure. Wholeoriginalstrict
+framingmodule+actualRejectCode/InvalidPSBTErrorclasses ported. FullPSBTParser remains
+unported. BytesIO.getbufferlen ->seek/tell/restore only; OrderedDictenabledactualC.
+15nativefixturescomparewholeoriginalCPythonchecker:2v0/v2roundtrips, strictduplicate/
+nonminimal/mixedversion/impossiblecount/trailing/truncation/badmagic casespass.
+Numeric12-wordSeedQRnowpasses ORIGINALgenericclassifier/SeedQrDecoder/Seedvalidation.
+Noopticalsuccessclaim. Loggingboundaryalsoomitsleftovercompactlogging.info.
+FinalDUT1image553bfe12...,RAMload233756;gate233824,Seed233819,memory233825,original
+QR/scan233826 pass;Home233827,cameraoff.50hosttestspass. Sourceprep/provenance and
+PSBT-FRAMING-PORT.md/phase-12-psbt-framing receipt recordall. SharedartifactsDUT1;
+DUT0olderUnicodeidle/qstrheavyneedsRAMreloadbeforefuturetests. Allreadersfinished.
+NoSD/CAD/REFstoragewrites. Next:actualSLIP39wordlist+importlibboundary for textseed
+classification,Aezeedchecksumfor24-wordambiguity,compact/encrypted/URdeps, full
+Controller/Viewrouting andrealcurves/entropy. Currentnumericgateinjectsdata only.

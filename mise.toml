@@ -1464,3 +1464,15 @@ run = "uv run --python 3.13 python baremetal/tools/capture_passphrase_oracle.py"
 [tasks."baremetal:passphrase:dut1:gate"]
 description = "Compare native passphrase escape/NFKD behavior against saved REF results on DUT1"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/passphrase_gate.py --serial rv1103-dut1 --timeout 30"
+
+[tasks."baremetal:seed:prepare"]
+description = "Prepare all locked original Seed classes with explicit native boundaries and public vector gate"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_seed.py", "uv run --python 3.13 python baremetal/tools/prepare_seed_gate.py"]
+
+[tasks."baremetal:memory:dut1:gate"]
+description = "Prove actual owned-buffer clearing, frozen/qstr guards and live-neighbor integrity on DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/memory_gate.py --serial rv1103-dut1 --timeout 30"
+
+[tasks."baremetal:seed:dut1:gate"]
+description = "Run original Seed model public derivation, passphrase-change and actual wipe gate on DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/seed_gate.py --serial rv1103-dut1 --timeout 30"

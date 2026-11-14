@@ -380,3 +380,17 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
 - FinalDUT1 image60f75644...,RAMload232400,gate232451. Home restored,cameraoff.
   NoSDwrites. OriginalSeed memory-clearing/ownership policy remains real work;
   no fake wipe/curve/model/optical-success claim. Detailed PASSPHRASE-PORT.md.
+
+### 2026-11-14 — Original BIP39 Seed model and actual native clearing
+
+- Retained every original Seed class/method with explicit deferred dependencies,
+  REF-tested passphrase boundary and native secure_delete. Actual volatile writes
+  are guarded by GC object/data ownership; frozen/qstr/external storage protected.
+- NativeDUT1 memorygate232932 passed clearing/alias/frozen-wordlist/neighbor tests.
+  Seedgate232943 passed24published vectors,32REF passphrase derivations, changes,
+  equality, invalidinput and actualseedbytewipe.48hosttests, QR/scan andpassphrase
+  regressions pass. Earlier memorytest incorrectlytreatedREPLbytes asfrozen;
+  correctedfixture isactuallyfrozen andprotected. No falseimplementationfailure.
+- SEED-PORT.md documents caller-owned/discard-only clearing, aliases/hash caveat,
+  skipped sharedstorage and remaining alternate seed/curve/UI/optical work.
+  FinalDUT1RAMimageab515da0...,Home restored,cameraoff. NoSD/CADwrites.

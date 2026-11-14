@@ -1,0 +1,26 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "source": "src/seedsigner/models/seed.py",
+  "sourceSha256": "cb98d3d8b54b159e1c02a372be261e35d5bf47498eac201763f0de10154b8fff",
+  "classes": {
+    "InvalidSeedException": "d533e1238b5704e58b6dc19d1fc476a62bb4108c5a83ae5302a26eb76835c155",
+    "SeedWordsUnavailableException": "57ea076453451a4324ce47fe7f2a6ca04d96ebd000be80c55d476515641cdf7e",
+    "Seed": "ea866bf167fd55de7ff63c775b72698e1399d33df8a9828c91fcaa1d0de815f0",
+    "AezeedSeed": "bbbf2e87c9620be53c63a4c16424fb914c6749044462a6507807cf3af89654b7",
+    "ElectrumSeed": "86d966449b84af05327f4d585c32dd02af92778795754e398fe0b7410af374e3",
+    "Slip39Seed": "eb4dec9999a434aefd32f6e694f47db1b7fb295f7213e602a1db1cb5c733ad1e",
+    "XprvSeed": "886b3acf6dc22d48d3cb3c7926ee1afdb209ba2a0a0151616e160a757560baa4"
+  },
+  "outputSha256": "d61a6254d8864b287819431acc89aba0868651b1bcd96905f3f02dfeaace3949",
+  "transformations": [
+    "Remove type annotations",
+    "Defer actual imports; unavailable dependencies propagate before broad parse handlers",
+    "Replace Seed and Electrum set_passphrase codec boundary with REF-tested adapter; preserve Electrum normalization",
+    "Use native GC-guarded best-effort secure_delete boundary",
+    "Remove logger payload calls"
+  ],
+  "scope": "All original classes retained; class presence does not qualify alternate seed, curve or workflow paths"
+}

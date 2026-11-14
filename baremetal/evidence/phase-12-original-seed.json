@@ -1,0 +1,26 @@
+{
+  "status": "original-bip39-seed-model-and-native-owned-buffer-clearing-gates-passed",
+  "scope": "BIP39 Seed model; not alternate seed/curve/Controller/optical/complete-memory-erasure qualification",
+  "device": "DUT1 app-ui",
+  "downloadSha256": "ab515da0e3bb0dd59e8c2b45505a4fc8370103bcdb6dba5ae83aec0c0cde730f",
+  "load": "logs/phase-11/dut1-20261114T232910Z",
+  "nativeMemoryGate": "logs/phase-11/usb-20261114T232932.219336Z",
+  "seedGate": "logs/phase-11/usb-20261114T232943.967070Z",
+  "publishedEnglishSeedVectors": 24,
+  "refPassphraseSeedCases": 32,
+  "regressions": {
+    "originalQrScan": "logs/phase-11/usb-20261114T233015.671754Z",
+    "passphrase": "logs/phase-11/usb-20261114T233016.654438Z",
+    "home": "logs/phase-11/usb-20261114T233021.094330Z",
+    "hostTests": 48
+  },
+  "sourceSha256": {
+    "micropython/modmemory.c": "98279dd87a7c4727f36bf01c89baef9ec012f393b9150e581608d8e0e1e12f4f",
+    "micropython/memory_gate.py": "7caf06d7183b63992d206a23c1d01ec3d8d1fce7cf34c25b5a1eccf86bacfa23",
+    "app/seedsigner_port/secure_delete.py": "9829c3a4b558d91aeb8209f799787bea1d53e44a74409d7bf9dc1312c003b709",
+    "app/seedsigner_port/memory_fixtures.py": "8e74a5a3f72b0abb23b90b9bdfe7fbb0b66cae06b808bb18310ae5a69ed7914b",
+    "app/seedsigner_port/seed.py": "d61a6254d8864b287819431acc89aba0868651b1bcd96905f3f02dfeaace3949",
+    "app/seed-provenance.json": "361c6cb04d5a586ce75870949f2919ef3fce857344882cffa8dea8a554044054",
+    "micropython/seed_gate.py": "a70f056f59478bb3724fe151c81ccd2e4eb39f288db05a3c2de6413cba601678"
+  }
+}

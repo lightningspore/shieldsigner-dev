@@ -359,3 +359,21 @@ Next originalSeed blocker: secure_delete usesCPython ctypes/refcounts and cannot
 be silentlystubbed; need realnative memoryownership/wipe policy. RealBIP39,
 normalization andpassphrase boundaries nowproven, but originalSeed/alternate seeds,
 curves/roots/UR,Controller/Viewrouting andopticalQR success remainunfinished.
+
+2026-11-14 originalSeed/nativeclearing: all originalSeed classes/methods retained
+fromguardedsource viaAST; actualBIP39Seedconstruction/regeneration/eq/disposal now
+native. Sourcebindingsdeferredexplicitly, unavailablefeaturespropagate, passphrase
+boundaryREF-tested. SEED-PORT.md andphase-12-original-seed receipt scope details.
+DUT1imageab515da0...,RAMload232910. Memorygate232932passesvolatileclearGC-owned
+bytearray/bytes/UTF8str,2048wordlistguards,frozenbytes/text guards,neighborintegrity,
+100GCcycles. FirstgateusedREPLliteralasfrozenprobe (wrong: heapconstant), corrected
+byactualfrozenfixtures; nativeallocationguardwasworking. OriginalSeedgate232943
+passes24publishedvectors+32REFpassphrasecases, regeneration/eq/invalidinputs, real
+seedbytealiaszeroingandpostwipewordlistvalidity;48hosttestspass. QR/scan233015 and
+passphrase233016 regressionspass;Home233021,cameraoff. Allreadersfinished.
+NoSD/CAD/REFstoragewrites. Cwipe accepts onlyGCHEAD-ownedobject/data; frozen/qstr/
+externalbuffersskipped. NoCPythonrefcounts; callerdiscardsaliases andmustnotwipe
+keys. Copies/temporaries/internsnotpromisederased. Noerase/walletqualification.
+SharedartifactsDUT1app-ui. DUT0olderUnicodeimageidle/qstrheavyneedsRAMreloadbefore
+futuretest. NextgenericQRdeps:PSBTframing,SLIP39wordlist/importboundary,Aezeedchecksum;
+DecodeQRcompactbranchhasleftoverlogging.info toremoveviaexistingloggingboundary.

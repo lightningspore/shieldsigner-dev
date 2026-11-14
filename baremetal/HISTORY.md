@@ -339,3 +339,14 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
   for the optional optical retry. Shared artifacts now target wired DUT0; do not
   load them on DUT1. No CAD, REF storage or SD changes. Native Seed/embit/UR,
   Unicode NFKD, curves, Controller and SD app integration remain unfinished.
+
+### 2026-11-14 — Unicode15 normalization prerequisite
+
+- Added pinned no_std Unicode15.0.0 normalization, matching read-only REF
+  CPython3.12.10, with native normalize/is_normalized APIs and retained licenses.
+- Actual DUT0 passed saved REF oracle/API bounds/reordering/heap gates and all
+  381480 relations in the official19074-row corpus (6380ms). Separate unlisted
+  scalar sweep remains pending after initial host observation timeout; no full
+  conformance, mnemonic or wallet readiness claim.44host regressions pass.
+- User finished demo; stopped DUT1 camera and restored Home. Continued software
+  dependencies without requiring further physical camera holding. RAM-only work.

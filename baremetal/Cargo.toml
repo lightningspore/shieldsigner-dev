@@ -28,7 +28,8 @@ app-runtime = ["fast-boot"]
 usb-console = ["app-runtime"]
 usb-only = ["usb-console"]
 bench-ui = ["usb-only"]
-native-ui = ["usb-console", "native-hashes"]
+native-ui = ["usb-console", "native-hashes", "native-unicode"]
+native-unicode = ["usb-console", "dep:unicode-normalization"]
 native-hashes = ["usb-console", "dep:shieldsigner-hash-core"]
 mini-pcb-ui = ["bench-ui"]
 app-ui = ["native-ui", "mini-pcb-ui"]
@@ -39,6 +40,8 @@ serde_json = { version = "1", default-features = false, features = ["alloc"], op
 buddy_system_allocator = { version = "=0.13.0", optional = true }
 
 shieldsigner-hash-core = { path = "hash-core", optional = true }
+
+unicode-normalization = { version = "=0.1.22", default-features = false, optional = true }
 
 [profile.release]
 panic = "abort"

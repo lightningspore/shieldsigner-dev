@@ -1,0 +1,41 @@
+{
+  "status": "ref-api-and-published-row-gates-passed; unlisted-scalar-sweep-pending",
+  "scope": "UTF8 scalar normalization prerequisites, not full Seed model or unicodedata API",
+  "downloadSha256": "a517f9bc227f67cac153a3147447d67aa0ac2d23a0acefd5aba09ccc9f5b3d3e",
+  "provenance": {
+    "crate": "unicode-normalization",
+    "version": "0.1.22",
+    "unicodeVersion": "15.0.0",
+    "refPython": "3.12.10",
+    "refOracleSha256": "2cb5634950a947660216a714f90e428a6ad855bc4b32bd2604dfe89234a4bfc4",
+    "datasetUrl": "https://www.unicode.org/Public/15.0.0/ucd/NormalizationTest.txt",
+    "datasetSha256": "fb9ac8cc154a80cad6caac9897af55a4e75176af6f4e2bb6edc2bf8b1d57f326"
+  },
+  "apiGate": "logs/phase-11/usb-20261114T230549.084920Z",
+  "publishedRows": {
+    "serial": "rv1103-dev-001",
+    "scope": "Unicode15 published row corpus through actual normalize API; not exhaustive unlisted-scalar identity",
+    "datasetSha256": "fb9ac8cc154a80cad6caac9897af55a4e75176af6f4e2bb6edc2bf8b1d57f326",
+    "rows": 19074,
+    "relations": 381480,
+    "packedBytes": 697232,
+    "passed": true,
+    "uploadedBytes": 697232
+  },
+  "publishedRowsEvidence": "logs/phase-12/unicode-conformance-20261114T230617.678970Z",
+  "identitySweep": {
+    "status": "host observation timed out; device completion not yet observed",
+    "evidence": "logs/phase-12/unicode-identity-20261114T230927.821370Z",
+    "initialObservationSeconds": 180
+  },
+  "hostTests": {
+    "passed": 44
+  },
+  "bootObservation": "20-second UART window ended before readiness; subsequent USB hardware gates passed",
+  "dut1": "Earlier app-ui image; demo stopped and Home restored",
+  "sourceSha256": {
+    "src/unicode_runtime.rs": "bbaa53ccd212db20bee76e7ece06bbd2d52c117c48467932b0014185fd9108df",
+    "micropython/modunicode.c": "7b9821bd7a2a97617f18f7292292161fcc2b9abdf889fc711234c039a9eba95e",
+    "micropython/unicode_gate.py": "fceff323d22b2a62304defef010fbd79f3f7309c695c21a4b7f3b94cff279c0d"
+  }
+}

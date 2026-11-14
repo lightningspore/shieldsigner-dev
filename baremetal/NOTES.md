@@ -304,3 +304,17 @@ NoSDwrites. Pending physical QR reposition/larger known-code question can wait;
 no optical success claimed. Next real model dependencies: actual NFKD normalization,
 embit/BIP39/curve and UR components; do not substitute identity normalization or
 fake crypto, or equate primitive vectors with complete seed/signing readiness.
+
+2026-11-14 Unicode15 normalization prerequisite: native actual Unicode15.0.0
+algorithms match REF CPython3.12.10's database. API/REF oracle gate230549 passed;
+all19074officialrows/381480relations passed in6380ms at conformance230617 with
+native heap baseline. UNICODE-PORT.md and evidence/phase-12-native-unicode.json
+record scope. Unlisted scalar identity sweep230927 exceeded180s host capture;
+no device terminal result yet, so full conformance remains pending. Follow-up
+reader/query sends no Ctrl-C/reset; preserve running computation. Default future
+sweep deadline1800s. Host44tests passed. New wiredDUT0 image a517f9bc... loaded
+230443;20sec UART window too short, subsequent USB gates prove actual execution.
+DUT1 demo stopped after user said done; Home restored via USB231220, cameraoff.
+No further user aiming needed to continue dependencies. No SD/CAD/REFstorage writes.
+Next: finish scalar sweep observation; original embit/BIP39/Seed dependencies,
+including exact original passphrase escape handling, remain incomplete.

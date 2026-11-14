@@ -1,0 +1,9 @@
+{
+  "crate": "unicode-normalization",
+  "version": "0.1.22",
+  "unicodeVersion": "15.0.0",
+  "refPython": "3.12.10",
+  "refOracleSha256": "2cb5634950a947660216a714f90e428a6ad855bc4b32bd2604dfe89234a4bfc4",
+  "datasetUrl": "https://www.unicode.org/Public/15.0.0/ucd/NormalizationTest.txt",
+  "datasetSha256": "fb9ac8cc154a80cad6caac9897af55a4e75176af6f4e2bb6edc2bf8b1d57f326"
+}

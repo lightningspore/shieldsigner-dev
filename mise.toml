@@ -1428,3 +1428,19 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:hash:interrupt:gate"]
 description = "Interrupt one-million-round native PBKDF2 over USB and verify interpreter/hash/heap recovery"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/hash_interrupt_gate.py"
+
+[tasks."baremetal:unicode:prepare"]
+description = "Fetch hash-pinned Unicode15 corpus and verify saved REF normalization oracle"
+run = "uv run --python 3.13 python baremetal/tools/prepare_unicode.py"
+
+[tasks."baremetal:unicode:gate"]
+description = "Check native Unicode API against the saved REF oracle on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/unicode_gate.py --serial rv1103-dev-001 --timeout 30"
+
+[tasks."baremetal:unicode:conformance"]
+description = "Check all published Unicode15 normalization row relations on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/unicode_conformance_gate.py"
+
+[tasks."baremetal:unicode:identity"]
+description = "Check normalization identity for every unlisted Unicode scalar on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/unicode_conformance_gate.py --identity"

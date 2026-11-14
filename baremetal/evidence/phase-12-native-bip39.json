@@ -1,0 +1,25 @@
+{
+  "status": "native-bip39-public-vector-gate-passed",
+  "scope": "Actual embit BIP39 leaf; not original Seed model or wallet qualification",
+  "device": "DUT1",
+  "features": "app-ui",
+  "downloadSha256": "9aac35e959dd54fff07c9970f029606db86f53544c40f91a4302eff714092f7a",
+  "load": "logs/phase-11/dut1-20261114T231820Z",
+  "loadObservation": "Initial20sec enumeration timeout; USB appeared later and subsequent hardware tests passed without reload",
+  "gate": "logs/phase-11/usb-20261114T231855.568015Z",
+  "publishedEnglishVectors": 24,
+  "unicodePassphraseCases": 5,
+  "regressions": {
+    "unicode": "logs/phase-11/usb-20261114T231905.696010Z",
+    "hash": "logs/phase-11/usb-20261114T231906.354266Z",
+    "ui": "logs/phase-11/usb-20261114T231908.823927Z",
+    "originalQrScan": "logs/phase-11/usb-20261114T231935.186095Z",
+    "hostTests": 44
+  },
+  "sourceSha256": {
+    "app/bip39-provenance.json": "48eb8fe4a90dba299723bb1979ab4d3bb907cd5ab446bf6dbebfa8876401b3df",
+    "app/bip39-vectors-provenance.json": "81fb5637ee7285d27333d1ce909f8fb0576dbecdc905be3a81fdd94bbcf51fca",
+    "micropython/bip39_gate.py": "5eade25ff63b5a803dad330c59d33aa43cfe9cbd394ca4fd6905f4a7b293df08",
+    "micropython/manifest.py": "a854056ff9817e129d18d1b6b696872d298d63b798d94cd976c4ad7737b2218b"
+  }
+}

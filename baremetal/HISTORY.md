@@ -350,3 +350,16 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
   conformance, mnemonic or wallet readiness claim.44host regressions pass.
 - User finished demo; stopped DUT1 camera and restored Home. Continued software
   dependencies without requiring further physical camera holding. RAM-only work.
+
+### 2026-11-14 — Actual embit BIP39 leaf on DUT1
+
+- Froze pinned embit0.8.0 BIP39 and English wordlist with source/license receipt.
+  Native DUT1 passed24published English vectors and5Unicode passphrase cases,
+  entropy/mnemonic conversion, checksum rejection, candidate search and heap check.
+- Native Unicode/hash/UI and original QR/scan regressions passed;44host tests pass.
+  BIP39-PORT.md records missing original Seed model/curve/wallet integration.
+- Expanded DUT1 loader enumeration observation to40s after successful late USB
+  arrival, without another reload. No cold-power timing claim or storage writes.
+- Diagnosed identity sweep's chr() interning behavior; corrected its test fixture
+  construction and reran on fresh DUT1. Original DUT0 sweep was interrupted with
+  state captured and interpreter responsive; pending full sweep result is explicit.

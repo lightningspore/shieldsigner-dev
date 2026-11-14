@@ -9,6 +9,7 @@ from pathlib import Path
 import serial
 from serial.tools import list_ports
 parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--serial',choices=('rv1103-dev-001','rv1103-dut1'),default='rv1103-dev-001')
 parser.add_argument('--identity',action='store_true',help='Check all unlisted Unicode scalars instead of published row relations')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
@@ -31,9 +32,9 @@ assert rows==19074 and len(excluded)==17029
 if args.identity:
  packed=bytearray(0x110000//8)
  for c in excluded:packed[c>>3]|=1<<(c&7)
-ports=[p for p in list_ports.comports() if (p.vid,p.pid)==(0x1209,0x0003) and p.serial_number=='rv1103-dev-001'];assert len(ports)==1,ports
+ports=[p for p in list_ports.comports() if (p.vid,p.pid)==(0x1209,0x0003) and p.serial_number==args.serial];assert len(ports)==1,ports
 folder=root/'logs/phase-12'/(('unicode-identity-' if args.identity else 'unicode-conformance-')+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ'));folder.mkdir(parents=True)
-report={'serial':'rv1103-dev-001','scope':'Unicode15 published row corpus through actual normalize API; not exhaustive unlisted-scalar identity','datasetSha256':hashlib.sha256(raw).hexdigest(),'rows':rows,'relations':rows*20,'packedBytes':len(packed),'passed':False,'identityMode':args.identity}
+report={'serial':args.serial,'scope':'Unicode15 published row corpus through actual normalize API; not exhaustive unlisted-scalar identity','datasetSha256':hashlib.sha256(raw).hexdigest(),'rows':rows,'relations':rows*20,'packedBytes':len(packed),'passed':False,'identityMode':args.identity}
 if args.identity:report.update(scope='Every Unicode scalar absent from Part1 is identity under all four forms',excludedScalars=17029,scalarChecks=1095035,relations=4380140)
 log=open(folder/'serial.bin','wb');token=secrets.token_hex(12)
 def run(console,code,tag,timeout=15):
@@ -98,9 +99,14 @@ checks=0
 scalars=0
 for cp in range(0x110000):
     if cp%1024==0:gc.collect()
+    if cp%65536==0:print('@@UCD_PROGRESS',cp,checks)
     if 0xd800<=cp<=0xdfff:continue
     if fixture[cp>>3]&(1<<(cp&7)):continue
-    text=chr(cp)
+    if cp<0x80:encoded=bytes((cp,))
+    elif cp<0x800:encoded=bytes((0xc0|(cp>>6),0x80|(cp&63)))
+    elif cp<0x10000:encoded=bytes((0xe0|(cp>>12),0x80|((cp>>6)&63),0x80|(cp&63)))
+    else:encoded=bytes((0xf0|(cp>>18),0x80|((cp>>12)&63),0x80|((cp>>6)&63),0x80|(cp&63)))
+    text=encoded.decode()
     for form in ('NFC','NFD','NFKC','NFKD'):
         if u.normalize(form,text)!=text:
             print('@@UCD_IDENTITY_FAILURE',cp,form)

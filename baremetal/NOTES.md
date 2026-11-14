@@ -318,3 +318,21 @@ DUT1 demo stopped after user said done; Home restored via USB231220, cameraoff.
 No further user aiming needed to continue dependencies. No SD/CAD/REFstorage writes.
 Next: finish scalar sweep observation; original embit/BIP39/Seed dependencies,
 including exact original passphrase escape handling, remain incomplete.
+
+2026-11-14 BIP39 leaf: actual embit0.8.0 (MIT source/license/hash preserved),
+English2048wordlist frozen; annotations removed and const imported directly from
+micropython to avoid unrelated eager curve backend. DUT1 app-ui image9aac35e9...
+boot231820 appeared after20s observation window; later API gates passed without
+reload. Observer now40s. BIP39 public24English vectors+5Unicode passphrases pass
+231855; Unicode231905,hash231906,UI231908,originalQR/scan231935 regressions pass;
+44host tests pass. BIP39-PORT.md has scope; not Seed model/curve/signing readiness.
+
+Unicode identity diagnostic: original chr(cp) test interns every codepoint in
+MicroPython (modbuiltins.c:145 calls mp_obj_new_str_via_qstr). This grows persistent
+qstr pools and slows sweep. Stopped via Ctrl-C based on this source diagnosis,
+not timeout alone; recovery231940 shows cp258721/scalars239644/checks958578 and
+responsive interpreter. DUT0 retains these qstrs until a clean RAM reload (runtime
+has no actual mp_deinit soft reset); don't assume gc reclaims interned strings.
+Corrected sweep creates UTF8 bytes then decodes without interning; uses fresh
+DUT1 image and serial selection. Running identity231941; no terminal result yet.
+DUT0 now idle prompt, DUT1 console exclusively owned by this sweep. NoSDwrites.

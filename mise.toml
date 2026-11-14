@@ -1444,3 +1444,11 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/unicode_
 [tasks."baremetal:unicode:identity"]
 description = "Check normalization identity for every unlisted Unicode scalar on wired DUT0"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/unicode_conformance_gate.py --identity"
+
+[tasks."baremetal:bip39:prepare"]
+description = "Prepare hash-pinned actual embit BIP39 leaf and public reference vectors"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_bip39.py", "uv run --python 3.13 python baremetal/tools/prepare_bip39_gate.py"]
+
+[tasks."baremetal:bip39:dut1:gate"]
+description = "Check actual native BIP39 API against public vectors on DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/bip39_gate.py --serial rv1103-dut1 --timeout 60"

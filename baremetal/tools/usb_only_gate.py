@@ -32,7 +32,7 @@ try:
     load=subprocess.run([str(tool),'db',str(image)],capture_output=True,text=True,env=env,timeout=30)
     report['download']={'exitCode':load.returncode,'stdout':load.stdout,'stderr':load.stderr}
     assert load.returncode==0 and 'Selected RAM download LocationID='+location in load.stdout,'Selected RAM download failed'
-    deadline=time.monotonic()+20
+    deadline=time.monotonic()+40
     while time.monotonic()<deadline:
         ports=[p for p in list_ports.comports() if (p.vid,p.pid,p.serial_number)==(0x1209,3,identity)]
         if len(ports)==1:break

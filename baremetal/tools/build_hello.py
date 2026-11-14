@@ -12,6 +12,8 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--features', default='')
 args = parser.parse_args()
 features=set(args.features.split(','))
+if 'app-runtime' in features:
+    features.add('fast-boot')
 if 'fast-boot' in features:
     features.add('runtime-board')
 runtime_info={}

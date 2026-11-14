@@ -16,6 +16,7 @@ pub fn repl_ready() {
         | ENTRY_LOW.load(Ordering::Relaxed) as u64;
     // GPIO1_C4 goes high near _start, low immediately after mp_init.
     // The phase10 observer owns the matching REF pin as input.
+    #[cfg(not(feature = "app-runtime"))]
     let _ = super::gpio::pin(52, Some(true), Some(false));
     let _ = writeln!(
         super::cpu::Console,

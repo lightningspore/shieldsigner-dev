@@ -48,6 +48,7 @@ _start:
     cpsid if
     .if {fast}
     mrrc p15, 0, r4, r5, c14
+    .if {probe}
     // Blue GPIO1_C4: REF must remain input. Orange C5 stays untouched.
     ldr r0, =0xff3ba800
     ldr r1, =0x80000000
@@ -68,6 +69,7 @@ _start:
     str r1, [r0]
     dsb sy
     .endif
+    .endif
     ldr sp, =0x00400000
     ldr r0, =__bss_start
     ldr r1, =__bss_end
@@ -83,6 +85,7 @@ _start:
 2:  b 2b
 "#,
     fast = const cfg!(feature = "fast-boot") as u32,
+    probe = const cfg!(all(feature = "fast-boot", not(feature = "app-runtime"))) as u32,
 );
 
 const UART: usize = 0xff4c0000;

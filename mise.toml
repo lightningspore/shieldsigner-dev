@@ -1239,3 +1239,8 @@ run = "uv run --python 3.13 python baremetal/tools/sd_boot_gate.py"
 [tasks."baremetal:led:gate"]
 description = "Verify5Hz onboard LED transitions and pad readbacks on running DUT"
 run = "uv run --python 3.13 python baremetal/tools/console.py baremetal/micropython/led_gate.py --timeout 5"
+
+
+[tasks."baremetal:app:build"]
+description = "Build app-port runtime without the GPIO52 boot-timing output; UART debug remains enabled"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features app-runtime"

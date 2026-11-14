@@ -28,7 +28,7 @@ pub fn init() {
         // Fast-boot instrumentation already owns C4; avoid a false edge here.
         masked(
             GPIO1 + 0x0c,
-            if cfg!(feature = "fast-boot") {
+            if cfg!(all(feature = "fast-boot", not(feature = "app-runtime"))) {
                 0x20
             } else {
                 0x30
@@ -37,7 +37,7 @@ pub fn init() {
         );
         masked(IOC + 0x14, 0x00ff, 0); // GPIO1_C4/C5 mux function 0
         masked(IOC + 0x1c8, 0x0f00, 0); // disable pulls for these two 3.3V pins
-        #[cfg(not(feature = "fast-boot"))]
+        #[cfg(any(not(feature = "fast-boot"), feature = "app-runtime"))]
         masked(GPIO1 + 0x04, 0x10, 0); // prepare low C4 output latch
         asm!("dsb sy", options(nostack));
         let version = read(GPIO1 + 0x78);
@@ -47,7 +47,7 @@ pub fn init() {
         }
     }
     READY.store(true, Ordering::Release);
-    if cfg!(feature = "fast-boot") {
+    if cfg!(all(feature = "fast-boot", not(feature = "app-runtime"))) {
         super::put(b"@@GPIO_READY C4=boot-timing-output C5=input\r\n");
     } else {
         super::put(b"@@GPIO_READY C4=input C5=input\r\n");

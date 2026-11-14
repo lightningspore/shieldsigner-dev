@@ -34,7 +34,7 @@ from REF's RAM filesystem after checking the result.
 | Buttons |periphery GPIO and optional pygame backend | Implement the PCB's real input pin map, pull configuration, debounce and repeat behavior. Current Pin52/53 test API does not cover them. |
 | Camera/QR |PIL conversion, optional picamera/OpenCV backends, pyzbar/qrcode/UR-related modules | Bind proven Rust ISP/3A to the app's frame contract, add efficient preview/conversion/QR decoding, and verify real scanning workflows. Current capture is a bounded32-frame acquisition. |
 | Signing/crypto |embit, hashlib/HMAC, cryptography/Cryptodome, mnemonic/shamir and other optional crypto imports | Preserve supported workflows and formats with real implementations; verify against established vectors and reference outputs. Placeholder signing is not an acceptable port. |
-| Smart cards |keycard, pysatochip, smartcard, smartpgp and related helper/view code | Inventory supported card transports and preserve intended functions while replacing Linux-only I/O. Keep the PCB's existing smart-card hardware/connector. |
+| Smart cards |keycard, pysatochip, smartcard, smartpgp and related helper/view code | Excluded from this port by user instruction. Keep the PCB's existing hardware/connector unchanged. |
 | Assets/storage |Fonts, localization, image resources and file-based configuration | Provide app/assets storage and loading on microSD, with provenance/licenses preserved. The experimental raw boot image has no filesystem yet. |
 
 Observed installed package directory names include embit0.8.0, Pillow11.0.0,
@@ -43,6 +43,5 @@ python-periphery2.4.1, cryptography43.0.3 and pycryptodomex3.23.0. Presence is n
 proof that every package is exercised; do not infer the final MicroPython
 dependency set solely from this inventory.
 
-Next implementation remains gated by the plan order: finish standalone boot,
-then convenient USB debugging, then port and qualify the app on the real PCB.
+User deferred exact cold-power benchmarking and prioritized the app. The target is the existing Linux-tested 240x240 board. USB debugging is needed to release UART2 pins used by its buttons. A third RV1103 device may allow the original two-board fixture to remain intact.
 The working Linux source/card remains the comparison and recovery reference.

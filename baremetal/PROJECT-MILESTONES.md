@@ -41,3 +41,7 @@ Update: standalone runtime SD boot and full API/camera tests now pass on the
 authorized spare4GB card, with a5Hz LED heartbeat. The ROM loads unchanged DDR
 and our runtime directly. Cold power-edge/first-frame timing and app/assets
 storage remain unfinished; no usable SeedSigner app boot result exists yet.
+
+Current user priority: port SeedSigner buttons, LCD and camera on the existing Linux-tested board (240x240 bench profile). Smartcard software is excluded. Exact cold-power benchmarking is deferred by user instruction and must not delay app work. UART2 overlaps bench buttons; provide another debug transport before reconnecting. Existing SPI loopback must be removed before LCD output.
+
+User confirmed third device: Luckfox Pico Mini A, RV1103, no onboard flash; use microSD boot. Preserve existing wired REF/DUT fixture. USB debugging remains an explicit priority, including REPL/script transfer and reconnect/recovery tests, alongside the actual app port.

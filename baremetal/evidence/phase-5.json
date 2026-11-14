@@ -1,0 +1,12 @@
+{
+  "phase": 5,
+  "passed": true,
+  "imageSha256": "5043ff9908f7c21dad2c3b6a24e9e02f2d88e97156e7a91ee138d4655b9a5d81",
+  "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n@@CPU cpsr=0x600001d3 sctlr=0x00c52878 cntfrq=24000000 elapsed=116368\n@@PASS cpu-counter\n@@ACTLR 0x00006000\n@@CLOCK counter_ticks=24017 cpu_cycles=1282838\n@@BENCH off_ticks=3833858 checksum=536739840\n@@MMU enabled\n@@BENCH on_ticks=39732 checksum=536739840\n@@PASS cache-benchmark\n@@PASS heap\n@@IRQ starting\n@@TIMER ticks=1000 elapsed=24000018 frequency=24000000\n@@PASS timer-irq\n@@ECHO_READY\n@@MCLK gpll_hz=1188000000 numerator=1 denominator=22 target_hz=27000000\n@@I2C init con=0x50000 clkdiv=0xe000e clksel=0x3\n@@SENSOR polled=Ok(52289)\n@@PASS sensor-id-polled\n@@SENSOR interrupt=Ok(52289) irqs=1\n@@PASS sensor-id-irq\n@@I2C_ERRORS polled_nak=Err(\"nack\") irq_nak=Err(\"nack\") masked_irq_timeout=Err(\"timeout\") elapsed_ticks=48293 recovered=Ok(52289)\n@@PASS i2c-errors\n@@PASS phase-5\n",
+  "sensorId": "0xcc41",
+  "controllerClockHz": 24000000,
+  "configuredSclHz": 100000,
+  "configuredMclkHz": 27000000,
+  "timeoutTest": "GIC I2C4 interrupt deliberately masked, deadline 2ms, bounded abort and successful following IRQ read",
+  "clockReadbackReference": "0x00000000\n0x00050263\n"
+}

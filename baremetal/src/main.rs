@@ -12,6 +12,8 @@ mod cpu;
 mod gpio;
 #[cfg(feature = "cpu-base")]
 mod heap;
+#[cfg(feature = "i2c-test")]
+mod i2c;
 #[cfg(feature = "cpu-base")]
 mod interrupts;
 
@@ -52,6 +54,8 @@ extern "C" fn rust_main() -> ! {
     cpu::run();
     #[cfg(feature = "gpio-test")]
     gpio::init();
+    #[cfg(feature = "i2c-test")]
+    i2c::run();
     // Keep a UART recovery path while USB is absent in this minimal payload.
     // 'R' requests a warm reset; no storage writes are involved.
     loop {

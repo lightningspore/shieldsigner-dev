@@ -1,11 +1,11 @@
 # Current bring-up state
 
-Updated: 2026-11-13 (host local date). **Phases 0–4 passed on hardware. Phase 5 I²C and sensor ID are next.**
+Updated: 2026-11-13 (host local date). **Phases 0–5 passed on hardware. Phase 6 SPI loopback is next.**
 
 ## Devices and boundaries
 
 - REF: **standard Luckfox Pico, RV1103** (user-confirmed), ADB `0a523b8b23110ffc`, Linux 5.10.160 `seedsigner-os`. Its live DT model string says Mini, but physical board identity is standard Pico. SC3336 camera detected as `0xcc41` at I²C bus4 address0x30. REF's own camera stays attached.
-- DUT: **Pico Mini, RV1103**, former ADB `ec9eda0a3c175664`; USB `2207:110c`, location201. No microSD. RAM downloads only. User is connecting a **separate camera**, with DUT powered off first; await reconnect confirmation before further DUT access.
+- DUT: **Pico Mini, RV1103**, former ADB `ec9eda0a3c175664`; USB `2207:110c`, location201. No microSD. RAM downloads only. User connected a **separate SC3336 camera** and confirmed DUT is powered back on; sensor ID was verified by our code.
 - Host: macOS26.5.1 arm64, official rkdeveloptool commit `304f073752fd25c854e1bcf05d8e7f925b1f4e14`, GCC arm-none-eabi16.2.0, mise Rust1.93.1/armv7a-none-eabi, uv Python3.13. Tool checkouts live in `.tools/` (ignored).
 - Never write REF boot partitions, flash DUT, or install/write DUT SD without further authorization. Do not infer later-phase hardware success from compilation or earlier gates.
 
@@ -41,6 +41,10 @@ Current DUT image before power-off: gpio-test, with CPU base, IRQ UART and comma
 
 CPU DDR map and register references: CPU-BASE.md. MMU maps64MB DDR cacheable and peripherals device; ACTLR.SMP enabled before cache maintenance. Heap4–8MB, monotonic/no reclaim yet. Provisional camera reservation48–64MB; DMA coherency and actual size remain Phase7 work.
 
-## Next: Phase 5
+## Latest result: Phase 5 passed
 
-User confirmed separate DUT camera; REF camera remains available for reference work. Wait for DUT camera/reconnect confirmation. Then implement polled I²C, NAK/repeated-start/timeout handling and interrupt path. Sensor expectation from official SC3336 driver: address0x30,16-bit register0x3107, two-byte chip ID0xcc41; MCLK27MHz. Need reproduce camera power/reset/clock and I²C pinmux from live REF DT/source before issuing sensor transactions. No Phase5 code or hardware success yet.
+Original I²C4 combined register reads return SC3336 ID0xcc41 at address0x30/register0x3107 in polled and interrupt modes (GIC INTID54). Controller parent explicitly24MHz, SCL100kHz. Camera MCLK configured27MHz from detected GPLL1188MHz /2 ×1/22; GPIO3_C5 releases sensor power-down/reset. Live REF registers and pinmux were studied; REF camera remains untouched.
+
+Hardware evidence `evidence/phase-5.json` and full local `logs/phase-5/20261114T060918Z/`. Wrong address0x31 NAKs correctly in polled and IRQ modes. Deliberately masking the I²C IRQ triggered a ~2ms timeout; cleanup was followed by a successful IRQ sensor read. This validates the software deadline and recovery path, not every possible physical bus fault.
+
+DUT currently runs i2c-test, remains recoverable through UART R, and has its separate camera attached. Blue/orange GPIO lines remain inputs; REF GPIO52/53 are exported inputs. Next Phase6 needs a DUT MOSI-to-MISO jumper for SPI loopback; pin assignment/test code not yet prepared. Do not start Phase7 camera capture until Phase6 gate passes. User requested a commit after each completed phase; Phases0–4 checkpoint is33d0926.

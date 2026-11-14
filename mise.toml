@@ -1155,3 +1155,7 @@ run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features cpu
 [tasks."baremetal:gpio:build"]
 description = "Build RV1103 GPIO1_C4/C5 UART-controlled bidirectional test payload"
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features gpio-test"
+
+[tasks."baremetal:i2c:build"]
+description = "Build RV1103 SC3336 I2C4 polled/IRQ chip-ID and bounded-error tests"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features i2c-test"

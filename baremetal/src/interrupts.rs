@@ -107,6 +107,9 @@ extern "C" fn rust_irq() {
         if id == 29 || id == 30 {
             asm!("mcr p15, 0, {0}, c14, c2, 0", in(reg) read_volatile(addr_of!(PERIOD)), options(nostack));
             write_volatile(addr_of_mut!(TICKS), ticks().wrapping_add(1));
+        } else if id == 54 {
+            #[cfg(feature = "i2c-test")]
+            super::i2c::irq();
         } else if id == 59 {
             while read(super::UART, 0x14) & 1 != 0 {
                 let byte = read(super::UART, 0) as u8;
@@ -132,4 +135,19 @@ extern "C" fn rust_irq() {
 extern "C" fn rust_fault() -> ! {
     super::put(b"@@FAIL exception\r\n");
     super::reset()
+}
+
+#[cfg(feature = "i2c-test")]
+pub unsafe fn i2c_irq_enabled(enabled: bool) {
+    let bit = 1u32 << 22; // INTID54 = I2C4 SPI22
+    if enabled {
+        write(DIST, 0x84, read(DIST, 0x84) | bit);
+        write(DIST, 0x434, (read(DIST, 0x434) & !0x00ff0000) | 0x00800000);
+        write(DIST, 0x834, (read(DIST, 0x834) & !0x00ff0000) | 0x00010000);
+        write(DIST, 0x284, bit);
+        write(DIST, 0x104, bit);
+    } else {
+        write(DIST, 0x184, bit);
+    }
+    asm!("dsb sy", options(nostack));
 }

@@ -1,5 +1,5 @@
 {
-  "status": "ref-api-and-published-row-gates-passed; unlisted-scalar-sweep-pending",
+  "status": "native-unicode15-api-published-rows-and-unlisted-scalar-gates-passed",
   "scope": "UTF8 scalar normalization prerequisites, not full Seed model or unicodedata API",
   "downloadSha256": "a517f9bc227f67cac153a3147447d67aa0ac2d23a0acefd5aba09ccc9f5b3d3e",
   "provenance": {
@@ -24,9 +24,14 @@
   },
   "publishedRowsEvidence": "logs/phase-12/unicode-conformance-20261114T230617.678970Z",
   "identitySweep": {
-    "status": "host observation timed out; device completion not yet observed",
-    "evidence": "logs/phase-12/unicode-identity-20261114T230927.821370Z",
-    "initialObservationSeconds": 180
+    "status": "passed",
+    "device": "DUT1 app-ui",
+    "evidence": "logs/phase-12/unicode-identity-20261114T231941.047047Z",
+    "scalarChecks": 1095035,
+    "relations": 4380140,
+    "elapsedMs": 83586,
+    "downloadSha256": "9aac35e959dd54fff07c9970f029606db86f53544c40f91a4302eff714092f7a",
+    "note": "Corrected fixture avoids chr interning; initial DUT0 run interrupted at cp258721 after source diagnosis; not a normalization failure"
   },
   "hostTests": {
     "passed": 44

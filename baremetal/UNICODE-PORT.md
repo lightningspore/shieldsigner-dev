@@ -24,20 +24,25 @@ reordering and heap cleanup. `baremetal:unicode:conformance` checks all 20
 relations for each of the 19074 published rows through the actual board API.
 `baremetal:unicode:identity` separately checks all four forms for each of the
 1095035 scalar values absent from Part1 (surrogates excluded). These tests require
-exclusive access to wired DUT0's USB console. The identity sweep is substantially
+exclusive USB console access; default wired DUT0, or explicit --serial rv1103-dut1. The identity sweep is substantially
 longer than the published-row gate; a host observation timeout does not prove a
 device failure or stop computation.
 
 Hardware evidence so far: API/REF gate passed at
 logs/phase-11/usb-20261114T230549.084920Z. The published corpus passed at
 logs/phase-12/unicode-conformance-20261114T230617.678970Z: 381480 comparisons in
-6380 ms, with native heap at baseline. The separate identity sweep is pending;
-its initial host capture timed out after 180 seconds. No full conformance claim
-is made from the row test alone. Host regressions: 44 tests passed.
+6380 ms, with native heap at baseline. The separate identity sweep passed on
+DUT1 at logs/phase-12/unicode-identity-20261114T231941.047047Z: 4380140 comparisons
+in83586ms, with native heap at baseline. This covers the published conformance
+relations and unlisted-scalar identity for the supported UTF8 scalar contract.
+Host regressions:44tests passed. The first DUT0 sweep used chr(), which interns
+every character in MicroPython; source diagnosis explained its escalating runtime
+and persistent qstr growth. It was interrupted, state captured, and the corrected
+test constructs UTF8 bytes and decodes them without interning.
 
 The RAM load's 20-second UART observation ended before the readiness marker;
 USB enumerated and the subsequent hardware gates ran on that image. This is an
 observation-window limit, not a measured cold boot. No SD or reference storage
-was changed. DUT1 remains on the earlier app-ui image, with camera stopped and
-Home restored after the user's demo. Mnemonic models, curve operations, complete
+was changed. DUT1 now runs the Unicode/BIP39 app-ui image described in
+BIP39-PORT.md; the user's camera demo was stopped before this update. Mnemonic models, curve operations, complete
 scan routing and optical QR success remain separate work.

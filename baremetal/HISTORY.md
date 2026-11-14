@@ -363,3 +363,8 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
 - Diagnosed identity sweep's chr() interning behavior; corrected its test fixture
   construction and reran on fresh DUT1. Original DUT0 sweep was interrupted with
   state captured and interpreter responsive; pending full sweep result is explicit.
+
+- Unicode identity follow-up: corrected DUT1 sweep231941 completed all4380140
+  comparisons across1095035unlisted scalars in83586ms, native heap baseline.
+  Combined with published corpus gate, completes supported UTF8 normalization
+  conformance coverage. Original chr()-interning test defect documented explicitly.

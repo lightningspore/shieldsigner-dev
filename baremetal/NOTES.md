@@ -336,3 +336,10 @@ has no actual mp_deinit soft reset); don't assume gc reclaims interned strings.
 Corrected sweep creates UTF8 bytes then decodes without interning; uses fresh
 DUT1 image and serial selection. Running identity231941; no terminal result yet.
 DUT0 now idle prompt, DUT1 console exclusively owned by this sweep. NoSDwrites.
+
+Unicode sweep completion: corrected DUT1 identity231941 passed1095035scalars /
+4380140relations in83586ms with Rustheapbaseline. Combined with19074published
+rows/381480relations, supported UTF8 scalar normalization meets both published
+conformance requirements. Receipt and UNICODE-PORT.md updated. Native Unicode
+version stays15.0.0 matching REF; no wholeunicodedata/Seed/wallet claim. DUT1 USB
+reader now free. DUT0 idle but qstr-heavy until nextRAMreload.

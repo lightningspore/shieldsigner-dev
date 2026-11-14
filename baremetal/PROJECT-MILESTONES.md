@@ -29,3 +29,10 @@ its replacement is verified. No camera holding is needed for current checks;
 comparison images were already saved. Request physical actions only when the
 next concrete hardware step needs them. Commit after completed stage gates and
 keep NOTES/HISTORY/evidence current. Full logs/private images remain local.
+
+Primary user-visible performance metric: power-on to a usable SeedSigner main
+screen with working input, plus camera readiness through the app. The user
+reports the current boot/app path takes at least about30s. This is a reported
+baseline, not our measured value. Internal13.1ms payload-to-interpreter timing
+excludes ROM/DDR/loading and does not include SeedSigner or demonstrate an
+end-to-end speedup. Preserve the original standalone power-to-REPL gate too.

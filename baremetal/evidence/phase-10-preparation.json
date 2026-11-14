@@ -28,5 +28,8 @@
     "logs/phase-9/console-20261114T173414Z/result.json": "314221b14e3893de1fb2b6c7022e8287e713347d101dc05dbef6e0f767974e23",
     "logs/phase-10/ref-camera-health.json": "7b095c360141ad387cf5069b903d8e95433e08ba74c0e00d77d863f61103ec99",
     "logs/phase-10/ref-app-inventory.json": "6e15f93fe5eb292793086da0ee8e1d9708f04bca91a15b6ab8a46a0555ce6351"
-  }
+  },
+  "measurementScope": "Internal payload entry to initialized interpreter only; no SeedSigner app loaded. Not power-on or boot-to-app timing.",
+  "userReportedCurrentBootToAppSecondsAtLeast": 30,
+  "replacementPowerToUsableAppMeasured": false
 }

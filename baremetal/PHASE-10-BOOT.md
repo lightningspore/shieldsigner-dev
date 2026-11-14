@@ -4,6 +4,32 @@ Status: fast-start payload passed the complete Phase9 hardware API script after
 RAM download. Experimental microSD image prepared and validated on host; no card
 written and no standalone boot or power-on timing gate passed yet.
 
+## User-visible timing requirement
+
+The primary product measurement is **power-on to a usable SeedSigner app**:
+its main screen is drawn and button input works. Camera readiness is a separate
+power-on-to-usable-camera-frame measurement through the actual app workflow.
+The user reports that the current boot/app path takes at least about30seconds.
+That is a user-observed baseline, not an instrumented measurement made here.
+
+The13.1ms internal result below is **not app boot time** and cannot establish a
+speedup against that baseline. It starts after ROM/DDR/loading at our payload
+entry and ends at initialized MicroPython, with no SeedSigner app loaded. Keep
+this number secondary in progress reports. Whole-system REPL timing from the
+original Phase10 gate also remains required, independently of usable-app timing.
+
+| Measurement | Current evidence |
+| --- | --- |
+| Current boot to running app | User reports at least about30s; exact start/end not instrumented |
+| Replacement power-on to usable app | Not implemented or measured |
+| Replacement power-on to REPL | Not measured; standalone SD boot untested |
+| Replacement power-on to usable app camera frame | Not implemented or measured |
+| Payload entry to initialized MicroPython | About13.1ms, measured on DUT and independently polled by REF; excludes earlier boot stages and app |
+
+Record power/reset, first payload execution, initialized interpreter, first
+accepted REPL command, app screen/input readiness and usable camera frame as
+separate events. Do not label interpreter initialization as application readiness.
+
 ## Artifacts and commands
 
 - `mise run baremetal:boot:build`: `fast-boot` feature, normal runtime APIs,

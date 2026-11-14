@@ -19,3 +19,6 @@ int _getpid(void){return 1;}
 int _kill(int pid,int signal){(void)pid;(void)signal;errno=EINVAL;return -1;}
 int _gettimeofday(struct timeval *tv,void *tz){(void)tv;(void)tz;errno=ENOSYS;return -1;}
 void _exit(int status){(void)status;bm_ui_fatal();__builtin_unreachable();}
+// No crti/crtn .fini prologue is linked. newlib __libc_fini_array owns any
+// registered finalizers; process exit ends in the reset callback above.
+void _fini(void) {}

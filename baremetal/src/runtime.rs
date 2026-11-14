@@ -76,6 +76,8 @@ extern "C" fn bm_repl_ready() {
     super::boot::repl_ready();
 }
 pub fn run() -> ! {
+    #[cfg(feature = "native-ui")]
+    super::native_ui::constructors();
     unsafe {
         extern "C" {
             fn bm_micropython_main();

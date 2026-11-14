@@ -4,6 +4,18 @@
 #![no_main]
 
 use core::arch::{asm, global_asm};
+#[cfg(feature = "native-ui")]
+mod c_alloc;
+#[cfg(feature = "native-ui")]
+mod native_ui;
+#[cfg(feature = "native-ui")]
+const SVC_STACK: u32 = 0x01c00000;
+#[cfg(not(feature = "native-ui"))]
+const SVC_STACK: u32 = 0x00400000;
+#[cfg(feature = "native-ui")]
+const IRQ_STACK: u32 = 0x01e00000;
+#[cfg(not(feature = "native-ui"))]
+const IRQ_STACK: u32 = 0x00200000;
 use core::ptr::{read_volatile, write_volatile};
 #[cfg(feature = "fast-boot")]
 mod boot;
@@ -80,7 +92,7 @@ _start:
     dsb sy
     .endif
     .endif
-    ldr sp, =0x00400000
+    ldr sp, ={svc_stack}
     ldr r0, =__bss_start
     ldr r1, =__bss_end
     mov r2, #0
@@ -94,6 +106,7 @@ _start:
     bl rust_main
 2:  b 2b
 "#,
+    svc_stack = const SVC_STACK,
     fast = const cfg!(feature = "fast-boot") as u32,
     probe = const cfg!(all(feature = "fast-boot", not(feature = "app-runtime"))) as u32,
 );

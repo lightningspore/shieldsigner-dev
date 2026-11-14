@@ -27,6 +27,8 @@ app-runtime = ["fast-boot"]
 usb-console = ["app-runtime"]
 usb-only = ["usb-console"]
 bench-ui = ["usb-only"]
+native-ui = ["usb-console"]
+app-ui = ["native-ui", "bench-ui"]
 
 [dependencies]
 shieldsigner-rkaiq = { path = "../firmware/rkaiq-rs", default-features = false, optional = true }

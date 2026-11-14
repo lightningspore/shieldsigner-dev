@@ -1,0 +1,101 @@
+{
+  "status": "genuine-native-home-headless-hardware-passed",
+  "scope": "Actual locked screen renderer on wired DUT0, with real keypad callback/error/heap/camera gates. No physical LCD/buttons/full controller/app boot qualification.",
+  "features": "native-ui",
+  "downloadSha256": "70cfaba34c4f280bc027343280e240b5976bfb2912ee7a6d354dc12d4b5ef067",
+  "boot": {
+    "path": "logs/phase-12/20261114T202608Z",
+    "manifestSha256": "14992a91afba515217b0a311ef2160f158b6c99e919a36efbe8237ffe63cd282",
+    "serialSha256": "da93701779e206170a56c89307777dc24704ea3ce1eac335816a8683f77b8c4d"
+  },
+  "gates": {
+    "nativeScreen": {
+      "path": "logs/phase-11/usb-20261114T202711.768518Z",
+      "serialSha256": "52256c4b662d642b2fe056c939bb2c7655bbcba86d6d6ce26baab1c11ad6fee7",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/ui_gate.py",
+        "scriptSha256": "26e8d559e9d9bc4ad66a4249eb784f85482360d94f0d6e35e3b28992a5395ab5",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "errorRenderGcStress": {
+      "path": "logs/phase-11/usb-20261114T202742.154315Z",
+      "serialSha256": "93f9a3038e8023b2c0e7781303302ebe6301f481875f703e521bd7e6a611bad9",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/ui_stress_gate.py",
+        "scriptSha256": "4a2645d678ab79188d0d970fe6126b3986e190a701f12b0a46384d1216e015ee",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "fullApiTwoCamera": {
+      "path": "logs/phase-11/usb-20261114T202747.583864Z",
+      "serialSha256": "cc9500fc94d23e5a25b79bf4097e22ccaa883644b607a42d52f1f619725e85ee",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/phase9_gate.py",
+        "scriptSha256": "12d8113dc8a7864dd0d7b680383d22d3f5b9354d2e8983930dd5241f6b0ff25f",
+        "completed": true,
+        "traceback": false
+      }
+    }
+  },
+  "nativeHeapBaselineBytes": 42015,
+  "errorRenderGcCycles": 20,
+  "homeRenderMs": 11,
+  "primaryAppBootMs": null,
+  "memory": {
+    "rawImageBytes": 1486708,
+    "elfTextBytes": 1477136,
+    "elfDataBytes": 9568,
+    "elfBssBytes": 46616,
+    "bssEnd": "0x00177618",
+    "rustHeap": "4..16MiB",
+    "micropythonGc": "16..24MiB",
+    "svcStack": "27..28MiB",
+    "irqStack": "29..30MiB",
+    "guardSections": [
+      26,
+      28
+    ],
+    "shadowFramebuffer": "32MiB,115200bytes",
+    "cameraAndUsbDma": "unchanged48..64MiB"
+  },
+  "frame": {
+    "format": "RGB565 BE",
+    "dimensions": [
+      240,
+      240
+    ],
+    "sha256": "6d46d67b07a7be9a35e87012261466fb05fd3ca06e3ac7a759fae4562bf62aac",
+    "decodedPng": "logs/phase-12/native-home.png",
+    "pngSha256": "7010d8bcbafb044a5fccd5b67f19932d4aa5fc94383e72411bfc3bb1a747fae2",
+    "visuallyInspected": "Home title, power icon, Scan/Seeds/Tools/Settings grid and selected orange Scan tile"
+  },
+  "exceptionFix": {
+    "linkArg": "--target2=rel",
+    "source": "https://reviews.llvm.org/D149458",
+    "hardwareProof": "Malformed JSON and missing title return RuntimeError; subsequent render/input/camera gates pass"
+  },
+  "hostBringupTests": 19,
+  "storageWrites": false,
+  "remaining": [
+    "DUT1 physical renderer and optical validation",
+    "Actual frozen SeedSigner controller/view adapters, complete screen registry",
+    "Models/crypto/QR/app workflows",
+    "Standalone app storage/boot and power-to-usable-app timing"
+  ],
+  "smartcardSoftware": "excluded by user"
+}

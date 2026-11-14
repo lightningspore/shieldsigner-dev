@@ -92,9 +92,10 @@ unsafe fn enable_memory() {
     asm!("mcr p15, 0, {0}, c1, c0, 1", "isb", in(reg) auxiliary | (1 << 6), options(nostack));
     let table = addr_of_mut!(TABLE.0) as *mut u32;
     for section in 0..4096 {
-        // Unmapped2–3MiB separates IRQ stack(top2MiB) and SVC stack(top4MiB).
-        // A growing3A/interpreter stack must fault before corrupting IRQ state.
-        if section == 2 {
+        // Baseline guard2–3MiB separates IRQ/SVC stacks. Native UI relocates
+        // them to27–28/29–30MiB with guards26–27 and28–29MiB.
+        // The larger image stays below4MiB; both heaps and DMA stay put.
+        if if cfg!(feature = "native-ui") {section == 26 || section == 28} else {section == 2} {
             write_volatile(table.add(section), 0);
             continue;
         }

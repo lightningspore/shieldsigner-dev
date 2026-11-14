@@ -27,12 +27,16 @@ irq_entry:
     pop {{r0-r12,lr}}
     subs pc, lr, #4
 exception_fault:
+    mov r0, lr
+    mrs r1, spsr
+    mrs r2, cpsr
     cpsid if
     cps #0x13
     movw sp, #0
-    movt sp, #0x0040
+    movt sp, #{svc_high}
     bl rust_fault
-"#
+"#,
+    svc_high = const (super::SVC_STACK >> 16),
 );
 
 unsafe fn write(base: usize, offset: usize, value: u32) {
@@ -46,15 +50,16 @@ pub unsafe fn start(frequency: u32) {
     extern "C" {
         static exception_vectors: u8;
     }
-    // Separate banked IRQ stack at2MiB; SVC grows down from4MiB. The earlier
-    // 64KiB spacing was too small for calibrated3A's large temporary records.
+    // Separate banked IRQ/SVC stacks; native-ui relocates both beyond the
+    // Python heap. Each retains1MiB plus a whole unmapped guard section.
     asm!(
         "cps #0x12",
         // Materialize the constant directly; an inline literal pool can move
         // beyond LDR range when LTO grows the camera startup function.
         "movw sp, #0",
-        "movt sp, #0x0020",
+        "movt sp, #{irq_high}",
         "cps #0x13",
+        irq_high = const (super::IRQ_STACK >> 16),
         options(nostack)
     );
     asm!("mcr p15, 0, {0}, c12, c0, 0", in(reg) addr_of!(exception_vectors) as u32, options(nostack));
@@ -202,8 +207,16 @@ pub unsafe fn isp_irqs_enabled(enabled: bool) {
 }
 
 #[no_mangle]
-extern "C" fn rust_fault() -> ! {
-    super::put(b"@@FAIL exception\r\n");
+extern "C" fn rust_fault(lr:u32,spsr:u32,mode:u32) -> ! {
+    use core::fmt::Write;
+    let (dfsr,dfar,ifsr,ifar):(u32,u32,u32,u32);
+    unsafe {
+        asm!("mrc p15, 0, {0}, c5, c0, 0",out(reg)dfsr,options(nostack));
+        asm!("mrc p15, 0, {0}, c6, c0, 0",out(reg)dfar,options(nostack));
+        asm!("mrc p15, 0, {0}, c5, c0, 1",out(reg)ifsr,options(nostack));
+        asm!("mrc p15, 0, {0}, c6, c0, 2",out(reg)ifar,options(nostack));
+    }
+    let _=writeln!(super::cpu::Console,"@@FAIL exception lr={:#x} spsr={:#x} mode={:#x} dfsr={:#x} dfar={:#x} ifsr={:#x} ifar={:#x}\r",lr,spsr,mode,dfsr,dfar,ifsr,ifar);
     super::reset()
 }
 

@@ -2,7 +2,10 @@
 # Original RV1103 port, linking the unchanged pinned MicroPython core.
 MPY_TOP ?= $(abspath ../.tools/micropython)
 BOARD_BINDINGS ?= 0
-ifeq ($(BOARD_BINDINGS),1)
+NATIVE_UI ?= 0
+ifeq ($(NATIVE_UI),1)
+BUILD ?= $(abspath ../build/micropython-ui)
+else ifeq ($(BOARD_BINDINGS),1)
 BUILD ?= $(abspath ../build/micropython-board)
 else
 BUILD ?= $(abspath ../build/micropython)
@@ -21,6 +24,10 @@ SRC_S = shared/runtime/gchelper_thumb2.s
 ifeq ($(BOARD_BINDINGS),1)
 SRC_C += modmachine.c modcamera.c moddisplay.c
 SRC_QSTR += modmachine.c modcamera.c moddisplay.c
+endif
+ifeq ($(NATIVE_UI),1)
+SRC_C += modui.c
+SRC_QSTR += modui.c
 endif
 SRC_QSTR += shared/readline/readline.c shared/runtime/pyexec.c
 OBJ = $(PY_O) $(addprefix $(BUILD)/,$(SRC_C:.c=.o)) $(addprefix $(BUILD)/,$(SRC_S:.s=.o))

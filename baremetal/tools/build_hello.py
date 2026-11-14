@@ -20,6 +20,10 @@ build_env = os.environ.copy()
 build_env.pop('RV1103_USB_SERIAL',None)
 if args.usb_serial: build_env['RV1103_USB_SERIAL']=args.usb_serial
 features=set(args.features.split(','))
+if 'app-ui' in features:
+    features.update({'native-ui','bench-ui'})
+if 'native-ui' in features:
+    features.add('usb-console')
 if 'bench-ui' in features:
     features.add('usb-only')
 if 'usb-only' in features:
@@ -31,6 +35,8 @@ if 'app-runtime' in features:
 if 'fast-boot' in features:
     features.add('runtime-board')
 runtime_info={}
+if 'native-ui' in features:
+    subprocess.run(['mise','run','baremetal:ui:library:build'],cwd=ROOT.parent,check=True)
 inputs = []
 if features & {'isp-3a-test','runtime-board'}:
     for name, size, digest in [
@@ -59,8 +65,9 @@ if features & {'runtime-repl','runtime-board'}:
         raise SystemExit('Unexpected pinned MicroPython library revision')
     run(['uv','run','--python','3.13','make','-C',str(ROOT/'.tools/micropython/mpy-cross'),'-j4'])
     run(['uv','run','--python','3.13','make','-C',str(ROOT/'micropython'),'-j4',
-         'BOARD_BINDINGS='+('1' if 'runtime-board' in features else '0')])
-    archive=ROOT/'build'/('micropython-board' if 'runtime-board' in features else 'micropython')/'libmicropython.a'
+         'BOARD_BINDINGS='+('1' if 'runtime-board' in features else '0'),
+         'NATIVE_UI='+('1' if 'native-ui' in features else '0')])
+    archive=ROOT/'build'/('micropython-ui' if 'native-ui' in features else 'micropython-board' if 'runtime-board' in features else 'micropython')/'libmicropython.a'
     runtime_info={'micropythonRevision':revision,'micropythonLibRevision':lib_revision,
                   'mpyCrossSha256':hashlib.sha256((ROOT/'.tools/micropython/mpy-cross/build/mpy-cross').read_bytes()).hexdigest(),'archiveSha256':hashlib.sha256(archive.read_bytes()).hexdigest(),
                   'newlibHeaderPackage':(ROOT/'.tools/newlib/package.txt').read_text().strip()}
@@ -82,14 +89,15 @@ run(['docker','run','--rm','--platform','linux/amd64','-v',str(rkbin)+':/work','
      './tools/boot_merger','hello.ini'])
 shutil.copyfile(rkbin/'hello-download.bin', build/'hello-download.bin')
 (build/'hello-manifest.json').write_text(json.dumps({
-    'entryAddress':'0x00000000', 'stackTop':'0x00400000',
+    'entryAddress':'0x00000000', 'stackTop':('0x01c00000' if 'native-ui' in features else '0x00400000'),
     'features': args.features,
-    'note':'Entry and stack proven by Phase 2 ten-run gate; added features require their own DUT proof.',
+    'note':('Native UI memory layout requires its own Phase12 gate; excludes cold-power/app timing.' if 'native-ui' in features else 'Entry and stack proven by Phase 2 ten-run gate; added features require their own DUT proof.'),
     'files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
-             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'Cargo.toml', ROOT/'Cargo.lock', ROOT/'build.rs', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').rglob('*.rs')), *sorted((ROOT/'micropython').glob('*')), *sorted((ROOT/'app').rglob('*.py')), *inputs] if p.is_file()},
+             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'link-ui.ld', ROOT/'Cargo.toml', ROOT/'Cargo.lock', ROOT/'build.rs', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').rglob('*.rs')), *sorted((ROOT/'micropython').glob('*')), *sorted((ROOT/'app').rglob('*.py')), *inputs] if p.is_file()},
     'algorithmSources': {str(p.relative_to(ROOT.parent)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in [ROOT.parent/'firmware/rkaiq-rs/Cargo.toml', *sorted((ROOT.parent/'firmware/rkaiq-rs/src').glob('*.rs'))]} if 'isp' in args.features or 'runtime-board' in features else {},
     'runtime':runtime_info,
+    'nativeUi':json.loads((ROOT/'build/ui/manifest.json').read_text()) if 'native-ui' in features else None,
     'usbSerial':(args.usb_serial or 'rv1103-dev-001') if 'usb-console' in features else None,
 },indent=2)+'\n')
 print('Built',build/'hello-download.bin')

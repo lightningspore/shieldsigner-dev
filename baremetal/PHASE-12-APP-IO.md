@@ -122,3 +122,23 @@ The existing locked SeedSigner LVGL screen corpus now cross-compiles to a
 not linked into either running firmware, and no native screen/controller pass
 is claimed. Next are runtime allocation/constructors/unwind support, image and
 stack layout validation, a MicroPython interface and real app screen tests.
+
+
+## Genuine Home renderer on wired DUT0
+
+The native screen library is now linked and exercised on actual DUT0, with a
+headless framebuffer so its original GPIO fixture stays usable. The exported
+frame was decoded and visually inspected: Home title, power icon, Scan/Seeds/
+Tools/Settings icons and labels, and orange selection highlight are correct.
+Real keypad callbacks select Scan and Seeds. Malformed JSON and missing-title
+exceptions return to Python, followed by successful renders. Twenty error/
+render/GC cycles preserve the42015-byte native heap baseline; the complete
+GPIO/I2C/SPI/two-camera/settings/GC gate also passes with the larger image and
+relocated stacks. Home render measured11ms after UI initialization; this is not
+power-to-app timing. See [ui/README.md](ui/README.md) and
+[evidence/phase-12-native-ui.json](evidence/phase-12-native-ui.json).
+
+DUT1 still runs the prior bench-ui camera/blit image. Physical LCD rendering,
+real button edges and the complete app/controller remain open. The next step
+is the combined app-ui build on DUT1, retaining its USB-only recovery identity
+and released UART/button pads, then actual controller/view integration.

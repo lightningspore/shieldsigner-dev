@@ -67,6 +67,9 @@ extern "C" int bm_nativeui_render(const char *name,const char *config){
         // Staged registry: unknown screens fail explicitly, no fallback drawing.
         if(!strcmp(name,"main_menu_screen"))main_menu_screen((void*)config);
         else {copy_text(error,"Screen not ported into native registry");return -1;}
+        // Settle LVGL reset/group reassignment while input is released, as the
+        // existing native host does before acknowledging a new screen.
+        pressed=false;lv_indev_read(keypad);
         lv_timer_handler();lv_refr_now(display);
         if(io_error){copy_text(error,"Display flush failed");return -1;}
         return 0;

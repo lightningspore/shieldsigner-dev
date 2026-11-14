@@ -1300,3 +1300,15 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:ui:library:build"]
 description = "Cross-compile the existing locked SeedSigner LVGL screen library for the native runtime"
 run = "uv run --python 3.13 python baremetal/tools/build_ui.py"
+
+[tasks."baremetal:ui:build"]
+description = "Build native SeedSigner screen runtime for wired DUT0 with a headless framebuffer"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features native-ui"
+
+[tasks."baremetal:ui:gate"]
+description = "Exercise genuine native Home screen, error recovery, keypad events and framebuffer on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/ui_gate.py --serial rv1103-dev-001 --timeout 60"
+
+[tasks."baremetal:ui:stress:gate"]
+description = "Check twenty real screen rebuild/error/GC cycles return native heap to baseline on DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/ui_stress_gate.py --serial rv1103-dev-001 --timeout 10"

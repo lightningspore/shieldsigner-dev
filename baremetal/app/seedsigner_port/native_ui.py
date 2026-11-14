@@ -23,6 +23,7 @@ class ScreenSession:
         self.clock = clock if clock is not None else time.ticks_ms
         self.sleep = sleep if sleep is not None else time.sleep_ms
         self.current = None
+        self._button_count = None
 
     def show(self, builder, config):
         if not isinstance(config, dict):
@@ -32,6 +33,7 @@ class ScreenSession:
         # it can select an action on the new screen, including on startup.
         self.buttons.reset_input()
         self.current = builder
+        self._button_count = None
 
     def poll(self):
         if self.current is None:
@@ -63,3 +65,20 @@ class ScreenSession:
     def run(self, builder, config, timeout_ms=None):
         self.show(builder, config)
         return self.wait(timeout_ms)
+
+    def show_screen(self, screen_class, arguments, translate=None):
+        from seedsigner_port.screen_contracts import configuration
+        builder,config=configuration(screen_class,arguments,translate)
+        self.show(builder,config)
+        self._button_count=len(config['button_list'])
+
+    def screen_result(self, event):
+        from seedsigner_port.screen_contracts import result
+        if self._button_count is None:
+            raise RuntimeError("Show an adapted app screen before interpreting its result")
+        return result(event,self._button_count)
+
+    def run_screen(self, screen_class, arguments, timeout_ms=None, translate=None):
+        self.show_screen(screen_class,arguments,translate)
+        event=self.wait(timeout_ms)
+        return None if event is None else self.screen_result(event)

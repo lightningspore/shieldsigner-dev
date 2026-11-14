@@ -1,0 +1,88 @@
+{
+  "status": "basic-app-screen-contracts-hardware-passed",
+  "scope": "Three reviewed app Screen argument/result adapters through real native renderer on headlessDUT0; not full Controller/View startup or physical LCD qualification.",
+  "features": "native-ui",
+  "downloadSha256": "f475ad4e4aab87fc23cf6dfc345b0c17ca3a31febe39e5a74546c1cece289c7a",
+  "boot": {
+    "path": "logs/phase-12/20261114T204642Z",
+    "manifestSha256": "b936c1124d8c86306bbcbcf9d2bd8ef4076e6cc36396af7c1a55c4448d5a8a59",
+    "serialSha256": "5e1d1f03128cf0519c17eacc6857959f52d9047b743c4409973af17dac7a7d71"
+  },
+  "gate": {
+    "path": "logs/phase-11/usb-20261114T204714.964041Z",
+    "serialSha256": "25180192815c94678759acd682bdb1d1c3c9b0da771cb024d51cd60c5b61231f",
+    "result": {
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dev_0011",
+      "usbSerial": "rv1103-dev-001",
+      "location": "2-1",
+      "script": "baremetal/micropython/screen_contracts_gate.py",
+      "scriptSha256": "ac12a194adbcb98121697f20ce1607525749257a9f6d520bccb9f1ff200f4fff",
+      "completed": true,
+      "traceback": false
+    }
+  },
+  "supportedAppScreenClasses": [
+    "ButtonListScreen",
+    "LargeButtonScreen",
+    "MainMenuScreen"
+  ],
+  "defaults": {
+    "application": {
+      "url": "https://github.com/3rdIteration/seedsigner.git",
+      "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+    },
+    "sources": {
+      "src/seedsigner/gui/screens/screen.py": "456e74eff9a587c7e7e9c1db331e31bc8cdbf24f0d83740186904881a81f5adb",
+      "src/seedsigner/gui/components.py": "277d68b1660777f2fe0f70e0934524df8c4a1cbef15f71b7dd00327e1ed41688"
+    },
+    "reviewedFields": [
+      "button_selected_color",
+      "checked_buttons",
+      "is_bottom_list",
+      "is_button_text_centered",
+      "scroll_y_initial_offset",
+      "selected_button",
+      "show_back_button",
+      "show_power_button",
+      "title",
+      "top_nav_icon_color",
+      "top_nav_icon_name"
+    ],
+    "outputSha256": "198f7fa75896e3ac246740c034e05d3b13bc60feef272ace8d0b62372425798a"
+  },
+  "existingLinuxContractSource": {
+    "path": "firmware/lvgl-app/python/contracts.py",
+    "sha256": "fa0d39e2c4c0ea663fed8b0fe86888b03c622893ba1256af52d5faf1ea728d78"
+  },
+  "sourceHashes": {
+    "app/seedsigner_port/screen_contracts.py": "855047b0b521105ac39001b4337ae4a7378208fb68d03b2d59ffbbb2bccb301a",
+    "app/seedsigner_port/native_ui.py": "460e69e07e6d737b1d0066bbb2e59f29859ae757ccfb0f28aed57af4660e0c0e",
+    "micropython/screen_contracts_gate.py": "ac12a194adbcb98121697f20ce1607525749257a9f6d520bccb9f1ff200f4fff",
+    "tests/test_screen_contracts.py": "8e5f8ce0110ee7d7b4d6c56053394b3f2b63d9b8ac6f145e9fe609d60041082a"
+  },
+  "hostTests": {
+    "total": 29,
+    "newOriginalContractDifferentialCases": 3,
+    "result": "all pass, no source-reference skips"
+  },
+  "hardwareVerified": [
+    "Class-name dispatch to genuine native Home/list/grid",
+    "Original field defaults and original#FF9F0A accent configuration",
+    "Button-option objects and translation opt-out accepted",
+    "Accepted debounced input produces actual selection and Back1000 results",
+    "Unsupported specialized screen/configured long-hold rejects explicitly"
+  ],
+  "inputQualification": "Injected test edges, not physical switches",
+  "rawImageBytes": 1821140,
+  "nativeHeapAfterTest": 53037,
+  "remaining": [
+    "Wire actual Controller/View run_screen to this interface",
+    "Other screen contracts and checked-button/long-hold semantics",
+    "Settings/model/crypto/storage/QR dependencies",
+    "Physical LCD/buttons and standalone complete-app boot"
+  ],
+  "dut1": "Unchanged54bfdca Home-only app-ui; optical LCD remains open",
+  "storageWrites": false,
+  "refModified": false
+}

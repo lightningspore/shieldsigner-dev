@@ -185,3 +185,20 @@ See [app/README.md](app/README.md), [ui/README.md](ui/README.md) and
 [evidence/phase-12-navigation-registry.json](evidence/phase-12-navigation-registry.json).
 DUT1 remains on54bfdca's prior Home-only app-ui image; shared build artifacts now
 contain the final wiredDUT0 native-ui image. The physical LCD gate stays open.
+
+
+## Basic app screen argument/result adapters
+
+The frozen backend now accepts the original three basic Screen class names and
+argument dictionaries, instead of requiring hand-written native JSON. Inherited
+field defaults come from pinned original dataclasses; config parity is compared
+to the existing Linux adapter. Button options/icons/colors, translation opt-out,
+layout/scroll defaults and original#FF9F0A selection color are preserved. Actual
+renderer selection/back callbacks pass through the validated result adapter on
+DUT0. Specialized contracts, configured hold actions and custom button styling
+remain explicit errors, and raw renders cannot reuse a stale button-count validator.
+Twenty-nine host tests pass. Current shared artifacts/DUT0 image include this
+adapter, boot204642Z / gate204714.964041Z. DUT1 remains unchanged54bfdca.
+The full Controller/View dependency graph and startup are still incomplete;
+physical LCD/buttons and standalone app boot remain open. Receipt:
+[evidence/phase-12-screen-contracts.json](evidence/phase-12-screen-contracts.json).

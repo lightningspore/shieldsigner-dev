@@ -54,3 +54,26 @@ These classes currently live in the port namespace; the actual Controller/View
 imports still need to be integrated consistently. Full Controller.start(), real
 settings/storage/models/crypto/QR and native screen configuration/result adapters
 remain incomplete. The native registry is broader than those reviewed adapters.
+
+
+`screen_contracts.py` now adapts the reviewed ButtonListScreen, LargeButtonScreen
+and MainMenuScreen argument dictionaries to genuine native builders, and validates
+selection/back/power results. Original inherited field defaults are extracted
+from pinned app dataclasses into `screen_defaults.py` by
+`baremetal:app:screens:prepare`, with `screen-defaults-provenance.json` recording
+source hashes. Host differential tests execute the existing Linux contract helpers
+and original selected dataclass fields to compare configs independently of the
+port. Original#FF9F0A selection color, layout flags, icons/colors, translation
+opt-out and scroll defaults are preserved. NUL text rejects explicitly.
+
+`ScreenSession.show_screen(Screen_cls, kwargs)` / `screen_result(event)` /
+`run_screen(Screen_cls, kwargs, timeout_ms=None)` provide the app-facing boundary.
+Raw-builder renders clear the adapted result count to prevent stale validation.
+The actual Controller/View methods are not wired to it yet. Unsupported Screen
+subclasses, explicit button-class styling and configured long-hold actions raise
+UnmigratedScreen; they never render a generic substitute. Only English identity
+translation is used by default; callers may inject a translator, but full locale
+asset lifecycle is not integrated. Twenty-nine host tests and the frozen real-
+renderer gate pass. Test View/screen/input classes in gate scripts are fixtures,
+not production app replacements. Physical switches and full app remain unverified.
+Receipt: [../evidence/phase-12-screen-contracts.json](../evidence/phase-12-screen-contracts.json).

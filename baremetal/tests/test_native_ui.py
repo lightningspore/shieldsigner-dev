@@ -50,3 +50,11 @@ class SessionTest(unittest.TestCase):
         self.assertEqual(self.session.wait(0),(1,3,''))
         self.buttons.trigger_override();self.assertEqual(self.session.poll(),1000)
         with self.assertRaises(ValueError):self.session.wait(0x80000000)
+    def test_app_screen_dispatch_and_result_validation(self):
+        self.backend.events=[(1,1,'')]
+        self.assertEqual(self.session.run_screen('ButtonListScreen',{'button_data':['A','B']},0),1)
+        self.assertEqual(self.backend.screens[-1][0],'button_list_screen')
+        self.assertEqual(self.session.screen_result((1,1000,'')),1000)
+        with self.assertRaises(ValueError):self.session.screen_result((1,2,''))
+        self.session.show('main_menu_screen',{})
+        with self.assertRaises(RuntimeError):self.session.screen_result((1,0,''))

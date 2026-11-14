@@ -107,3 +107,13 @@ Original Destination/BackStack classes are frozen with reproducible provenance;
 see [../app/README.md](../app/README.md). Full Controller/Views, settings/model/
 crypto/storage/QR dependencies and startup integration remain outstanding.
 Receipt: [../evidence/phase-12-navigation-registry.json](../evidence/phase-12-navigation-registry.json).
+
+
+The higher-level frozen adapter now maps three reviewed original app screen
+classes (Home, ordinary lists and large-button grids) to native configurations
+using extracted original defaults. This is narrower than the43 native builders;
+unknown specialized Screen contracts and configured hold/styling semantics reject
+explicitly. The new hardware gate takes class-style arguments and ButtonOption
+objects through the real renderer and returns validated choice/back codes. See
+[../app/README.md](../app/README.md) and
+[../evidence/phase-12-screen-contracts.json](../evidence/phase-12-screen-contracts.json).

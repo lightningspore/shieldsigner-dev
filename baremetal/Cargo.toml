@@ -21,6 +21,7 @@ isp-3a-test = ["isp-stats-test", "shieldsigner-rkaiq/profiles", "dep:serde_json"
 reclaiming-heap = ["cpu-base", "dep:buddy_system_allocator"]
 runtime-repl = ["reclaiming-heap"]
 runtime-board = ["runtime-repl", "isp-3a-test", "gpio-test", "spi-test"]
+fast-boot = ["runtime-board"]
 
 [dependencies]
 shieldsigner-rkaiq = { path = "../firmware/rkaiq-rs", default-features = false, optional = true }

@@ -2,10 +2,13 @@
 //! Reclaiming DDR allocator for calibrated sessions and the interpreter bridge.
 //! IRQ handlers remain allocation-free; never acquire this lock from an IRQ.
 use buddy_system_allocator::LockedHeap;
+#[cfg(not(feature = "fast-boot"))]
 use core::alloc::{GlobalAlloc, Layout};
 pub const HEAP_START: usize = 0x00400000;
 pub const HEAP_END: usize = 0x01000000;
+#[cfg(not(feature = "fast-boot"))]
 pub const CAMERA_START: usize = 0x03000000;
+#[cfg(not(feature = "fast-boot"))]
 pub const CAMERA_END: usize = 0x04000000;
 #[global_allocator]
 static HEAP: LockedHeap<25> = LockedHeap::empty();
@@ -15,6 +18,7 @@ pub unsafe fn init() {
 pub fn used() -> usize {
     HEAP.lock().stats_alloc_user()
 }
+#[cfg(not(feature = "fast-boot"))]
 pub fn check() -> bool {
     let baseline = used();
     for _ in 0..64 {

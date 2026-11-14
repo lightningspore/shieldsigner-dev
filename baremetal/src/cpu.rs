@@ -20,6 +20,27 @@ pub fn counter() -> u64 {
 }
 
 pub fn run() {
+    #[cfg(feature = "fast-boot")]
+    {
+        let frequency: u32;
+        unsafe {
+            asm!("mrc p15, 0, {0}, c14, c0, 0", out(reg) frequency, options(nostack));
+            if frequency != 24_000_000 {
+                super::put(b"@@FAIL boot-timer-frequency\r\n");
+                super::reset();
+            }
+            enable_memory();
+            super::heap::init();
+            super::interrupts::start(frequency);
+        }
+        return;
+    }
+    #[cfg(not(feature = "fast-boot"))]
+    diagnostic_run();
+}
+
+#[cfg(not(feature = "fast-boot"))]
+fn diagnostic_run() {
     let sctlr: u32;
     let cpsr: u32;
     let frequency: u32;
@@ -59,6 +80,7 @@ pub fn run() {
 #[repr(C, align(16384))]
 struct TranslationTable([u32; 4096]);
 static mut TABLE: TranslationTable = TranslationTable([0; 4096]);
+#[cfg(not(feature = "fast-boot"))]
 static mut WORK: [u32; 4096] = [0; 4096];
 
 unsafe fn enable_memory() {
@@ -134,6 +156,7 @@ unsafe fn enable_memory() {
     asm!("mcr p15, 0, {0}, c1, c0, 0", "isb", in(reg) control, options(nostack));
 }
 
+#[cfg(not(feature = "fast-boot"))]
 fn workload() -> (u64, u32) {
     use core::ptr::{addr_of, read_volatile};
     let start = counter();
@@ -145,6 +168,7 @@ fn workload() -> (u64, u32) {
     (counter().wrapping_sub(start), checksum)
 }
 
+#[cfg(not(feature = "fast-boot"))]
 fn memory_gate() {
     unsafe {
         let actlr: u32;
@@ -186,6 +210,7 @@ fn memory_gate() {
     }
 }
 
+#[cfg(not(feature = "fast-boot"))]
 fn interrupt_gate(frequency: u32) {
     super::put(b"@@IRQ starting\r\n");
     unsafe {

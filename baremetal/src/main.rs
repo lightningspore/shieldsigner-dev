@@ -5,6 +5,8 @@
 
 use core::arch::{asm, global_asm};
 use core::ptr::{read_volatile, write_volatile};
+#[cfg(feature = "fast-boot")]
+mod boot;
 #[cfg(feature = "runtime-repl")]
 mod runtime;
 
@@ -40,6 +42,28 @@ global_asm!(
     .global _start
 _start:
     cpsid if
+    .if {fast}
+    mrrc p15, 0, r4, r5, c14
+    // Blue GPIO1_C4: REF must remain input. Orange C5 stays untouched.
+    ldr r0, =0xff3ba800
+    ldr r1, =0x80000000
+    str r1, [r0]
+    ldr r0, =0xff53000c
+    ldr r1, =0x00100000
+    str r1, [r0]
+    ldr r0, =0xff538014
+    ldr r1, =0x000f0000
+    str r1, [r0]
+    ldr r0, =0xff5381c8
+    ldr r1, =0x03000000
+    str r1, [r0]
+    ldr r0, =0xff530004
+    ldr r1, =0x00100010
+    str r1, [r0]
+    ldr r0, =0xff53000c
+    str r1, [r0]
+    dsb sy
+    .endif
     ldr sp, =0x00400000
     ldr r0, =__bss_start
     ldr r1, =__bss_end
@@ -47,9 +71,14 @@ _start:
 1:  cmp r0, r1
     strlo r2, [r0], #4
     blo 1b
+    .if {fast}
+    mov r0, r4
+    mov r1, r5
+    .endif
     bl rust_main
 2:  b 2b
-"#
+"#,
+    fast = const cfg!(feature = "fast-boot") as u32,
 );
 
 const UART: usize = 0xff4c0000;
@@ -68,7 +97,11 @@ fn put(bytes: &[u8]) {
 }
 
 #[no_mangle]
-extern "C" fn rust_main() -> ! {
+extern "C" fn rust_main(entry_low: u32, entry_high: u32) -> ! {
+    #[cfg(feature = "fast-boot")]
+    boot::begin(entry_low, entry_high);
+    #[cfg(not(feature = "fast-boot"))]
+    let _ = (entry_low, entry_high);
     put(b"\r\n@@PASS hello\r\n");
     #[cfg(feature = "cpu-base")]
     cpu::run();

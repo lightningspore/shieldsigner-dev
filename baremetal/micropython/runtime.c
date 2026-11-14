@@ -13,10 +13,12 @@ extern uint32_t bm_ticks_us(void);
 extern uint32_t bm_ticks_ms(void);
 extern void bm_delay_us(uint32_t);
 extern void bm_runtime_fault(void);
+extern void bm_repl_ready(void);
 void bm_micropython_main(void) {
     mp_cstack_init_with_sp_here(768*1024);
     gc_init((void *)0x01000000,(void *)0x01800000);
     mp_init();
+    bm_repl_ready();
     static const char ready[]="\r\n@@REPL_READY reset=Ctrl-]\r\n";
     bm_uart_write(ready,sizeof(ready)-1);
     for (;;) { pyexec_friendly_repl(); }

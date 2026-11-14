@@ -25,9 +25,19 @@ pub fn init() {
         // GPIO1 PCLK gate: VEPUCRU_CLKGATE_CON0 bit15, 0 enables clock.
         masked(0xff3ba800, 1 << 15, 0);
         // High halves cover GPIO offsets16..31: C4=bit4, C5=bit5.
-        masked(GPIO1 + 0x0c, 0x30, 0); // both inputs before selecting GPIO mux
+        // Fast-boot instrumentation already owns C4; avoid a false edge here.
+        masked(
+            GPIO1 + 0x0c,
+            if cfg!(feature = "fast-boot") {
+                0x20
+            } else {
+                0x30
+            },
+            0,
+        );
         masked(IOC + 0x14, 0x00ff, 0); // GPIO1_C4/C5 mux function 0
         masked(IOC + 0x1c8, 0x0f00, 0); // disable pulls for these two 3.3V pins
+        #[cfg(not(feature = "fast-boot"))]
         masked(GPIO1 + 0x04, 0x10, 0); // prepare low C4 output latch
         asm!("dsb sy", options(nostack));
         let version = read(GPIO1 + 0x78);
@@ -37,7 +47,11 @@ pub fn init() {
         }
     }
     READY.store(true, Ordering::Release);
-    super::put(b"@@GPIO_READY C4=input C5=input\r\n");
+    if cfg!(feature = "fast-boot") {
+        super::put(b"@@GPIO_READY C4=boot-timing-output C5=input\r\n");
+    } else {
+        super::put(b"@@GPIO_READY C4=input C5=input\r\n");
+    }
 }
 
 #[cfg(not(feature = "runtime-repl"))]

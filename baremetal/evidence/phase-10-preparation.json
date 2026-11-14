@@ -1,0 +1,32 @@
+{
+  "phase": 10,
+  "status": "preparation-only-sd-gate-open",
+  "storageWrites": false,
+  "payloadSha256": "b503c56ec2168bc011f1fd2da7844ff9813b4c037f1a080157e604944849da43",
+  "sdImageSha256": "f322dc95c61b1f6a95af37975e22d9843941243b2e74b65ecd12c80a9edbc8b2",
+  "sdImageBytes": 2097152,
+  "sdOffsetSectors": 64,
+  "idblockBytes": 854016,
+  "fastStartRamApiGatePassed": true,
+  "dutPayloadToReplUs": 13112,
+  "refPolledHighPulseUs": 13094.375,
+  "refHighPulseMaxSampleGapNs": 130083,
+  "hostTestsPassed": 12,
+  "tasksChecked": 308,
+  "limits": [
+    "No microSD written, inserted or booted.",
+    "Payload timing excludes ROM, card access and DDR initialization.",
+    "No first-frame or full power-on timing reported yet.",
+    "No filesystem, USB debug or app port qualified."
+  ],
+  "evidence": {
+    "logs/phase-10/preparation/hello-manifest.json": "6b8c329bee011c4a992c64091dacdfc521556be264a8287e1413b214ff4d2104",
+    "logs/phase-10/preparation/runtime-sd-manifest.json": "743bd1a3685c0ad5717d4bdf3f15a3cdea5feb8ea09cb1492b1e468cc5d753fa",
+    "logs/phase-10/gpio-20261114T173649Z/result.json": "6aa32ff488c4a083ff28c5b92e1ba39b5f59baffd82519c67dc1575963e2b49e",
+    "logs/phase-10/gpio-20261114T173649Z/serial.bin": "1b33ef7c12a30ef4171a006ba8b9821ca0385ded6f2e18acf292c589a3427bd2",
+    "logs/phase-9/console-20261114T173414Z/serial.bin": "cff248c7cc9a71632a8a84e26d5d5f75c2e5e16c7d7f05ddd2583d427f292ae0",
+    "logs/phase-9/console-20261114T173414Z/result.json": "314221b14e3893de1fb2b6c7022e8287e713347d101dc05dbef6e0f767974e23",
+    "logs/phase-10/ref-camera-health.json": "7b095c360141ad387cf5069b903d8e95433e08ba74c0e00d77d863f61103ec99",
+    "logs/phase-10/ref-app-inventory.json": "6e15f93fe5eb292793086da0ee8e1d9708f04bca91a15b6ab8a46a0555ce6351"
+  }
+}

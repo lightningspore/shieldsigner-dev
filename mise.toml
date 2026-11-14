@@ -1215,3 +1215,15 @@ run = "uv run --python 3.13 python baremetal/tools/console.py baremetal/micropyt
 [tasks."baremetal:runtime:boot:gate"]
 description = "Verify five RAM-only runtime boots/reset cycles; start with DUT in maskrom and UART idle"
 run = "uv run --python 3.13 python baremetal/tools/runtime_boot_gate.py"
+
+[tasks."baremetal:boot:build"]
+description = "Build fast-start runtime for RAM verification before SD packaging"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features fast-boot"
+
+[tasks."baremetal:boot:sd:prepare"]
+description = "Prepare regular-file experimental microSD image; never write a device"
+run = "uv run --python 3.13 python baremetal/tools/sd_image.py"
+
+[tasks."baremetal:boot:ram:gate"]
+description = "Observe a RAM-only fast boot through UART and read-only REF GPIO polling"
+run = "uv run --python 3.13 python baremetal/tools/boot_ram_gate.py"

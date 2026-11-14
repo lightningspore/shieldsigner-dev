@@ -46,6 +46,11 @@ extern "C" fn bm_runtime_fault() -> ! {
     super::put(b"@@FAIL interpreter-fault\r\n");
     super::reset()
 }
+#[no_mangle]
+extern "C" fn bm_repl_ready() {
+    #[cfg(feature = "fast-boot")]
+    super::boot::repl_ready();
+}
 pub fn run() -> ! {
     unsafe {
         extern "C" {

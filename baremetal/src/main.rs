@@ -13,6 +13,8 @@ mod runtime;
 mod usb;
 #[cfg(feature = "usb-console")]
 mod usb_descriptors;
+#[cfg(feature = "usb-console")]
+mod usb_control;
 
 #[cfg(feature = "camera-test")]
 mod camera;

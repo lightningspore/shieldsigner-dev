@@ -1251,7 +1251,7 @@ run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features usb
 
 [tasks."baremetal:usb:check"]
 description = "Test USB descriptors and cross-compile the experimental USB console"
-run = ["mise exec rust@1.93.1 -- rustc --edition 2021 --test baremetal/src/usb_descriptors.rs -o baremetal/build/usb-descriptor-tests", "baremetal/build/usb-descriptor-tests", "mise run baremetal:usb:build"]
+run = ["mise exec rust@1.93.1 -- rustc --edition 2021 --test baremetal/src/usb_descriptors.rs -o baremetal/build/usb-descriptor-tests", "baremetal/build/usb-descriptor-tests", "mise exec rust@1.93.1 -- rustc --edition 2021 --test baremetal/src/usb_control.rs -o baremetal/build/usb-control-tests", "baremetal/build/usb-control-tests", "mise run baremetal:usb:build"]
 
 [tasks."baremetal:usb:console"]
 description = "Run a script through the development USB CDC console (script path argument)"

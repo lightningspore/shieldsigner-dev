@@ -43,3 +43,8 @@ transfer, lossless bounded output/backpressure, reset/disconnect/reconnect,
 peripheral/camera/GC regression, then SD packaging and standalone USB boot.
 Do not remove UART wires until the USB tests pass. No ADB shell/filesystem is
 implemented or promised. Smartcard software is excluded from the app scope.
+
+Control-transfer review: the driver's actual phase transitions live in
+`src/usb_control.rs`; five host tests exercise IN/OUT data, two/three-stage
+status, incorrect direction and duplicate-not-ready rejection. These tests
+complement the descriptor checks and do not prove hardware enumeration.

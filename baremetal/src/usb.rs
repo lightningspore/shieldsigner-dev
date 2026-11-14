@@ -14,15 +14,7 @@ const DCTL: usize = 0xc704;
 const DSTS: usize = 0xc70c;
 const ENABLE: usize = 0xc720;
 // Control, interrupt81, bulk02 OUT/82 IN. Physical endpoints0,1,3,4,5.
-#[derive(Clone, Copy, PartialEq)]
-enum Control {
-    Setup,
-    InData,
-    OutData,
-    InStatus,
-    OutStatus,
-    Status,
-}
+use super::usb_control::{Completion, Control};
 struct State {
     ready: bool,
     configured: bool,
@@ -276,18 +268,16 @@ unsafe fn event(s: &mut State, ev: u32) -> Result<(), &'static str> {
             return Err("usb-trb-status");
         }
         if ep < 2 {
-            match s.control {
-                Control::Setup => handle_setup(s)?,
-                Control::InData => s.control = Control::OutStatus,
-                Control::OutData => {
+            match s.control.complete(ep)? {
+                Completion::Setup => handle_setup(s)?,
+                Completion::DataSent => {}
+                Completion::LineCoding => {
                     if remaining & 0x00ffffff != 57 {
                         return Err("usb-line-coding-length");
                     }
                     core::ptr::copy_nonoverlapping(buffer(0) as *const u8, s.line.as_mut_ptr(), 7);
-                    s.control = Control::InStatus;
                 }
-                Control::Status => setup(s)?,
-                _ => return Err("usb-control-completion-state"),
+                Completion::Finished => setup(s)?,
             }
         } else if ep == 4 {
             let len = 512usize
@@ -310,16 +300,8 @@ unsafe fn event(s: &mut State, ev: u32) -> Result<(), &'static str> {
             }
         }
     } else if kind == 3 && ep < 2 {
-        match s.control {
-            Control::InStatus | Control::OutStatus => {
-                let target = if s.control == Control::InStatus { 1 } else { 0 };
-                if target != ep {
-                    return Err("usb-status-direction");
-                }
-                transfer(s, ep, if s.three_stage { 4 } else { 3 }, 0)?;
-                s.control = Control::Status;
-            }
-            _ => {}
+        if let Some(kind) = s.control.not_ready(ep, s.three_stage)? {
+            transfer(s, ep, kind, 0)?;
         }
     }
     Ok(())

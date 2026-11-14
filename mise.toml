@@ -1320,3 +1320,19 @@ run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features app
 [tasks."baremetal:ui:dut1:gate"]
 description = "Exercise frozen cooperative app UI, real native callbacks, local camera and Home restore on DUT1"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/app_ui_gate.py --serial rv1103-dut1 --timeout 20"
+
+[tasks."baremetal:app:navigation:prepare"]
+description = "Generate reviewed original navigation classes from pinned SeedSigner source"
+run = "uv run --python 3.13 python baremetal/tools/prepare_navigation.py"
+
+[tasks."baremetal:app:navigation:gate"]
+description = "Verify frozen original Destination/BackStack semantics on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/navigation_gate.py --serial rv1103-dev-001 --timeout 8"
+
+[tasks."baremetal:ui:registry:gate"]
+description = "Exercise actual registered list/grid/back navigation and repeated cleanup on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/ui_registry_gate.py --serial rv1103-dev-001 --timeout 15"
+
+[tasks."baremetal:ui:text:gate"]
+description = "Verify real keyboard text callbacks preserve ASCII/UTF8 and reject oversize without truncation"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/ui_text_gate.py --serial rv1103-dev-001 --timeout 15"

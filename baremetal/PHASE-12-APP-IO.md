@@ -163,3 +163,25 @@ use the explicit target build/loader sequence. Final receipts and exact source/
 image/log hashes are in [evidence/phase-12-dut1-native-ui.json](evidence/phase-12-dut1-native-ui.json).
 DUT0 still runs the prior38bf1ed headless UI runtime; its camera remains the
 observer. Shared build artifacts now contain DUT1's app-ui image, not DUT0's.
+
+
+## Original navigation and broader native registry on DUT0
+
+DUT0 now runs the43-builder native registry; `ui.screens()` exposes exact names.
+Actual list Down/Enter, top-nav Back, 2-tile grid Right/Enter and Home restore
+passed, with five post-warmup cycles preserving one53300-byte native heap baseline.
+The first font-cache warmup is recorded separately; it is not treated as a leak
+or hidden by a moving baseline. The actual passphrase keyboard returns255ASCII/
+254UTF8 bytes exactly and explicitly rejects256-byte results instead of silently
+truncating. Wider text and pending-event/lifecycle policies remain port limits.
+Full GPIO/I2C/SPI/two-camera/settings/GC also passed on this final image.
+
+The original complete Destination/BackStack classes are now frozen, with source
+pins/hashes and narrow type/dataclass transformations. Three differential host
+tests compare against original CPython classes; actual frozen route/redirect/
+equality/redaction/backstack tests pass on DUT0. Total25 host tests pass.
+This does not port the full Controller or replace production Views with fixtures.
+See [app/README.md](app/README.md), [ui/README.md](ui/README.md) and
+[evidence/phase-12-navigation-registry.json](evidence/phase-12-navigation-registry.json).
+DUT1 remains on54bfdca's prior Home-only app-ui image; shared build artifacts now
+contain the final wiredDUT0 native-ui image. The physical LCD gate stays open.

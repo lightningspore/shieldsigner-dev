@@ -1,0 +1,179 @@
+{
+  "status": "partial-original-navigation-native-registry-hardware-passed",
+  "scope": "Original Destination/BackStack and actual native list/grid/back/text callbacks on headless wiredDUT0. Not the full Controller/app, every screen or physical LCD qualification.",
+  "features": "native-ui",
+  "downloadSha256": "6b651864c2b9114ddc28dc8445b9ef0ff61730134c76ba2396733168f4b5f652",
+  "boot": {
+    "path": "logs/phase-12/20261114T204128Z",
+    "manifestSha256": "ca487807071ab25602387110213ff710ef9d8d397878415dd5bdc0aaa4c6cac4",
+    "serialSha256": "3c91ee59a0ec16685e378782419708a94fa78c70c4013e539300b33abd7284bb"
+  },
+  "gates": {
+    "frozenOriginalNavigation": {
+      "path": "logs/phase-11/usb-20261114T204159.328829Z",
+      "serialSha256": "0c65cbd52cf79900d640905c6675b553c6dd4fc7264ac84196df6129ea2e118e",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/navigation_gate.py",
+        "scriptSha256": "bfcebce36ea8a1778e686edadf9fa464763c7f3fff7780a9b5e5b1ff03aceb31",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "registryListGridBack": {
+      "path": "logs/phase-11/usb-20261114T204159.863413Z",
+      "serialSha256": "aed27ae204b1bfb33cc35ac06504449cf59ed8da3563250945af5678fa3e96a5",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/ui_registry_gate.py",
+        "scriptSha256": "369582e1e147ce7a547497773f57b5f958e4a68cd4970f08ef8d4929057d4191",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "realKeyboardTextBounds": {
+      "path": "logs/phase-11/usb-20261114T204158.658955Z",
+      "serialSha256": "c9b8bddecc3320ea0ee1ae4e2793a42da593689f956658568c1cf2dad946a084",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/ui_text_gate.py",
+        "scriptSha256": "15cf79436e40ddb92b07331874be1b6a44462824e4b4f528eec2eccbb2485a20",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "fullApiTwoCamera": {
+      "path": "logs/phase-11/usb-20261114T204221.658896Z",
+      "serialSha256": "6eefe544057ebfcac5a96439000e019f4f7ed45e04798b5793f2261edc72e66f",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/phase9_gate.py",
+        "scriptSha256": "12d8113dc8a7864dd0d7b680383d22d3f5b9354d2e8983930dd5241f6b0ff25f",
+        "completed": true,
+        "traceback": false
+      }
+    }
+  },
+  "originalNavigation": {
+    "application": {
+      "url": "https://github.com/3rdIteration/seedsigner.git",
+      "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+    },
+    "classes": {
+      "Destination": {
+        "source": "src/seedsigner/views/view.py",
+        "fileSha256": "45810f6d4fbf4bf9e35fac3dd123ba4fc500dbec1413890f18cc99c7a829baeb",
+        "classSha256": "ae870f1f6b96e9494841c582035f6bb1aa66228723e7b07838dcb2101fbe9c2b"
+      },
+      "BackStack": {
+        "source": "src/seedsigner/controller.py",
+        "fileSha256": "2c080563d12cef837f25799a7139277ad7c3756a05329822f81d961c2e7e031e",
+        "classSha256": "393e08b7608e50374d9dcc34577f340e26e39f9446cadca9ef1c9fac5b73d071"
+      }
+    },
+    "transformations": [
+      "Remove type annotations/decorator dependency",
+      "Explicit dataclass-equivalent Destination constructor",
+      "BackStack generic base list[Destination] becomes list"
+    ],
+    "outputSha256": "3ac70bfa688c04fcde59ea1f43d49af9c9f365b2ec5e27338be0653a578a7a86"
+  },
+  "registeredScreens": [
+    "button_list_screen",
+    "camera_entropy_overlay_screen",
+    "camera_preview_overlay_screen",
+    "camera_preview_pillarboxed_screen",
+    "donate_screen",
+    "io_test_screen",
+    "keyboard_screen",
+    "large_icon_status_screen",
+    "loading_spinner_screen",
+    "main_menu_screen",
+    "multisig_wallet_descriptor_screen",
+    "opening_splash_screen",
+    "power_off_not_required_screen",
+    "power_options_screen",
+    "psbt_address_details_screen",
+    "psbt_change_details_screen",
+    "psbt_math_screen",
+    "psbt_op_return_screen",
+    "psbt_overview_screen",
+    "qr_display_screen",
+    "reset_screen",
+    "screensaver_screen",
+    "seed_add_passphrase_screen",
+    "seed_address_verification_screen",
+    "seed_address_verification_success_screen",
+    "seed_export_xpub_details_screen",
+    "seed_finalize_screen",
+    "seed_mnemonic_entry_screen",
+    "seed_review_passphrase_screen",
+    "seed_sign_message_confirm_address_screen",
+    "seed_sign_message_confirm_message_screen",
+    "seed_transcribe_seedqr_format_screen",
+    "seed_transcribe_whole_qr_screen",
+    "seed_transcribe_zoomed_qr_screen",
+    "seed_words_screen",
+    "settings_locale_picker_screen",
+    "settings_qr_confirmation_screen",
+    "toast_overlay_screen",
+    "tools_address_explorer_address_list_screen",
+    "tools_address_explorer_address_type_screen",
+    "tools_calc_final_word_done_screen",
+    "tools_calc_final_word_screen",
+    "version_screen"
+  ],
+  "hardwareExercisedBuilders": [
+    "main_menu_screen",
+    "button_list_screen",
+    "power_options_screen",
+    "seed_add_passphrase_screen"
+  ],
+  "nativeHeap": {
+    "beforeMenuCacheWarmupAfterTextTests": 43018,
+    "afterWarmup": 53300,
+    "subsequentStableMenuCycles": 5,
+    "allCameraAllocationsReturnedToBaseline": true
+  },
+  "textEventLimit": {
+    "bytes": 255,
+    "positive": "255 ASCII bytes and254 UTF8 bytes returned exactly via real keyboard KEY3",
+    "negative": "256 ASCII/UTF8 bytes cause explicit RuntimeError, followed by successful Home rendering",
+    "remaining": "Wider text workflows and pending-event queue semantics need actual View contract review"
+  },
+  "image": {
+    "rawBytes": 1817316,
+    "elfTextBytes": 1807716,
+    "elfDataBytes": 9600,
+    "elfBssBytes": 46800,
+    "bssEnd": "0x001c76d0",
+    "limit": "4MiB; stacks/heaps/DMA unchanged from preceding native-ui layout"
+  },
+  "hostTests": {
+    "total": 25,
+    "originalClassDifferentialTests": 3,
+    "result": "all passed, no skipped source-reference tests"
+  },
+  "dut1": "Unchanged54bfdca Home-only app-ui with USB-only pin release; visible LCD still unconfirmed",
+  "storageWrites": false,
+  "refModified": false,
+  "remaining": [
+    "Full original Controller/View dependency and startup integration",
+    "Native screen configuration/result adapters and remaining workflow qualification",
+    "Physical LCD and switch edges",
+    "QR decoding/model/crypto/settings/storage services",
+    "Standalone app SD boot and primary power-to-usable-app timing"
+  ]
+}

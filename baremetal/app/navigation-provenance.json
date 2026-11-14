@@ -1,0 +1,24 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "classes": {
+    "Destination": {
+      "source": "src/seedsigner/views/view.py",
+      "fileSha256": "45810f6d4fbf4bf9e35fac3dd123ba4fc500dbec1413890f18cc99c7a829baeb",
+      "classSha256": "ae870f1f6b96e9494841c582035f6bb1aa66228723e7b07838dcb2101fbe9c2b"
+    },
+    "BackStack": {
+      "source": "src/seedsigner/controller.py",
+      "fileSha256": "2c080563d12cef837f25799a7139277ad7c3756a05329822f81d961c2e7e031e",
+      "classSha256": "393e08b7608e50374d9dcc34577f340e26e39f9446cadca9ef1c9fac5b73d071"
+    }
+  },
+  "transformations": [
+    "Remove type annotations/decorator dependency",
+    "Explicit dataclass-equivalent Destination constructor",
+    "BackStack generic base list[Destination] becomes list"
+  ],
+  "outputSha256": "3ac70bfa688c04fcde59ea1f43d49af9c9f365b2ec5e27338be0653a578a7a86"
+}

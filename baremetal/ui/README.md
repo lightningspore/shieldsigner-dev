@@ -4,8 +4,9 @@ The genuine locked SeedSigner LVGL Home screen runs on wired DUT0 behind
 `native-ui`, using a headless framebuffer. DUT1 now runs `app-ui`, which
 submits the same native pixels to the explicit bench LCD backend. Its visible
 panel output remains unconfirmed.
-The staged C ABI bridge initially registers the genuine `main_menu_screen` only;
-unsupported screen names fail explicitly. There is no replacement wallet flow.
+The C ABI bridge now registers all43 locked native screen builders; `ui.screens()`
+returns their names. Unknown names fail explicitly. Registration does not qualify
+each screen/configuration or its wallet workflow. There is no replacement wallet flow.
 
 Run `mise run baremetal:cxx:setup`, then `mise run baremetal:ui:library:build`.
 The complete official Arm14.3.rel1 Darwin arm64 toolchain is checksum-pinned in
@@ -54,8 +55,8 @@ Rendering copies bounded rectangles to the shadow frame; `app-ui` additionally
 selects the explicit bench LCD backend. DUT1 passed its native screen/callback
 gate, local camera conversion/blit and Home restore without LCD reinit, plus
 actual UART-pad/IRQ release readbacks. Physical switch edges and recognizable
-optical output are still unverified. Registry support is currently Home only;
-the actual frozen
+optical output are still unverified. The current wired build registers43 builders;
+DUT1 still runs the earlier Home-only build. The actual frozen
 controller/view adapters, other screens, models/crypto/QR and standalone app
 boot still need work. This is a renderer milestone, not a running full app.
 
@@ -81,3 +82,28 @@ Run `baremetal:ui:dut1:build`, reset DUT1, then `baremetal:usb:dut1:ram:gate`
 and `baremetal:ui:dut1:gate`. The wired harness rejects DUT1/app images before
 any enumeration/download, protecting the original GPIO fixture from an accidental
 LCD-pin build. Receipt: [../evidence/phase-12-dut1-native-ui.json](../evidence/phase-12-dut1-native-ui.json).
+
+
+## Registry and original navigation checkpoint
+
+The generated native registry now matches the existing Linux host's43 builder
+names and is recorded in the build manifest/cache key. The current `native-ui`
+image runs on wired DUT0; DUT1 remains on its prior Home-only `app-ui` image.
+`baremetal:ui:registry:gate` verifies actual list Down/Enter, top-nav Back,
+2-tile grid Right/Enter and repeated transitions back to Home. Native font caches
+warm on the first cycle; five subsequent identical cycles must preserve one
+fixed absolute heap baseline. The final gate stabilizes at53300bytes after the
+text-widget checks. This does not qualify every registered screen or workflow.
+
+`baremetal:ui:text:gate` drives the actual passphrase keyboard with PUBLIC test
+strings:255ASCII bytes and127 two-byte accented characters return exactly;
+256-byte results raise instead of silently truncating. Consumed event text is
+cleared through volatile writes. The current255-byte event-text bound remains
+an explicit port limitation, and the single pending-event slot, long-hold,
+full lifecycle and View result mapping need review before wider app workflows.
+This is not signing/seed/passphrase workflow qualification.
+
+Original Destination/BackStack classes are frozen with reproducible provenance;
+see [../app/README.md](../app/README.md). Full Controller/Views, settings/model/
+crypto/storage/QR dependencies and startup integration remain outstanding.
+Receipt: [../evidence/phase-12-navigation-registry.json](../evidence/phase-12-navigation-registry.json).

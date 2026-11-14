@@ -26,10 +26,31 @@ snapshot/provenance is documented in ../APP-REFERENCE-INVENTORY.md.
 `seedsigner_port/native_ui.py` now provides the cooperative in-process screen
 backend: `ScreenSession.show(builder, config_dict)`, `poll()`, `wait(timeout_ms)`
 and `run(...)`. It uses the real frozen MicroPython JSON module and native LVGL
-API. The real renderer currently registers Home only. Accepted debounced button
+API. The current wired renderer registers43 native builders; the previously
+tested DUT1 build still registers Home only. Accepted debounced button
 events become complete native key pulses; held keys are suppressed across screen
 handoffs. An override propagates the existing1000 contract. Real DUT1 proved the
 frozen import, stable held-input suppression, an injected accepted edge reaching
 the actual Seeds callback, local camera blit and Home restore without LCD reinit.
 Injected edges do not prove a physical switch. Long-hold, lifecycle, other screen
 contracts and actual Controller/View/model/crypto/QR work remain outstanding.
+
+
+`seedsigner_port/navigation.py` contains the original application's complete
+`Destination` and `BackStack` classes, prepared by
+`mise run baremetal:app:navigation:prepare` from the locked application checkout.
+The generator removes type annotations and the runtime dataclass dependency,
+writes the equivalent four-argument Destination constructor, and changes the
+BackStack base from `list[Destination]` to `list`. The routing, redirect, equality,
+None/empty-args normalization and recursive sensitive-value redaction methods
+are preserved. `navigation-provenance.json` records source pins, original class/
+file hashes, transformations and generated output hash; do not hand-edit output.
+Upstream MIT attribution remains in the file and LICENSE.SeedSigner.
+
+Host tests compare against the actual original CPython/dataclass classes without
+importing the full app. `baremetal:app:navigation:gate` verifies the frozen classes
+on DUT0 with explicit test View fixtures. No production View is substituted.
+These classes currently live in the port namespace; the actual Controller/View
+imports still need to be integrated consistently. Full Controller.start(), real
+settings/storage/models/crypto/QR and native screen configuration/result adapters
+remain incomplete. The native registry is broader than those reviewed adapters.

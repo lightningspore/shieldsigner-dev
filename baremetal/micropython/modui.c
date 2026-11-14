@@ -3,7 +3,10 @@
 #include <string.h>
 #include "py/runtime.h"
 #include "py/objarray.h"
+#include "py/objtuple.h"
 extern int bm_ui_init(void);
+extern uint32_t bm_nativeui_screen_count(void);
+extern const char *bm_nativeui_screen_name(uint32_t);
 extern unsigned bm_ui_heap_used(void);
 extern int bm_nativeui_render(const char *,const char *);
 extern int bm_nativeui_key(uint32_t,int);
@@ -42,8 +45,16 @@ static mp_obj_t ui_event(void){
     mp_obj_t result=mp_obj_new_tuple(3,values);bm_nativeui_consume_event();return result;
 }
 static MP_DEFINE_CONST_FUN_OBJ_0(ui_event_obj,ui_event);
+static mp_obj_t ui_screens(void){
+    size_t count=bm_nativeui_screen_count();mp_obj_t result=mp_obj_new_tuple(count,NULL);
+    mp_obj_tuple_t *tuple=MP_OBJ_TO_PTR(result);
+    for(size_t i=0;i<count;i++){const char *name=bm_nativeui_screen_name(i);tuple->items[i]=mp_obj_new_str(name,strlen(name));}
+    return result;
+}
+static MP_DEFINE_CONST_FUN_OBJ_0(ui_screens_obj,ui_screens);
 static const mp_rom_map_elem_t globals_table[]={
     {MP_ROM_QSTR(MP_QSTR___name__),MP_ROM_QSTR(MP_QSTR_ui)},
+    {MP_ROM_QSTR(MP_QSTR_screens),MP_ROM_PTR(&ui_screens_obj)},
     {MP_ROM_QSTR(MP_QSTR_init),MP_ROM_PTR(&ui_init_obj)},
     {MP_ROM_QSTR(MP_QSTR_render),MP_ROM_PTR(&ui_render_obj)},
     {MP_ROM_QSTR(MP_QSTR_key),MP_ROM_PTR(&ui_key_obj)},

@@ -3,6 +3,7 @@
 // No wallet logic, GPIO policy, Linux subprocess/pipe or filesystem transport.
 #include "lvgl.h"
 #include "seedsigner.h"
+#include "registry.h"
 #include "gui_constants.h"
 #include "input_profile.h"
 #include "overlay_manager.h"
@@ -25,7 +26,14 @@ static void copy_text(char *out,const char *value){
     memcpy(out,value,n);out[n]=0;
 }
 extern "C" void seedsigner_lvgl_on_button_selected(uint32_t index,const char*){event_kind=1;event_value=index;}
-extern "C" void seedsigner_lvgl_on_text_entered(const char *text){event_kind=2;copy_text(event_text,text);}
+extern "C" void seedsigner_lvgl_on_text_entered(const char *text){
+    // Screen registration must never silently truncate a passphrase/text result.
+    // Wider text workflows need their reviewed adapter before this bound grows.
+    if(text&&strlen(text)>=sizeof(event_text)){
+        event_kind=0;io_error=true;copy_text(error,"Native text event exceeds current255-byte limit");return;
+    }
+    event_kind=2;copy_text(event_text,text);
+}
 extern "C" void seedsigner_lvgl_on_aux_key(const char *text){event_kind=3;copy_text(event_text,text);}
 extern "C" void seedsigner_lvgl_on_qr_brightness(uint8_t value){event_kind=4;event_value=value;}
 extern "C" void seedsigner_lvgl_on_qr_density(uint8_t value){event_kind=5;event_value=value;}
@@ -64,9 +72,12 @@ extern "C" int bm_nativeui_render(const char *name,const char *config){
     if(!initialized){copy_text(error,"Initialize UI first");return -1;}
     try {
         error[0]=0;io_error=false;event_kind=0;
-        // Staged registry: unknown screens fail explicitly, no fallback drawing.
-        if(!strcmp(name,"main_menu_screen"))main_menu_screen((void*)config);
-        else {copy_text(error,"Screen not ported into native registry");return -1;}
+        // Same genuine locked screen registry as the existing native host.
+        // Registration is availability, not per-screen app-flow qualification.
+        const ScreenEntry *entry=nullptr;
+        for(const auto &candidate:registry)if(!strcmp(name,candidate.name)){entry=&candidate;break;}
+        if(!entry){copy_text(error,"Unknown native screen builder");return -1;}
+        entry->build((void*)config);
         // Settle LVGL reset/group reassignment while input is released, as the
         // existing native host does before acknowledging a new screen.
         pressed=false;lv_indev_read(keypad);
@@ -93,4 +104,10 @@ extern "C" int bm_nativeui_tick(){
 extern "C" uint32_t bm_nativeui_stat(uint32_t field){return field==0?frames:field==1?flushes:field==2?event_kind:field==3?event_value:0;}
 extern "C" const char *bm_nativeui_error(){return error;}
 extern "C" const char *bm_nativeui_event_text(){return event_text;}
-extern "C" void bm_nativeui_consume_event(){event_kind=0;event_text[0]=0;}
+extern "C" void bm_nativeui_consume_event(){
+    event_kind=0;event_value=0;
+    volatile char *bytes=event_text;for(size_t i=0;i<sizeof(event_text);++i)bytes[i]=0;
+}
+
+extern "C" uint32_t bm_nativeui_screen_count(){return sizeof(registry)/sizeof(registry[0]);}
+extern "C" const char *bm_nativeui_screen_name(uint32_t index){return index<bm_nativeui_screen_count()?registry[index].name:nullptr;}

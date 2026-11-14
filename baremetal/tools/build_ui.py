@@ -31,12 +31,15 @@ subprocess.run(['uv','run','--python','3.13','--with','pillow==11.3.0','python',
 lvgl=sources/'lvgl'
 fonts=['opensans_western_regular','opensans_western_semibold','seedsigner_icons_24_4bpp','seedsigner_icons_26_4bpp','seedsigner_icons_36_4bpp','seedsigner_icons_48_4bpp','inconsolata_semibold_24_4bpp','inconsolata_semibold_22_4bpp']
 c=list(lvgl.joinpath('src').rglob('*.c'))+list(core.glob('*.c'))+list((out/'branding').glob('*.c'))+[core/'fonts'/(n+'.c') for n in fonts]+[core/'images'/(n+'_img.c') for n in ('seedsigner_logo','hrf_logo','btc_logo')]+[root/'ui/syscalls.c']
+registry=sorted(p.stem for p in (core/'screens').glob('*_screen.cpp'))
+(out/'registry.h').write_text('struct ScreenEntry { const char *name; void (*build)(void*); };\nstatic const ScreenEntry registry[] = {\n'+''.join('{"'+n+'",'+n+'},\n' for n in registry)+'};\n')
 cpp=list(core.glob('*.cpp'))+list((core/'screens').glob('*_screen.cpp'))+[root/'ui/bridge.cpp']
 flags=['-Os','-mthumb','-mcpu=cortex-a7','-mfloat-abi=soft','-mno-unaligned-access','-ffunction-sections','-fdata-sections','-funwind-tables','-fexceptions','-fno-pie','-DLV_CONF_INCLUDE_SIMPLE','-DSUPPORT_DISPLAY_HEIGHT_240=1','-DJSON_NO_IO=1']
 flags+=['-I'+str(p) for p in (lvgl,core,sources/'screens/components/nlohmann_json/include',root/'ui',repo/'firmware/lvgl-app/native',out)]
 header_hash=hashlib.sha256()
 for base in (core,root/'ui',repo/'firmware/lvgl-app/native',lvgl/'src'):
     for p in sorted(base.rglob('*.h')):header_hash.update(p.read_bytes())
+header_hash.update((out/'registry.h').read_bytes())
 headers=header_hash.digest()
 objects=out/'objects';objects.mkdir(exist_ok=True)
 def compile_one(source):
@@ -52,6 +55,6 @@ archive=out/'libsignerui.a'
 # Recreate it: retaining old hash-named members would link stale definitions.
 archive.unlink(missing_ok=True)
 subprocess.run([str(tools/'arm-none-eabi-ar'),'rcs',str(archive),*map(str,built)],check=True)
-manifest={'sources':{k:lock[k] for k in ('application','screens','lvgl')},'toolchain':cfg,'flags':flags,'archiveSha256':hashlib.sha256(archive.read_bytes()).hexdigest(),'objects':len(built),'patches':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in patches},'adapterHeaders':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (repo/'firmware/lvgl-app/native').glob('*.h')},'portSources':{str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (root/'ui').glob('*') if p.is_file()}}
+manifest={'sources':{k:lock[k] for k in ('application','screens','lvgl')},'toolchain':cfg,'flags':flags,'archiveSha256':hashlib.sha256(archive.read_bytes()).hexdigest(),'objects':len(built),'registry':registry,'patches':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in patches},'adapterHeaders':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (repo/'firmware/lvgl-app/native').glob('*.h')},'portSources':{str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (root/'ui').glob('*') if p.is_file()}}
 (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
-print(json.dumps({'archive':str(archive),'objects':len(built),'sha256':manifest['archiveSha256']},indent=2))
+print(json.dumps({'archive':str(archive),'objects':len(built),'registry':registry,'sha256':manifest['archiveSha256']},indent=2))

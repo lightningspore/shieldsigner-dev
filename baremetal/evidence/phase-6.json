@@ -1,0 +1,11 @@
+{
+  "phase": 6,
+  "passed": true,
+  "imageSha256": "633657599c93e9e25b4fde121df9af4933a6e2911cd26764781887294ad40b66",
+  "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n@@CPU cpsr=0x600001d3 sctlr=0x00c52878 cntfrq=24000000 elapsed=42343\n@@PASS cpu-counter\n@@ACTLR 0x00006000\n@@CLOCK counter_ticks=24031 cpu_cycles=1282918\n@@BENCH off_ticks=3592813 checksum=536739840\n@@MMU enabled\n@@BENCH on_ticks=39732 checksum=536739840\n@@PASS cache-benchmark\n@@PASS heap\n@@IRQ starting\n@@TIMER ticks=1000 elapsed=24000018 frequency=24000000\n@@PASS timer-irq\n@@ECHO_READY\n@@SPI cpll_hz=996000000\n@@SPI version=0x110002 source_hz=199200000 root=0x907\n@@SPI_RESULT requested_hz=1000000 actual_hz=996000 bytes=4096 errors=0 checksum=0x90a534ae status=Ok(())\n@@SPI_RESULT requested_hz=10000000 actual_hz=9960000 bytes=4096 errors=0 checksum=0x90a534ae status=Ok(())\n@@SPI_RESULT requested_hz=50000000 actual_hz=49800000 bytes=4096 errors=0 checksum=0x90a534ae status=Ok(())\n@@PASS phase-6\n",
+  "rateNote": "Nominal1/10/50MHz; actual clock configurations0.996/9.96/49.8MHz from inherited996MHz CPLL divided5, then200/20/4. Rates derived from register configuration; not measured with oscilloscope.",
+  "randomPattern": "4096 bytes from deterministic xorshift32 seed0x7193ac55, full byte comparison at each rate",
+  "dma": false,
+  "internalLoopback": false,
+  "wiring": "DUT Mini header8 GPIO1_C2 MOSI to header9 GPIO1_C3 MISO"
+}

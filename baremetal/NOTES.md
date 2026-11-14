@@ -1,6 +1,6 @@
 # Current bring-up state
 
-Updated: 2026-11-13 (host local date). **Phases 0–5 passed on hardware. Phase 6 SPI loopback is next.**
+Updated: 2026-11-13 (host local date). **Phases 0–6 passed on hardware. Phase 7 raw camera capture is next.**
 
 ## Devices and boundaries
 
@@ -48,3 +48,9 @@ Original I²C4 combined register reads return SC3336 ID0xcc41 at address0x30/reg
 Hardware evidence `evidence/phase-5.json` and full local `logs/phase-5/20261114T060918Z/`. Wrong address0x31 NAKs correctly in polled and IRQ modes. Deliberately masking the I²C IRQ triggered a ~2ms timeout; cleanup was followed by a successful IRQ sensor read. This validates the software deadline and recovery path, not every possible physical bus fault.
 
 DUT currently runs i2c-test, remains recoverable through UART R, and has its separate camera attached. Blue/orange GPIO lines remain inputs; REF GPIO52/53 are exported inputs. Next Phase6 needs a DUT MOSI-to-MISO jumper for SPI loopback; pin assignment/test code not yet prepared. Do not start Phase7 camera capture until Phase6 gate passes. User requested a commit after each completed phase; Phases0–4 checkpoint is33d0926.
+
+## Latest result: Phase 6 passed
+
+Receipt `evidence/phase-6.json`, full local logs `logs/phase-6/20261114T061524Z/`. External SPI0 loopback DUT header8/MOSI/C2 → header9/MISO/C3, 4096 pseudorandom bytes with zero mismatches at configured0.996/9.96/49.8MHz (nominal1/10/50MHz, -0.4%). No DMA or controller-internal loopback. Actual clock configuration derived from inherited CPLL996MHz /5 and dividers200/20/4; PLL was not retuned. Driver clock/register facts from official SDK. DUT currently spi-test with UART R reset; camera stays attached. GPIO blue/orange unchanged. Next Phase7 reference capture and camera register replay; no raw image passed yet.
+
+User requested RustPython be evaluated as a potential Phase9 interpreter. Preliminary source findings and required decision tests are in PHASE-9-RUNTIME.md. No interpreter selection or bare-metal RustPython support is claimed. Keep all original Phase9 peripheral/camera hardware gates.

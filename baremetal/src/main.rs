@@ -16,6 +16,8 @@ mod heap;
 mod i2c;
 #[cfg(feature = "cpu-base")]
 mod interrupts;
+#[cfg(feature = "spi-test")]
+mod spi;
 
 global_asm!(
     r#"
@@ -56,6 +58,8 @@ extern "C" fn rust_main() -> ! {
     gpio::init();
     #[cfg(feature = "i2c-test")]
     i2c::run();
+    #[cfg(feature = "spi-test")]
+    spi::run();
     // Keep a UART recovery path while USB is absent in this minimal payload.
     // 'R' requests a warm reset; no storage writes are involved.
     loop {

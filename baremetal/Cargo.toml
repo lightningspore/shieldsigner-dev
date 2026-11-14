@@ -10,6 +10,7 @@ license = "MIT"
 cpu-base = []
 gpio-test = ["cpu-base"]
 i2c-test = ["cpu-base"]
+spi-test = ["cpu-base"]
 
 [profile.release]
 panic = "abort"

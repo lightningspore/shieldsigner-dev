@@ -1159,3 +1159,7 @@ run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features gpi
 [tasks."baremetal:i2c:build"]
 description = "Build RV1103 SC3336 I2C4 polled/IRQ chip-ID and bounded-error tests"
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features i2c-test"
+
+[tasks."baremetal:spi:build"]
+description = "Build RV1103 SPI0 external loopback tests with 4KB patterns at three clock rates"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features spi-test"

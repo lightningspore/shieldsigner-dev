@@ -70,5 +70,12 @@
       "dutGpio": "GPIO1_C5",
       "dutDirection": "input"
     }
-  ]
+  ],
+  "spiLoopbackWiringConfirmed": true,
+  "spiLoopback": {
+    "dutMosi": "GPIO1_C2",
+    "dutMosiHeaderPin": 8,
+    "dutMiso": "GPIO1_C3",
+    "dutMisoHeaderPin": 9
+  }
 }

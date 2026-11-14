@@ -231,3 +231,30 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
   decoder linked (`usb-20261114T215322.984059Z`).36host checks passed.
   Receipt: `evidence/phase-12-native-qr.json`. DUT1 Home restore receipt:
   `usb-20261114T215212.909795Z`.
+
+## 2026-11-14 — Regex/Unicode prerequisites for original Scan parsing
+
+- Read the original plan again and inspected the original ScanScreen._run and
+  DecodeQR source. Generic classification depends on counted/noncapturing regex,
+  ignore-case matching, groups and fullmatch that the minimal MicroPython build
+  does not supply. Enabled proper Unicode strings plus UTF8 validation on native
+  app builds and added a bounded PCRE2-backed match/search/fullmatch adapter.
+- Pinned PCRE2-10.46 b2bd4254b379b9d7dc9a3dda060a7e27009ccdff, Unicode enabled,
+  JIT/OS tests/grep disabled. Preserved upstream cached source and license. The
+  disposable source changes two read_repeat_counts int32_t locals to int, matching
+  the upstream int-pointer helper on ARM newlib; unmodified10.46 fails GCC14's
+  incompatible pointer type check. No pattern engine was replaced with a small
+  approximation. PCRE2 is not identical to CPython re outside the tested API.
+- C wrapper releases compile/match/context state before Python allocations/NLR.
+  Bounds are explicit; Unicode span positions count codepoints. Frozen adapter
+  supports the app's current matching/group APIs, not compile/sub/split/findall or
+  named-group lookup. Contract and limits: REGEX-UNICODE.md.
+- Real DUT0 boot logs/phase-12/20261114T215832Z. CPython-generated original QR
+  protocol-pattern and Unicode/bytes/invalid/bounds gate passed at
+  usb-20261114T215951.910578Z; heap returned to baseline after every operation.
+  QR fixtures215911.779797Z, native UI215923.119160Z and RAM settings gates passed
+  with the new Unicode configuration;36host tests passed. Receipt:
+  evidence/phase-12-regex-unicode.json.
+- New dependencies only on wired headless DUT0. DUT1 remains on working preview
+  app-ui/Home. No CAD/REF/SD changes. Full original DecodeQR/ScanScreen/View model
+  integration is still next, not established by dependency gates.

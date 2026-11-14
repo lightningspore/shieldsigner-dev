@@ -1,0 +1,106 @@
+{
+  "status": "native-regex-unicode-gate-and-qr-ui-settings-regressions-passed",
+  "scope": "runtime prerequisites for original app DecodeQR; not full ScanView integration",
+  "boot": "logs/phase-12/20261114T215832Z",
+  "downloadSha256": "e9abda875e8ad0e3448125922c1af1aae623df3429427e227016b409caee6493",
+  "nativeRegex": {
+    "url": "https://github.com/PCRE2Project/pcre2",
+    "commit": "b2bd4254b379b9d7dc9a3dda060a7e27009ccdff",
+    "version": "10.46",
+    "licenseSha256": "9cf7ac6976099a1d856826d3ef1b093bd6b84489dc6100628ac79e740cf9885a",
+    "toolchain": {
+      "release": "14.3.rel1",
+      "directory": "arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi",
+      "archive": "arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi.tar.xz",
+      "url": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi.tar.xz",
+      "checksumUrl": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi.tar.xz.sha256asc",
+      "sha256": "30f4d08b219190a37cded6aa796f4549504902c53cfc3c7e044a8490b6eba1f7",
+      "scope": "Local freestanding C++ screen-library build; no system installation or firmware/toolchain replacement"
+    },
+    "flags": "-Os -mthumb -mcpu=cortex-a7 -mfloat-abi=soft -mno-unaligned-access -ffunction-sections -fdata-sections -fno-pie",
+    "unicode": true,
+    "jit": false,
+    "archiveSha256": "568334b4042dbfbb0bc60fbe01b9f1882173e1792d6a9b0e4ed5c81e8035ff2e"
+  },
+  "sourceAdaptation": {
+    "file": "src/pcre2_compile.c",
+    "change": "two read_repeat_counts locals int32_t to int, matching read_number(int*) on32bit ARM newlib",
+    "patchedSha256": "1a905783b998ecad52a5dfadb31659a7f1c7788b230b751729d7baed92866d05"
+  },
+  "gates": {
+    "regexUnicode": {
+      "path": "logs/phase-11/usb-20261114T215951.910578Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/regex_gate.py",
+        "scriptSha256": "c56cf8a0d22cf968d3e6583109c57abfc8c669db681d9994898603dc1326434a",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "5c59c7581b5f4669e4e194742746e4038b8d0db1a84381f877ab9284192b7e97"
+    },
+    "qrRegression": {
+      "path": "logs/phase-11/usb-20261114T215911.779797Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/qr_gate.py",
+        "scriptSha256": "520005d497af18a6f06efe73690f97019ed5da3306ed0bff9c24720da41e460e",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "e938d21a0fe5a3dab41e74ff990a22305de881ec8057ba523ba78b6768de813d"
+    },
+    "nativeUiRegression": {
+      "path": "logs/phase-11/usb-20261114T215923.119160Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/ui_gate.py",
+        "scriptSha256": "26e8d559e9d9bc4ad66a4249eb784f85482360d94f0d6e35e3b28992a5395ab5",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "8e9d56c72fcd01136a3355d77db445af0a8ede6f75d87f175e95e3c93ae49377"
+    },
+    "settingsRegression": {
+      "path": "logs/phase-11/usb-20261114T220017.664023Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/settings_store_gate.py",
+        "scriptSha256": "053a10fa9df8a365b463dca776a71a59af543ce068923a7083155eacbeaa48f9",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "a655fda522a1b6626ed9ddfd30c8b92f8cc1b8fede76f231d7d7a77957a1bc8a"
+    }
+  },
+  "hostChecks": {
+    "task": "baremetal:check",
+    "tests": 36,
+    "passed": true
+  },
+  "runtimeSources": {
+    "app/re.py": "061ffa89eefdfdcaf5cb784ae221ab647d2d1cbe6da397560facabf1fa84d6d2",
+    "micropython/modregex.c": "0db195921b12267099eb88062c540fdc86922719ae6d0e1f8bb512fda829bed8",
+    "micropython/mpconfigport.h": "3cfc3a8a6cf4dc6600ff3b584cc524824eae81c94fee98287a1bd93857fd7fc2",
+    "tools/build_regex.py": "8a3a89114982f7da6e6a50179cbece9e9fd9ad5d79b134713ed7a739a6d3ec87",
+    "tools/prepare_regex_gate.py": "8073683329bed91b365b4eb581ac760899697738224d9d006da5ac1438df014c"
+  },
+  "limits": [
+    "Only documented re API and tested patterns; not all CPython re semantics",
+    "Original DecodeQR, ScanScreen and full View/Controller remain unfinished",
+    "DUT1 unchanged preview app-ui; new dependencies deployed only on wired DUT0",
+    "No SD writes or cold-power measurement"
+  ]
+}

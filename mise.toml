@@ -1384,3 +1384,11 @@ run = "uv run --python 3.13 --with qrcode==8.2 python baremetal/tools/prepare_qr
 [tasks."baremetal:qr:gate"]
 description = "Decode public QR fixtures in the real native MicroPython runtime on wired DUT0"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/qr_gate.py --serial rv1103-dev-001 --timeout 60"
+
+[tasks."baremetal:regex:prepare"]
+description = "Generate CPython expected results for original decoder regex patterns and Unicode spans"
+run = "uv run --python 3.13 python baremetal/tools/prepare_regex_gate.py"
+
+[tasks."baremetal:regex:gate"]
+description = "Verify PCRE2-backed regex, UTF8 rejection, bounds and native heap cleanup on DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/regex_gate.py --serial rv1103-dev-001 --timeout 10"

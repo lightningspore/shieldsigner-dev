@@ -260,3 +260,14 @@ Full-frame decode220–261ms vs small fixtures3–13ms. DUT1 Home restored, stil
 build artifacts are wired DUT0 identity; do not load them on DUT1. No SD writes.
 Next: actual original DecodeQR/ScanScreen/View model integration and optical
 qualification; do not replace original app workflows with a fixture menu.
+
+2026-11-14 original Scan dependency checkpoint: native app builds now provide
+proper Unicode strings/UTF8 validation and PCRE2-backed re matching/groups for
+original decoder patterns. DUT0 boot215832; regex gate215951.910578Z passed
+CPython pattern/group/span outputs, invalidUTF8, capture/flag/type limits and
+per-operation heap baseline. QR/UI/RAMsettings regressions and36hosttests pass.
+REGEX-UNICODE.md documents exact API/limits and the two-local-type PCRE2 ARM
+portability patch. Receipt evidence/phase-12-regex-unicode.json. Sharedbuild is
+wired DUT0 native-ui; DUT1 unchanged working preview app-ui, Home restored.
+NoSDwrites. Original DecodeQR/ScanScreen model/Controller integration still next;
+do not confuse dependencies or fixtures with complete general Scan readiness.

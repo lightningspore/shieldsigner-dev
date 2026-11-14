@@ -40,6 +40,7 @@ runtime_info={}
 if 'native-ui' in features:
     subprocess.run(['mise','run','baremetal:ui:library:build'],cwd=ROOT.parent,check=True)
     subprocess.run(['uv','run','--python','3.13','python',str(ROOT/'tools/build_qr.py')],check=True)
+    subprocess.run(['uv','run','--python','3.13','python',str(ROOT/'tools/build_regex.py')],check=True)
 inputs = []
 if features & {'isp-3a-test','runtime-board'}:
     for name, size, digest in [
@@ -100,6 +101,7 @@ shutil.copyfile(rkbin/'hello-download.bin', build/'hello-download.bin')
     'algorithmSources': {str(p.relative_to(ROOT.parent)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in [ROOT.parent/'firmware/rkaiq-rs/Cargo.toml', *sorted((ROOT.parent/'firmware/rkaiq-rs/src').glob('*.rs'))]} if 'isp' in args.features or 'runtime-board' in features else {},
     'runtime':runtime_info,
+    'nativeRegex':json.loads((ROOT/'build/regex/manifest.json').read_text()) if 'native-ui' in features else None,
     'nativeQr':json.loads((ROOT/'build/qr/manifest.json').read_text()) if 'native-ui' in features else None,
     'nativeUi':json.loads((ROOT/'build/ui/manifest.json').read_text()) if 'native-ui' in features else None,
     'usbSerial':(args.usb_serial or 'rv1103-dev-001') if 'usb-console' in features else None,

@@ -130,3 +130,6 @@ USB console preparation checkpoint: original no_std Rust DWC3 device driver and 
 
 
 USB review checkpoint: still no maskrom DUT on read-only enumeration; no payload download/storage write. Extracted the actual endpoint-zero phase transitions into usb_control.rs and hardened completion direction validation. Five control tests cover descriptor IN/data OUT/status/no-data and wrong-direction/duplicate events;3 descriptor tests and cross-build pass. Updated host-only preparation receipt. Current blocker for hardware proof remains DUT SD removal and repower (request already pending); no new wiring change requested.
+
+
+USB hardware blocker revalidated20261114T190106Z: host USB inventory exposes only REF2207:0019/ADB0a523b8b23110ffc; rkdeveloptool ld finds no maskrom target and no external card is present on Mac. Actual DUT UART LED gate console-20261114T190106Z passed (10 transitions,0 pad errors), confirming the existing SD runtime remains alive. USB candidate has never been loaded. SD removal/repower request has remained outstanding across three goal turns; no live capture/download process is running. Mark goal blocked pending physical DUT power-off, spare SD removal and power-on; REF/jumpers unchanged. Resume with enumeration, then RAM-only USB candidate load and UART capture; preserve existing wired fixture. No USB, app or cold-power completion claim.

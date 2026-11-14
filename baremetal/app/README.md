@@ -77,3 +77,33 @@ asset lifecycle is not integrated. Twenty-nine host tests and the frozen real-
 renderer gate pass. Test View/screen/input classes in gate scripts are fixtures,
 not production app replacements. Physical switches and full app remain unverified.
 Receipt: [../evidence/phase-12-screen-contracts.json](../evidence/phase-12-screen-contracts.json).
+
+
+`settings_schema.py` now contains the original60-entry SettingsConstants/
+SettingsEntry/SettingsDefinition schema and SettingsQR parser. Regenerate with
+`baremetal:app:settings:prepare`; `settings-schema-provenance.json` records pins,
+class/file hashes and transformations. Original translation-marker behavior is
+retained. Linux GPIO probing is replaced with explicit real-hardware metadata;
+language discovery reports only the English assets actually frozen, with no
+filesystem emulation. SettingsEntry uses an explicit dataclass-equivalent
+constructor, rich comparison fallback and repr. Original lookup/default-copy/
+serialization methods and numeric-bound metadata are preserved.
+
+The parser is extracted as `SettingsQR.parse_settingsqr`, with logging removed
+and real double conversion retained. It does not apply settings: raw free-entry
+values such as out-of-range PBKDF2 iterations must still be checked by the actual
+setter before use. The Settings singleton/update/setter/platform side effects,
+persistence and Controller integration remain unported. Schema device options
+are upstream metadata, not a promise that native drivers support every option;
+smartcard metadata does not implement card software. No user settings are loaded.
+
+Native app builds now enable actual MicroPython double precision and link the
+existing pinned libm runtime; the schema is frozen only in those builds because
+its original constants include floats. The minimal diagnostic freeze excludes
+it and remains buildable. `BM_NATIVE_UI` in the host build environment chooses
+the explicit freeze list; host manifest `os` use does not add a runtime OS stub.
+The device exported all60 public default entries, which compare exactly to the
+source-derived schema. Thirty parser/GC cycles preserve native heap baseline;
+real double arithmetic, malformed-input fixtures, screen and two-camera regression
+gates pass.32 host tests compare the schema/parser with original app classes.
+Receipt: [../evidence/phase-12-settings-schema.json](../evidence/phase-12-settings-schema.json).

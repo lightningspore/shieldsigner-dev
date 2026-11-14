@@ -202,3 +202,24 @@ adapter, boot204642Z / gate204714.964041Z. DUT1 remains unchanged54bfdca.
 The full Controller/View dependency graph and startup are still incomplete;
 physical LCD/buttons and standalone app boot remain open. Receipt:
 [evidence/phase-12-screen-contracts.json](evidence/phase-12-screen-contracts.json).
+
+
+## Original settings schema/parser dependency
+
+The native app freeze now includes the original60-entry settings schema and
+SettingsQR parser, with reproducible provenance and explicit English-only asset
+capability. All60 device-exported public entries match the source-derived schema;
+32 host tests pass, including comparison against original app classes. Actual
+double precision and30 parser/GC cycles pass on finalDUT0 image, followed by the
+basic-screen and complete GPIO/I2C/SPI/two-camera/settings/GC regression gates.
+Minimal diagnostic and native app builds both compile; float-bearing schema
+code is excluded from the diagnostic freeze. Finalboot205505Z, schema205541Z,
+screen205544.153536Z and camera205544.787006Z receipts are linked in
+[evidence/phase-12-settings-schema.json](evidence/phase-12-settings-schema.json).
+
+This is not the full Settings service: no user settings are read or applied,
+and original numeric-bound metadata still needs its actual setter enforcement.
+Platform options in the schema do not qualify unsupported native hardware;
+persistence/device-side effects, full Controller startup, models/crypto/QR and
+physical LCD/buttons remain open. DUT1 stays on54bfdca; shared artifacts/current
+DUT0 now contain the final double-enabled native-ui image. No storage writes.

@@ -27,3 +27,12 @@ void bm_micropython_poll(void);
 
 // Native screen configs use upstream JSON, with no filesystem dependency.
 #define MICROPY_PY_JSON (1)
+
+// Original app settings parsing requires real CPython-compatible double values.
+// Native UI builds link the pinned complete newlib/libm runtime.
+#if BM_NATIVE_UI
+#define MICROPY_FLOAT_IMPL MICROPY_FLOAT_IMPL_DOUBLE
+#endif
+
+// Preserve dataclass-equivalent rich comparison fallback semantics.
+#define MICROPY_PY_BUILTINS_NOTIMPLEMENTED (1)

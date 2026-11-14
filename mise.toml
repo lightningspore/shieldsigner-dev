@@ -1344,3 +1344,11 @@ run = "uv run --python 3.13 python baremetal/tools/prepare_screen_defaults.py"
 [tasks."baremetal:app:screens:gate"]
 description = "Verify frozen basic app-screen argument/result adapters through actual native rendering on wired DUT0"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/screen_contracts_gate.py --serial rv1103-dev-001 --timeout 15"
+
+[tasks."baremetal:app:settings:prepare"]
+description = "Prepare original settings schema with explicit frozen language and hardware capabilities"
+run = "uv run --python 3.13 python baremetal/tools/prepare_settings_schema.py"
+
+[tasks."baremetal:app:settings:gate"]
+description = "Verify frozen original settings schema, parser, doubles and public full-schema output on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/settings_schema_gate.py --serial rv1103-dev-001 --timeout 20"

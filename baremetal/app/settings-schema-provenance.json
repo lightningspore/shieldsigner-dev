@@ -1,0 +1,23 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "source": "src/seedsigner/models/settings_definition.py",
+  "fileSha256": "35687fa0852174ca2ed38575a1b4ade66cd2627348411c2a61d23fbb0fe766ea",
+  "classSha256": {
+    "SettingsConstants": "02cc0d4e87dbfaa142eb00836263ea78362318836dcd348120170ed491d8b2c6",
+    "SettingsEntry": "9aedc11e308b7b6aa3a10b78f16101eccb8f1574dd75f6f264a0e51b38533eff",
+    "SettingsDefinition": "4fbe1fa18fc6a5bd5a8382f89226ad8180204d67f5c468a7ddd9162dfc157ad4"
+  },
+  "settingsSourceSha256": "9d77c292ecb6760bbc176c5355958b8a85f6e651160e65cc58e3066371602b40",
+  "parser": "Original Settings.parse_settingsqr extracted as SettingsQR.parse_settingsqr; logging removed, float conversion uses real doubles or explicit unsupported error",
+  "l10nSourceSha256": "611cbe564315817964999f3437eecc6a988e2b968a8169066b146e0d1f784686",
+  "transformations": [
+    "Original mark_for_translation helper, renamed _mft",
+    "No periphery probe: actual hardware profile, USING_MOCK_GPIO=False",
+    "Frozen English-only detected languages, no filesystem emulation",
+    "Strip annotations and replace SettingsEntry dataclass init/eq/repr explicitly"
+  ],
+  "outputSha256": "264a8be8d43281741ff5b2e36c11b258e44634e8c0b29f893448c2d24b4f189d"
+}

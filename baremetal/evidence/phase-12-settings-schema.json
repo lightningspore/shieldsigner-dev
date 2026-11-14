@@ -1,0 +1,153 @@
+{
+  "status": "original-settings-schema-parser-hardware-passed",
+  "scope": "Original60-entry schema and parser on native-uiDUT0, not a full Settings singleton/store/Controller or applied/persisted configuration.",
+  "features": "native-ui",
+  "downloadSha256": "a306afb54e3c42e39673ca1c7a8835f9d33fea9acf904bbdc7d72dbd1ec85137",
+  "boot": {
+    "path": "logs/phase-12/20261114T205505Z",
+    "manifestSha256": "15dba72c3cc89f4877cb70102c4841707065b81fc4c5712566d1af653e05d697",
+    "serialSha256": "a264f1749d66486a8760c278a79d87854f8875d75a5ef4349e2bd3555f51f53d"
+  },
+  "gates": {
+    "schemaParserDoubles": {
+      "path": "logs/phase-11/usb-20261114T205541.162242Z",
+      "serialSha256": "20cfbb04806381797628d28b4030041b111760f2a7c9a3b41b15592fbd09278f",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/settings_schema_gate.py",
+        "scriptSha256": "848dfe28001b565e3c91eb644a3ac67f0f325c6cb3649d41ef661633f919eddb",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "screenContracts": {
+      "path": "logs/phase-11/usb-20261114T205544.153536Z",
+      "serialSha256": "74f1e046d186d7f2ae5a37ccb9f0bb98b2651e7f591e4361276f0ddb5fc0af16",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/screen_contracts_gate.py",
+        "scriptSha256": "ac12a194adbcb98121697f20ce1607525749257a9f6d520bccb9f1ff200f4fff",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "fullApiTwoCamera": {
+      "path": "logs/phase-11/usb-20261114T205544.787006Z",
+      "serialSha256": "b7e36e7afd5d56b93c6fc5ba0787ab86fde98c7e305969b5273691b306afa442",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/phase9_gate.py",
+        "scriptSha256": "12d8113dc8a7864dd0d7b680383d22d3f5b9354d2e8983930dd5241f6b0ff25f",
+        "completed": true,
+        "traceback": false
+      }
+    }
+  },
+  "deviceSchemaAudit": {
+    "passed": true,
+    "entries": 60,
+    "schemaSha256": "d029fa08de4ecfefdefe1805ac712c1efa5a8bc2ebf1a081e62ffa8c0be5b1a9",
+    "serialSha256": "20cfbb04806381797628d28b4030041b111760f2a7c9a3b41b15592fbd09278f",
+    "portSourceSha256": "4d1f78cefe50159acf16ca666ded35e43df65f57a9a280a1f12d874a01fd7c9f",
+    "scope": "Public default schema, no applied/persisted/user settings"
+  },
+  "provenance": {
+    "application": {
+      "url": "https://github.com/3rdIteration/seedsigner.git",
+      "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+    },
+    "source": "src/seedsigner/models/settings_definition.py",
+    "fileSha256": "35687fa0852174ca2ed38575a1b4ade66cd2627348411c2a61d23fbb0fe766ea",
+    "classSha256": {
+      "SettingsConstants": "02cc0d4e87dbfaa142eb00836263ea78362318836dcd348120170ed491d8b2c6",
+      "SettingsEntry": "9aedc11e308b7b6aa3a10b78f16101eccb8f1574dd75f6f264a0e51b38533eff",
+      "SettingsDefinition": "4fbe1fa18fc6a5bd5a8382f89226ad8180204d67f5c468a7ddd9162dfc157ad4"
+    },
+    "settingsSourceSha256": "9d77c292ecb6760bbc176c5355958b8a85f6e651160e65cc58e3066371602b40",
+    "parser": "Original Settings.parse_settingsqr extracted as SettingsQR.parse_settingsqr; logging removed, float conversion uses real doubles or explicit unsupported error",
+    "l10nSourceSha256": "611cbe564315817964999f3437eecc6a988e2b968a8169066b146e0d1f784686",
+    "transformations": [
+      "Original mark_for_translation helper, renamed _mft",
+      "No periphery probe: actual hardware profile, USING_MOCK_GPIO=False",
+      "Frozen English-only detected languages, no filesystem emulation",
+      "Strip annotations and replace SettingsEntry dataclass init/eq/repr explicitly"
+    ],
+    "outputSha256": "4d1f78cefe50159acf16ca666ded35e43df65f57a9a280a1f12d874a01fd7c9f"
+  },
+  "hostTests": {
+    "total": 32,
+    "newSchemaParserReferenceTests": 3,
+    "result": "all pass; no source-reference skips"
+  },
+  "runtimeChecks": {
+    "doublePrecision": "1 + 2^-40 > 1, plus decimal parse fixture",
+    "nativeHeapBaselineBytes": 1120,
+    "parserGcCycles": 30,
+    "schemaEntries": 60,
+    "numericBoundsMetadata": "pbkdf2 raw default/min/max10/10/1000 preserved; setters not ported, parsing alone does not enforce these bounds"
+  },
+  "platformScope": {
+    "languages": [
+      "en"
+    ],
+    "hardwareMetadata": "Original non-mock definitions retained; not proof of native support for every listed device",
+    "smartcard": "Inert upstream setting metadata only, no card services implemented",
+    "floatBuild": "Real doubles/libm in native-ui/app-ui; schema omitted from minimal diagnostic freeze"
+  },
+  "baselineBuildChecks": [
+    "logs/phase-12/settings-baseline-micropython-check.txt",
+    "logs/phase-12/settings-baseline-link-configured-check.txt"
+  ],
+  "image": {
+    "rawBytes": 1879284,
+    "elfTextBytes": 1869680,
+    "elfDataBytes": 9600,
+    "elfBssBytes": 46800,
+    "bssEnd": "0x001d76d0",
+    "memoryLayout": "Same native-ui guards/stacks/heaps/DMA, image below4MiB"
+  },
+  "storageWrites": false,
+  "refModified": false,
+  "dut1": "Unchanged54bfdca Home-only app-ui; visible LCD still open",
+  "remaining": [
+    "Actual Settings singleton/mutators/platform capability policy and persistence",
+    "Wire full original Controller/View graph and startup",
+    "Seed/model/crypto/QR dependencies",
+    "Physical LCD/buttons and complete standalone app boot"
+  ],
+  "generatedSourceFormatting": {
+    "note": "Trailing whitespace in inherited docstring normalized after hardware gate; executable methods unchanged. Boot manifest retains actual tested source hashes.",
+    "currentProvenance": {
+      "application": {
+        "url": "https://github.com/3rdIteration/seedsigner.git",
+        "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+      },
+      "source": "src/seedsigner/models/settings_definition.py",
+      "fileSha256": "35687fa0852174ca2ed38575a1b4ade66cd2627348411c2a61d23fbb0fe766ea",
+      "classSha256": {
+        "SettingsConstants": "02cc0d4e87dbfaa142eb00836263ea78362318836dcd348120170ed491d8b2c6",
+        "SettingsEntry": "9aedc11e308b7b6aa3a10b78f16101eccb8f1574dd75f6f264a0e51b38533eff",
+        "SettingsDefinition": "4fbe1fa18fc6a5bd5a8382f89226ad8180204d67f5c468a7ddd9162dfc157ad4"
+      },
+      "settingsSourceSha256": "9d77c292ecb6760bbc176c5355958b8a85f6e651160e65cc58e3066371602b40",
+      "parser": "Original Settings.parse_settingsqr extracted as SettingsQR.parse_settingsqr; logging removed, float conversion uses real doubles or explicit unsupported error",
+      "l10nSourceSha256": "611cbe564315817964999f3437eecc6a988e2b968a8169066b146e0d1f784686",
+      "transformations": [
+        "Original mark_for_translation helper, renamed _mft",
+        "No periphery probe: actual hardware profile, USING_MOCK_GPIO=False",
+        "Frozen English-only detected languages, no filesystem emulation",
+        "Strip annotations and replace SettingsEntry dataclass init/eq/repr explicitly"
+      ],
+      "outputSha256": "264a8be8d43281741ff5b2e36c11b258e44634e8c0b29f893448c2d24b4f189d"
+    }
+  }
+}

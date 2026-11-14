@@ -1,0 +1,50 @@
+{
+  "status": "partial-app-io-software-passed-optical-and-full-app-open",
+  "scope": "Native/frozen app I/O preparation on real DUT0/DUT1. No physical switch, visible LCD, complete app or standalone app boot qualification.",
+  "dut1": {
+    "features": "bench-ui",
+    "imageSha256": "a6f4375f671ffdbea9089477e5ce6d13000d24239e6049b92be413ec6f31451c",
+    "frozenInputGate": {
+      "path": "logs/phase-11/usb-20261114T195043Z",
+      "serialSha256": "819273a656ceffdcf1a52ab7c5f7af8bf2b1ca7571053d184184f03732814dcb"
+    },
+    "cameraCapture": {
+      "path": "logs/phase-11/usb-20261114T195651Z",
+      "serialSha256": "504bf9d7fdbe3dc59c88e5f743e8ec9f66398ef06c7b4d8a5f164cc6676b5d48"
+    },
+    "cameraProbe": "logs/phase-11/usb-20261114T195559Z",
+    "displayReinitAfterCapture": "logs/phase-11/usb-20261114T195824Z",
+    "physicalKeyMask": 64,
+    "startupHeldInputSuppression": "passed; physical press/release still untested",
+    "displayVisual": "No recognizable pattern/fill in available close oblique/cropped observer view; optical gate open"
+  },
+  "dut0": {
+    "features": "usb-console",
+    "imageSha256": "e5b93a85437c67d0e3bb7c2759c5750a98263418753db2ef2dfe3dde9a4d1d69",
+    "fullApiCameraGcGate": {
+      "path": "logs/phase-11/usb-20261114T195410Z",
+      "serialSha256": "d9cc2fa8a66fcbb06c2ee9f02b09aa3132611568721dbff2eb94c6e4c5ca7aa0"
+    },
+    "observerFrames": "Different RGB hashes across independent captures; saved locally only"
+  },
+  "hostTests": 19,
+  "sourceHashes": {
+    "app/seedsigner_port/buttons.py": "d8d76f89888f5588bf0662448c921f63094bff978c2154df47b21ee82d9a16ec",
+    "micropython/manifest.py": "67c285b7c2a4b69ec05c69c8c0fa87c3f0196643f6f007e2915931a3d14bd548",
+    "micropython/mpconfigport.h": "3ddbb498783c13f22130002a4358877003ad375546f58588b48da3ea1064196d",
+    "micropython/moddisplay.c": "8fc075b3a4f8778b11b74c3c6cb917e1f060069d3dbfc2eb07092f15203e9912",
+    "src/display.rs": "19489aeac273410c3d14b258900aa78b3a829dfafb4ce9f24e6822a7c07d483d",
+    "src/spi.rs": "02ae571c0a8a974216437b99407581ed5be21934380ce71373d871aa3bc24e11",
+    "src/main.rs": "aafccaaa0a0f76dbc87214212e0138624bc970c7b25e8b4fdd05184f64f15cb0",
+    "tools/usb_reset.py": "2105134424d3b8f00f90e2b3d1248fe37b9763f6cab09d46c1a49dd96773a65a"
+  },
+  "remaining": [
+    "Visible LCD validation and physical switch press/release",
+    "Actual SeedSigner controller/views/rendering/models/crypto port",
+    "Camera preview/QR through app; continuous performance not measured",
+    "Standalone USB/app SD packaging and real app boot/input gate"
+  ],
+  "coldPowerBenchmark": "explicitly deferred by user",
+  "smartcardSoftware": "excluded by user; no PCB changes",
+  "storageWrites": false
+}

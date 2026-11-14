@@ -1,5 +1,8 @@
-# Hardware gate: execute through the UART REPL, not a host Python interpreter.
+# Hardware gate: wired DUT0 only, through its UART or USB REPL.
 from machine import Pin, I2C, SPI
+import machine
+# DUT1 buttons use GPIO52: never run the fixture output/loopback test there.
+assert machine.console_status()["usb_only"] == 0
 import time
 import gc
 import camera

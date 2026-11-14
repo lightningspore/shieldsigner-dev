@@ -134,3 +134,10 @@ The board runtime also provides a5Hz onboard LED heartbeat and
 `machine.led_status()`. It uses GPIO3_C6 (global118), with100ms on/off periods
 driven by the1kHz IRQ. The status includes rate, transitions, commanded state
 and pad-readback error count. The original Pin52/53 API bounds are unchanged.
+
+Later extension: Phase11 adds USB CDC debugging and a USB-only app target;
+[Phase12](PHASE-12-APP-IO.md) expands the original minimum-ROM interpreter to
+core built-ins/MPZ, source-line diagnostics and explicitly frozen port modules.
+The earlier Phase9 receipt remains the historical bounded gate, not proof of
+a complete app. Current fixture script requires console_status and rejects
+USB-only DUT1 before GPIO writes; it is not a script for the old SD image.

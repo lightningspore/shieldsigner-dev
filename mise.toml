@@ -1272,3 +1272,15 @@ run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features usb
 [tasks."baremetal:usb:dut1:ram:gate"]
 description = "Load only DUT1 at configured location and prove USB-only console/pad release"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_only_gate.py"
+
+[tasks."baremetal:app:bench:build"]
+description = "Build explicit bench240 LCD/button USB-only target for DUT1"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features bench-ui --usb-serial rv1103-dut1"
+
+[tasks."baremetal:usb:dut1:reset"]
+description = "Reset uniquely identified DUT1 to maskrom through USB only"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_reset.py"
+
+[tasks."baremetal:app:buttons:gate"]
+description = "Run the frozen app button adapter and display guard checks on DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/app_buttons_gate.py --serial rv1103-dut1 --timeout 12"

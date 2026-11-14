@@ -47,6 +47,8 @@ try:
     if a.reset_to_maskrom:
         with serial.Serial(port.device,115200,timeout=.1,write_timeout=3,exclusive=True) as s:
             s.write(b'\x1d')
+            s.flush()
+            time.sleep(.15)
         tool=Path(__file__).resolve().parents[1]/'.tools/rkdeveloptool/rkdeveloptool'
         end=time.monotonic()+8
         while time.monotonic()<end:

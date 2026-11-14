@@ -15,6 +15,8 @@ mod usb;
 mod usb_descriptors;
 #[cfg(feature = "usb-console")]
 mod usb_control;
+#[cfg(feature = "bench-ui")]
+mod display;
 
 #[cfg(feature = "camera-test")]
 mod camera;
@@ -160,6 +162,7 @@ fn reset() -> ! {
     put(b"@@RESET\r\n");
     unsafe {
         asm!("cpsid if", options(nostack));
+        #[cfg(not(feature = "usb-only"))]
         while read_volatile((UART + 0x14) as *const u32) & 0x40 == 0 {}
         asm!("dsb sy", options(nostack));
         write_volatile(0xff3b0c08 as *mut u32, 0xfdb9);

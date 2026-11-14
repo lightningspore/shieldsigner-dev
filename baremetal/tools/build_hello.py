@@ -20,6 +20,8 @@ build_env = os.environ.copy()
 build_env.pop('RV1103_USB_SERIAL',None)
 if args.usb_serial: build_env['RV1103_USB_SERIAL']=args.usb_serial
 features=set(args.features.split(','))
+if 'bench-ui' in features:
+    features.add('usb-only')
 if 'usb-only' in features:
     features.add('usb-console')
 if 'usb-console' in features:
@@ -49,10 +51,18 @@ if features & {'runtime-repl','runtime-board'}:
     revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT/'.tools/micropython',text=True).strip()
     if revision!='78ff170de9e32c79db6e64d3e33d2bd60002bdcd':
         raise SystemExit('Unexpected MicroPython revision; see PHASE-9-RUNTIME.md')
+    lib=ROOT/'.tools/micropython/lib/micropython-lib'
+    if not (lib/'README.md').exists():
+        run(['git','submodule','update','--init','--depth','1','lib/micropython-lib'],cwd=ROOT/'.tools/micropython')
+    lib_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=lib,text=True).strip()
+    if lib_revision!='6ae440a8a144233e6e703f6759b7e7a0afaa37a4':
+        raise SystemExit('Unexpected pinned MicroPython library revision')
+    run(['uv','run','--python','3.13','make','-C',str(ROOT/'.tools/micropython/mpy-cross'),'-j4'])
     run(['uv','run','--python','3.13','make','-C',str(ROOT/'micropython'),'-j4',
          'BOARD_BINDINGS='+('1' if 'runtime-board' in features else '0')])
     archive=ROOT/'build'/('micropython-board' if 'runtime-board' in features else 'micropython')/'libmicropython.a'
-    runtime_info={'micropythonRevision':revision,'archiveSha256':hashlib.sha256(archive.read_bytes()).hexdigest(),
+    runtime_info={'micropythonRevision':revision,'micropythonLibRevision':lib_revision,
+                  'mpyCrossSha256':hashlib.sha256((ROOT/'.tools/micropython/mpy-cross/build/mpy-cross').read_bytes()).hexdigest(),'archiveSha256':hashlib.sha256(archive.read_bytes()).hexdigest(),
                   'newlibHeaderPackage':(ROOT/'.tools/newlib/package.txt').read_text().strip()}
 run(['mise', 'exec', 'rust@1.93.1', '--', 'cargo', 'build', '--release'] +
     (['--features', args.features] if args.features else []))
@@ -76,7 +86,7 @@ shutil.copyfile(rkbin/'hello-download.bin', build/'hello-download.bin')
     'features': args.features,
     'note':'Entry and stack proven by Phase 2 ten-run gate; added features require their own DUT proof.',
     'files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
-             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'Cargo.toml', ROOT/'Cargo.lock', ROOT/'build.rs', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').rglob('*.rs')), *sorted((ROOT/'micropython').glob('*')), *inputs] if p.is_file()},
+             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'Cargo.toml', ROOT/'Cargo.lock', ROOT/'build.rs', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').rglob('*.rs')), *sorted((ROOT/'micropython').glob('*')), *sorted((ROOT/'app').rglob('*.py')), *inputs] if p.is_file()},
     'algorithmSources': {str(p.relative_to(ROOT.parent)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in [ROOT.parent/'firmware/rkaiq-rs/Cargo.toml', *sorted((ROOT.parent/'firmware/rkaiq-rs/src').glob('*.rs'))]} if 'isp' in args.features or 'runtime-board' in features else {},
     'runtime':runtime_info,

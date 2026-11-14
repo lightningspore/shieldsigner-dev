@@ -14,12 +14,13 @@ def main():
     from serial.tools import list_ports
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('script', type=Path)
+    parser.add_argument('--serial', help='Exact firmware USB serial identity')
     parser.add_argument('--port', help='Exact CDC port when more than one development board is present')
     parser.add_argument('--timeout', type=float, default=30)
     args = parser.parse_args()
     if not 0 < args.timeout <= 300:
         parser.error('timeout must be in0..300 seconds')
-    candidates = [p for p in list_ports.comports() if (p.vid, p.pid) == (0x1209, 0x0003)]
+    candidates = [p for p in list_ports.comports() if (p.vid, p.pid) == (0x1209, 0x0003) and (not args.serial or p.serial_number == args.serial)]
     if args.port:
         candidates = [p for p in candidates if p.device == args.port]
     if len(candidates) != 1:

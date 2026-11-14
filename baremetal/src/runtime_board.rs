@@ -142,3 +142,21 @@ extern "C" fn bm_camera_setting(id: i32, value: i32) -> i32 {
         _ => return -1,
     }) as i32
 }
+
+#[no_mangle]
+unsafe extern "C" fn bm_display(op:u32,x:u32,y:u32,w:u32,h:u32,data:*const u8,len:usize)->i32 {
+    #[cfg(feature = "bench-ui")]
+    {
+        match op {
+            0 if x<=1=>crate::display::init(x!=0).map_or(-1,|_|0),
+            1 if x<=65535=>crate::display::fill(x as u16).map_or(-1,|_|0),
+            2 if x<240 && y<240 && w>0 && h>0 && w<=240 && h<=240 && x+w<=240 && y+h<=240 && len==w as usize*h as usize*2=>
+                crate::display::blit(x as u16,y as u16,w as u16,h as u16,core::slice::from_raw_parts(data,len)).map_or(-1,|_|0),
+            3=>crate::display::buttons().map_or(-1,|v|v as i32),
+            4=>crate::display::status(x).map_or(-1,|v|v as i32),
+            _=>-1,
+        }
+    }
+    #[cfg(not(feature = "bench-ui"))]
+    {let _=(op,x,y,w,h,data,len);-1}
+}

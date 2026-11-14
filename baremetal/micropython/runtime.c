@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Original port glue. Core interpreter and GC helpers remain upstream MIT.
 #include "py/runtime.h"
+#include "py/builtin.h"
 #include "py/gc.h"
 #include "py/cstack.h"
 #include "py/lexer.h"
@@ -39,3 +40,11 @@ void gc_collect(void) {gc_collect_start();gc_helper_collect_regs_and_stack();gc_
 mp_lexer_t *mp_lexer_new_from_file(qstr filename) {(void)filename;mp_raise_OSError(MP_ENOENT);}
 void nlr_jump_fail(void *value) {(void)value;bm_runtime_fault();for(;;){}}
 void __fatal_error(const char *message) {(void)message;bm_runtime_fault();for(;;){}}
+
+// Core io.BytesIO is available; filesystem-backed open awaits the SD driver.
+static mp_obj_t port_open(size_t n,const mp_obj_t *args,mp_map_t *kwargs) {
+    (void)n;(void)args;(void)kwargs;mp_raise_OSError(MP_ENODEV);
+}
+MP_DEFINE_CONST_FUN_OBJ_KW(mp_builtin_open_obj,1,port_open);
+
+mp_import_stat_t mp_import_stat(const char *path) {(void)path;return MP_IMPORT_STAT_NO_EXIST;}

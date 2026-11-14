@@ -51,3 +51,14 @@ reset now pass. DUT1 has a USB-only console and proven UART-pad release. User
 added DUT1 with the bench LCD/buttons; DUT0 camera observes its screen. Continue
 app work with this setup while the user is away. Standalone USB SD boot remains
 open; no need to reconnect or rewire the existing fixture.
+
+App I/O update: frozen cooperative input, core built-ins/large integers and
+bench display transfer/readback guards pass on DUT1. LCD optical output and
+physical switch presses are still unqualified; full app/controller/rendering/
+models/crypto/camera workflows remain open. Details: PHASE-12-APP-IO.md. Keep
+progressing independent software work while the user is away.
+
+Hardware discovery: DUT1 also has a responding SC3336 and real frame capture
+passed; a sequential LCD reinitialization/fill afterward passed. No extra
+camera wiring is required for local app development. Optical LCD validation
+remains open; see phase12 receipt for exact scope.

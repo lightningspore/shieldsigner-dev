@@ -1,0 +1,57 @@
+{
+  "phase": 10,
+  "status": "camera-request-timing-measured-sd-and-app-gates-open",
+  "operation": "Three fresh bounded32-frame acquisitions after a RAM-loaded boot; not steady-state streaming.",
+  "cameraInitMs": 21,
+  "runs": [
+    {
+      "index": 0,
+      "capture_us": 5320135,
+      "first_isp_us": 702300,
+      "outerMs": 5320
+    },
+    {
+      "index": 1,
+      "capture_us": 5377477,
+      "first_isp_us": 765364,
+      "outerMs": 5378
+    },
+    {
+      "index": 2,
+      "capture_us": 5326094,
+      "first_isp_us": 710672,
+      "outerMs": 5326
+    }
+  ],
+  "runtimeRegressionPassMarkers": [
+    "phase-9-gpio",
+    "phase-9-i2c",
+    "phase-9-spi",
+    "phase-9-time",
+    "phase-9-camera",
+    "phase-9-camera-settings",
+    "phase-9-gc-exceptions",
+    "phase-9"
+  ],
+  "payloadSha256": "d6ae1e6b79fa7564541cd2fef614e77e2d15770e60d7f1c1bb5da0372eb5036a",
+  "sdImageSha256": "ca285ea756dd797e9f19e27ea1dfbc767416ee76232a2088b906e6368bceae86",
+  "sdImageBytes": 2097152,
+  "storageWrites": false,
+  "hostTestsPassed": 12,
+  "tasksChecked": 309,
+  "limits": [
+    "Per-request timing excludes prior boot, separate init call and SeedSigner UI.",
+    "Initial ISP output precedes calibrated feedback and does not prove settled image quality.",
+    "Complete acquisition runs the existing32-frame control sequence; not a streaming FPS measurement.",
+    "No SD boot, full power-on timing, app port or live preview qualified."
+  ],
+  "evidence": {
+    "logs/phase-10/20261114T174457Z/serial.bin": "21fcac919cb27241f1ab60b26b07277a308c771079a39f6e081d6a07e1927855",
+    "logs/phase-10/20261114T174457Z/build-manifest.json": "5b2f93318f064bf139ac11577798882b5595fb6a1e1759368e366891459d5ba6",
+    "logs/phase-9/console-20261114T174525Z/serial.bin": "18cf8a9fc692a9baa4f59397caf2175213aea02ee88840a340af1d0e15992738",
+    "logs/phase-9/console-20261114T174525Z/result.json": "a35a11bf2464c708a2057fc016b2c5b8c18f08d82d96037d3c232b7719a76b35",
+    "logs/phase-9/console-20261114T174614Z/serial.bin": "0b4815b2dc0c122a23682389fe72c4e237916a21247950cb2e52947ebae20f5f",
+    "logs/phase-9/console-20261114T174614Z/result.json": "b6a632cae695364d5d4057f4189a2311c3ff8caec3a0d0933c89b059f54431ff",
+    "logs/phase-10/camera-timing-preparation/runtime-sd-manifest.json": "d00c30aec49462a4c449eb5d47a008f70fd874cae6bd91a7bdf3eb6803f018f4"
+  }
+}

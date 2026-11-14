@@ -110,8 +110,10 @@ extern "C" fn bm_camera_capture() -> i32 {
     }
     FRAME_READY.store(false, Ordering::Release);
     CONTROL_READY.store(false, Ordering::Release);
+    crate::camera_timing::begin();
     quiet(|| crate::camera::run());
     if FRAME_READY.load(Ordering::Acquire) {
+        crate::camera_timing::capture_complete();
         0
     } else {
         -1

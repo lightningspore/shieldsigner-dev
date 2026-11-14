@@ -12,6 +12,8 @@ mod runtime;
 
 #[cfg(feature = "camera-test")]
 mod camera;
+#[cfg(feature = "runtime-board")]
+mod camera_timing;
 #[cfg(feature = "camera-test")]
 mod camera_replay_data;
 #[cfg(feature = "cpu-base")]

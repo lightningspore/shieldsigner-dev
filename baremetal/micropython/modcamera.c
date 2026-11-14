@@ -4,10 +4,19 @@
 extern int bm_camera_init(void);
 extern int bm_camera_capture(void);
 extern int bm_camera_setting(int,int);
+extern int bm_camera_timing(unsigned int);
 static mp_obj_t camera_init(void){if(bm_camera_init()<0)mp_raise_OSError(MP_EIO);return mp_const_none;}
 static MP_DEFINE_CONST_FUN_OBJ_0(camera_init_obj,camera_init);
 static mp_obj_t camera_capture(void){if(bm_camera_capture()<0)mp_raise_OSError(MP_EIO);return mp_obj_new_memoryview('B',640*480*3/2,(void *)0x03800000);}
 static MP_DEFINE_CONST_FUN_OBJ_0(camera_capture_obj,camera_capture);
+static mp_obj_t camera_timings(void){
+    mp_obj_t result=mp_obj_new_dict(0);
+    int first=bm_camera_timing(0),complete=bm_camera_timing(1);
+    mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(MP_QSTR_first_isp_us),first<0?mp_const_none:mp_obj_new_int(first));
+    mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(MP_QSTR_capture_us),complete<0?mp_const_none:mp_obj_new_int(complete));
+    return result;
+}
+static MP_DEFINE_CONST_FUN_OBJ_0(camera_timings_obj,camera_timings);
 static mp_obj_t camera_settings(size_t n,const mp_obj_t *args,mp_map_t *kwargs){
     static const mp_arg_t allowed[]={
         {MP_QSTR_ae_target,MP_ARG_KW_ONLY|MP_ARG_INT,{.u_int=-1}},
@@ -32,6 +41,7 @@ static const mp_rom_map_elem_t camera_globals_table[]={
     {MP_ROM_QSTR(MP_QSTR___name__),MP_ROM_QSTR(MP_QSTR_camera)},
     {MP_ROM_QSTR(MP_QSTR_init),MP_ROM_PTR(&camera_init_obj)},
     {MP_ROM_QSTR(MP_QSTR_capture),MP_ROM_PTR(&camera_capture_obj)},
+    {MP_ROM_QSTR(MP_QSTR_timings),MP_ROM_PTR(&camera_timings_obj)},
     {MP_ROM_QSTR(MP_QSTR_settings),MP_ROM_PTR(&camera_settings_obj)}};
 static MP_DEFINE_CONST_DICT(camera_globals,camera_globals_table);
 const mp_obj_module_t camera_module={.base={&mp_type_module},.globals=(mp_obj_dict_t *)&camera_globals};

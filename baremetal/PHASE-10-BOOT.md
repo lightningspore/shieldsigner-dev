@@ -45,7 +45,7 @@ separate events. Do not label interpreter initialization as application readines
   source-manifest checksum and explicit unverified assumptions.
 
 This is a raw disk image, not a file to copy onto an ordinary FAT-formatted card.
-The candidate currently has854016bytes of ID block (including an829040-byte
+The candidate currently has856064bytes of ID block (including an830288-byte
 runtime). Unlike the SDK layout it does not reserve a512KiB partition and place
 U-Boot afterward. The ROM's acceptance of this larger second stage still needs
 an actual SD boot. If rejected, investigate the documented format/ROM load limits
@@ -101,3 +101,30 @@ was conservatively rejected by a whole-capture gap threshold despite agreeing
 edges; the observer now separately reports the gap within each measured pulse
 and retains the global gap too. The receipt is
 [evidence/phase-10-preparation.json](evidence/phase-10-preparation.json).
+
+## Camera acquisition timing, separate from boot and live FPS
+
+Three actual requests at `console-20261114T174525Z` measured initial processed
+DMA output at702300/765364/710672us and complete32-frame acquisition at
+5320135/5377477/5326094us. A separate `camera.init()` call took21ms. Python's
+enclosing capture timer agreed within1ms. Initial output requires frame/output
+IRQs, clear MI error status and changed DMA; the complete API result still
+requires the existing full3A loop and final output validation. A missing initial
+completion now returns failure instead of continuing on a timeout.
+
+These are per-request camera timings on the RAM-loaded runtime, not power-on,
+app startup, or steady-state streaming FPS. The user reports10+FPS under Linux:
+Linux keeps the camera/ISP/3A running, whereas this bring-up capture reinitializes
+and performs a32-frame batch each call. User clarified this was a comparison
+question, not a request to rewrite the pipeline immediately. Preserve the
+current bounded path for bring-up; introduce and qualify persistent streaming
+when needed for the actual app preview. Do not reduce the batch merely to make
+a timing number smaller.
+
+The added `camera.timings()` API exposes the last request's stage measurements.
+No streaming behavior, GPIO ownership, or 3A algorithm was changed. The complete
+eight-marker runtime regression also passed at `console-20261114T174614Z`.
+Latest experimental SD candidate includes this instrumentation; startup evidence
+above and `phase-10-preparation.json` refer to the earlier candidate. Latest
+hashes and limits are in
+[evidence/phase-10-camera-timing.json](evidence/phase-10-camera-timing.json).

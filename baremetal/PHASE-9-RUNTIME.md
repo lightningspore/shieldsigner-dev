@@ -120,3 +120,12 @@ harness now records command wall times; the repeated runtime boot test uses an
 all GIC enable/pending/active banks before enabling owned sources, and the UART
 reset path completes its acknowledged interrupt before issuing warm reset.
 These initialization changes are verified by the repeated boots and final script.
+
+`camera.timings()` reports per-request `first_isp_us` and `capture_us`
+(`None` until the corresponding stage completes). The first is the initial
+processed DMA completion with frame/output IRQs, no MI error and changed output;
+it precedes calibrated feedback and is not an image-quality/convergence claim.
+The second covers the complete bounded32-frame acquisition and final output
+validation. Both start inside `camera.capture()`, exclude a separate
+`camera.init()` call and exclude boot, app imports/UI and rendering. The Python
+timing script measures `init()` and the enclosing capture call separately.

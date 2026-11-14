@@ -1227,3 +1227,7 @@ run = "uv run --python 3.13 python baremetal/tools/sd_image.py"
 [tasks."baremetal:boot:ram:gate"]
 description = "Observe a RAM-only fast boot through UART and read-only REF GPIO polling"
 run = "uv run --python 3.13 python baremetal/tools/boot_ram_gate.py"
+
+[tasks."baremetal:camera:timing:gate"]
+description = "Measure three on-demand camera acquisitions on the loaded runtime; excludes boot and app"
+run = "uv run --python 3.13 python baremetal/tools/console.py baremetal/micropython/phase10_camera_timing.py --timeout 50"

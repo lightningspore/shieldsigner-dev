@@ -351,6 +351,29 @@ pub fn run(raw: usize, frame_us: u64) {
             }
         }
         super::interrupts::isp_irqs_enabled(false);
+        if FRAMES.load(Ordering::Acquire) == 0 || OUTPUTS.load(Ordering::Acquire) == 0 {
+            write(0x1c00, read(0x1c00) & !1);
+            super::put(b"@@FAIL isp-first-frame-timeout\r\n");
+            return;
+        }
+        if read(0x150c) != 0 {
+            write(0x1c00, read(0x1c00) & !1);
+            super::put(b"@@FAIL isp-first-frame-mi-error\r\n");
+            return;
+        }
+        #[cfg(feature = "runtime-board")]
+        {
+            // Distinguish initial processed DMA output from the later32-frame
+            // calibrated acquisition. Neither event establishes app readiness.
+            let changed = (0..Y_BYTES * 3 / 2).step_by(4).any(|offset|
+                read_volatile((OUTPUT + offset) as *const u32) != 0xa5a5a5a5);
+            if !changed {
+                write(0x1c00, read(0x1c00) & !1);
+                super::put(b"@@FAIL isp-first-output-unchanged\r\n");
+                return;
+            }
+            super::camera_timing::first_isp();
+        }
         let _ = writeln!(
             super::cpu::Console,
             "@@ISP_IRQ frames={} outputs={}\r",

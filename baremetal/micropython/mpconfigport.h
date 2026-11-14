@@ -31,6 +31,9 @@ void bm_micropython_poll(void);
 // Original app settings parsing requires real CPython-compatible double values.
 // Native UI builds link the pinned complete newlib/libm runtime.
 #if BM_NATIVE_UI
+#define MICROPY_PY_ARRAY_SLICE_ASSIGN (1)
+#define MICROPY_PY_BINASCII (1)
+#define MICROPY_PY_BUILTINS_BYTES_HEX (1)
 #define MICROPY_PY_BUILTINS_STR_UNICODE (1)
 #define MICROPY_PY_BUILTINS_STR_UNICODE_CHECK (1)
 #define MICROPY_FLOAT_IMPL MICROPY_FLOAT_IMPL_DOUBLE

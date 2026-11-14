@@ -28,8 +28,8 @@ SRC_QSTR += modmachine.c modcamera.c moddisplay.c
 endif
 ifeq ($(NATIVE_UI),1)
 INC += -I$(abspath ../build/regex/cmake-port)
-SRC_C += modui.c modqr.c modregex.c
-SRC_QSTR += modui.c modqr.c modregex.c
+SRC_C += modui.c modqr.c modregex.c extmod/modbinascii.c
+SRC_QSTR += modui.c modqr.c modregex.c extmod/modbinascii.c
 endif
 SRC_QSTR += extmod/modjson.c shared/readline/readline.c shared/runtime/pyexec.c
 OBJ = $(PY_O) $(addprefix $(BUILD)/,$(SRC_C:.c=.o)) $(addprefix $(BUILD)/,$(SRC_S:.s=.o))

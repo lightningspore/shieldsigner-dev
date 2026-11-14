@@ -1,0 +1,16 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "source": "src/seedsigner/gui/screens/scan_screens.py",
+  "sourceSha256": "738cfec806bb3eaa500b66331ec7fc515634c22739e246fe1ac5ad0d14b53ecf",
+  "methodSha256": "12ec1754c651695a22e20b809918afa8c7527938157d8f74d1521e41db424085",
+  "transformations": [
+    "Native ButtonInput names replace hardware constant IDs",
+    "Cooperative preview owns decoder_fps metadata instead of thread0",
+    "Wrap-safe native elapsed clock supplies time.time; source timing arithmetic unchanged",
+    "DecodeQRStatus import points at generated original native model"
+  ],
+  "outputSha256": "87c4775bb55c1464f6c433d6408d18dfa874c1d9d972ae6cebde8fc7c844645d"
+}

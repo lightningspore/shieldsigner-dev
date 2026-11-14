@@ -123,3 +123,7 @@ Controller startup, persistence or hardware-setting application.
 The corrected connected-board profile and physical LCD/input evidence are in
 [../MINI-PCB-IO.md](../MINI-PCB-IO.md). Prior Home-only builds with DC56/RST57
 were for another fixture and do not describe the connected board.
+
+Original DecodeQR classes and ScanScreen loop now have native preparation/gates;
+see [SCAN-PORT.md](../SCAN-PORT.md) for source provenance, verified scope and
+remaining crypto/UR/Controller/visual integration. This is not general Scan readiness.

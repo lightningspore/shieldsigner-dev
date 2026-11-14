@@ -1,0 +1,51 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "source": "src/seedsigner/models/decode_qr.py",
+  "sourceSha256": "cd981f1b31144617836b1823198423fa53cc047fe251f28f6d5d7403466e2f1c",
+  "classes": {
+    "PayloadAnalysis": "073d801e1ae68110583ef605d71a42a6c8b7e21b444c9dae0f95bf89599f1178",
+    "DecodeQRStatus": "60e93238ce8eeb68b0b46b1fecd5f1256f982c9ec57696cd59404e6ac6320059",
+    "DecodeQR": "6e11ed8b4bb25887a2d1e79a10e4d3687aef6be26201b4eec45aa257877cbabc",
+    "BaseQrDecoder": "dbbecc93de461493f37c38c6c8795cd89e16e3ba1c0c15a97b838fcf643505a0",
+    "BaseSingleFrameQrDecoder": "1a2b9496e14f23ef57f4c5e164bd15e6c121a993c3d03f17f77f707e97639d03",
+    "BaseAnimatedQrDecoder": "634047117866f2a44caef9e245809d6243b6549c3d8b23520d54f13b023426c0",
+    "SpecterPsbtQrDecoder": "6e231bdfe51380515b411e4390b3f044dfa8b9c22fd79b188092a58a2204fbd7",
+    "BBQRPsbtQrDecoder": "6ac5f3ce29d09b304a42251c5fb024edf90acff271408188d197b56e864fbe46",
+    "Base64PsbtQrDecoder": "c9355251c9d49f7173b5a45dc601f477dccb393db4f48bcc1ebdc92d54c12263",
+    "Base43PsbtQrDecoder": "fa8da585e728bf9c3b1a8e45e954c89c9a4145b78e4e449568cc37011eea466f",
+    "SeedQrDecoder": "75a43054b4f374375ee6b94b18058e39ec0c29310f428aa5814c63d9b0f3ca0f",
+    "Slip39ShareDecoder": "dadaf623b1892e226fa4651c8cb21ff6f5c0167ca85b79a29c81eb135148d845",
+    "XprvQrDecoder": "903126e72541b720747cc0b5d28ba9ed7699544845429a6388941cedbf0cb81a",
+    "AmbiguousQrDecoder": "1c8e57a197ea451552fe3b08d7b93b484ca1895e0b8b3b762a954856d0888fcd",
+    "SettingsQrDecoder": "99bcb33e8b478ee801685c690bcaeddee405e371e9ea61dce523a07d087a7578",
+    "SignMessageQrDecoder": "92eb7610aaea1d931ab4254bda9b7218c9946acbf5c5a090fd7d62648e95b019",
+    "BitcoinAddressQrDecoder": "c9a2a7323914a815f6767f4ba1bd7c0285559c91208e34a4b69fe35c51239a69",
+    "SpecterWalletQrDecoder": "18fb332db50efb4e445f31fd428cb7c456b16949841c65172caa1f44e19fe62d",
+    "GenericWalletQrDecoder": "503d8a8cb1d2b4b1937b3088dd64fc17fb79b4bbdd7642e674119e0600bca422",
+    "MultiSigConfigFileQRDecoder": "56bf237a22be52b4818c430bf43cd442dae117a390b891e8961a35c217710d54",
+    "PassphraseQrDecoder": "e0e846ad3f9fc217a21d1f1723e928bea9192e1d0692238a11e54b8fb5d04cdf",
+    "EncryptionKeyQrDecoder": "457284307241cc8e4cac3f191fab912dee7f3115f4d6a2a72dce31bef8706f10",
+    "WifQrDecoder": "bf645291ca81f4a4b99886ea9dae6cb5356a6c09d69a89b8bd09d44b1a449e4b",
+    "Bip38QrDecoder": "d944721d7cff7997c9f0d766134b5cd27d6734fd601e2b10433b16767ea96203",
+    "EncryptedQrDecoder": "f835c72cc136bc7151b73c50da580979253c84355753bc0f381a12f40cf27c37",
+    "TextQrDecoder": "7882859732bbc9106b74d5bcb6c66a84250f22132bf700f7b4f2b8ad085e69c6",
+    "TimeQrDecoder": "b647fb86449628b9f01cc79b06fcd7850c28511b1e21f88ba1961366fb993e19"
+  },
+  "transformations": [
+    "Remove annotations; explicit PayloadAnalysis constructor; integer status constants",
+    "Defer actual feature imports to native dependency boundary",
+    "Propagate unavailable dependencies before broad parse handlers",
+    "Remove logger payload calls; JSON decode exception spelling normalized",
+    "Replace legacy image probes/extraction with existing native ZXing API"
+  ],
+  "outputSha256": "791affb396521fc177a798a50bcff5d93f19d79bd574244edf6502b5a4174a42",
+  "base64": {
+    "source": "micropython-lib/python-stdlib/base64/base64.py",
+    "sourceSha256": "7db45610392bf27d506b2159279c40d3fd5e5f04b6b3bcced7acaf2f9edd3852",
+    "outputSha256": "a70c93f1c6829668c58cd017acbb82c2b3c8cb100bcfaa45528050a01822f5f6",
+    "change": "binascii.Error raises become ValueError, matching actual MicroPython binascii errors"
+  }
+}

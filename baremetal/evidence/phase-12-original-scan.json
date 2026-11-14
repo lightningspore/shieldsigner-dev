@@ -1,0 +1,241 @@
+{
+  "status": "original-model-scan-loop-native-camera-lcd-passed-optical-qr-pending",
+  "scope": "Source-derived original model and scan loop; not full Controller/View or wallet readiness",
+  "sourceMatch": {
+    "refSnapshotEqualsPinned": true,
+    "files": [
+      "models/decode_qr.py",
+      "gui/screens/scan_screens.py"
+    ],
+    "classes": 27,
+    "modelProvenance": {
+      "application": {
+        "url": "https://github.com/3rdIteration/seedsigner.git",
+        "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+      },
+      "source": "src/seedsigner/models/decode_qr.py",
+      "sourceSha256": "cd981f1b31144617836b1823198423fa53cc047fe251f28f6d5d7403466e2f1c",
+      "classes": {
+        "PayloadAnalysis": "073d801e1ae68110583ef605d71a42a6c8b7e21b444c9dae0f95bf89599f1178",
+        "DecodeQRStatus": "60e93238ce8eeb68b0b46b1fecd5f1256f982c9ec57696cd59404e6ac6320059",
+        "DecodeQR": "6e11ed8b4bb25887a2d1e79a10e4d3687aef6be26201b4eec45aa257877cbabc",
+        "BaseQrDecoder": "dbbecc93de461493f37c38c6c8795cd89e16e3ba1c0c15a97b838fcf643505a0",
+        "BaseSingleFrameQrDecoder": "1a2b9496e14f23ef57f4c5e164bd15e6c121a993c3d03f17f77f707e97639d03",
+        "BaseAnimatedQrDecoder": "634047117866f2a44caef9e245809d6243b6549c3d8b23520d54f13b023426c0",
+        "SpecterPsbtQrDecoder": "6e231bdfe51380515b411e4390b3f044dfa8b9c22fd79b188092a58a2204fbd7",
+        "BBQRPsbtQrDecoder": "6ac5f3ce29d09b304a42251c5fb024edf90acff271408188d197b56e864fbe46",
+        "Base64PsbtQrDecoder": "c9355251c9d49f7173b5a45dc601f477dccb393db4f48bcc1ebdc92d54c12263",
+        "Base43PsbtQrDecoder": "fa8da585e728bf9c3b1a8e45e954c89c9a4145b78e4e449568cc37011eea466f",
+        "SeedQrDecoder": "75a43054b4f374375ee6b94b18058e39ec0c29310f428aa5814c63d9b0f3ca0f",
+        "Slip39ShareDecoder": "dadaf623b1892e226fa4651c8cb21ff6f5c0167ca85b79a29c81eb135148d845",
+        "XprvQrDecoder": "903126e72541b720747cc0b5d28ba9ed7699544845429a6388941cedbf0cb81a",
+        "AmbiguousQrDecoder": "1c8e57a197ea451552fe3b08d7b93b484ca1895e0b8b3b762a954856d0888fcd",
+        "SettingsQrDecoder": "99bcb33e8b478ee801685c690bcaeddee405e371e9ea61dce523a07d087a7578",
+        "SignMessageQrDecoder": "92eb7610aaea1d931ab4254bda9b7218c9946acbf5c5a090fd7d62648e95b019",
+        "BitcoinAddressQrDecoder": "c9a2a7323914a815f6767f4ba1bd7c0285559c91208e34a4b69fe35c51239a69",
+        "SpecterWalletQrDecoder": "18fb332db50efb4e445f31fd428cb7c456b16949841c65172caa1f44e19fe62d",
+        "GenericWalletQrDecoder": "503d8a8cb1d2b4b1937b3088dd64fc17fb79b4bbdd7642e674119e0600bca422",
+        "MultiSigConfigFileQRDecoder": "56bf237a22be52b4818c430bf43cd442dae117a390b891e8961a35c217710d54",
+        "PassphraseQrDecoder": "e0e846ad3f9fc217a21d1f1723e928bea9192e1d0692238a11e54b8fb5d04cdf",
+        "EncryptionKeyQrDecoder": "457284307241cc8e4cac3f191fab912dee7f3115f4d6a2a72dce31bef8706f10",
+        "WifQrDecoder": "bf645291ca81f4a4b99886ea9dae6cb5356a6c09d69a89b8bd09d44b1a449e4b",
+        "Bip38QrDecoder": "d944721d7cff7997c9f0d766134b5cd27d6734fd601e2b10433b16767ea96203",
+        "EncryptedQrDecoder": "f835c72cc136bc7151b73c50da580979253c84355753bc0f381a12f40cf27c37",
+        "TextQrDecoder": "7882859732bbc9106b74d5bcb6c66a84250f22132bf700f7b4f2b8ad085e69c6",
+        "TimeQrDecoder": "b647fb86449628b9f01cc79b06fcd7850c28511b1e21f88ba1961366fb993e19"
+      },
+      "transformations": [
+        "Remove annotations; explicit PayloadAnalysis constructor; integer status constants",
+        "Defer actual feature imports to native dependency boundary",
+        "Propagate unavailable dependencies before broad parse handlers",
+        "Remove logger payload calls; JSON decode exception spelling normalized",
+        "Replace legacy image probes/extraction with existing native ZXing API"
+      ],
+      "outputSha256": "791affb396521fc177a798a50bcff5d93f19d79bd574244edf6502b5a4174a42",
+      "base64": {
+        "source": "micropython-lib/python-stdlib/base64/base64.py",
+        "sourceSha256": "7db45610392bf27d506b2159279c40d3fd5e5f04b6b3bcced7acaf2f9edd3852",
+        "outputSha256": "a70c93f1c6829668c58cd017acbb82c2b3c8cb100bcfaa45528050a01822f5f6",
+        "change": "binascii.Error raises become ValueError, matching actual MicroPython binascii errors"
+      }
+    },
+    "loopProvenance": {
+      "application": {
+        "url": "https://github.com/3rdIteration/seedsigner.git",
+        "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+      },
+      "source": "src/seedsigner/gui/screens/scan_screens.py",
+      "sourceSha256": "738cfec806bb3eaa500b66331ec7fc515634c22739e246fe1ac5ad0d14b53ecf",
+      "methodSha256": "12ec1754c651695a22e20b809918afa8c7527938157d8f74d1521e41db424085",
+      "transformations": [
+        "Native ButtonInput names replace hardware constant IDs",
+        "Cooperative preview owns decoder_fps metadata instead of thread0",
+        "Wrap-safe native elapsed clock supplies time.time; source timing arithmetic unchanged",
+        "DecodeQRStatus import points at generated original native model"
+      ],
+      "outputSha256": "87c4775bb55c1464f6c433d6408d18dfa874c1d9d972ae6cebde8fc7c844645d"
+    }
+  },
+  "deployments": {
+    "dut0": {
+      "features": "native-ui",
+      "boot": "logs/phase-12/20261114T220856Z",
+      "downloadSha256": "5a4c25e38484df3aa4dcab81f0010168bc82a1b9aafae0b5881912cdd2de941f"
+    },
+    "dut1": {
+      "features": "app-ui",
+      "serial": "rv1103-dut1",
+      "boot": "logs/phase-11/dut1-20261114T221157Z",
+      "downloadSha256": "27781c8ff60c12101d7ea66377699d7106f075e7ac763bce55ccb77d8984cd55",
+      "compiledAppSourcesMatchCurrent": true
+    }
+  },
+  "gates": {
+    "dut0NativePixelsModelLoop": {
+      "path": "logs/phase-11/usb-20261114T220934.155706Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/decode_qr_gate.py",
+        "scriptSha256": "486564a7d0254e5f5c6cc07a09444abef515091b017652a5cc61cba9d191c464",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "4c864cf0995cc05c3e1dd3dd856799891d557ffdb8eff688a976b3b613dd3331"
+    },
+    "dut1NativePixelsModelLoopFinal": {
+      "path": "logs/phase-11/usb-20261114T221552.594573Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/decode_qr_gate.py",
+        "scriptSha256": "1a6e55ff04ffac179874725a7471044f9117f19621914ac44fc43a231cc44da0",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "9fc76bb8a35473ae7cb8f736143facb4899d020487a27e2aa893d89079d5688b"
+    },
+    "dut0RealCameraInterrupt": {
+      "path": "logs/phase-12/scan-interrupt-20261114T221004.938513Z",
+      "result": {
+        "serial": "rv1103-dev-001",
+        "scope": "Original scan loop, real local camera and ZXing; headless sink/scripted no-back input; no optical QR qualification",
+        "passed": true,
+        "frames": 7
+      },
+      "serialSha256": "4f1a654812da15ee8e34257583b74bae255bf594a73004077ef2cc92c44d9b30",
+      "scriptSha256": "100b4032e5a5a19a23fe8b7ed85ac816bec2e889000a75c8cf204a8f4d04a08c"
+    },
+    "dut1RealCameraLcdInterrupt": {
+      "path": "logs/phase-12/scan-interrupt-20261114T221310.208806Z",
+      "result": {
+        "serial": "rv1103-dut1",
+        "scope": "Original scan loop, real local camera and ZXing; actual Mini PCB LCD; scripted no-back input; no optical QR qualification",
+        "passed": true,
+        "frames": 19
+      },
+      "serialSha256": "ae9bc091a5ca46c58519ec2d40e7f5df4ac6360603f41bf9b3a4e0cd1fc3bd2b",
+      "scriptSha256": "8f1b9d782ae67db1344718ca31d1e97d240cc5f5f5e65da031a96fef9ec5146f"
+    }
+  },
+  "hostChecks": {
+    "task": "baremetal:check",
+    "tests": 44,
+    "passed": true
+  },
+  "opticalLcdObserver": {
+    "initialTransfer": {
+      "path": "logs/phase-11/usb-20261114T221311.362751Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/camera_luma_export.py",
+        "scriptSha256": "e6bcd5b025509733a2afe93e82f7c82df0bb080749f0a159e9f4f06598b6ec5b",
+        "completed": false,
+        "error": "No USB script completion marker"
+      },
+      "serialSha256": "9965b618090db7e06857d2fb685899c6ffe63ce7060475d7d5a38cd98a7e5bf1"
+    },
+    "recoveredRows": {
+      "path": "logs/phase-11/usb-20261114T221508.400691Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/logs/phase-12/recover-luma.py",
+        "scriptSha256": "c868af9a23a1746112d15b1ab36a76eb5a27d1bfed75b1ae9f8c1e30c1975ac2",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "3fcfc63d2e36aa66ee7a44002a60b138c03ec03df26b626ba989b6e353b92ea0"
+    },
+    "resumedSerialSha256": "738878c143891778f9da01dabe5f74ea47fe6e82623163a500f7e4028068f905",
+    "rowsValidated": 480,
+    "sameSnapshotNoRecapture": true,
+    "imageLocalOnly": "logs/phase-12/original-scan-lcd-optical.png",
+    "imageSha256": "c528d7baf65ad41b4bcdc8ddcfedb388a5e9801dcf06b6761f60c931f8286a96"
+  },
+  "userOpticalQr": {
+    "qualified": false,
+    "attempts": {
+      "dut0ThirtyFrames": {
+        "path": "logs/phase-11/usb-20261114T221900.215400Z",
+        "result": {
+          "transport": "USB CDC",
+          "port": "/dev/cu.usbmodemrv1103_dev_0011",
+          "usbSerial": "rv1103-dev-001",
+          "location": "2-1",
+          "script": "baremetal/logs/phase-12/optical-user-qr.py",
+          "scriptSha256": "18f27a74a65f54fbf3d13f72c228e2941ca0ddb5576e87042fbd40eb6a9a172c",
+          "completed": true,
+          "traceback": false
+        },
+        "serialSha256": "c072501fb68b0c42a30340ee9e84abc03ad6e0a82237896a0d7d54b8faec72b0"
+      },
+      "dut1ThirtyFrames": {
+        "path": "logs/phase-11/usb-20261114T221859.045802Z",
+        "result": {
+          "transport": "USB CDC",
+          "port": "/dev/cu.usbmodemrv1103_dut11",
+          "usbSerial": "rv1103-dut1",
+          "location": "1-1",
+          "script": "baremetal/logs/phase-12/optical-user-qr.py",
+          "scriptSha256": "18f27a74a65f54fbf3d13f72c228e2941ca0ddb5576e87042fbd40eb6a9a172c",
+          "completed": true,
+          "traceback": false
+        },
+        "serialSha256": "ae115752a08fbd85c42b6e0b89816b03dd048ad1a1a55ddf8952a05ec466f4e9"
+      },
+      "dut1TwoHundredFortyFrames": {
+        "path": "logs/phase-11/usb-20261114T222018.573428Z",
+        "result": {
+          "transport": "USB CDC",
+          "port": "/dev/cu.usbmodemrv1103_dut11",
+          "usbSerial": "rv1103-dut1",
+          "location": "1-1",
+          "script": "baremetal/logs/phase-12/optical-user-qr.py",
+          "scriptSha256": "f766000ac7c64733b05e3eb1b3e4c1f7033c293cb374e1664628e835d98cc586",
+          "completed": true,
+          "traceback": false
+        },
+        "serialSha256": "a7a17e5a87457ced1a289cec531b00a0f8458bf1000c8cc7941bd514b6ebbc47"
+      }
+    },
+    "finding": "Same pinned desktop ZXing detects QR but returns Reed-Solomon checksum failure. No raw decoded payload logged. Full symbol visible; initial clipping diagnosis corrected. Awaiting optional physical reposition/larger test code.",
+    "rawImagesCommitted": false
+  },
+  "limits": [
+    "No optical QR pass",
+    "Seed/embit/UR/encryption/PSBT and other feature dependencies still unported",
+    "Instruction/progress overlays and BaseScreen/View/Controller routing incomplete",
+    "Scripted Scan Back verified; physical Scan button timing not newly qualified",
+    "No SD app/assets image update or cold-power timing"
+  ]
+}

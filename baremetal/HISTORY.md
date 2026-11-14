@@ -258,3 +258,48 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
 - New dependencies only on wired headless DUT0. DUT1 remains on working preview
   app-ui/Home. No CAD/REF/SD changes. Full original DecodeQR/ScanScreen/View model
   integration is still next, not established by dependency gates.
+
+## 2026-11-14 — Original DecodeQR model and ScanScreen loop on native camera/LCD
+
+- Read the original plan and inspected the actual source. REF snapshot matches
+  the pinned app byte-for-byte for decode_qr.py and scan_screens.py. Prepared all27
+  model classes with explicit native image/import boundaries, not a replacement
+  classifier. Full class/method/output provenance retained. Status integer values,
+  fragment logic and getters remain original; annotation/dataclass/IntEnum runtime
+  dependencies are removed explicitly. Missing features propagate FeatureUnavailable
+  rather than disappearing into original broad invalid-data handlers.
+- Added pinned micropython-lib base64 plus actual MicroPython binascii/hex APIs,
+  retaining licenses. Base64 error raises use the real binascii ValueError spelling.
+  Enabled native array slice assignment after the first pixel-fixture construction
+  exposed CORE_FEATURES' disabled slice stores; bytearray repetition is unsupported,
+  so the fixture uses a bytes initializer instead. Both earlier fixture failures
+  were recorded before the final hardware gate, not counted as model passes.
+- Reused the complete original ScanScreen._run with three reviewed platform
+  substitutions: native clock, native input names, cooperative preview metadata
+  instead of thread0. A fixed NV12 stream owns start/read/stop; finally releases it
+  on completion, Back, exceptions and USB interruption. Visual overlays and the
+  original BaseScreen/View/Controller dispatcher remain unfinished.
+-44host tests passed, including comparisons to whole original model classes and
+  the original Scan loop. Native public QR-pixel/model/loop gates passed on DUT0
+  (usb-20261114T220934.155706Z) and DUT1 (final expanded gate
+  usb-20261114T221552.594573Z). These include valid/invalid text/fragments,
+  SettingsQR, five native pixel decodes, Base64 vectors, explicit missing deps,
+  scripted Back and error cleanup. Public descriptor text is not a qualified wallet.
+- Real camera/ZXing original scan loop: DUT0 processed7frames and returned camera/
+  heap baseline after Ctrl-C (scan-interrupt-20261114T221004.938513Z). DUT1 processed
+ 19camera/LCD frames in the ten-second test, then restored Home and heap baseline
+  (scan-interrupt-20261114T221310.208806Z). Observer image confirms local camera
+  pixels on LCD. Full luma export timed out; drained the same live transfer, then
+  recovered206missing rows from the retained frame without recapture. All480rows
+  validated when assembling original-scan-lcd-optical.png.
+- User asked status, then placed a QR in frame. Thirty-frame passes on both boards
+  failed; another240-frame DUT1 pass also failed. Saved full-resolution snapshots
+  contain the whole printed code; initial clipping diagnosis was wrong and corrected
+  to the user. Native and pinned desktop ZXing both fail on this image; desktop
+  reports QR detection with Reed-Solomon checksum failure.29crop/sharpen/threshold
+  variants did not decode; diagnostic quirc found no symbol. No payload was logged.
+  Requested a flatter, front-facing or larger code; no optical QR pass claimed.
+- DUT1 boot dut1-20261114T221157Z; current shared artifacts are its app-ui build.
+  DUT0 remains headless native-ui boot20261114T220856Z. No CAD/REF/SD changes.
+  SCAN-PORT.md distinguishes actual gates from incomplete dependencies, overlays,
+  original destination routing, wallet/crypto and standalone app readiness.

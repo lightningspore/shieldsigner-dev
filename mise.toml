@@ -1392,3 +1392,23 @@ run = "uv run --python 3.13 python baremetal/tools/prepare_regex_gate.py"
 [tasks."baremetal:regex:gate"]
 description = "Verify PCRE2-backed regex, UTF8 rejection, bounds and native heap cleanup on DUT0"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/regex_gate.py --serial rv1103-dev-001 --timeout 10"
+
+[tasks."baremetal:app:decode:prepare"]
+description = "Prepare all original QR model classes and cooperative ScanScreen loop from pinned REF-matching source"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_decode_qr.py", "uv run --python 3.13 python baremetal/tools/prepare_scan_loop.py", "uv run --python 3.13 --with qrcode==8.2 python baremetal/tools/prepare_decode_qr_gate.py"]
+
+[tasks."baremetal:app:decode:gate"]
+description = "Check native QR pixels through original model and scan completion/back/error cleanup on wired DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/decode_qr_gate.py --serial rv1103-dev-001 --timeout 20"
+
+[tasks."baremetal:app:decode:dut1:gate"]
+description = "Check original model and scan loop with public pixel fixtures on Mini PCB DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/decode_qr_gate.py --serial rv1103-dut1 --timeout 20"
+
+[tasks."baremetal:app:scan:interrupt:gate"]
+description = "Run original scan loop on real DUT0 camera and verify USB interruption/heap cleanup"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/scan_interrupt_gate.py"
+
+[tasks."baremetal:app:scan:lcd:interrupt:gate"]
+description = "Run original scan loop on real DUT1 camera/LCD for ten seconds, interrupt over USB and restore Home"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/scan_interrupt_gate.py --serial rv1103-dut1 --lcd --seconds 10"

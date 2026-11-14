@@ -271,3 +271,22 @@ portability patch. Receipt evidence/phase-12-regex-unicode.json. Sharedbuild is
 wired DUT0 native-ui; DUT1 unchanged working preview app-ui, Home restored.
 NoSDwrites. Original DecodeQR/ScanScreen model/Controller integration still next;
 do not confuse dependencies or fixtures with complete general Scan readiness.
+
+2026-11-14 original Scan integration: all27 original DecodeQR classes generated
+from pinned source that matches REF snapshot byte-for-byte, plus original
+ScanScreen._run with explicit cooperative camera/clock/input boundaries.44host
+checks pass. Pixel→ZXing→original model/loop public fixture gates pass on both
+boards; DUT1 final usb-20261114T221552.594573Z. Real camera scan interrupted cleanly
+on DUT0 after7frames and DUT1 camera/LCD after19frames; heap returns and Home
+restores. NativeDataImport FeatureUnavailable guards prevent missing crypto/UR/
+Seed/Controller deps becoming false INVALID; these features remain unported.
+SCAN-PORT.md has full contract/gaps. Shared artifacts are app-ui/DUT1 serial;
+DUT1 boot221157. DUT0 headless native-ui boot220856. NoSDwrites.
+User put a printed QR in DUT1 frame: native30/240frame passes failed. Full snapshot
+user-qr-dut1-latest.png retained in ignored logs; contains wholecode. Earlier
+clipping diagnosis was wrong, corrected to user. Desktop pinned ZXing also finds
+QR but fails Reed-Solomon checksum;29image variants fail. Quirc diagnostic finds0.
+No decoded payload logged or committed. Asked via async input for flatter/more
+front-facing/larger QR; software work can continue if user unavailable. Original
+opticalknown-code qualification still pending, along with scan overlay/instructions,
+real BaseScreen/View/Controller routing and all wallet/crypto/UR/SD app workflows.

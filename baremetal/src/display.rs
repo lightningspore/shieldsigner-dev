@@ -134,7 +134,8 @@ pub fn init(software_spi: bool) -> Result<(), &'static str> {
     command(0x11, &[])?;
     pause(150);
     command(0x13, &[])?;
-    command(0x20, &[])?;
+    // Match installed ST7789 NORMAL_COLORS_REQUIRE_INVERSION baseline.
+    command(0x21, &[])?;
     command(0x29, &[])?;
     READY.store(true, Ordering::Release);
     Ok(())

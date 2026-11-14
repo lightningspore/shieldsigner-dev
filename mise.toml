@@ -1312,3 +1312,11 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:ui:stress:gate"]
 description = "Check twenty real screen rebuild/error/GC cycles return native heap to baseline on DUT0"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/ui_stress_gate.py --serial rv1103-dev-001 --timeout 10"
+
+[tasks."baremetal:ui:dut1:build"]
+description = "Build real native SeedSigner renderer with explicit bench LCD/buttons and DUT1 USB identity"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features app-ui --usb-serial rv1103-dut1"
+
+[tasks."baremetal:ui:dut1:gate"]
+description = "Exercise frozen cooperative app UI, real native callbacks, local camera and Home restore on DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/app_ui_gate.py --serial rv1103-dut1 --timeout 20"

@@ -19,7 +19,7 @@ MICROPY_ROM_TEXT_COMPRESSION = 0
 include $(TOP)/py/py.mk
 INC += -I. -I$(TOP) -I$(BUILD) -isystem $(abspath ../.tools/newlib/include)
 CFLAGS += $(INC) -Wall -Werror -std=c99 -Os -g -DNDEBUG -ffreestanding -fno-common -fno-builtin -fdata-sections -ffunction-sections -mthumb -mcpu=cortex-a7 -mfloat-abi=soft -mno-unaligned-access
-SRC_C = runtime.c shared/libc/printf.c shared/libc/string0.c shared/readline/readline.c shared/runtime/pyexec.c shared/runtime/stdout_helpers.c shared/runtime/gchelper_native.c
+SRC_C = extmod/modjson.c runtime.c shared/libc/printf.c shared/libc/string0.c shared/readline/readline.c shared/runtime/pyexec.c shared/runtime/stdout_helpers.c shared/runtime/gchelper_native.c
 SRC_S = shared/runtime/gchelper_thumb2.s
 ifeq ($(BOARD_BINDINGS),1)
 SRC_C += modmachine.c modcamera.c moddisplay.c
@@ -29,7 +29,7 @@ ifeq ($(NATIVE_UI),1)
 SRC_C += modui.c
 SRC_QSTR += modui.c
 endif
-SRC_QSTR += shared/readline/readline.c shared/runtime/pyexec.c
+SRC_QSTR += extmod/modjson.c shared/readline/readline.c shared/runtime/pyexec.c
 OBJ = $(PY_O) $(addprefix $(BUILD)/,$(SRC_C:.c=.o)) $(addprefix $(BUILD)/,$(SRC_S:.s=.o))
 all: $(BUILD)/libmicropython.a
 include $(TOP)/py/mkrules.mk

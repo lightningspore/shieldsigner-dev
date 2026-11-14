@@ -1,8 +1,9 @@
 # Native screen runtime
 
 The genuine locked SeedSigner LVGL Home screen runs on wired DUT0 behind
-`native-ui`, using a headless framebuffer. DUT1 still runs the prior bench-ui
-image; physical LCD rendering is the next gate.
+`native-ui`, using a headless framebuffer. DUT1 now runs `app-ui`, which
+submits the same native pixels to the explicit bench LCD backend. Its visible
+panel output remains unconfirmed.
 The staged C ABI bridge initially registers the genuine `main_menu_screen` only;
 unsupported screen names fail explicitly. There is no replacement wallet flow.
 
@@ -50,8 +51,11 @@ retain their original linker/stack layout. IRQ handlers do not allocate.
 
 `ui` provides init/render/key/tick/event/status and a read-only framebuffer view.
 Rendering copies bounded rectangles to the shadow frame; `app-ui` additionally
-selects the explicit bench LCD backend. That combined feature has not yet been
-loaded or validated. Registry support is currently Home only; the actual frozen
+selects the explicit bench LCD backend. DUT1 passed its native screen/callback
+gate, local camera conversion/blit and Home restore without LCD reinit, plus
+actual UART-pad/IRQ release readbacks. Physical switch edges and recognizable
+optical output are still unverified. Registry support is currently Home only;
+the actual frozen
 controller/view adapters, other screens, models/crypto/QR and standalone app
 boot still need work. This is a renderer milestone, not a running full app.
 
@@ -65,3 +69,15 @@ MIT notices; generated branding retains its existing provenance. The official
 Arm bundle includes GCC/newlib/libstdc++ third-party licenses and runtime
 exceptions: retain the applicable notices when distributing linked binaries.
 No toolchain binary is committed here.
+
+
+The frozen `seedsigner_port.native_ui.ScreenSession` accepts upstream builder
+names and configuration dicts, serializes with pinned MicroPython's actual JSON
+module and services native timers plus cooperative debounced input. It suppresses
+keys held across screen transitions; accepted navigation/repeat events emit
+complete keypad pulses. It does not implement wallet View routing or replace
+unsupported screens. Long-hold and app lifecycle policies still need integration.
+Run `baremetal:ui:dut1:build`, reset DUT1, then `baremetal:usb:dut1:ram:gate`
+and `baremetal:ui:dut1:gate`. The wired harness rejects DUT1/app images before
+any enumeration/download, protecting the original GPIO fixture from an accidental
+LCD-pin build. Receipt: [../evidence/phase-12-dut1-native-ui.json](../evidence/phase-12-dut1-native-ui.json).

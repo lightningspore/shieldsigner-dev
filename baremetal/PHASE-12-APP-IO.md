@@ -142,3 +142,24 @@ DUT1 still runs the prior bench-ui camera/blit image. Physical LCD rendering,
 real button edges and the complete app/controller remain open. The next step
 is the combined app-ui build on DUT1, retaining its USB-only recovery identity
 and released UART/button pads, then actual controller/view integration.
+
+
+## Native renderer and cooperative adapter on DUT1
+
+DUT1 now runs `app-ui` with its unique USB identity and released UART/button
+pads. The final Home framebuffer matches DUT0 byte for byte; native rendering
+plus SPI submission took194ms in this gate. The frozen cooperative adapter
+suppressed the stable physical mask64, routed injected accepted edges to the
+real Seeds callback, captured/submitted a local camera image and restored Home
+without LCD reinit. Native heap returned to42015bytes; all UART mux/output/IER/
+IRQ readbacks remained zero. Twenty-two host tests pass. The ST7789 inversion
+baseline now matches the installed driver's normal-color policy (INVON0x21).
+
+No recognizable Home is visible in the external observer image, including after
+that correction. Physical output is still an open gate, not a qualified LCD or
+proved hardware fault. Continue app/controller software while the user is away.
+The wired DUT0 harness now rejects an app/DUT1 profile before enumeration/load;
+use the explicit target build/loader sequence. Final receipts and exact source/
+image/log hashes are in [evidence/phase-12-dut1-native-ui.json](evidence/phase-12-dut1-native-ui.json).
+DUT0 still runs the prior38bf1ed headless UI runtime; its camera remains the
+observer. Shared build artifacts now contain DUT1's app-ui image, not DUT0's.

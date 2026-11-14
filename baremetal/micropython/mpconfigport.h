@@ -24,3 +24,6 @@ typedef long mp_off_t;
 void bm_micropython_poll(void);
 #define MICROPY_VM_HOOK_LOOP do { bm_micropython_poll(); } while (0);
 #define MICROPY_PY_STRUCT_UNSAFE_TYPECODES (0)
+
+// Native screen configs use upstream JSON, with no filesystem dependency.
+#define MICROPY_PY_JSON (1)

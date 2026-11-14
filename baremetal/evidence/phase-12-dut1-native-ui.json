@@ -1,0 +1,109 @@
+{
+  "status": "dut1-native-renderer-frozen-adapter-camera-passed-optical-open",
+  "scope": "Native Home rendering/SPI submission and frozen cooperative adapter on USB-only DUT1. Physical panel output, real switch edges and complete app remain unverified.",
+  "features": "app-ui",
+  "usbSerial": "rv1103-dut1",
+  "downloadSha256": "188d39f9d872fd6db43dd5cb2f0167416626a4a75f1ce9c879b9741f001a876d",
+  "boot": {
+    "path": "logs/phase-11/dut1-20261114T203237Z",
+    "manifestSha256": "1fe8409d1f271d9f8c9ac065801bd212dd4212b876f7a258377a6701726eef30",
+    "result": {
+      "scope": "DUT1 RAM-only db, no storage commands or REF/DUT0 UART writes",
+      "location": "101",
+      "serial": "rv1103-dut1",
+      "passed": true,
+      "enumeration": "DevNo=1\tVid=0x2207,Pid=0x110c,LocationID=101\tMaskrom\n",
+      "download": {
+        "exitCode": 0,
+        "stdout": "Selected RAM download LocationID=101\nDownloading bootloader...\n\u001b[1A\u001b[2KDownloading bootloader succeeded.\n",
+        "stderr": ""
+      },
+      "port": "/dev/cu.usbmodemrv1103_dut11"
+    }
+  },
+  "gates": {
+    "frozenAdapterCameraRestore": {
+      "path": "logs/phase-11/usb-20261114T203256.506883Z",
+      "serialSha256": "cbaaa6b7c6899a7f9b1a9510408db72609c8e26192887dd8e4c189313ab08df4",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/app_ui_gate.py",
+        "scriptSha256": "04772db6b9271193671d3d9095fdcca093fc3318421973f12c69eba8cc825ca3",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "nativeHomeFinalFrame": {
+      "path": "logs/phase-11/usb-20261114T203317.045222Z",
+      "serialSha256": "bd24ca2a4ac1d96363a3ca8767fcb450844c162f435fd904dc809a3cf2a10b1c",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/ui_gate.py",
+        "scriptSha256": "26e8d559e9d9bc4ad66a4249eb784f85482360d94f0d6e35e3b28992a5395ab5",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "opticalObserver": {
+      "path": "logs/phase-11/usb-20261114T203317.045224Z",
+      "serialSha256": "0526b0a5ed67103ae95fbddbc68f675d182145beb1eb41b94d87c08c5c21b2b0",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/logs/phase-12/native-home-observer.py",
+        "scriptSha256": "445e370f166c34910feef43eef7a47350eb5a9c680c50ec9541fa8ef125c16ac",
+        "completed": true,
+        "traceback": false
+      }
+    }
+  },
+  "nativeHeapBaselineBytes": 42015,
+  "heldPhysicalMask": 64,
+  "acceptedInjectedInputResult": [
+    1,
+    1,
+    ""
+  ],
+  "homeRenderAndSpiMs": 194,
+  "frameSha256": "6d46d67b07a7be9a35e87012261466fb05fd3ca06e3ac7a759fae4562bf62aac",
+  "framePng": "logs/phase-12/dut1-native-home-final.png",
+  "opticalPng": "logs/phase-12/native-home-optical-final.png",
+  "opticalResult": "No recognizable Home in close oblique camera view, including after inversion correction. Do not infer successful physical LCD operation.",
+  "inversionCorrection": "Installed ST7789.NORMAL_COLORS_REQUIRE_INVERSION=True; native default now INVON0x21 instead of INVOFF0x20. Pin/clock profile unchanged.",
+  "uartRelease": {
+    "mux": 0,
+    "gpioOutput": 0,
+    "ier": 0,
+    "irqEnabled": 0
+  },
+  "hostTests": 22,
+  "negativeLoadGuard": {
+    "path": "logs/phase-12/20261114T203342Z/result.json",
+    "result": {
+      "phase": 12,
+      "scope": "RAM-only db; no storage commands",
+      "build": null,
+      "image": "/Users/samkorn/Documents/repos/shieldsigner-dev/baremetal/build/hello-download.bin",
+      "sha256": "188d39f9d872fd6db43dd5cb2f0167416626a4a75f1ce9c879b9741f001a876d",
+      "buildManifestSha256": "1fe8409d1f271d9f8c9ac065801bd212dd4212b876f7a258377a6701726eef30",
+      "error": "DUT1/app pin profile rejected by wired DUT0 harness; build native-ui or use the explicit DUT1 loader"
+    }
+  },
+  "remaining": [
+    "Physical LCD visible output and physical switch transitions",
+    "Actual SeedSigner controller/views and screen configuration adapters",
+    "Additional native screen registry entries",
+    "Long-hold, lifecycle/screensaver and QR/crypto/model workflows",
+    "Standalone app storage/boot; primary power-to-usable-app timing"
+  ],
+  "storageWrites": false,
+  "refModified": false
+}

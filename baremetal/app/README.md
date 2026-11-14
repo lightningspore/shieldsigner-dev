@@ -21,3 +21,15 @@ Reference contract: REF snapshot seedsigner/hardware/buttons.py (installed
 lvgl-dev.cb6170a37a5a,3cf861a-dirty). Upstream SeedSigner is MIT, copyright2021
 SeedSigner; its notice is retained in LICENSE.SeedSigner. Original source
 snapshot/provenance is documented in ../APP-REFERENCE-INVENTORY.md.
+
+
+`seedsigner_port/native_ui.py` now provides the cooperative in-process screen
+backend: `ScreenSession.show(builder, config_dict)`, `poll()`, `wait(timeout_ms)`
+and `run(...)`. It uses the real frozen MicroPython JSON module and native LVGL
+API. The real renderer currently registers Home only. Accepted debounced button
+events become complete native key pulses; held keys are suppressed across screen
+handoffs. An override propagates the existing1000 contract. Real DUT1 proved the
+frozen import, stable held-input suppression, an injected accepted edge reaching
+the actual Seeds callback, local camera blit and Home restore without LCD reinit.
+Injected edges do not prove a physical switch. Long-hold, lifecycle, other screen
+contracts and actual Controller/View/model/crypto/QR work remain outstanding.

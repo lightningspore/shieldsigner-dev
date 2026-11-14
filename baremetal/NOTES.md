@@ -290,3 +290,17 @@ No decoded payload logged or committed. Asked via async input for flatter/more
 front-facing/larger QR; software work can continue if user unavailable. Original
 opticalknown-code qualification still pending, along with scan overlay/instructions,
 real BaseScreen/View/Controller routing and all wallet/crypto/UR/SD app workflows.
+
+2026-11-14 hash prerequisites: no_std RustCrypto core + native MicroPython
+hashlib/HMAC/PBKDF2 now hardware-proven on DUT0. HASH-PORT.md and hash-core/UPSTREAM.md
+have API/bounds/provenance.3Rust tests include216upstream PBKDF2 comparisons;
+44host tests pass. Finalboot224658, vector gate224802.460807Z all6algorithms and
+empty-buffer/copy/GC cases pass; public BIP39 SHA512/2048=56ms derivation-only.
+Million-round KDF Ctrl-C recovery gate224932.534807Z passed (~0.11shost bound,
+0.1sread resolution), with no double exception, fresh hash and native heap baseline.
+UI224951.332648Z and originalQR225049.291412Z regressions pass. Shared artifacts
+are now wired DUT0 native-ui/defaultUSBID; DUT1 remains16b2986 app-ui/Home.
+NoSDwrites. Pending physical QR reposition/larger known-code question can wait;
+no optical success claimed. Next real model dependencies: actual NFKD normalization,
+embit/BIP39/curve and UR components; do not substitute identity normalization or
+fake crypto, or equate primitive vectors with complete seed/signing readiness.

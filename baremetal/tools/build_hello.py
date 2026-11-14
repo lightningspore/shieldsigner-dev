@@ -25,6 +25,8 @@ if 'app-ui' in features:
 if 'mini-pcb-ui' in features:
     features.add('bench-ui')
 if 'native-ui' in features:
+    features.update({'usb-console','native-hashes'})
+if 'native-hashes' in features:
     features.add('usb-console')
 if 'bench-ui' in features:
     features.add('usb-only')
@@ -97,10 +99,11 @@ shutil.copyfile(rkbin/'hello-download.bin', build/'hello-download.bin')
     'features': args.features,
     'note':('Native UI memory layout requires its own Phase12 gate; excludes cold-power/app timing.' if 'native-ui' in features else 'Entry and stack proven by Phase 2 ten-run gate; added features require their own DUT proof.'),
     'files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
-             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'link-ui.ld', ROOT/'Cargo.toml', ROOT/'Cargo.lock', ROOT/'build.rs', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').rglob('*.rs')), *sorted((ROOT/'micropython').glob('*')), *sorted((ROOT/'app').rglob('*.py')), *inputs] if p.is_file()},
+             for p in [raw, build/'hello-download.bin', ROOT/'link.ld', ROOT/'link-ui.ld', ROOT/'Cargo.toml', ROOT/'Cargo.lock', ROOT/'build.rs', ROOT/'.cargo/config.toml', *sorted((ROOT/'src').rglob('*.rs')), *sorted((ROOT/'micropython').glob('*')), *sorted((ROOT/'app').rglob('*.py')), *([ROOT/'hash-core/Cargo.toml',*sorted((ROOT/'hash-core/src').rglob('*.rs'))] if 'native-hashes' in features else []), *inputs] if p.is_file()},
     'algorithmSources': {str(p.relative_to(ROOT.parent)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in [ROOT.parent/'firmware/rkaiq-rs/Cargo.toml', *sorted((ROOT.parent/'firmware/rkaiq-rs/src').glob('*.rs'))]} if 'isp' in args.features or 'runtime-board' in features else {},
     'runtime':runtime_info,
+    'nativeHashes':{'core':'hash-core','dependencyLockSha256':hashlib.sha256((ROOT/'Cargo.lock').read_bytes()).hexdigest(),'preparedLibraries':json.loads((ROOT/'app/hash-libs-provenance.json').read_text()),'note':'Streaming hashes, HMAC and service-aware PBKDF2 prerequisites; not full seed/wallet qualification'} if 'native-hashes' in features else None,
     'nativeRegex':json.loads((ROOT/'build/regex/manifest.json').read_text()) if 'native-ui' in features else None,
     'nativeQr':json.loads((ROOT/'build/qr/manifest.json').read_text()) if 'native-ui' in features else None,
     'nativeUi':json.loads((ROOT/'build/ui/manifest.json').read_text()) if 'native-ui' in features else None,

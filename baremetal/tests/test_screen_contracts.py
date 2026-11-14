@@ -5,7 +5,7 @@ from dataclasses import dataclass,fields,is_dataclass,MISSING
 from pathlib import Path
 import sys
 import unittest
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'app'))
+sys.path.append(str(Path(__file__).resolve().parents[1]/'app'))
 from seedsigner_port import screen_contracts as port
 from seedsigner_port.screen_defaults import DEFAULTS
 root=Path(__file__).resolve().parents[2]

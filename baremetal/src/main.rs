@@ -8,6 +8,8 @@ use core::arch::{asm, global_asm};
 mod c_alloc;
 #[cfg(feature = "native-ui")]
 mod native_ui;
+#[cfg(feature="native-hashes")]
+mod hash_runtime;
 #[cfg(feature = "native-ui")]
 const SVC_STACK: u32 = 0x01c00000;
 #[cfg(not(feature = "native-ui"))]

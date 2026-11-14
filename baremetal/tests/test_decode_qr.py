@@ -6,7 +6,7 @@ from enum import IntEnum
 from pathlib import Path
 import unittest
 root=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(root/'app'))
+sys.path.append(str(root/'app'))
 from seedsigner_port import decode_qr as port
 from seedsigner_port.decode_platform import FeatureUnavailable
 from seedsigner_port.qr_type import QRType

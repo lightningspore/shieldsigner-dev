@@ -5,6 +5,7 @@ edition = "2021"
 license = "MIT"
 
 [workspace]
+exclude = ["hash-core"]
 
 [features]
 cpu-base = []
@@ -27,7 +28,8 @@ app-runtime = ["fast-boot"]
 usb-console = ["app-runtime"]
 usb-only = ["usb-console"]
 bench-ui = ["usb-only"]
-native-ui = ["usb-console"]
+native-ui = ["usb-console", "native-hashes"]
+native-hashes = ["usb-console", "dep:shieldsigner-hash-core"]
 mini-pcb-ui = ["bench-ui"]
 app-ui = ["native-ui", "mini-pcb-ui"]
 
@@ -35,6 +37,8 @@ app-ui = ["native-ui", "mini-pcb-ui"]
 shieldsigner-rkaiq = { path = "../firmware/rkaiq-rs", default-features = false, optional = true }
 serde_json = { version = "1", default-features = false, features = ["alloc"], optional = true }
 buddy_system_allocator = { version = "=0.13.0", optional = true }
+
+shieldsigner-hash-core = { path = "hash-core", optional = true }
 
 [profile.release]
 panic = "abort"

@@ -1412,3 +1412,19 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/scan_int
 [tasks."baremetal:app:scan:lcd:interrupt:gate"]
 description = "Run original scan loop on real DUT1 camera/LCD for ten seconds, interrupt over USB and restore Home"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/scan_interrupt_gate.py --serial rv1103-dut1 --lcd --seconds 10"
+
+[tasks."baremetal:hash:prepare"]
+description = "Prepare pinned HMAC compatibility boundaries and public hash/HMAC/PBKDF2 vectors"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_hash_libs.py", "uv run --python 3.13 python baremetal/tools/prepare_hash_gate.py"]
+
+[tasks."baremetal:hash:core:check"]
+description = "Compare service-aware PBKDF2 to pinned RustCrypto upstream and verify cancellation/copy semantics"
+run = "mise exec rust@1.93.1 -- cargo test --manifest-path baremetal/hash-core/Cargo.toml --target aarch64-apple-darwin"
+
+[tasks."baremetal:hash:gate"]
+description = "Run public primitive/vector/streaming/HMAC/KDF/GC gates on wired native DUT0"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/hash_gate.py --serial rv1103-dev-001 --timeout 30"
+
+[tasks."baremetal:hash:interrupt:gate"]
+description = "Interrupt one-million-round native PBKDF2 over USB and verify interpreter/hash/heap recovery"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/hash_interrupt_gate.py"

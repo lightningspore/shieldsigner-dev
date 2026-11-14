@@ -5,7 +5,7 @@ import copy
 from pathlib import Path
 import sys
 import unittest
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'app'))
+sys.path.append(str(Path(__file__).resolve().parents[1]/'app'))
 from seedsigner_port.settings_schema import SettingsConstants as C,SettingsDefinition as D
 from seedsigner_port.settings_store import Settings
 from seedsigner_port.settings_platform import NativeSettingsPlatform,UnsupportedSettingsAction

@@ -303,3 +303,39 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
   DUT0 remains headless native-ui boot20261114T220856Z. No CAD/REF/SD changes.
   SCAN-PORT.md distinguishes actual gates from incomplete dependencies, overlays,
   original destination routing, wallet/crypto and standalone app readiness.
+
+## 2026-11-14 — Native hash/HMAC/PBKDF2 prerequisites
+
+- Read the original plan and inspected Seed/QR crypto dependencies. Added a
+  no_std hash-core library with exact RustCrypto crate pins, independent streaming
+  hash contexts, HMAC and service-aware PBKDF2. The latter retains pinned upstream
+  PRF/block/XOR logic, with USB/cancel checks before blocks and every64rounds;
+  cancellation clears partial output and never returns it as a key. Preserved
+  upstream licenses/source attribution. Cargo manifests record both workspaces.
+- Native MicroPython exposes SHA224/256/384/512, SHA1 and RIPEMD160, repeatable
+  digest/copy metadata, HMAC, subtle-backed comparison and PBKDF2. Context storage
+  is aligned and GC-owned; compile-time size/alignment/no-drop checks and runtime
+  alignment checks protect the C boundary. GC finalizers clear stored context;
+  reuse after clear rejects. Empty mutable buffers get valid empty Rust slices,
+  avoiding null-pointer/zero-length slice UB. No system-wide memory-erasure or
+  full wallet/security qualification is claimed.
+- Reused pinned micropython-lib HMAC source, adapting inherited allocation, requiring
+  digestmod and adding native one-shot/comparison entry points. Host app tests now
+  append their package path so native-only hashlib/hmac do not shadow CPython's
+  independent reference implementations. Exact supported API/bounds: HASH-PORT.md.
+- Three Rust host tests passed, including216 PBKDF2 cases against unmodified pinned
+  upstream, cancellation clearing and non-consuming independent copies.44existing
+  host checks pass. Native target boot logs/phase-12/20261114T224658Z; public
+  CPython/RFC/BIP39 vector gate usb-20261114T224802.460807Z passed all six algorithms,
+  block boundaries, streaming/copy/repeat, long/empty keys, multi-block output,
+  empty buffers, invalid inputs and context/GC cleanup. SHA1/4096 took23ms;
+  BIP39 SHA512/2048 took56ms. These are derivation times, not cold-power/app startup.
+- Final one-million-round SHA512 USB interruption gate passed at
+  hash-interrupt-20261114T224932.534807Z: caught KeyboardInterrupt,500further VM
+  iterations, fresh SHA256 and native heap baseline; host-bound response~0.11s at
+ 0.1s read resolution. UI regression224951.332648Z and original QR model/scan
+  regression225049.291412Z passed on the same final image.
+- Only wired headless DUT0 was updated. DUT1 stays on16b2986 app-ui/Home, available
+  for the optional optical retry. Shared artifacts now target wired DUT0; do not
+  load them on DUT1. No CAD, REF storage or SD changes. Native Seed/embit/UR,
+  Unicode NFKD, curves, Controller and SD app integration remain unfinished.

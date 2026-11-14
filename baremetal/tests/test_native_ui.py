@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import sys
 import unittest
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'app'))
+sys.path.append(str(Path(__file__).resolve().parents[1]/'app'))
 from seedsigner_port.buttons import ButtonInput
 from seedsigner_port.native_ui import ScreenSession
 

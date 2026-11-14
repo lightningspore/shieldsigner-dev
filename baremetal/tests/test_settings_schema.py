@@ -9,7 +9,7 @@ import sys
 from typing import Any,List
 import unittest
 root=Path(__file__).resolve().parents[2]
-sys.path.insert(0,str(root/'baremetal/app'))
+sys.path.append(str(root/'baremetal/app'))
 from seedsigner_port import settings_schema as port
 
 class SchemaTest(unittest.TestCase):

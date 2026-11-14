@@ -1,0 +1,115 @@
+{
+  "status": "native-hash-hmac-pbkdf2-vector-and-cancellation-gates-passed",
+  "scope": "Primitive/API prerequisites, not full seed/wallet/application qualification",
+  "deployment": {
+    "device": "wired DUT0",
+    "features": "native-ui",
+    "boot": "logs/phase-12/20261114T224658Z",
+    "downloadSha256": "dedaa767599b6ac9af9d8ac914e0460d8d9970c24e5f4f41e14e05d2699ac465",
+    "dut1": "Unchanged16b2986 app-ui/Home"
+  },
+  "nativeHashes": {
+    "core": "hash-core",
+    "dependencyLockSha256": "718e7c79e0e236a43871607cfc954dfd68f6ff7fbecd39783cfa01f8f2a12e4d",
+    "preparedLibraries": {
+      "micropythonLibCommit": "6ae440a8a144233e6e703f6759b7e7a0afaa37a4",
+      "hmac": {
+        "sourceSha256": "289072406e19751e3bda28b759dbf57469cb918726e8539812252d9c22e12d1c",
+        "outputSha256": "260341015d85c4bfdd9fd7000841877b30dc87510274e7f034e04b5ac165281d",
+        "changes": [
+          "Explicit digestmod required, matching current CPython API",
+          "object.__new__ supplies missing inherited MicroPython allocation entry",
+          "Add native one-shot digest and subtle-backed compare_digest"
+        ]
+      }
+    },
+    "note": "Streaming hashes, HMAC and service-aware PBKDF2 prerequisites; not full seed/wallet qualification"
+  },
+  "coreSources": {
+    "hash-core/Cargo.toml": "010208d20886e605941c76b41731d2da0952d38e720d95573dcec10321be5eec",
+    "hash-core/Cargo.lock": "7255f5bee57fa37430f000dc87ac8f895a8e2c649d942a5e64bde232ab9a82a5",
+    "hash-core/src/lib.rs": "0230d93bf3d0f7876c48cf0ba76b19cab00f6870ea1b0823143c80ba3cbc342a",
+    "hash-core/src/pbkdf2_service.rs": "f2bfd8644926e7c4e85cb40751a71ddad7a5f1cbdcdb759c50bab6e2b242c207",
+    "src/hash_runtime.rs": "c6a200ed7d49357a6bf2b4a82f7daf3d7667a578d729ac150ad06c6faf8561e5",
+    "micropython/modnativehash.c": "22f7c35546d047df148089fa887be082110c9fbb533c1a0264110468eb30e06f"
+  },
+  "gates": {
+    "nativeVectors": {
+      "path": "logs/phase-11/usb-20261114T224802.460807Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/hash_gate.py",
+        "scriptSha256": "b560f1a7ee16fb3b6e360638d002a3cd4af14a4c87b9640e368237584db177bb",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "4e91d5ea3b0bacccbad2c856da575a23067dbbca6630141ff3b3c7e0696e8da3"
+    },
+    "millionRoundInterrupt": {
+      "path": "logs/phase-12/hash-interrupt-20261114T224932.534807Z",
+      "result": {
+        "serial": "rv1103-dev-001",
+        "scope": "One-million-round PBKDF2-SHA512 interrupted over USB; public values only",
+        "passed": true,
+        "responseSecondsHostBound": 0.11027304199524224
+      },
+      "serialSha256": "284908901a9a8353bf69ed9ef1aeece406573f94663075197bda2d1a5584441f",
+      "scriptSha256": "8f59fd083fbb46f6edd4ed8ab2112034243cf7941aa173797ec92fe01b9fab6d"
+    },
+    "uiRegression": {
+      "path": "logs/phase-11/usb-20261114T224951.332648Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/ui_gate.py",
+        "scriptSha256": "26e8d559e9d9bc4ad66a4249eb784f85482360d94f0d6e35e3b28992a5395ab5",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "13dd0efa1ed1ae6932c3bbbca431999e9e07e912dda47550fb6666d4e271c7c7"
+    },
+    "modelScanRegression": {
+      "path": "logs/phase-11/usb-20261114T225049.291412Z",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/micropython/decode_qr_gate.py",
+        "scriptSha256": "1a6e55ff04ffac179874725a7471044f9117f19621914ac44fc43a231cc44da0",
+        "completed": true,
+        "traceback": false
+      },
+      "serialSha256": "175e20918622a774e6e28ede4ab32abfffbc15a19682c5546a6a473e0f8a9cc8"
+    }
+  },
+  "hostChecks": {
+    "python": {
+      "task": "baremetal:check",
+      "tests": 44,
+      "passed": true
+    },
+    "rust": {
+      "task": "baremetal:hash:core:check",
+      "tests": 3,
+      "pbkdf2DifferentialCases": 216,
+      "passed": true
+    }
+  },
+  "timings": {
+    "sha1Rounds4096Ms": 23,
+    "sha512Rounds2048Ms": 56,
+    "scope": "Derivation call only; excludes boot/app"
+  },
+  "limits": [
+    "Native KDF work/input/output limits documented",
+    "Original Seed/embit/UR/NFKD/curve/Controller/SD components not yet complete",
+    "Optical QR qualification pending",
+    "No SD writes or cold-power timing performed"
+  ]
+}

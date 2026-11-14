@@ -1,0 +1,17 @@
+{
+  "reference": "CPython hashlib/hmac",
+  "algorithms": [
+    "sha224",
+    "sha256",
+    "sha384",
+    "sha512",
+    "sha1",
+    "ripemd160"
+  ],
+  "publishedInputs": [
+    "https://www.rfc-editor.org/rfc/rfc4231.html",
+    "https://www.rfc-editor.org/rfc/rfc6070.html",
+    "https://github.com/trezor/python-mnemonic/blob/master/vectors.json"
+  ],
+  "generatedSha256": "b560f1a7ee16fb3b6e360638d002a3cd4af14a4c87b9640e368237584db177bb"
+}

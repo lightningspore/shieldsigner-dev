@@ -1,0 +1,12 @@
+{
+  "micropythonLibCommit": "6ae440a8a144233e6e703f6759b7e7a0afaa37a4",
+  "hmac": {
+    "sourceSha256": "289072406e19751e3bda28b759dbf57469cb918726e8539812252d9c22e12d1c",
+    "outputSha256": "260341015d85c4bfdd9fd7000841877b30dc87510274e7f034e04b5ac165281d",
+    "changes": [
+      "Explicit digestmod required, matching current CPython API",
+      "object.__new__ supplies missing inherited MicroPython allocation entry",
+      "Add native one-shot digest and subtle-backed compare_digest"
+    ]
+  }
+}

@@ -14,6 +14,12 @@ extern uint32_t bm_ticks_ms(void);
 extern void bm_delay_us(uint32_t);
 extern void bm_runtime_fault(void);
 extern void bm_repl_ready(void);
+extern int bm_console_poll(void);
+extern void bm_set_interrupt_char(int);
+void mp_hal_set_interrupt_char(int c) { bm_set_interrupt_char(c); }
+void bm_micropython_poll(void) {
+    if (bm_console_poll()) { mp_sched_keyboard_interrupt(); }
+}
 void bm_micropython_main(void) {
     mp_cstack_init_with_sp_here(768*1024);
     gc_init((void *)0x01000000,(void *)0x01800000);

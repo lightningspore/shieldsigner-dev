@@ -1,0 +1,31 @@
+{
+  "status": "host-preparation-only-hardware-gate-open",
+  "features": "usb-console",
+  "hardwareLoaded": false,
+  "storageWritten": false,
+  "buildFiles": {
+    "build/hello.bin": "a2f482ee3b8dd9c1c87b2439c49c4bb8920ac7bba93b7ae88a7b36db099e49b4",
+    "build/hello-download.bin": "8b5cfae0fb6e9601127cba32a2759a5966a2f88d41b3d89e483b4372519639b1"
+  },
+  "checks": {
+    "descriptorTests": 3,
+    "baremetalHostTests": 12,
+    "usbCrossBuild": "passed",
+    "uploaderCli": "passed"
+  },
+  "pending": [
+    "DUT card removed and maskrom confirmed",
+    "DWC3 enumeration and native macOS CDC binding",
+    "REPL/script transfer and Ctrl-C/reset",
+    "reconnect, backpressure and camera/API regression",
+    "standalone SD USB build"
+  ],
+  "sources": {
+    "src/usb.rs": "f71e8d32e5dc515108b79ad0ed64934f863ee40080653154f27fe13dba6998c7",
+    "src/usb_descriptors.rs": "cf366b4bf8d2a0aa6a930fba82d7eec5f35600d6d7f962577e4bc31bd2dab91f",
+    "src/runtime.rs": "8b81bb17707270f4f106814b77efb70477c15055c185d926cf8a7c24eee7e12e",
+    "micropython/runtime.c": "6b01373c5d1e86c0acf9c078a86444d56c4bf8357b4d0c0c1d054d7eaf588926",
+    "micropython/mpconfigport.h": "1d201a018c273414248cf3bba2bcb322a54963b009b91cf982cc4771ad3e9413",
+    "tools/usb_console.py": "a34d82415d7d4540ce61ae9b1b38d8410eed2bd017d47ee43b765af3680da08b"
+  }
+}

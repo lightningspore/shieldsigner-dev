@@ -1244,3 +1244,15 @@ run = "uv run --python 3.13 python baremetal/tools/console.py baremetal/micropyt
 [tasks."baremetal:app:build"]
 description = "Build app-port runtime without the GPIO52 boot-timing output; UART debug remains enabled"
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features app-runtime"
+
+[tasks."baremetal:usb:build"]
+description = "Build experimental DWC3 USB CDC runtime with UART recovery"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features usb-console"
+
+[tasks."baremetal:usb:check"]
+description = "Test USB descriptors and cross-compile the experimental USB console"
+run = ["mise exec rust@1.93.1 -- rustc --edition 2021 --test baremetal/src/usb_descriptors.rs -o baremetal/build/usb-descriptor-tests", "baremetal/build/usb-descriptor-tests", "mise run baremetal:usb:build"]
+
+[tasks."baremetal:usb:console"]
+description = "Run a script through the development USB CDC console (script path argument)"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py"

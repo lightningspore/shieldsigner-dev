@@ -16,3 +16,8 @@
 #define MICROPY_NLR_THUMB_USE_LONG_JUMP (1)
 #define MP_STATE_PORT MP_STATE_VM
 typedef long mp_off_t;
+
+// Service the console at VM branches, including a running Python loop.
+#define MICROPY_KBD_EXCEPTION (1)
+void bm_micropython_poll(void);
+#define MICROPY_VM_HOOK_LOOP do { bm_micropython_poll(); } while (0);

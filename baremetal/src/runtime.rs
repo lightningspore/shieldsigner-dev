@@ -1,10 +1,26 @@
 // SPDX-License-Identifier: MIT
-use core::sync::atomic::{AtomicUsize, Ordering};
+use core::sync::atomic::{AtomicBool, AtomicI32, AtomicUsize, Ordering};
+static INTERRUPT_CHAR: AtomicI32 = AtomicI32::new(-1);
+static INTERRUPTED: AtomicBool = AtomicBool::new(false);
+pub fn interrupt(byte: u8) -> bool {
+    if byte as i32 == INTERRUPT_CHAR.load(Ordering::Relaxed) {
+        INTERRUPTED.store(true, Ordering::Release); true
+    } else { false }
+}
+#[no_mangle]
+extern "C" fn bm_set_interrupt_char(c: i32) { INTERRUPT_CHAR.store(c, Ordering::Relaxed); }
+#[no_mangle]
+extern "C" fn bm_console_poll() -> i32 {
+    #[cfg(feature = "usb-console")]
+    super::usb::poll();
+    INTERRUPTED.swap(false, Ordering::AcqRel) as i32
+}
 const CAPACITY: usize = 4096;
 static HEAD: AtomicUsize = AtomicUsize::new(0);
 static TAIL: AtomicUsize = AtomicUsize::new(0);
 static mut RX: [u8; CAPACITY] = [0; CAPACITY];
 pub fn receive(byte: u8) {
+    if interrupt(byte) { return; }
     let head = HEAD.load(Ordering::Relaxed);
     let next = (head + 1) % CAPACITY;
     if next != TAIL.load(Ordering::Acquire) {
@@ -16,6 +32,8 @@ pub fn receive(byte: u8) {
 }
 #[no_mangle]
 extern "C" fn bm_uart_getc() -> i32 {
+    #[cfg(feature = "usb-console")]
+    if let Some(byte) = super::usb::read() { return byte as i32; }
     let tail = TAIL.load(Ordering::Relaxed);
     if tail == HEAD.load(Ordering::Acquire) {
         return -1;
@@ -26,7 +44,10 @@ extern "C" fn bm_uart_getc() -> i32 {
 }
 #[no_mangle]
 unsafe extern "C" fn bm_uart_write(data: *const u8, len: usize) {
-    super::put(core::slice::from_raw_parts(data, len));
+    let bytes = core::slice::from_raw_parts(data, len);
+    super::put(bytes);
+    #[cfg(feature = "usb-console")]
+    super::usb::write(bytes);
 }
 #[no_mangle]
 extern "C" fn bm_ticks_us() -> u32 {
@@ -39,7 +60,10 @@ extern "C" fn bm_ticks_ms() -> u32 {
 #[no_mangle]
 extern "C" fn bm_delay_us(us: u32) {
     let start = super::cpu::counter();
-    while super::cpu::counter() - start < (us as u64) * 24 {}
+    while super::cpu::counter() - start < (us as u64) * 24 {
+        #[cfg(feature = "usb-console")]
+        super::usb::poll();
+    }
 }
 #[no_mangle]
 extern "C" fn bm_runtime_fault() -> ! {

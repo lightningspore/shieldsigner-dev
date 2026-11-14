@@ -9,6 +9,10 @@ use core::ptr::{read_volatile, write_volatile};
 mod boot;
 #[cfg(feature = "runtime-repl")]
 mod runtime;
+#[cfg(feature = "usb-console")]
+mod usb;
+#[cfg(feature = "usb-console")]
+mod usb_descriptors;
 
 #[cfg(feature = "camera-test")]
 mod camera;
@@ -122,6 +126,11 @@ extern "C" fn rust_main(entry_low: u32, entry_high: u32) -> ! {
     spi::run();
     #[cfg(all(feature = "camera-test", not(feature = "runtime-repl")))]
     camera::run();
+    #[cfg(feature = "usb-console")]
+    if let Err(reason) = usb::init() {
+        use core::fmt::Write;
+        let _ = writeln!(cpu::Console, "@@FAIL {}\r", reason);
+    }
     #[cfg(feature = "runtime-repl")]
     runtime::run();
     // Keep a UART recovery path while USB is absent in this minimal payload.

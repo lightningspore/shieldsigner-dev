@@ -1,0 +1,6 @@
+{
+  "phase": 1,
+  "passed": true,
+  "imageSha256": "4b472ff34253701fac623b0f8cf419659debe6755c5c9e1eb639cc9c9bb2d060",
+  "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nrgef0\nrgef1\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\nBoot1 Release Time: Apr 28 2026 11:57:18, version: 1.10 NO FTL\nrom_version: 0x30303256\nBoot from dev = 129\nhamming_distance:1103 1106 2\nchip_id:5256110300,0\nChipType = 27\n0xff3e0040: 0x49\nsfc nor id: ff ff ff\nsfc_nand id: ff ff ff\nSet sdmmc2 Clk: 200, 1\nSet sdmmc2 Clk: 200, 1\n SDC_BusRequest:  CMD=1  SDC_RESP_TIMEOUT 1741\n mmc2:cmd1,20\nemmc reinit\nSet sdmmc2 Clk: 200, 1\n SDC_BusRequest:  CMD=1  SDC_RESP_TIMEOUT 1741\n mmc2:cmd1,20\nemmc reinit\nSet sdmmc2 Clk: 200, 1\n SDC_BusRequest:  CMD=1  SDC_RESP_TIMEOUT 1741\n mmc2:cmd1,20\nSdmmcInit=2 1\nUsbBoot ...33938\n0xff3e0040: 0x49\nusb trdtim:5\npowerOn 39101\n"
+}

@@ -1,0 +1,17 @@
+[package]
+name = "rv1103-bringup"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[workspace]
+
+[features]
+cpu-base = []
+gpio-test = ["cpu-base"]
+
+[profile.release]
+panic = "abort"
+opt-level = "s"
+lto = true
+codegen-units = 1

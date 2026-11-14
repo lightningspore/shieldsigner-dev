@@ -1,0 +1,30 @@
+{
+  "repository": "https://github.com/rockchip-linux/rkbin",
+  "commit": "3e288fe814e059dd06833495f845cab04ac20a5c",
+  "build": [
+    "docker",
+    "run",
+    "--rm",
+    "--platform",
+    "linux/amd64",
+    "-v",
+    "<baremetal>/.tools/rkbin:/work",
+    "-w",
+    "/work",
+    "alpine:3.21@sha256:bc21487101ae47172509130ee1092cc273a831968d64b617776d1f69c81e42ab",
+    "./tools/boot_merger",
+    "RKBOOT/RV1106MINIALL.ini"
+  ],
+  "files": {
+    "RKBOOT/RV1106MINIALL.ini": "4795b7273391d629c478aca84e9286ced1a612423a260a939d35d80525adbce9",
+    "bin/rv11/rv1106_ddr_924MHz_v1.16.bin": "edd25584df4b84c692b054528fd277db34ac64337676defcad84461e720fe276",
+    "bin/rv11/rv1106_usbplug_v1.09.bin": "d427508fa445285a8ce96071a68244f08e42db8ea370dfa62a3319a127ba33ef",
+    "bin/rv11/rv1106_spl_v1.03.bin": "db65d88678a68c30944399d03ea73eaa681cfc054acca95d495ac11d557733af",
+    "tools/boot_merger": "f8e1a2d01bc475e9571ab0aec00e4cca3d85bbd4587f3873970560443a237d0c",
+    "rv1106_download_v1.16.103.bin": "4b472ff34253701fac623b0f8cf419659debe6755c5c9e1eb639cc9c9bb2d060",
+    "LICENSE": "1b3cfbd212ef0e645b34aa6beee07343ce954a4f512338f12317ab297a9c9829"
+  },
+  "selection": "Luckfox Mini A official SDK BoardConfig selects RK_CHIP=rv1106 and luckfox_rv1106_uboot_defconfig. RV1103B is a distinct family. Only db is used; packaged persistent loader entries are not written.",
+  "targetSoc": "RV1103",
+  "targetSocSource": "User confirmed both REF and DUT are RV1103"
+}

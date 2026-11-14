@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "capture": "baremetal/logs/phase-3/20261114T055317Z",
+  "echo": "baremetal/logs/phase-3/echo-20261114T055341Z.json",
+  "cacheSpeedup": 96.44865245728377,
+  "checksum": 536739840,
+  "timerMeasuredHz": 999.9998333333612,
+  "heapPassed": true,
+  "imageSha256": "adcb74cd713c3017883acc7f867baec4b49de5d11ba4bfa1cc803cde2e7d1ef9",
+  "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n@@CPU cpsr=0x600001d3 sctlr=0x00c52878 cntfrq=24000000 elapsed=116361\n@@PASS cpu-counter\n@@ACTLR 0x00006000\n@@CLOCK counter_ticks=24031 cpu_cycles=1282396\n@@BENCH off_ticks=3832773 checksum=536739840\n@@MMU enabled\n@@BENCH on_ticks=39739 checksum=536739840\n@@PASS cache-benchmark\n@@PASS heap\n@@IRQ starting\n@@TIMER ticks=1000 elapsed=24000004 frequency=24000000\n@@PASS timer-irq\n@@ECHO_READY\n",
+  "echoResult": {
+    "passed": true,
+    "sentBase64": "aXJxLWVjaG86MDEyMzQ1Njc4OWFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6DQo=",
+    "receivedBase64": "aXJxLWVjaG86MDEyMzQ1Njc4OWFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6DQo=",
+    "stdout": "@@ECHO aXJxLWVjaG86MDEyMzQ1Njc4OWFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6DQo=\n",
+    "stderr": "",
+    "exitCode": 0,
+    "note": "cpu-base payload has no polling RX path; UART bytes are echoed only by INTID 59 handler."
+  }
+}

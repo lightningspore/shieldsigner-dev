@@ -1,0 +1,74 @@
+{
+  "referenceAdbSerial": "0a523b8b23110ffc",
+  "dutFormerAdbSerial": "ec9eda0a3c175664",
+  "dutMaskromVid": "2207",
+  "dutMaskromPid": "110c",
+  "dutUsbLocation": "201",
+  "referenceUart": "/dev/ttyS3",
+  "provisionalBaud": 115200,
+  "bridgeWiringConfirmed": true,
+  "connections": [
+    {
+      "referenceSignal": "UART3 TX",
+      "dutPin": 5,
+      "dutSignal": "UART2 RX",
+      "referencePinPreviouslyAssumedMini": 12,
+      "referencePhysicalPin": 19,
+      "referenceSignalVerifiedByWorkingUart": true,
+      "wireColor": "red",
+      "referenceGpio": "GPIO1_D0"
+    },
+    {
+      "referenceSignal": "UART3 RX",
+      "dutPin": 4,
+      "dutSignal": "UART2 TX",
+      "referencePinPreviouslyAssumedMini": 13,
+      "referencePhysicalPin": 20,
+      "referenceSignalVerifiedByWorkingUart": true,
+      "wireColor": "white",
+      "referenceGpio": "GPIO1_D1"
+    },
+    {
+      "referenceSignal": "GND",
+      "dutPin": 2,
+      "dutSignal": "GND",
+      "referencePinPreviouslyAssumedMini": 2,
+      "referencePhysicalPin": null,
+      "referenceSignalVerifiedByWorkingUart": false,
+      "wireColor": "brown"
+    }
+  ],
+  "referenceSoc": "RV1103",
+  "dutSoc": "RV1103",
+  "socIdentitySource": "User confirmed both boards are RV1103",
+  "verifiedLoaderBaud": 115200,
+  "referenceBoard": "Luckfox Pico",
+  "dutBoard": "Luckfox Pico Mini",
+  "referencePhysicalPinsVerified": true,
+  "gpioWiringConfirmed": true,
+  "referencePinoutSource": "https://files.luckfox.com/wiki/Luckfox-Pico/PDF/Luckfox%20Pico_pub_sch.pdf",
+  "gpioConnectionsPlanned": [
+    {
+      "wireColor": "blue",
+      "referencePhysicalPin": 7,
+      "referenceLabel": "GP5",
+      "referenceGpio": "GPIO1_C4",
+      "referenceLinuxGpio": 52,
+      "referenceDirection": "input",
+      "dutPhysicalPin": 10,
+      "dutGpio": "GPIO1_C4",
+      "dutDirection": "output"
+    },
+    {
+      "wireColor": "orange",
+      "referencePhysicalPin": 6,
+      "referenceLabel": "GP4",
+      "referenceGpio": "GPIO1_C5",
+      "referenceLinuxGpio": 53,
+      "referenceDirection": "output",
+      "dutPhysicalPin": 11,
+      "dutGpio": "GPIO1_C5",
+      "dutDirection": "input"
+    }
+  ]
+}

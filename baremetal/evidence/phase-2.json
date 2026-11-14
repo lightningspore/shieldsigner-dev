@@ -1,0 +1,76 @@
+{
+  "phase": 2,
+  "passed": true,
+  "runs": [
+    {
+      "run": 1,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    },
+    {
+      "run": 2,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    },
+    {
+      "run": 3,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    },
+    {
+      "run": 4,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    },
+    {
+      "run": 5,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    },
+    {
+      "run": 6,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    },
+    {
+      "run": 7,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    },
+    {
+      "run": 8,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    },
+    {
+      "run": 9,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    },
+    {
+      "run": 10,
+      "passed": true,
+      "imageSha256": "b4a6d0864cf2da8a3b726a94b994e30284c3a13d44ed00ba9b82a95c150de5b0",
+      "maskromRecovered": true,
+      "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n"
+    }
+  ]
+}

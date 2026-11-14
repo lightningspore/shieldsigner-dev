@@ -1,0 +1,165 @@
+Luckfox Pico Mini bare-metal bring-up — agent plan
+Nov 13, 2026 · @Sam
+Mission
+Run the Luckfox Pico Mini (Rockchip RV1103, one Cortex-A7, 64 MB DDR2 in-package) without Linux: power-on to a MicroPython prompt in well under a second, with GPIO, I2C, SPI and an ISP-processed camera image driven by the user's own Rust 3A code.
+What the user already has:
+• A Rust camera stack that works on Linux through V4L2 (the kernel's rkcif, D-PHY, rkisp and sensor drivers do the hardware work underneath).
+• A Rust port of Rockchip's rkaiq (the 3A algorithms: auto exposure, auto white balance, color matrix, lens shading, noise reduction), which on Linux reads ISP statistics and writes ISP parameters through V4L2 nodes.
+What this project adds: a bare-metal (or Zephyr) base, peripheral drivers, a replacement for the V4L2/kernel layer under the camera code, MicroPython on top, and a fast boot path.
+Out of scope: the hardware video encoder (MPP), the NPU (RKNN), Wi-Fi, Ethernet, USB host.
+Open decision for the user, not the agent: Zephyr vs plain no_std Rust as the base. Default to no_std Rust (it reuses the user's Rust code directly) unless the user says otherwise; keep the MicroPython port portable to either.
+Hardware setup
+Two Luckfox Pico Mini A boards (no SPI NAND on either), each on its own USB-C cable to the user's computer. There is no USB-serial adapter; the Linux board stands in for one.
+Board
+Boot media
+Role
+Reached from the host via
+Mini "REF"
+microSD with Luckfox Buildroot Linux
+Reference camera system, UART bridge, test partner for GPIO/I2C/SPI
+USB gadget: RNDIS network (SSH) and/or ADB, whichever the stock image exposes
+Mini "DUT"
+none
+Bare-metal target
+Rockchip maskrom over USB (rkdeveloptool); with no SD card and no NAND it should enter maskrom on every power-up
+Wiring between the boards (3 wires, 3.3 V logic both sides, do NOT join the 3.3 V or 5 V pins):
+• REF spare UART TX → DUT debug UART RX
+• REF spare UART RX → DUT debug UART TX
+• GND → GND
+REF's own console is UART2, so enable a different UART on REF with luckfox-config and confirm pin numbers from the Mini pinout and REF's device tree. Confirm which UART and pins the DUT's maskrom/loader prints on (expected UART2, 1500000 baud, per Luckfox defaults; verify).
+Camera: the CSI camera (expected SC3336; confirm from REF's dmesg/device tree) sits on REF for reference captures. It moves to DUT for camera phases, or the user swaps which board has the SD card. Ask the user when a swap is needed.
+Power cycling: none automated yet. A hung DUT needs the user to replug it, so batch work to minimise that and say clearly when a replug is required. A uhubctl-compatible hub would remove this step later.
+Host: the user's computer, reached through the agent's shell on it. OS not yet known; check first.
+Ground rules
+1.  Done means proven on hardware. A phase passes only when its gate test runs on the real DUT and the evidence (serial log, register diff, captured image) is saved under logs/phase-N/. Compiling is not passing.
+2.  Never write to REF's SD card boot partitions or flash anything to REF beyond enabling a UART and installing small tools in its rootfs. REF is the known-good reference; if it breaks, stop and tell the user.
+3.  DUT writes are RAM-only. Load code over maskrom into RAM. Do not burn anything persistent to the DUT (it has no NAND; do not insert or write an SD card for it) unless the user approves.
+4.  Ask the user only for physical actions: replugging a board, moving the camera, swapping the SD card, rewiring. Batch these requests and say exactly what to do. Everything else, decide and log the decision.
+5.  Licensing. Linux, U-Boot and the Luckfox SDK drivers are GPL. Read them to learn register layouts and sequences; write new code rather than pasting large blocks, so the result can stay under a permissive license. Rockchip's closed blobs (DDR init, loaders from rkbin) are used as-is, never disassembled into the codebase.
+6.  Electrical safety. Both boards are 3.3 V logic. Never connect power rails between boards, never drive a pin that the other board is also driving, and check the pinout before any jumper is moved.
+7.  Keep a running log. NOTES.md in the repo: what was tried, what the hardware did, register addresses learned, open questions. Future agents start from it.
+8.  One phase at a time. Do not start a phase until the previous gate passes, except reference-capture work on REF, which can run in parallel.
+Phased plan
+Ten phases, each ending in a gate that must pass on hardware. Phases 0–3 build the test loop and base; 4–6 are peripherals; 7–8 are the camera; 9–10 are MicroPython and fast boot.
+Phase 0 — Host and REF reachable
+• Identify host OS; install rkdeveloptool (build from source if needed), adb, Python 3 with pyserial, and an arm-none-eabi toolchain plus Rust armv7a-none-eabi target.
+• Confirm REF enumerates (RNDIS or ADB) and get a shell on it.
+• Confirm DUT enumerates as a Rockchip maskrom device (rkdeveloptool ld).
+• On REF: enable a spare UART with luckfox-config, wire it to DUT, open it at the DUT console baud.
+• Gate: rkdeveloptool ld lists DUT in maskrom; a shell command on REF works; REF's UART device opens.
+Phase 1 — Test harness
+One host script, harness.py, that every later phase uses:
+1.  Builds the DUT image.
+2.  Starts a serial capture on REF (over ADB/SSH) and streams it back to a host log.
+3.  Loads the image into DUT over maskrom.
+4.  Waits for a pass/fail marker on serial (e.g. @@PASS/@@FAIL <reason>) or a timeout.
+5.  Returns an exit code and saves the log.
+If DUT is not in maskrom (hung), print a clear "replug DUT" request and wait.
+• Gate: running the harness with the stock Rockchip loader shows the loader/DDR-init banner in the captured log.
+Phase 2 — Hello from bare metal
+• Study rkbin for RV1103/RV1106: the DDR init blob, the usbplug/loader, and the boot_merger .ini that packs them.
+• Build a loader where stage 2 is a minimal bare-metal binary (startup assembly, stack, UART write) instead of Rockchip's usbplug. Load with rkdeveloptool db.
+• Fallback if db cannot run arbitrary stage-2 code: load Rockchip's usbplug, then use its RAM download path (check rkdeveloptool commands), or boot DUT from a U-Boot SD card and use loady over the UART bridge. Ask the user before using an SD card on DUT.
+• Gate: @@PASS hello printed by own code after DDR init, via the harness, 10 runs in a row.
+Phase 3 — CPU base: caches, MMU, timer, interrupts
+• Enable MMU with a flat identity map (DDR cacheable, peripherals device memory), I- and D-cache, branch prediction.
+• Arm generic timer for delays and a tick; GICv2 for interrupts; a UART RX interrupt as the first test.
+• Simple heap allocator in DDR. Reserve a fixed region for camera buffers (decide size in phase 7).
+• Gate: a CoreMark-style or simple loop benchmark is at least 10x faster with caches on than off (log both); timer interrupt fires at a measured rate within 1%; UART echo works.
+Phase 4 — GPIO and pinmux
+• From REF's device tree and the SDK's pinctrl-rockchip.c / gpio-rockchip.c, extract GPIO bank bases, IOC/GRF mux registers and pull/drive registers for RV1103.
+• Remember Rockchip's write-mask convention (upper 16 bits enable the lower 16).
+• Check whether Zephyr already has a Rockchip GPIO driver to borrow structure from (only matters if Zephyr is chosen).
+• Gate: jumper a DUT output to a REF input (and vice versa). DUT toggles a pattern; REF reads it back via its GPIO sysfs/libgpiod; DUT reads a pattern REF drives. All 16 transitions match.
+Phase 5 — I2C
+• Port the controller logic of i2c-rk3x.c (write fresh code). Hard-code the input clock rate U-Boot/loader leaves, verified by reading CRU registers on REF.
+• Polled first, interrupt-driven second. Handle NAK, repeated start, timeout.
+• Gate: read the camera sensor's chip-ID register (address and expected value from the Linux sensor driver) on DUT, with the camera powered and clocked as REF's driver does it. Alternative if the camera is on REF: REF as I2C target via a test device or a cheap sensor, user to confirm parts.
+Phase 6 — SPI
+• Port the polled path of spi-rockchip.c. No DMA.
+• Gate: MOSI jumpered to MISO; 4 KB random-pattern loopback at 1, 10 and max MHz with zero errors. Logic analyzer optional (user has none confirmed).
+Phase 7 — Camera raw capture by register replay
+The user's camera code uses V4L2, so the kernel does the hardware work. Record it on REF and replay it on DUT.
+1.  On REF, add logging to the register-write helpers of the SDK's rkcif, MIPI D-PHY/CSI, and sensor drivers (or use ftrace/mmiotrace). Run the user's Rust capture app and save the ordered write log, including sensor I2C writes.
+2.  While streaming, dump the full register ranges of CRU, GRF/IOC, PMU, D-PHY, MIPI CSI host, VICAP and ISP to ref-dumps/streaming.txt. Also dump them at idle.
+3.  Note which device node the Rust app reads: an rkisp path (ISP output, YUV) or a raw rkcif path. Record the format and resolution.
+4.  On DUT: replay clocks, resets, pinmux, sensor power/reset GPIOs and MCLK first; then sensor I2C init; then D-PHY; then VICAP with the frame buffer pointed at the reserved DDR region. Poll VICAP status for frame-end.
+5.  Debug by diffing DUT register dumps against streaming.txt.
+6.  Dump a frame to the host (over the UART bridge; a cropped or downscaled frame is fine at first) and convert to PNG. Look at it.
+• Gate: a recognisable raw Bayer image of a high-contrast, colourful scene (ask the user to point the camera at something like a test card), 10 consecutive frames without stalls.
+• Then replace the raw replay with named, commented driver code, keeping the gate passing.
+Phase 8 — ISP with the user's Rust rkaiq
+• Extend the replay to the ISP blocks so frames go sensor → VICAP → ISP → YUV in DDR.
+• Replace the V4L2 params node: translate the user's Rust params structs into ISP register writes, module by module, using the SDK's rkisp params code for this ISP version as the map.
+• Replace the V4L2 stats node: after each frame, read ISP statistics (registers or the stats buffer the ISP writes) into the user's stats structs.
+• Apply params at frame boundaries using the ISP frame interrupt, as the kernel does.
+• Verify module by module: for a fixed scene and fixed params, DUT register values must equal REF's.
+• Gate: YUV output with the user's 3A converging (exposure and white balance settle within a few frames) and image quality visibly comparable to REF's Linux output of the same scene. Save side-by-side PNGs.
+Phase 9 — MicroPython
+• Port MicroPython: REPL on the console UART, heap in DDR, time from the generic timer, and machine.Pin, machine.I2C, machine.SPI on the phase 4–6 drivers (via a C ABI shim if the drivers are Rust).
+• Add a camera module: camera.init(), camera.capture() returning a frame buffer object, settings passthrough to the 3A.
+• If the user chose Zephyr instead, use MicroPython's existing Zephyr port with Zephyr drivers.
+• Gate: a script run from the REPL toggles a GPIO, reads the sensor ID over I2C, does an SPI loopback, and captures a frame, printing @@PASS for each.
+Phase 10 — Fast boot
+• Make the image boot from the DUT's own boot media without the host: Rockchip first-stage loader (DDR init) jumping straight to the image, no U-Boot. Ask the user before writing an SD card for DUT.
+• Measure with a GPIO toggled at reset vector, at REPL ready and at first good frame, timed by REF.
+• Gate: power-on to MicroPython REPL and power-on to first ISP frame both measured and reported. Target: REPL well under 1 s; first frame around 1 s (estimates, not commitments).
+References and tools
+Source
+Use it for
+Luckfox Pico SDK (sysdrv/source/kernel, sysdrv/source/uboot)
+RV1103 device trees, register addresses, IRQ numbers; drivers gpio-rockchip.c, pinctrl-rockchip.c, i2c-rk3x.c, spi-rockchip.c, rkcif, MIPI D-PHY/CSI, rkisp, sensor driver
+rkbin
+RV1103/RV1106 DDR init blob, usbplug, boot_merger .ini files
+rkdeveloptool
+Maskrom loading (ld, db, RAM/flash download commands)
+Zephyr Luckfox Pico Ultra board
+Working RV1106 Zephyr bring-up: UART, GICv2, timer; boot method and U-Boot patches
+MicroPython Zephyr port and MicroPython's porting guide
+REPL, machine module, custom C modules
+megi's Luckfox Linux branches
+Mainline-style RV1103 support, cleaner reference than the vendor kernel
+User's Rust V4L2 camera code and Rust rkaiq port
+The params/stats structs and 3A logic to keep unchanged
+REF board itself
+Live register dumps, dmesg, /proc/device-tree, write logs
+Tools on the host: rkdeveloptool, adb (or SSH), Python 3 + pyserial + numpy/Pillow for frame conversion, GCC arm-none-eabi, Rust armv7a-none-eabi. On REF: devmem/io for register peeks, libgpiod or sysfs GPIO, i2c-tools.
+Known unknowns and risks
+Risk
+Why it matters
+First move
+rkdeveloptool db may not run arbitrary stage-2 code
+Blocks the fully-USB load loop in phase 2
+Test with a hello binary first; fall back to usbplug RAM download or U-Boot loady
+DUT may not enter maskrom on its own
+Each load would need a button press
+Verify in phase 0; if not, ask the user about the BOOT button
+Console UART/baud on DUT unconfirmed
+No output, no feedback
+Read REF's device tree and loader output first
+Clocks/power domains for camera, ISP not set by the loader
+Silent failure: no frames, no error
+Phase 7 replay includes CRU/PMU writes; diff against REF dumps
+Caches vs DMA coherency
+Corrupt or stale frames once caches are on
+Flush/invalidate around every frame buffer, or map buffers non-cacheable at first
+MIPI lanes too fast for any logic analyzer
+No way to probe the CSI link directly
+Rely on register status bits and diffs against REF
+ISP param timing
+Flicker or half-applied settings
+Apply on the frame interrupt as the kernel does
+64 MB RAM
+Limits frame buffer count at high resolution
+Budget in phase 3; start at lower resolution
+Hung DUT needs a manual replug
+Slows unattended work
+Batch requests; recommend a uhubctl hub
+Frame transfer over UART is slow
+Phase 7 debugging loop is slow
+Send cropped/downscaled frames or checksums first; full frames only at gates
+Reporting back
+• At each gate: one short message to the user saying which phase passed, the evidence file, and the next phase. Attach the PNG at camera gates.
+• When blocked: say what was tried, what the hardware did, and the one physical action or decision needed from the user.
+• Keep NOTES.md current so a new agent can resume from the last passed gate.
+• Open questions to put to the user at the start: Zephyr or no_std Rust as the base; where the Rust camera and rkaiq code lives; which camera module is fitted; whether a uhubctl hub or USB-serial adapter can be added later.

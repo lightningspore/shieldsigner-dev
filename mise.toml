@@ -1135,3 +1135,23 @@ run = "uv run scripts/refresh-jlc.py --standard-fpc"
 [tasks."hardware:angles"]
 description = "Verify every native trace is horizontal, vertical or 45 degrees and audit the under-LCD power header"
 run = "uv run python scripts/audit-angle-header.py"
+
+[tasks."baremetal:doctor"]
+description = "Read-only REF UART and DUT maskrom access checks; all evidence stays under baremetal/logs"
+run = "uv run --python 3.13 python baremetal/tools/doctor.py"
+
+[tasks."baremetal:check"]
+description = "Host-only UART transport checks; does not access either board"
+run = "uv run --python 3.13 python -m unittest discover -s baremetal/tests -v"
+
+[tasks."baremetal:build"]
+description = "Build the original RV1103 RAM hello payload and pack unchanged vendor DDR initialization"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py"
+
+[tasks."baremetal:cpu:build"]
+description = "Build the RV1103 CPU/MMU/cache/timer/UART IRQ bring-up payload"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features cpu-base"
+
+[tasks."baremetal:gpio:build"]
+description = "Build RV1103 GPIO1_C4/C5 UART-controlled bidirectional test payload"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features gpio-test"

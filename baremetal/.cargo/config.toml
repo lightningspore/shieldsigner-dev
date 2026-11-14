@@ -1,0 +1,5 @@
+[build]
+target = "armv7a-none-eabi"
+
+[target.armv7a-none-eabi]
+rustflags = ["-C", "target-cpu=cortex-a7", "-C", "link-arg=-Tlink.ld"]

@@ -1,0 +1,137 @@
+{
+  "passed": true,
+  "records": [
+    {
+      "index": 0,
+      "refOutput": 0,
+      "expectedDutOutput": 1,
+      "refInput": 1,
+      "response": "@@GPIO out=1 in=0",
+      "passed": true
+    },
+    {
+      "index": 1,
+      "refOutput": 1,
+      "expectedDutOutput": 0,
+      "refInput": 0,
+      "response": "@@GPIO out=0 in=1",
+      "passed": true
+    },
+    {
+      "index": 2,
+      "refOutput": 0,
+      "expectedDutOutput": 1,
+      "refInput": 1,
+      "response": "@@GPIO out=1 in=0",
+      "passed": true
+    },
+    {
+      "index": 3,
+      "refOutput": 1,
+      "expectedDutOutput": 0,
+      "refInput": 0,
+      "response": "@@GPIO out=0 in=1",
+      "passed": true
+    },
+    {
+      "index": 4,
+      "refOutput": 0,
+      "expectedDutOutput": 1,
+      "refInput": 1,
+      "response": "@@GPIO out=1 in=0",
+      "passed": true
+    },
+    {
+      "index": 5,
+      "refOutput": 1,
+      "expectedDutOutput": 0,
+      "refInput": 0,
+      "response": "@@GPIO out=0 in=1",
+      "passed": true
+    },
+    {
+      "index": 6,
+      "refOutput": 0,
+      "expectedDutOutput": 1,
+      "refInput": 1,
+      "response": "@@GPIO out=1 in=0",
+      "passed": true
+    },
+    {
+      "index": 7,
+      "refOutput": 1,
+      "expectedDutOutput": 0,
+      "refInput": 0,
+      "response": "@@GPIO out=0 in=1",
+      "passed": true
+    },
+    {
+      "index": 8,
+      "refOutput": 0,
+      "expectedDutOutput": 1,
+      "refInput": 1,
+      "response": "@@GPIO out=1 in=0",
+      "passed": true
+    },
+    {
+      "index": 9,
+      "refOutput": 1,
+      "expectedDutOutput": 0,
+      "refInput": 0,
+      "response": "@@GPIO out=0 in=1",
+      "passed": true
+    },
+    {
+      "index": 10,
+      "refOutput": 0,
+      "expectedDutOutput": 1,
+      "refInput": 1,
+      "response": "@@GPIO out=1 in=0",
+      "passed": true
+    },
+    {
+      "index": 11,
+      "refOutput": 1,
+      "expectedDutOutput": 0,
+      "refInput": 0,
+      "response": "@@GPIO out=0 in=1",
+      "passed": true
+    },
+    {
+      "index": 12,
+      "refOutput": 0,
+      "expectedDutOutput": 1,
+      "refInput": 1,
+      "response": "@@GPIO out=1 in=0",
+      "passed": true
+    },
+    {
+      "index": 13,
+      "refOutput": 1,
+      "expectedDutOutput": 0,
+      "refInput": 0,
+      "response": "@@GPIO out=0 in=1",
+      "passed": true
+    },
+    {
+      "index": 14,
+      "refOutput": 0,
+      "expectedDutOutput": 1,
+      "refInput": 1,
+      "response": "@@GPIO out=1 in=0",
+      "passed": true
+    },
+    {
+      "index": 15,
+      "refOutput": 1,
+      "expectedDutOutput": 0,
+      "refInput": 0,
+      "response": "@@GPIO out=0 in=1",
+      "passed": true
+    }
+  ],
+  "release": "@@GPIO_RELEASED",
+  "stderr": "",
+  "exitCode": 0,
+  "serial": "DDR 125c220086 wesley.yao 26/05/11-10:15:37,fwver: v1.16\nS5P1\n4x\nfc27\nF\nDDRConf1\nDDR2, BW=16 Col=10 Bk=4 CS0 Row=13 CS=1 Size=64MB\n528MHz\nDDR bin out\n\n\n@@PASS hello\n@@CPU cpsr=0x600001d3 sctlr=0x00c52878 cntfrq=24000000 elapsed=42343\n@@PASS cpu-counter\n@@ACTLR 0x00006000\n@@CLOCK counter_ticks=24024 cpu_cycles=1281138\n@@BENCH off_ticks=3714711 checksum=536739840\n@@MMU enabled\n@@BENCH on_ticks=39760 checksum=536739840\n@@PASS cache-benchmark\n@@PASS heap\n@@IRQ starting\n@@TIMER ticks=1000 elapsed=24000018 frequency=24000000\n@@PASS timer-irq\n@@ECHO_READY\n@@GPIO_READY C4=input C5=input\n"
+}

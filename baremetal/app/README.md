@@ -107,3 +107,19 @@ source-derived schema. Thirty parser/GC cycles preserve native heap baseline;
 real double arithmetic, malformed-input fixtures, screen and two-camera regression
 gates pass.32 host tests compare the schema/parser with original app classes.
 Receipt: [../evidence/phase-12-settings-schema.json](../evidence/phase-12-settings-schema.json).
+
+
+The native RAM Settings singleton now retains the original validation/update/
+getter algorithms, including PBKDF2 integer/floor/ceiling checks. A separate
+settings_platform policy provides fixed current-device defaults and explicit
+unavailable-action errors before bulk updates can partially change data. Card
+interfaces are empty, persistence is disabled, and no file/thread/locale service
+is emulated. `object.__new__(cls)` is explicit because MicroPython does not
+inherit that attribute onto user classes. The native hardware identity is
+mini-pcb240. Source method hashes/transforms are in settings-store-provenance.json.
+36 host tests and real DUT0/DUT1 RAM settings gates pass. This is not complete
+Controller startup, persistence or hardware-setting application.
+
+The corrected connected-board profile and physical LCD/input evidence are in
+[../MINI-PCB-IO.md](../MINI-PCB-IO.md). Prior Home-only builds with DC56/RST57
+were for another fixture and do not describe the connected board.

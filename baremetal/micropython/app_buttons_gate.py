@@ -56,7 +56,7 @@ print('@@PASS app-runtime-core-bigints')
 import display
 import machine
 import gc
-display.init('bench240')
+display.init('mini-pcb240')
 physical=ButtonInput()
 held=display.buttons()
 assert physical.poll() is None
@@ -71,10 +71,10 @@ for action in [lambda:display.init('carrier'),lambda:display.fill(65536),lambda:
         rejected+=1
 assert rejected==6
 status=display.status()
-assert status['gpio_ddr_low']==0
-assert status['gpio_ddr_high']==768
+assert status['gpio_ddr_low']==2048
+assert status['gpio_ddr_high']==24
 assert status['mux_b']==0 and status['mux_c']==0 and status['mux_d']==0
-assert status['pull_b']==80 and status['pull_c']==21760 and status['pull_d']==80
+assert status['pull_b']==16 and status['pull_c']==21504 and status['pull_d']==85
 assert status['spi_mux']==1604
 assert machine.console_status()['uart_irq_enabled']==0
 print('@@PASS app-display-input-guards')

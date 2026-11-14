@@ -59,7 +59,7 @@ def main():
             (folder/'build-manifest.json').write_bytes(content)
             report['buildManifestSha256'] = hashlib.sha256(content).hexdigest()
             target_features=set(parsed.get('features','').split(','))
-            if target_features & {'usb-only','bench-ui','app-ui'} or parsed.get('usbSerial') not in (None,'rv1103-dev-001'):
+            if target_features & {'usb-only','bench-ui','mini-pcb-ui','app-ui'} or parsed.get('usbSerial') not in (None,'rv1103-dev-001'):
                 report['error']='DUT1/app pin profile rejected by wired DUT0 harness; build native-ui or use the explicit DUT1 loader'
                 (folder/'result.json').write_text(json.dumps(report,indent=2)+'\n')
                 raise SystemExit(report['error'])

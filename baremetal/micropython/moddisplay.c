@@ -10,8 +10,10 @@ static mp_obj_t display_init(size_t n,const mp_obj_t *args,mp_map_t *kwargs){
         {MP_QSTR_profile,MP_ARG_REQUIRED|MP_ARG_OBJ,{.u_obj=MP_OBJ_NULL}},
         {MP_QSTR_software_spi,MP_ARG_KW_ONLY|MP_ARG_BOOL,{.u_bool=false}}};
     mp_arg_val_t v[2];mp_arg_parse_all(n,args,kwargs,2,allowed,v);
-    if(strcmp(mp_obj_str_get_str(v[0].u_obj),"bench240"))mp_raise_ValueError(MP_ERROR_TEXT("explicit bench240 profile required"));
-    checked(bm_display(0,v[1].u_bool,0,0,0,NULL,0));return mp_const_none;
+    const char *profile=mp_obj_str_get_str(v[0].u_obj);
+    int base=!strcmp(profile,"bench240")?0:!strcmp(profile,"mini-pcb240")?2:-1;
+    if(base<0)mp_raise_ValueError(MP_ERROR_TEXT("explicit PCB display profile required"));
+    checked(bm_display(0,base+v[1].u_bool,0,0,0,NULL,0));return mp_const_none;
 }
 static MP_DEFINE_CONST_FUN_OBJ_KW(display_init_obj,1,display_init);
 static mp_obj_t display_fill(mp_obj_t color){

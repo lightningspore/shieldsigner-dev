@@ -1,9 +1,11 @@
 # SeedSigner app I/O checkpoint
 
-This is a partial app-port checkpoint. Frozen input code, native display writes,
-register readbacks and Python guards pass on DUT1. A working SeedSigner app,
-physical switch press/release qualification and visible LCD output are not yet
-proved. Smartcard software is excluded by user instruction.
+Current: the user-confirmed Mini PCB now has visibly working LCD output,
+a displayed local-camera capture and all eight physical switches verified.
+See [MINI-PCB-IO.md](MINI-PCB-IO.md) and
+[evidence/phase-12-mini-pcb.json](evidence/phase-12-mini-pcb.json).
+The earlier GPIO56/57 bench profile was for a different board; its LCD-negative
+results are superseded. Full app startup and continuous preview remain open.
 
 ## Current bench and recovery
 
@@ -24,7 +26,7 @@ proved. Smartcard software is excluded by user instruction.
   script proved DUT1 still responsive; the drained retry recovered it. No CPU
   hang was proved. USB-only firmware also no longer waits on unused UART TX.
 
-## Native bench240 contract
+## Historical separate bench240 contract (not this PCB)
 
 The explicit `bench-ui` feature includes USB-only operation. Other runtime
 builds reject display initialization. It is not the main HOTHMI carrier profile.

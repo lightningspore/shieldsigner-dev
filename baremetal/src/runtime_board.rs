@@ -30,6 +30,8 @@ pub fn camera_validated() {
 }
 #[no_mangle]
 extern "C" fn bm_pin(id: u32, mode: i32, value: i32) -> i32 {
+    // Phase4 fixture pins overlap app LCD/buttons. App boards use display API.
+    if cfg!(feature="usb-only") {return -1;}
     if !(-1..=1).contains(&mode) || !(-1..=1).contains(&value) {
         return -1;
     }
@@ -71,6 +73,8 @@ unsafe extern "C" fn bm_i2c_write(addr: u32, register: u32, data: *const u8, len
 }
 #[no_mangle]
 unsafe extern "C" fn bm_spi_transfer(hz: u32, tx: *const u8, rx: *mut u8, len: usize) -> i32 {
+    // Full-duplex fixture would remux LCD reset C3 to MISO on the Mini PCB.
+    if cfg!(feature="usb-only") {return -1;}
     if len == 0 || len > 4096 || !(100000..=50000000).contains(&hz) {
         return -1;
     }
@@ -148,7 +152,7 @@ unsafe extern "C" fn bm_display(op:u32,x:u32,y:u32,w:u32,h:u32,data:*const u8,le
     #[cfg(feature = "bench-ui")]
     {
         match op {
-            0 if x<=1=>crate::display::init(x!=0).map_or(-1,|_|0),
+            0 if x<=3 && ((cfg!(feature="mini-pcb-ui") && x>=2)||(!cfg!(feature="mini-pcb-ui") && x<2))=>crate::display::init(x&1!=0).map_or(-1,|_|0),
             1 if x<=65535=>crate::display::fill(x as u16).map_or(-1,|_|0),
             2 if x<240 && y<240 && w>0 && h>0 && w<=240 && h<=240 && x+w<=240 && y+h<=240 && len==w as usize*h as usize*2=>
                 crate::display::blit(x as u16,y as u16,w as u16,h as u16,core::slice::from_raw_parts(data,len)).map_or(-1,|_|0),

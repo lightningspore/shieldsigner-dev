@@ -21,7 +21,9 @@ build_env.pop('RV1103_USB_SERIAL',None)
 if args.usb_serial: build_env['RV1103_USB_SERIAL']=args.usb_serial
 features=set(args.features.split(','))
 if 'app-ui' in features:
-    features.update({'native-ui','bench-ui'})
+    features.update({'native-ui','mini-pcb-ui'})
+if 'mini-pcb-ui' in features:
+    features.add('bench-ui')
 if 'native-ui' in features:
     features.add('usb-console')
 if 'bench-ui' in features:

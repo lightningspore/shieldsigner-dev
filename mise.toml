@@ -1274,8 +1274,8 @@ description = "Load only DUT1 at configured location and prove USB-only console/
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_only_gate.py"
 
 [tasks."baremetal:app:bench:build"]
-description = "Build explicit bench240 LCD/button USB-only target for DUT1"
-run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features bench-ui --usb-serial rv1103-dut1"
+description = "Build the user-confirmed Mini PCB LCD/button USB-only target for DUT1"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features mini-pcb-ui --usb-serial rv1103-dut1"
 
 [tasks."baremetal:usb:dut1:reset"]
 description = "Reset uniquely identified DUT1 to maskrom through USB only"
@@ -1352,3 +1352,11 @@ run = "uv run --python 3.13 python baremetal/tools/prepare_settings_schema.py"
 [tasks."baremetal:app:settings:gate"]
 description = "Verify frozen original settings schema, parser, doubles and public full-schema output on wired DUT0"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/settings_schema_gate.py --serial rv1103-dev-001 --timeout 20"
+
+[tasks."baremetal:app:settings:store:prepare"]
+description = "Prepare original Settings data methods with explicit native platform boundaries"
+run = "uv run --python 3.13 python baremetal/tools/prepare_settings_store.py"
+
+[tasks."baremetal:app:settings:store:gate"]
+description = "Verify real original RAM settings validation/update/getters and explicit unavailable native actions"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/settings_store_gate.py --serial rv1103-dev-001 --timeout 15"

@@ -9,7 +9,10 @@ static READY: AtomicBool = AtomicBool::new(false);
 static DIVISOR: AtomicU32 = AtomicU32::new(20);
 const GPIO: usize = 0xff530000;
 const IOC: usize = 0xff538000;
-const BUTTONS: [u32; 8] = [26, 21, 27, 22, 20, 23, 11, 10];
+const PCB: bool = cfg!(feature="mini-pcb-ui");
+const DC:u32=if PCB {0x10}else{0x100};
+const RESET:u32=if PCB {8}else{0x200};
+const BUTTONS: [u32; 8] = if PCB {[57,59,56,54,58,55,4,53]} else {[58,53,59,54,52,55,43,42]};
 unsafe fn mask(address: usize, bits: u32, value: u32) {
     write_volatile(address as *mut u32, (bits << 16) | (value & bits));
 }
@@ -21,7 +24,7 @@ fn pause(ms: u32) {
 }
 fn data_mode(data: bool) {
     unsafe {
-        mask(GPIO + 4, 0x100, if data { 0x100 } else { 0 });
+        mask(GPIO + 4, DC, if data { DC } else { 0 });
     }
 }
 fn tx(data: &[u8]) -> Result<(), &'static str> {
@@ -76,6 +79,30 @@ pub fn init(software_spi: bool) -> Result<(), &'static str> {
         }
     }
     unsafe {
+        if PCB {
+            // Exact user-provided Mini PCB: D0..D3/C5..C7 are buttons.
+            // Release former wrong-profile D0/D1 outputs before anything else.
+            mask(GPIO+0x0c,0x0fe0,0);
+            mask(IOC+0x18,0xffff,0);
+            mask(IOC+0x14,0xffff,0);
+            // LCD reset=C3/global51, DC=C4/global52, BL=B3/global43.
+            mask(GPIO+4,0x18,8);
+            mask(GPIO+0x0c,0x18,0x18);
+            mask(IOC+0x10,0xf000,0);
+            mask(IOC+8,0xf000,0);
+            mask(IOC+0x1c4,0x00c0,0);
+            mask(IOC+0x1c8,0xffc0,0x5400); // C3/C4 no pulls, C5..C7 up
+            mask(IOC+0x1cc,0x00ff,0x55); // D0..D3 input pullups
+            // KEY2 is GPIO0_A4 on this PCB, with external pullup.
+            mask(0xff3b0800,2,0); // PMU root PCLK
+            mask(0xff3b0804,4,0); // GPIO0 PCLK
+            mask(0xff380008,0x10,0);
+            mask(0xff388004,0x000f,0); // A4 mux0
+            mask(0xff388038,0x0300,0x0100); // A4 pullup
+            // Prepare backlight high before output-enable; this is not UART.
+            mask(GPIO,0x800,0x800);
+            mask(GPIO+8,0x800,0x800);
+        } else {
         // LCD DC=D0/global56, RESET=D1/global57. Prepare latches first.
         mask(GPIO + 4, 0x0300, 0x0200);
         mask(GPIO + 0x0c, 0x0300, 0x0300);
@@ -90,14 +117,15 @@ pub fn init(software_spi: bool) -> Result<(), &'static str> {
         mask(IOC + 0x1c4, 0x00f0, 0x0050);
         mask(IOC + 0x1c8, 0xff00, 0x5500);
         mask(IOC + 0x1cc, 0x00f0, 0x0050);
+        }
     }
     pause(10);
     unsafe {
-        mask(GPIO + 4, 0x200, 0);
+        mask(GPIO + 4, RESET, 0);
     }
     pause(10);
     unsafe {
-        mask(GPIO + 4, 0x200, 0x200);
+        mask(GPIO + 4, RESET, RESET);
     }
     pause(150);
     command(0x01, &[])?;
@@ -146,8 +174,10 @@ pub fn buttons() -> Result<u32, &'static str> {
     }
     let levels = unsafe { read_volatile((GPIO + 0x70) as *const u32) };
     let mut result = 0;
-    for (index, bit) in BUTTONS.iter().enumerate() {
-        if levels & (1 << bit) == 0 {
+    let gpio0 = if PCB {unsafe {read_volatile(0xff380070 as *const u32)}}else{0};
+    for (index, pin) in BUTTONS.iter().enumerate() {
+        let pressed=if *pin<32 {gpio0 & (1<<pin)==0}else{levels & (1<<(pin-32))==0};
+        if pressed {
             result |= 1 << index;
         }
     }
@@ -184,13 +214,16 @@ pub fn blit(x: u16, y: u16, w: u16, h: u16, data: &[u8]) -> Result<(), &'static 
 
 /// Bounded pad/controller readbacks for bring-up; no arbitrary MMIO access.
 pub fn status(field: u32) -> Result<u32, &'static str> {
+    if field==14 {return Ok(unsafe {read_volatile(0xff380070 as *const u32)});}
+    if field==15 {return Ok(unsafe {read_volatile((GPIO+8) as *const u32)} & 0x0c00);}
+    if field==16 {return Ok(unsafe {read_volatile(GPIO as *const u32)} & 0x0800);}
     if field == 13 {
         return Ok(SOFTWARE_SPI.load(Ordering::Relaxed) as u32);
     }
     let (address, bits) = match field {
         0 => (GPIO + 0x70, 0x0fc00c00),
         1 => (GPIO + 8, 0x0c00),
-        2 => (GPIO + 0x0c, 0x0ff0),
+        2 => (GPIO + 0x0c, 0x0ff8),
         3 => (IOC + 8, 0xff00),
         4 => (IOC + 0x14, 0xffff),
         5 => (IOC + 0x18, 0xffff),

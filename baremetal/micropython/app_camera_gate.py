@@ -6,7 +6,7 @@ import machine
 import time
 import gc
 assert machine.console_status()['usb_only']==1
-display.init('bench240')
+display.init('mini-pcb240')
 initial=display.status()
 camera.init()
 baseline=camera.settings()['rust_heap_bytes']

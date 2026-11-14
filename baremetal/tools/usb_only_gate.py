@@ -19,7 +19,7 @@ manifest=json.loads((root/'build/hello-manifest.json').read_text())
 image=root/'build/hello-download.bin'
 report={'scope':'DUT1 RAM-only db, no storage commands or REF/DUT0 UART writes','location':location,'serial':identity,'passed':False}
 try:
-    assert manifest['features'] in ('usb-only','bench-ui','app-ui') and manifest['usbSerial']==identity,'Wrong target build'
+    assert manifest['features'] in ('usb-only','mini-pcb-ui','app-ui') and manifest['usbSerial']==identity,'Wrong target build'
     assert hashlib.sha256(image.read_bytes()).hexdigest()==manifest['files']['build/hello-download.bin'],'Image changed'
     (folder/'build-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     tool=root/'.tools/rkdeveloptool/rkdeveloptool'

@@ -51,7 +51,7 @@ s.show('main_menu_screen',config)
 gc.collect()
 assert ui.status()['heap_bytes']==baseline
 pins=machine.console_status()
-assert pins['uart_pad_mux']==0 and pins['uart_gpio_output']==0
+assert pins['uart_pad_mux']==0 and pins['uart_gpio_output']==2048
 assert pins['uart_ier']==0 and pins['uart_irq_enabled']==0
 print('@@APP_UI_CAMERA_RESTORE',ui.status(),pins)
 print('@@PASS app-ui-frozen-camera')

@@ -1,0 +1,27 @@
+{
+  "authority": "User identified this PCB as the connected LCD/button assembly",
+  "sources": {
+    "/Users/samkorn/Documents/repos/seedsigner-luckfox-pico/hardware-kicad/pcb/seedsigner-luckfox-pico-mini/seedsigner-luckfox-pico-mini.kicad_pcb": "dfecf4313d26f009780517d6799dc424b449fb1d1759658e32b08d903d5e00cc",
+    "/Users/samkorn/Documents/repos/seedsigner-luckfox-pico/hardware-kicad/pcb/seedsigner-luckfox-pico-mini/seedsigner-luckfox-pico-mini.kicad_sch": "8fe799cb50c4c9c573efefe70ec0b0f8b8ee865c61928381f0994fc6dca5830b"
+  },
+  "lcd": {
+    "cs": 48,
+    "sclk": 49,
+    "mosi": 50,
+    "reset": 51,
+    "dc": 52,
+    "backlight": 43
+  },
+  "buttons": {
+    "KEY_UP": 57,
+    "KEY_DOWN": 59,
+    "KEY_LEFT": 56,
+    "KEY_RIGHT": 54,
+    "KEY_PRESS": 58,
+    "KEY1": 55,
+    "KEY2": 4,
+    "KEY3": 53
+  },
+  "backlightJumpers": "JP1 PWM43 bridged in design, JP2 fixed3V3 open",
+  "note": "Read-only extraction. Do not drive former DC56/RST57: those are joystick Left/Up nets."
+}

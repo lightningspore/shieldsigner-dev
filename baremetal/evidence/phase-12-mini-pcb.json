@@ -1,0 +1,186 @@
+{
+  "status": "physical-mini-pcb-lcd-all-eight-buttons-static-camera-passed",
+  "boardAuthority": {
+    "authority": "User identified this PCB as the connected LCD/button assembly",
+    "sources": {
+      "/Users/samkorn/Documents/repos/seedsigner-luckfox-pico/hardware-kicad/pcb/seedsigner-luckfox-pico-mini/seedsigner-luckfox-pico-mini.kicad_pcb": "dfecf4313d26f009780517d6799dc424b449fb1d1759658e32b08d903d5e00cc",
+      "/Users/samkorn/Documents/repos/seedsigner-luckfox-pico/hardware-kicad/pcb/seedsigner-luckfox-pico-mini/seedsigner-luckfox-pico-mini.kicad_sch": "8fe799cb50c4c9c573efefe70ec0b0f8b8ee865c61928381f0994fc6dca5830b"
+    },
+    "lcd": {
+      "cs": 48,
+      "sclk": 49,
+      "mosi": 50,
+      "reset": 51,
+      "dc": 52,
+      "backlight": 43
+    },
+    "buttons": {
+      "KEY_UP": 57,
+      "KEY_DOWN": 59,
+      "KEY_LEFT": 56,
+      "KEY_RIGHT": 54,
+      "KEY_PRESS": 58,
+      "KEY1": 55,
+      "KEY2": 4,
+      "KEY3": 53
+    },
+    "backlightJumpers": "JP1 PWM43 bridged in design, JP2 fixed3V3 open",
+    "note": "Read-only extraction. Do not drive former DC56/RST57: those are joystick Left/Up nets."
+  },
+  "features": "app-ui (native-ui + mini-pcb-ui)",
+  "downloadSha256": "f0faa994a0cc4a304040548f6aa9c782e919beeb60b4872241b2dbdc1f13a078",
+  "boot": "logs/phase-11/dut1-20261114T212458Z",
+  "gates": {
+    "whiteFinal": {
+      "path": "logs/phase-11/usb-20261114T212601.408627Z",
+      "serialSha256": "1bbaef30008109d930a136ffcc3bd9412e83a77860e3151f85346f5e4edc481b",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/mini_pcb_lcd_gate.py",
+        "scriptSha256": "f86d58f69a52ac14089042837852f2532abce9a8a69af8c241b51561366e7ad5",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "homeFinal": {
+      "path": "logs/phase-11/usb-20261114T212602.638892Z",
+      "serialSha256": "3c32369f033820d9a35485410f12010061bbd304a09c4c61795eae10cf7a7e19",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/mini_pcb_home_gate.py",
+        "scriptSha256": "637fa1e6127f78abc115fdc4fbe126ea7761ce0ef1fba6c4156ff55b8a4c1777",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "fixtureGuards": {
+      "path": "logs/phase-11/usb-20261114T212603.765192Z",
+      "serialSha256": "899a6e560acb41d96946153d20207571b00af81cbd11ea28c03e87f8aeb3cdb6",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/mini_pcb_guards_gate.py",
+        "scriptSha256": "58c6c8aa63d3a0a56aadea7e2bece7c3199f68f4a50e9e1323147e2a95f74c45",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "ramSettings": {
+      "path": "logs/phase-11/usb-20261114T212604.276749Z",
+      "serialSha256": "0d47093de58a097ea037b345e0a38d8e73f115134272343ed5d37c67695322ce",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/settings_store_gate.py",
+        "scriptSha256": "053a10fa9df8a365b463dca776a71a59af543ce068923a7083155eacbeaa48f9",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "cameraHomeRestore": {
+      "path": "logs/phase-11/usb-20261114T212605.249454Z",
+      "serialSha256": "3f4c15fdb0f9cd999b696a5f2dbff2988f9d1467dbd88a2a6f195b6ff4c3520d",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/app_ui_gate.py",
+        "scriptSha256": "cb98f285cd6699265a5503104fcfb0b29d650b0673fb297bfda60421d2635b93",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "physicalButtons": {
+      "path": "logs/phase-11/usb-20261114T211837.412363Z",
+      "serialSha256": "31da17bce55a8d3b9bc19200c15fa47325279e7461185f6841fb00b2edf95cc1",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dut11",
+        "usbSerial": "rv1103-dut1",
+        "location": "1-1",
+        "script": "baremetal/micropython/mini_pcb_buttons_monitor.py",
+        "scriptSha256": "c5e32ebda9af989d5be90b3d96d9c446f6d73200d251412d7ee48406c28a2fe1",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "whiteOptical": {
+      "path": "logs/phase-11/usb-20261114T211556.746695Z",
+      "serialSha256": "d6d4332220e59330b98490b8f0e42c96f488719eb9227f0aa83734c5271d29ab",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/logs/phase-12/native-home-observer.py",
+        "scriptSha256": "445e370f166c34910feef43eef7a47350eb5a9c680c50ec9541fa8ef125c16ac",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "homeOptical": {
+      "path": "logs/phase-11/usb-20261114T211711.731775Z",
+      "serialSha256": "09ce7f6a5b3c42fa3abd885fb03ee23fbc8c704fef6a77ff345d5026df43e48d",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/logs/phase-12/native-home-observer.py",
+        "scriptSha256": "445e370f166c34910feef43eef7a47350eb5a9c680c50ec9541fa8ef125c16ac",
+        "completed": true,
+        "traceback": false
+      }
+    },
+    "cameraOptical": {
+      "path": "logs/phase-11/usb-20261114T212249.208241Z",
+      "serialSha256": "5493d8c62f3454f25d68caaf87fce46c6d3065c850ea6353353240c334a1d906",
+      "result": {
+        "transport": "USB CDC",
+        "port": "/dev/cu.usbmodemrv1103_dev_0011",
+        "usbSerial": "rv1103-dev-001",
+        "location": "2-1",
+        "script": "baremetal/logs/phase-12/native-home-observer.py",
+        "scriptSha256": "445e370f166c34910feef43eef7a47350eb5a9c680c50ec9541fa8ef125c16ac",
+        "completed": true,
+        "traceback": false
+      }
+    }
+  },
+  "physicalInputSeenMask": 255,
+  "buttonEvidenceEarlierImage": "000eb06d7f03807909857ed945faba862ac131f77f9f81c778324d40d269d4ae",
+  "sameDisplayDriverSource": "5a76a50cb0b11408563556c1e61be13d207486c04f3587a0a34fb3b761811395",
+  "opticalImages": [
+    "logs/phase-12/mini-pcb-white-optical.png",
+    "logs/phase-12/mini-pcb-home-optical.png",
+    "logs/phase-12/mini-pcb-camera-optical.png"
+  ],
+  "observation": "White, Home icons/orange tile and captured camera image visible on physical LCD; all eight physical input bits observed during user exercise",
+  "uartAfterLcdInit": {
+    "mux": 0,
+    "ier": 0,
+    "irq": 0,
+    "gpioOutput": 2048,
+    "reason": "GPIO43 backlight, not UART mode"
+  },
+  "hostTests": 36,
+  "settingsStore": "Original data validation/update/getters plus explicit RAM/native policy; no persistence or full Controller startup",
+  "storageWrites": false,
+  "cadEdits": false,
+  "remaining": [
+    "Continuous camera preview, frame ownership and measured FPS",
+    "Full original Controller/View and crypto/QR/storage integration",
+    "Complete app boot and end-to-end timing"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "source": "src/seedsigner/models/settings.py",
+  "fileSha256": "9d77c292ecb6760bbc176c5355958b8a85f6e651160e65cc58e3066371602b40",
+  "originalMethodSha256": {
+    "update": "2098638b4395162c2ab6ee9d032b4911fb9b679db0b5e37b9145e52efa37ed81",
+    "get_value": "37531f3d52af8b36daae642865d9e871116e148cc8c6cf9d834c9a4a4b3857a9",
+    "get_value_display_name": "6207848710752a4665b70757e2a72e1eae1ebab9ec7ec4d48c6658d8fc06c5e5",
+    "get_multiselect_value_display_names": "2eefed178cbc6820c81a7b9526ed5057bc03a3393518b648287772fb2ed1212c",
+    "get_platform_default_display_config": "b01a13dc27f322735a5c7c88f11afbe665e8ac58fa2d6a09843c86ac7be65d1f",
+    "get_platform_default_camera_rotation": "8415f07323d0c2eab62c9be9515d00c57e0d583cfc5fbc956c555fde0d35f2a3",
+    "set_value": "78606418e323bee6d7201016d722f9a6958c6718e538b8d3f982a74713b475a7"
+  },
+  "transformations": [
+    "Strip annotations and logging only in data algorithms",
+    "Keep complete set_value validation/equality prefix; replace Linux side effects with native policy",
+    "update preflights native actions and uses native defaults in missing/empty backfill",
+    "Native singleton uses object.__new__(cls): inherited __new__ is not exposed by MicroPython; no file reads/timers, explicit RAM-only save and locale capability"
+  ],
+  "outputSha256": "0b940b7be9fd3b2db493218cfcd7932390988a4097f59df06df48d16786bfea7"
+}

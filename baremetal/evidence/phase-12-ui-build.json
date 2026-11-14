@@ -1,0 +1,64 @@
+{
+  "status": "cross-compile-only-not-linked-or-hardware-tested",
+  "objects": 542,
+  "archiveSha256": "4cc5d55188dd9cc867082573e919f08cb669dd729dc1c94a938218acae0c30c5",
+  "manifestSha256": "28570fa3aecfef5dc25deb16375c57c58d813e5cf8058024593d4b4b7605e0de",
+  "sources": {
+    "application": {
+      "url": "https://github.com/3rdIteration/seedsigner.git",
+      "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+    },
+    "screens": {
+      "url": "https://github.com/kdmukai/seedsigner-lvgl-screens.git",
+      "commit": "33ddc0763c31b5ae0b6380147ba624a7fc0c9273"
+    },
+    "lvgl": {
+      "url": "https://github.com/lvgl/lvgl.git",
+      "commit": "85aa60d18b3d5e5588d7b247abf90198f07c8a63"
+    }
+  },
+  "toolchain": {
+    "release": "14.3.rel1",
+    "directory": "arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi",
+    "archive": "arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi.tar.xz",
+    "url": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi.tar.xz",
+    "checksumUrl": "https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-darwin-arm64-arm-none-eabi.tar.xz.sha256asc",
+    "sha256": "30f4d08b219190a37cded6aa796f4549504902c53cfc3c7e044a8490b6eba1f7",
+    "scope": "Local freestanding C++ screen-library build; no system installation or firmware/toolchain replacement"
+  },
+  "patches": {
+    "address-success-details.patch": "10ec72ea95fe91ed73cd819b1547f7edb6b264be6841531add5639cd34bd9c86",
+    "descriptor-read-first.patch": "355752c9574d1b05dcf741827985a34cf9675f966b5a8b7dc92ef3782dd7cea6",
+    "grid-back-navigation.patch": "ca78a795814ba406cdda0c7467d7c553284f2113eb6e9304d55398797185374e",
+    "grid-selected-color.patch": "4a4d114be2055eb484684f129aedbc19c44ff52092c90a23a4611c1429806a75",
+    "high-fee-markers.patch": "bacbb5ee650c303f2d4fed6e2195eb92f2931cae2e52c87a2583164e430c969e",
+    "keyboard-key3-save.patch": "5c9b1f09cdb3808db9389efdcd1791c19344bb14df689dd617f13fce2b128e06",
+    "passphrase-nav-aux.patch": "2a8802181c200c461bc8532790aef9932d6e9d466fe95385efa08b78550a18ae",
+    "passphrase-nul.patch": "1cc932e8f29f21b06e312403e90044dcaa297f533447eaf7eaa819a102e6078d",
+    "review-text.patch": "a4e4b6a44f7adc133c72aea039628fac25a67518161111620472e397e5a98840",
+    "scaffold-capacity.patch": "7a8bbec8d9ce648532458d340c85914ce7c847b20194c9d082d85ec1133e9c32",
+    "screensaver-controller-entry.patch": "84af8e67eff83592b71c60adfcda2b687a6ef8a04e01b46ccfc90383303d78d0",
+    "status-custom-visibility.patch": "9af82032819977845fbca64f68e283a3bc4bc8d81b075913dda0bd6823bb2d13",
+    "transcription-matrix.patch": "46f61b0d24845066143ffced05c9712d3777249fdcc5100d2974c3c8d49d3eb2",
+    "zz-fork-branding.patch": "292fc3201f078957f1b1e8f816915e6584a840aa87c3d2c68e11980985de32a0",
+    "zzz-transcription-border.patch": "88afa8c8213dde855cfbaefdce999bb252b97e26979cc350f367d783648a1565",
+    "zzzz-network-font.patch": "3e52bf0fce0d4803cb54adffc32c2fea8b03061b7fc2f8986b7f714637870e64",
+    "zzzz-transcription-alignment.patch": "0890b75874c7991d9a08161ac24cfb5562bc88d69df9db415502a20bbbfeb7bd"
+  },
+  "portSources": {
+    "ui/syscalls.c": "c39de455b8ad7d141a0ca304691d9189ad804a028468f6276a8af45e8154c42a",
+    "ui/bridge.cpp": "9f185952169fc8db15538c2344caf102b8cdfbbf75b64f8bd5c49a3c17fcb645",
+    "ui/lv_conf.h": "9579bb5e7f987b0f0efa26199ad0b3b9350d89ccd2df4ab4e0aa1580dc318e3d"
+  },
+  "adapterHeaders": {
+    "nul_text.h": "83f5f572b4b02e4756cc3fabb41b94b85d3359d44a8293b4a67360b2fb7d6542",
+    "text_review.h": "6a60e40e58cd41d27e1a49cef3ea41a782f132cfc56aab851b3950d06e6fa0dc",
+    "branding.h": "3afaba63584ba597109e79d11f3727f4ee9b4535a90fc4fd8b22def146097e38",
+    "transcription_matrix.h": "f30d48f4fb8fee346a29f5078570c5806077b4288fa9f6b460fcc1a6543b0a88",
+    "grid_style.h": "e8f293e31a652dba9202979ea16f888709ee78267bd0e5335b9454c871b72834",
+    "lv_conf.h": "1a5fdf74f2a35b694634040b9a0a643f4bbee84b4c381fb42fe60fb089596264",
+    "live_preview.h": "047457e02e0271a64dd81fd1b31d125957d39c4e14c42b4b9c912e87db4627b3"
+  },
+  "next": "Read ui/README.md; implement allocator/constructors/unwind/link and validate memory before hardware loading",
+  "storageWrites": false
+}

@@ -27,6 +27,12 @@ static mp_obj_t display_blit(size_t n,const mp_obj_t *args){
     checked(bm_display(2,v[0],v[1],v[2],v[3],data.buf,data.len));return mp_const_none;
 }
 static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(display_blit_obj,5,5,display_blit);
+static mp_obj_t display_nv12(mp_obj_t frame){
+    mp_buffer_info_t data;mp_get_buffer_raise(frame,&data,MP_BUFFER_READ);
+    if(data.len!=640*480*3/2)mp_raise_ValueError(MP_ERROR_TEXT("640x480 NV12 frame required"));
+    checked(bm_display(5,0,0,0,0,data.buf,data.len));return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(display_nv12_obj,display_nv12);
 static mp_obj_t display_buttons(void){int value=bm_display(3,0,0,0,0,NULL,0);checked(value);return MP_OBJ_NEW_SMALL_INT(value);}
 static MP_DEFINE_CONST_FUN_OBJ_0(display_buttons_obj,display_buttons);
 static mp_obj_t display_status(void){
@@ -41,6 +47,7 @@ static const mp_rom_map_elem_t globals_table[]={
     {MP_ROM_QSTR(MP_QSTR_init),MP_ROM_PTR(&display_init_obj)},
     {MP_ROM_QSTR(MP_QSTR_fill),MP_ROM_PTR(&display_fill_obj)},
     {MP_ROM_QSTR(MP_QSTR_blit),MP_ROM_PTR(&display_blit_obj)},
+    {MP_ROM_QSTR(MP_QSTR_blit_nv12),MP_ROM_PTR(&display_nv12_obj)},
     {MP_ROM_QSTR(MP_QSTR_buttons),MP_ROM_PTR(&display_buttons_obj)},
     {MP_ROM_QSTR(MP_QSTR_status),MP_ROM_PTR(&display_status_obj)},
     {MP_ROM_QSTR(MP_QSTR_WIDTH),MP_ROM_INT(240)},

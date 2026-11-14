@@ -1,0 +1,17 @@
+#ifndef LV_CONF_H
+#define LV_CONF_H
+#define LV_COLOR_DEPTH 16
+#define LV_USE_OS LV_OS_NONE
+#define LV_USE_STDLIB_MALLOC LV_STDLIB_CLIB
+#define LV_USE_STDLIB_STRING LV_STDLIB_CLIB
+#define LV_USE_STDLIB_SPRINTF LV_STDLIB_CLIB
+#define LV_USE_TINY_TTF 1
+#define LV_USE_BIDI 1
+#define LV_USE_ARABIC_PERSIAN_CHARS 1
+#define LV_USE_QRCODE 1
+#define LV_USE_LOG 0
+#define LV_USE_DRAW_SW_ASM LV_DRAW_SW_ASM_NONE
+#endif
+// Bare-metal port uses only compiled-in fonts/assets, never host files.
+#undef LV_TINY_TTF_FILE_SUPPORT
+#define LV_TINY_TTF_FILE_SUPPORT 0

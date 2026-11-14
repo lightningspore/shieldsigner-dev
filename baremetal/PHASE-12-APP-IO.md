@@ -101,3 +101,24 @@ Cold-power benchmarking remains deferred by the user. Standalone USB/app SD
 packaging, real app boot/navigation and camera preview readiness remain open.
 
 Checkpoint receipt: [evidence/phase-12-app-io.json](evidence/phase-12-app-io.json).
+
+
+## Local native camera adapter checkpoint
+
+`display.blit_nv12(frame)` accepts the camera's read-only640x480 NV12 buffer,
+center-crops480x480 and downsamples to240x240 using integer BT.601 RGB565.
+It uses a480-byte row buffer, with USB servicing between SPI chunks and no
+Rust frame allocation. Two captures on DUT1 passed without LCD reinitialization:
+233/232ms native conversion plus SPI submission; capture itself remained about
+5.26s. These are bounded operations, not continuous preview FPS or app startup.
+The GPIO/mux/divisor readbacks stayed unchanged and Rust heap usage returned
+to baseline. Two color/crop/bounds host tests and19 bring-up tests pass.
+Receipt: [evidence/phase-12-camera-blit.json](evidence/phase-12-camera-blit.json).
+The panel's visible output is still unconfirmed.
+
+The existing locked SeedSigner LVGL screen corpus now cross-compiles to a
+542-object archive with the local official Arm C++/newlib toolchain. See
+[ui/README.md](ui/README.md). This is build preparation only: the archive is
+not linked into either running firmware, and no native screen/controller pass
+is claimed. Next are runtime allocation/constructors/unwind support, image and
+stack layout validation, a MicroPython interface and real app screen tests.

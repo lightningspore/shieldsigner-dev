@@ -1284,3 +1284,19 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_rese
 [tasks."baremetal:app:buttons:gate"]
 description = "Run the frozen app button adapter and display guard checks on DUT1"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/app_buttons_gate.py --serial rv1103-dut1 --timeout 12"
+
+[tasks."baremetal:cxx:setup"]
+description = "Prepare pinned official Arm C++/newlib toolchain in the local ignored tools cache"
+run = "uv run --python 3.13 python baremetal/tools/setup_cxx.py"
+
+[tasks."baremetal:app:rgb:check"]
+description = "Verify camera color conversion, crop/stride, bounds and RGB565 byte order"
+run = ["mise exec rust@1.93.1 -- rustc --edition 2021 --test baremetal/src/rgb565.rs -o baremetal/build/rgb565-tests", "baremetal/build/rgb565-tests"]
+
+[tasks."baremetal:app:camera:gate"]
+description = "Prove local DUT1 camera capture and native RGB565 SPI blit without display reinit"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/app_camera_gate.py --serial rv1103-dut1 --timeout 30"
+
+[tasks."baremetal:ui:library:build"]
+description = "Cross-compile the existing locked SeedSigner LVGL screen library for the native runtime"
+run = "uv run --python 3.13 python baremetal/tools/build_ui.py"

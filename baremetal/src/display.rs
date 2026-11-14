@@ -229,3 +229,13 @@ fn software_write(data: &[u8]) {
         mask(GPIO + 4, 1, 1);
     }
 }
+
+/// Consume the bounded camera's read-only NV12 view synchronously. No frame copy
+/// or Rust heap allocation; the caller keeps the source view alive for this call.
+pub fn blit_nv12(frame:&[u8])->Result<(),&'static str> {
+    if !READY.load(Ordering::Acquire) || frame.len()!=crate::rgb565::FRAME_BYTES {return Err("lcd-nv12-frame");}
+    window(0,0,240,240)?;
+    let mut row=[0u8;480];
+    for y in 0..240 {crate::rgb565::center_crop_row(frame,y,&mut row)?;tx(&row)?;}
+    Ok(())
+}

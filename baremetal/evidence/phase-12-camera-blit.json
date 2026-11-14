@@ -1,0 +1,50 @@
+{
+  "status": "bounded-native-camera-blit-hardware-passed",
+  "scope": "Two local DUT1 captures converted to RGB565 and submitted over SPI without LCD reinitialization. Optical validation and full app remain open.",
+  "usbSerial": "rv1103-dut1",
+  "features": "bench-ui",
+  "downloadSha256": "f5b274aa63fde0b4b3d9fe5ad016dee0900e7308ed02f3ce8ebd96fbbc11b1ea",
+  "bootManifestSha256": "008e4ea9bba379188b622657493846175503c39606f54170c26bb5f9f4ccc64a",
+  "gate": "logs/phase-11/usb-20261114T201402.499624Z",
+  "serialSha256": "5400155967abaaa36d64aa5942c8992c1a3b685135b5544c0b5ec341c725e64d",
+  "result": {
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/app_camera_gate.py",
+    "scriptSha256": "a6ef4ccd6c2fe23943449f47195e4ef52344480a05d3a79188e492c6853c45db",
+    "completed": true,
+    "traceback": false
+  },
+  "captureUs": [
+    5255888,
+    5256468
+  ],
+  "nativeBlitMs": [
+    233,
+    232
+  ],
+  "firstIspUs": [
+    703915,
+    703286
+  ],
+  "rustHeapReturnedToBaseline": true,
+  "displayRegistersPreserved": true,
+  "lcdReinitializedBetweenCaptures": false,
+  "physicalKeyMask": 64,
+  "hostTests": {
+    "rgb565": 2,
+    "bringup": 19
+  },
+  "sourceHashes": {
+    "src/rgb565.rs": "67f43edd82408087567aaf0da2997c21deedcefdc95f280cfc215aeace59e1c1",
+    "src/display.rs": "95a2f2c553c89911d910097fbd73fa1f976ffa394ccff74c585df57466e37319",
+    "micropython/moddisplay.c": "bfd1d318e9990b995815f0052349780dd5754f4f86d5f4e8d9e705cf71850f10",
+    "micropython/app_camera_gate.py": "a6ef4ccd6c2fe23943449f47195e4ef52344480a05d3a79188e492c6853c45db"
+  },
+  "storageWrites": false,
+  "continuousPreviewFps": "not measured",
+  "visibleLcd": "unconfirmed",
+  "fullApp": "not running"
+}

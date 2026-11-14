@@ -33,7 +33,7 @@ def main():
     marker = b'\n@@CONSOLE_DONE ' + token.encode() + b'\r\n'
     payload = script + b"\nprint('@@CONSOLE_DONE " + token.encode() + b"')\n\x04"
     root = Path(__file__).resolve().parents[1]
-    folder = root / 'logs/phase-11' / ('usb-' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'))
+    folder = root / 'logs/phase-11' / ('usb-' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S.%fZ'))
     folder.mkdir(parents=True)
     report = {'transport': 'USB CDC', 'port': port.device, 'usbSerial': port.serial_number,
               'location': port.location, 'script': str(args.script),

@@ -154,6 +154,7 @@ unsafe extern "C" fn bm_display(op:u32,x:u32,y:u32,w:u32,h:u32,data:*const u8,le
                 crate::display::blit(x as u16,y as u16,w as u16,h as u16,core::slice::from_raw_parts(data,len)).map_or(-1,|_|0),
             3=>crate::display::buttons().map_or(-1,|v|v as i32),
             4=>crate::display::status(x).map_or(-1,|v|v as i32),
+            5 if len==crate::rgb565::FRAME_BYTES=>crate::display::blit_nv12(core::slice::from_raw_parts(data,len)).map_or(-1,|_|0),
             _=>-1,
         }
     }

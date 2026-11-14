@@ -17,6 +17,8 @@ mod usb_descriptors;
 mod usb_control;
 #[cfg(feature = "bench-ui")]
 mod display;
+#[cfg(feature = "bench-ui")]
+mod rgb565;
 
 #[cfg(feature = "camera-test")]
 mod camera;

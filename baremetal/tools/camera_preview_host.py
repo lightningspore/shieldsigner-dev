@@ -26,6 +26,14 @@ finally:
     camera.stop_preview()
 '''
 STATE={'png':b'','info':{}}
+def sharpness(w,h,g):
+    # Mean squared Laplacian over the central half of the frame: higher = sharper.
+    total=0;count=0
+    for y in range(h//4,3*h//4):
+        r=y*w
+        for x in range(w//4,3*w//4):
+            v=4*g[r+x]-g[r+x-1]-g[r+x+1]-g[r+x-w]-g[r+x+w];total+=v*v;count+=1
+    return round(total/count,1)
 def png(w,h,gray):
     raw=b''.join(b'\0'+gray[r*w:(r+1)*w] for r in range(h))
     chunk=lambda t,d:struct.pack('>I',len(d))+t+d+struct.pack('>I',zlib.crc32(t+d)&0xffffffff)
@@ -51,7 +59,7 @@ def main():
     s.write(b'\x03\x02\r');time.sleep(0.3);s.reset_input_buffer();s.write(b'\x05');time.sleep(0.2)
     for i in range(0,len(script),128):s.write(script[i:i+128].encode());time.sleep(0.01)
     s.write(b'\x04');print('preview: http://127.0.0.1:%d/'%a.port,flush=True)
-    buf=b'';decoded=[]
+    buf=b'';decoded=[];best=0
     try:
         while True:
             buf+=s.read(65536)
@@ -59,11 +67,11 @@ def main():
                 line,buf=buf.split(b'\n',1);line=line.strip()
                 if line.startswith(b'@@F '):
                     _,n,dt,exp,rest=line.split(b' ',4);d,hexdata=rest.rsplit(b' ',1)
-                    try:STATE['png']=png(320,240,binascii.unhexlify(hexdata))
+                    try:gray=binascii.unhexlify(hexdata);STATE['png']=png(320,240,gray);sharp=sharpness(320,240,gray);best=max(best,sharp)
                     except Exception:continue
                     d=d.decode()
                     if d!='None':decoded.append(d);print('DECODED',n.decode(),d,flush=True)
-                    STATE['info']={'frame':int(n),'decode_ms':int(dt),'exposure':exp.decode(),'decode':d,'decoded_total':len(decoded),'last_decoded':decoded[-1] if decoded else None}
+                    STATE['info']={'sharpness':sharp,'best_sharpness':best,'frame':int(n),'decode_ms':int(dt),'exposure':exp.decode(),'decode':d,'decoded_total':len(decoded),'last_decoded':decoded[-1] if decoded else None}
                 elif line and not line.startswith(b'==='):print('dev:',line.decode(errors='replace')[:200],flush=True)
     except KeyboardInterrupt:pass
     finally:s.write(b'\x03');time.sleep(0.5);s.close()

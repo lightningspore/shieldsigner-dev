@@ -33,10 +33,8 @@ def cases(a):
         'base64-psbt':(lambda:qr_screen.set_text(base64.b64encode(raw).decode(),'PSBT base64 %d bytes'%len(raw)),{'view':'PSBTSelectSeedView','psbt_sha256':psbt_digest(raw)}),
     }
 
-# base64-psbt: 440-char static QR (~73 modules). Optical limit on the current
-# fixed-focus lens at full-monitor distance: frame is soft, ~3.5 px/module, and
-# host zxing-cpp also fails on the exported frame. Opt-in stress case only.
-DEFAULT=['address','seedqr','ur-psbt']
+# base64-psbt: dense 440-char static QR; decodes once the lens is focused.
+DEFAULT=['address','seedqr','ur-psbt','base64-psbt']
 def run_case(name,show,expect,timeout):
     show();time.sleep(1.5)
     gate=(BASE/'micropython/optical_scan_gate.py').read_text()
@@ -54,8 +52,8 @@ def run_case(name,show,expect,timeout):
     return {'case':name,'passed':not bad,'mismatch':bad,'result':got,'evidence':evidence.group(1)}
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('cases',nargs='*');ap.add_argument('--fps',type=float,default=6);ap.add_argument('--fragment',type=int,default=60);ap.add_argument('--timeout',type=int,default=60)
-    a=ap.parse_args();table=cases(a);names=a.cases or DEFAULT
+    ap=argparse.ArgumentParser();ap.add_argument('cases',nargs='*');ap.add_argument('--fps',type=float,default=6);ap.add_argument('--fragment',type=int,default=60);ap.add_argument('--timeout',type=int,default=60);ap.add_argument('--size',type=float,default=75,help='QR height %% of screen; 94 puts module edges in soft lens corners')
+    a=ap.parse_args();qr_screen.SIZE=a.size;table=cases(a);names=a.cases or DEFAULT
     results=[]
     for name in names:
         show,expect=table[name];r=run_case(name,show,expect,a.timeout);results.append(r)

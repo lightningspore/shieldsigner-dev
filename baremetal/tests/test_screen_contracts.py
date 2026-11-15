@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 import unittest
 sys.path.append(str(Path(__file__).resolve().parents[1]/'app'))
+sys.path.append(str(Path(__file__).resolve().parents[2]/'firmware/lvgl-app/python'))
 from seedsigner_port import screen_contracts as port
 from seedsigner_port.screen_defaults import DEFAULTS
 root=Path(__file__).resolve().parents[2]
@@ -75,7 +76,7 @@ class ContractsTest(unittest.TestCase):
         classes={n.name:n for file in ('screen.py','seed_screens.py') for n in ast.parse((app/file).read_text()).body if isinstance(n,ast.ClassDef)}
         reviewed=set().union(*(set(v) for v in APP_DEFAULTS.values()))
         # Rebuild actual field defaults including warning factory buttons.
-        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen'):
+        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen'):
             node=classes[name]
             node.body=[n for n in node.body if isinstance(n,ast.AnnAssign) and n.target.id in reviewed]
             for n in node.body:n.annotation=ast.Constant('reviewed field')
@@ -83,6 +84,8 @@ class ContractsTest(unittest.TestCase):
             exec(compile(ast.fix_missing_locations(ast.Module(body=[node],type_ignores=[])),'<original app fields>','exec'),scope)
         for name in APP_DEFAULTS:
             cases=[{}, {'button_data':['Done','Cancel'],'text':'Public test','selected_button':1}]
+            if name=='SeedAddPassphraseScreen':cases=[dict(c,passphrase='public  \0\\value',initial_keyboard='ABC') for c in cases]
+            if name=='SeedReviewPassphraseScreen':cases=[dict(c,passphrase='public  \0\\value',fingerprint_without='73c5da0a',fingerprint_with='b4e3f5ed') for c in cases]
             if name in ('SeedFinalizeScreen','SeedOptionsScreen'):cases=[dict(c,fingerprint='73c5da0a') for c in cases]
             for arguments in cases:
                 actual=port.configuration(name,arguments,scope['_'])

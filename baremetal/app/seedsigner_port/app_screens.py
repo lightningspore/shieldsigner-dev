@@ -12,6 +12,9 @@ class NativeScreen:
     def display(self):
         from seedsigner_port.renderer import Renderer
         return Renderer.get_instance().run_screen(type(self),self.args)
+class SeedAddPassphraseScreen(NativeScreen):pass
+from seedsigner_port.app_screen_defaults import KEYBOARD_LABELS
+for _name,_label in KEYBOARD_LABELS.items():setattr(SeedAddPassphraseScreen,_name,_label)
 class ScanScreen(NativeScreen):
     def display(self):
         from seedsigner_port.controller import Controller

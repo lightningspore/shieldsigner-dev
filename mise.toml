@@ -1536,3 +1536,11 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:camera:snapshot"]
 description = "Capture a checksummed native luma snapshot in bounded row chunks; explicit USB serial required"
 run = "uv run --python 3.13 --with pyserial==3.5 --with pillow==12.2.0 python baremetal/tools/capture_luma.py"
+
+[tasks."baremetal:app:passphrase:prepare"]
+description = "Prepare reviewed original passphrase screens and public independent fingerprint oracle"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_app_screens.py", "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_passphrase_flow_gate.py"]
+
+[tasks."baremetal:app:passphrase:dut1:gate"]
+description = "Verify original accept/edit/discard/skip passphrase flows with actual native key events"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/passphrase_flow_gate.py --serial rv1103-dut1 --timeout 35"

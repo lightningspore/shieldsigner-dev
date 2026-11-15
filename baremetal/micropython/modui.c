@@ -14,6 +14,7 @@ extern int bm_nativeui_tick(void);
 extern uint32_t bm_nativeui_stat(uint32_t);
 extern const char *bm_nativeui_error(void);
 extern const char *bm_nativeui_event_text(void);
+extern unsigned bm_nativeui_event_length(void);
 extern void bm_nativeui_consume_event(void);
 static void checked(int value){if(value<0)mp_raise_msg_varg(&mp_type_RuntimeError,MP_ERROR_TEXT("Native UI: %s"),bm_nativeui_error());}
 static mp_obj_t ui_init(void){checked(bm_ui_init());return mp_const_none;}
@@ -41,7 +42,7 @@ static mp_obj_t ui_status(void){
 static MP_DEFINE_CONST_FUN_OBJ_0(ui_status_obj,ui_status);
 static mp_obj_t ui_event(void){
     unsigned kind=bm_nativeui_stat(2);if(!kind)return mp_const_none;
-    mp_obj_t values[]={mp_obj_new_int_from_uint(kind),mp_obj_new_int_from_uint(bm_nativeui_stat(3)),mp_obj_new_str(bm_nativeui_event_text(),strlen(bm_nativeui_event_text()))};
+    mp_obj_t values[]={mp_obj_new_int_from_uint(kind),mp_obj_new_int_from_uint(bm_nativeui_stat(3)),mp_obj_new_str(bm_nativeui_event_text(),bm_nativeui_event_length())};
     mp_obj_t result=mp_obj_new_tuple(3,values);bm_nativeui_consume_event();return result;
 }
 static MP_DEFINE_CONST_FUN_OBJ_0(ui_event_obj,ui_event);

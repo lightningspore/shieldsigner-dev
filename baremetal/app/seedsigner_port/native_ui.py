@@ -72,13 +72,14 @@ class ScreenSession:
         from seedsigner_port.screen_contracts import configuration
         builder,config=configuration(screen_class,arguments,translate)
         self.show(builder,config)
-        self._button_count=len(config['button_list'])
+        self._button_count=len(config.get('button_list',[]))
+        self._screen_name=screen_class if isinstance(screen_class,str) else screen_class.__name__
 
     def screen_result(self, event):
         from seedsigner_port.screen_contracts import result
         if self._button_count is None:
             raise RuntimeError("Show an adapted app screen before interpreting its result")
-        return result(event,self._button_count)
+        return result(event,self._button_count,self._screen_name)
 
     def run_screen(self, screen_class, arguments, timeout_ms=None, translate=None):
         self.show_screen(screen_class,arguments,translate)

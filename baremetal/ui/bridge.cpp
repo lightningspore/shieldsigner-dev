@@ -7,6 +7,7 @@
 #include "gui_constants.h"
 #include "input_profile.h"
 #include "overlay_manager.h"
+#include "nul_text.h"
 #include <cstring>
 #include <exception>
 #include <string>
@@ -19,24 +20,48 @@ static uint8_t pixels[240*20*2] __attribute__((aligned(16)));
 static uint32_t key=LV_KEY_ENTER;
 static bool pressed=false;
 static uint32_t event_kind=0,event_value=0,frames=0,flushes=0;
+static unsigned event_length=0;
+static bool passphrase_screen=false;
 static char event_text[256]={0},error[256]={0};
 static bool io_error=false,initialized=false;
 static void copy_text(char *out,const char *value){
     if(!value)value="";size_t n=strlen(value);if(n>255)n=255;
     memcpy(out,value,n);out[n]=0;
 }
-extern "C" void seedsigner_lvgl_on_button_selected(uint32_t index,const char*){event_kind=1;event_value=index;}
-extern "C" void seedsigner_lvgl_on_text_entered(const char *text){
-    // Screen registration must never silently truncate a passphrase/text result.
-    // Wider text workflows need their reviewed adapter before this bound grows.
-    if(text&&strlen(text)>=sizeof(event_text)){
-        event_kind=0;io_error=true;copy_text(error,"Native text event exceeds current255-byte limit");return;
+// Same actual widget snapshot used by the existing native Linux host. Preserve
+// NUL bytes and text-at-Back; no selected result or text is synthesized.
+static lv_obj_t *find_textarea(lv_obj_t *node){
+    if(lv_obj_check_type(node,&lv_textarea_class))return node;
+    for(uint32_t i=0;i<lv_obj_get_child_count(node);++i){
+        if(auto *found=find_textarea(lv_obj_get_child(node,i)))return found;
     }
-    event_kind=2;copy_text(event_text,text);
+    return nullptr;
 }
-extern "C" void seedsigner_lvgl_on_aux_key(const char *text){event_kind=3;copy_text(event_text,text);}
-extern "C" void seedsigner_lvgl_on_qr_brightness(uint8_t value){event_kind=4;event_value=value;}
-extern "C" void seedsigner_lvgl_on_qr_density(uint8_t value){event_kind=5;event_value=value;}
+static void text_event(uint32_t kind,uint32_t value,const char *text,size_t length){
+    if(length>=sizeof(event_text)){
+        event_kind=0;event_length=0;io_error=true;
+        copy_text(error,"Native text event exceeds current255-byte limit");return;
+    }
+    event_kind=kind;event_value=value;event_length=length;
+    if(length)memcpy(event_text,text,length);event_text[length]=0;
+}
+static void passphrase_event(bool back){
+    auto *area=find_textarea(lv_screen_active());
+    if(!area){event_kind=0;io_error=true;copy_text(error,"Passphrase widget missing");return;}
+    auto raw=nul_result(area);
+    text_event(back?6:2,back?1:0,raw.data(),raw.size());
+}
+extern "C" void seedsigner_lvgl_on_button_selected(uint32_t index,const char*){
+    if(passphrase_screen && index==SEEDSIGNER_RET_BACK_BUTTON){passphrase_event(true);return;}
+    event_kind=1;event_value=index;event_length=0;
+}
+extern "C" void seedsigner_lvgl_on_text_entered(const char *text){
+    if(passphrase_screen){passphrase_event(false);return;}
+    text_event(2,0,text?text:"",text?strlen(text):0);
+}
+extern "C" void seedsigner_lvgl_on_aux_key(const char *text){event_kind=3;copy_text(event_text,text);event_length=strlen(event_text);}
+extern "C" void seedsigner_lvgl_on_qr_brightness(uint8_t value){event_kind=4;event_value=value;event_length=0;}
+extern "C" void seedsigner_lvgl_on_qr_density(uint8_t value){event_kind=5;event_value=value;event_length=0;}
 static void flush(lv_display_t *d,const lv_area_t *area,uint8_t *bytes){
     const unsigned w=area->x2-area->x1+1,h=area->y2-area->y1+1;
     lv_draw_sw_rgb565_swap(bytes,w*h);
@@ -71,13 +96,15 @@ extern "C" int bm_nativeui_init(){
 extern "C" int bm_nativeui_render(const char *name,const char *config){
     if(!initialized){copy_text(error,"Initialize UI first");return -1;}
     try {
-        error[0]=0;io_error=false;event_kind=0;
+        error[0]=0;io_error=false;event_kind=0;event_length=0;
+        volatile char *old_text=event_text;for(size_t i=0;i<sizeof(event_text);++i)old_text[i]=0;
         // Same genuine locked screen registry as the existing native host.
         // Registration is availability, not per-screen app-flow qualification.
         const ScreenEntry *entry=nullptr;
         for(const auto &candidate:registry)if(!strcmp(name,candidate.name)){entry=&candidate;break;}
         if(!entry){copy_text(error,"Unknown native screen builder");return -1;}
         entry->build((void*)config);
+        passphrase_screen=!strcmp(name,"seed_add_passphrase_screen");
         // Settle LVGL reset/group reassignment while input is released, as the
         // existing native host does before acknowledging a new screen.
         pressed=false;lv_indev_read(keypad);
@@ -104,8 +131,9 @@ extern "C" int bm_nativeui_tick(){
 extern "C" uint32_t bm_nativeui_stat(uint32_t field){return field==0?frames:field==1?flushes:field==2?event_kind:field==3?event_value:0;}
 extern "C" const char *bm_nativeui_error(){return error;}
 extern "C" const char *bm_nativeui_event_text(){return event_text;}
+extern "C" unsigned bm_nativeui_event_length(){return event_length;}
 extern "C" void bm_nativeui_consume_event(){
-    event_kind=0;event_value=0;
+    event_kind=0;event_value=0;event_length=0;
     volatile char *bytes=event_text;for(size_t i=0;i<sizeof(event_text);++i)bytes[i]=0;
 }
 

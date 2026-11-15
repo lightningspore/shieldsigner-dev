@@ -492,3 +492,22 @@ passes. Home restored004955; preview stopped, all USB readers finished.
   DUT1 Home restored; DUT0 is now fresh/headless instead of the old qstr-heavy image.
   Shared build artifacts restored to DUT1 profile, rebuilt image not RAM-loaded.
   No CAD/SD/REF-storage writes; REF UART recovery/capture only. Optical remains open.
+
+### 2026-11-15 UTC — Original passphrase UI flows
+
+- Added reviewed native entry/review screen contracts and original keyboard label
+  constants. Original View logic and independent CPython embit fingerprints drive
+  real native accept/edit/discard/skip routes back to seed options and Home.
+- Native event adapter now reads the actual textarea for confirm and Back, using
+  the existing native host's NUL shadow policy. Explicit lengths preserve UTF8/NUL;
+  Back returns the entire current entry instead of a bare index. Event text clears
+  on new render/consumption;255-byte bound errors explicitly, never truncates.
+- DUT1 image3fdbd762..., RAMload010612; final flow011105 passes all4routes plus
+  exact confirm/back text and KEY1/KEY2 controls. Bound tests010837, original scan
+  regression011113 and memory011115 pass.72host tests pass. Public review pixels
+  011225 visually checked; title, k, fingerprints and3actions readable. Home011250.
+- Original keyboard starts at k; corrected fixture navigation instead of changing
+  its layout. No source View decisions replaced. PASSPHRASE-UI.md records scope.
+  Full non-ASCII glyph coverage and long-passphrase review still need work before
+  claiming a complete human-readable UI. Optical/SD/other wallet work remains open.
+  No CAD/SD/REF/DUT0 writes; all readers finished, shared artifacts DUT1 app-ui.

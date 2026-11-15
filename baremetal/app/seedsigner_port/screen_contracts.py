@@ -51,7 +51,14 @@ def configuration(screen_class,passed,translate=None):
     if name=='MainMenuScreen' and count!=4:raise ValueError('MainMenuScreen requires four buttons')
     return BASIC[name],cfg
 
-def result(event,button_count):
+def result(event,button_count,screen_name=None):
+    if screen_name=='SeedAddPassphraseScreen':
+        if not isinstance(event,tuple) or len(event)!=3 or event[0] not in (2,6) or type(event[2]) is not str:
+            raise ValueError("Invalid passphrase result")
+        if type(event[1]) is not int or event[1]!=(1 if event[0]==6 else 0):raise ValueError("Invalid passphrase back flag")
+        answer={'passphrase':event[2]}
+        if event[0]==6:answer['is_back_button']=True
+        return answer
     if event==1000:return 1000  # Existing ButtonInput override.
     if not isinstance(event,tuple) or len(event)!=3 or event[0]!=1:raise ValueError('Not a reviewed basic screen result')
     index=event[1]
@@ -61,7 +68,7 @@ def result(event,button_count):
 # Additional reviewed original screen contracts, using the same actual builders.
 _basic_configuration=configuration
 STATUS={'LargeIconStatusScreen':'custom','WarningScreen':'warning','DireWarningScreen':'dire_warning','ErrorScreen':'error'}
-APP_SCREENS=set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen'}
+APP_SCREENS=set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen'}
 def configuration(screen_class,passed,translate=None):
     name=screen_class if isinstance(screen_class,str) else screen_class.__name__
     if name not in APP_SCREENS:return _basic_configuration(screen_class,passed,translate)
@@ -88,4 +95,22 @@ def configuration(screen_class,passed,translate=None):
         cfg['is_bottom_list']=True;cfg['is_button_text_centered']=False
     elif name=='SeedSelectSeedScreen':
         cfg['text']=a.get('text','');cfg['is_bottom_list']=True
+    elif name=='SeedAddPassphraseScreen':
+        from seedsigner_port.visible_text import title
+        builder='seed_add_passphrase_screen'
+        text=a.get('passphrase') or ''
+        cfg['top_nav']['title']=title(text,cfg['top_nav']['title'] or tr('Passphrase'))
+        cfg['initial_text']=text
+        cfg['initial_mode']={'ABC':'upper','123':'digits','!@#':'symbols','*[]':'symbols'}.get(a.get('initial_keyboard'),'lower')
+        cfg.pop('button_list',None)
+        for source,target in [('selected_button','initial_selected_index'),('is_bottom_list','is_bottom_list'),('is_button_text_centered','is_button_text_centered')]:
+            if source not in a:cfg.pop(target,None)
+    elif name=='SeedReviewPassphraseScreen':
+        from seedsigner_port.visible_text import display,title
+        builder='seed_review_passphrase_screen'
+        cfg['top_nav']['title']=title(a['passphrase'],tr('Verify Passphrase'))
+        cfg['is_bottom_list']=True
+        cfg['passphrase']=display(a['passphrase'])
+        cfg['fingerprint_without']=a['fingerprint_without'];cfg['fingerprint_with']=a['fingerprint_with']
+        cfg['changes_fingerprint_label']=tr('changes fingerprint')
     return builder,cfg

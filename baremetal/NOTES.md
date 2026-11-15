@@ -510,3 +510,23 @@ are rebuilt DUT1app-ui fdd3eaa7... andNOTloaded (no firmware codechanges thissta
 REFuntouchedexceptauthorizedUARTreset/capturetool. NoCAD/SDwrites. Nextcontinue
 remainingactualappmenus/passphraseentry whilephysicalopticalsetup isunattended;
 return toopticalqualificationwhenbetterfocus/aim evidence isavailable.
+
+2026-11-15 UTC / original passphrase screen/View integration
+DUT1now3fdbd762... app-ui, RAMload010612. New actual native keyboard/review facades
+andoriginal labels/defaults support SourceSeedAdd/Review/ExitDialog views without
+rewrittenwalletlogic. Nativeconfirm2/Back6 events snapshot realtextarea withbyte
+length, includingNULviaexistingnativehost helper; Backretainscurrententry. Current
+255-byteeventbound rejects oversizeexplicitly. Renderernewframe/consume clears
+texteventbuffer; nontexteventsreturnemptytext. SourcePassphrase normalization /
+realRootFP remainactualpriorqualifiedbackend. Publick→52e15a41,kl→e6a78bb8,
+empty→73c5da0a agreeindependentCPythonembit0.8.0. Realnativekeys qualifiedaccept,
+edit,preserveappend,discardafterBack,emptyskip,finalize/options/Home; final011105.
+UTF8/NUL/spaceconfirmandBack exact, sideKEY1/KEY2 produceK6; bounds010837 pass.
+Scanregression011113,memory011115,72hosttests pass. Publicreviewpixel011225
+visuallychecked: shortk/fingerprints/actions readable. Home011250,previewstopped,
+USBreadersfinished. DUT0untouched(freshheadless77589e73...),REFuntouched,noSD/CAD.
+PASSPHRASE-UI.md and phase-12-passphrase-ui receipt recordscope. Importantremaining
+UIwork: fixedfont's nonASCIIglyphcoverage andlongpassphrase3linereview overflow.
+Do NOTclaim fullUnicodevisualreview orwholewalletqualification frombyteexacttests.
+Nextimprovevisiblepassphrasereview, thenremainingactualmenus/seedentry/fullSDapp;
+physicalprintedQRopticalqualificationstillopenwhileuseraway.

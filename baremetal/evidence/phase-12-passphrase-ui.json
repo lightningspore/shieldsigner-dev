@@ -1,0 +1,46 @@
+{
+  "status": "original-passphrase-entry-review-edit-discard-skip-flows-passed",
+  "scope": "Actual original Views and native key/widget events using public test seed only; not optical or complete wallet qualification",
+  "device": "DUT1 app-ui",
+  "downloadSha256": "3fdbd762049c02ed06a037af6b0e12ecc3e016a972d1860382d546174642c230",
+  "load": "logs/phase-11/dut1-20261115T010612Z",
+  "gates": {
+    "flow": "logs/phase-11/usb-20261115T011105.115256Z",
+    "bounds": "logs/phase-11/usb-20261115T010837.820490Z",
+    "scanRegression": "logs/phase-11/usb-20261115T011113.546343Z",
+    "memory": "logs/phase-11/usb-20261115T011115.698363Z",
+    "reviewPixels": "logs/phase-11/usb-20261115T011225.679810Z",
+    "home": "logs/phase-11/usb-20261115T011250.921228Z"
+  },
+  "hostTests": 72,
+  "publicSeed": "abandon x11 + about",
+  "independentOracle": "CPython embit0.8.0 BIP39/BIP32",
+  "fingerprints": {
+    "empty": "73c5da0a",
+    "k": "52e15a41",
+    "kl": "e6a78bb8"
+  },
+  "flows": [
+    "typed k, review actual changed fingerprint, accept, finalize, options, Home",
+    "typed k, edit and retain entry, append l, review changed fingerprint, accept, options, Home",
+    "typed kl, Back snapshots whole entry, original discard dialog, clear passphrase, finalize empty, options, Home",
+    "empty commit, original skip dialog, finalize empty, options, Home"
+  ],
+  "textTransport": [
+    "Exact confirm/back for ASCII, spaces, UTF8 and embedded NUL",
+    "Native255-byte bound exact; oversized ASCII/UTF8/NUL errors without truncation",
+    "Native KEY1 case and KEY2 digits produce K6",
+    "New render/event consumption clears event text; non-text events expose no stale text"
+  ],
+  "reviewPixels": "Local native framebuffer of public k review visually checked: title, k, actual fingerprints and all3original actions visible",
+  "remaining": [
+    "Non-ASCII glyph coverage and long-passphrase visible review layout remain unfinished",
+    "Keyboard inventory remains original printable ASCII; UTF8 transport is separate",
+    "Printed optical QR, other wallet screens, SD full-app boot, entropy/security qualification remain open"
+  ],
+  "notes": [
+    "First gate assumed default key a and single UP to Back; corrected fixture to actual upstream central k and real navigation",
+    "No source View business decisions replaced; existing native Linux host widget/nul_text snapshot policy reused",
+    "No CAD/SD/REF/DUT0 changes. DUT1 Home restored; readers finished."
+  ]
+}

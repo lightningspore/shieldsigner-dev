@@ -78,3 +78,7 @@ run. Startup gate time includes intentional animation/warning processing and is
 not a cold boot benchmark. Remaining work includes optical decode, other original
 menus/screens, passphrase entry, UR/compact/encrypted flows, entropy qualification
 and full app startup from SD. Frozen class availability does not close those gaps.
+
+Follow-on: [PASSPHRASE-UI.md](PASSPHRASE-UI.md) records the later native
+passphrase entry/review integration and its separate accept/edit/discard/skip
+hardware gates, including the remaining glyph and long-text review limits.

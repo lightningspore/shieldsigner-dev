@@ -13,8 +13,12 @@
     "button_selected_color",
     "checked_buttons",
     "fingerprint",
+    "fingerprint_with",
+    "fingerprint_without",
+    "initial_keyboard",
     "is_bottom_list",
     "is_button_text_centered",
+    "passphrase",
     "scroll_y_initial_offset",
     "selected_button",
     "show_back_button",
@@ -28,5 +32,5 @@
     "top_nav_icon_color",
     "top_nav_icon_name"
   ],
-  "outputSha256": "e267e749e781bd9f31aa6658b778d18bb20f415605e49de9484230993cd4c8d2"
+  "outputSha256": "82cde99bfecce8a12cabb3aac5f4185cfca4ea5195116486671dd9f7b8be8971"
 }

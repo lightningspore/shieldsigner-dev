@@ -1,0 +1,52 @@
+{
+  "status": "actual-original-controller-scan-finalize-options-home-passed",
+  "device": "DUT1 app-ui",
+  "downloadSha256": "b103b390705fc9ad5feb30b2505c552347eb14e105f163cc99dbf14467e0c0df",
+  "load": "logs/phase-11/dut1-20261115T004823Z",
+  "gates": {
+    "flow": "logs/phase-11/usb-20261115T004904.601766Z",
+    "errorIdle": "logs/phase-11/usb-20261115T004907.578961Z",
+    "startup": "logs/phase-11/usb-20261115T004910.590180Z",
+    "memory": "logs/phase-11/usb-20261115T004916.918807Z",
+    "qrScan": "logs/phase-11/usb-20261115T004918.577840Z",
+    "storageOverlays": "logs/phase-11/usb-20261115T004919.917248Z",
+    "homeRestore": "logs/phase-11/usb-20261115T004955.006879Z"
+  },
+  "hostTests": 61,
+  "sourceClasses": {
+    "coreViews": 14,
+    "scanViews": 18,
+    "seedViews": 91,
+    "splashView": 1,
+    "developmentWarningView": 1
+  },
+  "scope": "Actual original View and Controller dispatch/history flow with native QR pixel fixture, real fingerprint and C++ screen/key events. Real SC3336 camera used for idle wipe and stop gate. Not optical QR qualification or complete wallet app.",
+  "publicSeedFingerprint": "73c5da0a",
+  "frameHashes": [
+    "6d46d67b07a7be9a35e87012261466fb05fd3ca06e3ac7a759fae4562bf62aac",
+    "543303eda11f70b8954411c3a37d3777cf3d53136fefcf399c1774492dbe9edb",
+    "3b3ad4ff922d57dae948aa35adefb71e3df89c83afa71f7611ca17ccf16f0836",
+    "6d46d67b07a7be9a35e87012261466fb05fd3ca06e3ac7a759fae4562bf62aac"
+  ],
+  "realCameraBeforeAfter": [
+    [
+      true,
+      1
+    ],
+    [
+      false,
+      0
+    ]
+  ],
+  "notes": [
+    "Foreground loop retains original redirects, skip/clear history, unwind/dedup, Home state clearing and error routing",
+    "Initial native exception capture attempt exposed disabled sys stdfiles; use native traceback metadata without console print instead",
+    "Native string splitlines unavailable; not needed with metadata helper",
+    "Default warning buttons retain original ButtonOption objects; host differential test caught and corrected string-only fixture representation",
+    "Old scan error fixture expected Controller missing; replaced with actual still-unavailable UR decoder pixel payload",
+    "Native preview frame counter is session-owned and clears on stop; active observation captured before cleanup",
+    "No OS, storage, RNG or thread-success emulation. Optional features remain explicit errors.",
+    "No CAD/SD/REF changes; DUT0 untouched. Shared build artifacts DUT1.",
+    "Final review retained startup FeatureUnavailable error routing; native startup error fixture now passes too."
+  ]
+}

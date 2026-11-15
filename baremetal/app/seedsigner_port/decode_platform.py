@@ -8,7 +8,28 @@ class FeatureUnavailable(RuntimeError):
     pass
 
 def dependency(module,attribute=None):
-    aliases={'seedsigner.models.settings_definition':'seedsigner_port.settings_schema',
+    special={('seedsigner.helpers','hardening'):('seedsigner_port.app_services',None),
+             ('seedsigner.views.screensaver','ScreensaverScreen'):('seedsigner_port.app_services','ScreensaverScreen')}
+    if (module,attribute) in special:module,attribute=special[(module,attribute)]
+    aliases={'seedsigner.controller':'seedsigner_port.controller',
+             'seedsigner.views':'seedsigner_port.view_core',
+             'seedsigner.views.view':'seedsigner_port.view_core',
+             'seedsigner.views.scan_views':'seedsigner_port.view_scan',
+             'seedsigner.views.seed_views':'seedsigner_port.view_seed',
+             'seedsigner.views.resign_views':'seedsigner_port.session_keys',
+             'seedsigner.gui':'seedsigner_port.renderer',
+             'seedsigner.gui.renderer':'seedsigner_port.renderer',
+             'seedsigner.gui.toast':'seedsigner_port.app_services',
+             'seedsigner.gui.screens':'seedsigner_port.app_screens',
+             'seedsigner.gui.screens.screen':'seedsigner_port.app_screens',
+             'seedsigner.gui.screens.seed_screens':'seedsigner_port.app_screens',
+             'seedsigner.gui.screens.scan_screens':'seedsigner_port.app_screens',
+             'seedsigner.models.encryptedqr':'seedsigner_port.encrypted_storage',
+             'seedsigner.models.decode_qr':'seedsigner_port.decode_qr',
+             'seedsigner.hardware.buttons':'seedsigner_port.hardware_buttons',
+             'seedsigner.hardware.camera':'seedsigner_port.app_services',
+             'seedsigner.helpers.l10n':'seedsigner_port.localization',
+             'seedsigner.helpers.seedsigner_os':'seedsigner_port.app_services','seedsigner.models.settings_definition':'seedsigner_port.settings_schema',
              'seedsigner.models.seed_storage':'seedsigner_port.seed_storage',
              'seedsigner.models.singleton':'seedsigner_port.singleton',
              'seedsigner.gui.components':'seedsigner_port.gui_constants',

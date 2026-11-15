@@ -7,6 +7,8 @@ root=Path(__file__).resolve().parents[1]
 payload=b'settings::v1 name=public lang=en'
 q=qrcode.QRCode(border=4,error_correction=qrcode.constants.ERROR_CORRECT_M);q.add_data(payload,optimize=0);q.make(fit=True)
 rows=tuple(''.join('1' if v else '0' for v in row) for row in q.get_matrix())
+q2=qrcode.QRCode(border=4,error_correction=qrcode.constants.ERROR_CORRECT_M);q2.add_data(b'ur:bytes/abcd',optimize=0);q2.make(fit=True)
+error_rows=tuple(''.join('1' if v else '0' for v in row) for row in q2.get_matrix())
 code='''# SPDX-License-Identifier: MIT
 # Generated public fixtures; source model is unchanged except documented boundaries.
 from seedsigner_port.decode_qr import DecodeQR,DecodeQRStatus
@@ -70,6 +72,14 @@ for i in range(5):
     del d
     gc.collect()
 print('@@PASS original-decode-qr-native-pixels')
+'''
+code+='error_rows='+repr(error_rows)+'''\nerror_image=bytearray(bytes([255])*(640*480))
+error_width=len(error_rows)*6
+for y,row in enumerate(error_rows):
+    line=b''.join(bytes([0 if bit=='1' else 255])*6 for bit in row)
+    for j in range(6):
+        offset=((480-error_width)//2+y*6+j)*640+(640-error_width)//2
+        error_image[offset:offset+error_width]=line
 from seedsigner_port.scan_screen import NativeScanScreen,CooperativePreview
 class Source:
     def __init__(self,frames):
@@ -91,9 +101,9 @@ class Input:
     def check_for_low(self,key):return self.back
 blank=bytes([255])*(640*480)
 for mode in ('complete','back','dependency-error'):
-    source=Source([blank,image] if mode=='complete' else [blank] if mode=='back' else [image])
+    source=Source([blank,image] if mode=='complete' else [blank] if mode=='back' else [error_image])
     preview=CooperativePreview(lambda frame:None)
-    decoder=DecodeQR(is_encryptionkey=mode=='dependency-error')
+    decoder=DecodeQR()
     screen=NativeScanScreen(decoder,camera=source,preview=preview,buttons=Input(mode=='back'))
     try:
         result=screen.run()

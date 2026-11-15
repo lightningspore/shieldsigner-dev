@@ -45,3 +45,5 @@ void bm_micropython_poll(void);
 
 // Preserve dataclass-equivalent rich comparison fallback semantics.
 #define MICROPY_PY_BUILTINS_NOTIMPLEMENTED (1)
+
+#define MICROPY_PY_SYS_EXC_INFO (1)

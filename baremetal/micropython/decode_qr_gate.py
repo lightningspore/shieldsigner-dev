@@ -66,6 +66,14 @@ for i in range(5):
     del d
     gc.collect()
 print('@@PASS original-decode-qr-native-pixels')
+error_rows=('00000000000000000000000000000', '00000000000000000000000000000', '00000000000000000000000000000', '00000000000000000000000000000', '00001111111010110011111110000', '00001000001001000010000010000', '00001011101001010010111010000', '00001011101011100010111010000', '00001011101010001010111010000', '00001000001010110010000010000', '00001111111010101011111110000', '00000000000010011000000000000', '00001000101111010111110010000', '00000110000111001111101000000', '00001001111011010110111100000', '00001111100010110000110100000', '00000010111010011101010010000', '00000000000011100000100000000', '00001111111011000110111100000', '00001000001001001101100100000', '00001011101011001101000000000', '00001011101001100111101110000', '00001011101000100100111000000', '00001000001000111100100000000', '00001111111011001100110010000', '00000000000000000000000000000', '00000000000000000000000000000', '00000000000000000000000000000', '00000000000000000000000000000')
+error_image=bytearray(bytes([255])*(640*480))
+error_width=len(error_rows)*6
+for y,row in enumerate(error_rows):
+    line=b''.join(bytes([0 if bit=='1' else 255])*6 for bit in row)
+    for j in range(6):
+        offset=((480-error_width)//2+y*6+j)*640+(640-error_width)//2
+        error_image[offset:offset+error_width]=line
 from seedsigner_port.scan_screen import NativeScanScreen,CooperativePreview
 class Source:
     def __init__(self,frames):
@@ -87,9 +95,9 @@ class Input:
     def check_for_low(self,key):return self.back
 blank=bytes([255])*(640*480)
 for mode in ('complete','back','dependency-error'):
-    source=Source([blank,image] if mode=='complete' else [blank] if mode=='back' else [image])
+    source=Source([blank,image] if mode=='complete' else [blank] if mode=='back' else [error_image])
     preview=CooperativePreview(lambda frame:None)
-    decoder=DecodeQR(is_encryptionkey=mode=='dependency-error')
+    decoder=DecodeQR()
     screen=NativeScanScreen(decoder,camera=source,preview=preview,buttons=Input(mode=='back'))
     try:
         result=screen.run()

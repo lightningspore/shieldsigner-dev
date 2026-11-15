@@ -57,3 +57,35 @@ def result(event,button_count):
     index=event[1]
     if type(index) is not int or not(index in (1000,1001) or 0<=index<button_count):raise ValueError('Invalid screen selection')
     return index
+
+# Additional reviewed original screen contracts, using the same actual builders.
+_basic_configuration=configuration
+STATUS={'LargeIconStatusScreen':'custom','WarningScreen':'warning','DireWarningScreen':'dire_warning','ErrorScreen':'error'}
+APP_SCREENS=set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen'}
+def configuration(screen_class,passed,translate=None):
+    name=screen_class if isinstance(screen_class,str) else screen_class.__name__
+    if name not in APP_SCREENS:return _basic_configuration(screen_class,passed,translate)
+    from seedsigner_port.app_screen_defaults import DEFAULTS as APP_DEFAULTS
+    from seedsigner_port.gui_constants import GUIConstants,SeedSignerIconConstants
+    a=APP_DEFAULTS[name].copy();a.update(passed)
+    tr=translate if translate is not None else lambda text:text
+    builder,cfg=_basic_configuration('ButtonListScreen',a,translate)
+    if name in STATUS:
+        builder='large_icon_status_screen';cfg['status_type']=STATUS[name]
+        if not cfg['button_list']:cfg['button_list']=[tr('OK')]
+        if a.get('status_icon_size')==0:cfg['show_status_icon']=False
+        if cfg.get('initial_selected_index')==0:cfg.pop('initial_selected_index')
+        for key in ('text','status_headline'):
+            if a.get(key) is not None:cfg[key]=tr(a[key])
+        if a.get('status_color'):cfg['icon_color']=color(a['status_color'])
+        if a.get('status_icon_name'):cfg['icon']=a['status_icon_name']
+    elif name=='SeedFinalizeScreen':
+        builder='seed_finalize_screen'
+        cfg['top_nav'].update(title=tr('Finalize Seed'),show_back_button=False)
+        cfg['fingerprint']=a['fingerprint'];cfg['fingerprint_label']=tr('fingerprint')
+    elif name=='SeedOptionsScreen':
+        cfg['top_nav'].update(title=a['fingerprint'],icon=SeedSignerIconConstants.FINGERPRINT,icon_color=GUIConstants.INFO_COLOR)
+        cfg['is_bottom_list']=True;cfg['is_button_text_centered']=False
+    elif name=='SeedSelectSeedScreen':
+        cfg['text']=a.get('text','');cfg['is_bottom_list']=True
+    return builder,cfg

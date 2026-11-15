@@ -51,8 +51,44 @@ class ContractsTest(unittest.TestCase):
             self.assertEqual(port.result((1,value,''),2),self.reference['result']({'event':'button_selected','index':value},2))
         for value in (-1,2,True,'0'):
             with self.assertRaises(ValueError):port.result((1,value,''),2)
-        with self.assertRaises(port.UnmigratedScreen):port.configuration('SeedFinalizeScreen',{})
+        with self.assertRaises(port.UnmigratedScreen):port.configuration('SeedMnemonicEntryScreen',{})
         with self.assertRaises(port.UnmigratedScreen):port.configuration('ButtonListScreen',{'Button_cls':object})
         with self.assertRaises(port.UnmigratedScreen):port.configuration('LargeButtonScreen',{'long_press_key':'KEY3','button_data':['A','B']})
         with self.assertRaises(ValueError):port.configuration('MainMenuScreen',{'button_data':['one']})
         with self.assertRaises(ValueError):port.configuration('ButtonListScreen',{'button_data':['hidden\0suffix']})
+
+    def test_app_status_and_seed_contracts_against_original_linux_adapter(self):
+        from dataclasses import field
+        from seedsigner_port.gui_constants import GUIConstants,SeedSignerIconConstants
+        from seedsigner_port.button_options import ButtonOption
+        from seedsigner_port.app_screen_defaults import DEFAULTS as APP_DEFAULTS
+        scope=self.reference.copy()
+        scope.update(GUIConstants=GUIConstants,SeedSignerIconConstants=SeedSignerIconConstants,field=field,ButtonOption=ButtonOption,_mft=lambda x:x)
+        scope['WarningEdgesMixin']=type('WarningEdgesMixin',(),{})
+        scope['STATUS']=port.STATUS
+        scope['SUPPORTED']=set(port.BASIC)|port.APP_SCREENS
+        # Reference functions must use this scope, rather than their earlier globals.
+        functions=ast.parse((root/'firmware/lvgl-app/python/contracts.py').read_text())
+        selected=[n for n in functions.body if isinstance(n,ast.FunctionDef) and n.name in ('arguments','color','button','configuration','result')]
+        exec(compile(ast.Module(body=selected,type_ignores=[]),'<original app contracts>','exec'),scope)
+        app=root/'dist/firmware/sources/lvgl/application/src/seedsigner/gui/screens'
+        classes={n.name:n for file in ('screen.py','seed_screens.py') for n in ast.parse((app/file).read_text()).body if isinstance(n,ast.ClassDef)}
+        reviewed=set().union(*(set(v) for v in APP_DEFAULTS.values()))
+        # Rebuild actual field defaults including warning factory buttons.
+        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen'):
+            node=classes[name]
+            node.body=[n for n in node.body if isinstance(n,ast.AnnAssign) and n.target.id in reviewed]
+            for n in node.body:n.annotation=ast.Constant('reviewed field')
+            node.decorator_list=[ast.Name(id='dataclass',ctx=ast.Load())]
+            exec(compile(ast.fix_missing_locations(ast.Module(body=[node],type_ignores=[])),'<original app fields>','exec'),scope)
+        for name in APP_DEFAULTS:
+            cases=[{}, {'button_data':['Done','Cancel'],'text':'Public test','selected_button':1}]
+            if name in ('SeedFinalizeScreen','SeedOptionsScreen'):cases=[dict(c,fingerprint='73c5da0a') for c in cases]
+            for arguments in cases:
+                actual=port.configuration(name,arguments,scope['_'])
+                builder,expected=scope['configuration'](scope[name],arguments)
+                if name=='SeedOptionsScreen':
+                    # Original SeedOptionsScreen.__post_init__ sets these; the
+                    # Linux adapter omitted them. Match the actual source screen.
+                    expected['top_nav'].update(icon=SeedSignerIconConstants.FINGERPRINT,icon_color=GUIConstants.INFO_COLOR)
+                self.assertEqual(actual,(builder,expected),name)

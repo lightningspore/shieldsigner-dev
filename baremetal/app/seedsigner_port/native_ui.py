@@ -13,10 +13,11 @@ KEYS = {'KEY_UP':17, 'KEY_DOWN':18, 'KEY_LEFT':20, 'KEY_RIGHT':19,
         'KEY_PRESS':10, 'KEY1':49, 'KEY2':50, 'KEY3':51}
 
 class ScreenSession:
-    def __init__(self, backend=None, buttons=None, clock=None, sleep=None):
+    def __init__(self, backend=None, buttons=None, clock=None, sleep=None, service=None):
         if backend is None:
             import ui
             backend = ui
+        self.service = service
         self.backend = backend
         self.backend.init()
         self.buttons = buttons if buttons is not None else ButtonInput()
@@ -38,6 +39,7 @@ class ScreenSession:
     def poll(self):
         if self.current is None:
             raise RuntimeError('Show a screen before polling')
+        if self.service is not None:self.service()
         self.backend.tick()
         key = self.buttons.poll()
         if key == 1000:

@@ -44,3 +44,6 @@ fingerprints, pending conversion, deduplication, wipe aliases, opaque storage,
 button equality, singleton identity, key-cache clearing, timer-driven overlay
 expiry and wake handling. This checkpoint does not yet connect the full
 original Controller/View navigation, qualify entropy or prove optical QR decode.
+
+Follow-on: [VIEWS-PORT.md](VIEWS-PORT.md) records the later original Controller/View
+integration and its separate native flow, error/idle and startup evidence.

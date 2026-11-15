@@ -1,0 +1,32 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "sources": {
+    "screen.py": "456e74eff9a587c7e7e9c1db331e31bc8cdbf24f0d83740186904881a81f5adb",
+    "seed_screens.py": "4c1353663c93e26fe824633c2ce516d7bbfa3bd6666dd7b4a1182e13d0836bd0",
+    "components": "277d68b1660777f2fe0f70e0934524df8c4a1cbef15f71b7dd00327e1ed41688"
+  },
+  "reviewedFields": [
+    "button_data",
+    "button_selected_color",
+    "checked_buttons",
+    "fingerprint",
+    "is_bottom_list",
+    "is_button_text_centered",
+    "scroll_y_initial_offset",
+    "selected_button",
+    "show_back_button",
+    "show_power_button",
+    "status_color",
+    "status_headline",
+    "status_icon_name",
+    "status_icon_size",
+    "text",
+    "title",
+    "top_nav_icon_color",
+    "top_nav_icon_name"
+  ],
+  "outputSha256": "e267e749e781bd9f31aa6658b778d18bb20f415605e49de9484230993cd4c8d2"
+}

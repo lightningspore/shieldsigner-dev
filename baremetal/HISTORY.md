@@ -452,3 +452,25 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
   QR/scan003444,57host tests pass. Full original Controller/View wiring, optical QR,
   entropy and full app SD remain open. APP-CORE-PORT.md and evidence receipt record
   scope. No CAD/SD/REF writes. Shared artifacts remain DUT1; DUT0 untouched.
+
+### 2026-11-15 UTC — Original Controller/View scan-to-seed flow
+
+- Preserved all14core/18scan/91seed View classes plus original splash/development
+  warning, with lazy class/provider resolution. Original destination/history loop,
+  Home clearing, error recovery and final cleanup now run on native MicroPython.
+- Added actual native Screen facades and reviewed finalize/options/status contracts;
+  real FP73c5da0a and C++ key callbacks drive Home→Scan→Finalize→Options→Home.
+  Pixel fixture verifies this workflow; printed optical acquisition remains open.
+- Original inactivity wipe clears public stored/pending seed aliases and unwinds
+  real SC3336 preview from(True,1) to(False,0) before Home. Original error View
+  handles an unavailable provider. Actual splash and development warning reach Home.
+- Fixed actual native API boundaries found by gates: f-string grammar, unavailable
+  splitlines and sys.print_exception ignoring stream when stdfiles disabled. Native
+  exception metadata helper replaces formatting with no exception console output.
+- Final imageb103b390..., load004823; flow004904, error/idle004907, startup004910,
+  memory004916, QR004918, overlay/storage004919 pass.61host tests pass. Updated
+  obsolete Controller-missing scan error fixture to actual unavailable UR pixels.
+  VIEWS-PORT.md and phase-12-original-views receipt document scope and remaining work.
+  No SD/CAD/REF writes. DUT0 untouched; shared artifacts DUT1 app-ui.
+Final review preserves startup unavailable-provider error routing; native test
+passes. Home restored004955; preview stopped, all USB readers finished.

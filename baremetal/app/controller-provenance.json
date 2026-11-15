@@ -1,0 +1,17 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "sourceSha256": "2c080563d12cef837f25799a7139277ad7c3756a05329822f81d961c2e7e031e",
+  "outputSha256": "918996d5f67c126442f746df38e628eb6c9217688d6c422f302cf0c4e93acc2a",
+  "boundaries": [
+    "Synchronous real native services/storage instead of OS/background import/RNG threads",
+    "Camera owned persistent native stream",
+    "Actual original splash/development warning via native screens",
+    "Original foreground dispatch/history/error cleanup loop retained; smartcard menu branch omitted per scope",
+    "Cooperative actual inactivity timer; original wipe cleanup then NativeIdleWipe unwind",
+    "Native actual exception metadata replaces CPython traceback formatting without console output",
+    "No file-based block anchor refresh; original built-in advisory constants retained"
+  ]
+}

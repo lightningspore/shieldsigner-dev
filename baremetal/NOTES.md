@@ -469,3 +469,24 @@ using canonical navigation and real native screen builders, no placeholder Views
 Keep printed optical QR unresolved; no camera re-aim requested while user absent.
 No SD/CAD/REF writes, DUT0 untouched/needscleanreload, shared artifacts DUT1.
 Home restored003533; preview stopped and all USB readers finished.
+
+2026-11-15 UTC / original foreground Controller and View integration
+Final DUT1imageb103b390..., RAMload004823. OriginalController+14core/18scan/91seed
+Views frozen behind lazy actual imports; all source methods retained, no fake
+optional providers. Sourcefstrings converted to format forMPcompiler, dataclass
+Viewctors explicit. Realrenderer/status/finalize/options and sharedbuttonservices.
+Full original flowgate004904: Home→Scan→Finalize(FP73c5da0a)→Options→Home via
+nativeQRpixel fixture and realLVGLkeyevents, sourceStorage and actualhistory.
+Error/idle004907: realSourceErrorView recovers; originalwipe clears stored/pending
+publicseed aliases and stops actualSC3336 stream(True,1)→(False,0). Startup004910
+originalsplash+developmentwarning pass. memory004916,QR004918,core004919 pass;
+61hosttests pass. Native exception_location reads actualtracebackmetadata without
+printing. sys.print_exception streamcapture is NOTsupported bythisbuild; do notuse.
+OldQR fixture expectedController missing; nowtests realmissingURprovider pixels.
+VIEWS-PORT.md recordsentrycommand, boundaries, tests, pendingwork. Productionentry
+fromREPL: from seedsigner_port.controller import Controller; Controller.get_instance().start()
+NoautoappSDstartup inthisstage. Coreflowdoesnotprove printedopticalscan. Next focus
+optical camera decode and remainingoriginalmenus/passphraseentry; thenfullSDapp.
+NoCAD/SD/REFwrites; DUT0stillold/qstrheavy, don'tloadsharedDUT1imageonwiredDUT0.
+Final review preserves startup unavailable-provider error routing; native test
+passes. Home restored004955; preview stopped, all USB readers finished.

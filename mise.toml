@@ -1516,3 +1516,19 @@ run = "uv run --python 3.13 python baremetal/tools/prepare_app_core.py"
 [tasks."baremetal:app:core:dut1:gate"]
 description = "Verify original storage and actual native overlay lifecycle on DUT1"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/app_core_gate.py --serial rv1103-dut1 --timeout 30"
+
+[tasks."baremetal:app:views:prepare"]
+description = "Prepare pinned original Views/Controller and reviewed native screen contracts"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_controller.py", "uv run --python 3.13 python baremetal/tools/prepare_app_screens.py", "uv run --python 3.13 --with qrcode==8.2 python baremetal/tools/prepare_view_flow_gate.py"]
+
+[tasks."baremetal:app:views:dut1:gate"]
+description = "Run actual original scan-finalize-options-home flow through native QR/LVGL events"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/view_flow_gate.py --serial rv1103-dut1 --timeout 25"
+
+[tasks."baremetal:app:views:error-idle:dut1:gate"]
+description = "Verify original error recovery and inactivity wipe unwinds actual camera to Home"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/view_error_idle_gate.py --serial rv1103-dut1 --timeout 25"
+
+[tasks."baremetal:app:views:startup:dut1:gate"]
+description = "Verify actual original splash/development warning reach native Home"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/view_startup_gate.py --serial rv1103-dut1 --timeout 20"

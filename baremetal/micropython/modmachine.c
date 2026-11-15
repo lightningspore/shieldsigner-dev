@@ -98,11 +98,21 @@ static MP_DEFINE_CONST_FUN_OBJ_3(spi_exchange_obj,spi_exchange);
 static const mp_rom_map_elem_t spi_locals_table[]={{MP_ROM_QSTR(MP_QSTR_write_readinto),MP_ROM_PTR(&spi_exchange_obj)}};
 static MP_DEFINE_CONST_DICT(spi_locals,spi_locals_table);
 static MP_DEFINE_CONST_OBJ_TYPE(spi_type,MP_QSTR_SPI,MP_TYPE_FLAG_NONE,make_new,spi_new,locals_dict,&spi_locals);
+// Read actual traceback metadata without printing exception arguments to USB/UART.
+static mp_obj_t exception_location(mp_obj_t exception) {
+    if(!mp_obj_is_exception_instance(exception))mp_raise_TypeError(MP_ERROR_TEXT("Exception required"));
+    size_t count,*values;mp_obj_exception_get_traceback(exception,&count,&values);
+    if(count<3)return mp_const_none;
+    mp_obj_t fields[]={MP_OBJ_NEW_QSTR(values[0]),mp_obj_new_int_from_uint(values[1]),values[2]?MP_OBJ_NEW_QSTR(values[2]):MP_OBJ_NEW_QSTR(MP_QSTR_)};
+    return mp_obj_new_tuple(3,fields);
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(exception_location_obj,exception_location);
 static const mp_rom_map_elem_t machine_globals_table[]={
     {MP_ROM_QSTR(MP_QSTR___name__),MP_ROM_QSTR(MP_QSTR_machine)},
     {MP_ROM_QSTR(MP_QSTR_Pin),MP_ROM_PTR(&pin_type)},
     {MP_ROM_QSTR(MP_QSTR_led_status),MP_ROM_PTR(&led_status_obj)},
     {MP_ROM_QSTR(MP_QSTR_console_status),MP_ROM_PTR(&console_status_obj)},
+    {MP_ROM_QSTR(MP_QSTR_exception_location),MP_ROM_PTR(&exception_location_obj)},
     {MP_ROM_QSTR(MP_QSTR_I2C),MP_ROM_PTR(&i2c_type)},
     {MP_ROM_QSTR(MP_QSTR_SPI),MP_ROM_PTR(&spi_type)}};
 static MP_DEFINE_CONST_DICT(machine_globals,machine_globals_table);

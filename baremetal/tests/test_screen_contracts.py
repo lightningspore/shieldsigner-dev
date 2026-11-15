@@ -25,6 +25,7 @@ class ContractsTest(unittest.TestCase):
             node=classes[name]
             node.body=[n for n in node.body if isinstance(n,ast.AnnAssign) and n.target.id in reviewed]
             for n in node.body:n.annotation=ast.Constant('reviewed field')
+            if not node.body:node.body=[ast.Pass()]
             node.decorator_list=[ast.Name(id='dataclass',ctx=ast.Load())]
             exec(compile(ast.fix_missing_locations(ast.Module(body=[node],type_ignores=[])),'<original fields>','exec'),scope)
         funcs=ast.parse((root/'firmware/lvgl-app/python/contracts.py').read_text())
@@ -76,14 +77,16 @@ class ContractsTest(unittest.TestCase):
         classes={n.name:n for file in ('screen.py','seed_screens.py') for n in ast.parse((app/file).read_text()).body if isinstance(n,ast.ClassDef)}
         reviewed=set().union(*(set(v) for v in APP_DEFAULTS.values()))
         # Rebuild actual field defaults including warning factory buttons.
-        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen'):
+        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'):
             node=classes[name]
             node.body=[n for n in node.body if isinstance(n,ast.AnnAssign) and n.target.id in reviewed]
             for n in node.body:n.annotation=ast.Constant('reviewed field')
+            if not node.body:node.body=[ast.Pass()]
             node.decorator_list=[ast.Name(id='dataclass',ctx=ast.Load())]
             exec(compile(ast.fix_missing_locations(ast.Module(body=[node],type_ignores=[])),'<original app fields>','exec'),scope)
         for name in APP_DEFAULTS:
             cases=[{}, {'button_data':['Done','Cancel'],'text':'Public test','selected_button':1}]
+            if name=='SeedWordsScreen':cases=[dict(c,words=['abandon','ability','able','about'],page_index=2,num_pages=3) for c in cases]
             if name=='SeedMnemonicEntryScreen':cases=[dict(c,wordlist=['abandon','ability','able','about'],initial_letters=['a','b']) for c in cases]
             if name=='SeedAddPassphraseScreen':cases=[dict(c,passphrase='public  \0\\value',initial_keyboard='ABC') for c in cases]
             if name=='SeedReviewPassphraseScreen':cases=[dict(c,passphrase='public  \0\\value',fingerprint_without='73c5da0a',fingerprint_with='b4e3f5ed') for c in cases]
@@ -91,6 +94,12 @@ class ContractsTest(unittest.TestCase):
             for arguments in cases:
                 actual=port.configuration(name,arguments,scope['_'])
                 builder,expected=scope['configuration'](scope[name],arguments)
+                if name=='SeedWordsBackupTestPromptScreen':
+                    # Original post-init content was not covered by the Linux
+                    # adapter; keep its real prompt and disable top-nav Back.
+                    expected['top_nav'].update(title=scope['_']('Verify Backup?'),show_back_button=False)
+                    expected['is_bottom_list']=True
+                    expected['text']=scope['_']('Optionally verify that your mnemonic backup is correct.')
                 if name=='SeedOptionsScreen':
                     # Original SeedOptionsScreen.__post_init__ sets these; the
                     # Linux adapter omitted them. Match the actual source screen.

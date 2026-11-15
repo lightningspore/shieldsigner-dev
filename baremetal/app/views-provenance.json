@@ -53,7 +53,7 @@
     "view_seed.py": {
       "source": "views/seed_views.py",
       "sourceSha256": "1784b3294ffc2c927d63244da80ac7b605144822f3ed28e72af0ded8abcbbd06",
-      "outputSha256": "e8b69fa37df85c7b90d7588e0b0d503aa1763ba0e90b5c7d1524fd6d5e77faa0",
+      "outputSha256": "e0a9dfd2807737802d32f1bb23a4c3d25d4e4310c054e6b2efd860a6a9daf98c",
       "classes": [
         "SeedsMenuView",
         "SeedSelectSeedView",
@@ -164,5 +164,9 @@
         "DeveloperOSWarningView"
       ]
     }
-  }
+  },
+  "reviewedChanges": [
+    "SeedWordsView rounds page count up so partial final pages are displayed.",
+    "Seed Views random import uses non-secret native quiz_random ordering."
+  ]
 }

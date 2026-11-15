@@ -1572,3 +1572,11 @@ run = ["uv run --python 3.13 python baremetal/tools/prepare_app_screens.py", "uv
 [tasks."baremetal:app:mnemonic:dut1:gate"]
 description = "Exercise original manual BIP39 entry and checksum/edit/Back flows using real native keys"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/mnemonic_entry_gate.py --serial rv1103-dut1 --timeout 90"
+
+[tasks."baremetal:app:backup:prepare"]
+description = "Prepare reviewed original backup screens/Views and independent public backup fixtures"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_controller.py", "uv run --python 3.13 python baremetal/tools/prepare_app_screens.py", "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_backup_words_gate.py"]
+
+[tasks."baremetal:app:backup:dut1:gate"]
+description = "Verify original word pages, partial final pages and backup quiz with actual native key events"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/backup_words_gate.py --serial rv1103-dut1 --timeout 80"

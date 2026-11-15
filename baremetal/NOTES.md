@@ -593,3 +593,33 @@ Home restored013951; camera off, readers finished.
   reset. Final state020827 confirms defaults12/24, empty storage, camera off;
   Home020828. No SD/CAD/REF/DUT0 writes, no push. Earlier reset remains unknown;
   optical QR, entropy, other app screens/signing and full SD startup remain open.
+
+### 2026-11-15 UTC — Original seed-word backup review and quiz
+
+- Added reviewed word-page and backup-prompt adapters using actual pinned native
+  widgets and original Views. Prompt retains its original post-init text/Back
+  policy. Fixed original SeedWordsView floor-page-count bug in guarded generation:
+ 15/18/21-word phrases now show trailing partial pages, with explicit4-word
+  numbering offsets. Pinned source unchanged; reviewed changes in provenance.
+- Seed Views bind their non-secret random import to quiz_random: actual pinned
+  MicroPython Yasmarang plus rejection-sampled Fisher-Yates. Clock-seeded and
+  predictable, NOT wallet entropy or CPython MT equivalence. No secrets/entropy
+  health qualification. Native-only standard module is explicitly compiled/frozen.
+- DUT1 final image dbbc054b..., RAMload021448. Native021558 passes all5BIP39
+  lengths, every exact word slice/page/offset, Back/review, wrong-answer retry and
+  all12quiz answers for stored/pending seeds. Original pending sentinel reaches
+  finalization and storage; success clears stored-seed history. Forced inactivity
+  during visible words clears stored/pending seeds and zeroes checked64-byte
+  aliases before Home. Public generated phrases only, discarded after testing.
+- Integration attempts exposed explicit module/source/feature flags and missing
+  ticks_us (use actual ticks_ms). Pending fixture also needed the starting View's
+  history entry before its skip-current transition. Failed logs retained in the
+  receipt; no reset was used to conceal a running test or unknown failure.
+- Actual partial-page pixels021646 show13absurd/14math/15exhibit on4/4, all readable
+  with Done/border.20word-page/Home rebuilds stabilize at155986native heap bytes.
+ 81host tests pass. Manual entry021652, passphrase021736 and paged review021745
+  regressions pass without recorded reset. Final021810 confirms restored default
+  settings, empty storage, camera off, normal probes disabled; Home restored.
+- BACKUP-WORDS.md and phase-12-backup-words receipt capture scope and matching ELF
+  checkpoint021747. No SD/CAD/REF/DUT0 writes or push. Earlier unexplained reset,
+  optical QR, qualified entropy, remaining app/signing and SD startup remain open.

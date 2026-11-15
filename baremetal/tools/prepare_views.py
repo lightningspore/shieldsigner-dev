@@ -22,11 +22,12 @@ def dataclass_constructor(n,classes):
  n.decorator_list=[d for d in n.decorator_list if ast.unparse(d)!='dataclass']
  n.body=[a for a in n.body if not isinstance(a,ast.AnnAssign)]+ast.parse(body).body
 
-receipt={'application':lock,'files':{}}
+receipt={'application':lock,'files':{},'reviewedChanges':['SeedWordsView rounds page count up so partial final pages are displayed.','Seed Views random import uses non-secret native quiz_random ordering.']}
 for file,outname in [('views/view.py','view_core.py'),('views/scan_views.py','view_scan.py'),('views/seed_views.py','view_seed.py'),('views/screensaver.py','view_splash.py'),('views/developer_os_warning.py','view_development.py')]:
  raw=(source/'src/seedsigner'/file).read_bytes();tree=ast.parse(raw)
  classes={n.name:n for n in tree.body if isinstance(n,ast.ClassDef) and n.name!='Destination' and (outname!='view_splash.py' or n.name=='OpeningSplashView')}
  bindings={'time':('seedsigner_port.clock',None),'Destination':('seedsigner_port.navigation','Destination'),'OpeningSplashScreen':('seedsigner_port.app_screens','OpeningSplashScreen')}
+ if outname=='view_seed.py':bindings['random']=('seedsigner_port.quiz_random',None)
  originals=copy.deepcopy(classes)
  port=LazyPort(tree,'seedsigner.'+file[:-3].replace('/','.'),classes=classes,bindings=bindings)
  nodes=[]
@@ -34,6 +35,11 @@ for file,outname in [('views/view.py','view_core.py'),('views/scan_views.py','vi
   if isinstance(n,ast.FunctionDef):nodes.append(port.visit(copy.deepcopy(n)))
   elif isinstance(n,ast.ClassDef) and n.name in classes:
    original=copy.deepcopy(n)
+   if n.name=='SeedWordsView':
+    # The upstream floor division omits trailing words at15/18/21 lengths.
+    matches=[x for x in ast.walk(n) if isinstance(x,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='num_pages' for t in x.targets)]
+    assert len(matches)==1 and ast.unparse(matches[0].value)=='int(len(mnemonic) / words_per_page)'
+    matches[0].value=ast.parse('(len(mnemonic)+words_per_page-1)//words_per_page',mode='eval').body
    if any(ast.unparse(d)=='dataclass' for d in n.decorator_list):dataclass_constructor(n,originals)
    n=port.visit(n)
    factory=ast.FunctionDef(name='_make_'+n.name,args=ast.arguments(posonlyargs=[],args=[],kwonlyargs=[],kw_defaults=[],defaults=[]),body=[n,ast.Return(value=ast.Name(id=n.name,ctx=ast.Load()))],decorator_list=[])

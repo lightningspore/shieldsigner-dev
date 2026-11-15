@@ -86,3 +86,6 @@ hardware gates, including the remaining glyph and long-text review limits.
 Follow-on: [MNEMONIC-ENTRY.md](MNEMONIC-ENTRY.md) records the native manual BIP39
 entry adapter and its original View/key-event gates. Paged passphrase review is
 recorded separately in [REVIEW-PAGES.md](REVIEW-PAGES.md).
+
+Follow-on: [BACKUP-WORDS.md](BACKUP-WORDS.md) records native word backup review,
+quiz verification and the guarded original pagination fix for partial pages.

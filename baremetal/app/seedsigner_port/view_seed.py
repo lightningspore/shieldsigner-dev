@@ -1770,7 +1770,7 @@ def _make_SeedWordsView():
                 title = _dependency('gettext', 'gettext')('Seed Words')
             words = mnemonic[self.page_index * words_per_page:(self.page_index + 1) * words_per_page]
             button_data = []
-            num_pages = int(len(mnemonic) / words_per_page)
+            num_pages = (len(mnemonic) + words_per_page - 1) // words_per_page
             if self.page_index < num_pages - 1 or self.is_pending_seed:
                 button_data.append(self.NEXT)
             else:
@@ -1917,17 +1917,17 @@ def _make_SeedWordsBackupTestView():
 
         def run(self):
             if self.rand_seed is not None:
-                _dependency('random', None).seed(self.rand_seed + self.cur_index if self.cur_index is not None else 0)
+                _dependency('seedsigner_port.quiz_random', None).seed(self.rand_seed + self.cur_index if self.cur_index is not None else 0)
             if self.cur_index is None:
-                self.cur_index = int(_dependency('random', None).random() * len(self.mnemonic_list))
+                self.cur_index = int(_dependency('seedsigner_port.quiz_random', None).random() * len(self.mnemonic_list))
                 while self.cur_index in self.confirmed_list:
-                    self.cur_index = int(_dependency('random', None).random() * len(self.mnemonic_list))
+                    self.cur_index = int(_dependency('seedsigner_port.quiz_random', None).random() * len(self.mnemonic_list))
             real_word = _dependency('seedsigner.gui.screens.screen', 'ButtonOptionWithoutTranslation')(self.mnemonic_list[self.cur_index])
-            fake_word1 = _dependency('seedsigner.gui.screens.screen', 'ButtonOptionWithoutTranslation')(''.join(_dependency('embit', 'bip39').WORDLIST[int(_dependency('random', None).random() * 2047)]))
-            fake_word2 = _dependency('seedsigner.gui.screens.screen', 'ButtonOptionWithoutTranslation')(''.join(_dependency('embit', 'bip39').WORDLIST[int(_dependency('random', None).random() * 2047)]))
-            fake_word3 = _dependency('seedsigner.gui.screens.screen', 'ButtonOptionWithoutTranslation')(''.join(_dependency('embit', 'bip39').WORDLIST[int(_dependency('random', None).random() * 2047)]))
+            fake_word1 = _dependency('seedsigner.gui.screens.screen', 'ButtonOptionWithoutTranslation')(''.join(_dependency('embit', 'bip39').WORDLIST[int(_dependency('seedsigner_port.quiz_random', None).random() * 2047)]))
+            fake_word2 = _dependency('seedsigner.gui.screens.screen', 'ButtonOptionWithoutTranslation')(''.join(_dependency('embit', 'bip39').WORDLIST[int(_dependency('seedsigner_port.quiz_random', None).random() * 2047)]))
+            fake_word3 = _dependency('seedsigner.gui.screens.screen', 'ButtonOptionWithoutTranslation')(''.join(_dependency('embit', 'bip39').WORDLIST[int(_dependency('seedsigner_port.quiz_random', None).random() * 2047)]))
             button_data = [real_word, fake_word1, fake_word2, fake_word3]
-            _dependency('random', None).shuffle(button_data)
+            _dependency('seedsigner_port.quiz_random', None).shuffle(button_data)
             title = _dependency('gettext', 'gettext')('Verify Word #{}').format(self.cur_index + 1)
             selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens', 'ButtonListScreen'), title=title, show_back_button=False, button_data=button_data, is_bottom_list=True, is_button_text_centered=True)
             if self.is_pending_seed:

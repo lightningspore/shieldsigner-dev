@@ -30,8 +30,8 @@ endif
 ifeq ($(NATIVE_UI),1)
 INC += -I$(abspath ../.tools/secp256k1/include)
 INC += -I$(abspath ../build/regex/cmake-port)
-SRC_C += modui.c modqr.c modregex.c modnativehash.c modunicode.c modmemory.c modsecp.c extmod/modbinascii.c
-SRC_QSTR += modui.c modqr.c modregex.c modnativehash.c modunicode.c modmemory.c modsecp.c extmod/modbinascii.c
+SRC_C += modui.c modqr.c modregex.c modnativehash.c modunicode.c modmemory.c modsecp.c extmod/modbinascii.c extmod/modrandom.c
+SRC_QSTR += modui.c modqr.c modregex.c modnativehash.c modunicode.c modmemory.c modsecp.c extmod/modbinascii.c extmod/modrandom.c
 endif
 SRC_QSTR += extmod/modjson.c shared/readline/readline.c shared/runtime/pyexec.c
 OBJ = $(PY_O) $(addprefix $(BUILD)/,$(SRC_C:.c=.o)) $(addprefix $(BUILD)/,$(SRC_S:.s=.o))

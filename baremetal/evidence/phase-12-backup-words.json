@@ -1,0 +1,75 @@
+{
+  "status": "original-backup-review-quiz-and-idle-hardware-gates-pass",
+  "device": "DUT1 app-ui; RAM-only",
+  "downloadSha256": "dbbc054b04f8f0744e8429436d21b2fd262b446b9b7fe11ad39492949781e0cf",
+  "load": "logs/phase-11/dut1-20261115T021448Z",
+  "checkpoint": "logs/phase-12/backup-20261115T021747Z",
+  "native": {
+    "path": "logs/phase-11/usb-20261115T021558.676854Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/backup_words_gate.py",
+    "scriptSha256": "ea2135d5c8cfa2fb676e7b7270f2e4f3b364cd874c9f11e8b70aab0e4f5c3f37",
+    "completed": true,
+    "traceback": false
+  },
+  "nativePassedCases": [
+    "skip-real-lvgl 12 False 3 0",
+    "skip-real-lvgl 15 False 4 0",
+    "skip-real-lvgl 18 False 5 0",
+    "skip-real-lvgl 21 False 6 0",
+    "skip-real-lvgl 24 False 6 0",
+    "back-real-lvgl 12 False 5 0",
+    "review-real-lvgl 12 False 6 0",
+    "skip-real-lvgl 12 True 3 0",
+    "verify-real-lvgl 12 False 3 12",
+    "verify-real-lvgl 12 True 3 12",
+    "word-idle-wipe-home False",
+    "word-idle-wipe-home True"
+  ],
+  "pixelAndMemory": {
+    "path": "logs/phase-11/usb-20261115T021646.825470Z",
+    "frameSha256": "10d1691ede89b9c92288618da734934f1be45d12e4d4d5c347a9f547906c9872",
+    "inspection": "Partial page4/4 visibly shows13 absurd,14 math,15 exhibit; Done and warning border fit240px.",
+    "stableRebuilds": 20,
+    "warmNativeHeapBytes": 155986
+  },
+  "hostTests": 81,
+  "correctedAttempts": [
+    {
+      "path": "logs/phase-11/usb-20261115T021145.376948Z",
+      "issue": "Missing quiz helper in explicit frozen-module list."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T021245.185089Z",
+      "issue": "Standard random module absent from explicit C/QSTR source list."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T021328.719982Z",
+      "issue": "Clock exposes ticks_ms, not ticks_us."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T021422.620467Z",
+      "issue": "MicroPython random() requires its EXTRA_FUNCS flag, beyond seed/getrandbits."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T021513.233657Z",
+      "issue": "All stored-seed pages/review passed; pending fixture started a self-skipping View with empty history. Fixture now supplies the running View history entry."
+    }
+  ],
+  "limits": [
+    "Predictably clock-seeded quiz PRNG, not wallet entropy; native generator differs from CPython MT.",
+    "Earlier unexplained reset remains unresolved; no reset recorded in these marked successful flows.",
+    "No optical QR, seed generation, transaction signing, other seed family or full wallet qualification.",
+    "No CAD/SD/REF/DUT0 writes; only local commits."
+  ],
+  "regressions": {
+    "mnemonic": "logs/phase-11/usb-20261115T021652.661847Z",
+    "passphrase": "logs/phase-11/usb-20261115T021736.773151Z",
+    "pagedReview": "logs/phase-12/review-pages-20261115T021745.187701Z/result.json"
+  },
+  "finalState": "logs/phase-11/usb-20261115T021810.255247Z",
+  "home": "logs/phase-11/usb-20261115T021810.783473Z"
+}

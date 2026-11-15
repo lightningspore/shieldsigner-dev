@@ -19,6 +19,8 @@
     "initial_letters",
     "is_bottom_list",
     "is_button_text_centered",
+    "num_pages",
+    "page_index",
     "passphrase",
     "scroll_y_initial_offset",
     "selected_button",
@@ -32,7 +34,8 @@
     "title",
     "top_nav_icon_color",
     "top_nav_icon_name",
-    "wordlist"
+    "wordlist",
+    "words"
   ],
-  "outputSha256": "76e9f7c725faf2f54df95d3e41bfe93417aff9c8c0db22b0af7c173caac52ab3"
+  "outputSha256": "04d5c140fc0c006003a2e529fac445adc112a92ea3d4091374aae065d207e06b"
 }

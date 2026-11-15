@@ -71,7 +71,7 @@ def result(event,button_count,screen_name=None):
 # Additional reviewed original screen contracts, using the same actual builders.
 _basic_configuration=configuration
 STATUS={'LargeIconStatusScreen':'custom','WarningScreen':'warning','DireWarningScreen':'dire_warning','ErrorScreen':'error'}
-APP_SCREENS=set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen'}
+APP_SCREENS=set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
 def configuration(screen_class,passed,translate=None):
     name=screen_class if isinstance(screen_class,str) else screen_class.__name__
     if name not in APP_SCREENS:return _basic_configuration(screen_class,passed,translate)
@@ -98,6 +98,17 @@ def configuration(screen_class,passed,translate=None):
         cfg['is_bottom_list']=True;cfg['is_button_text_centered']=False
     elif name=='SeedSelectSeedScreen':
         cfg['text']=a.get('text','');cfg['is_bottom_list']=True
+    elif name=='SeedWordsScreen':
+        builder='seed_words_screen'
+        words=a.get('words');page=a.get('page_index',0);total=a.get('num_pages',3)
+        if not isinstance(words,(list,tuple)) or not 1<=len(words)<=4 or any(type(word) is not str or not word or '\0' in word for word in words):raise ValueError('Seed page requires one to four words')
+        if type(page) is not int or type(total) is not int or not 0<=page<total:raise ValueError('Invalid seed page index')
+        cfg['words']=words;cfg['page_index']=page;cfg['start_number']=page*4+1
+        cfg['top_nav']['title']=tr('Seed Words: {}/{}').format(page+1,total)
+    elif name=='SeedWordsBackupTestPromptScreen':
+        cfg['top_nav'].update(title=tr('Verify Backup?'),show_back_button=False)
+        cfg['is_bottom_list']=True
+        cfg['text']=tr('Optionally verify that your mnemonic backup is correct.')
     elif name=='SeedMnemonicEntryScreen':
         builder='seed_mnemonic_entry_screen'
         words=a.get('wordlist')

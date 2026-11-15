@@ -41,6 +41,9 @@ void bm_micropython_poll(void);
 #define MICROPY_PY_BUILTINS_STR_UNICODE (1)
 #define MICROPY_PY_BUILTINS_STR_UNICODE_CHECK (1)
 #define MICROPY_FLOAT_IMPL MICROPY_FLOAT_IMPL_DOUBLE
+// Standard pseudorandom generator for non-secret quiz ordering, not wallet entropy.
+#define MICROPY_PY_RANDOM (1)
+#define MICROPY_PY_RANDOM_EXTRA_FUNCS (1)
 #endif
 
 // Preserve dataclass-equivalent rich comparison fallback semantics.

@@ -1,0 +1,75 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "files": {
+    "bip85.py": {
+      "source": "embit-0.8.0/src/embit/bip85.py",
+      "sourceSha256": "418b491d8b231c59856c75b2279b35eb56b341221ee58cec169657aac4a02308",
+      "outputSha256": "a5df4f670e1c76449407d7e38338fa0c06f9fc1d421e1f5052a9fa0423d2ba27",
+      "changes": [
+        "Unchanged"
+      ]
+    },
+    "diceware_words.py": {
+      "source": "resources/diceware/*.txt",
+      "sourceSha256": "378ceb2f8cf579444758cfc1cd62a5f198213f980896261e98123edc40be5304",
+      "outputSha256": "645cf131135434b3d689bf1553a640806a17c7e1c922e98b76641e9b1d59384b",
+      "changes": [
+        "Words only, ordered by dice key; key order asserted at generation"
+      ]
+    },
+    "password_generation.py": {
+      "source": "helpers/password_generation.py",
+      "sourceSha256": "447f925fcf97ef9ac2750ad853a00343e8987a21a8622f0a5c825704ba3b002b",
+      "outputSha256": "d878597b7d03be9fbccab4560b7388d2530f6267c145c39a4a5b86d6161b9e90",
+      "changes": [
+        "Cryptodome SHAKE256 -> seedsigner_port.shake (FIPS 202, vector-checked)",
+        "base64.b85encode -> password_support (CPython algorithm)"
+      ]
+    },
+    "view_tools_extra.py": {
+      "sources": {
+        "views/gpg_views.py": "28d529ad8ca2d7770ae136db8e60c22809829ae5a0a5aca244bedb2b1bc10511",
+        "views/tools_views.py": "62ec90fcc848fce567a8b5ae3ff3ab8deb22fb7525a92cdf950954f682872d99",
+        "views/password_generator_views.py": "bbc0bba9e2181215d9af68ff1d0f8762a018ed32eb7c3761c95cb7817fcb1a92"
+      },
+      "outputSha256": "292a83eebc051cb14b9b79dbc54b4c0b17827ab4ca99b3fd47dc798c0912c46f",
+      "classes": [
+        "ToolsTextQRTextEntryView",
+        "ToolsTextQRTextEntryExitDialogView",
+        "ToolsTextQRReviewTextView",
+        "ToolsTextQRTranscribeModePromptView",
+        "ToolsTextQRTranscribeModeView",
+        "ToolsTextQRFullScreenModeView",
+        "ToolsTranscribeTextQRZoomedInView",
+        "ToolsTranscribeTextQRConfirmQRPromptView",
+        "ToolsTranscribeTextQRConfirmScanView",
+        "ToolsTextQRScanQRCodeView",
+        "ToolsTextQRReviewTextView2",
+        "ToolsTextQRView",
+        "ToolsPasswordGeneratorTypeView",
+        "ToolsPasswordStrengthView",
+        "ToolsPasswordRandomOptionsView",
+        "ToolsPasswordEntropySourceView",
+        "ToolsPasswordHardwareRngEntropyView",
+        "ToolsPasswordWordSeparatorView",
+        "ToolsPasswordDiceRollCountView",
+        "ToolsPasswordDiceEntryView",
+        "ToolsPasswordGenerateView",
+        "ToolsPasswordBIP85GenerateView",
+        "ToolsPasswordReviewView",
+        "ToolsPasswordSaveView"
+      ],
+      "changes": [
+        "Text entry unescape: native \\uXXXX equivalent of the CPython raw_unicode_escape/unicode_escape round trip (MicroPython lacks both codecs and regex lookahead).",
+        "Password save: Seedkeeper option omitted (smartcard support fixed disabled); Show as QR unchanged.",
+        "Camera password entropy: owned native frames wiped via clear_controller_images instead of dropping references.",
+        "str.capitalize (absent in MicroPython) -> password_support.capitalize.",
+        "Dice entry uses the native keyboard for any source roll count (password counts differ from seed counts)."
+      ]
+    }
+  },
+  "scope": "Text QR and Password Generator flows on native screens. Seedkeeper save omitted (smartcard support fixed disabled). System RNG path keeps the original health gate; no RNG monitor exists so it reports unavailable. No entropy/security qualification follows from availability."
+}

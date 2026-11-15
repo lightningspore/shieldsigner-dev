@@ -13,6 +13,7 @@ def dependency(module,attribute=None):
     special={('seedsigner.helpers','embit_utils'):('seedsigner_port.embit_utils',None),
              ('binascii','a2b_base64'):('seedsigner_port.binary_codecs','a2b_base64'),
              ('seedsigner.helpers','kef'):('seedsigner_port.kef',None),
+             ('embit','bip85'):('embit.bip85',None),
              ('seedsigner.helpers','mnemonic_generation'):('seedsigner_port.camera_entropy_mnemonic',None),
              ('seedsigner.helpers','hardening'):('seedsigner_port.app_services',None),
              ('seedsigner.views.screensaver','ScreensaverScreen'):('seedsigner_port.app_services','ScreensaverScreen')}
@@ -24,6 +25,8 @@ def dependency(module,attribute=None):
              'seedsigner.views.view':'seedsigner_port.view_core',
              'seedsigner.views.scan_views':'seedsigner_port.view_scan',
              'seedsigner.views.tools_views':'seedsigner_port.camera_entropy_views',
+             'seedsigner.views.gpg_views':'seedsigner_port.view_tools_extra',
+             'seedsigner.views.password_generator_views':'seedsigner_port.view_tools_extra',
              'seedsigner.views.psbt_views':'seedsigner_port.view_psbt',
              'seedsigner.gui.screens.psbt_screens':'seedsigner_port.psbt_screens',
              'seedsigner.views.settings_views':'seedsigner_port.view_settings',

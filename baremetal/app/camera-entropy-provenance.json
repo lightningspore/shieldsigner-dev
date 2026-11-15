@@ -25,7 +25,7 @@
     "camera_entropy_views.py": {
       "source": "views/tools_views.py",
       "sourceSha256": "62ec90fcc848fce567a8b5ae3ff3ab8deb22fb7525a92cdf950954f682872d99",
-      "outputSha256": "0713575e934c3b3b3555ca5fd9b424f2b64eb65fa7b9ce80765d848db3a7187f",
+      "outputSha256": "c3ce35a45f84a4f128aa9e5b120f60f0cee4228a5aa6c29b596c0a46e19f8d97",
       "classes": [
         "ToolsMenuView",
         "ToolsImageEntropyLivePreviewView",

@@ -52,6 +52,9 @@ def configuration(screen_class,passed,translate=None):
     return BASIC[name],cfg
 
 def result(event,button_count,screen_name=None):
+    if screen_name=='ToolsTextQRTextEntryScreen':
+        from seedsigner_port.textqr import typed_result
+        return typed_result(result(event,button_count,'SeedAddPassphraseScreen'))
     if screen_name=='SeedAddPassphraseScreen':
         if not isinstance(event,tuple) or len(event)!=3 or event[0] not in (2,6) or type(event[2]) is not str:
             raise ValueError("Invalid passphrase result")
@@ -77,7 +80,8 @@ POWER={'ResetScreen':('Restarting','SeedSigner is restarting.\n\nAll in-memory d
        'PowerOffNotRequiredScreen':('Just Unplug It','It is safe to disconnect power at any time.','power_off_not_required_screen',True)}
 FINAL_WORD={'ToolsCalcFinalWordFinalizePromptScreen','ToolsCalcFinalWordScreen','ToolsCalcFinalWordDoneScreen'}
 EXPLORER={'ToolsAddressExplorerAddressTypeScreen','ToolsAddressExplorerAddressListScreen'}
-APP_SCREENS=set(POWER)|FINAL_WORD|EXPLORER|TRANSCRIPTION|set(STATUS)|{'SeedAddressVerificationScreen','SeedAddressVerificationSuccessScreen','SeedExportXpubDetailsScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
+from seedsigner_port.textqr import NAMES as TEXTQR
+APP_SCREENS=set(POWER)|TEXTQR|FINAL_WORD|EXPLORER|TRANSCRIPTION|set(STATUS)|{'SeedAddressVerificationScreen','SeedAddressVerificationSuccessScreen','SeedExportXpubDetailsScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
 def configuration(screen_class,passed,translate=None):
     name=screen_class if isinstance(screen_class,str) else screen_class.__name__
     if name in ('PSBTOverviewScreen', 'PSBTMathScreen', 'PSBTAddressDetailsScreen', 'PSBTChangeDetailsScreen', 'PSBTOpReturnScreen', 'PSBTFinalizeScreen'):
@@ -97,6 +101,10 @@ def configuration(screen_class,passed,translate=None):
         a=dict(passed);tr=translate if translate is not None else lambda text:text
         _,cfg=_basic_configuration('ButtonListScreen',a,translate)
         return final_word_configure(name,a,cfg,tr)
+    if name in TEXTQR:
+        from seedsigner_port.textqr import configure as textqr_configure
+        a=dict(passed);_,cfg=_basic_configuration('ButtonListScreen',a,translate)
+        return textqr_configure(name,a,cfg)
     if name in EXPLORER:
         from seedsigner_port.explorer import configure as explorer_configure
         a=dict(passed);tr=translate if translate is not None else lambda text:text

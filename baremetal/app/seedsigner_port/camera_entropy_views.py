@@ -26,7 +26,10 @@ def _make_ToolsMenuView():
             self.include_password_generator = include_password_generator
 
         def run(self):
-            button_data = [self.IMAGE, self.DICE, self.KEYBOARD, self.ADDRESS_EXPLORER, self.VERIFY_ADDRESS]
+            button_data = [self.IMAGE, self.DICE]
+            if getattr(self, 'include_password_generator', True):
+                button_data.append(self.PASSWORD_GENERATOR)
+            button_data.extend([self.KEYBOARD, self.ADDRESS_EXPLORER, self.VERIFY_ADDRESS, self.TEXTQRCODE])
             selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens', 'ButtonListScreen'), title=_dependency('gettext', 'gettext')('Tools'), is_button_text_centered=False, button_data=button_data)
             if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
                 return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
@@ -38,6 +41,16 @@ def _make_ToolsMenuView():
                 return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsAddressExplorerSelectSourceView'))
             if button_data[selected_menu_num] == self.VERIFY_ADDRESS:
                 return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.scan_views', 'ScanAddressView'))
+            if button_data[selected_menu_num] == self.SLIP39_IMAGE:
+                self.controller.create_slip39 = True
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsImageEntropyLivePreviewView'))
+            if button_data[selected_menu_num] == self.SLIP39_DICE:
+                self.controller.create_slip39 = True
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsDiceEntropyMnemonicLengthView'))
+            if button_data[selected_menu_num] == self.TEXTQRCODE:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner_port.view_tools_extra', 'ToolsTextQRView'))
+            if button_data[selected_menu_num] == self.PASSWORD_GENERATOR:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner_port.view_tools_extra', 'ToolsPasswordGeneratorTypeView'))
             return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsDiceEntropyMnemonicLengthView'))
     return ToolsMenuView
 

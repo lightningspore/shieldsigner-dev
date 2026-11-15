@@ -109,3 +109,20 @@ class LoadingScreenThread:
             Renderer.get_instance().display_blank_screen();self.active=False
 
 from seedsigner_port.address_search import SeedAddressVerificationScreen
+
+class SeedBIP85SelectChildIndexScreen(NativeScreen):
+    """Original 0-9 keyboard (5 cols, save, no cursor keys) via native keyboard.
+    Same contract as firmware/lvgl-app/python/contracts.py KEYBOARDS."""
+    def display(self):
+        from seedsigner_port.renderer import Renderer
+        from seedsigner_port.localization import gettext as _
+        a=self.args
+        cfg={'top_nav':{'title':_(a.get('title') or 'BIP-85 Index'),'show_back_button':True,'show_power_button':False},
+             'keys':list('0123456789'),'cols':5,'show_save_button':True,'show_cursor_keys':False,
+             'initial_value':a.get('initial_value') or '','allow_screensaver':True}
+        renderer=Renderer.get_instance();renderer.service();renderer.session.show('keyboard_screen',cfg)
+        event=renderer.session.wait()
+        if event==1000 or (isinstance(event,tuple) and len(event)==3 and event[0]==1 and event[1]==1000):return RET_CODE__BACK_BUTTON
+        if not isinstance(event,tuple) or len(event)!=3 or event[0]!=2 or event[1]!=0 or type(event[2]) is not str:raise ValueError('Unexpected native numeric keyboard result')
+        if any(c not in '0123456789' for c in event[2]):raise ValueError('Invalid numeric entry')
+        return event[2]

@@ -495,7 +495,7 @@ def _make_ScanDecryptEncryptedQRView():
                 return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ScanAmbiguousQRPromptView'), view_args=dict(segment=word_bytes, candidate_types=analysis.candidate_types, public_data=analysis.public_data), skip_current_view=True)
             try:
                 decoded_text = word_bytes.decode('utf-8')
-            except UnicodeDecodeError:
+            except _dependency('builtins', 'UnicodeError'):
                 decoded_text = None
             if decoded_text:
                 return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ScanDecryptedTextView'), view_args=dict(text=decoded_text), skip_current_view=True)

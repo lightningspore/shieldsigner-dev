@@ -17,7 +17,7 @@ class Counts(ast.NodeTransformer):
         if isinstance(n.func,ast.Name) and n.func.id=='Counter':n.func=ast.Name(id='_counts',ctx=ast.Load())
         return n
 port=LazyPort(tree,'seedsigner.helpers.mnemonic_generation')
-selected={'generate_mnemonic_from_bytes','_shannon_entropy','byte_entropy_is_sufficient','_hash_dice_rolls','generate_mnemonic_from_dice','generate_bytes_from_dice','dice_entropy_is_sufficient'}
+selected={'calculate_checksum','generate_mnemonic_from_bytes','_shannon_entropy','byte_entropy_is_sufficient','_hash_dice_rolls','generate_mnemonic_from_dice','generate_bytes_from_dice','dice_entropy_is_sufficient'}
 nodes=[]
 for n in tree.body:
     if isinstance(n,ast.FunctionDef) and n.name in selected:nodes.append(port.visit(Counts().visit(copy.deepcopy(n))))
@@ -34,17 +34,18 @@ text=header+ast.unparse(ast.fix_missing_locations(ast.Module(body=nodes,type_ign
 out=root/'app/seedsigner_port/camera_entropy_mnemonic.py';out.write_text(text)
 receipt['files']['camera_entropy_mnemonic.py']={'source':'helpers/mnemonic_generation.py','sourceSha256':hashlib.sha256(raw).hexdigest(),'outputSha256':hashlib.sha256(out.read_bytes()).hexdigest(),'functions':sorted(selected),'changes':['Original Counter(data) frequency histogram uses equivalent native dict counts; annotations/import boundaries use common source port.']}
 raw=(base/'views/tools_views.py').read_bytes();assert hashlib.sha256(raw).hexdigest()==guards['views/tools_views.py']
-tree=ast.parse(raw);names=('ToolsMenuView','ToolsImageEntropyLivePreviewView','ToolsImageEntropyFinalImageView','ToolsImageEntropyMnemonicLengthView','ToolsDiceEntropyMnemonicLengthView','ToolsDiceEntropyEntryView')
+tree=ast.parse(raw);names=('ToolsMenuView','ToolsImageEntropyLivePreviewView','ToolsImageEntropyFinalImageView','ToolsImageEntropyMnemonicLengthView','ToolsDiceEntropyMnemonicLengthView','ToolsDiceEntropyEntryView','ToolsCalcFinalWordNumWordsView','ToolsCalcFinalWordFinalizePromptView','ToolsCalcFinalWordCoinFlipsView','ToolsCalcFinalWordShowFinalWordView','ToolsCalcFinalWordDoneView')
 classes={n.name:copy.deepcopy(n) for n in tree.body if isinstance(n,ast.ClassDef) and n.name in names}
-bindings={'_derive_camera_entropy_bytes':('seedsigner_port.camera_entropy','derive_camera_entropy_bytes'),'mnemonic_generation':('seedsigner_port.camera_entropy_mnemonic',None),'ToolsDiceEntropyMnemonicLengthView':('seedsigner.views.tools_views','ToolsDiceEntropyMnemonicLengthView'),'time':('seedsigner_port.clock',None),'Destination':('seedsigner_port.navigation','Destination')}
+bindings={'_derive_camera_entropy_bytes':('seedsigner_port.camera_entropy','derive_camera_entropy_bytes'),'mnemonic_generation':('seedsigner_port.camera_entropy_mnemonic',None),'ToolsDiceEntropyMnemonicLengthView':('seedsigner.views.tools_views','ToolsDiceEntropyMnemonicLengthView'),'time':('seedsigner_port.clock',None),'Destination':('seedsigner_port.navigation','Destination'),'format':('seedsigner_port.final_word','builtin_format')}
 port=LazyPort(tree,'seedsigner.views.tools_views',classes=classes,bindings=bindings)
 nodes=[]
 for name in names:
     node=classes[name];method=next(n for n in node.body if isinstance(n,ast.FunctionDef) and n.name=='run')
     if name=='ToolsMenuView':
-        # Preserve the source menu options/title/selection destinations, without
-        # constructing unrelated Linux battery/network/build/GPG prerequisites.
-        method.body=ast.parse('button_data=[self.IMAGE,self.DICE]\nselected_menu_num=self.run_screen(ButtonListScreen,title=_("Tools"),is_button_text_centered=False,button_data=button_data)\nif selected_menu_num==RET_CODE__BACK_BUTTON:return Destination(BackStackView)\nif button_data[selected_menu_num]==self.IMAGE:return Destination(ToolsImageEntropyLivePreviewView)\nreturn Destination(ToolsDiceEntropyMnemonicLengthView)\n').body
+        # Source menu options/title/destinations for entries ported to this
+        # runtime. Linux battery/network/build/GPG/microSD/smartcard probes are
+        # not constructed; unported software entries are added as they land.
+        method.body=ast.parse('button_data=[self.IMAGE,self.DICE,self.KEYBOARD]\nselected_menu_num=self.run_screen(ButtonListScreen,title=_("Tools"),is_button_text_centered=False,button_data=button_data)\nif selected_menu_num==RET_CODE__BACK_BUTTON:return Destination(BackStackView)\nif button_data[selected_menu_num]==self.IMAGE:return Destination(ToolsImageEntropyLivePreviewView)\nif button_data[selected_menu_num]==self.KEYBOARD:return Destination(ToolsCalcFinalWordNumWordsView)\nreturn Destination(ToolsDiceEntropyMnemonicLengthView)\n').body
     elif name=='ToolsImageEntropyLivePreviewView':
         gates=[n for n in method.body if isinstance(n,ast.If) and ast.unparse(n.test)=='not self.controller.hardware_rng_is_healthy'];assert len(gates)==1
         method.body.remove(gates[0])

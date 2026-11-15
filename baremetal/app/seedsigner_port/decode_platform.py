@@ -13,6 +13,7 @@ def dependency(module,attribute=None):
     special={('seedsigner.helpers','embit_utils'):('seedsigner_port.embit_utils',None),
              ('binascii','a2b_base64'):('seedsigner_port.binary_codecs','a2b_base64'),
              ('seedsigner.helpers','kef'):('seedsigner_port.kef',None),
+             ('seedsigner.helpers','mnemonic_generation'):('seedsigner_port.camera_entropy_mnemonic',None),
              ('seedsigner.helpers','hardening'):('seedsigner_port.app_services',None),
              ('seedsigner.views.screensaver','ScreensaverScreen'):('seedsigner_port.app_services','ScreensaverScreen')}
     if (module,attribute) in special:module,attribute=special[(module,attribute)]

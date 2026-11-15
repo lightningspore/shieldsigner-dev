@@ -26,7 +26,7 @@ receipt={'application':lock,'files':{},'reviewedChanges':['SeedWordsView rounds 
 for file,outname in [('views/view.py','view_core.py'),('views/scan_views.py','view_scan.py'),('views/seed_views.py','view_seed.py'),('views/screensaver.py','view_splash.py'),('views/developer_os_warning.py','view_development.py')]:
  raw=(source/'src/seedsigner'/file).read_bytes();tree=ast.parse(raw)
  classes={n.name:n for n in tree.body if isinstance(n,ast.ClassDef) and n.name!='Destination' and (outname!='view_splash.py' or n.name=='OpeningSplashView')}
- bindings={'time':('seedsigner_port.clock',None),'Destination':('seedsigner_port.navigation','Destination'),'OpeningSplashScreen':('seedsigner_port.app_screens','OpeningSplashScreen')}
+ bindings={'UnicodeDecodeError':('builtins','UnicodeError'),'time':('seedsigner_port.clock',None),'Destination':('seedsigner_port.navigation','Destination'),'OpeningSplashScreen':('seedsigner_port.app_screens','OpeningSplashScreen')}
  if outname=='view_seed.py':bindings['random']=('seedsigner_port.quiz_random',None)
  originals=copy.deepcopy(classes)
  port=LazyPort(tree,'seedsigner.'+file[:-3].replace('/','.'),classes=classes,bindings=bindings)

@@ -28,7 +28,7 @@
     "view_scan.py": {
       "source": "views/scan_views.py",
       "sourceSha256": "ad151a5b572c5cc5564f94163a3060e6f9abc5bcc63ab7a0ae69eac069ef7f0c",
-      "outputSha256": "e3285b539918c4f29087ae0f95454f7a3cf5fe94ae5b282dca92061904f4b41e",
+      "outputSha256": "0a0cbfdb6acc13e783b78a91e85d462d06bb1779c6f030d95152c5c969a7b1e6",
       "classes": [
         "ScanView",
         "ScanPSBTView",
@@ -53,7 +53,7 @@
     "view_seed.py": {
       "source": "views/seed_views.py",
       "sourceSha256": "1784b3294ffc2c927d63244da80ac7b605144822f3ed28e72af0ded8abcbbd06",
-      "outputSha256": "86badbfc9f0f4595424109a9a0e87fd73ae35f25e4ba6ef23b2bbaed1ce5bf06",
+      "outputSha256": "3d0ee22dea299a0d8e3e43f5698f1b9b0ae7562c3c245f528de4e5c62904b7fa",
       "classes": [
         "SeedsMenuView",
         "SeedSelectSeedView",

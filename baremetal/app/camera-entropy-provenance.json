@@ -7,11 +7,12 @@
     "camera_entropy_mnemonic.py": {
       "source": "helpers/mnemonic_generation.py",
       "sourceSha256": "e0dcae5af748e7de1cc9c14c0cf39b30cf38bd288c663eff327c8a90eb894b58",
-      "outputSha256": "848493164f6ca304bddbfbdf404471fb2e53a4f2263faab45cbf6ceb1e9d71f0",
+      "outputSha256": "626a65b8058e1a4006ebb5774d3124c822019eecb55f774d3978ea5ac5b44b9c",
       "functions": [
         "_hash_dice_rolls",
         "_shannon_entropy",
         "byte_entropy_is_sufficient",
+        "calculate_checksum",
         "dice_entropy_is_sufficient",
         "generate_bytes_from_dice",
         "generate_mnemonic_from_bytes",
@@ -24,14 +25,19 @@
     "camera_entropy_views.py": {
       "source": "views/tools_views.py",
       "sourceSha256": "62ec90fcc848fce567a8b5ae3ff3ab8deb22fb7525a92cdf950954f682872d99",
-      "outputSha256": "5afd06ef5fcc299c2b98eacf0d8443c85a4714c3bd758ab375e245056eca2a80",
+      "outputSha256": "6917410ce2c2244ed2a46edef04a2d33222681c23f44db77047058e1b850b91a",
       "classes": [
         "ToolsMenuView",
         "ToolsImageEntropyLivePreviewView",
         "ToolsImageEntropyFinalImageView",
         "ToolsImageEntropyMnemonicLengthView",
         "ToolsDiceEntropyMnemonicLengthView",
-        "ToolsDiceEntropyEntryView"
+        "ToolsDiceEntropyEntryView",
+        "ToolsCalcFinalWordNumWordsView",
+        "ToolsCalcFinalWordFinalizePromptView",
+        "ToolsCalcFinalWordCoinFlipsView",
+        "ToolsCalcFinalWordShowFinalWordView",
+        "ToolsCalcFinalWordDoneView"
       ],
       "changes": [
         "Camera is configured entropy source; remove Linux fork RNG-health entry prerequisite.",

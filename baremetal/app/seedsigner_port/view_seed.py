@@ -248,12 +248,12 @@ def _make_SeedKeeperSelectView():
                 if len(secret_raw_bytes) >= 1 + size:
                     try:
                         candidates.append(secret_raw_bytes[1:1 + size].decode('utf-8'))
-                    except UnicodeDecodeError:
+                    except _dependency('builtins', 'UnicodeError'):
                         pass
             for decode_attempt in (lambda: _resolve('SeedKeeperSelectView')._decode_seedkeeper_text(secret_hex), lambda: secret_raw_bytes.decode('utf-8')):
                 try:
                     candidates.append(decode_attempt())
-                except UnicodeDecodeError:
+                except _dependency('builtins', 'UnicodeError'):
                     continue
             for candidate in candidates:
                 if candidate.startswith(('xprv', 'tprv')):

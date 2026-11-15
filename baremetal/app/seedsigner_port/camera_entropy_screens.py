@@ -81,4 +81,10 @@ def __getattr__(name):
     if name=='ToolsDiceEntropyEntryScreen':
         from seedsigner_port.camera_entropy_dice import ToolsDiceEntropyEntryScreen
         return ToolsDiceEntropyEntryScreen
+    if name=='ToolsCoinFlipEntryScreen':
+        from seedsigner_port.final_word import ToolsCoinFlipEntryScreen
+        return ToolsCoinFlipEntryScreen
+    if name in ('ToolsCalcFinalWordFinalizePromptScreen','ToolsCalcFinalWordScreen','ToolsCalcFinalWordDoneScreen'):
+        from seedsigner_port import app_screens
+        return getattr(app_screens,name)
     raise AttributeError(name)

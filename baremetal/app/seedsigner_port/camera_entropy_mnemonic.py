@@ -10,6 +10,26 @@ DICE_ROLLS_REQUIRED = {12: 50, 15: 62, 18: 75, 21: 87, 24: 99}
 ENTROPY_BYTES_REQUIRED = {12: 16, 15: 20, 18: 24, 21: 28, 24: 32, 20: 16, 33: 32}
 ROLL_COUNT_TO_LENGTH = {v: k for k, v in DICE_ROLLS_REQUIRED.items()}
 
+def calculate_checksum(mnemonic, wordlist_language_code=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').WORDLIST_LANGUAGE__ENGLISH):
+    """
+        Provide 12- or 24-word mnemonic, returns complete mnemonic w/checksum as a list.
+
+        Mnemonic may be a list of words or a string of words separated by spaces or commas.
+
+        If 11- or 23-words are provided, append word `0000` to end of list as temp final
+        word.
+    """
+    if type(mnemonic) == str:
+        mnemonic = _dependency('re', None).findall('[^,\\s]+', mnemonic)
+    if len(mnemonic) in [11, 14, 17, 20, 23]:
+        temp_final_word = ''.join(_dependency('seedsigner.models.seed', 'Seed').get_wordlist(wordlist_language_code)[0])
+        mnemonic.append(temp_final_word)
+    if len(mnemonic) not in SUPPORTED_WORD_LENGTHS:
+        raise Exception('Pass in a 12, 15, 18, 21, or 24-word mnemonic')
+    mnemonic_copy = mnemonic.copy()
+    mnemonic_bytes = _dependency('embit', 'bip39').mnemonic_to_bytes(_dependency('unicodedata', None).normalize('NFKD', ' '.join(mnemonic_copy)), ignore_checksum=True, wordlist=_dependency('seedsigner.models.seed', 'Seed').get_wordlist(wordlist_language_code))
+    return [''.join(w) for w in _dependency('embit', 'bip39').mnemonic_from_bytes(mnemonic_bytes, wordlist=_dependency('seedsigner.models.seed', 'Seed').get_wordlist(wordlist_language_code)).split()]
+
 def generate_mnemonic_from_bytes(entropy_bytes, wordlist_language_code=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').WORDLIST_LANGUAGE__ENGLISH):
     return [''.join(w) for w in _dependency('embit', 'bip39').mnemonic_from_bytes(entropy_bytes, wordlist=_dependency('seedsigner.models.seed', 'Seed').get_wordlist(wordlist_language_code)).split()]
 

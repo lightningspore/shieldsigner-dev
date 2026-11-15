@@ -26,12 +26,14 @@ def _make_ToolsMenuView():
             self.include_password_generator = include_password_generator
 
         def run(self):
-            button_data = [self.IMAGE, self.DICE]
+            button_data = [self.IMAGE, self.DICE, self.KEYBOARD]
             selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens', 'ButtonListScreen'), title=_dependency('gettext', 'gettext')('Tools'), is_button_text_centered=False, button_data=button_data)
             if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
                 return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
             if button_data[selected_menu_num] == self.IMAGE:
                 return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsImageEntropyLivePreviewView'))
+            if button_data[selected_menu_num] == self.KEYBOARD:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsCalcFinalWordNumWordsView'))
             return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsDiceEntropyMnemonicLengthView'))
     return ToolsMenuView
 
@@ -205,7 +207,131 @@ def _make_ToolsDiceEntropyEntryView():
                 loading_screen.stop()
                 return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.seed_views', 'SeedWordsWarningView'), view_args={'seed': None}, clear_history=True)
     return ToolsDiceEntropyEntryView
-_FACTORIES={'ToolsMenuView':_make_ToolsMenuView,'ToolsImageEntropyLivePreviewView':_make_ToolsImageEntropyLivePreviewView,'ToolsImageEntropyFinalImageView':_make_ToolsImageEntropyFinalImageView,'ToolsImageEntropyMnemonicLengthView':_make_ToolsImageEntropyMnemonicLengthView,'ToolsDiceEntropyMnemonicLengthView':_make_ToolsDiceEntropyMnemonicLengthView,'ToolsDiceEntropyEntryView':_make_ToolsDiceEntropyEntryView}
+
+def _make_ToolsCalcFinalWordNumWordsView():
+
+    class ToolsCalcFinalWordNumWordsView(_dependency('seedsigner.views.view', 'View')):
+        TWELVE = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('12 words', return_data=12)
+        FIFTEEN = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('15 words', return_data=15)
+        EIGHTEEN = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('18 words', return_data=18)
+        TWENTY_ONE = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('21 words', return_data=21)
+        TWENTY_FOUR = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('24 words', return_data=24)
+
+        def run(self):
+            allowed = self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__SEED_WORD_LENGTHS)
+            options = {12: self.TWELVE, 15: self.FIFTEEN, 18: self.EIGHTEEN, 21: self.TWENTY_ONE, 24: self.TWENTY_FOUR}
+            button_data = [options[l] for l in allowed]
+            selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens', 'ButtonListScreen'), title=_dependency('gettext', 'gettext')('Mnemonic Length'), is_bottom_list=True, is_button_text_centered=True, button_data=button_data)
+            if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
+            self.controller.storage.init_pending_mnemonic(button_data[selected_menu_num].return_data)
+            return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.seed_views', 'SeedMnemonicEntryView'), view_args=dict(is_calc_final_word=True))
+    return ToolsCalcFinalWordNumWordsView
+
+def _make_ToolsCalcFinalWordFinalizePromptView():
+
+    class ToolsCalcFinalWordFinalizePromptView(_dependency('seedsigner.views.view', 'View')):
+        COIN_FLIPS = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Coin flip entropy')
+        SELECT_WORD = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Word selection entropy')
+        ZEROS = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Finalize with zeros')
+
+        def run(self):
+            mnemonic = self.controller.storage.pending_mnemonic
+            mnemonic_length = len(mnemonic)
+            total_bits = _dependency('seedsigner_port.camera_entropy_mnemonic', None).ENTROPY_BYTES_REQUIRED[mnemonic_length] * 8
+            num_entropy_bits = total_bits - (mnemonic_length - 1) * 11
+            button_data = [self.COIN_FLIPS, self.SELECT_WORD, self.ZEROS]
+            selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens.tools_screens', 'ToolsCalcFinalWordFinalizePromptScreen'), mnemonic_length=mnemonic_length, num_entropy_bits=num_entropy_bits, button_data=button_data)
+            if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
+            elif button_data[selected_menu_num] == self.COIN_FLIPS:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsCalcFinalWordCoinFlipsView'))
+            elif button_data[selected_menu_num] == self.SELECT_WORD:
+                self.controller.storage.update_pending_mnemonic(None, mnemonic_length - 1)
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.seed_views', 'SeedMnemonicEntryView'), view_args=dict(is_calc_final_word=True, cur_word_index=mnemonic_length - 1))
+            elif button_data[selected_menu_num] == self.ZEROS:
+                wordlist_language_code = self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__WORDLIST_LANGUAGE)
+                self.controller.storage.update_pending_mnemonic(_dependency('seedsigner.models.seed', 'Seed').get_wordlist(wordlist_language_code)[0], mnemonic_length - 1)
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsCalcFinalWordShowFinalWordView'), view_args=dict(coin_flips='0' * num_entropy_bits))
+    return ToolsCalcFinalWordFinalizePromptView
+
+def _make_ToolsCalcFinalWordCoinFlipsView():
+
+    class ToolsCalcFinalWordCoinFlipsView(_dependency('seedsigner.views.view', 'View')):
+
+        def run(self):
+            mnemonic_length = len(self.controller.storage.pending_mnemonic)
+            total_bits = _dependency('seedsigner_port.camera_entropy_mnemonic', None).ENTROPY_BYTES_REQUIRED[mnemonic_length] * 8
+            total_flips = total_bits - (mnemonic_length - 1) * 11
+            ret_val = self.run_screen(_dependency('seedsigner.gui.screens.tools_screens', 'ToolsCoinFlipEntryScreen'), return_after_n_chars=total_flips)
+            if ret_val == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
+            else:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsCalcFinalWordShowFinalWordView'), view_args=dict(coin_flips=ret_val))
+    return ToolsCalcFinalWordCoinFlipsView
+
+def _make_ToolsCalcFinalWordShowFinalWordView():
+
+    class ToolsCalcFinalWordShowFinalWordView(_dependency('seedsigner.views.view', 'View')):
+        NEXT = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Next')
+
+        def __init__(self, coin_flips=None):
+            super().__init__()
+            wordlist_language_code = self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__WORDLIST_LANGUAGE)
+            wordlist = _dependency('seedsigner.models.seed', 'Seed').get_wordlist(wordlist_language_code)
+            if coin_flips:
+                self.selected_final_word = None
+                self.selected_final_bits = coin_flips
+            else:
+                self.selected_final_word = self.controller.storage.pending_mnemonic[-1]
+                self.selected_final_bits = _dependency('seedsigner_port.final_word', 'builtin_format')(wordlist.index(self.selected_final_word), '011b')
+            if coin_flips:
+                binary_string = coin_flips + '0' * (11 - len(coin_flips))
+                wordlist_index = int(binary_string, 2)
+                wordlist = _dependency('seedsigner.models.seed', 'Seed').get_wordlist(self.controller.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__WORDLIST_LANGUAGE))
+                word = wordlist[wordlist_index]
+                self.controller.storage.update_pending_mnemonic(word, -1)
+            final_mnemonic = _dependency('seedsigner.helpers', 'mnemonic_generation').calculate_checksum(mnemonic=self.controller.storage.pending_mnemonic, wordlist_language_code=wordlist_language_code)
+            self.controller.storage.update_pending_mnemonic(final_mnemonic[-1], -1)
+            mnemonic = self.controller.storage.pending_mnemonic
+            mnemonic_length = len(mnemonic)
+            self.actual_final_word = self.controller.storage.pending_mnemonic[-1]
+            total_bits = _dependency('seedsigner.helpers', 'mnemonic_generation').ENTROPY_BYTES_REQUIRED[mnemonic_length] * 8
+            num_entropy_bits = total_bits - (mnemonic_length - 1) * 11
+            num_checksum_bits = 11 - num_entropy_bits
+            self.checksum_bits = _dependency('seedsigner_port.final_word', 'builtin_format')(wordlist.index(self.actual_final_word), '011b')[-num_checksum_bits:]
+
+        def run(self):
+            button_data = [self.NEXT]
+            title = _dependency('gettext', 'gettext')('Final Word Calc')
+            selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens.tools_screens', 'ToolsCalcFinalWordScreen'), title=title, button_data=button_data, selected_final_word=self.selected_final_word, selected_final_bits=self.selected_final_bits, checksum_bits=self.checksum_bits, actual_final_word=self.actual_final_word)
+            if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
+            elif button_data[selected_menu_num] == self.NEXT:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsCalcFinalWordDoneView'))
+    return ToolsCalcFinalWordShowFinalWordView
+
+def _make_ToolsCalcFinalWordDoneView():
+
+    class ToolsCalcFinalWordDoneView(_dependency('seedsigner.views.view', 'View')):
+        LOAD = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Load seed')
+        DISCARD = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Discard', button_label_color='red')
+
+        def run(self):
+            mnemonic = self.controller.storage.pending_mnemonic
+            mnemonic_word_length = len(mnemonic)
+            final_word = mnemonic[-1]
+            button_data = [self.LOAD, self.DISCARD]
+            selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens.tools_screens', 'ToolsCalcFinalWordDoneScreen'), final_word=final_word, mnemonic_word_length=mnemonic_word_length, fingerprint=self.controller.storage.get_pending_mnemonic_fingerprint(self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__NETWORK), wordlist_language_code=self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__WORDLIST_LANGUAGE)), button_data=button_data)
+            if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
+            self.controller.storage.convert_pending_mnemonic_to_pending_seed(wordlist_language_code=self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__WORDLIST_LANGUAGE))
+            if button_data[selected_menu_num] == self.LOAD:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.seed_views', 'SeedFinalizeView'))
+            elif button_data[selected_menu_num] == self.DISCARD:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.seed_views', 'SeedDiscardView'))
+    return ToolsCalcFinalWordDoneView
+_FACTORIES={'ToolsMenuView':_make_ToolsMenuView,'ToolsImageEntropyLivePreviewView':_make_ToolsImageEntropyLivePreviewView,'ToolsImageEntropyFinalImageView':_make_ToolsImageEntropyFinalImageView,'ToolsImageEntropyMnemonicLengthView':_make_ToolsImageEntropyMnemonicLengthView,'ToolsDiceEntropyMnemonicLengthView':_make_ToolsDiceEntropyMnemonicLengthView,'ToolsDiceEntropyEntryView':_make_ToolsDiceEntropyEntryView,'ToolsCalcFinalWordNumWordsView':_make_ToolsCalcFinalWordNumWordsView,'ToolsCalcFinalWordFinalizePromptView':_make_ToolsCalcFinalWordFinalizePromptView,'ToolsCalcFinalWordCoinFlipsView':_make_ToolsCalcFinalWordCoinFlipsView,'ToolsCalcFinalWordShowFinalWordView':_make_ToolsCalcFinalWordShowFinalWordView,'ToolsCalcFinalWordDoneView':_make_ToolsCalcFinalWordDoneView}
 _CACHE={}
 def _resolve(name):
     if name not in _CACHE:

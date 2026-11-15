@@ -120,7 +120,9 @@ pub fn configure(pattern: bool) -> Result<(), &'static str> {
     set_exposure(exposure)?;
     set_diagnostic_gain(low_light)?;
     let orientation = i2c::read_sensor(ORIENTATION)?;
-    i2c::write_sensor(ORIENTATION, orientation & !0x66)?;
+    // Mini PCB mounts the sensor rotated 180 degrees: set mirror (0x06) and
+    // flip (0x60) so every user-facing view is upright (verified on DUT1 by eye).
+    i2c::write_sensor(ORIENTATION, orientation | 0x66)?;
     let test = i2c::read_sensor(TEST_PATTERN)?;
     i2c::write_sensor(TEST_PATTERN, (test & !8) | if pattern { 8 } else { 0 })?;
     let _ = writeln!(

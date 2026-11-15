@@ -27,8 +27,8 @@ a.set_passphrase('',regenerate_seed=False)
 assert a.passphrase=='' and not a==b
 a.set_passphrase('')
 assert a==b
-try:a.get_root();assert False
-except FeatureUnavailable:pass
+assert a.get_root().is_private
+assert a.get_fingerprint()=='73c5da0a' # Public abandon/about, empty passphrase; CPython embit reference
 assert a==b
 for invalid in (['abandon']*12,['notaword']*12):
     try:Seed(invalid);assert False

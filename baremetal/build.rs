@@ -20,6 +20,9 @@ fn main() {
         println!("cargo:rustc-link-search=native={}",root.join("build/regex").display());
         println!("cargo:rustc-link-lib=static=signerregex");
         println!("cargo:rerun-if-changed=build/regex/libsignerregex.a");
+        println!("cargo:rustc-link-search=native={}",root.join("build/secp").display());
+        println!("cargo:rustc-link-lib=static=signersecp");
+        println!("cargo:rerun-if-changed=build/secp/libsignersecp.a");
         for name in ["stdc++", "m", "c", "gcc"] {
             let output=std::process::Command::new(&tools).args(["-mthumb","-mcpu=cortex-a7","-mfloat-abi=soft",&format!("-print-file-name=lib{}.a",name)]).output().expect("Run baremetal:cxx:setup");
             assert!(output.status.success());

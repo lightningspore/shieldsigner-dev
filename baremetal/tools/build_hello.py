@@ -41,6 +41,7 @@ if 'fast-boot' in features:
 runtime_info={}
 if 'native-ui' in features:
     subprocess.run(['mise','run','baremetal:ui:library:build'],cwd=ROOT.parent,check=True)
+    subprocess.run(['uv','run','--python','3.13','python',str(ROOT/'tools/build_secp.py')],cwd=ROOT.parent,check=True)
     subprocess.run(['uv','run','--python','3.13','python',str(ROOT/'tools/build_qr.py')],check=True)
     subprocess.run(['uv','run','--python','3.13','python',str(ROOT/'tools/build_regex.py')],check=True)
 inputs = []
@@ -104,6 +105,7 @@ shutil.copyfile(rkbin/'hello-download.bin', build/'hello-download.bin')
         for p in [ROOT.parent/'firmware/rkaiq-rs/Cargo.toml', *sorted((ROOT.parent/'firmware/rkaiq-rs/src').glob('*.rs'))]} if 'isp' in args.features or 'runtime-board' in features else {},
     'runtime':runtime_info,
     'nativeHashes':{'core':'hash-core','dependencyLockSha256':hashlib.sha256((ROOT/'Cargo.lock').read_bytes()).hexdigest(),'preparedLibraries':json.loads((ROOT/'app/hash-libs-provenance.json').read_text()),'note':'Streaming hashes, HMAC and service-aware PBKDF2 prerequisites; not full seed/wallet qualification'} if 'native-hashes' in features else None,
+    'nativeSecp':json.loads((ROOT/'build/secp/manifest.json').read_text()) if 'native-ui' in features else None,
     'nativeMnemonic':{'shamir':json.loads((ROOT/'app/shamir-provenance.json').read_text()),'aezeed':json.loads((ROOT/'app/aezeed-provenance.json').read_text())} if 'native-ui' in features else None,
     'nativeEmbitModels':json.loads((ROOT/'app/embit-models-provenance.json').read_text()) if 'native-ui' in features else None,
     'nativePsbtFraming':json.loads((ROOT/'app/psbt-framing-provenance.json').read_text()) if 'native-ui' in features else None,

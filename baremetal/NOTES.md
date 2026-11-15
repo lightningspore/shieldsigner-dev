@@ -427,3 +427,29 @@ still older Unicode image/qstr-heavy and needs a clean RAM reload before work.
 Next: real View/Controller scan routing and displayed results, remaining compact/
 encryption/UR dependencies, curves/entropy and SD app assets. Actual printed-code
 optical scanning and full wallet workflows remain unqualified.
+
+2026-11-15 UTC — Actual native curves required by original result Views
+The original SeedFinalizeView computes a real fingerprint, so the Controller/View
+work required its actual curve backend first. Added pinned libsecp256k1 v0.7.0
+(a660a497...) portable ARM32 C, small upstream precomputation tables, preallocated
+context (actual180bytes), preserved MIT license/source snapshot. Native binding
+validates buffers and uses portable X||Y/R||S tokens, not untrusted C struct blobs.
+Full embit EC/BIP32-required ABI resolves real operations; no fake key/signature.
+Custom callbacks/external contexts/unported APIs fail explicitly. Context randomize
+accepts actual caller input; PUBLIC gate seed reset afterward. No entropy-source,
+side-channel, full-erasure or wallet qualification claim. secrets still unavailable.
+
+Final DUT1 image3e476dbe..., RAMload001212. Gate001235 passes all17BIP32paths,
+16invalidkeys,19BIP340vectors,24originalSeedfingerprints/roots,12ECDSAcomparisons,
+6ECDHpairs, recovery/lowS/keypair/in-place operations, malformed input recovery;
+elapsed2740ms excludes upload/boot/UI. Smoke gate000647 proved actual generator.
+Initial C compile errors were binding formatting/helper-name issues; fixed with
+warnings enabled. Console control-byte guard caught an escaped fixture-generation
+bug before upload; corrected fixture without weakening transport guard.
+Seed001240,PSBT001245,mnemonic001246,memory001315,QR/scan001316 pass;54hosttests pass.
+Home001318, preview stopped, readers finished. SECP-PORT.md and native-curves
+receipt record provenance/scope. No SD/CAD/REF-storage writes. Shared artifacts
+DUT1; DUT0 older Unicode/qstr-heavy needs clean RAM reload before work.
+Next: original View/Controller/SeedStorage and real screen contracts. Fingerprints
+are now genuine, so SeedFinalizeView can be ported without a placeholder. Full
+optical QR, compact/encrypted/UR, entropy and SD app work remain unfinished.

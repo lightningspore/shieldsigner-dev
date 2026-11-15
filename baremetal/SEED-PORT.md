@@ -17,7 +17,8 @@ equality, optional regeneration, invalid checksum/unknown words, explicit missin
 curve dependency and post-wipe wordlist usability.48host tests pass, including
 all original class/method coverage. Class presence alone does not qualify Aezeed,
 Electrum, SLIP39 or Xprv flows. Original bip85_supported metadata remains upstream
-behavior; native curves/BIP85 are still unavailable rather than implemented.
+behavior; actual native curves/root fingerprints are now supplied by SECP-PORT.md.
+The BIP85 leaf and complete View workflows remain separate unfinished work.
 
 The CPython ctypes/refcount secure_delete implementation cannot run unchanged.
 The native boundary performs real volatile clearing only after both object and
@@ -48,3 +49,6 @@ the abandoned chr()-based fixture interned many characters.
 Next integration gaps include original generic QR classification dependencies
 (PSBT framing, SLIP39 wordlist, Aezeed checksum), full Seed/Controller/View routing,
 curves and wallet operations, SD assets and actual optical QR qualification.
+
+Current follow-up: SECP-PORT.md records actual native root/fingerprint gates; the
+initial curve-unavailable gate described above was superseded by real key checks.

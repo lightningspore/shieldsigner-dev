@@ -1496,3 +1496,15 @@ run = ["uv run --python 3.13 python baremetal/tools/prepare_shamir.py", "uv run 
 [tasks."baremetal:mnemonic:dut1:gate"]
 description = "Check published SLIP39 recovery, original mnemonic formats and Aezeed ambiguity on DUT1"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/mnemonic_gate.py --serial rv1103-dut1 --timeout 90"
+
+[tasks."baremetal:secp:build"]
+description = "Build actual pinned portable-C libsecp256k1 for native ARM curve operations"
+run = "uv run --python 3.13 python baremetal/tools/build_secp.py"
+
+[tasks."baremetal:secp:prepare"]
+description = "Prepare complete published BIP32/BIP340 and public embit differential curve fixtures"
+run = "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_secp_gate.py"
+
+[tasks."baremetal:secp:dut1:gate"]
+description = "Run actual native curves, original Seed fingerprints, signatures, ECDH and rejection tests on DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/secp_gate.py --serial rv1103-dut1 --timeout 60"

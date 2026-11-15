@@ -42,7 +42,7 @@ to baseline. The host-observed response was about 0.10 s at 0.1 s serial-read
 resolution. The callback itself is not claimed to have that measurement precision.
 
 Unicode NFKD and the actual embit BIP39 leaf now have separate native gates
-(UNICODE-PORT.md, BIP39-PORT.md, PASSPHRASE-PORT.md). The original BIP39 Seed model now has native gates (SEED-PORT.md). Alternate seed
-types, UR/encryption, curve operations, Controller routing and SD assets remain
-unfinished. This checkpoint
+(UNICODE-PORT.md, BIP39-PORT.md, PASSPHRASE-PORT.md). The original BIP39 Seed model now has native gates (SEED-PORT.md). Actual native curve operations/root fingerprints now have gates (SECP-PORT.md).
+Alternate seed UI, UR/encryption, complete signing/Controller routing and SD assets
+remain unfinished. This checkpoint
 supplies prerequisites; it does not establish seed generation or signing flows.

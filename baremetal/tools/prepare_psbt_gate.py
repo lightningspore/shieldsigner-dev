@@ -43,14 +43,9 @@ for name,raw in cases:
  if expected=='ok':code+=f"    assert parsed.serialize().hex()=={serialized!r}\n"
  code+="except FeatureUnavailable:raise\nexcept InvalidPSBTError as e:result='reject:'+e.code\nexcept Exception as e:result='error:'+type(e).__name__\n"
  code+=f"assert result=={expected!r},({name!r},result)\ngc.collect()\n"
-code+='''try:
-    ec.PublicKey.parse(binascii.unhexlify('0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'))
-    assert False
-except FeatureUnavailable:pass
-try:
-    ec.NUMS_PUBKEY
-    assert False
-except FeatureUnavailable:pass
+code+='''point=ec.PublicKey.parse(binascii.unhexlify('0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'))
+assert point.sec().hex()=='0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798'
+assert ec.NUMS_PUBKEY.sec().hex()=='0250929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0'
 d=DecodeQR()
 status=d.add_data('0000'*11+'0003')
 assert status==DecodeQRStatus.COMPLETE and d.is_complete

@@ -14,11 +14,12 @@ Regular parsing algorithms, strict rejection checks and returned models remain
 upstream source. Existing QR log omission also covers the original compact-seed
 branch's module-level logging call, which previously referenced an absent logger.
 
-Only the secp256k1 import is deferred. An attribute request resolves an actual
-backend or raises FeatureUnavailable; it never returns a fabricated key/signature.
+Only the secp256k1 import is deferred. An attribute request resolves the actual
+backend described in SECP-PORT.md, or fails explicitly if a provider is absent;
+it never returns a fabricated key/signature.
 The original NUMS_PUBKEY initializer also needs a real curve parse, so module
 __getattr__ computes and caches that exact original expression on first access.
-This lets parser modules load without pretending curve operations are present.
+This keeps parser imports lazy while actual curve operations use libsecp256k1.
 Entropy follows the original source; with no os.urandom/filesystem provider,
 requests fail rather than using a substitute RNG. None of these modules qualify
 signing, entropy, EC/BIP32 operations or wallet review workflows.
@@ -28,8 +29,8 @@ for15public synthetic cases: valid v0/v2 model round trips; duplicate map keys;
 non-minimal key-length/type/value encodings; v2-only fields in each v0 map;
 v0 transaction fields in v2; impossible map counts; count trailing bytes; extra
 scope bytes; truncation and bad magic. A wrong-version or malformed result is the
-original RejectCode, not a softened acceptance. Curve and NUMS point requests
-must raise explicit FeatureUnavailable. A12-word numeric SeedQR also passes the
+original RejectCode, not a softened acceptance. The initial gate required explicit failure before a curve provider existed.
+The current regression verifies actual generator/NUMS public keys (SECP-PORT.md). A12-word numeric SeedQR also passes the
 actual original generic classifier/SeedQrDecoder, returns the published public
 mnemonic and uses the real original Seed model for checksum classification.
 

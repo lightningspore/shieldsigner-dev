@@ -27,8 +27,9 @@ observation window. Subsequent hardware API tests succeeded without reloading;
 the observer now allows40seconds. This is transport/load observation, not a
 cold-power benchmark. No SD, CAD or REF storage writes occurred.
 
-This checkpoint does not port Seed, alternate seed types, secp256k1, derivation
-paths, descriptors, signing, UR, or the full View/Controller routing. The generic
+This initial leaf checkpoint was followed by the original Seed model and actual
+curves/root fingerprints (SEED-PORT.md and SECP-PORT.md). Alternate seed UI flows,
+descriptors, full signing workflows, UR and View/Controller routing remain pending. The generic
 original QR classifier still needs the real Seed/SLIP39 dependencies. Optical QR
 success also remains unproven. Do not use these primitive vectors as a wallet
 qualification claim.

@@ -1,0 +1,62 @@
+{
+  "status": "actual-native-libsecp256k1-and-original-seed-fingerprint-gates-passed",
+  "scope": "Primitive/ABI and original embit/Seed functionality; not entropy, side-channel, whole-wallet or optical qualification",
+  "device": "DUT1 app-ui",
+  "downloadSha256": "3e476dbe2507acac55fd5c93a6e075ed4f9e85e2d4d0a15b50402d567781cc40",
+  "load": "logs/phase-11/dut1-20261115T001212Z",
+  "gate": "logs/phase-11/usb-20261115T001235.503574Z",
+  "backend": {
+    "repository": "https://github.com/bitcoin-core/secp256k1",
+    "tag": "v0.7.0",
+    "commit": "a660a4976efe880bae7982ee410b9e0dc59ac983",
+    "license": "MIT",
+    "ecmultWindow": 8,
+    "ecmultGenKb": 2,
+    "archiveSha256": "ad616f7b77902fa4acf8416213269f14ba9a8ae41b8223337b1252a4db5fa654",
+    "configuration": "ARM32 portable C, no asm, small constant-time precomputation tables, actual ECDH/extrakeys/Schnorr/recovery modules",
+    "note": "Primitive implementation, not entropy or whole-wallet qualification"
+  },
+  "vectors": {
+    "sources": {
+      "bip32.mediawiki": {
+        "url": "https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032.mediawiki",
+        "sha256": "e5e00a8289db2f681052cf24a745320afc225e66b25d1e489a7c884d2fc7f11f"
+      },
+      "bip340.csv": {
+        "url": "https://raw.githubusercontent.com/bitcoin/bips/master/bip-0340/test-vectors.csv",
+        "sha256": "34c9d1d9c3a88d524bc80778540dc43f8306ec249a7485293063c376db851c2d"
+      }
+    },
+    "bip32ValidPaths": 17,
+    "bip32InvalidKeys": 16,
+    "bip340Rows": 19,
+    "bip39FingerprintCases": 24,
+    "ecdsaReference": "CPython embit0.8.0 embit.util.ctypes_secp256k1, public inputs",
+    "generatedSha256": "3d693bdb3d4f9fbc538f425a04bcc063b86909247f76285f39b498dbcef228d8"
+  },
+  "gateElapsedMs": 2740,
+  "timingScope": "Gate code only; excludes upload/ROM/DDR/boot/UI startup",
+  "context": {
+    "actualBytes": 180,
+    "arenaBytes": 4096,
+    "randomization": "Actual caller-input API tested with public bytes, then reset; entropy quality unqualified"
+  },
+  "regressions": {
+    "seed": "logs/phase-11/usb-20261115T001240.008077Z",
+    "psbt": "logs/phase-11/usb-20261115T001245.354191Z",
+    "mnemonic": "logs/phase-11/usb-20261115T001246.279251Z",
+    "memory": "logs/phase-11/usb-20261115T001315.028504Z",
+    "originalQrScan": "logs/phase-11/usb-20261115T001316.937896Z",
+    "home": "logs/phase-11/usb-20261115T001318.010546Z",
+    "hostTests": 54
+  },
+  "sourceSha256": {
+    "micropython/modsecp.c": "8ac5523bba174d5dcf76c560733d747ff5ba507c3d6b4fa0182ff8ac7fa26665",
+    "app/secp256k1.py": "32b7eafdb485bed239c3e4d54c67d47058f33e4f7898c64f8ca9dfa2892f11a8",
+    "tools/build_secp.py": "b3cb45561fdf79f4445b10b35911b76e7545ed3c523b4978d6657733591078c7",
+    "tools/prepare_secp_gate.py": "c4b0df502a91d5cf5e6d805ecca78a47a2b69933bcc8618ebbd511614aa4d75d",
+    "micropython/secp_gate.py": "3d693bdb3d4f9fbc538f425a04bcc063b86909247f76285f39b498dbcef228d8",
+    "app/secp-vectors-provenance.json": "5e1df03d8a927fb48d64f01255ebca7d328eada794a97340c5145210d7037f9a",
+    "secp/source.json": "88237df2e370a44c0f8970c85d666851b6be9e4b52ab203d83d0cee9107601ab"
+  }
+}

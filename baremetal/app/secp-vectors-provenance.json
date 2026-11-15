@@ -1,0 +1,18 @@
+{
+  "sources": {
+    "bip32.mediawiki": {
+      "url": "https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032.mediawiki",
+      "sha256": "e5e00a8289db2f681052cf24a745320afc225e66b25d1e489a7c884d2fc7f11f"
+    },
+    "bip340.csv": {
+      "url": "https://raw.githubusercontent.com/bitcoin/bips/master/bip-0340/test-vectors.csv",
+      "sha256": "34c9d1d9c3a88d524bc80778540dc43f8306ec249a7485293063c376db851c2d"
+    }
+  },
+  "bip32ValidPaths": 17,
+  "bip32InvalidKeys": 16,
+  "bip340Rows": 19,
+  "bip39FingerprintCases": 24,
+  "ecdsaReference": "CPython embit0.8.0 embit.util.ctypes_secp256k1, public inputs",
+  "generatedSha256": "3d693bdb3d4f9fbc538f425a04bcc063b86909247f76285f39b498dbcef228d8"
+}

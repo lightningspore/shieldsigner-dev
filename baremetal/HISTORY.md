@@ -423,3 +423,15 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
   pass, plus52host tests. Home restored, preview stopped, no active readers.
   MNEMONIC-PORT.md records remaining UI/optical/curve/entropy/decryption/SD gaps.
   No SD/CAD/REF-storage changes. This does not qualify complete wallet operation.
+
+### 2026-11-15 UTC — Actual secp256k1 and Seed fingerprints
+
+- Found the original result View needs a real root fingerprint. Added actual pinned
+  libsecp256k1 v0.7.0, validated portable C bindings and the required embit ABI.
+  Preserved source/license; no placeholder point/signature or random-byte fallback.
+- Native final gate passed17BIP32paths/16invalidkeys,19BIP340vectors,24Seedroots/
+  fingerprints, ECDSA/ECDH/recovery/low-S and malformed/in-place cases. Gate2740ms
+  is not boot/UI timing. Context randomization works; entropy qualification pending.
+- Final image3e476dbe..., load001212; all Seed/PSBT/mnemonic/memory/QR regressions
+  and54host tests pass. Home restored, preview stopped, no active readers.
+  SECP-PORT.md and receipt record details. No SD/CAD/REF-storage writes.

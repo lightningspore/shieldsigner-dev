@@ -406,6 +406,8 @@ pub fn init() -> Result<(), &'static str> {
     Ok(())
 }
 pub fn poll() {
+    #[cfg(feature = "usb-only")]
+    super::watchdog::feed();
     unsafe {
         let s = &mut *core::ptr::addr_of_mut!(STATE);
         if !s.ready {

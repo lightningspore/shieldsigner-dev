@@ -31,6 +31,8 @@ mod reset_format;
 mod reset_record;
 #[cfg(feature = "usb-console")]
 mod usb;
+#[cfg(feature = "runtime-board")]
+mod watchdog;
 #[cfg(feature = "usb-console")]
 mod usb_descriptors;
 #[cfg(feature = "usb-console")]
@@ -163,6 +165,8 @@ extern "C" fn rust_main(entry_low: u32, entry_high: u32) -> ! {
         use core::fmt::Write;
         let _ = writeln!(cpu::Console, "@@FAIL {}\r", reason);
     }
+    #[cfg(feature = "usb-only")]
+    watchdog::enable();
     #[cfg(feature = "runtime-repl")]
     runtime::run();
     // Keep a UART recovery path while USB is absent in this minimal payload.
@@ -179,6 +183,18 @@ extern "C" fn rust_main(entry_low: u32, entry_high: u32) -> ! {
             }
         }
     }
+}
+
+/// App-requested reset. Mode 0: global soft reset (power-cycle equivalent).
+/// Mode 1: also set the Rockchip boot-mode register (GRF 0xff020200) to
+/// BOOT_BROM_DOWNLOAD so the ROM enters maskrom flash mode even with boot media.
+#[cfg(feature = "runtime-board")]
+#[no_mangle]
+extern "C" fn bm_machine_reset(mode: u32) -> ! {
+    if mode == 1 {
+        unsafe { write_volatile(0xff02_0200 as *mut u32, 0xEF08_A53C) };
+    }
+    reset()
 }
 
 fn reset() -> ! {

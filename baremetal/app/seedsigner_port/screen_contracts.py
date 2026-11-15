@@ -72,12 +72,23 @@ def result(event,button_count,screen_name=None):
 _basic_configuration=configuration
 STATUS={'LargeIconStatusScreen':'custom','WarningScreen':'warning','DireWarningScreen':'dire_warning','ErrorScreen':'error'}
 TRANSCRIPTION={'SeedTranscribeSeedQRFormatScreen','SeedTranscribeSeedQRWholeQRScreen','SeedTranscribeSeedQRZoomedInScreen','SeedTranscribeSeedQRConfirmQRPromptScreen'}
-APP_SCREENS=TRANSCRIPTION|set(STATUS)|{'SeedAddressVerificationScreen','SeedAddressVerificationSuccessScreen','SeedExportXpubDetailsScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
+POWER={'ResetScreen':('Restarting','SeedSigner is restarting.\n\nAll in-memory data will be wiped.','reset_screen',False),
+       'RebootToLoaderScreen':('Flash Mode','Rebooting into USB flash (Loader) mode.\n\nConnect USB and use the Rockchip flash tool.','reset_screen',False),
+       'PowerOffNotRequiredScreen':('Just Unplug It','It is safe to disconnect power at any time.','power_off_not_required_screen',True)}
+APP_SCREENS=set(POWER)|TRANSCRIPTION|set(STATUS)|{'SeedAddressVerificationScreen','SeedAddressVerificationSuccessScreen','SeedExportXpubDetailsScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
 def configuration(screen_class,passed,translate=None):
     name=screen_class if isinstance(screen_class,str) else screen_class.__name__
     if name in ('PSBTOverviewScreen', 'PSBTMathScreen', 'PSBTAddressDetailsScreen', 'PSBTChangeDetailsScreen', 'PSBTOpReturnScreen', 'PSBTFinalizeScreen'):
         from seedsigner_port.psbt_screens import configuration as psbt_configuration
         return psbt_configuration(screen_class,passed,translate)
+    if name in POWER:
+        # Same contract as firmware/lvgl-app/python/contracts.py (shared builders).
+        title,text,builder,back=POWER[name]
+        tr=translate if translate is not None else lambda text:text
+        _,cfg=_basic_configuration('ButtonListScreen',{'button_data':[]},translate)
+        cfg['top_nav'].update(title=tr(title),show_back_button=back,show_power_button=False)
+        cfg['text']=tr(text);cfg.pop('button_list',None)
+        return builder,cfg
     if name not in APP_SCREENS:return _basic_configuration(screen_class,passed,translate)
     from seedsigner_port.app_screen_defaults import DEFAULTS as APP_DEFAULTS
     from seedsigner_port.gui_constants import GUIConstants,SeedSignerIconConstants

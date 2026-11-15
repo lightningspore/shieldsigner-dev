@@ -13,6 +13,8 @@ pub fn interrupt(byte: u8) -> bool {
 extern "C" fn bm_set_interrupt_char(c: i32) { INTERRUPT_CHAR.store(c, Ordering::Relaxed); }
 #[no_mangle]
 extern "C" fn bm_console_poll() -> i32 {
+    #[cfg(feature = "usb-only")]
+    super::watchdog::feed();
     #[cfg(feature = "usb-console")]
     super::usb::poll();
     INTERRUPTED.swap(false, Ordering::AcqRel) as i32

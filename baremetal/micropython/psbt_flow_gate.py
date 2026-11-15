@@ -42,7 +42,8 @@ class Driver:
         elif builder=='large_icon_status_screen':
             assert cfg['top_nav']['title']=='Sign Transaction',cfg
             assert self.approvals==0 and PSBTParser.sig_count(c.psbt)==0
-            if self.decline:pulse(20);return
+            # LEFT only moves focus to top-nav Back (original navigation parity); Select activates it.
+            if self.decline:pulse(20);pulse(10);return
             self.approvals+=1
             # Actual native scroll/navigation events expose the button; only the
             # native screen session decides when Select returns an approval.

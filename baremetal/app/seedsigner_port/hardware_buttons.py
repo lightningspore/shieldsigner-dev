@@ -20,6 +20,8 @@ class HardwareButtons(ButtonInput):
         value=super().check_for_low(key=key,keys=keys)
         if value:self.update_last_input_time()
         return value
+# Mini PCB keys are real GPIO inputs (original Power off shows the unplug screen).
+USING_GPIO=True
 class HardwareButtonsConstants:
     ALL_KEYS=NAMES
     KEYS__ANYCLICK=('KEY_PRESS','KEY1','KEY2','KEY3')

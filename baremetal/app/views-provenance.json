@@ -7,7 +7,7 @@
     "view_core.py": {
       "source": "views/view.py",
       "sourceSha256": "45810f6d4fbf4bf9e35fac3dd123ba4fc500dbec1413890f18cc99c7a829baeb",
-      "outputSha256": "579868b98506a59d89101303f92dab4a23d701d7bac2b98ed599ac4430ce7081",
+      "outputSha256": "502a1976fb9b99cbdade16c726dcb71fe814c96787569e6752f4a83b58d8a3d5",
       "classes": [
         "BackStackView",
         "View",
@@ -168,6 +168,7 @@
   "reviewedChanges": [
     "SeedWordsView rounds page count up so partial final pages are displayed.",
     "Seed Views random import uses non-secret native quiz_random ordering.",
-    "Address verification workers use foreground Counter/Worker, yielding after each original address pair and expanded path precomputation; original matching/routing retained."
+    "Address verification workers use foreground Counter/Worker, yielding after each original address pair and expanded path precomputation; original matching/routing retained.",
+    "RestartView/RebootToLoaderView show the original screen then call native machine.reset (mode 1 sets BOOT_BROM_DOWNLOAD) instead of OS process/syscall threads."
   ]
 }

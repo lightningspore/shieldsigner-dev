@@ -9,6 +9,15 @@ extern int bm_i2c_read(uint32_t,uint32_t,uint8_t *,size_t);
 extern int bm_i2c_write(uint32_t,uint32_t,const uint8_t *,size_t);
 extern int bm_spi_transfer(uint32_t,const uint8_t *,uint8_t *,size_t);
 extern uint32_t bm_led_status(uint32_t);
+extern uint32_t bm_watchdog_status(uint32_t);
+static mp_obj_t watchdog_status(void){mp_obj_t t[5];for(unsigned i=0;i<5;i++)t[i]=mp_obj_new_int_from_uint(bm_watchdog_status(i));return mp_obj_new_tuple(5,t);}
+static MP_DEFINE_CONST_FUN_OBJ_0(watchdog_status_obj,watchdog_status);
+extern void bm_watchdog_selftest(void) __attribute__((noreturn));
+extern void bm_machine_reset(uint32_t) __attribute__((noreturn));
+static mp_obj_t machine_reset(size_t n,const mp_obj_t *a){mp_int_t mode=n?mp_obj_get_int(a[0]):0;if(mode<0||mode>1)mp_raise_ValueError(MP_ERROR_TEXT("reset mode 0 or 1"));bm_machine_reset(mode);}
+static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(machine_reset_obj,0,1,machine_reset);
+static mp_obj_t watchdog_selftest(void){bm_watchdog_selftest();}
+static MP_DEFINE_CONST_FUN_OBJ_0(watchdog_selftest_obj,watchdog_selftest);
 extern uint32_t bm_console_status(uint32_t);
 static mp_obj_t console_status(void) {
     static const qstr names[]={MP_QSTR_usb_only,MP_QSTR_uart_pad_mux,MP_QSTR_uart_gpio_output,MP_QSTR_uart_ier,MP_QSTR_uart_irq_enabled,MP_QSTR_usb_ready};
@@ -139,6 +148,9 @@ static const mp_rom_map_elem_t machine_globals_table[]={
     {MP_ROM_QSTR(MP_QSTR_fault_probe),MP_ROM_PTR(&reset_probe_obj)},
     {MP_ROM_QSTR(MP_QSTR_Pin),MP_ROM_PTR(&pin_type)},
     {MP_ROM_QSTR(MP_QSTR_led_status),MP_ROM_PTR(&led_status_obj)},
+    {MP_ROM_QSTR(MP_QSTR_reset),MP_ROM_PTR(&machine_reset_obj)},
+    {MP_ROM_QSTR(MP_QSTR_watchdog_status),MP_ROM_PTR(&watchdog_status_obj)},
+    {MP_ROM_QSTR(MP_QSTR_watchdog_selftest),MP_ROM_PTR(&watchdog_selftest_obj)},
     {MP_ROM_QSTR(MP_QSTR_console_status),MP_ROM_PTR(&console_status_obj)},
     {MP_ROM_QSTR(MP_QSTR_exception_location),MP_ROM_PTR(&exception_location_obj)},
     {MP_ROM_QSTR(MP_QSTR_I2C),MP_ROM_PTR(&i2c_type)},

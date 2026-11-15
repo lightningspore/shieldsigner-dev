@@ -161,34 +161,10 @@ def _make_RestartView():
 
         def run(self):
             _dependency('seedsigner.models.settings', 'Settings').get_instance().flush_save()
-            if self.renderer.is_screenshot_generator:
-                self.run_screen(_dependency('seedsigner.gui.screens.screen', 'ResetScreen'))
-                return
-            thread = _resolve('RestartView').DoResetThread()
-            thread.start()
-            try:
-                self.run_screen(_dependency('seedsigner.gui.screens.screen', 'ResetScreen'))
-            except FeatureUnavailable:
-                raise
-            except Exception:
-                thread.stop()
-                raise
-
-        class DoResetThread(_dependency('seedsigner.models.threads', 'BaseThread')):
-
-            def run(self):
-                pass
-                _dependency('time', None).sleep(0.25)
-                if not self.keep_running:
-                    return
-                _dependency('sys', None).stdout.flush()
-                _dependency('sys', None).stderr.flush()
-                pid = _dependency('os', None).getpid()
-                if _dependency('seedsigner.models.settings', 'Settings').is_seedsigner_os():
-                    python = _dependency('shlex', None).quote(_dependency('sys', None).executable)
-                    _dependency('subprocess', 'call')('kill {0}; exec {1} /opt/src/main.py'.format(pid, python), shell=True)
-                else:
-                    _dependency('subprocess', 'call')('kill {0}'.format(pid), shell=True)
+            self.renderer.session.show_screen(_dependency('seedsigner.gui.screens.screen', 'ResetScreen'), {})
+            for _ in range(20):
+                self.renderer.session.backend.tick()
+            __import__('machine').reset(0)
 
         def __init__(self):
             self.__post_init__()
@@ -203,29 +179,10 @@ def _make_RebootToLoaderView():
 
         def run(self):
             _dependency('seedsigner.models.settings', 'Settings').get_instance().flush_save()
-            if self.renderer.is_screenshot_generator:
-                self.run_screen(_dependency('seedsigner.gui.screens.screen', 'RebootToLoaderScreen'))
-                return
-            thread = _resolve('RebootToLoaderView').DoRebootToLoaderThread()
-            thread.start()
-            try:
-                self.run_screen(_dependency('seedsigner.gui.screens.screen', 'RebootToLoaderScreen'))
-            except FeatureUnavailable:
-                raise
-            except Exception:
-                thread.stop()
-                raise
-
-        class DoRebootToLoaderThread(_dependency('seedsigner.models.threads', 'BaseThread')):
-
-            def run(self):
-                pass
-                _dependency('time', None).sleep(0.25)
-                if not self.keep_running:
-                    return
-                libc = _dependency('ctypes', None).CDLL(None, use_errno=True)
-                rc = libc.syscall(88, 4276215469, 672274793, 2712847316, b'loader')
-                pass
+            self.renderer.session.show_screen(_dependency('seedsigner.gui.screens.screen', 'RebootToLoaderScreen'), {})
+            for _ in range(20):
+                self.renderer.session.backend.tick()
+            __import__('machine').reset(1)
 
         def __init__(self):
             self.__post_init__()

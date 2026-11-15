@@ -51,6 +51,7 @@ class StoreTest(unittest.TestCase):
         self.assertEqual(self.store.get_value(C.SETTING__SMARTCARD_INTERFACES),[])
         self.assertEqual(self.store.get_value(C.SETTING__CAMERA_ROTATION),270)
         self.assertFalse(self.store.is_seedsigner_os())
+        for key in (C.SETTING__SMARTCARD_SUPPORT,C.SETTING__SATOCHIP_SUPPORT,C.SETTING__KEYCARD_SUPPORT,C.SETTING__SPECTER_DIY_SUPPORT):self.assertEqual(self.store.get_value(key),C.OPTION__DISABLED)
         self.assertEqual(self.store.get_platform_default_hardware_config(),'mini-pcb240')
         for key,value in [(C.SETTING__PERSISTENT_SETTINGS,'E'),(C.SETTING__SMARTCARD_INTERFACES,['usb']),(C.SETTING__DISPLAY_CONFIGURATION,'st7735_128x128'),(C.SETTING__LOCALE,'es')]:
             before=copy.deepcopy(self.store._data)

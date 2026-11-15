@@ -22,7 +22,7 @@ def dataclass_constructor(n,classes):
  n.decorator_list=[d for d in n.decorator_list if ast.unparse(d)!='dataclass']
  n.body=[a for a in n.body if not isinstance(a,ast.AnnAssign)]+ast.parse(body).body
 
-receipt={'application':lock,'files':{},'reviewedChanges':['SeedWordsView rounds page count up so partial final pages are displayed.','Seed Views random import uses non-secret native quiz_random ordering.','Address verification workers use foreground Counter/Worker, yielding after each original address pair and expanded path precomputation; original matching/routing retained.']}
+receipt={'application':lock,'files':{},'reviewedChanges':['SeedWordsView rounds page count up so partial final pages are displayed.','Seed Views random import uses non-secret native quiz_random ordering.','Address verification workers use foreground Counter/Worker, yielding after each original address pair and expanded path precomputation; original matching/routing retained.','RestartView/RebootToLoaderView show the original screen then call native machine.reset (mode 1 sets BOOT_BROM_DOWNLOAD) instead of OS process/syscall threads.']}
 for file,outname in [('views/view.py','view_core.py'),('views/scan_views.py','view_scan.py'),('views/seed_views.py','view_seed.py'),('views/screensaver.py','view_splash.py'),('views/developer_os_warning.py','view_development.py')]:
  raw=(source/'src/seedsigner'/file).read_bytes();tree=ast.parse(raw)
  classes={n.name:n for n in tree.body if isinstance(n,ast.ClassDef) and n.name!='Destination' and (outname!='view_splash.py' or n.name=='OpeningSplashView')}
@@ -40,6 +40,14 @@ for file,outname in [('views/view.py','view_core.py'),('views/scan_views.py','vi
     matches=[x for x in ast.walk(n) if isinstance(x,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='num_pages' for t in x.targets)]
     assert len(matches)==1 and ast.unparse(matches[0].value)=='int(len(mnemonic) / words_per_page)'
     matches[0].value=ast.parse('(len(mnemonic)+words_per_page-1)//words_per_page',mode='eval').body
+   if n.name in ('RestartView','RebootToLoaderView'):
+    # No OS process/syscall here: show the original screen, let the native
+    # renderer flush it, then perform the native global reset. Loader mode
+    # sets the Rockchip BOOT_BROM_DOWNLOAD flag so the ROM enters maskrom.
+    screen='ResetScreen' if n.name=='RestartView' else 'RebootToLoaderScreen'
+    run=next(x for x in n.body if isinstance(x,ast.FunctionDef) and x.name=='run')
+    run.body=ast.parse('Settings.get_instance().flush_save()\nself.renderer.session.show_screen(_dependency("seedsigner.gui.screens.screen","'+screen+'"),{})\nfor _ in range(20):self.renderer.session.backend.tick()\n__import__("machine").reset('+('0' if n.name=='RestartView' else '1')+')\n').body
+    n.body=[x for x in n.body if not isinstance(x,ast.ClassDef)]
    if any(ast.unparse(d)=='dataclass' for d in n.decorator_list):dataclass_constructor(n,originals)
    selected_port=port
    if n.name=='SeedAddressVerificationView':

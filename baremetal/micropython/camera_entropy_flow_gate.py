@@ -76,6 +76,7 @@ class Driver:
     def checked_render(self,builder,encoded):
         self.broker.mask=0
         cfg=json.loads(encoded);ui.render(builder,encoded)
+        if builder=='loading_spinner_screen':return # Original transient progress screen; no decision.
         title=cfg['top_nav']['title'];c=Controller.get_instance()
         if builder=='seed_words_screen':
             page=cfg['page_index'];assert cfg['words']==self.words[page*4:(page+1)*4]
@@ -107,7 +108,9 @@ class Driver:
 
 class DiceDriver(Driver):
     def checked_render(self,builder,encoded):
-        cfg=json.loads(encoded);title=cfg['top_nav']['title']
+        cfg=json.loads(encoded)
+        if builder=='loading_spinner_screen':ui.render(builder,encoded);return
+        title=cfg['top_nav']['title']
         if title=='Tools':
             ui.render(builder,encoded)
             if self.lengths and self.mode in ('dice-back','dice-poor'):back()

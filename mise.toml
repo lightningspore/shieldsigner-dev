@@ -1564,3 +1564,11 @@ run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features app
 [tasks."baremetal:reset:probe:dut1:gate"]
 description = "Deliberately fault RAM-only DUT1, reload identical image and validate retained actual fault registers"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/reset_record_gate.py"
+
+[tasks."baremetal:app:mnemonic:prepare"]
+description = "Prepare reviewed seed-word entry defaults and independent public BIP39 fingerprints"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_app_screens.py", "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_mnemonic_entry_gate.py"]
+
+[tasks."baremetal:app:mnemonic:dut1:gate"]
+description = "Exercise original manual BIP39 entry and checksum/edit/Back flows using real native keys"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/mnemonic_entry_gate.py --serial rv1103-dut1 --timeout 90"

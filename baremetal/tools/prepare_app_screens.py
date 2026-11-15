@@ -19,7 +19,7 @@ classes={};hashes={}
 for name in ('screen.py','seed_screens.py'):
  p=source/'gui/screens'/name;hashes[name]=hashlib.sha256(p.read_bytes()).hexdigest()
  classes.update({n.name:n for n in ast.parse(p.read_text()).body if isinstance(n,ast.ClassDef)})
-fields={'title','show_back_button','show_power_button','selected_button','is_bottom_list','is_button_text_centered','checked_buttons','scroll_y_initial_offset','top_nav_icon_name','top_nav_icon_color','button_selected_color','button_data','fingerprint','text','status_icon_name','status_icon_size','status_color','status_headline','passphrase','initial_keyboard','fingerprint_without','fingerprint_with'}
+fields={'title','show_back_button','show_power_button','selected_button','is_bottom_list','is_button_text_centered','checked_buttons','scroll_y_initial_offset','top_nav_icon_name','top_nav_icon_color','button_selected_color','button_data','fingerprint','text','status_icon_name','status_icon_size','status_color','status_headline','passphrase','initial_keyboard','fingerprint_without','fingerprint_with','wordlist','initial_letters'}
 namespace=dict(constants,_mft=lambda x:x,ButtonOption=lambda label:label,field=lambda **kw:kw['default_factory']())
 def defaults(name):
  n=classes[name];out={}
@@ -29,7 +29,7 @@ def defaults(name):
   if isinstance(a,ast.AnnAssign) and a.target.id in fields:
    out[a.target.id]=eval(compile(ast.Expression(a.value),'<pinned default>','eval'),namespace)
  return out
-names=('LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen')
+names=('LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen')
 values={name:defaults(name) for name in names}
 labels={a.targets[0].id:ast.literal_eval(a.value) for a in classes['SeedAddPassphraseScreen'].body if isinstance(a,ast.Assign) and isinstance(a.targets[0],ast.Name) and a.targets[0].id.startswith('KEYBOARD__')}
 p=root/'app/seedsigner_port/app_screen_defaults.py'

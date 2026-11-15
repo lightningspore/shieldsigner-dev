@@ -52,7 +52,7 @@ class ContractsTest(unittest.TestCase):
             self.assertEqual(port.result((1,value,''),2),self.reference['result']({'event':'button_selected','index':value},2))
         for value in (-1,2,True,'0'):
             with self.assertRaises(ValueError):port.result((1,value,''),2)
-        with self.assertRaises(port.UnmigratedScreen):port.configuration('SeedMnemonicEntryScreen',{})
+        with self.assertRaises(ValueError):port.configuration('SeedMnemonicEntryScreen',{})
         with self.assertRaises(port.UnmigratedScreen):port.configuration('ButtonListScreen',{'Button_cls':object})
         with self.assertRaises(port.UnmigratedScreen):port.configuration('LargeButtonScreen',{'long_press_key':'KEY3','button_data':['A','B']})
         with self.assertRaises(ValueError):port.configuration('MainMenuScreen',{'button_data':['one']})
@@ -76,7 +76,7 @@ class ContractsTest(unittest.TestCase):
         classes={n.name:n for file in ('screen.py','seed_screens.py') for n in ast.parse((app/file).read_text()).body if isinstance(n,ast.ClassDef)}
         reviewed=set().union(*(set(v) for v in APP_DEFAULTS.values()))
         # Rebuild actual field defaults including warning factory buttons.
-        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen'):
+        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen'):
             node=classes[name]
             node.body=[n for n in node.body if isinstance(n,ast.AnnAssign) and n.target.id in reviewed]
             for n in node.body:n.annotation=ast.Constant('reviewed field')
@@ -84,6 +84,7 @@ class ContractsTest(unittest.TestCase):
             exec(compile(ast.fix_missing_locations(ast.Module(body=[node],type_ignores=[])),'<original app fields>','exec'),scope)
         for name in APP_DEFAULTS:
             cases=[{}, {'button_data':['Done','Cancel'],'text':'Public test','selected_button':1}]
+            if name=='SeedMnemonicEntryScreen':cases=[dict(c,wordlist=['abandon','ability','able','about'],initial_letters=['a','b']) for c in cases]
             if name=='SeedAddPassphraseScreen':cases=[dict(c,passphrase='public  \0\\value',initial_keyboard='ABC') for c in cases]
             if name=='SeedReviewPassphraseScreen':cases=[dict(c,passphrase='public  \0\\value',fingerprint_without='73c5da0a',fingerprint_with='b4e3f5ed') for c in cases]
             if name in ('SeedFinalizeScreen','SeedOptionsScreen'):cases=[dict(c,fingerprint='73c5da0a') for c in cases]
@@ -95,3 +96,10 @@ class ContractsTest(unittest.TestCase):
                     # Linux adapter omitted them. Match the actual source screen.
                     expected['top_nav'].update(icon=SeedSignerIconConstants.FINGERPRINT,icon_color=GUIConstants.INFO_COLOR)
                 self.assertEqual(actual,(builder,expected),name)
+
+    def test_mnemonic_text_result_and_back(self):
+        self.assertEqual(port.result((2,0,'abandon'),0,'SeedMnemonicEntryScreen'),'abandon')
+        self.assertEqual(port.result((1,1000,''),0,'SeedMnemonicEntryScreen'),1000)
+        self.assertEqual(port.result(1000,0,'SeedMnemonicEntryScreen'),1000)
+        for event in ((2,1,'abandon'),(2,0,''),(2,0,'ab\0c'),(2,0,3),(3,0,'abandon')):
+            with self.assertRaises(ValueError):port.result(event,0,'SeedMnemonicEntryScreen')

@@ -82,3 +82,7 @@ and full app startup from SD. Frozen class availability does not close those gap
 Follow-on: [PASSPHRASE-UI.md](PASSPHRASE-UI.md) records the later native
 passphrase entry/review integration and its separate accept/edit/discard/skip
 hardware gates, including the remaining glyph and long-text review limits.
+
+Follow-on: [MNEMONIC-ENTRY.md](MNEMONIC-ENTRY.md) records the native manual BIP39
+entry adapter and its original View/key-event gates. Paged passphrase review is
+recorded separately in [REVIEW-PAGES.md](REVIEW-PAGES.md).

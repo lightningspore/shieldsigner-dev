@@ -552,3 +552,26 @@ passes. Home restored004955; preview stopped, all USB readers finished.
 - Earlier unexplained reset012910 remains OPEN. Controlled fault tests do not
   explain it; unmarked resets or cold loss can leave stale/no DDR evidence. No
   new optical/entropy/wallet qualification. DUT1 RAM only, no SD/CAD/REF/DUT0 writes.
+
+### 2026-11-15 UTC — Original manual BIP39 word entry
+
+- Reviewed SeedMnemonicEntryScreen arguments/text results now reach the actual
+  pinned native keyboard. Original menu, word-entry, checksum-error, finalization
+  and storage decisions remain generated upstream source. Default fields and
+  provenance regenerated; host differential/result checks total81 pass.
+- DUT1 image8d72625d..., RAMload020307. Final native gate020714 proves fresh
+  12/15/18/21/24-word entry using real native keys and independent CPython embit
+  public zero-entropy fingerprints. Candidate scroll/accept, hidden single-prefix
+  rejection, saved-word reopening, DEL correction, invalid checksum discard/edit
+  and Back #2→#1→cancel pass. Public seeds discarded; reset recordNone per flow.
+- Test initially used unsupported starred tuple syntax, then tried a15-word menu
+  item hidden by defaults. Both fixture issues corrected; timeout explicitly
+  interrupted without reset, inspection020531 responsive/recordNone. Final gate
+  enables lengths in RAM and restores defaults in finally; no production setting
+  change. MNEMONIC-ENTRY.md and evidence receipt retain scope and failed attempts.
+- Actual framebuffer020638 visually checked: word number, prefix and highlighted
+  candidate readable.20entry/Home rebuild cycles return native heap to133702bytes.
+  Original passphrase020758 and paged review020806 regressions pass; no recorded
+  reset. Final state020827 confirms defaults12/24, empty storage, camera off;
+  Home020828. No SD/CAD/REF/DUT0 writes, no push. Earlier reset remains unknown;
+  optical QR, entropy, other app screens/signing and full SD startup remain open.

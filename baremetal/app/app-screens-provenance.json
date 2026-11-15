@@ -16,6 +16,7 @@
     "fingerprint_with",
     "fingerprint_without",
     "initial_keyboard",
+    "initial_letters",
     "is_bottom_list",
     "is_button_text_centered",
     "passphrase",
@@ -30,7 +31,8 @@
     "text",
     "title",
     "top_nav_icon_color",
-    "top_nav_icon_name"
+    "top_nav_icon_name",
+    "wordlist"
   ],
-  "outputSha256": "82cde99bfecce8a12cabb3aac5f4185cfca4ea5195116486671dd9f7b8be8971"
+  "outputSha256": "76e9f7c725faf2f54df95d3e41bfe93417aff9c8c0db22b0af7c173caac52ab3"
 }

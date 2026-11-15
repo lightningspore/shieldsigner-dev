@@ -59,6 +59,9 @@ def result(event,button_count,screen_name=None):
         answer={'passphrase':event[2]}
         if event[0]==6:answer['is_back_button']=True
         return answer
+    if screen_name=='SeedMnemonicEntryScreen' and isinstance(event,tuple) and len(event)==3 and event[0]==2:
+        if type(event[1]) is not int or event[1]!=0 or type(event[2]) is not str or not event[2] or '\0' in event[2]:raise ValueError('Invalid mnemonic word result')
+        return event[2]
     if event==1000:return 1000  # Existing ButtonInput override.
     if not isinstance(event,tuple) or len(event)!=3 or event[0]!=1:raise ValueError('Not a reviewed basic screen result')
     index=event[1]
@@ -68,7 +71,7 @@ def result(event,button_count,screen_name=None):
 # Additional reviewed original screen contracts, using the same actual builders.
 _basic_configuration=configuration
 STATUS={'LargeIconStatusScreen':'custom','WarningScreen':'warning','DireWarningScreen':'dire_warning','ErrorScreen':'error'}
-APP_SCREENS=set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen'}
+APP_SCREENS=set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen'}
 def configuration(screen_class,passed,translate=None):
     name=screen_class if isinstance(screen_class,str) else screen_class.__name__
     if name not in APP_SCREENS:return _basic_configuration(screen_class,passed,translate)
@@ -95,6 +98,14 @@ def configuration(screen_class,passed,translate=None):
         cfg['is_bottom_list']=True;cfg['is_button_text_centered']=False
     elif name=='SeedSelectSeedScreen':
         cfg['text']=a.get('text','');cfg['is_bottom_list']=True
+    elif name=='SeedMnemonicEntryScreen':
+        builder='seed_mnemonic_entry_screen'
+        words=a.get('wordlist')
+        if not isinstance(words,(list,tuple)) or not words or any(type(word) is not str or not word or '\0' in word for word in words):raise ValueError('Mnemonic entry requires the selected wordlist')
+        cfg['wordlist']=words;cfg['initial_letters']=a.get('initial_letters') or []
+        cfg.pop('button_list',None)
+        for source,target in [('selected_button','initial_selected_index'),('is_bottom_list','is_bottom_list'),('is_button_text_centered','is_button_text_centered')]:
+            if source not in a:cfg.pop(target,None)
     elif name=='SeedAddPassphraseScreen':
         from seedsigner_port.visible_text import title
         builder='seed_add_passphrase_screen'

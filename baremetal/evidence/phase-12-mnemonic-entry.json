@@ -1,0 +1,77 @@
+{
+  "status": "manual-English-BIP39-entry-hardware-gates-pass",
+  "device": "DUT1 app-ui; RAM-only",
+  "downloadSha256": "8d72625d321352f33cbd7034c89667e6f1f42e91f95b78e0e9d1e0d8d7b8dd64",
+  "load": "logs/phase-11/dut1-20261115T020307Z",
+  "publicIndependentOracle": {
+    "provider": "CPython embit0.8.0",
+    "fixtures": [
+      [
+        12,
+        "about",
+        "73c5da0a"
+      ],
+      [
+        15,
+        "address",
+        "3726240e"
+      ],
+      [
+        18,
+        "agent",
+        "e08b8ac3"
+      ],
+      [
+        21,
+        "admit",
+        "359c0843"
+      ],
+      [
+        24,
+        "art",
+        "5436d724"
+      ]
+    ]
+  },
+  "firstBroadNativePass": "logs/phase-11/usb-20261115T020540.085676Z",
+  "pixelsAndRebuilds": {
+    "evidence": "logs/phase-11/usb-20261115T020638.366463Z",
+    "frameSha256": "238b62c2d7f18bac601b3456706dc36eeb361a2e440500df200a1af255390e5e",
+    "warmNativeHeapBytes": 133702,
+    "cycles": 20,
+    "visualInspection": "Selected candidate, keyboard prefix and word number readable at240x240; dim candidate rows intentionally clip behind arrows/body."
+  },
+  "hostTests": 81,
+  "fixtureCorrections": [
+    {
+      "evidence": "logs/phase-11/usb-20261115T020420.560409Z",
+      "issue": "MicroPython rejects starred tuple expressions; generator test syntax corrected."
+    },
+    {
+      "evidence": "logs/phase-11/usb-20261115T020426.868632Z",
+      "issue": "Default menu hides15/18/21-word lengths; test timed out trying to select a hidden option. Explicitly interrupted the running test; USB remained responsive, reset recordNone. Test now enables all lengths in RAM and restores settings in finally.",
+      "inspection": "logs/phase-11/usb-20261115T020531.264371Z"
+    }
+  ],
+  "limits": [
+    "English BIP39 manual entry only; public zero-entropy fixtures, no entropy generation qualification.",
+    "No optical QR decode, transaction/signing or full wallet qualification.",
+    "Earlier unexplained reset remains unresolved.",
+    "No SD, CAD, REF or DUT0 writes."
+  ],
+  "finalNative": {
+    "path": "logs/phase-11/usb-20261115T020714.476237Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/mnemonic_entry_gate.py",
+    "scriptSha256": "f93dfc9871907913609de3c1ecb4d305085969635631d97fcd0be63f87651401",
+    "completed": true,
+    "traceback": false
+  },
+  "passphraseRegression": "logs/phase-11/usb-20261115T020758.439727Z",
+  "pagedReviewRegression": "logs/phase-12/review-pages-20261115T020806.883463Z/result.json",
+  "finalState": "logs/phase-11/usb-20261115T020827.776076Z",
+  "home": "logs/phase-11/usb-20261115T020828.276338Z"
+}

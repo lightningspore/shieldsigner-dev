@@ -153,6 +153,8 @@ extern "C" fn rust_irq() {
                         b'R'
                     }
                 {
+                    #[cfg(feature="runtime-board")]
+                    super::reset_record::simple(7);
                     // Drop this UART IRQ's running priority before resetting;
                     // do not leave an acknowledged interrupt active in the GIC.
                     write(CPU,0x10,ack);
@@ -216,6 +218,8 @@ extern "C" fn rust_fault(lr:u32,spsr:u32,mode:u32) -> ! {
         asm!("mrc p15, 0, {0}, c5, c0, 1",out(reg)ifsr,options(nostack));
         asm!("mrc p15, 0, {0}, c6, c0, 2",out(reg)ifar,options(nostack));
     }
+    #[cfg(feature="runtime-board")]
+    super::reset_record::mark(5,[lr,spsr,mode,dfsr,dfar,ifsr,ifar]);
     let _=writeln!(super::cpu::Console,"@@FAIL exception lr={:#x} spsr={:#x} mode={:#x} dfsr={:#x} dfar={:#x} ifsr={:#x} ifar={:#x}\r",lr,spsr,mode,dfsr,dfar,ifsr,ifar);
     super::reset()
 }

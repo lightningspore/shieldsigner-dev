@@ -300,6 +300,7 @@ unsafe fn event(s: &mut State, ev: u32) -> Result<(), &'static str> {
                 }
                 let byte = read_volatile((buffer(4) + i) as *const u8);
                 if byte == 0x1d {
+                    super::reset_record::simple(2);
                     super::reset();
                 }
                 if super::runtime::interrupt(byte) {
@@ -427,6 +428,7 @@ pub fn read() -> Option<u8> {
         let b = s.rx[s.rt];
         s.rt = (s.rt + 1) % N;
         if b == 0x1d {
+            super::reset_record::simple(2);
             super::reset();
         }
         Some(b)

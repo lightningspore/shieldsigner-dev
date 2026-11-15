@@ -9,6 +9,7 @@
 #include "overlay_manager.h"
 #include "nul_text.h"
 #include <cstring>
+#include <cstdlib>
 #include <exception>
 #include <string>
 extern "C" uint32_t bm_ticks_ms();
@@ -168,3 +169,6 @@ extern "C" int bm_nativeui_toast(const char *text,const char *icon,unsigned outl
     }catch(const std::exception &e){copy_text(error,e.what());return -1;}
     catch(...){copy_text(error,"Native toast failure");return -1;}
 }
+
+// Reachable only from the opt-in diagnostic Rust probe; normal builds remove it.
+extern "C" void bm_nativeui_abort_probe(){std::abort();}

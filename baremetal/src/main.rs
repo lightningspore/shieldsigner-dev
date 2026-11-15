@@ -25,6 +25,10 @@ use core::ptr::{read_volatile, write_volatile};
 mod boot;
 #[cfg(feature = "runtime-repl")]
 mod runtime;
+#[cfg(feature="runtime-board")]
+mod reset_format;
+#[cfg(feature="runtime-board")]
+mod reset_record;
 #[cfg(feature = "usb-console")]
 mod usb;
 #[cfg(feature = "usb-console")]
@@ -178,6 +182,8 @@ extern "C" fn rust_main(entry_low: u32, entry_high: u32) -> ! {
 }
 
 fn reset() -> ! {
+    #[cfg(feature="runtime-board")]
+    reset_record::simple(1);
     #[cfg(feature = "runtime-board")]
     runtime::QUIET.store(false, core::sync::atomic::Ordering::Relaxed);
     put(b"@@RESET\r\n");
@@ -196,6 +202,8 @@ fn reset() -> ! {
 
 #[panic_handler]
 fn panic(_: &core::panic::PanicInfo) -> ! {
+    #[cfg(feature="runtime-board")]
+    reset_record::simple(6);
     put(b"@@FAIL panic\r\n");
     loop {
         core::hint::spin_loop();

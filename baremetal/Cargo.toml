@@ -9,6 +9,7 @@ exclude = ["hash-core"]
 
 [features]
 cpu-base = []
+fault-probe = ["runtime-board"]
 gpio-test = ["cpu-base"]
 i2c-test = ["cpu-base"]
 spi-test = ["cpu-base"]

@@ -1,0 +1,162 @@
+{
+  "status": "controlled-reset-diagnostics-pass-earlier-unexplained-reset-still-open",
+  "normalDownloadSha256": "5f442574999380dd07cdbba986f3e36cd0e6b36ce7cf9f5a6d3c92816f6120a0",
+  "normalLoad": "logs/phase-11/dut1-20261115T015513Z",
+  "probeEvidence": "logs/phase-12/reset-record-20261115T014928.989632Z/result.json",
+  "controlledProbeResults": {
+    "passed": true,
+    "scope": "DUT1 RAM-only deliberate diagnostics; no storage or REF/DUT0 writes",
+    "downloadSha256": "70d21f50e2068652a5c982f81ee79d1d86c8c1f9f15e897e0c329781e0fed99f",
+    "cases": [
+      {
+        "probe": 1,
+        "record": {
+          "dfar": 27262976,
+          "reason": 5,
+          "dfsr": 5,
+          "ifar": 4294967295,
+          "lr": 83560,
+          "ifsr": 5690,
+          "mode": 2148401623,
+          "spsr": 2148401491,
+          "marker": 21368833,
+          "counter_high": 0,
+          "counter_low": 2683920835,
+          "format_version": 1
+        },
+        "faultInstruction": "0x14660",
+        "symbol": "bm_reset_probe\n??:?"
+      },
+      {
+        "probe": 2,
+        "record": {
+          "dfar": 0,
+          "reason": 4,
+          "dfsr": 0,
+          "ifar": 0,
+          "lr": 0,
+          "ifsr": 0,
+          "mode": 0,
+          "spsr": 0,
+          "marker": 21368834,
+          "counter_high": 0,
+          "counter_low": 619356683,
+          "format_version": 1
+        }
+      },
+      {
+        "probe": 3,
+        "record": {
+          "dfar": 0,
+          "reason": 3,
+          "dfsr": 0,
+          "ifar": 0,
+          "lr": 0,
+          "ifsr": 0,
+          "mode": 0,
+          "spsr": 0,
+          "marker": 21368835,
+          "counter_high": 0,
+          "counter_low": 613697274,
+          "format_version": 1
+        }
+      }
+    ],
+    "damagedRecordRejected": true
+  },
+  "usbResetRetention": "logs/phase-11/usb-20261115T014836.632739Z",
+  "normalProbesDisabled": "logs/phase-11/usb-20261115T015552.532727Z",
+  "reviewRuns": [
+    {
+      "path": "logs/phase-12/review-pages-20261115T015553.068514Z/result.json",
+      "passed": true,
+      "scope": "Public original View/native page flows, independently decoded display identities; not wallet or optical qualification",
+      "buildDownloadSha256": "5f442574999380dd07cdbba986f3e36cd0e6b36ce7cf9f5a6d3c92816f6120a0",
+      "resetBefore": {
+        "available": true,
+        "record": null
+      },
+      "displayedPages": [
+        {
+          "fixture": 0,
+          "mode": "revisit",
+          "characters": 180,
+          "pages": 2,
+          "exact": true
+        },
+        {
+          "fixture": 1,
+          "mode": "accept",
+          "characters": 18,
+          "pages": 1,
+          "exact": true
+        },
+        {
+          "fixture": 2,
+          "mode": "accept",
+          "characters": 63,
+          "pages": 8,
+          "exact": true
+        }
+      ],
+      "resetAfter": {
+        "available": true,
+        "record": null
+      },
+      "nativeEvidence": "/Users/samkorn/Documents/repos/shieldsigner-dev/baremetal/logs/phase-11/usb-20261115T015553.574066Z"
+    },
+    {
+      "path": "logs/phase-12/review-pages-20261115T015903.539569Z/result.json",
+      "passed": true,
+      "scope": "Public original View/native page flows, independently decoded display identities; not wallet or optical qualification",
+      "buildDownloadSha256": "5f442574999380dd07cdbba986f3e36cd0e6b36ce7cf9f5a6d3c92816f6120a0",
+      "resetBefore": {
+        "available": true,
+        "record": null
+      },
+      "displayedPages": [
+        {
+          "fixture": 0,
+          "mode": "revisit",
+          "characters": 180,
+          "pages": 2,
+          "exact": true
+        },
+        {
+          "fixture": 1,
+          "mode": "accept",
+          "characters": 18,
+          "pages": 1,
+          "exact": true
+        },
+        {
+          "fixture": 2,
+          "mode": "accept",
+          "characters": 63,
+          "pages": 8,
+          "exact": true
+        }
+      ],
+      "resetAfter": {
+        "available": true,
+        "record": null
+      },
+      "nativeEvidence": "/Users/samkorn/Documents/repos/shieldsigner-dev/baremetal/logs/phase-11/usb-20261115T015904.047802Z"
+    }
+  ],
+  "regressions": {
+    "passphrase": "logs/phase-11/usb-20261115T015855.163558Z",
+    "memory": "logs/phase-11/usb-20261115T015917.802892Z",
+    "home": "logs/phase-11/usb-20261115T020051.983490Z"
+  },
+  "hostTests": {
+    "python": 80,
+    "rustResetFormat": 4
+  },
+  "limits": [
+    "Earlier maskrom reset cause remains unknown; no retrospective record exists.",
+    "DDR retention demonstrated only for controlled warm reset plus matching RAM reload, not cold power.",
+    "No optical QR, entropy, wallet or long-term hardware qualification.",
+    "DUT1 RAM only; no SD/CAD/REF/DUT0 writes."
+  ]
+}

@@ -1552,3 +1552,15 @@ run = "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_r
 [tasks."baremetal:app:review:dut1:gate"]
 description = "Verify actual original paged-review flows and independently decode every displayed character"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/review_pages_gate.py"
+
+[tasks."baremetal:reset:check"]
+description = "Check numeric reset record validation against torn/corrupted records"
+run = ["mise exec rust@1.93.1 -- rustc --edition 2021 --test baremetal/src/reset_format.rs -o baremetal/build/reset-format-tests", "baremetal/build/reset-format-tests"]
+
+[tasks."baremetal:reset:probe:dut1:build"]
+description = "Build RAM-only DUT1 diagnostic image with deliberate guarded fault probes enabled"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features app-ui,fault-probe --usb-serial rv1103-dut1"
+
+[tasks."baremetal:reset:probe:dut1:gate"]
+description = "Deliberately fault RAM-only DUT1, reload identical image and validate retained actual fault registers"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/reset_record_gate.py"

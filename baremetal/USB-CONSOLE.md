@@ -62,3 +62,8 @@ For DUT1, build with `mise run baremetal:usb:dut1:build`, then (when in maskrom)
 `--port /dev/cu.usbmodemrv1103_dut11` to the uploader/debug gate for DUT1.
 The USB debug gate's `--reset-to-maskrom 101` proves USB Ctrl-] recovery.
 Host loader location selection is documented in patches/README.md.
+
+Runtime-board builds now retain numeric software fault/reset evidence in a
+separate64-byte region at60MiB+64KiB. It does not overlap the USB16KiB DMA
+reservation. See [RESET-DIAGNOSTICS.md](RESET-DIAGNOSTICS.md) for the USB getter,
+limits and opt-in deliberate fault gates. Normal app builds disable fault probes.

@@ -107,8 +107,36 @@ static mp_obj_t exception_location(mp_obj_t exception) {
     return mp_obj_new_tuple(3,fields);
 }
 static MP_DEFINE_CONST_FUN_OBJ_1(exception_location_obj,exception_location);
+extern int bm_reset_info(uint32_t *,uint32_t);
+extern void bm_reset_clear(void);
+extern void bm_reset_marker(uint32_t);
+extern uint32_t bm_reset_probe_enabled(void);
+extern int bm_reset_probe(uint32_t);
+static mp_obj_t reset_info(void){
+    uint32_t words[16];int result=bm_reset_info(words,16);
+    if(result==0)return mp_const_none;
+    if(result!=16)mp_raise_msg(&mp_type_RuntimeError,MP_ERROR_TEXT("Reset record read failed"));
+    static const qstr names[]={MP_QSTR_format_version,MP_QSTR_reason,MP_QSTR_marker,MP_QSTR_lr,MP_QSTR_spsr,MP_QSTR_mode,MP_QSTR_dfsr,MP_QSTR_dfar,MP_QSTR_ifsr,MP_QSTR_ifar,MP_QSTR_counter_low,MP_QSTR_counter_high};
+    mp_obj_t out=mp_obj_new_dict(0);
+    for(size_t i=0;i<12;i++)mp_obj_dict_store(out,MP_OBJ_NEW_QSTR(names[i]),mp_obj_new_int_from_uint(words[i+1]));
+    return out;
+}
+static MP_DEFINE_CONST_FUN_OBJ_0(reset_info_obj,reset_info);
+static mp_obj_t reset_clear(void){bm_reset_clear();return mp_const_none;}
+static MP_DEFINE_CONST_FUN_OBJ_0(reset_clear_obj,reset_clear);
+static mp_obj_t reset_marker(mp_obj_t value){mp_int_t marker=mp_obj_get_int(value);if(marker<0)mp_raise_ValueError(MP_ERROR_TEXT("Nonnegative marker required"));bm_reset_marker(marker);return mp_const_none;}
+static MP_DEFINE_CONST_FUN_OBJ_1(reset_marker_obj,reset_marker);
+static mp_obj_t reset_probe_enabled(void){return mp_obj_new_bool(bm_reset_probe_enabled());}
+static MP_DEFINE_CONST_FUN_OBJ_0(reset_probe_enabled_obj,reset_probe_enabled);
+static mp_obj_t reset_probe(mp_obj_t value){mp_int_t kind=mp_obj_get_int(value);if(kind<1||kind>4)mp_raise_ValueError(MP_ERROR_TEXT("Diagnostic probe1..4 required"));if(bm_reset_probe(kind)<0)mp_raise_msg(&mp_type_NotImplementedError,MP_ERROR_TEXT("Fault probes disabled or unavailable"));return mp_const_none;}
+static MP_DEFINE_CONST_FUN_OBJ_1(reset_probe_obj,reset_probe);
 static const mp_rom_map_elem_t machine_globals_table[]={
     {MP_ROM_QSTR(MP_QSTR___name__),MP_ROM_QSTR(MP_QSTR_machine)},
+    {MP_ROM_QSTR(MP_QSTR_last_reset),MP_ROM_PTR(&reset_info_obj)},
+    {MP_ROM_QSTR(MP_QSTR_clear_reset_record),MP_ROM_PTR(&reset_clear_obj)},
+    {MP_ROM_QSTR(MP_QSTR_set_reset_marker),MP_ROM_PTR(&reset_marker_obj)},
+    {MP_ROM_QSTR(MP_QSTR_fault_probes_enabled),MP_ROM_PTR(&reset_probe_enabled_obj)},
+    {MP_ROM_QSTR(MP_QSTR_fault_probe),MP_ROM_PTR(&reset_probe_obj)},
     {MP_ROM_QSTR(MP_QSTR_Pin),MP_ROM_PTR(&pin_type)},
     {MP_ROM_QSTR(MP_QSTR_led_status),MP_ROM_PTR(&led_status_obj)},
     {MP_ROM_QSTR(MP_QSTR_console_status),MP_ROM_PTR(&console_status_obj)},

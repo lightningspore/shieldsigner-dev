@@ -69,6 +69,8 @@ extern "C" fn bm_delay_us(us: u32) {
 }
 #[no_mangle]
 extern "C" fn bm_runtime_fault() -> ! {
+    #[cfg(feature="runtime-board")]
+    super::reset_record::simple(3);
     super::put(b"@@FAIL interpreter-fault\r\n");
     super::reset()
 }

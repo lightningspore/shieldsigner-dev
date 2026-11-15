@@ -40,4 +40,4 @@ unsafe extern "C" fn bm_ui_flush(x:u32,y:u32,w:u32,h:u32,data:*const u8,length:u
 #[no_mangle]
 extern "C" fn bm_ui_heap_used()->u32{super::heap::used()as u32}
 #[no_mangle]
-extern "C" fn bm_ui_fatal()->!{super::put(b"@@FAIL native-ui-fatal\r\n");super::reset()}
+extern "C" fn bm_ui_fatal()->!{super::reset_record::simple(4);super::put(b"@@FAIL native-ui-fatal\r\n");super::reset()}

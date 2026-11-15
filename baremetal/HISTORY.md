@@ -533,3 +533,22 @@ passes. Home restored004955; preview stopped, all USB readers finished.
   fonts are not claimed; ASCII identifiers expose every character instead. Next
   add useful reset/fault diagnostics and investigate accumulated runtime; remaining
   app/SD/entropy/optical work remains open.
+
+### 2026-11-15 UTC — Retained warm-reset diagnostics
+
+- Added a versioned/checksummed 64-byte record at noncacheable DDR60MiB+64KiB,
+  outside USB DMA. First marked cause per boot wins, with optional app marker and
+  ARM fault registers; commit magic is written last. MicroPython exposes read,
+  clear and marker APIs. Panic records evidence but keeps its existing halt policy.
+- DUT1 controlled USB reset, guarded data abort, actual C++ abort and interpreter
+  fatal callback retained the expected causes through matching RAM reloads.
+  Corrupt records reject; saved probe ELF resolves the guarded instruction.
+  Deliberate probes require an explicit build feature, disabled in the normal app.
+- Normal image5f442574... loaded015513; disabled-probe check015552 passes.
+  Instrumented review015553 and015903 pass with no recorded reset during either
+  run. Original passphrase015855 and memory015917 regressions pass; Home020051.
+  Four Rust record-format tests and80Python tests pass. Evidence receipt and
+  RESET-DIAGNOSTICS.md document exact scope, API and retained-record limitations.
+- Earlier unexplained reset012910 remains OPEN. Controlled fault tests do not
+  explain it; unmarked resets or cold loss can leave stale/no DDR evidence. No
+  new optical/entropy/wallet qualification. DUT1 RAM only, no SD/CAD/REF/DUT0 writes.

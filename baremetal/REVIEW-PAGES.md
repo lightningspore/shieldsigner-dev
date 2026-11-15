@@ -56,3 +56,7 @@ explain or close the reset. The evidence receipt records the failed run as well
 as passing runs. More reset/fault diagnostics are needed before stability or
 whole-wallet qualification. Optical QR and the remaining app/SD/entropy work
 also remain open.
+
+Follow-on: [RESET-DIAGNOSTICS.md](RESET-DIAGNOSTICS.md) documents USB-readable
+retained fault evidence and the instrumented gate wrapper. Controlled CPU/abort/
+interpreter-fatal probes validate that path; they do not explain the earlier reset.

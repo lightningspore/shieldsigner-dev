@@ -2645,17 +2645,17 @@ def _make_SeedAddressVerificationView():
             self.is_expanded = use_expanded and self.seed is not None and (not self.is_multisig) and (not self.export_for_xpub)
             self.is_singlesig_simple = self.seed is not None and (not self.is_multisig) and (not self.export_for_xpub) and (not self.is_expanded)
             if self.is_singlesig_simple:
-                self.threadsafe_counter = _dependency('seedsigner.models.threads', 'ThreadsafeCounter')(initial_value=simple_start_index)
+                self.threadsafe_counter = _dependency('seedsigner_port.address_search', 'Counter')(initial_value=simple_start_index)
             else:
-                self.threadsafe_counter = _dependency('seedsigner.models.threads', 'ThreadsafeCounter')()
-            self.verified_index = _dependency('seedsigner.models.threads', 'ThreadsafeCounter')(initial_value=None)
-            self.verified_index_is_change = _dependency('seedsigner.models.threads', 'ThreadsafeCounter')(initial_value=None)
+                self.threadsafe_counter = _dependency('seedsigner_port.address_search', 'Counter')()
+            self.verified_index = _dependency('seedsigner_port.address_search', 'Counter')(initial_value=None)
+            self.verified_index_is_change = _dependency('seedsigner_port.address_search', 'Counter')(initial_value=None)
             pass
             pass
             self.display_index_counter = None
             if self.is_expanded:
                 derivation_paths = _dependency('seedsigner.helpers', 'embit_utils').get_expanded_search_derivation_paths(network=self.network)
-                self.display_index_counter = _dependency('seedsigner.models.threads', 'ThreadsafeCounter')(initial_value=self.expanded_start_index)
+                self.display_index_counter = _dependency('seedsigner_port.address_search', 'Counter')(initial_value=self.expanded_start_index)
                 self.addr_verification_thread = self.ExpandedBruteForceAddressVerificationThread(address=self.address, seed=self.seed, embit_network=embit_network, network=self.network, derivation_paths=derivation_paths, addrs_per_path=self.EXPANDED_ADDRS_PER_PATH, start_index=self.expanded_start_index, threadsafe_counter=self.threadsafe_counter, verified_index=self.verified_index, verified_index_is_change=self.verified_index_is_change, address_index_counter=self.display_index_counter)
             else:
                 self.addr_verification_thread = self.BruteForceAddressVerificationThread(address=self.address, seed=self.seed, descriptor=self.controller.multisig_wallet_descriptor, script_type=self.script_type, embit_network=embit_network, derivation_path=self.derivation_path, threadsafe_counter=self.threadsafe_counter, verified_index=self.verified_index, verified_index_is_change=self.verified_index_is_change)
@@ -2723,7 +2723,7 @@ def _make_SeedAddressVerificationView():
                     _dependency('seedsigner_port.clock', None).sleep(0.01)
             return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'MainMenuView'))
 
-        class BruteForceAddressVerificationThread(_dependency('seedsigner.models.threads', 'BaseThread')):
+        class BruteForceAddressVerificationThread(_dependency('seedsigner_port.address_search', 'Worker')):
 
             def __init__(self, address, seed, descriptor, script_type, embit_network, derivation_path, threadsafe_counter, verified_index, verified_index_is_change):
                 """
@@ -2764,8 +2764,9 @@ def _make_SeedAddressVerificationView():
                         self.keep_running = False
                         break
                     self.threadsafe_counter.increment()
+                    yield
 
-        class ExpandedBruteForceAddressVerificationThread(_dependency('seedsigner.models.threads', 'BaseThread')):
+        class ExpandedBruteForceAddressVerificationThread(_dependency('seedsigner_port.address_search', 'Worker')):
             """
             Recovery-oriented search that tries ALL supported script types for
             every derivation path (BIP44/49/84/86 × accounts 0-9 plus
@@ -2808,6 +2809,7 @@ def _make_SeedAddressVerificationView():
                     except Exception as e:
                         pass
                         skipped_paths.add(path)
+                    yield
                 total_addrs_checked = 0
                 for i in range(self.start_index, self.start_index + self.addrs_per_path):
                     if self.address_index_counter:
@@ -2846,6 +2848,7 @@ def _make_SeedAddressVerificationView():
                                 self.keep_running = False
                                 return
                             self.threadsafe_counter.increment()
+                            yield
                 pass
                 pass
     return SeedAddressVerificationView

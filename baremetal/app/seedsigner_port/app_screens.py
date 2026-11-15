@@ -101,3 +101,5 @@ class LoadingScreenThread:
         if self.active:
             from seedsigner_port.renderer import Renderer
             Renderer.get_instance().display_blank_screen();self.active=False
+
+from seedsigner_port.address_search import SeedAddressVerificationScreen

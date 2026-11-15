@@ -8,6 +8,8 @@ class FeatureUnavailable(RuntimeError):
     pass
 
 def dependency(module,attribute=None):
+    if module=='seedsigner.helpers.ur2' or module.startswith('seedsigner.helpers.ur2.'):
+        module='seedsigner_port.ur2'+module[len('seedsigner.helpers.ur2'):]
     special={('seedsigner.helpers','embit_utils'):('seedsigner_port.embit_utils',None),
              ('binascii','a2b_base64'):('seedsigner_port.binary_codecs','a2b_base64'),
              ('seedsigner.helpers','kef'):('seedsigner_port.kef',None),
@@ -20,6 +22,12 @@ def dependency(module,attribute=None):
              'seedsigner.views':'seedsigner_port.view_core',
              'seedsigner.views.view':'seedsigner_port.view_core',
              'seedsigner.views.scan_views':'seedsigner_port.view_scan',
+             'seedsigner.views.tools_views':'seedsigner_port.camera_entropy_views',
+             'seedsigner.views.psbt_views':'seedsigner_port.view_psbt',
+             'seedsigner.gui.screens.psbt_screens':'seedsigner_port.psbt_screens',
+             'seedsigner.views.settings_views':'seedsigner_port.view_settings',
+             'seedsigner.gui.screens.tools_screens':'seedsigner_port.camera_entropy_screens',
+             'seedsigner.helpers.mnemonic_generation':'seedsigner_port.camera_entropy_mnemonic',
              'seedsigner.views.seed_views':'seedsigner_port.view_seed',
              'seedsigner.views.resign_views':'seedsigner_port.session_keys',
              'seedsigner.gui':'seedsigner_port.renderer',
@@ -41,7 +49,7 @@ def dependency(module,attribute=None):
              'gettext':'seedsigner_port.localization',
              'seedsigner.models.aezeed':'seedsigner_port.aezeed',
              'seedsigner.models.psbt_framing':'seedsigner_port.psbt_framing',
-             'seedsigner.models.psbt_parser':'seedsigner_port.psbt_errors',
+             'seedsigner.models.psbt_parser':'seedsigner_port.psbt_parser',
              'seedsigner.models.seed':'seedsigner_port.seed',
              'seedsigner.helpers.secure_delete':'seedsigner_port.secure_delete',
              'seedsigner.models.settings':'seedsigner_port.settings_store',

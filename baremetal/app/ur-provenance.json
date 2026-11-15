@@ -1,0 +1,165 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "urtypesSource": "https://github.com/selfcustody/urtypes/archive/7fb280eab3b3563dfc57d2733b0bf5cbc0a96a6a.zip",
+  "files": {
+    "seedsigner_port/ur2/__init__.py": {
+      "source": "src/seedsigner/helpers/ur2/__init__.py",
+      "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "seedsigner_port/ur2/bytewords.py": {
+      "source": "src/seedsigner/helpers/ur2/bytewords.py",
+      "sourceSha256": "b652f89758fb84d2beafaeb01e77a8af5f3e7a201d5b3fa1473e01ef8418bfc1",
+      "outputSha256": "b652f89758fb84d2beafaeb01e77a8af5f3e7a201d5b3fa1473e01ef8418bfc1"
+    },
+    "seedsigner_port/ur2/cbor_lite.py": {
+      "source": "src/seedsigner/helpers/ur2/cbor_lite.py",
+      "sourceSha256": "e59050f921aa9254600485b524cede9bff879e0aa4facc4ce9e77b168f595a6a",
+      "outputSha256": "e59050f921aa9254600485b524cede9bff879e0aa4facc4ce9e77b168f595a6a"
+    },
+    "seedsigner_port/ur2/constants.py": {
+      "source": "src/seedsigner/helpers/ur2/constants.py",
+      "sourceSha256": "d7a4ccd6c624c69aec6983667399c6566dddb60134349e43443ac05b67956495",
+      "outputSha256": "d7a4ccd6c624c69aec6983667399c6566dddb60134349e43443ac05b67956495"
+    },
+    "seedsigner_port/ur2/crc32.py": {
+      "source": "src/seedsigner/helpers/ur2/crc32.py",
+      "sourceSha256": "888541118b69e5a3f587e1556f0787f6b644ff263811c6913843eb18b68513da",
+      "outputSha256": "888541118b69e5a3f587e1556f0787f6b644ff263811c6913843eb18b68513da"
+    },
+    "seedsigner_port/ur2/fountain_decoder.py": {
+      "source": "src/seedsigner/helpers/ur2/fountain_decoder.py",
+      "sourceSha256": "b52b6f61c21f44bc1c676efc38dbbae0dd5915bac71aa8b07a54a6704a5132d5",
+      "outputSha256": "b52b6f61c21f44bc1c676efc38dbbae0dd5915bac71aa8b07a54a6704a5132d5"
+    },
+    "seedsigner_port/ur2/fountain_encoder.py": {
+      "source": "src/seedsigner/helpers/ur2/fountain_encoder.py",
+      "sourceSha256": "602409bfefd3cbaf86bc0b4bf328e128a7af0a565f07d5c669c3febd1b53b3fd",
+      "outputSha256": "602409bfefd3cbaf86bc0b4bf328e128a7af0a565f07d5c669c3febd1b53b3fd"
+    },
+    "seedsigner_port/ur2/fountain_utils.py": {
+      "source": "src/seedsigner/helpers/ur2/fountain_utils.py",
+      "sourceSha256": "cbbc87708a1ad1f4e5494f04a4c29ca585946fa55fb0a4dd92711d7d40c20d42",
+      "outputSha256": "cbbc87708a1ad1f4e5494f04a4c29ca585946fa55fb0a4dd92711d7d40c20d42"
+    },
+    "seedsigner_port/ur2/random_sampler.py": {
+      "source": "src/seedsigner/helpers/ur2/random_sampler.py",
+      "sourceSha256": "dcb23762815edd2a0b0fe48fba02fac5b3aba3d67c1f27bafe6823b1dda04b59",
+      "outputSha256": "dcb23762815edd2a0b0fe48fba02fac5b3aba3d67c1f27bafe6823b1dda04b59"
+    },
+    "seedsigner_port/ur2/ur.py": {
+      "source": "src/seedsigner/helpers/ur2/ur.py",
+      "sourceSha256": "b51393572a556ff4426412783b1902d1afc6241f26870ecf649eefb719880929",
+      "outputSha256": "b51393572a556ff4426412783b1902d1afc6241f26870ecf649eefb719880929"
+    },
+    "seedsigner_port/ur2/ur_decoder.py": {
+      "source": "src/seedsigner/helpers/ur2/ur_decoder.py",
+      "sourceSha256": "c26a2a89fbb3356f8643eeabfadb746c5e95fc93c035ec6f84a9b2954dd19d7f",
+      "outputSha256": "c26a2a89fbb3356f8643eeabfadb746c5e95fc93c035ec6f84a9b2954dd19d7f"
+    },
+    "seedsigner_port/ur2/ur_encoder.py": {
+      "source": "src/seedsigner/helpers/ur2/ur_encoder.py",
+      "sourceSha256": "2a05145e5961347404ccf7230727eee85efa2822f0b39890ae42e6fe47202c1b",
+      "outputSha256": "2a05145e5961347404ccf7230727eee85efa2822f0b39890ae42e6fe47202c1b"
+    },
+    "seedsigner_port/ur2/utils.py": {
+      "source": "src/seedsigner/helpers/ur2/utils.py",
+      "sourceSha256": "565724921749e1ed0e92b6beb38d4f00df2ec373b105928bed1f8c30da297c6d",
+      "outputSha256": "565724921749e1ed0e92b6beb38d4f00df2ec373b105928bed1f8c30da297c6d"
+    },
+    "seedsigner_port/ur2/xoshiro256.py": {
+      "source": "src/seedsigner/helpers/ur2/xoshiro256.py",
+      "sourceSha256": "d4d700a789502a4ba21f4a3a24a3c8381f13a3c7fb896b0e19dffc6948aef1d4",
+      "outputSha256": "d4d700a789502a4ba21f4a3a24a3c8381f13a3c7fb896b0e19dffc6948aef1d4"
+    },
+    "urtypes/__init__.py": {
+      "source": "urtypes/__init__.py",
+      "sourceSha256": "772ba0830abd34869dac4006a4b5df39faf4526529041b15c12b241ff9948668",
+      "outputSha256": "772ba0830abd34869dac4006a4b5df39faf4526529041b15c12b241ff9948668"
+    },
+    "urtypes/bytes.py": {
+      "source": "urtypes/bytes.py",
+      "sourceSha256": "3a7d60c8e6bcd1ca935940cb2484e687ea39acdfa3365f19266f586d02ed1846",
+      "outputSha256": "3a7d60c8e6bcd1ca935940cb2484e687ea39acdfa3365f19266f586d02ed1846"
+    },
+    "urtypes/cbor/__init__.py": {
+      "source": "urtypes/cbor/__init__.py",
+      "sourceSha256": "1db7a643d9d907aff46f50a2215805baefaa89ffe6f14377d14770cfaf2b5ee5",
+      "outputSha256": "1db7a643d9d907aff46f50a2215805baefaa89ffe6f14377d14770cfaf2b5ee5"
+    },
+    "urtypes/cbor/data.py": {
+      "source": "urtypes/cbor/data.py",
+      "sourceSha256": "6f17effbf60bab30f619f252a5b6f04ed4d2e9958868889c3b7911675b60b381",
+      "outputSha256": "6f17effbf60bab30f619f252a5b6f04ed4d2e9958868889c3b7911675b60b381"
+    },
+    "urtypes/cbor/decoder.py": {
+      "source": "urtypes/cbor/decoder.py",
+      "sourceSha256": "8f1bd669f60b58ae92f059e9fb0a3c399561df3a287640c0ea90831cdde9b712",
+      "outputSha256": "8f1bd669f60b58ae92f059e9fb0a3c399561df3a287640c0ea90831cdde9b712"
+    },
+    "urtypes/cbor/encoder.py": {
+      "source": "urtypes/cbor/encoder.py",
+      "sourceSha256": "83c955c038d1fd8a5d1cf280eeb6eab01b0e335e39a8ded3b3ebecd3355e6309",
+      "outputSha256": "83c955c038d1fd8a5d1cf280eeb6eab01b0e335e39a8ded3b3ebecd3355e6309"
+    },
+    "urtypes/crypto/__init__.py": {
+      "source": "urtypes/crypto/__init__.py",
+      "sourceSha256": "77ebd3763023392fd9ce40b0711404af19938988e8537d7023db008c7b360ddb",
+      "outputSha256": "77ebd3763023392fd9ce40b0711404af19938988e8537d7023db008c7b360ddb"
+    },
+    "urtypes/crypto/account.py": {
+      "source": "urtypes/crypto/account.py",
+      "sourceSha256": "fb4a05234fc90f2f8d8d77fdfa1964611524c2c5b2b5fc2f29fef90e6640a4e3",
+      "outputSha256": "fb4a05234fc90f2f8d8d77fdfa1964611524c2c5b2b5fc2f29fef90e6640a4e3"
+    },
+    "urtypes/crypto/bip39.py": {
+      "source": "urtypes/crypto/bip39.py",
+      "sourceSha256": "fea4640d1522d7b47e3e21cd78c5eb674808b756bb74c62ae49c900af4d274df",
+      "outputSha256": "fea4640d1522d7b47e3e21cd78c5eb674808b756bb74c62ae49c900af4d274df"
+    },
+    "urtypes/crypto/coin_info.py": {
+      "source": "urtypes/crypto/coin_info.py",
+      "sourceSha256": "28ebe30684a962d411b7467a4456d66b2dfcddf65d1309bc3ff4f3cc76b555f0",
+      "outputSha256": "28ebe30684a962d411b7467a4456d66b2dfcddf65d1309bc3ff4f3cc76b555f0"
+    },
+    "urtypes/crypto/ec_key.py": {
+      "source": "urtypes/crypto/ec_key.py",
+      "sourceSha256": "81209101aacc1f6587490a225855661faa62364010a9bb303d75c4bd29c6eaae",
+      "outputSha256": "81209101aacc1f6587490a225855661faa62364010a9bb303d75c4bd29c6eaae"
+    },
+    "urtypes/crypto/hd_key.py": {
+      "source": "urtypes/crypto/hd_key.py",
+      "sourceSha256": "b1048b95b8185846c9aff4824a378d55e7ad1f5b7975076d81dd4328285335e2",
+      "outputSha256": "b1048b95b8185846c9aff4824a378d55e7ad1f5b7975076d81dd4328285335e2"
+    },
+    "urtypes/crypto/keypath.py": {
+      "source": "urtypes/crypto/keypath.py",
+      "sourceSha256": "c03876483a862aea9e6d2c3460c35c229774e9dc58e49be7376c4af90828f554",
+      "outputSha256": "c03876483a862aea9e6d2c3460c35c229774e9dc58e49be7376c4af90828f554"
+    },
+    "urtypes/crypto/multi_key.py": {
+      "source": "urtypes/crypto/multi_key.py",
+      "sourceSha256": "7168bfd53fa68dcaafbf724d0981d3f1f5c54c715c773d546610deee052ca4bd",
+      "outputSha256": "7168bfd53fa68dcaafbf724d0981d3f1f5c54c715c773d546610deee052ca4bd"
+    },
+    "urtypes/crypto/output.py": {
+      "source": "urtypes/crypto/output.py",
+      "sourceSha256": "2657fd1f7793e78cd084def705f2f2506d91be277900d6faa57be28dde97dfcf",
+      "outputSha256": "2657fd1f7793e78cd084def705f2f2506d91be277900d6faa57be28dde97dfcf"
+    },
+    "urtypes/crypto/psbt.py": {
+      "source": "urtypes/crypto/psbt.py",
+      "sourceSha256": "02763f691a696f6947ae15c40b1be6bb9ccfde6a634067ded19538c58a3095a0",
+      "outputSha256": "02763f691a696f6947ae15c40b1be6bb9ccfde6a634067ded19538c58a3095a0"
+    },
+    "urtypes/registry.py": {
+      "source": "urtypes/registry.py",
+      "sourceSha256": "c1b10c1467799cc855262abf1e630083b83ad7104ef3962aa1e5322eea48ede0",
+      "outputSha256": "c1b10c1467799cc855262abf1e630083b83ad7104ef3962aa1e5322eea48ede0"
+    }
+  },
+  "changes": []
+}

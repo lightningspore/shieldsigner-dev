@@ -103,7 +103,43 @@ static mp_obj_t ui_scan_state(void){
 static MP_DEFINE_CONST_FUN_OBJ_0(ui_scan_state_obj,ui_scan_state);
 static mp_obj_t ui_blank(void){checked(bm_nativeui_blank());return mp_const_none;}
 static MP_DEFINE_CONST_FUN_OBJ_0(ui_blank_obj,ui_blank);
+extern int bm_nativeui_address_progress(const char *text);
+static mp_obj_t ui_address_progress(mp_obj_t text){
+    size_t length;const char *value=mp_obj_str_get_data(text,&length);
+    if(!mp_obj_is_str(text)||length>128||memchr(value,0,length))mp_raise_ValueError(MP_ERROR_TEXT("Address progress must be text without NUL, max128bytes"));
+    checked(bm_nativeui_address_progress(value));return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(ui_address_progress_obj,ui_address_progress);
+extern int bm_nativeui_qr_frame(const unsigned char *,size_t);
+extern int bm_nativeui_qr_tip_active(void);
+extern uint32_t bm_nativeui_qr_exit_key(void);
+static mp_obj_t ui_qr_frame(mp_obj_t frame){
+    mp_buffer_info_t data;mp_get_buffer_raise(frame,&data,MP_BUFFER_READ);
+    if(!data.len||data.len>512)mp_raise_ValueError(MP_ERROR_TEXT("QR frame requires1..512bytes"));
+    checked(bm_nativeui_qr_frame(data.buf,data.len));return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(ui_qr_frame_obj,ui_qr_frame);
+static mp_obj_t ui_qr_tip_active(void){return mp_obj_new_bool(bm_nativeui_qr_tip_active());}
+static MP_DEFINE_CONST_FUN_OBJ_0(ui_qr_tip_active_obj,ui_qr_tip_active);
+static mp_obj_t ui_qr_exit_key(void){return mp_obj_new_int_from_uint(bm_nativeui_qr_exit_key());}
+static MP_DEFINE_CONST_FUN_OBJ_0(ui_qr_exit_key_obj,ui_qr_exit_key);
+extern int bm_nativeui_scroll_y(void);
+extern int bm_nativeui_scroll_to_y(int);
+static mp_obj_t ui_scroll_y(void){return mp_obj_new_int(bm_nativeui_scroll_y());}
+static MP_DEFINE_CONST_FUN_OBJ_0(ui_scroll_y_obj,ui_scroll_y);
+static mp_obj_t ui_scroll_to_y(mp_obj_t position){
+    mp_int_t value=mp_obj_get_int(position);
+    if(value<-1000000||value>1000000)mp_raise_ValueError(MP_ERROR_TEXT("Scroll position outside reviewed bound"));
+    checked(bm_nativeui_scroll_to_y(value));return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(ui_scroll_to_y_obj,ui_scroll_to_y);
 static const mp_rom_map_elem_t globals_table[]={
+    {MP_ROM_QSTR(MP_QSTR_scroll_y),MP_ROM_PTR(&ui_scroll_y_obj)},
+    {MP_ROM_QSTR(MP_QSTR_scroll_to_y),MP_ROM_PTR(&ui_scroll_to_y_obj)},
+    {MP_ROM_QSTR(MP_QSTR_qr_frame),MP_ROM_PTR(&ui_qr_frame_obj)},
+    {MP_ROM_QSTR(MP_QSTR_qr_tip_active),MP_ROM_PTR(&ui_qr_tip_active_obj)},
+    {MP_ROM_QSTR(MP_QSTR_qr_exit_key),MP_ROM_PTR(&ui_qr_exit_key_obj)},
+    {MP_ROM_QSTR(MP_QSTR_address_progress),MP_ROM_PTR(&ui_address_progress_obj)},
     {MP_ROM_QSTR(MP_QSTR_blank),MP_ROM_PTR(&ui_blank_obj)},
     {MP_ROM_QSTR(MP_QSTR_scan_begin),MP_ROM_PTR(&ui_scan_begin_obj)},
     {MP_ROM_QSTR(MP_QSTR_scan_frame),MP_ROM_PTR(&ui_scan_frame_obj)},

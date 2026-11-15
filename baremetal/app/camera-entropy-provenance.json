@@ -1,0 +1,45 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "files": {
+    "camera_entropy_mnemonic.py": {
+      "source": "helpers/mnemonic_generation.py",
+      "sourceSha256": "e0dcae5af748e7de1cc9c14c0cf39b30cf38bd288c663eff327c8a90eb894b58",
+      "outputSha256": "848493164f6ca304bddbfbdf404471fb2e53a4f2263faab45cbf6ceb1e9d71f0",
+      "functions": [
+        "_hash_dice_rolls",
+        "_shannon_entropy",
+        "byte_entropy_is_sufficient",
+        "dice_entropy_is_sufficient",
+        "generate_bytes_from_dice",
+        "generate_mnemonic_from_bytes",
+        "generate_mnemonic_from_dice"
+      ],
+      "changes": [
+        "Original Counter(data) frequency histogram uses equivalent native dict counts; annotations/import boundaries use common source port."
+      ]
+    },
+    "camera_entropy_views.py": {
+      "source": "views/tools_views.py",
+      "sourceSha256": "62ec90fcc848fce567a8b5ae3ff3ab8deb22fb7525a92cdf950954f682872d99",
+      "outputSha256": "5afd06ef5fcc299c2b98eacf0d8443c85a4714c3bd758ab375e245056eca2a80",
+      "classes": [
+        "ToolsMenuView",
+        "ToolsImageEntropyLivePreviewView",
+        "ToolsImageEntropyFinalImageView",
+        "ToolsImageEntropyMnemonicLengthView",
+        "ToolsDiceEntropyMnemonicLengthView",
+        "ToolsDiceEntropyEntryView"
+      ],
+      "changes": [
+        "Camera is configured entropy source; remove Linux fork RNG-health entry prerequisite.",
+        "Native capture always returns final owned NV12; no PIL/procfs/fallback camera boundary.",
+        "Mnemonic length, entropy truncation/BIP39/pending-seed routing remain original; image buffers cleared in finally.",
+        "Poor Entropy clears images and retries fresh acquisition; length Back retains images for review."
+      ]
+    }
+  },
+  "scope": "Camera-only native flow; no fabricated RNG health or OS/TRNG prerequisite. No entropy/security qualification follows from function availability."
+}

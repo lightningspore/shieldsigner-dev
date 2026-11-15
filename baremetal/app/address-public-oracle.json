@@ -1,0 +1,6 @@
+{
+  "provider": "CPython embit0.8.0/qrcode7.3.1",
+  "cases": 11,
+  "gateSha256": "cbe56eee6fa9de34760c17203bcf7299d26fbb32d2e1efe07b5edde03b6c34e8",
+  "scope": "Known public mnemonic/PUBLIC passphrase; 0/7/10/999 matching, exact1000 bound, another account, wrong script, cancel and idle; not optical/security qualification."
+}

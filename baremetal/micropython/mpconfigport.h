@@ -31,6 +31,7 @@ void bm_micropython_poll(void);
 // Original app settings parsing requires real CPython-compatible double values.
 // Native UI builds link the pinned complete newlib/libm runtime.
 #if BM_NATIVE_UI
+#define MICROPY_PY_BUILTINS_FROZENSET (1)
 #define MICROPY_ENABLE_FINALISER (1)
 #define MICROPY_PY_ALL_SPECIAL_METHODS (1)
 #define MICROPY_PY_BUILTINS_NEXT2 (1)
@@ -45,6 +46,8 @@ void bm_micropython_poll(void);
 #define MICROPY_FLOAT_IMPL MICROPY_FLOAT_IMPL_DOUBLE
 // Standard pseudorandom generator for non-secret quiz ordering, not wallet entropy.
 #define MICROPY_PY_MATH (1)
+// Original camera/dice entropy quality helpers require real math.log2.
+#define MICROPY_PY_MATH_SPECIAL_FUNCTIONS (1)
 #define MICROPY_PY_RANDOM (1)
 #define MICROPY_PY_RANDOM_EXTRA_FUNCS (1)
 #endif

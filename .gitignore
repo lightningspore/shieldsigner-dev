@@ -35,3 +35,6 @@ checks/
 
 # Local KiCad MCP history metadata.
 kicad/.history/
+
+# Local application diagnostic logs are not source artifacts.
+/log/

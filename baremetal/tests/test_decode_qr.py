@@ -44,8 +44,11 @@ class ModelTests(unittest.TestCase):
         parts=['p2of2 "descriptor":"public fixture"}','p2of2 "descriptor":"public fixture"}','p1of2 {"label":"test",']
         a,x=self.states(self.reference,parts);b,y=self.states(port,parts)
         self.assertEqual(x,y);self.assertEqual([v[0] for v in y],[1,2,3]);self.assertEqual(b.get_wallet_descriptor(),a.get_wallet_descriptor())
-    def test_unported_dependency_is_explicit(self):
-        with self.assertRaises(FeatureUnavailable):port.DecodeQR().add_data('ur:bytes/abcd')
+    def test_malformed_ur_matches_original_with_real_provider(self):
+        from seedsigner_port.ur2.ur_decoder import URDecoder
+        self.reference.URDecoder=URDecoder
+        a,x=self.states(self.reference,['ur:bytes/abcd']);b,y=self.states(port,['ur:bytes/abcd'])
+        self.assertEqual(x,y);self.assertFalse(b.is_complete)
     def test_all_classes_retained(self):
         names=[n.name for n in ast.parse(source.read_text()).body if isinstance(n,ast.ClassDef)]
         self.assertEqual(len(names),27)

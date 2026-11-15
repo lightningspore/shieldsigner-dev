@@ -28,7 +28,8 @@ static uint32_t key=LV_KEY_ENTER;
 static bool pressed=false;
 static uint32_t event_kind=0,event_value=0,frames=0,flushes=0;
 static unsigned event_length=0;
-static bool passphrase_screen=false;
+static bool passphrase_screen=false,qr_screen=false;
+static uint32_t qr_exit_key=0;
 static char event_text[256]={0},error[256]={0};
 static bool io_error=false,initialized=false;
 static void copy_text(char *out,const char *value){
@@ -59,6 +60,7 @@ static void passphrase_event(bool back){
     text_event(back?6:2,back?1:0,raw.data(),raw.size());
 }
 extern "C" void seedsigner_lvgl_on_button_selected(uint32_t index,const char*){
+    if(qr_screen && index==SEEDSIGNER_RET_BACK_BUTTON)qr_exit_key=pressed?key:0;
     if(passphrase_screen && index==SEEDSIGNER_RET_BACK_BUTTON){passphrase_event(true);return;}
     event_kind=1;event_value=index;event_length=0;
 }
@@ -112,6 +114,7 @@ extern "C" int bm_nativeui_render(const char *name,const char *config){
         if(!entry){copy_text(error,"Unknown native screen builder");return -1;}
         entry->build((void*)config);
         passphrase_screen=!strcmp(name,"seed_add_passphrase_screen");
+        qr_screen=!strcmp(name,"qr_display_screen");qr_exit_key=0;
         // Settle LVGL reset/group reassignment while input is released, as the
         // existing native host does before acknowledging a new screen.
         pressed=false;lv_indev_read(keypad);
@@ -236,7 +239,7 @@ extern "C" int bm_nativeui_scan_begin(const char *instructions){
         spec.frame_status=CAMERA_OVERLAY_FRAME_MISS;spec.just_decoded_index=-1;
         context->overlay=camera_preview_overlay_create(context->root,&spec);
         if(!context->overlay)throw std::bad_alloc();
-        scan_surface=context;passphrase_screen=false;bm_nativeui_consume_event();
+        scan_surface=context;passphrase_screen=false;qr_screen=false;qr_exit_key=0;bm_nativeui_consume_event();
         load_screen_and_cleanup_previous(context->root);
         pressed=false;lv_indev_read(keypad);scan_refresh();
         if(io_error)throw std::runtime_error("Scan display flush failed");
@@ -282,7 +285,7 @@ extern "C" int bm_nativeui_blank(){
         lv_obj_set_style_bg_color(blank,lv_color_black(),LV_PART_MAIN);
         lv_obj_set_style_bg_opa(blank,LV_OPA_COVER,LV_PART_MAIN);
         lv_obj_set_style_border_width(blank,0,LV_PART_MAIN);
-        load_screen_and_cleanup_previous(blank);passphrase_screen=false;bm_nativeui_consume_event();
+        load_screen_and_cleanup_previous(blank);passphrase_screen=false;qr_screen=false;qr_exit_key=0;bm_nativeui_consume_event();
         scan_refresh();return io_error?-1:0;
     }catch(const std::exception &e){copy_text(error,e.what());return -1;}
     catch(...){copy_text(error,"Native scan teardown failed");return -1;}
@@ -290,4 +293,57 @@ extern "C" int bm_nativeui_blank(){
 extern "C" unsigned bm_nativeui_scan_stat(unsigned field){
     if(!scan_surface)return 0;
     switch(field){case 0:return 1;case 1:return scan_surface->count;case 2:return scan_surface->progress;case 3:return scan_surface->status;case 4:return scan_surface->scanning;default:return 0;}
+}
+
+extern "C" int bm_nativeui_address_progress(const char *text){
+    if(!initialized){copy_text(error,"Initialize UI first");return -1;}
+    try {
+        error[0]=0;io_error=false;
+        seed_address_verification_set_progress(text);scan_refresh();
+        if(io_error){copy_text(error,"Address progress flush failed");return -1;}
+        return 0;
+    }catch(const std::exception &e){copy_text(error,e.what());return -1;}
+    catch(...){copy_text(error,"Native address progress failed");return -1;}
+}
+
+
+// Original QR host-push APIs. The native screen copies/encodes the borrowed frame
+// synchronously, owns its qrcodegen buffers and releases them on root deletion.
+extern "C" int bm_nativeui_qr_frame(const uint8_t *bytes,size_t length){
+    if(!initialized||!qr_screen){copy_text(error,"Display QR screen first");return -1;}
+    if(!bytes||!length||length>512){copy_text(error,"QR frame exceeds reviewed512-byte bound");return -1;}
+    try {
+        error[0]=0;io_error=false;
+        qr_display_set_frame(bytes,length);scan_refresh();
+        if(io_error){copy_text(error,"QR frame flush failed");return -1;}
+        return 0;
+    }catch(const std::exception &e){copy_text(error,e.what());return -1;}
+    catch(...){copy_text(error,"Native QR frame failed");return -1;}
+}
+extern "C" int bm_nativeui_qr_tip_active(){return initialized&&qr_screen&&qr_display_is_tip_active()?1:0;}
+extern "C" uint32_t bm_nativeui_qr_exit_key(){return qr_exit_key;}
+
+// Same scaffold body selection as the existing Linux native host: the tallest
+// direct scrollable child is the content body, not the shorter top navigation.
+static lv_obj_t *native_scroll_body(){
+    auto *screen=lv_screen_active();if(!screen)return nullptr;
+    lv_obj_t *best=nullptr;int height=-1;
+    for(uint32_t i=0;i<lv_obj_get_child_count(screen);++i){
+        auto *child=lv_obj_get_child(screen,i);
+        if(lv_obj_has_flag(child,LV_OBJ_FLAG_SCROLLABLE)&&lv_obj_get_height(child)>height){best=child;height=lv_obj_get_height(child);}
+    }
+    return best;
+}
+extern "C" int bm_nativeui_scroll_y(){auto *body=initialized?native_scroll_body():nullptr;return body?lv_obj_get_scroll_y(body):0;}
+extern "C" int bm_nativeui_scroll_to_y(int value){
+    if(!initialized){copy_text(error,"Initialize UI first");return -1;}
+    try {
+        error[0]=0;io_error=false;
+        auto *body=native_scroll_body();
+        if(body)lv_obj_scroll_to_y(body,value,LV_ANIM_OFF);
+        scan_refresh();
+        if(io_error){copy_text(error,"Native scroll flush failed");return -1;}
+        return 0;
+    }catch(const std::exception &e){copy_text(error,e.what());return -1;}
+    catch(...){copy_text(error,"Native scroll restore failed");return -1;}
 }

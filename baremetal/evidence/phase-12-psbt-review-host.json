@@ -1,0 +1,49 @@
+{
+  "sourceSha256": "ab5bc31e372d2f008c1b0574c601801111b5f301422b89e2dcf256cd88985c7e",
+  "corpusTableSha256": "d70ec1169148d62e5e3ebf088d257f8b0f2593b5b2acee2c8e25263968922309",
+  "cases": 116,
+  "parsed": 45,
+  "rejected": 71,
+  "publicClock": 1787616000,
+  "provider": "Unmodified original PSBTParser and CPython embit0.8.0; original corpus target table",
+  "signingCases": 8,
+  "scope": "Original review fields/refusal policy parity, deterministic public signatures independently verified, final full transaction and original trim. No UI/hardware/production-security qualification.",
+  "nativeGateSha256": "170b1ad2d67cb3a55c2fa0779dbcb22dfc93c69c0017bf30f10004fbae32e725",
+  "nativeCases": 116,
+  "referenceLibrarySha256": {
+    "bip32": "584bbbd23c5e90791295ee688832510d0c1da82b932c5760472a2f6fb75cdaa2",
+    "psbt": "e25bd03708e89c0209723b9cc8eddb502b1653d8afc0c9aa32efd1226793541b",
+    "script": "f35827d59a038ba9b0d11ab80697ae3f5913f6bf16d7c078b627180f5ef651e3",
+    "ec": "ae3b900f283fca5541d99816016c6514d37117d56135328bced688ba7f001973",
+    "secp256k1": "24030ea8e6a7606307288008f8eb9156e36e728bdd72c77b8b9b338f72dd9f97"
+  },
+  "status": "host-policy-parity-pass-native-gate-prepared-not-run",
+  "hostReport": "/tmp/ss_psbt_review_prepare_clock.txt",
+  "sourceChecks": "/tmp/ss_psbt_views_checks.txt",
+  "noHardwareAccess": true,
+  "moduleMpyCrossChecks": [
+    "seedsigner_port/psbt_parser.py",
+    "embit/finalizer.py",
+    "seedsigner_port/psbt_clock.py",
+    "seedsigner_port/view_psbt.py",
+    "seedsigner_port/psbt_formatting.py",
+    "seedsigner_port/psbt_contracts.py",
+    "seedsigner_port/psbt_screen_defaults.py",
+    "seedsigner_port/psbt_screens.py"
+  ],
+  "nativeExplicitUnavailableClockCases": [
+    "XTRAS.LOCKTIME_FUTURE",
+    "TX-19.timestamp_future"
+  ],
+  "psbtSpecificHostTestsPassed": 8,
+  "workspaceCheck": {
+    "log": "/tmp/ss_psbt_views_fullcheck.txt",
+    "tests": 142,
+    "failures": 1,
+    "errors": 3,
+    "failingModule": "test_settings_views.py",
+    "note": "Other agent concurrently implementing settings; PSBT tests passed."
+  },
+  "viewsProvenance": "app/psbt-views-provenance.json",
+  "viewsScope": "All23 original classes/methods retained; six native contract differential checks; scripted original approval Back path exits before signing; native end-to-end approval/export not run."
+}

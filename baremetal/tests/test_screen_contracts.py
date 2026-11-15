@@ -78,7 +78,7 @@ class ContractsTest(unittest.TestCase):
         classes={n.name:n for file in ('screen.py','seed_screens.py') for n in ast.parse((app/file).read_text()).body if isinstance(n,ast.ClassDef)}
         reviewed=set().union(*(set(v) for v in APP_DEFAULTS.values()))
         # Rebuild actual field defaults including warning factory buttons.
-        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen','SeedTranscribeSeedQRFormatScreen','SeedTranscribeSeedQRWholeQRScreen','SeedTranscribeSeedQRZoomedInScreen','SeedTranscribeSeedQRConfirmQRPromptScreen','SeedExportXpubDetailsScreen'):
+        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen','SeedTranscribeSeedQRFormatScreen','SeedTranscribeSeedQRWholeQRScreen','SeedTranscribeSeedQRZoomedInScreen','SeedTranscribeSeedQRConfirmQRPromptScreen','SeedExportXpubDetailsScreen','SeedAddressVerificationScreen','SeedAddressVerificationSuccessScreen'):
             node=classes[name]
             node.body=[n for n in node.body if isinstance(n,ast.AnnAssign) and n.target.id in reviewed]
             for n in node.body:n.annotation=ast.Constant('reviewed field')
@@ -87,6 +87,8 @@ class ContractsTest(unittest.TestCase):
             exec(compile(ast.fix_missing_locations(ast.Module(body=[node],type_ignores=[])),'<original app fields>','exec'),scope)
         for name in APP_DEFAULTS:
             cases=[{}, {'button_data':['Done','Cancel'],'text':'Public test','selected_button':1}]
+            if name=='SeedAddressVerificationScreen':cases=[dict(c,address='bc1 PUBLIC',network='Mainnet',sig_type='Single Sig',script_type='Native Segwit',is_mainnet=True,threadsafe_counter=type('PublicCounter',(),{'cur_count':7})(),button_data=['Skip 10','Cancel']) for c in cases]
+            if name=='SeedAddressVerificationSuccessScreen':cases=[dict(c,address='bc1 PUBLIC',verified_index=7,verified_index_is_change=True,derivation_path="m/84'/0'/0'",script_type_display='Native Segwit',is_non_standard=False) for c in cases]
             if name=='SeedExportXpubDetailsScreen':cases=[dict(c,fingerprint='73c5da0a',derivation_path="m/84'/0'/0'",xpub='zpub PUBLIC') for c in cases]
             if name in port.TRANSCRIPTION:cases=[dict(c,qr_data='0000',num_modules=21,is_compactqr=True,is_encryptedqr=False) for c in cases]
             if name=='SeedWordsScreen':cases=[dict(c,words=['abandon','ability','able','about'],page_index=2,num_pages=3) for c in cases]

@@ -72,9 +72,12 @@ def result(event,button_count,screen_name=None):
 _basic_configuration=configuration
 STATUS={'LargeIconStatusScreen':'custom','WarningScreen':'warning','DireWarningScreen':'dire_warning','ErrorScreen':'error'}
 TRANSCRIPTION={'SeedTranscribeSeedQRFormatScreen','SeedTranscribeSeedQRWholeQRScreen','SeedTranscribeSeedQRZoomedInScreen','SeedTranscribeSeedQRConfirmQRPromptScreen'}
-APP_SCREENS=TRANSCRIPTION|set(STATUS)|{'SeedExportXpubDetailsScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
+APP_SCREENS=TRANSCRIPTION|set(STATUS)|{'SeedAddressVerificationScreen','SeedAddressVerificationSuccessScreen','SeedExportXpubDetailsScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
 def configuration(screen_class,passed,translate=None):
     name=screen_class if isinstance(screen_class,str) else screen_class.__name__
+    if name in ('PSBTOverviewScreen', 'PSBTMathScreen', 'PSBTAddressDetailsScreen', 'PSBTChangeDetailsScreen', 'PSBTOpReturnScreen', 'PSBTFinalizeScreen'):
+        from seedsigner_port.psbt_screens import configuration as psbt_configuration
+        return psbt_configuration(screen_class,passed,translate)
     if name not in APP_SCREENS:return _basic_configuration(screen_class,passed,translate)
     from seedsigner_port.app_screen_defaults import DEFAULTS as APP_DEFAULTS
     from seedsigner_port.gui_constants import GUIConstants,SeedSignerIconConstants
@@ -88,6 +91,25 @@ def configuration(screen_class,passed,translate=None):
                 if source not in a:cfg.pop(target,None)
         from seedsigner_port.transcription import configure
         return configure(name,a,cfg)
+    if name=='SeedAddressVerificationScreen':
+        cfg['top_nav'].update(title=tr('Verify Address'),show_back_button=False)
+        cfg['is_bottom_list']=True;cfg['address']=a['address'];cfg['network']=a['network']
+        cfg['type_network']=a['sig_type']+' - '+a['script_type']+(' ('+a['network']+')' if not a['is_mainnet'] else '')
+        counter=a.get('display_index_counter') or a['threadsafe_counter']
+        cfg['progress_text']=tr('Checking address {}').format(counter.cur_count)
+        if not cfg['button_list']:raise ValueError('Address search needs original action buttons')
+        return 'seed_address_verification_screen',cfg
+    if name=='SeedAddressVerificationSuccessScreen':
+        cfg['top_nav'].update(title=tr('Success!'),show_back_button=False)
+        cfg['is_bottom_list']=True;cfg.pop('initial_selected_index',None)
+        cfg['address']=a['address'];cfg['status_headline']=tr('Address Verified')
+        cfg['address_type_text']=tr('change address') if a['verified_index_is_change'] else tr('receive address')
+        cfg['index_text']=tr('index {}').format(a['verified_index']);cfg['button_list']=[tr('OK')]
+        cfg['derivation_text']=a.get('derivation_path') or ''
+        if cfg['derivation_text'] and a.get('script_type_display'):cfg['derivation_text']+=' ('+a['script_type_display']+')'
+        cfg['is_non_standard']=bool(a.get('is_non_standard'))
+        cfg['non_standard_text']=tr('Non-standard path!') if cfg['is_non_standard'] else ''
+        return 'seed_address_verification_success_screen',cfg
     if name=='SeedExportXpubDetailsScreen':
         cfg['top_nav']['title']=tr('Xpub Details')
         cfg['button_list']=[tr(a['button_label'])]

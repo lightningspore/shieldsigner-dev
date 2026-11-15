@@ -22,7 +22,7 @@ def dataclass_constructor(n,classes):
  n.decorator_list=[d for d in n.decorator_list if ast.unparse(d)!='dataclass']
  n.body=[a for a in n.body if not isinstance(a,ast.AnnAssign)]+ast.parse(body).body
 
-receipt={'application':lock,'files':{},'reviewedChanges':['SeedWordsView rounds page count up so partial final pages are displayed.','Seed Views random import uses non-secret native quiz_random ordering.']}
+receipt={'application':lock,'files':{},'reviewedChanges':['SeedWordsView rounds page count up so partial final pages are displayed.','Seed Views random import uses non-secret native quiz_random ordering.','Address verification workers use foreground Counter/Worker, yielding after each original address pair and expanded path precomputation; original matching/routing retained.']}
 for file,outname in [('views/view.py','view_core.py'),('views/scan_views.py','view_scan.py'),('views/seed_views.py','view_seed.py'),('views/screensaver.py','view_splash.py'),('views/developer_os_warning.py','view_development.py')]:
  raw=(source/'src/seedsigner'/file).read_bytes();tree=ast.parse(raw)
  classes={n.name:n for n in tree.body if isinstance(n,ast.ClassDef) and n.name!='Destination' and (outname!='view_splash.py' or n.name=='OpeningSplashView')}
@@ -41,7 +41,21 @@ for file,outname in [('views/view.py','view_core.py'),('views/scan_views.py','vi
     assert len(matches)==1 and ast.unparse(matches[0].value)=='int(len(mnemonic) / words_per_page)'
     matches[0].value=ast.parse('(len(mnemonic)+words_per_page-1)//words_per_page',mode='eval').body
    if any(ast.unparse(d)=='dataclass' for d in n.decorator_list):dataclass_constructor(n,originals)
-   n=port.visit(n)
+   selected_port=port
+   if n.name=='SeedAddressVerificationView':
+    selected_port=LazyPort(tree,'seedsigner.'+file[:-3].replace('/','.'),classes=classes,bindings={**bindings,'BaseThread':('seedsigner_port.address_search','Worker'),'ThreadsafeCounter':('seedsigner_port.address_search','Counter')})
+    for worker in [x for x in n.body if isinstance(x,ast.ClassDef)]:
+     run=next(x for x in worker.body if isinstance(x,ast.FunctionDef) and x.name=='run')
+     if worker.name=='BruteForceAddressVerificationThread':
+      loops=[x for x in ast.walk(run) if isinstance(x,ast.While) and ast.unparse(x.test)=='self.keep_running'];assert len(loops)==1
+      loops[0].body.append(ast.Expr(value=ast.Yield(value=None)))
+     elif worker.name=='ExpandedBruteForceAddressVerificationThread':
+      initialization=[x for x in run.body if isinstance(x,ast.For) and ast.unparse(x.target)=='path'];assert len(initialization)==1
+      initialization[0].body.append(ast.Expr(value=ast.Yield(value=None)))
+      loops=[x for x in ast.walk(run) if isinstance(x,ast.For) and ast.unparse(x.target)=='script_type'];assert len(loops)==1
+      loops[0].body.append(ast.Expr(value=ast.Yield(value=None)))
+     else:raise AssertionError('Unreviewed address worker')
+   n=selected_port.visit(n)
    factory=ast.FunctionDef(name='_make_'+n.name,args=ast.arguments(posonlyargs=[],args=[],kwonlyargs=[],kw_defaults=[],defaults=[]),body=[n,ast.Return(value=ast.Name(id=n.name,ctx=ast.Load()))],decorator_list=[])
    nodes.append(factory)
  header='# Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner\n# Generated from pinned original source; optional class bases resolve only on use.\nfrom seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable\nfrom seedsigner_port.navigation import Destination\n'

@@ -1,0 +1,15 @@
+# Camera and dice seed generation
+
+The port exposes the existing SeedSigner camera and dice entries under Tools. It does not add an internal RNG feature or require a hardware RNG project. The source Views, original BIP39 word lengths, dice roll counts, hashing, quality warnings, pending seed, and word backup/finalization flow remain the reference.
+
+Camera preview collects the original five distinct, non-flat samples. Capture requires release of the entry key followed by a fresh click; review requires another release before acceptance. Reshoot clears the old owned capture. Returning from word-length selection retains that capture for review. The Poor Entropy warning retries with a fresh preview and pool: the Linux source returned to final review after clearing its inputs, which cannot recapture through this native boundary.
+
+The Linux PIL image boundary is replaced explicitly: preview entropy is the 640×480 NV12 Y plane sampled to 96×96 with nearest-center sampling; the final hash uses the complete unmodified NV12 frame. Display conversion is separate. This produces different bytes from Linux RGB/PIL conversion while retaining the ordered SHA256 chain and original Shannon threshold. These checks do not measure or certify physical camera entropy.
+
+The native camera's next-preview buffer is borrowed. Samples and final capture are copied before another read can overwrite that buffer. Five samples and one final frame are owned; the set of seen sample hashes grows during preview, matching the source's lifetime. Owned mutable inputs are zeroed on cancellation, reshoot, generation and exceptions. This is best-effort buffer cleanup, not a guarantee of whole-memory erasure. Normal generation emits no images, entropy or mnemonic logs.
+
+Dice uses the existing native six-face keyboard and the original ASCII roll hashing and quality check. The required counts are 50/62/75/87/99 for 12/15/18/21/24 words. No pseudorandom input replaces physical rolls.
+
+`tools/prepare_camera_entropy.py` pins source hashes and generates the adapted helpers and Views; `app/camera-entropy-provenance.json` records boundary changes. `tests/test_camera_entropy*.py` exercise hashing, ownership, held keys, navigation, cleanup and dice mapping. The full host suite passed 148 tests after the retry and public-oracle regressions were added.
+
+`micropython/camera_entropy_core_gate.py` contains explicitly public synthetic fixtures, with independent CPython hashlib, Pillow pixel reads at exact rational centers, and embit oracle generation in `tools/prepare_camera_entropy_gate.py`. `micropython/camera_entropy_flow_gate.py` extends this with actual native events through Tools, capture/review, word length and word pages. The flow gate also exercises the real dice keyboard, Back and poor-roll warning. These device gates require a coordinated hardware run; preparing them is not evidence of a completed device test. They never open a real camera. The current capture display uses the already proven `ui.scan` surface; richer source overlay presentation is a follow-up, not a generation prerequisite.

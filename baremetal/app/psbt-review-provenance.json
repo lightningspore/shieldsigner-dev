@@ -1,0 +1,33 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "source": "models/psbt_parser.py",
+  "sourceSha256": "ab5bc31e372d2f008c1b0574c601801111b5f301422b89e2dcf256cd88985c7e",
+  "outputSha256": "8f165d32f23ba36428b7df6b3216ecc7cf283689c81d74c97535a536db04178f",
+  "classes": [
+    "OPCODES",
+    "RiskWarning",
+    "RejectCode",
+    "InvalidPSBTError",
+    "PSBTParser"
+  ],
+  "reviewedChanges": [
+    "Shared original RejectCode/InvalidPSBTError imported from frozen error leaf to preserve strict loader exception identity.",
+    "Remove annotations; resolve actual optional imports lazily; preserve function-local bindings and original f-string values through common source port.",
+    "Omit logger calls that could format private transaction/key data; unavailable providers propagate before broad fallback handlers."
+  ],
+  "finalizer": {
+    "provider": "embit0.8.0 pinned sdist",
+    "sourceSha256": "0a1b2be13e3c9e41ca7aa78ab7c5b67dc81f6571fe8e849252d25be261853520",
+    "outputSha256": "03e42425b8dabeae616ecc01d1963928fc6709e6bb47b41a4e92065775f8a3be",
+    "changes": "Original source unchanged apart from attribution header."
+  },
+  "limits": [
+    "Source availability is not complete signing/UI qualification.",
+    "Descriptor provider is not frozen yet; descriptor-specific methods remain unavailable.",
+    "Original timestamp comparison delegates to actual standard time through psbt_clock; absent native wall time fails explicitly, never uses uptime.",
+    "No board access or production entropy/security claim."
+  ]
+}

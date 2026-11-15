@@ -862,3 +862,12 @@ passes. Home restored004955; preview stopped, all USB readers finished.
   candidates, not qualified end-to-end camera generation or production signing.
   Further device work waits for a coordinated handoff; use Etcher, no RAM-only
   test detour. No device actions performed while writing this handoff.
+
+### 2026-11-15 UTC — Commit complete integrated port checkpoint
+
+- User requested all remaining work committed and pushed for a clean checkout.
+  Preserved camera/dice, PSBT, settings, animated QR/UR, address-search adapters,
+  generators, provenance, public fixtures and prepared native gates together.
+  Included the pending math.log2 configuration fix; 148 host tests pass again.
+- Root local diagnostic log directory is ignored and retained on disk. No new
+  device test, flash, native qualification or security qualification is claimed.

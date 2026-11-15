@@ -69,6 +69,7 @@ class ContractsTest(unittest.TestCase):
         scope['WarningEdgesMixin']=type('WarningEdgesMixin',(),{})
         scope['STATUS']=port.STATUS
         scope['SUPPORTED']=set(port.BASIC)|port.APP_SCREENS
+        scope['TRANSCRIPTION_SCREENS']=port.TRANSCRIPTION
         # Reference functions must use this scope, rather than their earlier globals.
         functions=ast.parse((root/'firmware/lvgl-app/python/contracts.py').read_text())
         selected=[n for n in functions.body if isinstance(n,ast.FunctionDef) and n.name in ('arguments','color','button','configuration','result')]
@@ -77,7 +78,7 @@ class ContractsTest(unittest.TestCase):
         classes={n.name:n for file in ('screen.py','seed_screens.py') for n in ast.parse((app/file).read_text()).body if isinstance(n,ast.ClassDef)}
         reviewed=set().union(*(set(v) for v in APP_DEFAULTS.values()))
         # Rebuild actual field defaults including warning factory buttons.
-        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'):
+        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen','SeedTranscribeSeedQRFormatScreen','SeedTranscribeSeedQRWholeQRScreen','SeedTranscribeSeedQRZoomedInScreen','SeedTranscribeSeedQRConfirmQRPromptScreen'):
             node=classes[name]
             node.body=[n for n in node.body if isinstance(n,ast.AnnAssign) and n.target.id in reviewed]
             for n in node.body:n.annotation=ast.Constant('reviewed field')
@@ -86,6 +87,7 @@ class ContractsTest(unittest.TestCase):
             exec(compile(ast.fix_missing_locations(ast.Module(body=[node],type_ignores=[])),'<original app fields>','exec'),scope)
         for name in APP_DEFAULTS:
             cases=[{}, {'button_data':['Done','Cancel'],'text':'Public test','selected_button':1}]
+            if name in port.TRANSCRIPTION:cases=[dict(c,qr_data='0000',num_modules=21,is_compactqr=True,is_encryptedqr=False) for c in cases]
             if name=='SeedWordsScreen':cases=[dict(c,words=['abandon','ability','able','about'],page_index=2,num_pages=3) for c in cases]
             if name=='SeedMnemonicEntryScreen':cases=[dict(c,wordlist=['abandon','ability','able','about'],initial_letters=['a','b']) for c in cases]
             if name=='SeedAddPassphraseScreen':cases=[dict(c,passphrase='public  \0\\value',initial_keyboard='ABC') for c in cases]

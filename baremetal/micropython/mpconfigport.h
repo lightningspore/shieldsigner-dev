@@ -32,6 +32,8 @@ void bm_micropython_poll(void);
 // Native UI builds link the pinned complete newlib/libm runtime.
 #if BM_NATIVE_UI
 #define MICROPY_ENABLE_FINALISER (1)
+#define MICROPY_PY_ALL_SPECIAL_METHODS (1)
+#define MICROPY_PY_BUILTINS_NEXT2 (1)
 #define MICROPY_PY_DELATTR_SETATTR (1)
 #define MICROPY_PY_COLLECTIONS_NAMEDTUPLE__ASDICT (1)
 #define MICROPY_PY_COLLECTIONS_ORDEREDDICT (1)
@@ -42,6 +44,7 @@ void bm_micropython_poll(void);
 #define MICROPY_PY_BUILTINS_STR_UNICODE_CHECK (1)
 #define MICROPY_FLOAT_IMPL MICROPY_FLOAT_IMPL_DOUBLE
 // Standard pseudorandom generator for non-secret quiz ordering, not wallet entropy.
+#define MICROPY_PY_MATH (1)
 #define MICROPY_PY_RANDOM (1)
 #define MICROPY_PY_RANDOM_EXTRA_FUNCS (1)
 #endif

@@ -1,0 +1,29 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "sourceSha256": "a330851c58e492f09344c5851be41b03c6447e9f920c9647bd97c23ea93ed77f",
+  "outputSha256": "bd88ae65d5917a03d444283935cb05871b5ff27bcd87ae6701925c103293749f",
+  "classes": [
+    "BaseQrEncoder",
+    "BaseStaticQrEncoder",
+    "SeedQrEncoder",
+    "CompactSeedQrEncoder",
+    "GenericStaticQrEncoder",
+    "BaseXpubQrEncoder",
+    "StaticXpubQrEncoder",
+    "BaseSimpleAnimatedQREncoder",
+    "SpecterLegacyXPubQrEncoder",
+    "BaseFountainQrEncoder",
+    "UrXpubQrEncoder",
+    "UrPsbtQrEncoder",
+    "UrBytesQrEncoder",
+    "UrTextQrEncoder",
+    "GenericStringEncoder"
+  ],
+  "reviewedChanges": [
+    "Dataclass constructors are explicit; optional imports resolve lazily.",
+    "Compact encoder uses CPython-equivalent zfill helper."
+  ]
+}

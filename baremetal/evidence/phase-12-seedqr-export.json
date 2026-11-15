@@ -1,0 +1,68 @@
+{
+  "status": "original-standard-compact-SeedQR-export-hardware-gates-pass",
+  "device": "DUT1 app-ui; RAM-only",
+  "downloadSha256": "41abc7a732b805f4c1f26aedd17da3febe16fdfdf013e417e91537e31eed93b8",
+  "load": "logs/phase-11/dut1-20261115T022750Z",
+  "checkpoint": "logs/phase-12/seedqr-20261115T023125Z",
+  "core": {
+    "path": "logs/phase-11/usb-20261115T022814.738352Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/seedqr_core_gate.py",
+    "scriptSha256": "c8d046cc02cf036d81dc491180cdd4be61be0c790ce051c3b403f0d0beaebdbc",
+    "completed": true,
+    "traceback": false
+  },
+  "flow": {
+    "path": "logs/phase-11/usb-20261115T022927.327808Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/seedqr_flow_gate.py",
+    "scriptSha256": "c8c3510aa696117e2d5277f6177cca152830d7480f44a4defa4bb863dd9d1f36",
+    "completed": true,
+    "traceback": false
+  },
+  "coreCases": 25,
+  "coreWorkloadMs": 5530,
+  "scope": "Public original standard/compact SeedQR payloads and matrices; actual native ZXing, original export Views and rendered overview pixels; not optical camera qualification.",
+  "pixelMemory": {
+    "path": "logs/phase-11/usb-20261115T023007.960172Z",
+    "frameSha256": "9f9b848379c28d47ed1ced5396b98703ed64fd14bea3903445469c3e725d147e",
+    "visualInspection": "Title, QR and Begin25x25 button readable at240px.",
+    "rebuilds": 20,
+    "stableWarmNativeHeapBytes": 152033
+  },
+  "hostTests": 83,
+  "correctedAttempts": [
+    {
+      "path": "logs/phase-11/usb-20261115T022408.367052Z",
+      "issue": "MicroPython class multiplication/modulo dispatch disabled; enabled standard special-method support."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T022525.555822Z",
+      "issue": "Two-argument next disabled; enabled standard NEXT2 support."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T022653.022142Z",
+      "issue": "Twenty-one cases passed, then odd alphanumeric segment exposed overly broad bytes.find adapter; only indexed integer operands now convert to single-byte bytes."
+    }
+  ],
+  "limits": [
+    "No optical camera focus/printed-QR or hand-transcription confirmation qualification.",
+    "Only standard and compact SeedQR; encrypted/UR/xpub/PSBT export workflows remain unqualified.",
+    "Earlier unexplained reset remains open; known retained reset diagnostics remain active.",
+    "No entropy, signing, full wallet or cold-boot qualification.",
+    "No SD/CAD/REF/DUT0 writes or push."
+  ],
+  "regressions": {
+    "backup": "logs/phase-11/usb-20261115T023015.912220Z",
+    "passphrase": "logs/phase-11/usb-20261115T023041.857565Z",
+    "pagedReview": "logs/phase-12/review-pages-20261115T023050.252643Z/result.json"
+  },
+  "finalState": "logs/phase-11/usb-20261115T023142.250953Z",
+  "home": "logs/phase-11/usb-20261115T023142.771906Z"
+}

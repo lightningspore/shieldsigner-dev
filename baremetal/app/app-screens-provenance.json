@@ -17,11 +17,17 @@
     "fingerprint_without",
     "initial_keyboard",
     "initial_letters",
+    "initial_zone_x",
+    "initial_zone_y",
     "is_bottom_list",
     "is_button_text_centered",
+    "is_compactqr",
+    "is_encryptedqr",
+    "num_modules",
     "num_pages",
     "page_index",
     "passphrase",
+    "qr_data",
     "scroll_y_initial_offset",
     "selected_button",
     "show_back_button",
@@ -37,5 +43,5 @@
     "wordlist",
     "words"
   ],
-  "outputSha256": "04d5c140fc0c006003a2e529fac445adc112a92ea3d4091374aae065d207e06b"
+  "outputSha256": "453c22088244c58817dfe8d90ec4b4eeda1967dc93cb3c667957425ab3072e7b"
 }

@@ -1,0 +1,6 @@
+{
+  "provider": "CPython qrcode7.3.1 and embit0.8.0",
+  "cases": 25,
+  "gateSha256": "c8d046cc02cf036d81dc491180cdd4be61be0c790ce051c3b403f0d0beaebdbc",
+  "scope": "Public entropy/payloads only; includes numeric, bytes, NUL, final LF, optimized segments."
+}

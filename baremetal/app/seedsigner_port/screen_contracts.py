@@ -71,7 +71,8 @@ def result(event,button_count,screen_name=None):
 # Additional reviewed original screen contracts, using the same actual builders.
 _basic_configuration=configuration
 STATUS={'LargeIconStatusScreen':'custom','WarningScreen':'warning','DireWarningScreen':'dire_warning','ErrorScreen':'error'}
-APP_SCREENS=set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
+TRANSCRIPTION={'SeedTranscribeSeedQRFormatScreen','SeedTranscribeSeedQRWholeQRScreen','SeedTranscribeSeedQRZoomedInScreen','SeedTranscribeSeedQRConfirmQRPromptScreen'}
+APP_SCREENS=TRANSCRIPTION|set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
 def configuration(screen_class,passed,translate=None):
     name=screen_class if isinstance(screen_class,str) else screen_class.__name__
     if name not in APP_SCREENS:return _basic_configuration(screen_class,passed,translate)
@@ -80,6 +81,13 @@ def configuration(screen_class,passed,translate=None):
     a=APP_DEFAULTS[name].copy();a.update(passed)
     tr=translate if translate is not None else lambda text:text
     builder,cfg=_basic_configuration('ButtonListScreen',a,translate)
+    if name in TRANSCRIPTION:
+        if name=='SeedTranscribeSeedQRZoomedInScreen':
+            cfg['top_nav']['title']=tr(a.get('title') or '')
+            for source,target in [('selected_button','initial_selected_index'),('is_bottom_list','is_bottom_list'),('is_button_text_centered','is_button_text_centered')]:
+                if source not in a:cfg.pop(target,None)
+        from seedsigner_port.transcription import configure
+        return configure(name,a,cfg)
     if name in STATUS:
         builder='large_icon_status_screen';cfg['status_type']=STATUS[name]
         if not cfg['button_list']:cfg['button_list']=[tr('OK')]

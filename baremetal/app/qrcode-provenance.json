@@ -1,0 +1,31 @@
+{
+  "package": "qrcode",
+  "version": "7.3.1",
+  "files": {
+    "main.py": {
+      "sourceSha256": "37cec6e9d8bb239edf005ec46c2a2040b3b2c29604432a1d10e541dcff4ef7d2",
+      "outputSha256": "7cb5f78dae7b6b7f07bc81f4e745d709268d360893300e01943ca2ffd9c780b3"
+    },
+    "base.py": {
+      "sourceSha256": "f894e62848eb28b3b0f3875f352ede18d8bd07086f20d3155742d6d1de5b4002",
+      "outputSha256": "e5c43ca5e238333651cbe27456b48f14cc2cf9a471f123346945905b6ef3feb7"
+    },
+    "util.py": {
+      "sourceSha256": "12bc06e5c94ddb9375644770d67c54b7d8c6b666c92fe0fd0b0451eafe913a1d",
+      "outputSha256": "91a5e32d548d40f7136d2d525888719ca8d6517a8be67238c8483650276e1653"
+    },
+    "constants.py": {
+      "sourceSha256": "d02b1af1861d790f0d685ad19ade3799a560d763bcf5dfa82a088a01520edace",
+      "outputSha256": "206d0d82441358d4ac2eeb55863c512bf9056ec3a21cab550f160da7c0dae56f"
+    },
+    "exceptions.py": {
+      "sourceSha256": "2f67d9b9838ab1cbdd9fbdab6bec05f06c2caf6641f5e4595aba757f4203c781",
+      "outputSha256": "58ac338ecc1e20cc1a77cfc6d5350fabeef54196aac584dcd3728ddc1dffb409"
+    },
+    "LUT.py": {
+      "sourceSha256": "01e7dd7f10fe106794b5daff56cd927da138c3576e9826b3e5ad62bb44c1efa9",
+      "outputSha256": "2fb0b04a4054ef5c23d4c7cc6905d8bdf5017b2bd491d067898365e9587feb59"
+    }
+  },
+  "scope": "Original segmentation, RS, mask and matrix algorithms; image/terminal methods explicitly unavailable; native PCRE2/bisect adapters; indexed bytes.find values become one-byte bytes for MicroPython."
+}

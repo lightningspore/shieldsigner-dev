@@ -623,3 +623,34 @@ Home restored013951; camera off, readers finished.
 - BACKUP-WORDS.md and phase-12-backup-words receipt capture scope and matching ELF
   checkpoint021747. No SD/CAD/REF/DUT0 writes or push. Earlier unexplained reset,
   optical QR, qualified entropy, remaining app/signing and SD startup remain open.
+
+### 2026-11-15 UTC — Original standard/compact SeedQR export
+
+- Generated all15original encoder classes with lazy providers/explicit dataclass
+  constructors; qualified standard/compact BIP39 encoders. Pinned original
+  python-qrcode7.3.1 matrix algorithms and full upstream license retained. Native
+  PCRE2 regex/bisect/zfill/bytes.find boundaries preserve needed CPython behavior;
+  standard math, class arithmetic and two-argument next enabled for native builds.
+  No PIL/image stubs; unsupported image/terminal providers fail explicitly.
+- Original format/warning/whole/zoom/confirmation-prompt Views now use actual
+  native transcription widgets with the same original matrix in both QR views.
+ 25independent CPython payload/matrix cases022814 pass
+  all5BIP39 lengths and binary/segmentation edge cases; native ZXing recovers each
+  symbol and original SeedQrDecoder returns expected words. Core workload5530ms,
+  NOT boot timing. Final successful core log022814, image 41abc7a732b8..., RAMload022750.
+- Earlier core attempts exposed disabled Polynomial operators, next(iterator,None),
+  then an overly broad bytes.find conversion for odd alphanumeric segments. Fixed
+  boundary/feature support; failed evidence retained. Final source/image hashes
+  checked.83host tests pass, including original class/hash and adapter differentials.
+- Native export022821 and final022927 pass12/24standard+compact, overview pixel
+  decoding, Back→format, zoom pan/exit and Done→options→Home with original history.
+  Forced inactivity while private QR displayed wipes checked seed-byte alias and
+  storage; Home pixels decode no QR. No whole-memory erasure claim.
+- Actual overview pixels023007 visually checked (title, QR, Begin25x25 fit240px).
+ 20overview/Home rebuilds return native heap to152033bytes. Backup023015,
+  passphrase023041 and paged review023050 regressions pass. Final023142 confirms
+  empty storage, camera off, restored settings, no reset record; Home restored.
+- QR-EXPORT.md and phase-12-seedqr-export receipt include matching ELF checkpoint
+ 023125. No SD/CAD/REF/DUT0 writes or push. Optical camera/handwritten confirmation,
+  entropy, encrypted/UR/xpub/PSBT export/signing and full SD app startup remain open.
+  Earlier unexplained reset remains OPEN despite successful marked runs.

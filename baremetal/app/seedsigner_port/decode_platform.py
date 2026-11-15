@@ -11,7 +11,8 @@ def dependency(module,attribute=None):
     special={('seedsigner.helpers','hardening'):('seedsigner_port.app_services',None),
              ('seedsigner.views.screensaver','ScreensaverScreen'):('seedsigner_port.app_services','ScreensaverScreen')}
     if (module,attribute) in special:module,attribute=special[(module,attribute)]
-    aliases={'seedsigner.controller':'seedsigner_port.controller',
+    aliases={'seedsigner.models.encode_qr':'seedsigner_port.encode_qr','seedsigner.helpers.qr':'seedsigner_port.qr_helper',
+             'seedsigner.controller':'seedsigner_port.controller',
              'seedsigner.views':'seedsigner_port.view_core',
              'seedsigner.views.view':'seedsigner_port.view_core',
              'seedsigner.views.scan_views':'seedsigner_port.view_scan',

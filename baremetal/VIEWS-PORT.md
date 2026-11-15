@@ -89,3 +89,6 @@ recorded separately in [REVIEW-PAGES.md](REVIEW-PAGES.md).
 
 Follow-on: [BACKUP-WORDS.md](BACKUP-WORDS.md) records native word backup review,
 quiz verification and the guarded original pagination fix for partial pages.
+
+Follow-on: [QR-EXPORT.md](QR-EXPORT.md) records original standard/compact SeedQR
+encoding, exact matrix parity and native transcription-screen gates.

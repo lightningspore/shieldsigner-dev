@@ -1580,3 +1580,15 @@ run = ["uv run --python 3.13 python baremetal/tools/prepare_controller.py", "uv 
 [tasks."baremetal:app:backup:dut1:gate"]
 description = "Verify original word pages, partial final pages and backup quiz with actual native key events"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/backup_words_gate.py --serial rv1103-dut1 --timeout 80"
+
+[tasks."baremetal:app:seedqr:prepare"]
+description = "Prepare original SeedQR encoders, pinned QR matrices and public independent oracles"
+run = ["uv run --python 3.13 --with qrcode==7.3.1 python baremetal/tools/prepare_qrcode.py", "uv run --python 3.13 python baremetal/tools/prepare_encode_qr.py", "uv run --python 3.13 python baremetal/tools/prepare_app_screens.py", "uv run --python 3.13 --with qrcode==7.3.1 --with embit==0.8.0 python baremetal/tools/prepare_seedqr_gate.py"]
+
+[tasks."baremetal:app:seedqr:core:dut1:gate"]
+description = "Compare original SeedQR bytes and every QR module against CPython and real native ZXing"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/seedqr_core_gate.py --serial rv1103-dut1 --timeout 110"
+
+[tasks."baremetal:app:seedqr:dut1:gate"]
+description = "Run original SeedQR export with real native screen pixels, pan and Done events"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/seedqr_flow_gate.py --serial rv1103-dut1 --timeout 100"

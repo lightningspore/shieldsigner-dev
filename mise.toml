@@ -1508,3 +1508,11 @@ run = "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_s
 [tasks."baremetal:secp:dut1:gate"]
 description = "Run actual native curves, original Seed fingerprints, signatures, ECDH and rejection tests on DUT1"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/secp_gate.py --serial rv1103-dut1 --timeout 60"
+
+[tasks."baremetal:app:core:prepare"]
+description = "Prepare pinned original storage, button options and controller prerequisites"
+run = "uv run --python 3.13 python baremetal/tools/prepare_app_core.py"
+
+[tasks."baremetal:app:core:dut1:gate"]
+description = "Verify original storage and actual native overlay lifecycle on DUT1"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/app_core_gate.py --serial rv1103-dut1 --timeout 30"

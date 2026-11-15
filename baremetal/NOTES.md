@@ -453,3 +453,19 @@ DUT1; DUT0 older Unicode/qstr-heavy needs clean RAM reload before work.
 Next: original View/Controller/SeedStorage and real screen contracts. Fingerprints
 are now genuine, so SeedFinalizeView can be ported without a placeholder. Full
 optical QR, compact/encrypted/UR, entropy and SD app work remain unfinished.
+
+2026-11-15 UTC / original app storage + native overlay checkpoint
+Original SeedStorage/opaque EncryptedQRStorage/Singleton and button/constants/key
+clear helpers now frozen with source/output receipts. Native gate003457 uses real
+BIP39 FP73c5da0a, pending conversion/dedup/wipe, SLIP39 share collection and actual
+LVGL toast/screensaver timers/wake.20warm cycles stable93430nativebytes after
+memory003443 and QRfixture003444 regressions;57hosttests pass. image6cb48f65...,
+DUT1 RAMload003354. Earlier fixtures exposed actual native API differences:
+time.sleep absent (adapter nowuses sleep_ms), display.buttons requires ui.init,
+original incomplete mnemonic with None words raisesTypeError (not changed).
+APP-CORE-PORT.md documents interfaces/scope. Original full Controller/View paths
+not wired yet; next connect actual ScanView→SeedFinalizeView→SeedOptionsView→Home,
+using canonical navigation and real native screen builders, no placeholder Views.
+Keep printed optical QR unresolved; no camera re-aim requested while user absent.
+No SD/CAD/REF writes, DUT0 untouched/needscleanreload, shared artifacts DUT1.
+Home restored003533; preview stopped and all USB readers finished.

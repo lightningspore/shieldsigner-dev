@@ -52,10 +52,27 @@ static mp_obj_t ui_screens(void){
     return result;
 }
 static MP_DEFINE_CONST_FUN_OBJ_0(ui_screens_obj,ui_screens);
+extern int bm_nativeui_overlay_control(unsigned,unsigned);
+extern int bm_nativeui_toast(const char *,const char *,unsigned,unsigned,unsigned);
+static mp_obj_t ui_overlays(size_t n,const mp_obj_t *a){
+    mp_int_t op=mp_obj_get_int(a[0]),value=n>1?mp_obj_get_int(a[1]):0;
+    if(op<0||op>6||value<0)mp_raise_ValueError(MP_ERROR_TEXT("Invalid overlay operation/value"));
+    int result=bm_nativeui_overlay_control(op,value);checked(result);return mp_obj_new_int(result);
+}
+static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(ui_overlays_obj,1,2,ui_overlays);
+static mp_obj_t ui_toast(size_t n,const mp_obj_t *a){
+    (void)n;size_t nt,ni;const char *text=mp_obj_str_get_data(a[0],&nt),*icon=mp_obj_str_get_data(a[1],&ni);
+    mp_int_t outline=mp_obj_get_int(a[2]),font=mp_obj_get_int(a[3]),duration=mp_obj_get_int(a[4]);
+    if(nt>255||ni>15||memchr(text,0,nt)||memchr(icon,0,ni)||outline<0||outline>0xffffff||font<0||font>0xffffff||duration<0)mp_raise_ValueError(MP_ERROR_TEXT("Invalid toast data/bound"));
+    checked(bm_nativeui_toast(text,icon,outline,font,duration));return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(ui_toast_obj,5,5,ui_toast);
 static const mp_rom_map_elem_t globals_table[]={
     {MP_ROM_QSTR(MP_QSTR___name__),MP_ROM_QSTR(MP_QSTR_ui)},
     {MP_ROM_QSTR(MP_QSTR_screens),MP_ROM_PTR(&ui_screens_obj)},
     {MP_ROM_QSTR(MP_QSTR_init),MP_ROM_PTR(&ui_init_obj)},
+    {MP_ROM_QSTR(MP_QSTR_overlays),MP_ROM_PTR(&ui_overlays_obj)},
+    {MP_ROM_QSTR(MP_QSTR_toast),MP_ROM_PTR(&ui_toast_obj)},
     {MP_ROM_QSTR(MP_QSTR_render),MP_ROM_PTR(&ui_render_obj)},
     {MP_ROM_QSTR(MP_QSTR_key),MP_ROM_PTR(&ui_key_obj)},
     {MP_ROM_QSTR(MP_QSTR_tick),MP_ROM_PTR(&ui_tick_obj)},

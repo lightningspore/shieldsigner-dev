@@ -1,0 +1,24 @@
+{
+  "status": "original-storage-and-native-overlay-checkpoint-passed",
+  "scope": "Storage/constants/input prerequisites and actual LVGL overlay controls; original Controller/View integration and optical decode remain unfinished",
+  "device": "DUT1 app-ui",
+  "downloadSha256": "6cb48f6539ff5dbd91d9f3e5dc5a9d1f52a43ac3d003535ae9ec430df6a2ac11",
+  "load": "logs/phase-11/dut1-20261115T003354Z",
+  "gate": "logs/phase-11/usb-20261115T003457.605749Z",
+  "hostTests": 57,
+  "overlayCycles": 20,
+  "warmNativeHeapBytes": 93430,
+  "regressions": {
+    "memory": "logs/phase-11/usb-20261115T003443.754435Z",
+    "qrScanPixelFixtures": "logs/phase-11/usb-20261115T003444.953458Z"
+  },
+  "notes": [
+    "Initial native time module lacks seconds sleep: adapter now calls actual sleep_ms, with host regression test",
+    "Original incomplete mnemonic with None words raises TypeError; no behavior change made. Invalid-checksum complete mnemonic returns no fingerprint",
+    "Actual PCB initialization precedes shared button input reads",
+    "First overlay use increased native allocation; repeated same-image cycles stable after warm-up",
+    "SLIP39 share collection passed; seed conversion still needs actual loading-screen provider",
+    "No SD/CAD/REF writes; DUT0 untouched"
+  ],
+  "homeRestore": "logs/phase-11/usb-20261115T003533.083121Z"
+}

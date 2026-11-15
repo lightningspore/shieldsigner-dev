@@ -1,0 +1,64 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "files": {
+    "seed_storage.py": {
+      "source": "models/seed_storage.py",
+      "sourceSha256": "35c5b3585a0f594fbcf40e7476a0abb3bd66c463c688b7ca1f97ca86b6a558cb",
+      "outputSha256": "65dfbec4f66a5730e736921da6cc71fbabf56a7cd7563a272e5e4f798f84b22b",
+      "names": [
+        "SeedStorage"
+      ]
+    },
+    "encrypted_storage.py": {
+      "source": "models/encryptedqr.py",
+      "sourceSha256": "b7a4e7068c4a9f4f2f4aabcd6a6f9cf7068887d631c36cdb31fafeb65e2e1608",
+      "outputSha256": "02062d6980453a2ba35dd645c1f44c955a00740f043ee777948091a5d3ec3159",
+      "names": [
+        "EncryptedQRStorage"
+      ]
+    },
+    "singleton.py": {
+      "source": "models/singleton.py",
+      "sourceSha256": "caaa41a60af389c8b5322d510536d310664fa4ef53e8957c9fab7f021c4e71ac",
+      "outputSha256": "9b33ffdf2464fa436a2f9e8bd2cce398bef509aa8ddec3e0929a79d7d205e4ce",
+      "names": [
+        "Singleton",
+        "ConfigurableSingleton"
+      ]
+    },
+    "gui_constants.py": {
+      "source": "gui/components.py",
+      "sourceSha256": "277d68b1660777f2fe0f70e0934524df8c4a1cbef15f71b7dd00327e1ed41688",
+      "outputSha256": "54dacc3fad4c3e9c2aeaba8a0e1550633f70e78b7db308436641ed87f3a43623",
+      "names": [
+        "GUIConstants",
+        "SeedSignerIconConstants",
+        "FontAwesomeIconConstants"
+      ]
+    },
+    "button_options.py": {
+      "source": "gui/screens/screen.py",
+      "sourceSha256": "456e74eff9a587c7e7e9c1db331e31bc8cdbf24f0d83740186904881a81f5adb",
+      "fields": [
+        "button_label",
+        "icon_name",
+        "icon_color",
+        "right_icon_name",
+        "button_label_color",
+        "return_data",
+        "active_button_label",
+        "font_name",
+        "font_size"
+      ],
+      "outputSha256": "743b5e933985034096dac9768fbeb910ffa9d369462fa0104cf442f14a932c77"
+    },
+    "session_keys.py": {
+      "source": "views/resign_views.py",
+      "sourceSha256": "7fa0d221da1cc09b98eab2c385bcb6afb3ebc93eb0936d27198764aa8ec68495",
+      "outputSha256": "0ddf9dbba6bdb8fec8fa4fe1aad5e4b659f8819b5a61cf7ecd3ac04750631a86"
+    }
+  }
+}

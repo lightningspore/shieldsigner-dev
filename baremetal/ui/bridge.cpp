@@ -111,3 +111,32 @@ extern "C" void bm_nativeui_consume_event(){
 
 extern "C" uint32_t bm_nativeui_screen_count(){return sizeof(registry)/sizeof(registry[0]);}
 extern "C" const char *bm_nativeui_screen_name(uint32_t index){return index<bm_nativeui_screen_count()?registry[index].name:nullptr;}
+
+// Real upstream cooperative overlays, owned by the same foreground LVGL loop.
+extern "C" int bm_nativeui_overlay_control(unsigned operation,unsigned value){
+    if(!initialized)return -1;
+    try {
+        switch(operation){
+        case 0: overlay_manager_set_screensaver_timeout(value);break;
+        case 1: overlay_manager_show_screensaver();break;
+        case 2: overlay_manager_dismiss_screensaver();break;
+        case 3: lv_display_trigger_activity(display);break;
+        case 4: return overlay_manager_is_screensaver_active()?1:0;
+        case 5: toast_overlay_dismiss();break;
+        case 6: return toast_overlay_is_active()?1:0;
+        default: copy_text(error,"Unknown overlay operation");return -1;
+        }
+        lv_timer_handler();lv_refr_now(display);return io_error?-1:0;
+    }catch(const std::exception &e){copy_text(error,e.what());return -1;}
+    catch(...){copy_text(error,"Native overlay failure");return -1;}
+}
+extern "C" int bm_nativeui_toast(const char *text,const char *icon,unsigned outline,unsigned font,unsigned duration){
+    if(!initialized)return -1;
+    try {
+        if(!text||strlen(text)>255||(icon&&strlen(icon)>15)){copy_text(error,"Toast text exceeds reviewed bound");return -1;}
+        if(overlay_manager_is_screensaver_active())overlay_manager_dismiss_screensaver();
+        toast_overlay_spec_t spec{ text,icon&&*icon?icon:nullptr,outline,font,duration };
+        toast_overlay_show(&spec);lv_timer_handler();lv_refr_now(display);return io_error?-1:0;
+    }catch(const std::exception &e){copy_text(error,e.what());return -1;}
+    catch(...){copy_text(error,"Native toast failure");return -1;}
+}

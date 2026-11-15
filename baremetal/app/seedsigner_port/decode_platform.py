@@ -8,7 +8,12 @@ class FeatureUnavailable(RuntimeError):
     pass
 
 def dependency(module,attribute=None):
-    aliases={'seedsigner.models.aezeed':'seedsigner_port.aezeed',
+    aliases={'seedsigner.models.settings_definition':'seedsigner_port.settings_schema',
+             'seedsigner.models.seed_storage':'seedsigner_port.seed_storage',
+             'seedsigner.models.singleton':'seedsigner_port.singleton',
+             'seedsigner.gui.components':'seedsigner_port.gui_constants',
+             'gettext':'seedsigner_port.localization',
+             'seedsigner.models.aezeed':'seedsigner_port.aezeed',
              'seedsigner.models.psbt_framing':'seedsigner_port.psbt_framing',
              'seedsigner.models.psbt_parser':'seedsigner_port.psbt_errors',
              'seedsigner.models.seed':'seedsigner_port.seed',

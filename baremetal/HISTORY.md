@@ -435,3 +435,20 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
 - Final image3e476dbe..., load001212; all Seed/PSBT/mnemonic/memory/QR regressions
   and54host tests pass. Home restored, preview stopped, no active readers.
   SECP-PORT.md and receipt record details. No SD/CAD/REF-storage writes.
+
+### 2026-11-15 UTC — Original storage and native overlay checkpoint
+
+- Added pinned whole original SeedStorage, opaque EncryptedQRStorage, singleton
+  classes, GUI/icon constants, button fields/equality and session-key clearing.
+  Scope-aware source import adapter and per-file provenance retain source bodies.
+- Added actual monotonic clock/sleep and shared PCB button activity adapters.
+  First native run found absent seconds sleep; use native sleep_ms. Tests also
+  exposed invalid incomplete-mnemonic assumptions and missing PCB init in fixture;
+  corrected test setup without changing original storage behavior.
+- Exposed upstream LVGL foreground toast/screensaver controls. Native timer expiry,
+  wake-key consumption and20warm construction/cleanup cycles pass; heap93430bytes
+  stable after QR/memory regressions. First-use allocation is recorded, not hidden.
+- Final image6cb48f65..., RAMload003354; coregate003457, memory003443,
+  QR/scan003444,57host tests pass. Full original Controller/View wiring, optical QR,
+  entropy and full app SD remain open. APP-CORE-PORT.md and evidence receipt record
+  scope. No CAD/SD/REF writes. Shared artifacts remain DUT1; DUT0 untouched.

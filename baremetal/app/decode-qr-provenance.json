@@ -36,12 +36,13 @@
   },
   "transformations": [
     "Remove annotations; explicit PayloadAnalysis constructor; integer status constants",
-    "Defer actual feature imports to native dependency boundary",
+    "Defer actual feature imports to native dependency boundary; preserve function-local bindings and arguments",
     "Propagate unavailable dependencies before broad parse handlers",
     "Remove logger payload calls; JSON decode exception spelling normalized",
+    "Base43 uses reversed(v) and a list reverse buffer; original byte algorithm unchanged",
     "Replace legacy image probes/extraction with existing native ZXing API"
   ],
-  "outputSha256": "8b431e292c02424a1bdb516245720367e82b803b1c5f5b5a5968d4227d820d6b",
+  "outputSha256": "9d99488b4c95d5865bcbb7019497a2947c2284b4631b08f3556ae328fa04f9f5",
   "base64": {
     "source": "micropython-lib/python-stdlib/base64/base64.py",
     "sourceSha256": "7db45610392bf27d506b2159279c40d3fd5e5f04b6b3bcced7acaf2f9edd3852",

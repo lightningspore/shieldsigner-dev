@@ -2,12 +2,18 @@
 // In-process port of the existing locked SeedSigner LVGL screen library.
 // No wallet logic, GPIO policy, Linux subprocess/pipe or filesystem transport.
 #include "lvgl.h"
+#include "src/misc/cache/instance/lv_image_cache.h"
 #include "seedsigner.h"
 #include "registry.h"
 #include "gui_constants.h"
 #include "input_profile.h"
 #include "overlay_manager.h"
 #include "nul_text.h"
+#include "camera_preview_overlay.h"
+#include "screen_scaffold.h"
+#include <array>
+#include <new>
+#include <stdexcept>
 #include <cstring>
 #include <cstdlib>
 #include <exception>
@@ -172,3 +178,116 @@ extern "C" int bm_nativeui_toast(const char *text,const char *icon,unsigned outl
 
 // Reachable only from the opt-in diagnostic Rust probe; normal builds remove it.
 extern "C" void bm_nativeui_abort_probe(){std::abort();}
+
+// Camera and chrome share the real LVGL compositing/flush path. This buffer is
+// owned by the surface, never aliases camera DMA or the output shadow, and is
+// wiped before release. Original overlay widgets own instruction/progress UI.
+extern "C" int bm_ui_scan_convert(const uint8_t*,size_t,uint8_t*,size_t);
+namespace {
+struct scan_surface_t {
+    lv_obj_t *root=nullptr,*image=nullptr;
+    camera_preview_overlay_t *overlay=nullptr;
+    lv_image_dsc_t descriptor{};
+    std::array<uint8_t,240*240*2> rgb{};
+    uint32_t count=0,progress=0,status=0;
+    bool scanning=false;
+    ~scan_surface_t(){volatile uint8_t *p=rgb.data();for(size_t i=0;i<rgb.size();++i)p[i]=0;}
+};
+scan_surface_t *scan_surface=nullptr;
+void scan_surface_deleted(lv_event_t *event){
+    auto *context=static_cast<scan_surface_t*>(lv_event_get_user_data(event));
+    if(scan_surface==context)scan_surface=nullptr;
+    if(context->overlay)camera_preview_overlay_destroy(context->overlay);
+    // Image source points into context, so delete the child/cache while it lives.
+    if(context->image){lv_image_cache_drop(&context->descriptor);lv_obj_delete(context->image);}
+    delete context;
+}
+void scan_refresh(){
+    lv_timer_handler();lv_refr_now(display);
+}
+}
+extern "C" int bm_nativeui_scan_end();
+extern "C" int bm_nativeui_blank();
+extern "C" int bm_nativeui_scan_begin(const char *instructions){
+    if(!initialized){copy_text(error,"Initialize UI first");return -1;}
+    if(scan_surface){copy_text(error,"Scan surface already active");return -1;}
+    scan_surface_t *context=nullptr;
+    try {
+        error[0]=0;io_error=false;
+        context=new scan_surface_t;
+        context->root=lv_obj_create(nullptr);
+        if(!context->root)throw std::bad_alloc();
+        lv_obj_add_event_cb(context->root,scan_surface_deleted,LV_EVENT_DELETE,context);
+        lv_obj_set_style_bg_color(context->root,lv_color_black(),LV_PART_MAIN);
+        lv_obj_set_style_bg_opa(context->root,LV_OPA_COVER,LV_PART_MAIN);
+        lv_obj_set_style_pad_all(context->root,0,LV_PART_MAIN);
+        lv_obj_set_style_border_width(context->root,0,LV_PART_MAIN);
+        lv_obj_remove_flag(context->root,LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_add_flag(context->root,SS_OBJ_FLAG_NO_SCREENSAVER);
+        auto &d=context->descriptor;
+        d.header.magic=LV_IMAGE_HEADER_MAGIC;d.header.cf=LV_COLOR_FORMAT_RGB565;
+        d.header.w=240;d.header.h=240;d.header.stride=480;
+        d.data_size=context->rgb.size();d.data=context->rgb.data();
+        context->image=lv_image_create(context->root);
+        if(!context->image)throw std::bad_alloc();
+        lv_image_set_src(context->image,&d);lv_obj_set_pos(context->image,0,0);
+        camera_preview_overlay_spec_t spec{};
+        spec.instructions_text=instructions;spec.square_w=240;spec.square_h=240;
+        spec.frame_status=CAMERA_OVERLAY_FRAME_MISS;spec.just_decoded_index=-1;
+        context->overlay=camera_preview_overlay_create(context->root,&spec);
+        if(!context->overlay)throw std::bad_alloc();
+        scan_surface=context;passphrase_screen=false;bm_nativeui_consume_event();
+        load_screen_and_cleanup_previous(context->root);
+        pressed=false;lv_indev_read(keypad);scan_refresh();
+        if(io_error)throw std::runtime_error("Scan display flush failed");
+        return 0;
+    }catch(const std::exception &e){copy_text(error,e.what());}
+    catch(...){copy_text(error,"Native scan initialization failed");}
+    if(context){
+        char saved[256];memcpy(saved,error,sizeof(saved));
+        if(context->root && lv_screen_active()==context->root)bm_nativeui_scan_end();
+        else if(context->root)lv_obj_delete(context->root);else delete context;
+        memcpy(error,saved,sizeof(saved));
+    }
+    return -1;
+}
+extern "C" int bm_nativeui_scan_frame(const uint8_t *frame,size_t length){
+    if(!scan_surface){copy_text(error,"Begin scan surface first");return -1;}
+    try {
+        if(bm_ui_scan_convert(frame,length,scan_surface->rgb.data(),scan_surface->rgb.size())<0){copy_text(error,"Invalid scan NV12 frame");return -1;}
+        ++scan_surface->count;
+        lv_obj_invalidate(scan_surface->image);scan_refresh();
+        if(io_error){copy_text(error,"Scan frame flush failed");return -1;}
+        return 0;
+    }catch(const std::exception &e){copy_text(error,e.what());return -1;}
+    catch(...){copy_text(error,"Native scan frame failed");return -1;}
+}
+extern "C" int bm_nativeui_scan_status(unsigned percent,unsigned status,int scanning){
+    if(!scan_surface){copy_text(error,"Begin scan surface first");return -1;}
+    if(percent>100||status>3){copy_text(error,"Invalid scan progress/status");return -1;}
+    try {
+        if(scanning)camera_preview_overlay_set_progress(scan_surface->overlay,percent,static_cast<camera_overlay_frame_status_t>(status));
+        else camera_preview_overlay_set_scanning(scan_surface->overlay,false);
+        scan_surface->progress=percent;scan_surface->status=status;scan_surface->scanning=scanning!=0;
+        scan_refresh();return io_error?-1:0;
+    }catch(const std::exception &e){copy_text(error,e.what());return -1;}
+    catch(...){copy_text(error,"Native scan progress failed");return -1;}
+}
+extern "C" int bm_nativeui_scan_end(){return scan_surface?bm_nativeui_blank():0;}
+extern "C" int bm_nativeui_blank(){
+    if(!initialized){copy_text(error,"Initialize UI first");return -1;}
+    try {
+        auto *blank=lv_obj_create(nullptr);
+        if(!blank)throw std::bad_alloc();
+        lv_obj_set_style_bg_color(blank,lv_color_black(),LV_PART_MAIN);
+        lv_obj_set_style_bg_opa(blank,LV_OPA_COVER,LV_PART_MAIN);
+        lv_obj_set_style_border_width(blank,0,LV_PART_MAIN);
+        load_screen_and_cleanup_previous(blank);passphrase_screen=false;bm_nativeui_consume_event();
+        scan_refresh();return io_error?-1:0;
+    }catch(const std::exception &e){copy_text(error,e.what());return -1;}
+    catch(...){copy_text(error,"Native scan teardown failed");return -1;}
+}
+extern "C" unsigned bm_nativeui_scan_stat(unsigned field){
+    if(!scan_surface)return 0;
+    switch(field){case 0:return 1;case 1:return scan_surface->count;case 2:return scan_surface->progress;case 3:return scan_surface->status;case 4:return scan_surface->scanning;default:return 0;}
+}

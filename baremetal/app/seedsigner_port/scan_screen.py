@@ -2,8 +2,8 @@
 """Cooperative runtime for the original ScanScreen._run method.
 
 The original completion/invalid/fragment/back loop is source-generated. Sensor,
-clock, input and preview ownership live here. Native instruction/progress overlays
-and the original BaseScreen/View dispatcher remain separate unfinished work.
+clock, input and preview ownership live here. Original native instruction/progress
+widgets composite with an owned RGB preview; no PIL/OS/thread rendering is used.
 """
 import time
 from seedsigner_port.scan_loop import run_source
@@ -36,25 +36,45 @@ class NativeVideoStream:
         return self.backend.next_preview()
     def stop_video_stream_mode(self):
         if self.active:
-            self.active=False
             self.backend.stop_preview()
+            self.active=False
 
 class CooperativePreview:
     def __init__(self,render=None):
-        if render is None:
-            import ui
-            import display
-            ui.init()
-            render=display.blit_nv12
         self.render=render
-        self.decoder_fps='0.00'
-        self.frame_status=3
-        self.frames=0
+        self.native=render is None
+        self.backend=None
+        if self.native:
+            import ui
+            ui.init();self.backend=ui
+        self.decoder=None;self.instructions_text=None;self.active=False
+        self.decoder_fps='0.00';self.frame_status=3;self.frames=0
+    def configure(self,decoder,instructions_text):
+        self.decoder=decoder;self.instructions_text=instructions_text
+    def begin(self):
+        if self.active:raise RuntimeError('Preview already active')
+        if self.native:
+            from seedsigner_port.localization import gettext as _
+            caption='< '+_('back')+'\n'+_(self.instructions_text or 'Scan a QR code')
+            self.backend.scan_begin(caption)
+        self.active=True
+    def _status(self):
+        if not self.native or not self.active:return
+        percent=self.decoder.get_percent_complete() if self.decoder is not None else 0
+        weighted=self.decoder.get_percent_complete(weight_mixed_frames=True) if self.decoder is not None else 0
+        self.backend.scan_status(weighted,self.frame_status,percent>0)
     def show(self,frame):
-        self.render(frame)
+        if self.native:
+            if not self.active:raise RuntimeError('Begin preview first')
+            self.backend.scan_frame(frame);self._status()
+        else:self.render(frame)
         self.frames+=1
     def set_value(self,status):
-        self.frame_status=status
+        self.frame_status=status;self._status()
+    def close(self):
+        if self.active:
+            self.active=False
+            if self.native:self.backend.scan_end()
 
 class PreviewStream:
     def __init__(self,source,preview):
@@ -77,6 +97,7 @@ class NativeScanScreen:
         self.decoder=decoder
         self.instructions_text=instructions_text
         self.preview=preview if preview is not None else CooperativePreview()
+        if hasattr(self.preview,'configure'):self.preview.configure(decoder,instructions_text)
         self.frames_decode_status=self.preview
         self.camera=PreviewStream(camera if camera is not None else NativeVideoStream(),self.preview)
         self.hw_inputs=buttons if buttons is not None else ButtonInput()
@@ -84,7 +105,10 @@ class NativeScanScreen:
     def run(self):
         self.hw_inputs.reset_input()
         try:
+            if hasattr(self.preview,'begin'):self.preview.begin()
             self.camera.start_video_stream_mode()
             return self._run()
         finally:
-            self.camera.stop_video_stream_mode()
+            try:self.camera.stop_video_stream_mode()
+            finally:
+                if hasattr(self.preview,'close'):self.preview.close()

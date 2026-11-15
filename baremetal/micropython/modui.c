@@ -68,7 +68,48 @@ static mp_obj_t ui_toast(size_t n,const mp_obj_t *a){
     checked(bm_nativeui_toast(text,icon,outline,font,duration));return mp_const_none;
 }
 static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(ui_toast_obj,5,5,ui_toast);
+extern int bm_nativeui_scan_begin(const char *);
+extern int bm_nativeui_scan_frame(const unsigned char *,size_t);
+extern int bm_nativeui_scan_status(unsigned,unsigned,int);
+extern int bm_nativeui_scan_end(void);
+extern int bm_nativeui_blank(void);
+extern unsigned bm_nativeui_scan_stat(unsigned);
+static mp_obj_t ui_scan_begin(mp_obj_t text){
+    size_t length;const char *value=mp_obj_str_get_data(text,&length);
+    if(!mp_obj_is_str(text)||length>192||memchr(value,0,length))mp_raise_ValueError(MP_ERROR_TEXT("Scan instructions must be text without NUL, max192bytes"));
+    checked(bm_nativeui_scan_begin(value));return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(ui_scan_begin_obj,ui_scan_begin);
+static mp_obj_t ui_scan_frame(mp_obj_t frame){
+    mp_buffer_info_t data;mp_get_buffer_raise(frame,&data,MP_BUFFER_READ);
+    if(data.len!=640*480*3/2)mp_raise_ValueError(MP_ERROR_TEXT("640x480 NV12 frame required"));
+    checked(bm_nativeui_scan_frame(data.buf,data.len));return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(ui_scan_frame_obj,ui_scan_frame);
+static mp_obj_t ui_scan_status(mp_obj_t progress,mp_obj_t status,mp_obj_t scanning){
+    mp_int_t p=mp_obj_get_int(progress),s=mp_obj_get_int(status);
+    if(p<0||p>100||s<0||s>3)mp_raise_ValueError(MP_ERROR_TEXT("Invalid scan progress or frame status"));
+    checked(bm_nativeui_scan_status(p,s,mp_obj_is_true(scanning)));return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_3(ui_scan_status_obj,ui_scan_status);
+static mp_obj_t ui_scan_end(void){checked(bm_nativeui_scan_end());return mp_const_none;}
+static MP_DEFINE_CONST_FUN_OBJ_0(ui_scan_end_obj,ui_scan_end);
+static mp_obj_t ui_scan_state(void){
+    const qstr names[]={MP_QSTR_active,MP_QSTR_frames,MP_QSTR_progress,MP_QSTR_frame_status,MP_QSTR_scanning};
+    mp_obj_t result=mp_obj_new_dict(0);
+    for(unsigned i=0;i<5;i++)mp_obj_dict_store(result,MP_OBJ_NEW_QSTR(names[i]),mp_obj_new_int_from_uint(bm_nativeui_scan_stat(i)));
+    return result;
+}
+static MP_DEFINE_CONST_FUN_OBJ_0(ui_scan_state_obj,ui_scan_state);
+static mp_obj_t ui_blank(void){checked(bm_nativeui_blank());return mp_const_none;}
+static MP_DEFINE_CONST_FUN_OBJ_0(ui_blank_obj,ui_blank);
 static const mp_rom_map_elem_t globals_table[]={
+    {MP_ROM_QSTR(MP_QSTR_blank),MP_ROM_PTR(&ui_blank_obj)},
+    {MP_ROM_QSTR(MP_QSTR_scan_begin),MP_ROM_PTR(&ui_scan_begin_obj)},
+    {MP_ROM_QSTR(MP_QSTR_scan_frame),MP_ROM_PTR(&ui_scan_frame_obj)},
+    {MP_ROM_QSTR(MP_QSTR_scan_status),MP_ROM_PTR(&ui_scan_status_obj)},
+    {MP_ROM_QSTR(MP_QSTR_scan_end),MP_ROM_PTR(&ui_scan_end_obj)},
+    {MP_ROM_QSTR(MP_QSTR_scan_state),MP_ROM_PTR(&ui_scan_state_obj)},
     {MP_ROM_QSTR(MP_QSTR___name__),MP_ROM_QSTR(MP_QSTR_ui)},
     {MP_ROM_QSTR(MP_QSTR_screens),MP_ROM_PTR(&ui_screens_obj)},
     {MP_ROM_QSTR(MP_QSTR_init),MP_ROM_PTR(&ui_init_obj)},

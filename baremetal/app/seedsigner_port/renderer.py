@@ -29,5 +29,5 @@ class Renderer:
         self.service()
         return self.session.run_screen(screen_class,args)
     def display_blank_screen(self):
-        import display
-        display.fill(0)
+        self.backend.blank()
+        self.session.current=None;self.session._button_count=None

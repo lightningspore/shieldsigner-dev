@@ -1,0 +1,153 @@
+{
+  "status": "native-composited-scan-overlay-and-original-PSBT-retrieval-gates-pass",
+  "device": "DUT1 app-ui, RAM-only; no fault probes",
+  "downloadSha256": "b35f2a99be50de10079f44dc017b3a6e5be1b96424faf1e8c1953e668c1f1ae7",
+  "load": "logs/phase-11/dut1-20261115T031420Z",
+  "checkpoint": "logs/phase-12/scan-overlay-final-20261115T031526Z",
+  "hostTests": 93,
+  "primitive": {
+    "path": "logs/phase-11/usb-20261115T031623.906478Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/scan_overlay_gate.py",
+    "scriptSha256": "15c34271a10c8727f6da44ebbf44c4e90aa742b638db3c410ede88b8cfbec5a4",
+    "completed": true,
+    "traceback": false
+  },
+  "flow": {
+    "path": "logs/phase-11/usb-20261115T031635.355227Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/scan_overlay_flow_gate.py",
+    "scriptSha256": "aa9e76ab55a0c886307a122e2d22f8d50c70463220f8a0240006552ef40cc3b0",
+    "completed": true,
+    "traceback": false
+  },
+  "regressions": {
+    "confirmation": {
+      "path": "logs/phase-11/usb-20261115T031640.164182Z",
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dut11",
+      "usbSerial": "rv1103-dut1",
+      "location": "1-1",
+      "script": "baremetal/micropython/seedqr_confirm_gate.py",
+      "scriptSha256": "99a1ff0c71dc672c138c04ac5b2fe000f6edc5992b5da63ddcda755fde1f1d12",
+      "completed": true,
+      "traceback": false
+    },
+    "realSensorIdle": {
+      "path": "logs/phase-11/usb-20261115T031711.739989Z",
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dut11",
+      "usbSerial": "rv1103-dut1",
+      "location": "1-1",
+      "script": "baremetal/micropython/view_error_idle_gate.py",
+      "scriptSha256": "171cf177e33e9629c0d697b7fe2ba55b18b375b1505c3aead2399c2a7e0ba1fe",
+      "completed": true,
+      "traceback": false
+    },
+    "qrCore": {
+      "path": "logs/phase-11/usb-20261115T031714.828408Z",
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dut11",
+      "usbSerial": "rv1103-dut1",
+      "location": "1-1",
+      "script": "baremetal/micropython/seedqr_core_gate.py",
+      "scriptSha256": "c8d046cc02cf036d81dc491180cdd4be61be0c790ce051c3b403f0d0beaebdbc",
+      "completed": true,
+      "traceback": false
+    },
+    "instructions": {
+      "path": "logs/phase-11/usb-20261115T031721.598951Z",
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dut11",
+      "usbSerial": "rv1103-dut1",
+      "location": "1-1",
+      "script": "/tmp/ss_overlay_caption.py",
+      "scriptSha256": "61df46f3fd08d1f0c206bdf4981d66c61e2b0d464c9754ba2ff805c8aab43fd6",
+      "completed": true,
+      "traceback": false
+    },
+    "finalState": {
+      "path": "logs/phase-11/usb-20261115T031740.858400Z",
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dut11",
+      "usbSerial": "rv1103-dut1",
+      "location": "1-1",
+      "script": "/tmp/ss_confirm_final_state.py",
+      "scriptSha256": "2cff0d53aa862e424d8123bbb86224605dde1b563975bfb1bac1e61bef3beced",
+      "completed": true,
+      "traceback": false
+    },
+    "realPreviewInterrupt": {
+      "path": "logs/phase-12/scan-interrupt-20261115T031729.834683Z",
+      "serial": "rv1103-dut1",
+      "scope": "Original scan loop, real local camera and ZXing; actual Mini PCB LCD; scripted no-back input; no optical QR qualification",
+      "passed": true,
+      "frames": 17
+    }
+  },
+  "nativeSurfaceCycles": 20,
+  "nativeHeapBytesAfterEveryWarmCycle": 158191,
+  "earlierSameImageFreshSessionStableHeapBytes": 56571,
+  "heapNote": "Absolute baseline depends on other loaded native screen/font caches; each 20-cycle sequence returned to its own baseline.",
+  "pixelChecks": [
+    "NV12 black/white/red RGB565 centers",
+    "Borrowed source mutation leaves owned RGB/shadow unchanged",
+    "Original instruction/progress/added/repeated/missed widget states",
+    "Generic screen replacement and ui.blank release owner",
+    "Final progress frame visually inspected on same image; instruction frame visually inspected"
+  ],
+  "flowChecks": [
+    "Six public pixel frames: part1, repeat1, miss, part3, part2, part4",
+    "Exact source progress snapshots 25/25/25/50/75 percent",
+    "Original complete PSBT retrieval equals public fixture bytes",
+    "Standalone original Base64 and Base43 PSBT routing and parsed serialization",
+    "Real surface teardown after deliberate source error and KeyboardInterrupt"
+  ],
+  "confirmedCases": 11,
+  "qrCoreCases": 25,
+  "realPreviewFramesIn10SecondInterruptWindow": 17,
+  "realPreviewNote": "Includes native QR work and display updates; not a camera capture FPS benchmark. Ctrl-C is deliberate and expected. Sensor stopped and native heap returned to baseline.",
+  "sourceHashes": {
+    "app/seedsigner_port/decode_qr.py": "9d99488b4c95d5865bcbb7019497a2947c2284b4631b08f3556ae328fa04f9f5",
+    "app/seedsigner_port/scan_screen.py": "108139f55bb13a4a93b1f6275bab3919894a4fb7b76094e337a1e7935c893c90",
+    "app/seedsigner_port/binary_codecs.py": "588b45a318ad9651ea01a242693d19bc51a7b602673fe4d50f81374b484e1be4",
+    "ui/bridge.cpp": "1829055bd0fbeb0de9cb0c707f99b2945d27af908ec78cade28198ae2c1c4ba5",
+    "src/native_ui.rs": "7a22a16e3795859edf9f3e228d5fd21659ad4cb1be75492a289ab2d9356507ea",
+    "tools/prepare_decode_qr.py": "8ac12d195f12bcb0495ad9416b75931e14ef864af375b284d3cc1ee6bc275d9f"
+  },
+  "gateSnapshotNote": "Build manifest captures gates before final public-fixture cleanup additions. They are host-injected scripts, not frozen runtime modules; current executed hashes are in gate reports and executed-* checkpoint copies.",
+  "correctedAttempts": [
+    {
+      "path": "logs/phase-11/usb-20261115T030127.244035Z",
+      "issue": "Native binascii requires an ASCII buffer; added explicit source boundary adapter."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T030405.872534Z",
+      "issue": "Source transformer incorrectly replaced local base64 variable with imported module; preserve local bindings."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T031127.056270Z",
+      "issue": "Standalone original Base43 probing exposed unsupported stepped bytes slice; reversed iterator preserves algorithm. List reverse buffer also needed."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T031511.423702Z",
+      "issue": "Confirmation case10 allocation failed with prior multi-megabyte public fixture list retained in REPL. Added explicit gate fixture release; complete sequence then passed."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T031603.885199Z",
+      "issue": "Cleanup pop expression echoed large known public bytearrays in REPL and timed out. Interrupted only that fixture cleanup, assigned discarded values to suppress echo, then retried successfully."
+    }
+  ],
+  "limits": [
+    "Public synthetic QR pixels qualify software paths, not optical focus or reliable camera scanning.",
+    "Only public synthetic framebuffer images exported; real preview frames not exported.",
+    "No wallet signing/entropy/security qualification; earlier unexplained reset remains open.",
+    "No SD/CAD/REF/DUT0 writes or push."
+  ]
+}

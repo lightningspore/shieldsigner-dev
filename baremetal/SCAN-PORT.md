@@ -29,9 +29,10 @@ The internal stream is fixed640×480 NV12, not the complete original PIL Camera
 API. Left/Right retains the original Scan Back behavior. The older preview-only
 demo's center/Key3 exit is a separate adapter.
 
-This is not the completed BaseScreen/View/Controller integration. Native Scan
-currently displays camera pixels; instructions/progress overlays and destination
-routing remain unfinished. Main-menu Scan is not yet wired to this adapter.
+The original View/Controller now routes Main-menu Scan through this adapter.
+Native instructions and fragment progress composite with camera pixels through
+LVGL; see [SCAN-OVERLAY.md](SCAN-OVERLAY.md) for ownership and current gates.
+The results below record the earlier model/loop stage, not full app qualification.
 
 ## Verified scope
 

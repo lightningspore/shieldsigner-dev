@@ -8,7 +8,8 @@ class FeatureUnavailable(RuntimeError):
     pass
 
 def dependency(module,attribute=None):
-    special={('seedsigner.helpers','kef'):('seedsigner_port.kef',None),
+    special={('binascii','a2b_base64'):('seedsigner_port.binary_codecs','a2b_base64'),
+             ('seedsigner.helpers','kef'):('seedsigner_port.kef',None),
              ('seedsigner.helpers','hardening'):('seedsigner_port.app_services',None),
              ('seedsigner.views.screensaver','ScreensaverScreen'):('seedsigner_port.app_services','ScreensaverScreen')}
     if (module,attribute) in special:module,attribute=special[(module,attribute)]

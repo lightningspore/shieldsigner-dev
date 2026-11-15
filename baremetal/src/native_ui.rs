@@ -41,3 +41,20 @@ unsafe extern "C" fn bm_ui_flush(x:u32,y:u32,w:u32,h:u32,data:*const u8,length:u
 extern "C" fn bm_ui_heap_used()->u32{super::heap::used()as u32}
 #[no_mangle]
 extern "C" fn bm_ui_fatal()->!{super::reset_record::simple(4);super::put(b"@@FAIL native-ui-fatal\r\n");super::reset()}
+
+// Synchronous ownership transfer into the C++ surface's own little-endian RGB565
+// buffer. The borrowed NV12 view is never retained beyond this call.
+#[no_mangle]
+unsafe extern "C" fn bm_ui_scan_convert(frame:*const u8,length:usize,output:*mut u8,capacity:usize)->i32 {
+    if frame.is_null()||output.is_null()||length!=super::rgb565::FRAME_BYTES||capacity!=FRAME_BYTES{return -1;}
+    let source=core::slice::from_raw_parts(frame,length);
+    let mut row=[0;480];
+    for y in 0..240 {
+        if super::rgb565::center_crop_row(source,y,&mut row).is_err(){return -1;}
+        for x in 0..240 {
+            output.add(y*480+x*2).write(row[x*2+1]);
+            output.add(y*480+x*2+1).write(row[x*2]);
+        }
+    }
+    0
+}

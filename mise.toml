@@ -1608,3 +1608,11 @@ run = ["uv run --python 3.13 --with pycryptodomex==3.23.0 python baremetal/tools
 [tasks."baremetal:app:qr:detection:dut1:gate"]
 description = "Compare original QR envelope/classification probes with CPython and reject unavailable crypto"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/qr_detection_gate.py --serial rv1103-dut1 --timeout 40"
+
+[tasks."baremetal:app:scan:overlay:prepare"]
+description = "Prepare independent public multipart PSBT pixels for the native scan overlay"
+run = "uv run --python 3.13 --with qrcode==7.3.1 python baremetal/tools/prepare_scan_overlay_gate.py"
+
+[tasks."baremetal:app:scan:overlay:dut1:gate"]
+description = "Check owned preview pixels, original native progress widgets and multipart scan cleanup"
+run = ["uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/scan_overlay_gate.py --serial rv1103-dut1 --timeout 45", "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/scan_overlay_flow_gate.py --serial rv1103-dut1 --timeout 45"]

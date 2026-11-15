@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Compare the port with whole original model classes, not a replacement parser."""
-import ast,base64,json,logging,re,sys,types
+import ast,base64,binascii,json,logging,re,sys,types
 from dataclasses import dataclass
 from enum import IntEnum
 from pathlib import Path
@@ -17,7 +17,7 @@ class ModelTests(unittest.TestCase):
     def setUpClass(cls):
         if not source.exists():raise RuntimeError('Pinned app source required for model parity')
         module=types.ModuleType('_original_decode_qr_test');sys.modules[module.__name__]=module
-        module.__dict__.update(dataclass=dataclass,IntEnum=IntEnum,base64=base64,json=json,re=re,QRType=QRType,SettingsConstants=SettingsConstants,logger=logging.getLogger('decode-reference'))
+        module.__dict__.update(dataclass=dataclass,IntEnum=IntEnum,base64=base64,a2b_base64=binascii.a2b_base64,json=json,re=re,QRType=QRType,SettingsConstants=SettingsConstants,logger=logging.getLogger('decode-reference'))
         tree=ast.parse(source.read_text())
         nodes=[ast.ImportFrom(module='__future__',names=[ast.alias(name='annotations')],level=0)]+[n for n in tree.body if isinstance(n,ast.ClassDef)]
         exec(compile(ast.fix_missing_locations(ast.Module(body=nodes,type_ignores=[])),'<whole original QR model>','exec'),module.__dict__)
@@ -96,3 +96,21 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(a.get_wallet_descriptor(),b.get_wallet_descriptor())
     def test_unavailable_psbt_validation_is_not_misclassification(self):
         with self.assertRaises(FeatureUnavailable):port.DecodeQR().add_data('cHNidP8=')
+
+    def test_original_specter_base64_local_binding_and_out_of_order_parts(self):
+        raw=b'PUBLIC multipart binary\0\xff'
+        encoded=base64.b64encode(raw).decode()
+        split=len(encoded)//2
+        values=['p2of2 '+encoded[split:],'p2of2 '+encoded[split:],'p1of2 '+encoded[:split]]
+        a=self.reference.SpecterPsbtQrDecoder();b=port.SpecterPsbtQrDecoder()
+        for value in values:
+            self.assertEqual(int(a.add(value)),b.add(value))
+            self.assertEqual(a.collected_segments,b.collected_segments)
+        self.assertEqual(a.get_base64_data(),b.get_base64_data())
+        self.assertEqual(a.get_data(),raw);self.assertEqual(b.get_data(),raw)
+
+    def test_original_base43_reverse_buffer_semantics(self):
+        from seedsigner_port.base43 import base43_encode
+        for raw in (b'',b'\0',b'\0\0public',bytes(range(32)),b'\xff'*64):
+            token=base43_encode(raw)
+            self.assertEqual(port.DecodeQR.base43_decode(token),self.reference.DecodeQR.base43_decode(token))

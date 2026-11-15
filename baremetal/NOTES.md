@@ -688,3 +688,39 @@ Home restored013951; camera off, readers finished.
 - QR-CONFIRMATION.md records scope. No SD/CAD/REF/DUT0 writes or push. Optical focus,
   hand-transcribed confirmation, qualified entropy/crypto/signing and full SD app
   startup remain open; earlier unexplained reset remains OPEN.
+
+### 2026-11-15 UTC — Composited native scanner and PSBT retrieval
+
+- Native LVGL scanner now uses the original camera instruction/progress/status
+  widgets over an owned115200-byte RGB565 preview. Existing center crop/BT.601
+  conversion retained, explicit little-endian image storage; no borrowed camera
+  pointers retained. Image cache/widget/animation cleanup precedes buffer wipe/free.
+  Generic screen replacement and ui.blank release the surface; Python renderer
+  blanks the actual LVGL root/shadow. Camera stop failure keeps ownership for retry.
+- Original scan runtime begins/ends the preview through completion, source errors
+  and interrupts. Source decoder fixes preserve function-local import shadowing,
+  adapt ASCII Base64 to native binascii buffers and original Base43 reverse byte
+  traversal/assembly to MicroPython APIs. Original CPython differentials pass.
+- New image b35f2a99be50..., DUT1 RAMload031420. Native031623 passes color vectors,
+  source mutation isolation, progress/status changes, screen replacement, blank
+  and20warmcycles with stable158191-byte native baseline. Earlier fresh-session
+ 20cycles stable56571bytes; cache state differs across sessions. Public pixel
+  flow031635 passes repeat/miss/out-of-order fragment progress and complete PSBT
+  serialization, standalone Base64/Base43 retrieval and error/interrupt cleanup.
+- Retained failed attempts: native binascii string030127, local-base64 binding
+ 030405, Base43 stepped-slice031127. First confirmation031511 failed allocation
+  on case10 because prior gate retained multi-megabyte public frames in REPL;
+  gates now explicitly release them. Cleanup031603 echoed public pop results and
+  timed out; interrupted that cleanup and suppressed expression echo. Corrected
+  full sequence passes:11confirmation031640, real sensor idle031711,25QRcore031714.
+- Public native instruction/progress framebuffer images visually checked. Actual
+  sensor+LCD scan031729 runs17frames in10seconds then deliberate USB Ctrl-C stops
+  sensor to(False,0) and returns native heap to baseline. This is an app preview
+  check, not a capture FPS measurement or optical QR qualification. No real scene
+  pixels exported. Final031740 verifies empty storage/default settings, sensor off,
+  probes disabled/no recorded reset; actual camera/buttons restored and Home drawn.
+- 93host tests pass. SCAN-OVERLAY.md, mise prepare/gates, matching ELF/image
+  checkpoint031526 and phase-12-scan-overlay receipt retained. Host-injected gate
+  cleanup changed after image build; executed copies/hashes recorded separately.
+  No SD/CAD/REF/DUT0 writes or push. Optical focus/reliability, qualified entropy,
+  signing and full SD app startup remain open; earlier unexplained reset OPEN.

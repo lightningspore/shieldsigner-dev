@@ -593,13 +593,13 @@ class DecodeQR:
             v = bytes(s)
         long_value = 0
         power_of_base = 1
-        for c in v[::-1]:
+        for c in reversed(v):
             digit = chars.find(bytes([c]))
             if digit == -1:
                 raise Exception('Forbidden character {} for base {}'.format(c, 43))
             long_value += digit * power_of_base
             power_of_base *= 43
-        result = bytearray()
+        result = []
         while long_value >= 256:
             div, mod = divmod(long_value, 256)
             result.append(mod)
@@ -766,14 +766,14 @@ class SpecterPsbtQrDecoder(BaseAnimatedQrDecoder):
 
     def get_base64_data(self):
         base64 = ''.join(self.segments)
-        if self.complete and DecodeQR.is_base64(_dependency('base64', None)):
-            return _dependency('base64', None)
+        if self.complete and DecodeQR.is_base64(base64):
+            return base64
         return None
 
     def get_data(self):
         base64 = self.get_base64_data()
-        if _dependency('base64', None) != None:
-            return _dependency('binascii', 'a2b_base64')(_dependency('base64', None))
+        if base64 != None:
+            return _dependency('binascii', 'a2b_base64')(base64)
         return None
 
     def current_segment_num(self, segment):
@@ -848,8 +848,8 @@ class Base64PsbtQrDecoder(BaseSingleFrameQrDecoder):
 
     def get_data(self):
         base64 = self.get_base64_data()
-        if _dependency('base64', None) != None:
-            return _dependency('binascii', 'a2b_base64')(_dependency('base64', None))
+        if base64 != None:
+            return _dependency('binascii', 'a2b_base64')(base64)
         return None
 
 class Base43PsbtQrDecoder(BaseSingleFrameQrDecoder):

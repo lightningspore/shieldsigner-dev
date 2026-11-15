@@ -2,6 +2,7 @@
 """Freeze all original QR model classes, changing platform boundaries explicitly."""
 import ast,copy,hashlib,json,subprocess
 from pathlib import Path
+from source_port import Bound
 root=Path(__file__).resolve().parents[1];repo=root.parent
 source=repo/'dist/firmware/sources/lvgl/application'
 lock=json.loads((repo/'firmware/lvgl-app/sources.lock.json').read_text())['application']
@@ -17,14 +18,36 @@ for n in tree.body:
         for a in n.names:bindings[a.asname or a.name]=(n.module,a.name)
 for name in ('json','re','logging','dataclass','IntEnum','QRType','SettingsConstants'):bindings.pop(name,None)
 class Port(ast.NodeTransformer):
+    def __init__(self):self.locals=[]
     def visit_FunctionDef(self,n):
+        if n.name=='base43_decode':
+            # MicroPython lacks stepped bytes slicing and bytearray.reverse().
+            # Keep the original reverse traversal and byte assembly via iter/list.
+            for node in ast.walk(n):
+                if isinstance(node,ast.For) and isinstance(node.iter,ast.Subscript) and ast.unparse(node.iter)=='v[::-1]':
+                    node.iter=ast.Call(func=ast.Name(id='reversed',ctx=ast.Load()),args=[ast.Name(id='v',ctx=ast.Load())],keywords=[])
+                if isinstance(node,ast.Assign) and isinstance(node.value,ast.Call) and isinstance(node.value.func,ast.Name) and node.value.func.id=='bytearray' and not node.value.args:
+                    node.value=ast.List(elts=[],ctx=ast.Load())
         n.returns=None
         for a in [*n.args.posonlyargs,*n.args.args,*n.args.kwonlyargs,*([n.args.vararg] if n.args.vararg else []),*([n.args.kwarg] if n.args.kwarg else [])]:a.annotation=None
-        return self.generic_visit(n)
+        n.decorator_list=[self.visit(d) for d in n.decorator_list]
+        n.args.defaults=[self.visit(d) for d in n.args.defaults]
+        n.args.kw_defaults=[self.visit(d) if d is not None else None for d in n.args.kw_defaults]
+        bound=Bound()
+        for item in n.body:bound.visit(item)
+        bound.names.update(a.arg for a in [*n.args.posonlyargs,*n.args.args,*n.args.kwonlyargs,*([n.args.vararg] if n.args.vararg else []),*([n.args.kwarg] if n.args.kwarg else [])])
+        self.locals.append(bound.names)
+        body=[]
+        for item in n.body:
+            value=self.visit(item)
+            if isinstance(value,list):body.extend(value)
+            elif value is not None:body.append(value)
+        n.body=body or [ast.Pass()];self.locals.pop()
+        return n
     def visit_AnnAssign(self,n):
         return ast.copy_location(ast.Assign(targets=[n.target],value=self.visit(n.value)),n) if n.value is not None else None
     def visit_Name(self,n):
-        if isinstance(n.ctx,ast.Load) and n.id in bindings:
+        if isinstance(n.ctx,ast.Load) and n.id in bindings and not any(n.id in scope for scope in self.locals):
             module,attr=bindings[n.id]
             return ast.copy_location(ast.Call(func=ast.Name(id='_dependency',ctx=ast.Load()),args=[ast.Constant(module),ast.Constant(attr)],keywords=[]),n)
         return n
@@ -89,5 +112,5 @@ base=root/'.tools/micropython/lib/micropython-lib/python-stdlib/base64/base64.py
 (root/'app/LICENSE.micropython-lib').write_bytes((root/'.tools/micropython/lib/micropython-lib/LICENSE').read_bytes())
 assert hashlib.sha256(base.read_bytes()).hexdigest()=='7db45610392bf27d506b2159279c40d3fd5e5f04b6b3bcced7acaf2f9edd3852'
 text=base.read_text();(root/'app/base64.py').write_text('# Derived from pinned micropython-lib base64; original notices retained.\n'+text.replace('raise binascii.Error(', 'raise ValueError('))
-receipt={'application':lock,'source':str(path.relative_to(source)),'sourceSha256':hashlib.sha256(raw).hexdigest(),'classes':provenance,'transformations':['Remove annotations; explicit PayloadAnalysis constructor; integer status constants','Defer actual feature imports to native dependency boundary','Propagate unavailable dependencies before broad parse handlers','Remove logger payload calls; JSON decode exception spelling normalized','Replace legacy image probes/extraction with existing native ZXing API'],'outputSha256':hashlib.sha256(out.read_bytes()).hexdigest(),'base64':{'source':'micropython-lib/python-stdlib/base64/base64.py','sourceSha256':hashlib.sha256(base.read_bytes()).hexdigest(),'outputSha256':hashlib.sha256((root/'app/base64.py').read_bytes()).hexdigest(),'change':'binascii.Error raises become ValueError, matching actual MicroPython binascii errors'}}
+receipt={'application':lock,'source':str(path.relative_to(source)),'sourceSha256':hashlib.sha256(raw).hexdigest(),'classes':provenance,'transformations':['Remove annotations; explicit PayloadAnalysis constructor; integer status constants','Defer actual feature imports to native dependency boundary; preserve function-local bindings and arguments','Propagate unavailable dependencies before broad parse handlers','Remove logger payload calls; JSON decode exception spelling normalized','Base43 uses reversed(v) and a list reverse buffer; original byte algorithm unchanged','Replace legacy image probes/extraction with existing native ZXing API'],'outputSha256':hashlib.sha256(out.read_bytes()).hexdigest(),'base64':{'source':'micropython-lib/python-stdlib/base64/base64.py','sourceSha256':hashlib.sha256(base.read_bytes()).hexdigest(),'outputSha256':hashlib.sha256((root/'app/base64.py').read_bytes()).hexdigest(),'change':'binascii.Error raises become ValueError, matching actual MicroPython binascii errors'}}
 (root/'app/decode-qr-provenance.json').write_text(json.dumps(receipt,indent=2)+'\n')

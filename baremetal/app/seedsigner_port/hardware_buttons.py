@@ -16,6 +16,10 @@ class HardwareButtons(ButtonInput):
         value=super().poll(keys)
         if value is not None:self.update_last_input_time()
         return value
+    def check_for_low(self,key=None,keys=None):
+        value=super().check_for_low(key=key,keys=keys)
+        if value:self.update_last_input_time()
+        return value
 class HardwareButtonsConstants:
     ALL_KEYS=NAMES
     KEYS__ANYCLICK=('KEY_PRESS','KEY1','KEY2','KEY3')

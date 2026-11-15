@@ -1,0 +1,101 @@
+{
+  "status": "original-confirmation-scanner-and-format-detection-hardware-gates-pass",
+  "device": "DUT1 app-ui; RAM-only",
+  "downloadSha256": "6564273b2b572dd39a54e0663d6c5fca5873685414f3dc9e48a191246988aea2",
+  "load": "logs/phase-11/dut1-20261115T024112Z",
+  "checkpoint": "logs/phase-12/seedqr-confirmation-20261115T024732Z",
+  "confirmation": {
+    "path": "logs/phase-11/usb-20261115T024343.630751Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/seedqr_confirm_gate.py",
+    "scriptSha256": "99a1ff0c71dc672c138c04ac5b2fe000f6edc5992b5da63ddcda755fde1f1d12",
+    "completed": true,
+    "traceback": false
+  },
+  "confirmationCases": [
+    "0 match 12 False  1 1",
+    "1 match 12 True  1 1",
+    "2 match 24 False  1 1",
+    "3 match 24 True  1 1",
+    "4 wrong 12 False  1 2",
+    "5 wrong 12 True  1 2",
+    "6 nonseed 12 False  1 2",
+    "7 bad-checksum 12 False  1 2",
+    "8 address 12 False  1 2",
+    "9 cancel 12 False left 3 1",
+    "10 cancel 12 False right 3 1"
+  ],
+  "metadata": {
+    "path": "logs/phase-11/usb-20261115T024137.737680Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/qr_detection_gate.py",
+    "scriptSha256": "77e1682437f2e54423b1e9170fa9a4bcf8c5def8094a5841152812aab7b01ef7",
+    "completed": true,
+    "traceback": false
+  },
+  "metadataCases": 118,
+  "hostTests": 86,
+  "regressions": {
+    "realSensorCleanup": {
+      "path": "logs/phase-11/usb-20261115T024501.677517Z",
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dut11",
+      "usbSerial": "rv1103-dut1",
+      "location": "1-1",
+      "script": "baremetal/micropython/view_error_idle_gate.py",
+      "scriptSha256": "171cf177e33e9629c0d697b7fe2ba55b18b375b1505c3aead2399c2a7e0ba1fe",
+      "completed": true,
+      "traceback": false
+    },
+    "qrCore": {
+      "path": "logs/phase-11/usb-20261115T024504.816219Z",
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dut11",
+      "usbSerial": "rv1103-dut1",
+      "location": "1-1",
+      "script": "baremetal/micropython/seedqr_core_gate.py",
+      "scriptSha256": "c8d046cc02cf036d81dc491180cdd4be61be0c790ce051c3b403f0d0beaebdbc",
+      "completed": true,
+      "traceback": false
+    },
+    "pagedReview": "logs/phase-12/review-pages-20261115T024511.601379Z/result.json"
+  },
+  "finalState": {
+    "path": "logs/phase-11/usb-20261115T024636.948514Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "/tmp/ss_confirm_final_state.py",
+    "scriptSha256": "2cff0d53aa862e424d8123bbb86224605dde1b563975bfb1bac1e61bef3beced",
+    "completed": true,
+    "traceback": false
+  },
+  "correctedAttempts": [
+    {
+      "path": "logs/phase-11/usb-20261115T023542.013256Z",
+      "issue": "Standard confirmation passed; compact detection exposed missing original BIP38/KEF format-probe providers."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T023620.690340Z",
+      "issue": "Diagnostic rerun identified missing BIP38Key import explicitly; original format providers ported."
+    },
+    {
+      "path": "logs/phase-11/usb-20261115T023847.362613Z",
+      "issue": "Needed from-helpers-import-kef alias, beyond direct module alias. Fixed routing to actual frozen provider."
+    }
+  ],
+  "limits": [
+    "Synthetic public pixel sources exercise actual native QR/preview/UI/model/navigation; optical camera focus/scanning remains unqualified.",
+    "Timed logical input masks exercise real debounce/activity code, not a new electrical GPIO qualification.",
+    "Format recognition and envelope metadata only; native AES/scrypt decryption remains explicitly unavailable.",
+    "Earlier unexplained reset remains unresolved despite no recorded reset during successful marked cases.",
+    "No SD/CAD/REF/DUT0 writes or push."
+  ]
+}

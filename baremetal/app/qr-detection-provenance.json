@@ -1,0 +1,45 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "files": {
+    "bip38.py": {
+      "source": "models/bip38.py",
+      "sourceSha256": "8dec9d35e19a40fbcfcab74807602354a35d9fb39fe465f17b70adb2baae82dc",
+      "outputSha256": "3b61dee0b54c3d4557ae097aad17fc3d9c08eac4c6355157a2f9c5b5914260ea"
+    },
+    "wif.py": {
+      "source": "models/wif.py",
+      "sourceSha256": "6cfc7fb28e154298e4e25d3cc290555f16c72eada3b54e8c92d439b4e5ef768f",
+      "outputSha256": "1b1a96377544c5475f5d6bb82ca29efd46724211ea2ec2e5226d433c8c586a33"
+    },
+    "encryption.py": {
+      "source": "models/encryption.py",
+      "sourceSha256": "9f41724168c18dd10ecc03f73aaf5f3db9536622e96576ee519e6ec12f53c6d4",
+      "outputSha256": "61bbedd08a45ae12fdbe82b16dd569020dbb13a752d2a7a6af967d0c13acce62"
+    },
+    "kef.py": {
+      "source": "helpers/kef.py",
+      "sourceSha256": "bf3e611954f455eff532aa60d82364cbeb70392c73bdb8e51304d90d1aa53650",
+      "outputSha256": "4dbf0c675fc4db998290ed9b53e3ebe132c21a6a9d551c34f2aa5c1ea670c32e"
+    },
+    "base43.py": {
+      "source": "helpers/base43.py",
+      "sourceSha256": "988feceae2e481a7a868ca2f8d22c1dd22bb3512cfd9baf3c749d63cf2da3e7b",
+      "outputSha256": "667ba0be1f1db6c398b447ed083dd01f95a7ef4dff496c34a6b66cd47e8915e0"
+    }
+  },
+  "aesModeConstants": {
+    "MODE_ECB": 1,
+    "MODE_CBC": 2,
+    "MODE_CTR": 6,
+    "MODE_GCM": 11
+  },
+  "compatibilityChanges": [
+    "Base43 local prepend buffer is a list because MicroPython bytearray has no insert; returned bytes unchanged.",
+    "UnicodeDecodeError uses native UnicodeError where CPython subclass is absent."
+  ],
+  "constantProvider": "pycryptodomex3.23.0, compile-time public format constants only; no native AES module",
+  "scope": "Original format detection/envelope parsing; AES/scrypt entry preflights fail explicitly on native runtime."
+}

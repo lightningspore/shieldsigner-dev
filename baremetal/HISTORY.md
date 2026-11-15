@@ -636,3 +636,37 @@ passes. Home restored004955; preview stopped, all USB readers finished.
  023125. No SD/CAD/REF/DUT0 writes or push. Optical camera/handwritten confirmation,
   entropy, encrypted/UR/xpub/PSBT export/signing and full SD app startup remain open.
   Earlier unexplained reset remains OPEN despite successful marked runs.
+
+### 2026-11-15 UTC — Original SeedQR confirmation and format probes
+
+- HardwareButtons.check_for_low now records activity for accepted debounced,
+  unblocked lows, matching poll. Initially held keys stay blocked; a held stable
+  level counts until release stabilizes. Host test exercises real debounce and
+  timestamp behavior; native left/right cancellation verifies accepted activity.
+- Original compact detection probes BIP38/KEF before choosing candidates. Ported
+  original BIP38/WIF/encryption/KEF/Base43 bodies with lazy dependencies and exact
+  source/output hashes. Real public AES mode IDs extracted at generation only;
+  no native AES module supplied. Crypto methods preflight actual AES/scrypt and
+  fail explicitly when absent. Preserved Krux MIT notice. Base43 local prepend
+  buffer uses a list; UnicodeDecodeError maps to native UnicodeError as needed.
+- Independent unmodified CPython format oracle and native024137 pass118raw/Base43
+  metadata probes, invalid UTF8 IDs, malformed envelopes and compact/encrypted
+  candidate overlap. BIP38 fields/leading zeros and unavailable crypto verified.
+  No encryption/decryption, key-generation or wallet qualification follows.
+- Initial confirmation023542/023620 reached standard match then missing BIP38;
+  provider load023847 exposed helpers-import-kef alias routing. Fixed actual
+  dependencies, retained failures. First10flows024139 pass; final11flows024343
+  add recognized complete Bitcoin-address rejection and decoder-state assertions.
+  Native ZXing/original Views compare matching12/24standard/compact, wrong seeds,
+  bad checksum/text, and cancel left/right. Error routes revisit zoom then Done;
+  source seed stays unchanged, no pending seed substituted. Public pixel fixtures
+  and timed logical masks only; physical optical/debounce wiring not requalified.
+- Final image6564273b2b57..., RAMload024112.86host tests pass. Actual SC3336
+  regression024501 captures1preview frame then stops to(False,0) via idle cleanup;
+  QR core024504 and paged review024511 pass without recorded reset. Final024636
+  confirms empty storage/default settings, sensor off and probes disabled, replaces
+  test Controller/camera/buttons with normal adapters, restores Home. Matching ELF
+  checkpoint024732 and phase-12-seedqr-confirmation receipt saved.
+- QR-CONFIRMATION.md records scope. No SD/CAD/REF/DUT0 writes or push. Optical focus,
+  hand-transcribed confirmation, qualified entropy/crypto/signing and full SD app
+  startup remain open; earlier unexplained reset remains OPEN.

@@ -1592,3 +1592,19 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:app:seedqr:dut1:gate"]
 description = "Run original SeedQR export with real native screen pixels, pan and Done events"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/seedqr_flow_gate.py --serial rv1103-dut1 --timeout 100"
+
+[tasks."baremetal:app:seedqr:confirm:prepare"]
+description = "Prepare independent public QR pixel fixtures for original confirmation scan navigation"
+run = "uv run --python 3.13 --with qrcode==7.3.1 --with embit==0.8.0 python baremetal/tools/prepare_seedqr_confirm_gate.py"
+
+[tasks."baremetal:app:seedqr:confirm:dut1:gate"]
+description = "Verify original match/wrong/invalid/cancel confirmation paths through native QR and debounce"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/seedqr_confirm_gate.py --serial rv1103-dut1 --timeout 110"
+
+[tasks."baremetal:app:qr:detection:prepare"]
+description = "Prepare original BIP38/KEF format probes and independent public metadata oracles"
+run = ["uv run --python 3.13 --with pycryptodomex==3.23.0 python baremetal/tools/prepare_qr_detection.py", "uv run --python 3.13 --with pycryptodomex==3.23.0 --with embit==0.8.0 python baremetal/tools/prepare_qr_detection_gate.py"]
+
+[tasks."baremetal:app:qr:detection:dut1:gate"]
+description = "Compare original QR envelope/classification probes with CPython and reject unavailable crypto"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/qr_detection_gate.py --serial rv1103-dut1 --timeout 40"

@@ -48,3 +48,6 @@ This does **not** qualify optical camera focus/scanning, camera confirmation of 
 handwritten QR, encrypted exports, other seed families, entropy generation,
 transaction signing, SD app startup or a full wallet release. Development USB
 access remains open. The earlier unexplained reset remains unresolved.
+
+Follow-on: [QR-CONFIRMATION.md](QR-CONFIRMATION.md) records original confirmation
+navigation with public pixel fixtures and the format-probe/input changes it needed.

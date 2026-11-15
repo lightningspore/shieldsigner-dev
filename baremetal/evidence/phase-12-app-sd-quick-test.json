@@ -1,0 +1,30 @@
+{
+  "status": "user-confirmed-native-app-SD-boot-quick-test",
+  "timestampUtc": "2026-11-15T05:08:27.579221+00:00",
+  "image": "logs/phase-12/app-sd-20261115T045650Z/seedsigner-app-sd.img",
+  "imageSha256": "19a7fc3acbd7b0123a711eb815b3d0f31f0485d0b249329ffe25eb0998e04098",
+  "imageBytes": 3145728,
+  "payloadSha256": "ff9d919c0fba9bd7fd7fc48f9339e82208f141558f68b2e937778e8c7ab7f86e",
+  "profile": "app-autostart",
+  "hostTests": 107,
+  "card": {
+    "hostDeviceBeforeWrite": "/dev/disk7",
+    "bytes": 4025483264,
+    "role": "user-provided spare4GB test card, moved to DUT1"
+  },
+  "writeObservations": [
+    "Etcher failed with Error spawning the child process; canceled its failed attempt.",
+    "macOS auth dialog access blocked by computer-use safety controls; user handled/canceled old prompt. Old sudo/osascript PIDs absent before fallback.",
+    "Raspberry Pi Imager selected immutable app image and sole4GB external target; OS customization declined.",
+    "Write started; later storage selection cleared and card disappeared from host. No final write/verification dialog observed."
+  ],
+  "userBootReport": "pluged in it. it works! boot up and start is FAST!",
+  "hardwareScope": "User confirms card inserted and app starts on DUT1. No USB RAM download after card move.",
+  "timingScope": "FAST is a subjective user observation; no instrumented cold power-to-UI/REPL/frame duration.",
+  "limits": [
+    "No independent host raw-byte readback or observed writer verification success dialog.",
+    "Current native2.9MB payload boot confirmed by user, not an unrestricted ROM stage-size limit.",
+    "Development image with in-progress address-search prototype; source continuation/expanded gates remain incomplete.",
+    "No new optical QR decode, signing, entropy or production security qualification."
+  ]
+}

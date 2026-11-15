@@ -4,6 +4,7 @@
 Format facts: pinned Luckfox U-Boot tools/rkcommon.c header0_info_v2 and
 scripts/spl.sh. Original validation/packaging code; vendor DDR stays unchanged.
 """
+import argparse
 import configparser
 import hashlib
 import json
@@ -53,7 +54,28 @@ def inspect_idblock(data, expected):
     return entries
 
 
+def validate_payload(payload, manifest, profile):
+    expected='app-autostart' if profile=='app' else 'fast-boot'
+    if manifest['features']!=expected or manifest['files']['build/hello.bin']!=sha(payload):
+        raise ValueError('Build matching '+expected+' payload first')
+    if profile=='app' and manifest.get('usbSerial')!='rv1103-dut1':
+        raise ValueError('App SD image requires the actual DUT1 LCD/button profile')
+
+
+def compose_sd_image(idblock):
+    # Preserve the historical2MiB minimum; native app includes frozen assets and
+    # needs a larger regular-file image. No SDK partitions/U-Boot are appended.
+    unit=1024*1024
+    size=((max(2*unit,SD_OFFSET+len(idblock))+unit-1)//unit)*unit
+    image=bytearray(size);image[SD_OFFSET:SD_OFFSET+len(idblock)]=idblock
+    return image
+
+
 def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--profile',choices=('runtime','app'),default='runtime')
+    args=parser.parse_args()
+    prefix='app' if args.profile=='app' else 'runtime'
     build = ROOT / 'build'
     rkbin = ROOT / '.tools/rkbin'
     pins = json.loads((ROOT / 'stock-loader.json').read_text())
@@ -63,8 +85,7 @@ def main():
             raise SystemExit('Changed packaging input: ' + name)
     payload = (build / 'hello.bin').read_bytes()
     manifest = json.loads((build / 'hello-manifest.json').read_text())
-    if manifest['features'] != 'fast-boot' or manifest['files']['build/hello.bin'] != sha(payload):
-        raise SystemExit('Build fast-boot first; payload must match its manifest')
+    validate_payload(payload,manifest,args.profile)
     # NEWIDB uses the exact stage bytes, without the legacy four-byte magic.
     (rkbin / 'sd-runtime.bin').write_bytes(payload)
     ini = configparser.ConfigParser()
@@ -83,22 +104,19 @@ def main():
     data = (rkbin / 'sd-idblock.img').read_bytes()
     ddr = (rkbin / ini['LOADER_OPTION']['FlashData']).read_bytes()
     entries = inspect_idblock(data, [ddr, payload])
-    image = bytearray(2 * 1024 * 1024)
-    if SD_OFFSET + len(data) > len(image):
-        raise SystemExit('ID block exceeds image reservation')
-    image[SD_OFFSET:SD_OFFSET + len(data)] = data
-    (build / 'runtime-idblock.img').write_bytes(data)
-    (build / 'runtime-sd.img').write_bytes(image)
-    report = {'status': 'prepared-not-hardware-boot-verified', 'storageWrites': False,
+    image=compose_sd_image(data)
+    (build / (prefix+'-idblock.img')).write_bytes(data)
+    (build / (prefix+'-sd.img')).write_bytes(image)
+    report = {'status': 'prepared-not-hardware-boot-verified', 'storageWrites': False, 'profile':args.profile, 'features':manifest['features'], 'usbSerial':manifest.get('usbSerial'),
         'sdOffsetBytes': SD_OFFSET, 'sdOffsetSectors': 64, 'idblockBytes': len(data),
         'stages': entries, 'imageBytes': len(image), 'imageSha256': sha(image),
         'idblockSha256': sha(data), 'payloadSha256': sha(payload),
         'sourceManifestSha256': sha((build / 'hello-manifest.json').read_bytes()),
         'limits': ['No card write or ROM SD boot test performed.',
                   'ROM maximum second-stage size remains hardware-unverified.',
-                  'Raw image only; no app filesystem or partition table yet.',
+                  'Raw image only; app code/assets are frozen in payload, no filesystem or partition table.',
                   'The usual SDK 512KiB ID-block partition is not used; no U-Boot follows.']}
-    (build / 'runtime-sd-manifest.json').write_text(json.dumps(report, indent=2) + '\n')
+    (build / (prefix+'-sd-manifest.json')).write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 
 

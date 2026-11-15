@@ -67,3 +67,9 @@ Follow-on: [APP-BOOT.md](APP-BOOT.md) records the optional `app-autostart`
 DUT1 RAM profile and frozen foreground entry. Automatic splash/warning launch
 and USB interruption are tested separately from native key acknowledgment/Home.
 This does not update the SD card or establish cold power-to-app timing.
+
+2026-11-15 UTC: user-confirmed native app boot from updated spare4GB microSD.
+The current frozen app/assets and original UI start automatically; user reports
+startup is FAST. This closes the quick standalone app boot test, not externally
+timed power-to-UI/first-frame qualification or complete app/signing/entropy work.
+See evidence/phase-12-app-sd-quick-test.json.

@@ -152,3 +152,32 @@ and real pad-readback errors. `mise run baremetal:led:gate` verifies10 transitio
 per second and both states. While the full API script ran two camera captures,
 108 transitions occurred in10801ms with zero pad errors. This is a diagnostic
 heartbeat, not an application watchdog.
+
+## Native UI app SD candidate (2026-11-15 UTC)
+
+`mise run baremetal:app:sd:prepare` packages the current DUT1 `app-autostart`
+payload as `build/app-sd.img`. It validates the exact payload manifest/hash and
+DUT1 USB identity, preserves unchanged DDR and independently checks both NEWIDB
+stage extents/hashes. The image reservation rounds up to whole MiB above the
+historical2MiB minimum, so the2917320-byte frozen native app fits in a3MiB image.
+The original runtime profile/filenames remain available.107host tests pass.
+
+Current candidate is saved under
+`logs/phase-12/app-sd-20261115T045650Z/seedsigner-app-sd.img`, SHA256
+`19a7fc3acbd7b0123a711eb815b3d0f31f0485d0b249329ffe25eb0998e04098`.
+User requested a quick test and inserted the spare4GB card, identified as external
+USB `/dev/disk7`,4025483264bytes. Etcher selected this exact image/card; write was
+started and is waiting for macOS administrator authentication. No successful
+write/readback or ROM boot is claimed at this checkpoint. The larger native
+second stage is not yet hardware SD-boot qualified. Frozen app/assets require no
+FAT filesystem; the missing-partition-table notice is expected for this raw ROM
+layout. Current image includes the in-progress address-search prototype; expanded/
+continuation search gates remain incomplete. This is a development quick test.
+
+Follow-up: Etcher's helper failed and was canceled. Raspberry Pi Imager wrote the
+selected card; its final verification dialog was not observed, so no independent
+byte-for-byte readback is claimed. User moved the card to DUT1 and explicitly
+confirmed it works and starts FAST. The native2.9MB stage/app SD quick test now
+has user hardware confirmation. Exact power-to-app/REPL/frame timings and the
+unrestricted ROM maximum remain unqualified. Receipt:
+[evidence/phase-12-app-sd-quick-test.json](evidence/phase-12-app-sd-quick-test.json).

@@ -1640,3 +1640,7 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:app:xpub:dut1:gate"]
 description = "Run original export Views through native details/QR pixels, Back, brightness and source routing"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/xpub_flow_gate.py --serial rv1103-dut1 --timeout 100"
+
+[tasks."baremetal:app:sd:prepare"]
+description = "Package current DUT1 app-autostart as a regular-file ROM microSD image"
+run = "uv run --python 3.13 python baremetal/tools/sd_image.py --profile app"

@@ -805,3 +805,63 @@ Home restored013951; camera off, readers finished.
   interrupting console gate. No SD/CAD/REF/DUT0 writes or push. Physical/optical
   qualification, address scan/search, animated/UR export, full signing, qualified
   entropy and SD app startup remain open. Earlier unexplained reset stays OPEN.
+
+### 2026-11-15 UTC — Address verification prototype and manual UI handoff
+
+- In-progress/uncommitted address-search stage: source workers are foreground
+  generators with yields after original pairs/precomputed expanded paths; scoped
+  Counter/Worker bindings only, no global fake BaseThread. Native progress push
+  uses original library API.105host tests and11native export→scan→search flows
+  pass (usb044739): receive/change/Taproot/legacy, Skip10, cancel, wrong script,
+  other account, last999 vs bound1000, source idle wipe/worker release.
+- First flow044707 lacked UI init before HardwareButtons and failed GPIO read;
+  gate setup corrected. Source constructor order in actual Renderer was unchanged.
+  Additional direct-search045122 passed simple0/native success pixels, then failed
+  its next100 case assertion at line71. No expanded/continuation qualification yet;
+  add diagnostics and investigate after manual handoff. Failed script already
+  terminal before attempted host SIGINT (PID no longer existed); no worker/reader
+  was stopped by that attempted host signal.
+- User explicitly requested testing a QR and using the UI. Suspended further
+  hardware tests, built current optional app-autostart prototype, RAM downloaded
+  DUT1 only045300 with no console interrupt. Public test QR generated under
+  logs/phase-12/manual-ui-demo-20261115T045341Z: standard48numeric digits encoding
+  abandon×11/about, expected fingerprint73c5da0a. No real seed/scene image used.
+- MANUAL UI HANDOFF PENDING: user is operating DUT1 buttons/camera. Do not send
+  USB Ctrl-C/reset, overwrite RAM or run device gates while this handoff is active.
+  Wait for user's result/done instruction before reclaiming DUT1. Independent
+  host/source investigation may continue. This is not a request to pause the goal.
+  Optical decoding/physical button success is not yet observed. No SD/CAD/REF/
+  DUT0 writes or push. Earlier unexplained reset remains open.
+
+### 2026-11-15 UTC — User-requested app microSD quick test, preparing card
+
+- User approved UI demo as good and requested a microSD quick test, then inserted
+  spare4GB into Mac. External physical disk7/Generic STORAGE DEVICE/4025483264
+  bytes identified; metadata snapshot retained. No REF/DUT0 storage targeted.
+- Extended existing file-only packager with explicit runtime/app profile guards,
+  DUT1 identity validation and dynamic whole-MiB image reservation. Current frozen
+  app2917320bytes cannot fit old2MiB image; new app-sd is3145728bytes. Unchanged
+  DDR22148bytes and both padded stages/header SHA256 validated. Added profile/
+  corruption/large-image tests;107host checks pass. Concrete candidate/ELF/manifest
+  saved in app-sd045650 checkpoint, imageSHA19a7fc3acbd7... .
+- Etcher initially needed native-coordinate file-picker click; stale prior image
+  canceled and app restarted before selecting immutable new app image. Expected
+  missing-partition-table notice acknowledged; only external4.03GB disk7 selected.
+  Flash started; actual sudo askpass process observed waiting for Mac auth. Asked
+  user to enter password only in system prompt. Write/verification/boot not yet
+  proven. Do not interpret GUI Starting as completed flash.
+
+### 2026-11-15 UTC — User confirms native app microSD boot
+
+- Etcher helper failed; no completed Etcher write claimed. CUA safety controls
+  rejected access to UserNotificationCenter/auth dialog, user handled old request.
+  Both pending sudo/osascript processes were absent before alternate write.
+- Raspberry Pi Imager selected immutable3MiB app image and only4GB external card,
+  declined OS customization, started write. Later storage cleared/card disappeared;
+  writer verification-success dialog was not observed. No raw-byte readback claim.
+- User then reported: "pluged in it. it works! boot up and start is FAST!"
+  This confirms the standalone app SD quick test on DUT1 at current native2.9MB
+  payload size, without another RAM download. FAST is user-reported, not a measured
+  power-to-UI/REPL/frame time. phase-12-app-sd-quick-test receipt preserves exact
+  hashes, write observations, scope and gaps. DUT1 now has SD installed: USB reset
+  boots card, not maskrom. Do not reset/interrupt while user operates UI.

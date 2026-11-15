@@ -56,3 +56,19 @@ class SdImageTests(unittest.TestCase):
         data, stages = self.fixture()
         with self.assertRaises(ValueError):
             sd_image.inspect_idblock(data, [stages[0], b'vendor-spl'])
+
+    def test_large_native_app_image_keeps_complete_idblock(self):
+        data=bytes([0xa5])*(2900000)
+        image=sd_image.compose_sd_image(data)
+        self.assertEqual(len(image),3*1024*1024)
+        self.assertFalse(any(image[:sd_image.SD_OFFSET]))
+        self.assertEqual(image[sd_image.SD_OFFSET:sd_image.SD_OFFSET+len(data)],data)
+        self.assertFalse(any(image[sd_image.SD_OFFSET+len(data):]))
+        self.assertEqual(len(sd_image.compose_sd_image(b'public')),2*1024*1024)
+
+    def test_app_profile_rejects_wrong_board_fault_profile_or_payload(self):
+        payload=b'public';manifest={'features':'app-autostart','usbSerial':'rv1103-dut1','files':{'build/hello.bin':sd_image.sha(payload)}}
+        sd_image.validate_payload(payload,manifest,'app')
+        for field,value in (('usbSerial','rv1103-dev-001'),('features','app-ui,fault-probe'),('features','fast-boot')):
+            with self.assertRaises(ValueError):sd_image.validate_payload(payload,{**manifest,field:value},'app')
+        with self.assertRaises(ValueError):sd_image.validate_payload(payload+b'changed',manifest,'app')

@@ -14,9 +14,16 @@ class UrPortTests(unittest.TestCase):
     source=root.parent/'dist/firmware/sources/lvgl/application'
     for name,item in r['files'].items():
         output=(root/'app'/name).read_bytes();self.assertEqual(hashlib.sha256(output).hexdigest(),item['outputSha256'])
-        self.assertEqual(item['sourceSha256'],item['outputSha256'])
+        changed={c['file'] for c in r['changes']}
+        if item['source'] in changed:self.assertNotEqual(item['sourceSha256'],item['outputSha256'])
+        else:self.assertEqual(item['sourceSha256'],item['outputSha256'])
         if item['source'].startswith('src/'):
             self.assertEqual(hashlib.sha256((source/item['source']).read_bytes()).hexdigest(),item['sourceSha256'])
+ def test_only_documented_baremetal_adaptation(self):
+     r=json.loads((root/'app/ur-provenance.json').read_text())
+     self.assertEqual([c['file'] for c in r['changes']],['src/seedsigner/helpers/ur2/fountain_decoder.py'])
+     code=[l for l in (root/'app/seedsigner_port/ur2/fountain_decoder.py').read_text().splitlines() if not l.strip().startswith('#')]
+     self.assertFalse(any('time.time' in l for l in code))
  def test_single_part_and_mixed_fountain_bytes_roundtrip(self):
     for data in (b'PUBLIC-UR-fixture',bytes(range(256)),b'\0'*128+b'PUBLIC\xff'*40):
      for density in (10,30,120):

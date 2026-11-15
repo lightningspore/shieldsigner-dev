@@ -19,8 +19,15 @@ original=source/'src/seedsigner/helpers/ur2';target=root/'app/seedsigner_port/ur
 for src in sorted(original.glob('*.py')):
     rel=str(src.relative_to(source));raw=src.read_bytes()
     assert raw==subprocess.check_output(['git','show',lock['commit']+':'+rel],cwd=source)
+    source_hash=hashlib.sha256(raw).hexdigest()
+    if src.name=='fountain_decoder.py':
+        # Baremetal time has no wall clock (time.time). The original timing value
+        # only feeds a commented-out debug print, so drop it; algorithm unchanged.
+        old=b'        start = time.time()\n';assert raw.count(old)==1
+        raw=raw.replace(old,b'        # Baremetal: unused debug timing removed; no time.time wall clock.\n')
+        receipt['changes'].append({'file':rel,'change':'Remove unused debug time.time() call in process_queue_item; baremetal time module has no wall clock'})
     out=target/src.name;out.write_bytes(raw)
-    receipt['files'][str(out.relative_to(root/'app'))]={'source':rel,'sourceSha256':hashlib.sha256(raw).hexdigest(),'outputSha256':hashlib.sha256(out.read_bytes()).hexdigest()}
+    receipt['files'][str(out.relative_to(root/'app'))]={'source':rel,'sourceSha256':source_hash,'outputSha256':hashlib.sha256(out.read_bytes()).hexdigest()}
 shutil.copyfile(original/'LICENSE',root/'app/LICENSE.UR2')
 original=Path(urtypes.__file__).parent;target=root/'app/urtypes';target.mkdir(exist_ok=True)
 for src in sorted(original.rglob('*.py')):

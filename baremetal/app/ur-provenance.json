@@ -33,7 +33,7 @@
     "seedsigner_port/ur2/fountain_decoder.py": {
       "source": "src/seedsigner/helpers/ur2/fountain_decoder.py",
       "sourceSha256": "b52b6f61c21f44bc1c676efc38dbbae0dd5915bac71aa8b07a54a6704a5132d5",
-      "outputSha256": "b52b6f61c21f44bc1c676efc38dbbae0dd5915bac71aa8b07a54a6704a5132d5"
+      "outputSha256": "ca633d01834ebdf8565dfd1cb5cde07e4b15711fce79d7693950eaa6bec9b2fe"
     },
     "seedsigner_port/ur2/fountain_encoder.py": {
       "source": "src/seedsigner/helpers/ur2/fountain_encoder.py",
@@ -161,5 +161,10 @@
       "outputSha256": "c1b10c1467799cc855262abf1e630083b83ad7104ef3962aa1e5322eea48ede0"
     }
   },
-  "changes": []
+  "changes": [
+    {
+      "file": "src/seedsigner/helpers/ur2/fountain_decoder.py",
+      "change": "Remove unused debug time.time() call in process_queue_item; baremetal time module has no wall clock"
+    }
+  ]
 }

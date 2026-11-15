@@ -173,7 +173,7 @@ class FountainDecoder:
         self.queued_parts.append(p)
 
     def process_queue_item(self):
-        start = time.time()
+        # Baremetal: unused debug timing removed; no time.time wall clock.
         part = self.queued_parts.pop(0)
         # self.print_part(part)
 

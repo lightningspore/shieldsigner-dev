@@ -847,3 +847,18 @@ passes. Home restored004955; preview stopped, all USB readers finished.
   power-to-UI/REPL/frame time. phase-12-app-sd-quick-test receipt preserves exact
   hashes, write observations, scope and gaps. DUT1 now has SD installed: USB reset
   boots card, not maskrom. Do not reset/interrupt while user operates UI.
+
+### 2026-11-15 UTC — Camera app SD flash and incomplete port handoff
+
+- Etcher completed the camera-enabled 3 MiB DUT1 image (SHA256
+  196291d3f0bc3d2400fe10d6a1327609d7a11674a8fd83b636ee7238b6a6117b).
+  User reached seed creation and reported missing math.log2. Enabled upstream
+  MicroPython special math functions; corrected image SHA256
+  1046bf2a7497dceee8cca01f176d3cb1d900f2c4f6f30a1f6b5c4057ba1f21fd
+  is built/packaged with 148 host tests passing, but not flashed or boot-tested.
+- User reports additional unimplemented UI destinations and requested a handoff.
+  HANDOFF-2026-11-15.md records exact artifacts/source state, feature limitations,
+  remaining native gates and next steps. The parallel ports are integrated
+  candidates, not qualified end-to-end camera generation or production signing.
+  Further device work waits for a coordinated handoff; use Etcher, no RAM-only
+  test detour. No device actions performed while writing this handoff.

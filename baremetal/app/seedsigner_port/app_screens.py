@@ -15,6 +15,39 @@ class NativeScreen:
 class SeedAddPassphraseScreen(NativeScreen):pass
 from seedsigner_port.app_screen_defaults import KEYBOARD_LABELS
 for _name,_label in KEYBOARD_LABELS.items():setattr(SeedAddPassphraseScreen,_name,_label)
+class SeedReviewPassphraseScreen(NativeScreen):
+    def display(self):
+        from seedsigner_port.renderer import Renderer
+        from seedsigner_port.review_text import short_visible,pages,page_config,LEGEND
+        from seedsigner_port.screen_contracts import result
+        renderer=Renderer.get_instance()
+        value=self.args['passphrase']
+        if short_visible(value):return renderer.run_screen(type(self),self.args)
+        content=pages(value)
+        # The legend and each page are presentation steps. Only an original
+        # action index or Back out of the first step is returned to the View.
+        page=-1
+        while True:
+            if page<0:
+                config={'top_nav':{'title':'Exact Characters','show_back_button':True},
+                        'text':LEGEND,'read_first':True,'is_bottom_list':True,
+                        'button_list':['Review'],'allow_screensaver':True}
+            elif page<len(content):config=page_config(value,content[page],page,len(content))
+            else:
+                summary=self.args.copy();summary['passphrase']='%d chars read'%len(value)
+                selected=renderer.run_screen(type(self),summary)
+                if selected==RET_CODE__BACK_BUTTON:
+                    page=len(content)-1
+                    continue
+                return selected
+            renderer.service()
+            event=renderer.session.run('button_list_screen',config)
+            selected=result(event,1)
+            if selected==RET_CODE__BACK_BUTTON:
+                if page<0:return RET_CODE__BACK_BUTTON
+                page-=1
+            elif selected==0:page+=1
+            else:raise ValueError('Unexpected review page action')
 class ScanScreen(NativeScreen):
     def display(self):
         from seedsigner_port.controller import Controller

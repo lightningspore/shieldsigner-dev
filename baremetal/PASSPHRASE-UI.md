@@ -53,3 +53,9 @@ its visible region. Improving Unicode glyph coverage and long-text review is
 still required before claiming a complete human-readable passphrase UI. These
 tests also do not qualify optical QR acquisition, other wallet screens, full app
 SD startup, randomness, side-channel behavior or whole-wallet security.
+
+Follow-on: [REVIEW-PAGES.md](REVIEW-PAGES.md) records the later presentation pager
+that exposes all long/hidden/non-ASCII character identities without requiring
+universal glyph coverage. The former three-line overflow is avoided in the
+original View's facade; raw low-level builders remain unchanged. An unexplained
+runtime reset during expanded testing remains an open stability issue.

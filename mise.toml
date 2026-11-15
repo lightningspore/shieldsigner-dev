@@ -1544,3 +1544,11 @@ run = ["uv run --python 3.13 python baremetal/tools/prepare_app_screens.py", "uv
 [tasks."baremetal:app:passphrase:dut1:gate"]
 description = "Verify original accept/edit/discard/skip passphrase flows with actual native key events"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/passphrase_flow_gate.py --serial rv1103-dut1 --timeout 35"
+
+[tasks."baremetal:app:review:prepare"]
+description = "Prepare public long/Unicode review fixtures with independent CPython fingerprints"
+run = "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_review_pages_gate.py"
+
+[tasks."baremetal:app:review:dut1:gate"]
+description = "Verify actual original paged-review flows and independently decode every displayed character"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/review_pages_gate.py"

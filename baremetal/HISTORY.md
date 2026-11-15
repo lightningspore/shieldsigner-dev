@@ -511,3 +511,25 @@ passes. Home restored004955; preview stopped, all USB readers finished.
   Full non-ASCII glyph coverage and long-passphrase review still need work before
   claiming a complete human-readable UI. Optical/SD/other wallet work remains open.
   No CAD/SD/REF/DUT0 writes; all readers finished, shared artifacts DUT1 app-ui.
+
+### 2026-11-15 UTC — Exact paged passphrase review, reset still open
+
+- Original review facade keeps short simple ASCII on the existing screen, and
+  pages long/hidden/non-ASCII values using actual native list widgets. Explicit
+  character identifiers prevent missing-glyph substitution and distinguish spaces,
+  NUL, controls and literal backslashes. Final fingerprints/actions remain original;
+  seed/model values and original NFC-display/NFKD-derivation behavior unchanged.
+- Host independently reconstructs all rendered page data and character ranges.
+  All1,112,064 valid Unicode scalar identities round-trip;80host tests pass.
+  DUT1 public native cases cover180ASCII characters, mixed Unicode/NUL and63emoji,
+  revisiting, original Back exit, inactivity wipe and stable warm rebuilds.
+  Native page pixels012512 visually checked at240px without clipped data rows.
+- One repeat012910 reset DUT1 to maskrom before the new stress loop; cause unknown
+  and no fault text captured on USB. Reloaded identical image575dc79e... at013153.
+  Fresh013325, hot013430 and after-regression013643 sequences each pass, including
+ 20stable-heap cycles. This does not close the reset or qualify long-term stability.
+- REVIEW-PAGES.md and receipt preserve failed and passing evidence. Short entry
+  regression013633 and memory013641 pass. No CAD/SD/REF/DUT0 changes. Universal
+  fonts are not claimed; ASCII identifiers expose every character instead. Next
+  add useful reset/fault diagnostics and investigate accumulated runtime; remaining
+  app/SD/entropy/optical work remains open.

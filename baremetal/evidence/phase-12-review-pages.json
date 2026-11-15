@@ -1,0 +1,116 @@
+{
+  "status": "functional-paged-review-gates-pass-runtime-reset-unresolved",
+  "device": "DUT1 app-ui",
+  "downloadSha256": "575dc79e59bb8c3d0f08af8956b7d6ad0739c5e0f16bf01a43d154bc5726fa43",
+  "currentLoad": "logs/phase-11/dut1-20261115T013153Z",
+  "passingRuns": [
+    {
+      "report": "logs/phase-12/review-pages-20261115T013325.724086Z/result.json",
+      "cycles": 20,
+      "warmNativeHeapBytes": 207875,
+      "displayedPages": [
+        {
+          "fixture": 0,
+          "mode": "revisit",
+          "characters": 180,
+          "pages": 2,
+          "exact": true
+        },
+        {
+          "fixture": 1,
+          "mode": "accept",
+          "characters": 18,
+          "pages": 1,
+          "exact": true
+        },
+        {
+          "fixture": 2,
+          "mode": "accept",
+          "characters": 63,
+          "pages": 8,
+          "exact": true
+        }
+      ]
+    },
+    {
+      "report": "logs/phase-12/review-pages-20261115T013430.778544Z/result.json",
+      "cycles": 20,
+      "warmNativeHeapBytes": 207875,
+      "displayedPages": [
+        {
+          "fixture": 0,
+          "mode": "revisit",
+          "characters": 180,
+          "pages": 2,
+          "exact": true
+        },
+        {
+          "fixture": 1,
+          "mode": "accept",
+          "characters": 18,
+          "pages": 1,
+          "exact": true
+        },
+        {
+          "fixture": 2,
+          "mode": "accept",
+          "characters": 63,
+          "pages": 8,
+          "exact": true
+        }
+      ]
+    },
+    {
+      "report": "logs/phase-12/review-pages-20261115T013643.364689Z/result.json",
+      "cycles": 20,
+      "warmNativeHeapBytes": 217196,
+      "displayedPages": [
+        {
+          "fixture": 0,
+          "mode": "revisit",
+          "characters": 180,
+          "pages": 2,
+          "exact": true
+        },
+        {
+          "fixture": 1,
+          "mode": "accept",
+          "characters": 18,
+          "pages": 1,
+          "exact": true
+        },
+        {
+          "fixture": 2,
+          "mode": "accept",
+          "characters": 63,
+          "pages": 8,
+          "exact": true
+        }
+      ]
+    }
+  ],
+  "hostTests": 80,
+  "hostScalarIdentities": 1112064,
+  "resetIncident": {
+    "scope": "Cause unknown; not considered resolved by subsequent passing runs",
+    "nativeLog": "logs/phase-11/usb-20261115T012910.074814Z",
+    "gateReport": "logs/phase-12/review-pages-20261115T012910.053434Z/result.json",
+    "observation": "USB device disconnected; maskrom101 confirmed. Occurred before stress loop, after first Renderer initialization in that run.",
+    "recovery": "Identical image RAM-loaded without user intervention. Fresh and hot repeats pass.",
+    "nextAction": "Add persistent/USB-accessible fault/reset diagnostics; investigate accumulated runtime before claiming stability"
+  },
+  "visualProof": {
+    "log": "logs/phase-11/usb-20261115T012512.569821Z",
+    "result": "Native240px ASCII and Unicode-identifier pages visually checked; full rows/ranges/Next visible"
+  },
+  "limits": [
+    "Display-only fallback; original View/model/fingerprint/action choices unchanged",
+    "Source NFC display scalar positions, original NFKD seed derivation",
+    "Universal fonts are not embedded; unsupported/hidden characters have exact identifiers",
+    "255-byte keyboard event bound persists",
+    "Optical QR, other app menus, full SD app boot, entropy and wallet/security qualification remain open"
+  ],
+  "passphraseRegression": "logs/phase-11/usb-20261115T013633.486002Z",
+  "memoryRegression": "logs/phase-11/usb-20261115T013641.933231Z",
+  "homeRestore": "logs/phase-11/usb-20261115T013951.829001Z"
+}

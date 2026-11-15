@@ -530,3 +530,24 @@ UIwork: fixedfont's nonASCIIglyphcoverage andlongpassphrase3linereview overflow.
 Do NOTclaim fullUnicodevisualreview orwholewalletqualification frombyteexacttests.
 Nextimprovevisiblepassphrasereview, thenremainingactualmenus/seedentry/fullSDapp;
 physicalprintedQRopticalqualificationstillopenwhileuseraway.
+
+2026-11-15 UTC / paged character review + unresolved reset
+DUT1image575dc79e... app-ui. Newreview_text.py puredisplay encoding and actual
+SeedReviewPassphraseScreen facade pages values that don'tfit reliable shortASCII.
+Legend+numberedranges+24col/4data lines; hidden/nonASCII usesexactUnicodeidentifiers,
+backslashdoubled. No model/normalization/actionindex changes. SourceNFCdisplayvalue
+positions, OriginalNFKDrootderivation; finaloriginalscreen showscount+realFP/actions.
+Backrevisitslastpage, outoflegendreturnsoriginalBack. Service/idlewipe remainsreal.
+Hostindependentescape decoder checksALLrenderedtext/ranges;1,112,064scalaridentities
+roundtrip;80hosttests pass. Native180ASCII,mixedUnicode/NUL/backslash/LF,63emoji,
+revisit,Backexit,wipe routespass. Pixel012512: fullASCII andUnicodeIDrowsreadable.
+IMPORTANT: expandedrepeat012910 disconnected/resettomaskrom101 beforestressloop,
+noUSBfaultmessage. CauseUNKNOWN, NOTresolvedbylaterpasses. RAMreloadedSAMEimage
+013153; fresh013325/hot013430/after-regression013643 eachpass20stableheapcycles
+andallpagedflows. Shortentry013633,memory013641 pass. Capturefailedrunandpassing
+receipts inphase-12-review-pages.json. REVIEW-PAGES.md recordsusage/limits.
+NextPRIORITY addpersistent/USB-accessiblefault/resetcause diagnostics, investigate
+accumulatedruntime BEFOREclaimingstability. Don'tsuppress/resetawaythisincident.
+DUT0untouchedheadless77589e73...,SPIloopbackstillinstalled. REFuntouched,noSD/CAD.
+SharedbuildDUT1app-ui575dc79e...,sameaslive; noinputuserphysicalactionneeded.
+Home restored013951; camera off, readers finished.

@@ -474,3 +474,21 @@ User supplied actual PCB path in sibling seedsigner-luckfox-pico repo. Read-only
   No SD/CAD/REF writes. DUT0 untouched; shared artifacts DUT1 app-ui.
 Final review preserves startup unavailable-provider error routing; native test
 passes. Home restored004955; preview stopped, all USB readers finished.
+
+### 2026-11-15 UTC — Optical diagnosis and verified camera snapshots
+
+- Rechecked the printed QR with12AE frames and4fixed-exposure frames. Full outline
+  is visible; native and desktop readers still fail.1036desktop sampling/binarizer
+  variants produce no valid decode. No payload printed or committed.
+- Displayed a known public QR on DUT1 and clean-loaded a headless native-ui image
+  on wired DUT0.20observer attempts fail; its captured LCD image is badly out of
+  focus. This cannot qualify optical scanning. No speculative decoder change made.
+- Found large DUT0 hex dumps exceed console observation windows because UART
+  mirroring limits throughput. Added owned-snapshot/80-row chunk capture with
+  matching SHA256 identities and a final whole-image check. Both actual boards
+  pass;69host tests include mixed-capture, corrupted/missing/conflicting row guards.
+- CAMERA-SNAPSHOTS.md and receipt record scope and evidence. Native preview stops,
+  previous exposure settings restore, owned snapshot is best-effort wiped/released.
+  DUT1 Home restored; DUT0 is now fresh/headless instead of the old qstr-heavy image.
+  Shared build artifacts restored to DUT1 profile, rebuilt image not RAM-loaded.
+  No CAD/SD/REF-storage writes; REF UART recovery/capture only. Optical remains open.

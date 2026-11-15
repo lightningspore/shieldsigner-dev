@@ -1532,3 +1532,7 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:app:views:startup:dut1:gate"]
 description = "Verify actual original splash/development warning reach native Home"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/view_startup_gate.py --serial rv1103-dut1 --timeout 20"
+
+[tasks."baremetal:camera:snapshot"]
+description = "Capture a checksummed native luma snapshot in bounded row chunks; explicit USB serial required"
+run = "uv run --python 3.13 --with pyserial==3.5 --with pillow==12.2.0 python baremetal/tools/capture_luma.py"

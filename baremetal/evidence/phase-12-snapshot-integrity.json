@@ -1,0 +1,38 @@
+{
+  "status": "coherent-native-snapshot-transfer-verified-optical-qr-still-open",
+  "hostTests": 69,
+  "snapshotGates": {
+    "dut1": "logs/phase-12/capture-20261115T005936.322399Z/result.json",
+    "dut0": "logs/phase-12/capture-20261115T005831.597330Z/result.json"
+  },
+  "dut0Cleanup": "logs/phase-11/usb-20261115T010000.889063Z",
+  "opticalDiagnostics": {
+    "dut1AutoExposureFrames": 12,
+    "dut1FixedExposureFrames": 4,
+    "nativeValidDecodes": 0,
+    "desktopSamplingVariants": 1036,
+    "desktopValidDecodes": 0,
+    "result": "Native and desktop readers find printed QR structure but no valid decode; no payload logged. Known LCD public QR observer image is badly out of focus, so optical qualification remains open.",
+    "printedCapture": "logs/phase-11/usb-20261115T005047.298050Z",
+    "manualCapture": "logs/phase-11/usb-20261115T005314.026839Z",
+    "knownObserverAttempts": "logs/phase-11/usb-20261115T005504.845986Z"
+  },
+  "deviceState": {
+    "dut1RuntimeImage": "b103b390705fc9ad5feb30b2505c552347eb14e105f163cc99dbf14467e0c0df",
+    "dut1HomeRestore": "logs/phase-11/usb-20261115T005720.550845Z",
+    "dut0RuntimeImage": "77589e73daa99114d9b1369ac8f5adb85078f3eda4d390083bc63c132ff96072",
+    "dut0Load": "logs/phase-12/20261115T005424Z",
+    "dut0Profile": "fresh headless native-ui; wired SPI loopback pins preserved",
+    "sharedBuildProfile": "DUT1 app-ui",
+    "sharedBuildSha256": "fdd3eaa72a66dc63b7d63d67f2377328b583d5118257fbc7c6fc1a2c5563517c",
+    "sharedBuildLoaded": false
+  },
+  "changes": [
+    "Owned 307200-byte luma snapshot copied before stopping native preview",
+    "80-row console chunks with matching SHA256 headers and final full-frame verification",
+    "Reject mixing captures, conflicting rows, corrupt data, incomplete images, and hashed/legacy mixtures",
+    "Stop actual camera and restore settings; best-effort owned snapshot wipe before release",
+    "No QR algorithm, default camera settings, SD, CAD or REF storage changes. REF UART reset/capture tools only.",
+    "Camera images and raw exports remain ignored local evidence; no decoded unknown payload committed."
+  ]
+}

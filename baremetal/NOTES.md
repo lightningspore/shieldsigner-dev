@@ -490,3 +490,23 @@ optical camera decode and remainingoriginalmenus/passphraseentry; thenfullSDapp.
 NoCAD/SD/REFwrites; DUT0stillold/qstrheavy, don'tloadsharedDUT1imageonwiredDUT0.
 Final review preserves startup unavailable-provider error routing; native test
 passes. Home restored004955; preview stopped, all USB readers finished.
+
+2026-11-15 UTC / optical follow-up and snapshot transport
+Printed DUT1QR stillfails12AE/4manualframes; wholecodevisible anddesktop reports
+checksum errors.1036boundedstandard sampling/binarizer variants fail; no payload
+printed/committed. KnownpublicQRonLCDalsofails20DUT0attempts; observerimage is
+badlyoutoffocus. Do notclaimcameraopticalsuccess orchangeQRalgorithms without
+supporting evidence. Images remainignoredlocal artifacts under optical-current.
+Newcapture_luma.py task copiesoneownedluma image and exports80-row scripts with
+sameSHA256; hostrejectsmixedcaptures/corrupt/missing/conflicting rows andchecks
+fullimage beforePNGsave. BothDUTs pass,69hosttests pass. CAMERA-SNAPSHOTS.md and
+phase-12-snapshot-integrity receipt record usage/proof. Ownedcopy is best-effort
+wiped/released andcamera/settingsrestore verified; no whole-memory erase claim.
+DUT0 NOW clean headless native-ui image77589e73..., RAMload005424; oldqstr-heavy
+state gone. Camera stopped, AEtarget0/seed122 restored010000. Do NOTloadapp-ui
+onDUT0 becauseSPIloopback jumper remains. DUT1 stillrunningb103b390... app-ui,
+Home005720; camera stopped afternewcaptures withsettingsrestored. Sharedartifacts
+are rebuilt DUT1app-ui fdd3eaa7... andNOTloaded (no firmware codechanges thisstage).
+REFuntouchedexceptauthorizedUARTreset/capturetool. NoCAD/SDwrites. Nextcontinue
+remainingactualappmenus/passphraseentry whilephysicalopticalsetup isunattended;
+return toopticalqualificationwhenbetterfocus/aim evidence isavailable.

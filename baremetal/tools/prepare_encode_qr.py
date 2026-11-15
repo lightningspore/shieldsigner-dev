@@ -22,6 +22,13 @@ for node in tree.body:
         f=fields(node);args=','.join(name+('='+ast.unparse(value) if value is not None else '') for name,value in f.items())
         init='def __init__(self'+(','+args if args else '')+'):\n'+''.join('    self.'+name+'='+name+'\n' for name in f)+'    self.__post_init__()\n'
         node.decorator_list=[];node.body=[x for x in node.body if not isinstance(x,ast.AnnAssign)]+ast.parse(init).body
+    if node.name=='StaticXpubQrEncoder':
+        # MicroPython resolves a diamond depth-first instead of CPython C3.
+        # Materialize the exact BaseStatic methods otherwise shadowed by the
+        # BaseXpub -> BaseQr abstract methods. No encoder algorithm changes.
+        for method in originals['BaseStaticQrEncoder'].body:
+            if isinstance(method,ast.FunctionDef) and method.name in ('cur_part','seq_len','is_complete'):
+                node.body.append(copy.deepcopy(method))
     if node.name=='CompactSeedQrEncoder':
         class Strings(ast.NodeTransformer):
             def visit_Call(self,n):
@@ -35,5 +42,5 @@ for node in tree.body:
 text='# Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner\n# Generated original encoders; optional providers fail on use.\nfrom seedsigner_port.decode_platform import dependency as _dependency,FeatureUnavailable\n'+ast.unparse(ast.fix_missing_locations(ast.Module(body=nodes,type_ignores=[])))+'\n'
 text+='_FACTORIES={'+','.join(repr(n)+':_make_'+n for n in originals)+'}\n_CACHE={}\ndef _resolve(name):\n    if name not in _CACHE:\n        if name not in _FACTORIES:raise AttributeError(name)\n        _CACHE[name]=_FACTORIES[name]()\n    return _CACHE[name]\ndef __getattr__(name):return _resolve(name)\n'
 out=root/'app/seedsigner_port/encode_qr.py';out.write_text(text)
-(root/'app/encode-qr-provenance.json').write_text(json.dumps({'application':lock,'sourceSha256':hashlib.sha256(raw).hexdigest(),'outputSha256':hashlib.sha256(text.encode()).hexdigest(),'classes':list(originals),'reviewedChanges':['Dataclass constructors are explicit; optional imports resolve lazily.','Compact encoder uses CPython-equivalent zfill helper.']},indent=2)+'\n')
+(root/'app/encode-qr-provenance.json').write_text(json.dumps({'application':lock,'sourceSha256':hashlib.sha256(raw).hexdigest(),'outputSha256':hashlib.sha256(text.encode()).hexdigest(),'classes':list(originals),'reviewedChanges':['Dataclass constructors are explicit; optional imports resolve lazily.','Compact encoder uses CPython-equivalent zfill helper.','StaticXpub materializes exact BaseStatic cur_part/seq_len/is_complete to preserve CPython C3 resolution on MicroPython diamonds.']},indent=2)+'\n')
 print('Prepared',len(originals),'original QR encoder classes')

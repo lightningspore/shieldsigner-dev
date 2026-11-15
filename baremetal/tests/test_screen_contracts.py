@@ -78,7 +78,7 @@ class ContractsTest(unittest.TestCase):
         classes={n.name:n for file in ('screen.py','seed_screens.py') for n in ast.parse((app/file).read_text()).body if isinstance(n,ast.ClassDef)}
         reviewed=set().union(*(set(v) for v in APP_DEFAULTS.values()))
         # Rebuild actual field defaults including warning factory buttons.
-        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen','SeedTranscribeSeedQRFormatScreen','SeedTranscribeSeedQRWholeQRScreen','SeedTranscribeSeedQRZoomedInScreen','SeedTranscribeSeedQRConfirmQRPromptScreen'):
+        for name in ('BaseTopNavScreen','ButtonListScreen','LargeIconStatusScreen','WarningScreen','DireWarningScreen','ErrorScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen','SeedTranscribeSeedQRFormatScreen','SeedTranscribeSeedQRWholeQRScreen','SeedTranscribeSeedQRZoomedInScreen','SeedTranscribeSeedQRConfirmQRPromptScreen','SeedExportXpubDetailsScreen'):
             node=classes[name]
             node.body=[n for n in node.body if isinstance(n,ast.AnnAssign) and n.target.id in reviewed]
             for n in node.body:n.annotation=ast.Constant('reviewed field')
@@ -87,6 +87,7 @@ class ContractsTest(unittest.TestCase):
             exec(compile(ast.fix_missing_locations(ast.Module(body=[node],type_ignores=[])),'<original app fields>','exec'),scope)
         for name in APP_DEFAULTS:
             cases=[{}, {'button_data':['Done','Cancel'],'text':'Public test','selected_button':1}]
+            if name=='SeedExportXpubDetailsScreen':cases=[dict(c,fingerprint='73c5da0a',derivation_path="m/84'/0'/0'",xpub='zpub PUBLIC') for c in cases]
             if name in port.TRANSCRIPTION:cases=[dict(c,qr_data='0000',num_modules=21,is_compactqr=True,is_encryptedqr=False) for c in cases]
             if name=='SeedWordsScreen':cases=[dict(c,words=['abandon','ability','able','about'],page_index=2,num_pages=3) for c in cases]
             if name=='SeedMnemonicEntryScreen':cases=[dict(c,wordlist=['abandon','ability','able','about'],initial_letters=['a','b']) for c in cases]
@@ -114,3 +115,10 @@ class ContractsTest(unittest.TestCase):
         self.assertEqual(port.result(1000,0,'SeedMnemonicEntryScreen'),1000)
         for event in ((2,1,'abandon'),(2,0,''),(2,0,'ab\0c'),(2,0,3),(3,0,'abandon')):
             with self.assertRaises(ValueError):port.result(event,0,'SeedMnemonicEntryScreen')
+
+    def test_xpub_review_rejects_missing_or_hidden_fields(self):
+        valid={'fingerprint':'73c5da0a','derivation_path':"m/84'/0'/0'",'xpub':'zpub PUBLIC'}
+        for key in valid:
+            for bad in ('',None,'hidden\0suffix'):
+                values=dict(valid);values[key]=bad
+                with self.assertRaises(ValueError):port.configuration('SeedExportXpubDetailsScreen',values)

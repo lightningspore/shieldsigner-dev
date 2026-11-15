@@ -10,8 +10,10 @@
   },
   "reviewedFields": [
     "button_data",
+    "button_label",
     "button_selected_color",
     "checked_buttons",
+    "derivation_path",
     "fingerprint",
     "fingerprint_with",
     "fingerprint_without",
@@ -41,7 +43,8 @@
     "top_nav_icon_color",
     "top_nav_icon_name",
     "wordlist",
-    "words"
+    "words",
+    "xpub"
   ],
-  "outputSha256": "453c22088244c58817dfe8d90ec4b4eeda1967dc93cb3c667957425ab3072e7b"
+  "outputSha256": "b002cd661888f74be5234f8bc6102e5004c929163fc47468e1fb84474407d2c2"
 }

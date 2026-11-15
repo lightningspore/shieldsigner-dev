@@ -1628,3 +1628,15 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:app:autostart:dut1:ram"]
 description = "Load DUT1 autostart image into RAM and leave foreground app running; no console gate"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_only_gate.py --leave-app-running"
+
+[tasks."baremetal:app:xpub:prepare"]
+description = "Prepare original wallet helpers and independent public xpub/address vectors"
+run = ["uv run --python 3.13 python baremetal/tools/prepare_embit_utils.py", "uv run --python 3.13 python baremetal/tools/prepare_encode_qr.py", "uv run --python 3.13 python baremetal/tools/prepare_app_screens.py", "uv run --python 3.13 --with embit==0.8.0 python baremetal/tools/prepare_xpub_gate.py"]
+
+[tasks."baremetal:app:xpub:core:dut1:gate"]
+description = "Compare original static/Specter xpubs and addresses against independent CPython on native crypto"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/xpub_core_gate.py --serial rv1103-dut1 --timeout 180"
+
+[tasks."baremetal:app:xpub:dut1:gate"]
+description = "Run original export Views through native details/QR pixels, Back, brightness and source routing"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/xpub_flow_gate.py --serial rv1103-dut1 --timeout 100"

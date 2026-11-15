@@ -1,0 +1,25 @@
+{
+  "application": {
+    "url": "https://github.com/3rdIteration/seedsigner.git",
+    "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
+  },
+  "sourceSha256": "d438f307017f9e6573a958282d7be45a4a8a5937bfe373256b2e1e5e8b45fe90",
+  "outputSha256": "e0b236a3e649f802e72d9db1426f4e3b00a7c01f0034c5310d22a61ce6c8d158",
+  "functions": [
+    "get_standard_derivation_path",
+    "is_standard_derivation",
+    "get_expanded_search_derivation_paths",
+    "normalize_descriptor_str",
+    "get_single_sig_address",
+    "get_multisig_address",
+    "get_multisig_policy",
+    "get_embit_network_name",
+    "parse_derivation_path",
+    "sign_message",
+    "get_xpub"
+  ],
+  "changes": [
+    "Remove annotations, lazy real imports, original f-string conversions through common source port."
+  ],
+  "scope": "Function presence is not qualification; descriptor/message-signing providers remain separately gated."
+}

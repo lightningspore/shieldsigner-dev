@@ -97,3 +97,8 @@ Follow-on: [APP-BOOT.md](APP-BOOT.md) records the optional `app-autostart`
 DUT1 RAM profile and frozen foreground entry. Automatic splash/warning launch
 and USB interruption are tested separately from native key acknowledgment/Home.
 This does not update the SD card or establish cold power-to-app timing.
+
+Follow-on: [XPUB-EXPORT.md](XPUB-EXPORT.md) records original xpub helper/encoder
+checks and static export through native details/QR screens. Singlesig currently
+reaches the original address-verification prompt; its camera/search flow remains
+a separate unfinished gate. Animated/UR display remains explicitly unavailable.

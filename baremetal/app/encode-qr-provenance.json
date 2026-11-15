@@ -4,7 +4,7 @@
     "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
   },
   "sourceSha256": "a330851c58e492f09344c5851be41b03c6447e9f920c9647bd97c23ea93ed77f",
-  "outputSha256": "bd88ae65d5917a03d444283935cb05871b5ff27bcd87ae6701925c103293749f",
+  "outputSha256": "343b819daff38ffba27831d8199760f213317f46024e0fee51b7c40a90103cdb",
   "classes": [
     "BaseQrEncoder",
     "BaseStaticQrEncoder",
@@ -24,6 +24,7 @@
   ],
   "reviewedChanges": [
     "Dataclass constructors are explicit; optional imports resolve lazily.",
-    "Compact encoder uses CPython-equivalent zfill helper."
+    "Compact encoder uses CPython-equivalent zfill helper.",
+    "StaticXpub materializes exact BaseStatic cur_part/seq_len/is_complete to preserve CPython C3 resolution on MicroPython diamonds."
   ]
 }

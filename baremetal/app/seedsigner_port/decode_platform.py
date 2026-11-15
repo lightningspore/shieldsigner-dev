@@ -8,12 +8,13 @@ class FeatureUnavailable(RuntimeError):
     pass
 
 def dependency(module,attribute=None):
-    special={('binascii','a2b_base64'):('seedsigner_port.binary_codecs','a2b_base64'),
+    special={('seedsigner.helpers','embit_utils'):('seedsigner_port.embit_utils',None),
+             ('binascii','a2b_base64'):('seedsigner_port.binary_codecs','a2b_base64'),
              ('seedsigner.helpers','kef'):('seedsigner_port.kef',None),
              ('seedsigner.helpers','hardening'):('seedsigner_port.app_services',None),
              ('seedsigner.views.screensaver','ScreensaverScreen'):('seedsigner_port.app_services','ScreensaverScreen')}
     if (module,attribute) in special:module,attribute=special[(module,attribute)]
-    aliases={'seedsigner.models.bip38':'seedsigner_port.bip38','seedsigner.models.wif':'seedsigner_port.wif','seedsigner.models.encryption':'seedsigner_port.encryption','seedsigner.helpers.kef':'seedsigner_port.kef','seedsigner.helpers.base43':'seedsigner_port.base43',
+    aliases={'seedsigner.helpers.embit_utils':'seedsigner_port.embit_utils','seedsigner.models.bip38':'seedsigner_port.bip38','seedsigner.models.wif':'seedsigner_port.wif','seedsigner.models.encryption':'seedsigner_port.encryption','seedsigner.helpers.kef':'seedsigner_port.kef','seedsigner.helpers.base43':'seedsigner_port.base43',
              'seedsigner.models.encode_qr':'seedsigner_port.encode_qr','seedsigner.helpers.qr':'seedsigner_port.qr_helper',
              'seedsigner.controller':'seedsigner_port.controller',
              'seedsigner.views':'seedsigner_port.view_core',

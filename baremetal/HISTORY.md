@@ -744,3 +744,46 @@ passes. Home restored004955; preview stopped, all USB readers finished.
   entry/recovery already tested on exact image. App awaits warning acknowledgment.
   SD app image/persistence, physical/optical qualification, signing/entropy and
   cold-power timing remain open; earlier unexplained reset remains OPEN. No push.
+
+### 2026-11-15 UTC — Original xpub derivation and static native export
+
+- Froze original embit helper function bodies with pinned source/hash guards and
+  lazy real dependencies; mapped direct/from-helpers aliases. Function presence
+  is not descriptor/message-signing qualification. Source generators/defaults
+  and attribution retained, no native C++ screen-library changes.
+- First core043303 exposed MicroPython's depth-first diamond inheritance: static
+  xpub cur_part reached BaseQr abstract instead of BaseStatic. Materialized exact
+  original BaseStatic cur_part/seq_len/is_complete on StaticXpub, retaining CPython
+  C3 behavior without changing encoder algorithms. Host body/provenance checks
+  account for the shared annotation removal. Updated host contract oracle with
+  actual original xpub details class/valid fields;101host tests pass.
+- Native core043738 on final e3fa1be12669... app-autostart image/RAMload043708 passes
+ 42public cases:3networks, account0/7,7script/signature combinations, exact versions,
+  xpub payloads and48receive/change addresses including Taproot.126Specter density
+  cases verify fragments, rollover and restart. Public mnemonic/PUBLIC passphrase
+  only,5584ms overall workload; no signing/security or sensor performance claim.
+- Reviewed native xpub details facade preserves source fingerprint/path/prefix,
+  labels and Export button. Static QR facade sends original payload as hex to
+  actual native QR display, two-module quiet zone,512-byte reviewed bound; source
+  brightness events/settings and any-non-brightness-key exit retained. Animated
+  frame transport and cancel_on_back key identity fail explicitly until ported.
+  LoadingScreenThread call boundary draws native cooperative spinner; no OS or
+  background animation while crypto blocks. Root replacement releases native timer.
+- Flow043745 passes original SeedOptions→export/privacy→details→QR routes on main/
+  test singlesig/multisig. Actual framebuffer QR decodes exact original payload;
+  native Down changes255→224 and persists at exit. Singlesig reaches original
+  address-verification prompt; multisig reaches Home. Details Back returns via
+  original history to options/Home. No selected results injected.20loading/details/
+  QR/Home cycles return to stable152963native bytes. Source address scan/search
+  is unfinished; native format menus remain original and unported formats error.
+- Public actual QR and details043817 images visually checked: full fingerprint/
+  path, source-abbreviated xpub prefix and Export fit240px. Original11confirmation
+  regression043818 and real SC3336/LCD/ZXing interruption043851 pass18frames/10s,
+  stopped sensor and warm native heap baseline. No real camera pixels exported.
+  Final043902 verifies empty/defaults/camera off/probes off/no new reset and restores
+  actual adapters/Home. Matching ELF/image/runtime hashes in checkpoint043839;
+  XPUB-EXPORT.md and phase-12-xpub-export receipt record scope and failed attempts.
+- Final same-image RAM handoff is recorded in receipt separately, without an
+  interrupting console gate. No SD/CAD/REF/DUT0 writes or push. Physical/optical
+  qualification, address scan/search, animated/UR export, full signing, qualified
+  entropy and SD app startup remain open. Earlier unexplained reset stays OPEN.

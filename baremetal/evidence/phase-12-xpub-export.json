@@ -1,0 +1,152 @@
+{
+  "status": "original-xpub-derivation-static-export-and-native-screen-gates-pass",
+  "device": "DUT1 app-autostart, RAM only",
+  "downloadSha256": "e3fa1be126698693ad91cd2826900678df71411e4044c4f8962f7ee9ca599b07",
+  "checkpoint": "logs/phase-12/xpub-export-20261115T043839Z",
+  "load": {
+    "path": "logs/phase-11/dut1-20261115T043708Z",
+    "scope": "DUT1 RAM-only db, no storage commands or REF/DUT0 UART writes",
+    "location": "101",
+    "serial": "rv1103-dut1",
+    "passed": true,
+    "enumeration": "DevNo=1\tVid=0x2207,Pid=0x110c,LocationID=101\tMaskrom\nDevNo=2\tVid=0x2207,Pid=0x110c,LocationID=201\tMaskrom\n",
+    "download": {
+      "exitCode": 0,
+      "stdout": "Selected RAM download LocationID=101\nDownloading bootloader...\n\u001b[1A\u001b[2KDownloading bootloader succeeded.\n",
+      "stderr": ""
+    },
+    "port": "/dev/cu.usbmodemrv1103_dut11"
+  },
+  "automaticEntry": {
+    "path": "logs/phase-11/usb-20261115T043738.330521Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "/Users/samkorn/Documents/repos/shieldsigner-dev/baremetal/micropython/app_autostart_gate.py",
+    "scriptSha256": "13eb2fa7034e7d5ad408f5ab41c516592b9360e073016652030bada56f33ae99",
+    "completed": true,
+    "traceback": false
+  },
+  "core": {
+    "path": "logs/phase-11/usb-20261115T043738.905449Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/xpub_core_gate.py",
+    "scriptSha256": "5197b46a9ab9908c8bea8f768d3629d3868b2656d88aa5c26feda53b3e912e77",
+    "completed": true,
+    "traceback": false
+  },
+  "coreCases": 42,
+  "coreAddresses": 48,
+  "specterDensityCases": 126,
+  "flow": {
+    "path": "logs/phase-11/usb-20261115T043745.433010Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/xpub_flow_gate.py",
+    "scriptSha256": "c7d9b2576ec83b48b692cc9ca2952190922751f2e366474114c989d690422d1d",
+    "completed": true,
+    "traceback": false
+  },
+  "flowCases": 5,
+  "warmNativeCycles": 20,
+  "warmNativeHeapBytes": 152963,
+  "detailsSnapshot": {
+    "path": "logs/phase-11/usb-20261115T043817.686445Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "/tmp/ss_xpub_details_snapshot.py",
+    "scriptSha256": "3b7549be9a6fc9b7eccdf840203f37bdbae8e999acdd0b4317c68f5e9064467e",
+    "completed": true,
+    "traceback": false
+  },
+  "visualChecks": [
+    "Actual native public xpub QR framebuffer decoded exactly by ZXing and visually inspected.",
+    "Actual native xpub details framebuffer inspected: complete fingerprint/path, original abbreviated xpub prefix and Export button fit240px."
+  ],
+  "hostTests": 101,
+  "regressions": {
+    "confirmation": {
+      "path": "logs/phase-11/usb-20261115T043818.459839Z",
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dut11",
+      "usbSerial": "rv1103-dut1",
+      "location": "1-1",
+      "script": "baremetal/micropython/seedqr_confirm_gate.py",
+      "scriptSha256": "99a1ff0c71dc672c138c04ac5b2fe000f6edc5992b5da63ddcda755fde1f1d12",
+      "completed": true,
+      "traceback": false
+    },
+    "realCameraInterrupt": {
+      "path": "logs/phase-12/scan-interrupt-20261115T043851.508505Z",
+      "serial": "rv1103-dut1",
+      "scope": "Original scan loop, real local camera and ZXing; actual Mini PCB LCD; scripted no-back input; no optical QR qualification",
+      "passed": true,
+      "frames": 18
+    },
+    "finalCleanState": {
+      "path": "logs/phase-11/usb-20261115T043902.881604Z",
+      "transport": "USB CDC",
+      "port": "/dev/cu.usbmodemrv1103_dut11",
+      "usbSerial": "rv1103-dut1",
+      "location": "1-1",
+      "script": "/tmp/ss_confirm_final_state.py",
+      "scriptSha256": "2cff0d53aa862e424d8123bbb86224605dde1b563975bfb1bac1e61bef3beced",
+      "completed": true,
+      "traceback": false
+    }
+  },
+  "runtimeInputsMatchBuildManifest": [
+    "app/seedsigner_port/embit_utils.py",
+    "app/seedsigner_port/encode_qr.py",
+    "app/seedsigner_port/app_screens.py",
+    "app/seedsigner_port/qr_display.py",
+    "app/seedsigner_port/screen_contracts.py"
+  ],
+  "correctedAttempts": [
+    {
+      "path": "logs/phase-11/usb-20261115T043303.857437Z",
+      "issue": "MicroPython depth-first multiple inheritance reached BaseQrEncoder abstract cur_part before BaseStatic. Materialize exactly three original BaseStatic methods on StaticXpub to preserve original CPython C3 behavior."
+    },
+    {
+      "path": "/tmp/ss_xpub_check1.txt",
+      "issue": "Host contract oracle needed the newly reviewed original xpub details dataclass and valid fingerprint/path/xpub fixtures."
+    },
+    {
+      "path": "/tmp/ss_xpub_host_final.txt",
+      "issue": "New source-body check initially compared a retained source return annotation against the intentionally annotation-free port; normalize that shared transform before equality."
+    }
+  ],
+  "limits": [
+    "Static QR export and original next-screen routing only: singlesig reaches verification prompt; address scanning/search remains a later gate.",
+    "Specter bytes/fragment sequencing verified; animated frame transport and UR providers remain unavailable.",
+    "Source menus/crypto paths tested with known public mnemonic and PUBLIC passphrase, not production security or signing qualification.",
+    "Native key events and framebuffer QR decoding do not qualify physical switch presses or optical QR focus/reliability.",
+    "Loading facade paints actual native spinner cooperatively; no background thread runs during crypto.",
+    "No SD/CAD/REF/DUT0 writes or push; earlier unexplained reset remains open."
+  ],
+  "finalForegroundHandoff": {
+    "path": "logs/phase-11/dut1-20261115T043943Z",
+    "scope": "DUT1 RAM-only db, no storage commands or REF/DUT0 UART writes",
+    "location": "101",
+    "serial": "rv1103-dut1",
+    "passed": true,
+    "enumeration": "DevNo=1\tVid=0x2207,Pid=0x110c,LocationID=101\tMaskrom\nDevNo=2\tVid=0x2207,Pid=0x110c,LocationID=201\tMaskrom\n",
+    "download": {
+      "exitCode": 0,
+      "stdout": "Selected RAM download LocationID=101\nDownloading bootloader...\n\u001b[1A\u001b[2KDownloading bootloader succeeded.\n",
+      "stderr": ""
+    },
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "appNotInterrupted": true,
+    "consoleGate": "skipped; download/enumeration only",
+    "note": "Selected same-image RAM download and USB enumeration only, no interrupting console gate; prior exact image automatic entry verified separately."
+  }
+}

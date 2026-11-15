@@ -72,7 +72,7 @@ def result(event,button_count,screen_name=None):
 _basic_configuration=configuration
 STATUS={'LargeIconStatusScreen':'custom','WarningScreen':'warning','DireWarningScreen':'dire_warning','ErrorScreen':'error'}
 TRANSCRIPTION={'SeedTranscribeSeedQRFormatScreen','SeedTranscribeSeedQRWholeQRScreen','SeedTranscribeSeedQRZoomedInScreen','SeedTranscribeSeedQRConfirmQRPromptScreen'}
-APP_SCREENS=TRANSCRIPTION|set(STATUS)|{'SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
+APP_SCREENS=TRANSCRIPTION|set(STATUS)|{'SeedExportXpubDetailsScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
 def configuration(screen_class,passed,translate=None):
     name=screen_class if isinstance(screen_class,str) else screen_class.__name__
     if name not in APP_SCREENS:return _basic_configuration(screen_class,passed,translate)
@@ -88,6 +88,14 @@ def configuration(screen_class,passed,translate=None):
                 if source not in a:cfg.pop(target,None)
         from seedsigner_port.transcription import configure
         return configure(name,a,cfg)
+    if name=='SeedExportXpubDetailsScreen':
+        cfg['top_nav']['title']=tr('Xpub Details')
+        cfg['button_list']=[tr(a['button_label'])]
+        for field in ('fingerprint','derivation_path','xpub'):
+            if not isinstance(a.get(field),str) or not a[field] or '\0' in a[field]:raise ValueError('Missing or invalid xpub review '+field)
+            cfg[field]=a[field]
+        cfg.update(fingerprint_label=tr('Fingerprint'),derivation_label=tr('Derivation'),xpub_label=tr('Xpub'),is_bottom_list=True)
+        return 'seed_export_xpub_details_screen',cfg
     if name in STATUS:
         builder='large_icon_status_screen';cfg['status_type']=STATUS[name]
         if not cfg['button_list']:cfg['button_list']=[tr('OK')]

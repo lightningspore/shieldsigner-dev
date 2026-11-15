@@ -87,3 +87,17 @@ def __getattr__(name):
     if name not in BASIC and name not in APP_SCREENS:raise FeatureUnavailable('Native screen not reviewed: '+name)
     if name not in _CACHE:_CACHE[name]=type(name,(NativeScreen,),{})
     return _CACHE[name]
+
+from seedsigner_port.qr_display import QRDisplayScreen
+class LoadingScreenThread:
+    """Original call boundary, rendered cooperatively; no background thread."""
+    def __init__(self,text=''):self.text=text;self.active=False
+    def start(self):
+        from seedsigner_port.renderer import Renderer
+        if self.active:raise RuntimeError('Loading screen already active')
+        Renderer.get_instance().session.show('loading_spinner_screen',{'text':self.text})
+        self.active=True
+    def stop(self):
+        if self.active:
+            from seedsigner_port.renderer import Renderer
+            Renderer.get_instance().display_blank_screen();self.active=False

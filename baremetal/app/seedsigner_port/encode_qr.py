@@ -157,6 +157,17 @@ def _make_StaticXpubQrEncoder():
         def next_part(self):
             self.prep_xpub()
             return self.xpubstring
+
+        def seq_len(self):
+            return 1
+
+        def cur_part(self):
+            """ static QRs only have a single part, which `next_part` always returns """
+            return self.next_part()
+
+        @property
+        def is_complete(self):
+            return True
     return StaticXpubQrEncoder
 
 def _make_BaseSimpleAnimatedQREncoder():

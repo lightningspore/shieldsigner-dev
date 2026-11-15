@@ -16,6 +16,7 @@ extern void bm_delay_us(uint32_t);
 extern void bm_runtime_fault(void);
 extern void bm_repl_ready(void);
 extern int bm_console_poll(void);
+extern int bm_app_autostart(void);
 extern void bm_set_interrupt_char(int);
 void mp_hal_set_interrupt_char(int c) { bm_set_interrupt_char(c); }
 void bm_micropython_poll(void) {
@@ -26,6 +27,13 @@ void bm_micropython_main(void) {
     gc_init((void *)0x01000000,(void *)0x01800000);
     mp_init();
     bm_repl_ready();
+    #if BM_NATIVE_UI
+    if (bm_app_autostart()) {
+        static const char starting[]="\r\n@@APP_AUTOSTART\r\n";
+        bm_uart_write(starting,sizeof(starting)-1);
+        pyexec_frozen_module("seedsigner_boot.py",true);
+    }
+    #endif
     static const char ready[]="\r\n@@REPL_READY reset=Ctrl-]\r\n";
     bm_uart_write(ready,sizeof(ready)-1);
     for (;;) { pyexec_friendly_repl(); }

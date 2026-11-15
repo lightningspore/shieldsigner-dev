@@ -1616,3 +1616,15 @@ run = "uv run --python 3.13 --with qrcode==7.3.1 python baremetal/tools/prepare_
 [tasks."baremetal:app:scan:overlay:dut1:gate"]
 description = "Check owned preview pixels, original native progress widgets and multipart scan cleanup"
 run = ["uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/scan_overlay_gate.py --serial rv1103-dut1 --timeout 45", "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/scan_overlay_flow_gate.py --serial rv1103-dut1 --timeout 45"]
+
+[tasks."baremetal:app:autostart:dut1:build"]
+description = "Build optional DUT1 boot-to-app image with USB interrupt recovery"
+run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features app-autostart --usb-serial rv1103-dut1"
+
+[tasks."baremetal:app:boot:dut1:gate"]
+description = "Check frozen foreground boot lifecycle through original splash, warning acknowledgment and Home"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/app_boot_flow_gate.py --serial rv1103-dut1 --timeout 35"
+
+[tasks."baremetal:app:autostart:dut1:ram"]
+description = "Load DUT1 autostart image into RAM and leave foreground app running; no console gate"
+run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_only_gate.py --leave-app-running"

@@ -33,6 +33,8 @@ finally:
 if args.lcd:
     home=b"from seedsigner_port.native_ui import ScreenSession\nhome=ScreenSession()\nhome.show('main_menu_screen',{'top_nav':{'title':'Home'},'button_list':['Scan','Seeds','Tools','Settings']})\n"
     script=script.replace(b'preview=CooperativePreview(lambda frame:None)\n',home+b'preview=CooperativePreview()\n')
+    warm=b"warm=CooperativePreview()\nwarm.configure(DecodeQR(),None)\nwarm.begin()\nwarm.close()\n"+home+b"del warm\n"
+    script=script.replace(b'baseline=camera.settings()',warm+b'baseline=camera.settings()')
     script=script.replace(b"    print('@@SCAN_INTERRUPT_CLEAN'",b"    home.show('main_menu_screen',{'top_nav':{'title':'Home'},'button_list':['Scan','Seeds','Tools','Settings']})\n    print('@@SCAN_INTERRUPT_CLEAN'")
 report={'serial':args.serial,'scope':'Original scan loop, real local camera and ZXing; '+('actual Mini PCB LCD' if args.lcd else 'headless sink')+'; scripted no-back input; no optical QR qualification','passed':False}
 out=b''

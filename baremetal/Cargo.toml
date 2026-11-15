@@ -34,6 +34,8 @@ native-unicode = ["usb-console", "dep:unicode-normalization"]
 native-hashes = ["usb-console", "dep:shieldsigner-hash-core"]
 mini-pcb-ui = ["bench-ui"]
 app-ui = ["native-ui", "mini-pcb-ui"]
+# Optional DUT1 app entry; ordinary app-ui remains a development REPL image.
+app-autostart = ["app-ui"]
 
 [dependencies]
 shieldsigner-rkaiq = { path = "../firmware/rkaiq-rs", default-features = false, optional = true }

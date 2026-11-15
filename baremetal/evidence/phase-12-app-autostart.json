@@ -1,0 +1,109 @@
+{
+  "status": "optional-frozen-DUT1-app-startup-and-USB-recovery-hardware-gates-pass",
+  "device": "DUT1 RV1103 Mini A, RAM-only app-autostart profile",
+  "downloadSha256": "18e5b71db142d0a898054387bbfceddcefedb6bfd3090a6e67a4a12187e0af73",
+  "checkpoint": "logs/phase-12/app-autostart-20261115T042811Z",
+  "load": {
+    "path": "logs/phase-11/dut1-20261115T042717Z",
+    "scope": "DUT1 RAM-only db, no storage commands or REF/DUT0 UART writes",
+    "location": "101",
+    "serial": "rv1103-dut1",
+    "passed": true,
+    "enumeration": "DevNo=1\tVid=0x2207,Pid=0x110c,LocationID=101\tMaskrom\nDevNo=2\tVid=0x2207,Pid=0x110c,LocationID=201\tMaskrom\n",
+    "download": {
+      "exitCode": 0,
+      "stdout": "Selected RAM download LocationID=101\nDownloading bootloader...\n\u001b[1A\u001b[2KDownloading bootloader succeeded.\n",
+      "stderr": ""
+    },
+    "port": "/dev/cu.usbmodemrv1103_dut11"
+  },
+  "automaticEntryRecovery": {
+    "path": "logs/phase-11/usb-20261115T042747.161590Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "/Users/samkorn/Documents/repos/shieldsigner-dev/baremetal/micropython/app_autostart_gate.py",
+    "scriptSha256": "13eb2fa7034e7d5ad408f5ab41c516592b9360e073016652030bada56f33ae99",
+    "completed": true,
+    "traceback": false
+  },
+  "originalStartupHome": {
+    "path": "logs/phase-11/usb-20261115T042747.704613Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "baremetal/micropython/app_boot_flow_gate.py",
+    "scriptSha256": "50c016db60a1993978d0cb4cd57fad27924af76156e946737aaed8d30de72be3",
+    "completed": true,
+    "traceback": false
+  },
+  "realCameraInterrupt": {
+    "path": "logs/phase-12/scan-interrupt-20261115T042754.152265Z",
+    "serial": "rv1103-dut1",
+    "scope": "Original scan loop, real local camera and ZXing; actual Mini PCB LCD; scripted no-back input; no optical QR qualification",
+    "passed": true,
+    "frames": 18
+  },
+  "preHandoffCleanState": {
+    "path": "logs/phase-11/usb-20261115T042805.617892Z",
+    "transport": "USB CDC",
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "usbSerial": "rv1103-dut1",
+    "location": "1-1",
+    "script": "/tmp/ss_confirm_final_state.py",
+    "scriptSha256": "2cff0d53aa862e424d8123bbb86224605dde1b563975bfb1bac1e61bef3beced",
+    "completed": true,
+    "traceback": false
+  },
+  "hostTests": 97,
+  "behaviors": [
+    "Frozen executable entry launches original Controller without a host start command.",
+    "Automatic first entry reached native status screen; deliberate USB Ctrl-C recovered to REPL with blank shadow and stopped camera.",
+    "Same boot.run entry traverses original splash/warning/native-key acknowledgment/Home, then clean return.",
+    "App wrapper tracks only type/builder names; camera stop and screen blank run in finally; nested entry rejected.",
+    "Live SC3336/LCD/ZXing ran18frames in10seconds before intentional Ctrl-C; warm native heap returned to baseline.",
+    "Ordinary app-ui profile retains manual REPL entry; no SD startup change."
+  ],
+  "timingScope": "Five-second host wait allows splash before recovery test. Not reset/power-to-app timing. Camera frame count is app workload, not sensor FPS.",
+  "pins": "UART mux/IRQ/IER remain disabled. GPIO43 backlight DDR bit0x800 expected after native UI init, as already documented in MINI-PCB-IO.md.",
+  "resetScope": "Retained reason2 record from preceding intentional USB reset printed and validated, then cleared. No unexpected reset observed in final marked tests; earlier unrelated unexplained reset still open.",
+  "correctedAttempts": [
+    {
+      "path": "logs/phase-11/dut1-20261115T042339Z",
+      "issue": "Automatic app/USB recovery passed; subsequent old pre-LCD pin test rejected intentional backlight DDR bit. Made optional profile gate check the actual initialized Mini PCB pin state."
+    },
+    {
+      "path": "logs/phase-11/dut1-20261115T042447Z",
+      "issue": "Gate incorrectly required no retained reset record after explicit host USB reset. Print/validate reason2 before clearing; other reasons still rejected."
+    },
+    {
+      "path": "logs/phase-12/scan-interrupt-20261115T042630.089377Z",
+      "issue": "Sensor stopped after18frames, but first-use native instruction cache added6171bytes. LCD interruption test now warms same instruction widgets before heap baseline; final full sequence stable."
+    }
+  ],
+  "limits": [
+    "Logical native key events verify source warning/Home routing; physical user acknowledgment not newly qualified.",
+    "Live camera preview works; optical QR focus/reliability remains unqualified.",
+    "Final RAM handoff intentionally skips interrupting console gate; automatic launch/recovery already checked on exact image.",
+    "No SD/CAD/REF/DUT0 writes or push; DUT0 remains in maskrom after host shutdown.",
+    "No signing, entropy, production security, full app or persistent SD app-boot qualification."
+  ],
+  "finalForegroundHandoff": {
+    "path": "logs/phase-11/dut1-20261115T042821Z",
+    "scope": "DUT1 RAM-only db, no storage commands or REF/DUT0 UART writes",
+    "location": "101",
+    "serial": "rv1103-dut1",
+    "passed": true,
+    "enumeration": "DevNo=1\tVid=0x2207,Pid=0x110c,LocationID=101\tMaskrom\nDevNo=2\tVid=0x2207,Pid=0x110c,LocationID=201\tMaskrom\n",
+    "download": {
+      "exitCode": 0,
+      "stdout": "Selected RAM download LocationID=101\nDownloading bootloader...\n\u001b[1A\u001b[2KDownloading bootloader succeeded.\n",
+      "stderr": ""
+    },
+    "port": "/dev/cu.usbmodemrv1103_dut11",
+    "appNotInterrupted": true,
+    "consoleGate": "skipped; download/enumeration only"
+  }
+}

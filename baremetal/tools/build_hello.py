@@ -20,6 +20,8 @@ build_env = os.environ.copy()
 build_env.pop('RV1103_USB_SERIAL',None)
 if args.usb_serial: build_env['RV1103_USB_SERIAL']=args.usb_serial
 features=set(args.features.split(','))
+if 'app-autostart' in features:
+    features.add('app-ui')
 if 'app-ui' in features:
     features.update({'native-ui','mini-pcb-ui'})
 if 'mini-pcb-ui' in features:

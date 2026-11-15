@@ -79,6 +79,8 @@ extern "C" fn bm_repl_ready() {
     #[cfg(feature = "fast-boot")]
     super::boot::repl_ready();
 }
+#[no_mangle]
+extern "C" fn bm_app_autostart() -> i32 { cfg!(feature = "app-autostart") as i32 }
 pub fn run() -> ! {
     #[cfg(feature = "native-ui")]
     super::native_ui::constructors();

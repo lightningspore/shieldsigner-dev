@@ -62,3 +62,8 @@ Hardware discovery: DUT1 also has a responding SC3336 and real frame capture
 passed; a sequential LCD reinitialization/fill afterward passed. No extra
 camera wiring is required for local app development. Optical LCD validation
 remains open; see phase12 receipt for exact scope.
+
+Follow-on: [APP-BOOT.md](APP-BOOT.md) records the optional `app-autostart`
+DUT1 RAM profile and frozen foreground entry. Automatic splash/warning launch
+and USB interruption are tested separately from native key acknowledgment/Home.
+This does not update the SD card or establish cold power-to-app timing.

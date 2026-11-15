@@ -724,3 +724,41 @@ Home restored013951; camera off, readers finished.
   cleanup changed after image build; executed copies/hashes recorded separately.
   No SD/CAD/REF/DUT0 writes or push. Optical focus/reliability, qualified entropy,
   signing and full SD app startup remain open; earlier unexplained reset OPEN.
+
+### 2026-11-15 UTC — Frozen foreground app startup and USB recovery
+
+- User reported host power loss; both RV1103 targets observed in maskrom101/201,
+  no CDC ports or REF ADB. RAM firmware was lost as expected. Reloaded only DUT1;
+  DUT0 remains in maskrom, no REF/SD/storage/CAD changes.
+- New optional app-autostart inherits full DUT1 app-ui. After mp_init, runtime
+  executes frozen seedsigner_boot.py and the reviewed boot.run wrapper, entering
+  original splash/development warning/Home without a host Python start command.
+  Normal app-ui keeps REPL startup. Generic DUT0 harness rejects new LCD profile.
+- Wrapper releases camera and blanks actual LVGL screen on all exits, retains only
+  entry/running/type/builder metadata, rejects reentry; cleanup errors recorded by
+  type too.97host tests pass, including return/interrupt/stop-error/nested entry.
+  @@REPL_READY now follows app exit in this optional profile; interpreter timing
+  hook remains after mp_init and does not measure cold/app readiness.
+- Initial load042339 autoentry/recovery passed, but old console gate incorrectly
+  expected no GPIO outputs after LCD init. Actual UART mux/IER/IRQ0; DDR0x800 is
+  documented GPIO43 LCD backlight, not UART output. Corrected optional-profile gate.
+ 042447 gate rejected retained reason2 from intentional preceding USB reset;
+  now prints and validates only None/reason2 before clearing. Other reasons fail.
+- Final image18e5b71db142..., RAMload042717 passes actual frozen startup to native
+  status screen then USB Ctrl-C recovery/blank/stopped camera/empty storage/probes
+  off. Entry-flow042747 passes original splash, exact development warning, native
+  key acknowledgment and Home; returns cleanly through wrapper. This qualifies
+  injected native key events, not a newly observed physical button press.
+- First live scan042630 stopped after18frames but cold instruction font cache
+  added6171native bytes. Camera/LCD interrupt gate now warms identical original
+  instruction widgets before native heap baseline. Final042754 runs18frames in
+ 10seconds, intentional Ctrl-C returns sensor(False,0) and heap to warm baseline.
+  No camera pixels exported, no sensor FPS/optical QR claim. Final042805 confirms
+  empty/defaults/camera off/probes disabled/no new reset, restores normal adapters.
+- Matching ELF/image/runtime hashes and scripts saved in checkpoint042811.
+  APP-BOOT.md, mise build/gates/handoff tasks and phase-12-app-autostart receipt
+  record exact scope. Final042821 RAM download leaves same image un-interrupted
+  for user: this final handoff checks download/USB enumeration only; automatic
+  entry/recovery already tested on exact image. App awaits warning acknowledgment.
+  SD app image/persistence, physical/optical qualification, signing/entropy and
+  cold-power timing remain open; earlier unexplained reset remains OPEN. No push.

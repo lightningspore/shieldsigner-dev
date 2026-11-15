@@ -92,3 +92,8 @@ quiz verification and the guarded original pagination fix for partial pages.
 
 Follow-on: [QR-EXPORT.md](QR-EXPORT.md) records original standard/compact SeedQR
 encoding, exact matrix parity and native transcription-screen gates.
+
+Follow-on: [APP-BOOT.md](APP-BOOT.md) records the optional `app-autostart`
+DUT1 RAM profile and frozen foreground entry. Automatic splash/warning launch
+and USB interruption are tested separately from native key acknowledgment/Home.
+This does not update the SD card or establish cold power-to-app timing.

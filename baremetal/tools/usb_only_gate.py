@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Load the explicitly configured DUT1 into RAM; never use REF UART or storage."""
+import argparse
 import datetime
 import hashlib
 import json
@@ -10,6 +11,9 @@ import subprocess
 import time
 from serial.tools import list_ports
 
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--leave-app-running',action='store_true',help='Only app-autostart: download without interrupting app; skip console gate')
+args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 cfg=json.loads((root/'devices.json').read_text())
 location=cfg['appDutUsbLocation'];identity=cfg['appDutUsbSerial']
@@ -19,7 +23,9 @@ manifest=json.loads((root/'build/hello-manifest.json').read_text())
 image=root/'build/hello-download.bin'
 report={'scope':'DUT1 RAM-only db, no storage commands or REF/DUT0 UART writes','location':location,'serial':identity,'passed':False}
 try:
-    assert manifest['features'] in ('usb-only','mini-pcb-ui','app-ui','app-ui,fault-probe') and manifest['usbSerial']==identity,'Wrong target build'
+    assert manifest['features'] in ('usb-only','mini-pcb-ui','app-ui','app-ui,fault-probe','app-autostart') and manifest['usbSerial']==identity,'Wrong target build'
+    if args.leave_app_running:
+        assert manifest['features']=='app-autostart','Leaving app running requires app-autostart profile'
     assert hashlib.sha256(image.read_bytes()).hexdigest()==manifest['files']['build/hello-download.bin'],'Image changed'
     (folder/'build-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     tool=root/'.tools/rkdeveloptool/rkdeveloptool'
@@ -39,10 +45,19 @@ try:
         time.sleep(.1)
     else:raise TimeoutError('DUT1 USB CDC did not appear')
     report['port']=ports[0].device
-    result=subprocess.run(['uv','run','--python','3.13','--with','pyserial==3.5','python',str(root/'tools/usb_console.py'),str(root/'micropython/usb_only_gate.py'),'--port',ports[0].device,'--timeout','8'],capture_output=True,timeout=20)
-    (folder/'console-host.txt').write_bytes(result.stdout+result.stderr)
-    report['passed']=result.returncode==0 and b'\r\n@@PASS usb-only-pins-released\r\n' in result.stdout
-    if not report['passed']:raise RuntimeError('DUT1 console/pin-release gate failed')
+    if args.leave_app_running:
+        report.update(passed=True,appNotInterrupted=True,consoleGate='skipped; download/enumeration only')
+    else:
+        autostart=manifest['features']=='app-autostart'
+        if autostart:
+            # Original native splash completes before interrupting the warning screen.
+            time.sleep(5)
+        gate='app_autostart_gate.py' if autostart else 'usb_only_gate.py'
+        marker=b'@@PASS frozen-app-autostart-status-screen-usb-interrupt-blank-repl' if autostart else b'@@PASS usb-only-pins-released'
+        result=subprocess.run(['uv','run','--python','3.13','--with','pyserial==3.5','python',str(root/'tools/usb_console.py'),str(root/'micropython'/gate),'--port',ports[0].device,'--timeout','12'],capture_output=True,timeout=25)
+        (folder/'console-host.txt').write_bytes(result.stdout+result.stderr)
+        report['passed']=result.returncode==0 and b'\r\n'+marker+b'\r\n' in result.stdout
+        if not report['passed']:raise RuntimeError('DUT1 console/pin-release gate failed')
 except Exception as e:report['error']=str(e)
 finally:
     (folder/'result.json').write_text(json.dumps(report,indent=2)+'\n')

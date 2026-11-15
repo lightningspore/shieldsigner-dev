@@ -26,7 +26,7 @@ def _make_ToolsMenuView():
             self.include_password_generator = include_password_generator
 
         def run(self):
-            button_data = [self.IMAGE, self.DICE, self.KEYBOARD]
+            button_data = [self.IMAGE, self.DICE, self.KEYBOARD, self.ADDRESS_EXPLORER, self.VERIFY_ADDRESS]
             selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens', 'ButtonListScreen'), title=_dependency('gettext', 'gettext')('Tools'), is_button_text_centered=False, button_data=button_data)
             if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
                 return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
@@ -34,6 +34,10 @@ def _make_ToolsMenuView():
                 return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsImageEntropyLivePreviewView'))
             if button_data[selected_menu_num] == self.KEYBOARD:
                 return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsCalcFinalWordNumWordsView'))
+            if button_data[selected_menu_num] == self.ADDRESS_EXPLORER:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsAddressExplorerSelectSourceView'))
+            if button_data[selected_menu_num] == self.VERIFY_ADDRESS:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.scan_views', 'ScanAddressView'))
             return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsDiceEntropyMnemonicLengthView'))
     return ToolsMenuView
 
@@ -331,7 +335,187 @@ def _make_ToolsCalcFinalWordDoneView():
             elif button_data[selected_menu_num] == self.DISCARD:
                 return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.seed_views', 'SeedDiscardView'))
     return ToolsCalcFinalWordDoneView
-_FACTORIES={'ToolsMenuView':_make_ToolsMenuView,'ToolsImageEntropyLivePreviewView':_make_ToolsImageEntropyLivePreviewView,'ToolsImageEntropyFinalImageView':_make_ToolsImageEntropyFinalImageView,'ToolsImageEntropyMnemonicLengthView':_make_ToolsImageEntropyMnemonicLengthView,'ToolsDiceEntropyMnemonicLengthView':_make_ToolsDiceEntropyMnemonicLengthView,'ToolsDiceEntropyEntryView':_make_ToolsDiceEntropyEntryView,'ToolsCalcFinalWordNumWordsView':_make_ToolsCalcFinalWordNumWordsView,'ToolsCalcFinalWordFinalizePromptView':_make_ToolsCalcFinalWordFinalizePromptView,'ToolsCalcFinalWordCoinFlipsView':_make_ToolsCalcFinalWordCoinFlipsView,'ToolsCalcFinalWordShowFinalWordView':_make_ToolsCalcFinalWordShowFinalWordView,'ToolsCalcFinalWordDoneView':_make_ToolsCalcFinalWordDoneView}
+
+def _make_ToolsAddressExplorerSelectSourceView():
+
+    class ToolsAddressExplorerSelectSourceView(_dependency('seedsigner.views.view', 'View')):
+        SCAN_SEED = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Scan a seed', _dependency('seedsigner.gui.components', 'SeedSignerIconConstants').QRCODE)
+        SCAN_DESCRIPTOR = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Scan wallet descriptor', _dependency('seedsigner.gui.components', 'SeedSignerIconConstants').QRCODE)
+        TYPE_12WORD = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Enter 12-word seed', _dependency('seedsigner.gui.components', 'FontAwesomeIconConstants').KEYBOARD, return_data=12)
+        TYPE_15WORD = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Enter 15-word seed', _dependency('seedsigner.gui.components', 'FontAwesomeIconConstants').KEYBOARD, return_data=15)
+        TYPE_18WORD = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Enter 18-word seed', _dependency('seedsigner.gui.components', 'FontAwesomeIconConstants').KEYBOARD, return_data=18)
+        TYPE_21WORD = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Enter 21-word seed', _dependency('seedsigner.gui.components', 'FontAwesomeIconConstants').KEYBOARD, return_data=21)
+        TYPE_24WORD = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Enter 24-word seed', _dependency('seedsigner.gui.components', 'FontAwesomeIconConstants').KEYBOARD, return_data=24)
+        LOADED_DESCRIPTOR = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Loaded Multisig Descriptor')
+        SATOCHIP = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Load from Satochip', _dependency('seedsigner.gui.components', 'SeedSignerIconConstants').FINGERPRINT)
+        TYPE_ELECTRUM = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Electrum Seed', _dependency('seedsigner.gui.components', 'FontAwesomeIconConstants').KEYBOARD)
+
+        def run(self):
+            seeds = self.controller.storage.seeds
+            button_data = []
+            for seed in seeds:
+                button_str = seed.get_fingerprint(self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__NETWORK))
+                button_data.append(_dependency('seedsigner.gui.screens.screen', 'ButtonOption')(button_str, _dependency('seedsigner.gui.components', 'SeedSignerIconConstants').FINGERPRINT))
+            if self.controller.multisig_wallet_descriptor:
+                button_data.append(self.LOADED_DESCRIPTOR)
+            seed_lengths = self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__SEED_WORD_LENGTHS)
+            options = {12: self.TYPE_12WORD, 15: self.TYPE_15WORD, 18: self.TYPE_18WORD, 21: self.TYPE_21WORD, 24: self.TYPE_24WORD}
+            button_data = button_data + [self.SCAN_SEED, self.SCAN_DESCRIPTOR]
+            if self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__SATOCHIP_SUPPORT) == _dependency('seedsigner.models.settings_definition', 'SettingsConstants').OPTION__ENABLED:
+                button_data.append(self.SATOCHIP)
+            button_data += [options[l] for l in seed_lengths]
+            if self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__ELECTRUM_SEEDS) == _dependency('seedsigner.models.settings_definition', 'SettingsConstants').OPTION__ENABLED:
+                button_data.append(self.TYPE_ELECTRUM)
+            selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens', 'ButtonListScreen'), title=_dependency('gettext', 'gettext')('Address Explorer'), button_data=button_data, is_button_text_centered=False, is_bottom_list=True)
+            if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
+            self.controller.resume_main_flow = self.controller.FLOW__ADDRESS_EXPLORER
+            if len(seeds) > 0 and selected_menu_num < len(seeds):
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.seed_views', 'SeedExportXpubScriptTypeView'), view_args=dict(seed=seeds[selected_menu_num], sig_type=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SINGLE_SIG))
+            elif button_data[selected_menu_num] == self.LOADED_DESCRIPTOR:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsAddressExplorerAddressTypeView'))
+            elif button_data[selected_menu_num] == self.SCAN_SEED:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.scan_views', 'ScanSeedQRView'))
+            elif button_data[selected_menu_num] == self.SCAN_DESCRIPTOR:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.scan_views', 'ScanWalletDescriptorView'))
+            elif button_data[selected_menu_num] == self.SATOCHIP:
+                return _dependency('seedsigner_port.navigation', 'Destination')(SatochipLoadDescriptorScriptTypeView)
+            elif button_data[selected_menu_num] in [self.TYPE_12WORD, self.TYPE_15WORD, self.TYPE_18WORD, self.TYPE_21WORD, self.TYPE_24WORD]:
+                self.controller.storage.init_pending_mnemonic(num_words=button_data[selected_menu_num].return_data)
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.seed_views', 'SeedMnemonicEntryView'))
+            elif button_data[selected_menu_num] == self.TYPE_ELECTRUM:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.seed_views', 'SeedElectrumMnemonicStartView'))
+    return ToolsAddressExplorerSelectSourceView
+
+def _make_ToolsAddressExplorerAddressTypeView():
+
+    class ToolsAddressExplorerAddressTypeView(_dependency('seedsigner.views.view', 'View')):
+        RECEIVE = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Receive addresses')
+        CHANGE = _dependency('seedsigner.gui.screens.screen', 'ButtonOption')('Change addresses')
+
+        def __init__(self, seed=None, script_type=None, custom_derivation=None, account=0):
+            """
+            If the explorer source is a seed, `seed` and `script_type` must be
+            specified. `custom_derivation` can be specified as needed.
+
+            If the source is a multisig or single sig wallet descriptor, `seed`,
+            `script_type`, and `custom_derivation` should be `None`.
+        """
+            super().__init__()
+            self.seed = seed
+            self.script_type = script_type
+            self.custom_derivation = custom_derivation
+            self.account = account
+            network = self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__NETWORK)
+            data = dict(seed=seed, network=self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__NETWORK), embit_network=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').map_network_to_embit(network), script_type=script_type, account=account)
+            if self.seed is not None:
+                data['seed'] = self.seed
+                seed_derivation_override = self.seed.derivation_override(sig_type=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SINGLE_SIG)
+                if self.script_type == _dependency('seedsigner.models.settings_definition', 'SettingsConstants').CUSTOM_DERIVATION:
+                    derivation_path = self.custom_derivation
+                elif seed_derivation_override:
+                    derivation_path = seed_derivation_override
+                else:
+                    derivation_path = _dependency('seedsigner.helpers', 'embit_utils').get_standard_derivation_path(network=self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__NETWORK), wallet_type=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SINGLE_SIG, script_type=self.script_type, account=self.account)
+                data['derivation_path'] = derivation_path
+                data['xpub'] = self.seed.get_xpub(derivation_path, network=network)
+            else:
+                data['wallet_descriptor'] = self.controller.multisig_wallet_descriptor
+            self.controller.address_explorer_data = data
+
+        def run(self):
+            data = self.controller.address_explorer_data
+            wallet_descriptor_display_name = None
+            if 'wallet_descriptor' in data:
+                if data['wallet_descriptor'].is_basic_multisig:
+                    threshold, n = _dependency('seedsigner.helpers.embit_utils', 'get_multisig_policy')(data['wallet_descriptor'])
+                    wallet_descriptor_display_name = _dependency('gettext', 'gettext')('{threshold} / {n} multisig').format(threshold=threshold, n=n)
+                else:
+                    wallet_descriptor_display_name = data['wallet_descriptor'].brief_policy.split('multisig')[0].strip()
+            script_type = data['script_type'] if 'script_type' in data else None
+            button_data = [self.RECEIVE, self.CHANGE]
+            selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens.tools_screens', 'ToolsAddressExplorerAddressTypeScreen'), button_data=button_data, fingerprint=self.seed.get_fingerprint() if self.seed is not None else None, wallet_descriptor_display_name=wallet_descriptor_display_name, script_type=script_type, custom_derivation_path=self.custom_derivation)
+            if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
+                if len(self.controller.back_stack) > 1 and self.controller.back_stack[-2].View_cls == _dependency('seedsigner.views.seed_views', 'SeedOptionsView'):
+                    self.controller.resume_main_flow = None
+                    self.controller.address_explorer_data = None
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
+            elif button_data[selected_menu_num] in [self.RECEIVE, self.CHANGE]:
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsAddressExplorerAddressListView'), view_args=dict(is_change=button_data[selected_menu_num] == self.CHANGE))
+    return ToolsAddressExplorerAddressTypeView
+
+def _make_ToolsAddressExplorerAddressListView():
+
+    class ToolsAddressExplorerAddressListView(_dependency('seedsigner.views.view', 'View')):
+
+        def __init__(self, is_change=False, start_index=0, selected_button_index=0, initial_scroll=0):
+            super().__init__()
+            self.is_change = is_change
+            self.start_index = start_index
+            self.selected_button_index = selected_button_index
+            self.initial_scroll = initial_scroll
+
+        def run(self):
+            self.loading_screen = None
+            addresses = []
+            button_data = []
+            data = self.controller.address_explorer_data
+            addrs_per_screen = 10
+            addr_storage_key = 'receive_addrs'
+            if self.is_change:
+                addr_storage_key = 'change_addrs'
+            if addr_storage_key in data and len(data[addr_storage_key]) >= self.start_index + addrs_per_screen:
+                addresses = data[addr_storage_key][self.start_index:self.start_index + addrs_per_screen]
+            else:
+                try:
+                    self.loading_screen = _dependency('seedsigner.gui.screens.screen', 'LoadingScreenThread')(text=_dependency('gettext', 'gettext')('Calculating addrs...'))
+                    self.loading_screen.start()
+                    if addr_storage_key not in data:
+                        data[addr_storage_key] = []
+                    if 'xpub' in data:
+                        if 'script_type' in data and data['script_type'] != _dependency('seedsigner.models.settings_definition', 'SettingsConstants').CUSTOM_DERIVATION:
+                            for i in range(self.start_index, self.start_index + addrs_per_screen):
+                                address = _dependency('seedsigner.helpers', 'embit_utils').get_single_sig_address(xpub=data['xpub'], script_type=data['script_type'], index=i, is_change=self.is_change, embit_network=data['embit_network'])
+                                addresses.append(address)
+                                data[addr_storage_key].append(address)
+                        else:
+                            raise Exception(_dependency('gettext', 'gettext')('Custom Derivation address explorer not yet implemented'))
+                    elif 'wallet_descriptor' in data:
+                        descriptor = data['wallet_descriptor']
+                        for i in range(self.start_index, self.start_index + addrs_per_screen):
+                            address = _dependency('seedsigner.helpers', 'embit_utils').get_multisig_address(descriptor=descriptor, index=i, is_change=self.is_change, embit_network=data['embit_network'])
+                            addresses.append(address)
+                            data[addr_storage_key].append(address)
+                finally:
+                    self.loading_screen.stop()
+            selected_menu_num = self.run_screen(_dependency('seedsigner.gui.screens.tools_screens', 'ToolsAddressExplorerAddressListScreen'), title=_dependency('gettext', 'gettext')('Receive Addrs') if not self.is_change else _dependency('gettext', 'gettext')('Change Addrs'), start_index=self.start_index, addresses=addresses, selected_button=self.selected_button_index, scroll_y_initial_offset=self.initial_scroll)
+            if selected_menu_num == _dependency('seedsigner.gui.screens', 'RET_CODE__BACK_BUTTON'):
+                return _dependency('seedsigner_port.navigation', 'Destination')(_dependency('seedsigner.views.view', 'BackStackView'))
+            if selected_menu_num == len(addresses):
+                return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsAddressExplorerAddressListView'), view_args=dict(is_change=self.is_change, start_index=self.start_index + addrs_per_screen))
+            initial_scroll = self.screen.buttons[0].scroll_y
+            index = selected_menu_num + self.start_index
+            return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsAddressExplorerAddressView'), view_args=dict(index=index, address=addresses[selected_menu_num], is_change=self.is_change, start_index=self.start_index, parent_initial_scroll=initial_scroll), skip_current_view=True)
+    return ToolsAddressExplorerAddressListView
+
+def _make_ToolsAddressExplorerAddressView():
+
+    class ToolsAddressExplorerAddressView(_dependency('seedsigner.views.view', 'View')):
+
+        def __init__(self, index, address, is_change, start_index, parent_initial_scroll=0):
+            super().__init__()
+            self.index = index
+            self.address = address
+            self.is_change = is_change
+            self.start_index = start_index
+            self.parent_initial_scroll = parent_initial_scroll
+
+        def run(self):
+            qr_encoder = _dependency('seedsigner.models.encode_qr', 'GenericStaticQrEncoder')(data=self.address)
+            self.run_screen(_dependency('seedsigner.gui.screens.screen', 'QRDisplayScreen'), qr_encoder=qr_encoder)
+            return _dependency('seedsigner_port.navigation', 'Destination')(_resolve('ToolsAddressExplorerAddressListView'), view_args=dict(is_change=self.is_change, start_index=self.start_index, selected_button_index=self.index - self.start_index, initial_scroll=self.parent_initial_scroll), skip_current_view=True)
+    return ToolsAddressExplorerAddressView
+_FACTORIES={'ToolsMenuView':_make_ToolsMenuView,'ToolsImageEntropyLivePreviewView':_make_ToolsImageEntropyLivePreviewView,'ToolsImageEntropyFinalImageView':_make_ToolsImageEntropyFinalImageView,'ToolsImageEntropyMnemonicLengthView':_make_ToolsImageEntropyMnemonicLengthView,'ToolsDiceEntropyMnemonicLengthView':_make_ToolsDiceEntropyMnemonicLengthView,'ToolsDiceEntropyEntryView':_make_ToolsDiceEntropyEntryView,'ToolsCalcFinalWordNumWordsView':_make_ToolsCalcFinalWordNumWordsView,'ToolsCalcFinalWordFinalizePromptView':_make_ToolsCalcFinalWordFinalizePromptView,'ToolsCalcFinalWordCoinFlipsView':_make_ToolsCalcFinalWordCoinFlipsView,'ToolsCalcFinalWordShowFinalWordView':_make_ToolsCalcFinalWordShowFinalWordView,'ToolsCalcFinalWordDoneView':_make_ToolsCalcFinalWordDoneView,'ToolsAddressExplorerSelectSourceView':_make_ToolsAddressExplorerSelectSourceView,'ToolsAddressExplorerAddressTypeView':_make_ToolsAddressExplorerAddressTypeView,'ToolsAddressExplorerAddressListView':_make_ToolsAddressExplorerAddressListView,'ToolsAddressExplorerAddressView':_make_ToolsAddressExplorerAddressView}
 _CACHE={}
 def _resolve(name):
     if name not in _CACHE:

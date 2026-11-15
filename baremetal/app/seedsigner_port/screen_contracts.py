@@ -76,7 +76,8 @@ POWER={'ResetScreen':('Restarting','SeedSigner is restarting.\n\nAll in-memory d
        'RebootToLoaderScreen':('Flash Mode','Rebooting into USB flash (Loader) mode.\n\nConnect USB and use the Rockchip flash tool.','reset_screen',False),
        'PowerOffNotRequiredScreen':('Just Unplug It','It is safe to disconnect power at any time.','power_off_not_required_screen',True)}
 FINAL_WORD={'ToolsCalcFinalWordFinalizePromptScreen','ToolsCalcFinalWordScreen','ToolsCalcFinalWordDoneScreen'}
-APP_SCREENS=set(POWER)|FINAL_WORD|TRANSCRIPTION|set(STATUS)|{'SeedAddressVerificationScreen','SeedAddressVerificationSuccessScreen','SeedExportXpubDetailsScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
+EXPLORER={'ToolsAddressExplorerAddressTypeScreen','ToolsAddressExplorerAddressListScreen'}
+APP_SCREENS=set(POWER)|FINAL_WORD|EXPLORER|TRANSCRIPTION|set(STATUS)|{'SeedAddressVerificationScreen','SeedAddressVerificationSuccessScreen','SeedExportXpubDetailsScreen','SeedFinalizeScreen','SeedOptionsScreen','SeedSelectSeedScreen','SeedAddPassphraseScreen','SeedReviewPassphraseScreen','SeedMnemonicEntryScreen','SeedWordsScreen','SeedWordsBackupTestPromptScreen'}
 def configuration(screen_class,passed,translate=None):
     name=screen_class if isinstance(screen_class,str) else screen_class.__name__
     if name in ('PSBTOverviewScreen', 'PSBTMathScreen', 'PSBTAddressDetailsScreen', 'PSBTChangeDetailsScreen', 'PSBTOpReturnScreen', 'PSBTFinalizeScreen'):
@@ -96,6 +97,11 @@ def configuration(screen_class,passed,translate=None):
         a=dict(passed);tr=translate if translate is not None else lambda text:text
         _,cfg=_basic_configuration('ButtonListScreen',a,translate)
         return final_word_configure(name,a,cfg,tr)
+    if name in EXPLORER:
+        from seedsigner_port.explorer import configure as explorer_configure
+        a=dict(passed);tr=translate if translate is not None else lambda text:text
+        _,cfg=_basic_configuration('ButtonListScreen',a,translate)
+        return explorer_configure(name,a,cfg,tr)
     from seedsigner_port.app_screen_defaults import DEFAULTS as APP_DEFAULTS
     from seedsigner_port.gui_constants import GUIConstants,SeedSignerIconConstants
     a=APP_DEFAULTS[name].copy();a.update(passed)

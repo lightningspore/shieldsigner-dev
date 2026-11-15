@@ -27,6 +27,8 @@ code='''# SPDX-License-Identifier: MIT
 from seedsigner_port.camera_entropy import CameraPool,CameraFrame,derive_camera_entropy_bytes,clear_images
 from seedsigner_port.camera_entropy_mnemonic import generate_mnemonic_from_bytes,generate_mnemonic_from_dice,ENTROPY_BYTES_REQUIRED,dice_entropy_is_sufficient
 import machine,gc
+# Prior-boot evidence (e.g. host USB reset) is logged, then cleared, like the other gates.
+print('@@CAMERA_ENTROPY_RESET_BEFORE',machine.last_reset());machine.clear_reset_record()
 expected='''+repr(digest)+'''
 camera_cases='''+repr(camera)+'''
 dice_cases='''+repr(dice)+'''

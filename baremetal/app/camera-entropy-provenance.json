@@ -25,7 +25,7 @@
     "camera_entropy_views.py": {
       "source": "views/tools_views.py",
       "sourceSha256": "62ec90fcc848fce567a8b5ae3ff3ab8deb22fb7525a92cdf950954f682872d99",
-      "outputSha256": "6917410ce2c2244ed2a46edef04a2d33222681c23f44db77047058e1b850b91a",
+      "outputSha256": "0713575e934c3b3b3555ca5fd9b424f2b64eb65fa7b9ce80765d848db3a7187f",
       "classes": [
         "ToolsMenuView",
         "ToolsImageEntropyLivePreviewView",
@@ -37,7 +37,11 @@
         "ToolsCalcFinalWordFinalizePromptView",
         "ToolsCalcFinalWordCoinFlipsView",
         "ToolsCalcFinalWordShowFinalWordView",
-        "ToolsCalcFinalWordDoneView"
+        "ToolsCalcFinalWordDoneView",
+        "ToolsAddressExplorerSelectSourceView",
+        "ToolsAddressExplorerAddressTypeView",
+        "ToolsAddressExplorerAddressListView",
+        "ToolsAddressExplorerAddressView"
       ],
       "changes": [
         "Camera is configured entropy source; remove Linux fork RNG-health entry prerequisite.",

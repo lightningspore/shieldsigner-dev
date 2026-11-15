@@ -84,7 +84,7 @@ def __getattr__(name):
     if name=='ToolsCoinFlipEntryScreen':
         from seedsigner_port.final_word import ToolsCoinFlipEntryScreen
         return ToolsCoinFlipEntryScreen
-    if name in ('ToolsCalcFinalWordFinalizePromptScreen','ToolsCalcFinalWordScreen','ToolsCalcFinalWordDoneScreen'):
+    if name in ('ToolsCalcFinalWordFinalizePromptScreen','ToolsCalcFinalWordScreen','ToolsCalcFinalWordDoneScreen','ToolsAddressExplorerAddressTypeScreen','ToolsAddressExplorerAddressListScreen'):
         from seedsigner_port import app_screens
         return getattr(app_screens,name)
     raise AttributeError(name)

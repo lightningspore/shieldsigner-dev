@@ -7,8 +7,14 @@ RET_CODE__BACK_BUTTON=1000
 RET_CODE__POWER_BUTTON=1001
 RET_CODE__DISPLAY_TOGGLE=1002
 RET_CODE__REBOOT_TO_LOADER=1003
+class _Scroll:
+    scroll_y=0
 class NativeScreen:
-    def __init__(self,**kwargs):self.args=kwargs
+    def __init__(self,**kwargs):
+        self.args=kwargs
+        # Original Views read screen.buttons[0].scroll_y (lvgl-app screen_bridge
+        # parity). The native bridge restores focus by index; scroll offset is 0.
+        self.buttons=[_Scroll()]
     def display(self):
         from seedsigner_port.renderer import Renderer
         return Renderer.get_instance().run_screen(type(self),self.args)

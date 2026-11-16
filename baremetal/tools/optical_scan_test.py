@@ -12,7 +12,7 @@ routing result against independently computed host values.
 import argparse,ast,base64,hashlib,json,re,subprocess,sys,time
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-import qr_screen
+import qr_screen,demo_fixtures
 from embit.psbt import PSBT
 from embit.wordlists.bip39 import WORDLIST
 BASE=Path(__file__).resolve().parents[1]
@@ -30,6 +30,10 @@ def cases(a):
         'address':(lambda:qr_screen.set_text(ADDRESS),{'view':'AddressVerificationStartView','address':ADDRESS}),
         'seedqr':(lambda:qr_screen.set_text(seedqr,'SeedQR (PUBLIC abandon..about)'),{'words':12,'first_last':('abandon','about')}),
         'ur-psbt':(lambda:qr_screen.set_ur_psbt(raw,a.fragment,a.fps),{'view':'PSBTSelectSeedView','psbt_sha256':psbt_digest(raw)}),
+        # Demo page presets (tools/demo_fixtures.py, testnet, PUBLIC).
+        'demo-seed':(lambda:qr_screen.set_preset('seed'),{'words':12,'first_last':('abandon','about')}),
+        'demo-address':(lambda:qr_screen.set_preset('address'),{'address':demo_fixtures.address()}),
+        'demo-psbt':(lambda:qr_screen.set_preset('psbt',a.fps,a.fragment),{'view':'PSBTSelectSeedView','psbt_sha256':psbt_digest(demo_fixtures.psbt())}),
         'base64-psbt':(lambda:qr_screen.set_text(base64.b64encode(raw).decode(),'PSBT base64 %d bytes'%len(raw)),{'view':'PSBTSelectSeedView','psbt_sha256':psbt_digest(raw)}),
     }
 

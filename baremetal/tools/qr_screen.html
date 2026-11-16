@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QR demo · ShieldSigner</title>
+<meta name="theme-color" content="#10140f">
+<!-- Styling follows website/static/css/site.css (tokens, type, panels, eyebrows). -->
+<style>
+:root { --bg:#10140f; --panel:#191f17; --line:#343d2f; --text:#eef0e7; --muted:#a4ad9c; --lime:#c5ed78; --qr:#fff; }
+* { box-sizing:border-box; }
+html,body { height:100%; }
+body { margin:0; background:var(--bg); color:var(--text); font:16px/1.6 system-ui,-apple-system,sans-serif; overflow:hidden; }
+button,select,input { font:inherit; }
+button:focus-visible,select:focus-visible,input:focus-visible { outline:3px solid var(--lime); outline-offset:3px; }
+.app { display:grid; grid-template-columns:400px 1fr; height:100vh; }
+.side { border-right:1px solid var(--line); padding:24px 30px; display:flex; flex-direction:column; gap:18px; overflow:auto; }
+.brand { display:flex; align-items:center; gap:12px; font-size:21px; font-weight:650; letter-spacing:-.7px; }
+.brand svg { width:30px; height:32px; color:var(--lime); }
+.brand-note { font:11px monospace; letter-spacing:0; color:var(--muted); margin-left:4px; }
+.eyebrow { font:11px/1.5 monospace; letter-spacing:1.5px; color:var(--lime); margin:0 0 12px; text-transform:uppercase; }
+.dot { display:inline-block; background:var(--lime); height:7px; width:7px; border-radius:50%; margin-right:8px; vertical-align:1px; }
+.dot.idle { background:var(--muted); }
+.choices { display:grid; gap:10px; }
+.choice { text-align:left; display:flex; gap:16px; align-items:flex-start; border:1px solid var(--line); background:var(--panel); color:var(--text); padding:13px 16px; border-radius:5px; cursor:pointer; }
+.choice:hover { border-color:#59694a; }
+.choice[aria-pressed=true] { border-color:var(--lime); background:#20291b; }
+.choice .num { font:12px monospace; color:var(--lime); padding-top:4px; }
+.choice strong { display:block; font-size:17px; letter-spacing:-.4px; line-height:1.25; }
+.choice span { display:block; font-size:12px; color:var(--muted); margin-top:4px; }
+.details { border-block:1px solid var(--line); padding:12px 0; }
+.details dl { display:grid; grid-template-columns:92px minmax(0,1fr); gap:6px 12px; margin:0; font-size:13px; }
+.details dt { font:11px/1.9 monospace; text-transform:uppercase; letter-spacing:1px; color:var(--lime); }
+.details dd { margin:0; color:var(--muted); overflow-wrap:anywhere; font-family:ui-monospace,monospace; font-size:12px; line-height:1.9; }
+.notice { border-left:3px solid #b8aa69; background:#24261a; color:#d5d2b0; padding:12px 14px; font-size:13px; margin:14px 0 0; }
+.controls { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.controls label { display:block; font-size:11px; color:var(--muted); margin-bottom:6px; }
+.controls select, .controls input[type=range] { width:100%; }
+.controls select { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:4px; padding:10px; height:42px; }
+.controls input[type=range] { accent-color:var(--lime); }
+.controls .wide { grid-column:1/-1; }
+.row { display:flex; gap:10px; flex-wrap:wrap; }
+.button { background:var(--lime); border:0; color:var(--bg); font:650 14px system-ui; padding:12px 16px; border-radius:4px; cursor:pointer; }
+.button:hover { background:#d5f5a1; }
+.ghost { background:#27331c; color:var(--lime); border:1px solid #556844; border-radius:4px; padding:11px 14px; cursor:pointer; font-size:13px; }
+.keys { font:11px/1.9 monospace; color:var(--muted); margin-top:auto; }
+.keys kbd { display:inline-block; min-width:20px; text-align:center; border:1px solid var(--line); border-radius:3px; padding:0 5px; margin-right:6px; color:var(--text); background:var(--panel); }
+.stage { position:relative; display:grid; place-items:center; min-width:0; }
+.frame { background:#20291b; border:1px solid #45513b; border-radius:7px; overflow:hidden; display:flex; flex-direction:column; }
+.frame-top,.frame-bottom { display:flex; justify-content:space-between; gap:14px; padding:11px 16px; color:#bccda9; font:11px monospace; letter-spacing:.6px; }
+.frame-top { border-bottom:1px solid #45513b; } .frame-bottom { border-top:1px solid #45513b; }
+.qr-card { background:var(--qr); display:grid; place-items:center; aspect-ratio:1; } /* quiet zone padding set in fit() */
+.qr-card img { width:100%; height:100%; image-rendering:pixelated; display:block; }
+.qr-card.empty img { visibility:hidden; }
+.progress { display:flex; gap:4px; }
+.progress i { width:18px; height:4px; border-radius:2px; background:#45513b; }
+.progress i.on { background:var(--lime); }
+.toast { position:absolute; top:22px; right:24px; font:12px monospace; color:var(--lime); opacity:0; transition:opacity .2s; }
+.toast.show { opacity:1; }
+/* Presentation: only the code on the page background, maximum size. */
+body.present .side { display:none; }
+body.present .app { grid-template-columns:1fr; }
+body.present .frame { background:transparent; border-color:transparent; }
+body.present .frame-top { visibility:hidden; }
+body.present .frame-bottom { border-color:transparent; justify-content:center; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><svg viewBox="0 0 64 68" aria-hidden="true"><path fill="currentColor" d="M31 4Q32 3.5 33 4L42 9 16 30 35 37 19 56C10 47 7 36 7 18Q7 16 9 15ZM46 11 55 15Q57 16 57 18C57 40 49 54 33 63Q32 64 31 63L22 58 50 32 32 25Z"/></svg>ShieldSigner<span class="brand-note">QR demo</span></div>
+    <section>
+      <p class="eyebrow"><span class="dot" id="live"></span>Show on screen</p>
+      <div class="choices" role="group" aria-label="Demo QR">
+        <button class="choice" data-preset="seed" aria-pressed="false"><span class="num">01</span><span><strong>Testnet seed</strong><span>SeedQR · abandon … about</span></span></button>
+        <button class="choice" data-preset="address" aria-pressed="false"><span class="num">02</span><span><strong>Address</strong><span>tb1q receive · verify on device</span></span></button>
+        <button class="choice" data-preset="psbt" aria-pressed="false"><span class="num">03</span><span><strong>Animated PSBT</strong><span>UR crypto-psbt · review &amp; sign</span></span></button>
+      </div>
+    </section>
+    <section class="details" id="details" hidden>
+      <p class="eyebrow" id="kind"></p>
+      <dl id="lines"></dl>
+      <p class="notice" id="note" hidden></p>
+    </section>
+    <section class="controls">
+      <div id="anim-fps"><label for="fps">Speed</label><select id="fps"><option value="2">2 fps</option><option value="4">4 fps</option><option value="6" selected>6 fps</option><option value="8">8 fps</option><option value="10">10 fps</option></select></div>
+      <div id="anim-frag"><label for="fragment">Part size</label><select id="fragment"><option value="30">30 bytes · more parts</option><option value="60" selected>60 bytes</option><option value="100">100 bytes</option><option value="150">150 bytes · fewer parts</option></select></div>
+      <div class="wide"><label for="size">Code size <span id="size-val"></span></label><input type="range" id="size" min="40" max="96" step="1"></div>
+      <div class="wide row"><button class="button" id="present">Present  (H)</button><button class="ghost" id="pause">Pause</button><button class="ghost" id="blank">Blank</button></div>
+    </section>
+    <div class="keys"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd>switch code<br><kbd>H</kbd>present / controls<br><kbd>␣</kbd>pause · <kbd>←</kbd><kbd>→</kbd>step parts<br><kbd>+</kbd><kbd>−</kbd>size · <kbd>B</kbd>blank</div>
+  </aside>
+  <main class="stage">
+    <div class="frame" id="frame">
+      <div class="frame-top"><span id="ftitle">NOTHING SHOWN</span><span id="fkind"></span></div>
+      <div class="qr-card empty" id="card"><img id="q" alt=""></div>
+      <div class="frame-bottom"><span id="counter"></span><span class="progress" id="progress"></span></div>
+    </div>
+    <div class="toast" id="toast"></div>
+  </main>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let ver=-1,imgs=[],idx=0,timer=null,state=null,paused=false,preset=null;
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.remove('show'),1200)}
+function fit(){ // square card: size% of viewport height, clamped to stage width
+  if(!state)return;const stage=document.querySelector('.stage').getBoundingClientRect();
+  let px=Math.min(innerHeight*state.size/100,stage.width-48);px=Math.max(120,px);
+  $('card').style.width=$('card').style.height=px+'px';$('card').style.padding=Math.round(px*.07)+'px';$('size').value=state.size;$('size-val').textContent=Math.round(state.size)+'%';
+  $('frame').style.transform='translateY('+state.y+'vh)'}
+function show(i){if(!imgs.length)return;idx=(i+imgs.length)%imgs.length;$('q').src=imgs[idx].src;
+  $('counter').textContent=imgs.length>1?('PART '+(idx+1)+' / '+imgs.length+(paused?' · PAUSED':'')):'STATIC';
+  [...$('progress').children].forEach((e,k)=>e.classList.toggle('on',k===idx))}
+function animate(){clearInterval(timer);if(imgs.length>1&&state.fps>0&&!paused)timer=setInterval(()=>show(idx+1),1000/state.fps)}
+function load(s){
+  state=s;imgs=[];paused=false;$('pause').textContent='Pause';
+  for(let i=0;i<s.count;i++){const im=new Image();im.src='/f/'+s.version+'/'+i+'.png';imgs.push(im)}
+  $('card').classList.toggle('empty',!s.count);$('live').classList.toggle('idle',!s.count);
+  const m=s.meta||{};preset=s.preset;
+  document.querySelectorAll('.choice').forEach(b=>b.setAttribute('aria-pressed',b.dataset.preset===s.preset));
+  $('ftitle').textContent=s.count?(m.title||s.label||'').toUpperCase():'NOTHING SHOWN';$('fkind').textContent=s.count?(m.kind||'').toUpperCase():'';
+  $('details').hidden=!m.lines;$('kind').textContent=m.kind||'';
+  $('lines').innerHTML='';(m.lines||[]).forEach(([k,v])=>{const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=k;dd.textContent=v;$('lines').append(dt,dd)});
+  $('note').hidden=!m.note;$('note').textContent=m.note||'';
+  const anim=s.count>1;['anim-fps','anim-frag'].forEach(id=>$(id).style.opacity=(s.preset==='psbt'||anim)?1:.4);
+  if(m.fragment)$('fragment').value=m.fragment;if(s.fps)$('fps').value=String(Math.round(s.fps));
+  $('progress').innerHTML=anim&&s.count<=24?'<i></i>'.repeat(s.count):'';
+  if(s.count){$('q').src=imgs[0].src;show(0)}else{$('counter').textContent='';}
+  fit();animate()}
+async function poll(){try{const s=await (await fetch('/state')).json();
+  if(s.version!==ver){ver=s.version;load(s)}else if(state&&(s.size!==state.size||s.y!==state.y)){state.size=s.size;state.y=s.y;fit()}}catch(e){}}
+async function post(path,body){const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(j.error)toast(j.error);await poll();return j}
+function choose(name){toast('Rendering…');post('/preset',{name,fps:+$('fps').value,fragment:+$('fragment').value}).then(()=>toast(name==='psbt'?'Animated PSBT':name==='seed'?'Testnet seed':'Address'))}
+function setSize(v){v=Math.max(40,Math.min(96,v));if(state){state.size=v;fit()}post('/view',{size:v})}
+document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>choose(b.dataset.preset));
+$('fps').onchange=()=>{if(preset==='psbt')choose('psbt')};$('fragment').onchange=()=>{if(preset==='psbt')choose('psbt')};
+$('size').oninput=e=>setSize(+e.target.value);
+$('present').onclick=()=>{document.body.classList.toggle('present');setTimeout(fit,0)};
+$('pause').onclick=()=>{paused=!paused;$('pause').textContent=paused?'Resume':'Pause';show(idx);animate()};
+$('blank').onclick=()=>post('/set',{frames:[],fps:0,label:'blank'});
+addEventListener('keydown',e=>{if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
+  const k=e.key;if(k==='1')choose('seed');else if(k==='2')choose('address');else if(k==='3')choose('psbt');
+  else if(k==='h'||k==='H'||k==='Escape'&&document.body.classList.contains('present'))$('present').click();
+  else if(k===' '){e.preventDefault();$('pause').click()}else if(k==='ArrowRight'){paused=true;$('pause').textContent='Resume';animate();show(idx+1)}
+  else if(k==='ArrowLeft'){paused=true;$('pause').textContent='Resume';animate();show(idx-1)}
+  else if(k==='+'||k==='=')setSize((state?state.size:75)+4);else if(k==='-')setSize((state?state.size:75)-4);
+  else if(k==='b'||k==='B')$('blank').click()});
+addEventListener('resize',fit);setInterval(poll,300);poll();
+</script>
+</body>
+</html>

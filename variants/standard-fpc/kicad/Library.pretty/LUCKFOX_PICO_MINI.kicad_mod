@@ -528,7 +528,7 @@
 		(uuid "3105c813-7a90-4014-a22c-2c387779662e")
 	)
 	(embedded_fonts no)
-	(model "/Users/samkorn/Documents/repos/seedsigner-luckfox-pico/hardware-kicad/3d_models/Luckfox Pico Mini.step"
+	(model "${KIPRJMOD}/../../../kicad/3dmodels/vendor/Luckfox-Pico-Mini.step"
 		(offset
 			(xyz -1.5 1.5 1.5)
 		)

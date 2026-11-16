@@ -4,7 +4,7 @@
     "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
   },
   "sourceSha256": "933d7f7d19cfdec01e4b587c7a66d44abd0cb9b45df8fee1908a3aeaed87b4a6",
-  "outputSha256": "a8591e3de6bcbc3d5f290c98aef470797879af272181e73dc4c803c656a26ee9",
+  "outputSha256": "4235ecf8fef98211af3f49dd5184294a3a602983a1d2de1e9c9d8ab6dd314a69",
   "classes": [
     "SettingsMenuView",
     "LoadBackupFilesSettingsView",

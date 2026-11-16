@@ -1,5 +1,7 @@
 # Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner
 from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
+
+
 class GUIConstants:
     EDGE_PADDING = 8
     COMPONENT_PADDING = 8
@@ -22,14 +24,61 @@ class GUIConstants:
     ICON_LARGE_BUTTON_SIZE = 48
     ICON_TOAST_FONT_SIZE = 30
     ICON_PRIMARY_SCREEN_SIZE = 50
-    BASE_LOCALE_FONTS = {'default': 'OpenSans-Regular', _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__ARABIC: 'NotoSansAR-Regular', _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__CHINESE_SIMPLIFIED: 'NotoSansSC-Regular', _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__HINDI: 'NotoSansDevanagari-Regular', _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__JAPANESE: 'NotoSansJP-Regular', _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__KOREAN: 'NotoSansKR-Regular', _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__PERSIAN: 'NotoSansAR-Regular', _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__THAI: 'NotoSansTH-Regular'}
+    BASE_LOCALE_FONTS = {
+        'default': 'OpenSans-Regular',
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__ARABIC: 'NotoSansAR-Regular',
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__CHINESE_SIMPLIFIED: 'NotoSansSC-Regular',
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__HINDI: 'NotoSansDevanagari-Regular',
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__JAPANESE: 'NotoSansJP-Regular',
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__KOREAN: 'NotoSansKR-Regular',
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__PERSIAN: 'NotoSansAR-Regular',
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__THAI: 'NotoSansTH-Regular',
+    }
     TOP_NAV_TITLE_FONT_NAME = BASE_LOCALE_FONTS.copy()
     TOP_NAV_TITLE_FONT_NAME['default'] = 'OpenSans-SemiBold'
-    TOP_NAV_TITLE_FONT_SIZE = {'default': 20, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__CHINESE_SIMPLIFIED: 23, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__HINDI: 22, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__JAPANESE: 22, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__KOREAN: 23}
+    TOP_NAV_TITLE_FONT_SIZE = {
+        'default': 20,
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__CHINESE_SIMPLIFIED: 23,
+        _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__HINDI: 22,
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__JAPANESE: 22,
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__KOREAN: 23,
+    }
     TOP_NAV_HEIGHT = 48
     TOP_NAV_BUTTON_SIZE = 32
     BODY_FONT_NAME = BASE_LOCALE_FONTS.copy()
-    BODY_FONT_SIZE = {'default': 17, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__CHINESE_SIMPLIFIED: 18, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__HINDI: 18, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__JAPANESE: 18, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__KOREAN: 18}
+    BODY_FONT_SIZE = {
+        'default': 17,
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__CHINESE_SIMPLIFIED: 18,
+        _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__HINDI: 18,
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__JAPANESE: 18,
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__KOREAN: 18,
+    }
     BODY_FONT_MAX_SIZE = TOP_NAV_TITLE_FONT_SIZE['default']
     BODY_FONT_MIN_SIZE = 15
     BODY_FONT_COLOR = '#FCFCFC'
@@ -42,7 +91,21 @@ class GUIConstants:
     LABEL_FONT_COLOR = '#777777'
     BUTTON_FONT_NAME = BASE_LOCALE_FONTS.copy()
     BUTTON_FONT_NAME['default'] = 'OpenSans-SemiBold'
-    BUTTON_FONT_SIZE = {'default': 18, 'ar': 18, 'fa': 18, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__HINDI: 20, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__JAPANESE: 20, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__KOREAN: 20, _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__CHINESE_SIMPLIFIED: 20}
+    BUTTON_FONT_SIZE = {
+        'default': 18,
+        'ar': 18,
+        'fa': 18,
+        _dependency('seedsigner.models.settings_definition', 'SettingsConstants').LOCALE__HINDI: 20,
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__JAPANESE: 20,
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__KOREAN: 20,
+        _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).LOCALE__CHINESE_SIMPLIFIED: 20,
+    }
     BUTTON_FONT_COLOR = '#FCFCFC'
     BUTTON_BACKGROUND_COLOR = '#2C2C2C'
     BUTTON_HEIGHT = 32
@@ -52,7 +115,15 @@ class GUIConstants:
     @staticmethod
     def get_body_font_name(locale=None):
         if not locale:
-            locale = _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__LOCALE)
+            locale = (
+                _dependency('seedsigner.models.settings', 'Settings')
+                .get_instance()
+                .get_value(
+                    _dependency(
+                        'seedsigner.models.settings_definition', 'SettingsConstants'
+                    ).SETTING__LOCALE
+                )
+            )
         if locale in GUIConstants.BODY_FONT_NAME:
             return GUIConstants.BODY_FONT_NAME[locale]
         else:
@@ -61,7 +132,15 @@ class GUIConstants:
     @staticmethod
     def get_body_font_size(locale=None):
         if not locale:
-            locale = _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__LOCALE)
+            locale = (
+                _dependency('seedsigner.models.settings', 'Settings')
+                .get_instance()
+                .get_value(
+                    _dependency(
+                        'seedsigner.models.settings_definition', 'SettingsConstants'
+                    ).SETTING__LOCALE
+                )
+            )
         if locale in GUIConstants.BODY_FONT_SIZE:
             return GUIConstants.BODY_FONT_SIZE[locale]
         else:
@@ -69,7 +148,15 @@ class GUIConstants:
 
     @staticmethod
     def get_top_nav_title_font_name():
-        locale = _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__LOCALE)
+        locale = (
+            _dependency('seedsigner.models.settings', 'Settings')
+            .get_instance()
+            .get_value(
+                _dependency(
+                    'seedsigner.models.settings_definition', 'SettingsConstants'
+                ).SETTING__LOCALE
+            )
+        )
         if locale in GUIConstants.TOP_NAV_TITLE_FONT_NAME:
             return GUIConstants.TOP_NAV_TITLE_FONT_NAME[locale]
         else:
@@ -77,7 +164,15 @@ class GUIConstants:
 
     @staticmethod
     def get_top_nav_title_font_size():
-        locale = _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__LOCALE)
+        locale = (
+            _dependency('seedsigner.models.settings', 'Settings')
+            .get_instance()
+            .get_value(
+                _dependency(
+                    'seedsigner.models.settings_definition', 'SettingsConstants'
+                ).SETTING__LOCALE
+            )
+        )
         if locale in GUIConstants.TOP_NAV_TITLE_FONT_SIZE:
             return GUIConstants.TOP_NAV_TITLE_FONT_SIZE[locale]
         else:
@@ -86,7 +181,15 @@ class GUIConstants:
     @staticmethod
     def get_button_font_name(locale=None):
         if not locale:
-            locale = _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__LOCALE)
+            locale = (
+                _dependency('seedsigner.models.settings', 'Settings')
+                .get_instance()
+                .get_value(
+                    _dependency(
+                        'seedsigner.models.settings_definition', 'SettingsConstants'
+                    ).SETTING__LOCALE
+                )
+            )
         if locale in GUIConstants.BUTTON_FONT_NAME:
             return GUIConstants.BUTTON_FONT_NAME[locale]
         else:
@@ -95,11 +198,20 @@ class GUIConstants:
     @staticmethod
     def get_button_font_size(locale=None):
         if not locale:
-            locale = _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__LOCALE)
+            locale = (
+                _dependency('seedsigner.models.settings', 'Settings')
+                .get_instance()
+                .get_value(
+                    _dependency(
+                        'seedsigner.models.settings_definition', 'SettingsConstants'
+                    ).SETTING__LOCALE
+                )
+            )
         if locale in GUIConstants.BUTTON_FONT_SIZE:
             return GUIConstants.BUTTON_FONT_SIZE[locale]
         else:
             return GUIConstants.BUTTON_FONT_SIZE['default']
+
 
 class FontAwesomeIconConstants:
     ANGLE_DOWN = '\uf107'
@@ -135,6 +247,7 @@ class FontAwesomeIconConstants:
     BATTERY_QUARTER = '\uf243'
     BATTERY_EMPTY = '\uf244'
     BATTERY_CHARGING = '\uf0e7'
+
 
 class SeedSignerIconConstants:
     SCAN = '\ue900'

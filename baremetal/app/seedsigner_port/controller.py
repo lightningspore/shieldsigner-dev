@@ -1,39 +1,46 @@
 # Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner
 # Original foreground Controller; reviewed native setup/error/service boundaries.
-from seedsigner_port.decode_platform import dependency as _dependency,FeatureUnavailable
+from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
 from seedsigner_port.navigation import Destination
 from seedsigner_port.app_services import NativeIdleWipe
+
+
 class StopFlowBasedTest(Exception):
     """
-        This is a special exception that is only raised by the test suite to stop the
-        Controller's main loop. It should not be raised by any other code.
+    This is a special exception that is only raised by the test suite to stop the
+    Controller's main loop. It should not be raised by any other code.
     """
+
     pass
+
 
 class FlowBasedTestException(Exception):
     """
-        This is a special exception that is only raised by the test suite.
-        It should not be raised by any other code.
+    This is a special exception that is only raised by the test suite.
+    It should not be raised by any other code.
     """
+
     pass
+
 
 class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
     """
-        The Controller is a globally available singleton that maintains SeedSigner state.
+    The Controller is a globally available singleton that maintains SeedSigner state.
 
-        It only makes sense to ever have a single Controller instance so it is
-        implemented here as a singleton. One departure from the typical singleton pattern
-        is the addition of a `configure_instance()` call to pass run-time settings into
-        the Controller.
+    It only makes sense to ever have a single Controller instance so it is
+    implemented here as a singleton. One departure from the typical singleton pattern
+    is the addition of a `configure_instance()` call to pass run-time settings into
+    the Controller.
 
-        Any code that needs to interact with the one and only Controller can just run:
-        ```
-        from seedsigner.controller import Controller
-        controller = Controller.get_instance()
-        ```
-        Note: In many/most cases you'll need to do the Controller import within a method
-        rather than at the top in order avoid circular imports.
+    Any code that needs to interact with the one and only Controller can just run:
+    ```
+    from seedsigner.controller import Controller
+    controller = Controller.get_instance()
+    ```
+    Note: In many/most cases you'll need to do the Controller import within a method
+    rather than at the top in order avoid circular imports.
     """
+
     VERSION = 'SeSi-0.8.7+ShSi-B13'
     RELEASE_BLOCK_HEIGHT = 963408
     RELEASE_BLOCK_TIME = 1787616000
@@ -95,8 +102,8 @@ class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
     @classmethod
     def reset_instance(cls):
         """
-            Currently used by the screenshot generator, but could potentially be used to
-            wipe and reset the state of the device.
+        Currently used by the screenshot generator, but could potentially be used to
+        wipe and reset the state of the device.
         """
         cls._instance = None
         cls.configure_instance()
@@ -179,15 +186,46 @@ class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
             elif initial_destination:
                 next_destination = initial_destination
             else:
-                next_destination = _dependency('seedsigner.views.view', 'Destination')(_dependency('seedsigner.views', 'MainMenuView'))
-            if _dependency('seedsigner.models.settings', 'Settings').RUNTIME_PROFILE not in {'luckfox_22', 'luckfox_40', 'luckfox_pi', 'desktop'}:
-                if self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__MICROSD_TOAST_TIMER) == _dependency('seedsigner.models.settings_definition', 'SettingsConstants').MICROSD_TOAST_TIMER_FIVE_SECONDS:
-                    self.activate_toast(_dependency('seedsigner.gui.toast', 'RemoveSDCardToastManagerThread')())
-                elif self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__MICROSD_TOAST_TIMER) == _dependency('seedsigner.models.settings_definition', 'SettingsConstants').MICROSD_TOAST_TIMER_FOREVER:
-                    next_destination = _dependency('seedsigner.views.view', 'Destination')(_dependency('seedsigner.views', 'RemoveMicroSDWarningView'))
+                next_destination = _dependency('seedsigner.views.view', 'Destination')(
+                    _dependency('seedsigner.views', 'MainMenuView')
+                )
+            if _dependency('seedsigner.models.settings', 'Settings').RUNTIME_PROFILE not in {
+                'luckfox_22',
+                'luckfox_40',
+                'luckfox_pi',
+                'desktop',
+            }:
+                if (
+                    self.settings.get_value(
+                        _dependency(
+                            'seedsigner.models.settings_definition', 'SettingsConstants'
+                        ).SETTING__MICROSD_TOAST_TIMER
+                    )
+                    == _dependency(
+                        'seedsigner.models.settings_definition', 'SettingsConstants'
+                    ).MICROSD_TOAST_TIMER_FIVE_SECONDS
+                ):
+                    self.activate_toast(
+                        _dependency('seedsigner.gui.toast', 'RemoveSDCardToastManagerThread')()
+                    )
+                elif (
+                    self.settings.get_value(
+                        _dependency(
+                            'seedsigner.models.settings_definition', 'SettingsConstants'
+                        ).SETTING__MICROSD_TOAST_TIMER
+                    )
+                    == _dependency(
+                        'seedsigner.models.settings_definition', 'SettingsConstants'
+                    ).MICROSD_TOAST_TIMER_FOREVER
+                ):
+                    next_destination = _dependency('seedsigner.views.view', 'Destination')(
+                        _dependency('seedsigner.views', 'RemoveMicroSDWarningView')
+                    )
             while True:
                 if next_destination.View_cls is None:
-                    next_destination = _dependency('seedsigner.views.view', 'Destination')(_dependency('seedsigner.views', 'MainMenuView'))
+                    next_destination = _dependency('seedsigner.views.view', 'Destination')(
+                        _dependency('seedsigner.views', 'MainMenuView')
+                    )
                 if next_destination.View_cls == _dependency('seedsigner.views', 'MainMenuView'):
                     self.clear_back_stack()
                     self.resume_main_flow = None
@@ -201,7 +239,16 @@ class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
                     self.image_entropy_preview_frames = None
                     self.image_entropy_final_image = None
                     self.password_generator_entropy_cache = None
-                    if _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__CACHE_SCARD_PIN) != 'E':
+                    if (
+                        _dependency('seedsigner.models.settings', 'Settings')
+                        .get_instance()
+                        .get_value(
+                            _dependency(
+                                'seedsigner.models.settings_definition', 'SettingsConstants'
+                            ).SETTING__CACHE_SCARD_PIN
+                        )
+                        != 'E'
+                    ):
                         self.Satochip_PIN = None
                         self.Satochip_Last_UID_SHA1 = None
                         self.Satochip_Connector = None
@@ -220,12 +267,16 @@ class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
                 except (KeyboardInterrupt, SystemExit):
                     raise
                 except NativeIdleWipe:
-                    next_destination = Destination(_dependency('seedsigner.views', 'MainMenuView'), clear_history=True)
+                    next_destination = Destination(
+                        _dependency('seedsigner.views', 'MainMenuView'), clear_history=True
+                    )
                 except BaseException as e:
                     pass
                     next_destination = self.handle_exception(e)
                 if not next_destination:
-                    next_destination = _dependency('seedsigner.views.view', 'Destination')(_dependency('seedsigner.views.view', 'NotYetImplementedView'))
+                    next_destination = _dependency('seedsigner.views.view', 'Destination')(
+                        _dependency('seedsigner.views.view', 'NotYetImplementedView')
+                    )
                 if next_destination.skip_current_view:
                     current_view = self.back_stack.pop()
                     pass
@@ -257,7 +308,9 @@ class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
                 self.rng_monitor_thread.stop()
             if _dependency('sys', None).exc_info()[0] is None:
                 pass
-                _dependency('seedsigner.gui.renderer', 'Renderer').get_instance().display_blank_screen()
+                _dependency(
+                    'seedsigner.gui.renderer', 'Renderer'
+                ).get_instance().display_blank_screen()
             else:
                 pass
 
@@ -271,7 +324,9 @@ class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
             self.toast_notification_thread.toggle_renderer_lock()
         pass
         if not self.screensaver:
-            self.screensaver = _dependency('seedsigner.views.screensaver', 'ScreensaverScreen')(_dependency('seedsigner.hardware.buttons', 'HardwareButtons').get_instance())
+            self.screensaver = _dependency('seedsigner.views.screensaver', 'ScreensaverScreen')(
+                _dependency('seedsigner.hardware.buttons', 'HardwareButtons').get_instance()
+            )
         self.screensaver.start()
         pass
 
@@ -280,7 +335,9 @@ class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
         Reset the screensaver's timeout starting point to right now (i.e. make it think
         that zero time has elapsed since the last user interaction).
         """
-        _dependency('seedsigner.hardware.buttons', 'HardwareButtons').get_instance().update_last_input_time()
+        _dependency(
+            'seedsigner.hardware.buttons', 'HardwareButtons'
+        ).get_instance().update_last_input_time()
         _dependency('ui', None).overlays(3)
 
     def activate_toast(self, toast_manager_thread):
@@ -338,9 +395,17 @@ class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
         self.image_entropy_preview_frames = None
         self.image_entropy_final_image = None
         self.clear_back_stack()
-        self.back_stack.append(_dependency('seedsigner.views.view', 'Destination')(_dependency('seedsigner.views', 'MainMenuView')))
+        self.back_stack.append(
+            _dependency('seedsigner.views.view', 'Destination')(
+                _dependency('seedsigner.views', 'MainMenuView')
+            )
+        )
         self.auto_wiped = True
-        self.activate_toast(_dependency('seedsigner.gui.toast', 'InfoToast')(label_text=_dependency('gettext', 'gettext')('Data wiped after inactivity')))
+        self.activate_toast(
+            _dependency('seedsigner.gui.toast', 'InfoToast')(
+                label_text=_dependency('gettext', 'gettext')('Data wiped after inactivity')
+            )
+        )
         raise NativeIdleWipe()
 
     def handle_exception(self, e):
@@ -348,25 +413,48 @@ class Controller(_dependency('seedsigner.models.singleton', 'Singleton')):
         line_info = ''
         if location is not None:
             line_info = '{}, {} in {}'.format(location[0], location[1], location[2])
-        return _dependency('seedsigner.views.view', 'Destination')(_dependency('seedsigner.views.view', 'UnhandledExceptionView'), view_args={'error': [type(e).__name__, line_info, str(e)]}, clear_history=True)
+        return _dependency('seedsigner.views.view', 'Destination')(
+            _dependency('seedsigner.views.view', 'UnhandledExceptionView'),
+            view_args={'error': [type(e).__name__, line_info, str(e)]},
+            clear_history=True,
+        )
 
     @property
     def is_screensaver_start_allowed(self):
         """
-            Determines whether the screensaver is allowed to start.
+        Determines whether the screensaver is allowed to start.
 
-            The screensaver can start only if:
-            - It is not currently running.
-            - The current active view allows screensaver activity.
+        The screensaver can start only if:
+        - It is not currently running.
+        - The current active view allows screensaver activity.
         """
-        active_view = self.back_stack[-1].view if self.back_stack else _dependency('seedsigner.views', 'MainMenuView')()
+        active_view = (
+            self.back_stack[-1].view
+            if self.back_stack
+            else _dependency('seedsigner.views', 'MainMenuView')()
+        )
         return not self.is_screensaver_running and active_view.is_screensaver_allowed
 
     def service(self):
-        minutes = self.settings.get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__WIPE_TIMER)
-        if minutes and minutes != _dependency('seedsigner.models.settings_definition', 'SettingsConstants').WIPE_TIMER__DISABLED:
+        minutes = self.settings.get_value(
+            _dependency(
+                'seedsigner.models.settings_definition', 'SettingsConstants'
+            ).SETTING__WIPE_TIMER
+        )
+        if (
+            minutes
+            and minutes
+            != _dependency(
+                'seedsigner.models.settings_definition', 'SettingsConstants'
+            ).WIPE_TIMER__DISABLED
+        ):
             self.wipe_timer_ms = minutes * 60000
-            buttons = _dependency('seedsigner_port.hardware_buttons', 'HardwareButtons').get_instance()
-            if int(_dependency('seedsigner_port', 'clock').time() * 1000) - buttons.last_input_time > self.wipe_timer_ms:
+            buttons = _dependency(
+                'seedsigner_port.hardware_buttons', 'HardwareButtons'
+            ).get_instance()
+            if (
+                int(_dependency('seedsigner_port', 'clock').time() * 1000) - buttons.last_input_time
+                > self.wipe_timer_ms
+            ):
                 buttons.update_last_input_time()
                 self.handle_wipe_timeout()

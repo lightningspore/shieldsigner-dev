@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MIT
 import machine
+
 status = machine.console_status()
 assert status['usb_only'] == 1
 assert status['usb_ready'] == 1

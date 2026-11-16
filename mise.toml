@@ -1141,8 +1141,11 @@ description = "Read-only REF UART and DUT maskrom access checks; all evidence st
 run = "uv run --python 3.13 python baremetal/tools/doctor.py"
 
 [tasks."baremetal:check"]
-description = "Host-only UART transport and camera-evidence validation; does not access either board"
-run = "uv run --python 3.13 python -m unittest discover -s baremetal/tests -v"
+description = "Host tests and Python format check; does not access either board"
+run = [
+  "cd baremetal && uvx ruff@0.17.5 format --check .",
+  "uv run --python 3.13 python -m unittest discover -s baremetal/tests -v",
+]
 
 [tasks."baremetal:build"]
 description = "Build the original RV1103 RAM hello payload and pack unchanged vendor DDR initialization"

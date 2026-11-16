@@ -1,0 +1,25 @@
+# Python style for hand-written and generated baremetal code: `ruff format`.
+# Generated modules are formatted on write by tools/pyformat.py, so rerunning
+# a tools/prepare_*.py generator reproduces the committed (formatted) file.
+line-length = 100
+# Frozen modules run on MicroPython: keep syntax conservative.
+target-version = "py37"
+# Vendored upstream sources keep their upstream form (provenance receipts).
+extend-exclude = [
+    "app/embit",
+    "app/qrcode",
+    "app/shamir_mnemonic",
+    "app/urtypes",
+    "app/seedsigner_port/ur2",
+    "app/base64.py",
+    "app/hmac.py",
+    "app/seedsigner_port/defaultdict.py",
+    "logs",
+    "build",
+    "target",
+    ".tools",
+    "ref-dumps",
+]
+
+[format]
+quote-style = "preserve"

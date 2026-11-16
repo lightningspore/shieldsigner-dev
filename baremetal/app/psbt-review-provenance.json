@@ -5,7 +5,7 @@
   },
   "source": "models/psbt_parser.py",
   "sourceSha256": "ab5bc31e372d2f008c1b0574c601801111b5f301422b89e2dcf256cd88985c7e",
-  "outputSha256": "8f165d32f23ba36428b7df6b3216ecc7cf283689c81d74c97535a536db04178f",
+  "outputSha256": "fd632243e5bb90bd961c1aa0764cba13e7391bd44b3350131f7ca1b9b34b7988",
   "classes": [
     "OPCODES",
     "RiskWarning",

@@ -1,5 +1,7 @@
 # Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner
 from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
+
+
 class Singleton:
     _instance = None
 
@@ -12,8 +14,8 @@ class Singleton:
             cls._instance = object.__new__(cls)
         return cls._instance
 
-class ConfigurableSingleton(Singleton):
 
+class ConfigurableSingleton(Singleton):
     @classmethod
     def get_instance(cls):
         if cls._instance:

@@ -1,30 +1,36 @@
 # SPDX-License-Identifier: MIT
 """Foreground preview. Frame views expire at the next camera fetch or stop."""
+
 import time
+
 
 def run(duration_ms=60000):
     import camera
     import display
     from seedsigner_port.buttons import ButtonInput
     from seedsigner_port.native_ui import ScreenSession
-    screen=ScreenSession()
-    buttons=ButtonInput()
+
+    screen = ScreenSession()
+    buttons = ButtonInput()
     camera.init()
-    frames=0
-    started=time.ticks_ms()
+    frames = 0
+    started = time.ticks_ms()
     try:
         camera.start_preview()
-        ready=time.ticks_ms()
-        while ((time.ticks_ms()-ready)&0xffffffff)<duration_ms:
-            frame=camera.next_preview()
+        ready = time.ticks_ms()
+        while ((time.ticks_ms() - ready) & 0xFFFFFFFF) < duration_ms:
+            frame = camera.next_preview()
             display.blit_nv12(frame)
-            frames+=1
+            frames += 1
             # Poll during a short service interval so ordinary presses debounce.
             for _ in range(3):
-                if buttons.poll(('KEY_PRESS','KEY3')) is not None:
-                    return frames,((time.ticks_ms()-ready)&0xffffffff)
+                if buttons.poll(('KEY_PRESS', 'KEY3')) is not None:
+                    return frames, ((time.ticks_ms() - ready) & 0xFFFFFFFF)
                 time.sleep_ms(5)
-        return frames,((time.ticks_ms()-ready)&0xffffffff)
+        return frames, ((time.ticks_ms() - ready) & 0xFFFFFFFF)
     finally:
         camera.stop_preview()
-        screen.show('main_menu_screen',{'top_nav':{'title':'Home'},'button_list':['Scan','Seeds','Tools','Settings']})
+        screen.show(
+            'main_menu_screen',
+            {'top_nav': {'title': 'Home'}, 'button_list': ['Scan', 'Seeds', 'Tools', 'Settings']},
+        )

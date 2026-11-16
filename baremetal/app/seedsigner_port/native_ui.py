@@ -5,17 +5,28 @@ No wallet/controller flow lives here. Screen names/configs stay the upstream
 screen-library contract; unsupported builders raise instead of drawing fallbacks.
 Key codes match firmware/lvgl-app/python/runtime.py and native navigation.cpp.
 """
+
 import json
 import time
 from seedsigner_port.buttons import ButtonInput
 
-KEYS = {'KEY_UP':17, 'KEY_DOWN':18, 'KEY_LEFT':20, 'KEY_RIGHT':19,
-        'KEY_PRESS':10, 'KEY1':49, 'KEY2':50, 'KEY3':51}
+KEYS = {
+    'KEY_UP': 17,
+    'KEY_DOWN': 18,
+    'KEY_LEFT': 20,
+    'KEY_RIGHT': 19,
+    'KEY_PRESS': 10,
+    'KEY1': 49,
+    'KEY2': 50,
+    'KEY3': 51,
+}
+
 
 class ScreenSession:
     def __init__(self, backend=None, buttons=None, clock=None, sleep=None, service=None):
         if backend is None:
             import ui
+
             backend = ui
         self.service = service
         self.backend = backend
@@ -39,7 +50,8 @@ class ScreenSession:
     def poll(self):
         if self.current is None:
             raise RuntimeError('Show a screen before polling')
-        if self.service is not None:self.service()
+        if self.service is not None:
+            self.service()
         self.backend.tick()
         key = self.buttons.poll()
         if key == 1000:
@@ -53,14 +65,14 @@ class ScreenSession:
         return self.backend.event()
 
     def wait(self, timeout_ms=None):
-        if timeout_ms is not None and (timeout_ms < 0 or timeout_ms > 0x7fffffff):
+        if timeout_ms is not None and (timeout_ms < 0 or timeout_ms > 0x7FFFFFFF):
             raise ValueError('Timeout outside wrap-safe interval')
         start = self.clock()
         while True:
             event = self.poll()
             if event is not None:
                 return event
-            if timeout_ms is not None and ((self.clock()-start)&0xffffffff) >= timeout_ms:
+            if timeout_ms is not None and ((self.clock() - start) & 0xFFFFFFFF) >= timeout_ms:
                 return None
             self.sleep(5)
 
@@ -70,18 +82,20 @@ class ScreenSession:
 
     def show_screen(self, screen_class, arguments, translate=None):
         from seedsigner_port.screen_contracts import configuration
-        builder,config=configuration(screen_class,arguments,translate)
-        self.show(builder,config)
-        self._button_count=len(config.get('button_list',[]))
-        self._screen_name=screen_class if isinstance(screen_class,str) else screen_class.__name__
+
+        builder, config = configuration(screen_class, arguments, translate)
+        self.show(builder, config)
+        self._button_count = len(config.get('button_list', []))
+        self._screen_name = screen_class if isinstance(screen_class, str) else screen_class.__name__
 
     def screen_result(self, event):
         from seedsigner_port.screen_contracts import result
+
         if self._button_count is None:
             raise RuntimeError("Show an adapted app screen before interpreting its result")
-        return result(event,self._button_count,self._screen_name)
+        return result(event, self._button_count, self._screen_name)
 
     def run_screen(self, screen_class, arguments, timeout_ms=None, translate=None):
-        self.show_screen(screen_class,arguments,translate)
-        event=self.wait(timeout_ms)
+        self.show_screen(screen_class, arguments, translate)
+        event = self.wait(timeout_ms)
         return None if event is None else self.screen_result(event)

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # Generated PUBLIC format envelopes. No private QR text/payload is printed.
-from seedsigner_port import kef,base43
+from seedsigner_port import kef, base43
 from seedsigner_port.encryption import EncryptedQRCode
 from seedsigner_port.bip38 import BIP38Key
 from seedsigner_port.decode_qr import DecodeQR
@@ -8,36 +8,543 @@ from seedsigner_port.decode_platform import FeatureUnavailable
 from seedsigner_port.controller import Controller
 from seedsigner_port.seed import InvalidSeedException
 from seedsigner_port.qr_type import QRType
-import gc,machine
-c=Controller.get_instance()
-for seed in list(c.storage.seeds):c.discard_seed(seed)
+import gc, machine
+
+c = Controller.get_instance()
+for seed in list(c.storage.seeds):
+    c.discard_seed(seed)
 c.storage.clear_pending_seed()
-cases=[(b'', None, None), (b'\x00', None, None), (b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00', None, None), (b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f', None, None), (b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13', None, None), (b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17', None, None), (b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b', None, None), (b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f', None, None), (b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n', None, None), (b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x00', None, None), (b'\x00\x00\x00\x00\nBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-ECB v1\nPBKDF2 iter.: 100000', (b'', 0, 100000, b'BBBBBBBBBBBBBBBB')), (b'0000280D*TSJD7I/ZS*STLYX2Z48H', 'Encrypted QR Code:\nID: \nVersion: AES-ECB v1\nPBKDF2 iter.: 100000', (b'', 0, 100000, b'BBBBBBBBBBBBBBBB')), (b'\x00\x00\x00\x00\nBBBBBBBBBBBBBBB', None, None), (b'\x06public\x00\x00\x00\nBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-ECB v1\nPBKDF2 iter.: 100000', (b'public', 0, 100000, b'BBBBBBBBBBBBBBBB')), (b'MJKVU-NLT8QA3H8/IFR6T$PU20IS2IQ6M8WJH.V', 'Encrypted QR Code:\nID: public\nVersion: AES-ECB v1\nPBKDF2 iter.: 100000', (b'public', 0, 100000, b'BBBBBBBBBBBBBBBB')), (b'\x06public\x00\x00\x00\nBBBBBBBBBBBBBBB', None, None), (b'\x01\xff\x00\x00\x00\nBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB v1\nPBKDF2 iter.: 100000", (b'\xff', 0, 100000, b'BBBBBBBBBBBBBBBB')), (b'1U:MK1$T$M$:.7CT+ILQUSRW5U0QEM1/', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB v1\nPBKDF2 iter.: 100000", (b'\xff', 0, 100000, b'BBBBBBBBBBBBBBBB')), (b'\x01\xff\x00\x00\x00\nBBBBBBBBBBBBBBB', None, None), (b'\x00\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-CBC v1\nPBKDF2 iter.: 100000', (b'', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'09P39TH-+KMTW-V+EL:C*E9I/NOV4IU$:O5BR9M6NB.A:785JCE03', 'Encrypted QR Code:\nID: \nVersion: AES-CBC v1\nPBKDF2 iter.: 100000', (b'', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x00\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x06public\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-CBC v1\nPBKDF2 iter.: 100000', (b'public', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'4XWBPYR+JU3.FE3BN:HF+IWS8B8PMG-*I32XA-LKX45$HI*XFKDPMRPMA.:PMTG', 'Encrypted QR Code:\nID: public\nVersion: AES-CBC v1\nPBKDF2 iter.: 100000', (b'public', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x06public\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x01\xff\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC v1\nPBKDF2 iter.: 100000", (b'\xff', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'FX0EY/7.BAM2Z:9EHRRUT$64.EHG2NEU2PJY9E9A3X28RPBP.J+ZO$D', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC v1\nPBKDF2 iter.: 100000", (b'\xff', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x00\x05\x00\x00\nBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-ECB\nPBKDF2 iter.: 100000', (b'', 5, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'0PSGODMUD+5/Y:1Z7Z9UK7OI2:U7C8A:Z9', 'Encrypted QR Code:\nID: \nVersion: AES-ECB\nPBKDF2 iter.: 100000', (b'', 5, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'\x00\x05\x00\x00\nBBBBBBBBBBBBBBBBBB', None, None), (b'\x06public\x05\x00\x00\nBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-ECB\nPBKDF2 iter.: 100000', (b'public', 5, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'2O7.YQ3PCCY429EI8R9XH4BCV67Q2-YEL610L7BV6AAQ', 'Encrypted QR Code:\nID: public\nVersion: AES-ECB\nPBKDF2 iter.: 100000', (b'public', 5, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'\x06public\x05\x00\x00\nBBBBBBBBBBBBBBBBBB', None, None), (b'\x01\xff\x05\x00\x00\nBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB\nPBKDF2 iter.: 100000", (b'\xff', 5, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'8J4HKR+JY1WIW.AR*FGJ7.-J1HTG-6XD+E8W', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB\nPBKDF2 iter.: 100000", (b'\xff', 5, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x05\x00\x00\nBBBBBBBBBBBBBBBBBB', None, None), (b'\x00\x06\x00\x00\nBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-ECB +p\nPBKDF2 iter.: 100000', (b'', 6, 100000, b'BBBBBBBBBBBBBBBB')), (b'06BY.QU:VVND15+PR6:F7UKPP01OG.', 'Encrypted QR Code:\nID: \nVersion: AES-ECB +p\nPBKDF2 iter.: 100000', (b'', 6, 100000, b'BBBBBBBBBBBBBBBB')), (b'\x00\x06\x00\x00\nBBBBBBBBBBBBBBB', None, None), (b'\x06public\x06\x00\x00\nBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-ECB +p\nPBKDF2 iter.: 100000', (b'public', 6, 100000, b'BBBBBBBBBBBBBBBB')), (b'MJKVU-NLT8WL+EXLHXL0EIII8SW/M.R5D0TS+6B', 'Encrypted QR Code:\nID: public\nVersion: AES-ECB +p\nPBKDF2 iter.: 100000', (b'public', 6, 100000, b'BBBBBBBBBBBBBBBB')), (b'\x06public\x06\x00\x00\nBBBBBBBBBBBBBBB', None, None), (b'\x01\xff\x06\x00\x00\nBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB +p\nPBKDF2 iter.: 100000", (b'\xff', 6, 100000, b'BBBBBBBBBBBBBBBB')), (b'1U:SV$YBGMB$XY*MQP6/166X4KZNN:AL', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB +p\nPBKDF2 iter.: 100000", (b'\xff', 6, 100000, b'BBBBBBBBBBBBBBBB')), (b'\x01\xff\x06\x00\x00\nBBBBBBBBBBBBBBB', None, None), (b'\x00\x07\x00\x00\nBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-ECB +c\nPBKDF2 iter.: 100000', (b'', 7, 100000, b'BBBBBBBBBBBBBBBB')), (b'07DXP*/:RNF3CJ0X-28W.1/+GL36B8', 'Encrypted QR Code:\nID: \nVersion: AES-ECB +c\nPBKDF2 iter.: 100000', (b'', 7, 100000, b'BBBBBBBBBBBBBBBB')), (b'\x00\x07\x00\x00\nBBBBBBBBBBBBBBB', None, None), (b'\x06public\x07\x00\x00\nBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-ECB +c\nPBKDF2 iter.: 100000', (b'public', 7, 100000, b'BBBBBBBBBBBBBBBB')), (b'MJKVU-NLT8XN*01WHTCZ4TVNG.S7.T/QPZ7UK0M', 'Encrypted QR Code:\nID: public\nVersion: AES-ECB +c\nPBKDF2 iter.: 100000', (b'public', 7, 100000, b'BBBBBBBBBBBBBBBB')), (b'\x06public\x07\x00\x00\nBBBBBBBBBBBBBBB', None, None), (b'\x01\xff\x07\x00\x00\nBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB +c\nPBKDF2 iter.: 100000", (b'\xff', 7, 100000, b'BBBBBBBBBBBBBBBB')), (b'1U:TXZJMRM7SPP5ZVXI$AN-4PXR1PO4W', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB +c\nPBKDF2 iter.: 100000", (b'\xff', 7, 100000, b'BBBBBBBBBBBBBBBB')), (b'\x01\xff\x07\x00\x00\nBBBBBBBBBBBBBBB', None, None), (b'\x00\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-CBC\nPBKDF2 iter.: 100000', (b'', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'01M4X+7H$*GP9SEVWCC:C46V5U6XZ3YFW.5$2186:$IGJ.-T7U75UOL5+NFY', 'Encrypted QR Code:\nID: \nVersion: AES-CBC\nPBKDF2 iter.: 100000', (b'', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x00\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x06public\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-CBC\nPBKDF2 iter.: 100000', (b'public', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'3AY6.S3Z2ISVM$3*5H7GSME05BY2ZRKZ83/H-E7DVKXDSD034ENU8UF+2$81R5F8OH69R', 'Encrypted QR Code:\nID: public\nVersion: AES-CBC\nPBKDF2 iter.: 100000', (b'public', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x06public\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x01\xff\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC\nPBKDF2 iter.: 100000", (b'\xff', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'AUT+UGM-OKUAE23JDL7PRPCGCF1U3UVJLJWZ8-C1EOE/84$IQ23-$C35YCV8M', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC\nPBKDF2 iter.: 100000", (b'\xff', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x00\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-CBC +p\nPBKDF2 iter.: 100000', (b'', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'02JHZF*AWNKNUJQQPLN:BGOXZT-FUSN$FUBKQCWZO891HQ+P:71A4D', 'Encrypted QR Code:\nID: \nVersion: AES-CBC +p\nPBKDF2 iter.: 100000', (b'', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x00\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x06public\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-CBC +p\nPBKDF2 iter.: 100000', (b'public', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'4XWBPYR+JU67839JGZ2F-JJF2/FRMFJ4:JY61-2P+P$NWXNDS*/MQYAASYUEIXQ', 'Encrypted QR Code:\nID: public\nVersion: AES-CBC +p\nPBKDF2 iter.: 100000', (b'public', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x06public\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x01\xff\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC +p\nPBKDF2 iter.: 100000", (b'\xff', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'FX2ORUE54372$:-1CEYWTYSFLV5V$M+Z847LOS*XH7U5VV-EFDQOK.N', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC +p\nPBKDF2 iter.: 100000", (b'\xff', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x00\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-CBC +c\nPBKDF2 iter.: 100000', (b'', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'02S:+P3RADGA-5GUFQO7*1P$BOJJ4ZBJUXEM6BDSD2HEV87E*A4IDE', 'Encrypted QR Code:\nID: \nVersion: AES-CBC +c\nPBKDF2 iter.: 100000', (b'', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x00\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x06public\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-CBC +c\nPBKDF2 iter.: 100000', (b'public', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'4XWBPYR+JU6GX6ISXCZBQS556VKRU/461+ST5D9DL.-QYDL*LQZU.4YMHTXHQ:R', 'Encrypted QR Code:\nID: public\nVersion: AES-CBC +c\nPBKDF2 iter.: 100000', (b'public', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x06public\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x01\xff\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC +c\nPBKDF2 iter.: 100000", (b'\xff', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'FX2Y9XNEKN-/O8OYG4-W+HDGO70B-.2MYJAOQ8$E9-OE22KQ48TRT6O', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC +c\nPBKDF2 iter.: 100000", (b'\xff', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None), (b'\x00\x0f\x00\x00\nBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-CTR\nPBKDF2 iter.: 100000', (b'', 15, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'01X:6TJ5J*L39OKL/WYXG8E2N*1TH7ZX:TW', 'Encrypted QR Code:\nID: \nVersion: AES-CTR\nPBKDF2 iter.: 100000', (b'', 15, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'\x00\x0f\x00\x00\nBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-CTR\nPBKDF2 iter.: 100000', (b'', 15, 100000, b'BBBBBBBBBBBBBBBBBB')), (b'\x06public\x0f\x00\x00\nBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-CTR\nPBKDF2 iter.: 100000', (b'public', 15, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'2O7.YQ3PCCZCF:JNYGXGEF0Y8CWPQPMK:BZ2KH7FTA56', 'Encrypted QR Code:\nID: public\nVersion: AES-CTR\nPBKDF2 iter.: 100000', (b'public', 15, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'\x06public\x0f\x00\x00\nBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-CTR\nPBKDF2 iter.: 100000', (b'public', 15, 100000, b'BBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x0f\x00\x00\nBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR\nPBKDF2 iter.: 100000", (b'\xff', 15, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'8J5PYI0PGYD1U806EL/IVQRPMNKI+GS/IE3C', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR\nPBKDF2 iter.: 100000", (b'\xff', 15, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x0f\x00\x00\nBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR\nPBKDF2 iter.: 100000", (b'\xff', 15, 100000, b'BBBBBBBBBBBBBBBBBB')), (b'\x00\x10\x00\x00\nBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-CTR +c\nPBKDF2 iter.: 100000', (b'', 16, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'01-4ZYB3VVAX21-$+58.1*AHOI.P0/YAL7U', 'Encrypted QR Code:\nID: \nVersion: AES-CTR +c\nPBKDF2 iter.: 100000', (b'', 16, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'\x00\x10\x00\x00\nBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-CTR +c\nPBKDF2 iter.: 100000', (b'', 16, 100000, b'BBBBBBBBBBBBBBBBBB')), (b'\x06public\x10\x00\x00\nBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000', (b'public', 16, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'2O7.YQ3PCCZHLSOFWSR617LAN94:XB8HECG/G0/E5VQ4', 'Encrypted QR Code:\nID: public\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000', (b'public', 16, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'\x06public\x10\x00\x00\nBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000', (b'public', 16, 100000, b'BBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x10\x00\x00\nBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000", (b'\xff', 16, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'8J5U.45HF36YH0KPTIDZ+CDL*O2EY0J-*ZOA', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000", (b'\xff', 16, 100000, b'BBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x10\x00\x00\nBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000", (b'\xff', 16, 100000, b'BBBBBBBBBBBBBBBBBB')), (b'\x00\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-GCM\nPBKDF2 iter.: 100000', (b'', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'01QVV2NQXBTOWKRBZNNKP7ZK/VKINTF6R4J4:G.MM', 'Encrypted QR Code:\nID: \nVersion: AES-GCM\nPBKDF2 iter.: 100000', (b'', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'\x00\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-GCM\nPBKDF2 iter.: 100000', (b'', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBB')), (b'\x06public\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-GCM\nPBKDF2 iter.: 100000', (b'public', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'1V*5+--$2T1FDPDA8R7AYHFSV-NN:K+V++:PA8G/GO7-MHMBJ$', 'Encrypted QR Code:\nID: public\nVersion: AES-GCM\nPBKDF2 iter.: 100000', (b'public', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'\x06public\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-GCM\nPBKDF2 iter.: 100000', (b'public', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM\nPBKDF2 iter.: 100000", (b'\xff', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'5VVNB02R89:0X5774CI*KRZ5$3EUCNRP2FT9EYCP:3', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM\nPBKDF2 iter.: 100000", (b'\xff', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM\nPBKDF2 iter.: 100000", (b'\xff', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBB')), (b'\x00\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-GCM +c\nPBKDF2 iter.: 100000', (b'', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'01U9SDH:NA36XQK/.90*9.SZTGYLF0B*J6TLX48AX', 'Encrypted QR Code:\nID: \nVersion: AES-GCM +c\nPBKDF2 iter.: 100000', (b'', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'\x00\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: \nVersion: AES-GCM +c\nPBKDF2 iter.: 100000', (b'', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBB')), (b'\x06public\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000', (b'public', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'1V*5+--$2T1IYMO4OH5RGILMJ191G5SPAQR-C:U+4GA6-89M84', 'Encrypted QR Code:\nID: public\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000', (b'public', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'\x06public\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB', 'Encrypted QR Code:\nID: public\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000', (b'public', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000", (b'\xff', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'5VVQV.DLN:.HF6D0YH4E*CO:7Y01FE/LX7VJVO:$UE', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000", (b'\xff', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB')), (b'\x01\xff\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB', "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000", (b'\xff', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBB'))]
-for number,(raw,expected,state) in enumerate(cases):
-    obj,public=DecodeQR.parse_encrypted_qr(raw)
-    assert public==expected
-    if state is None:assert obj is None
-    else:assert (obj.mnemonic_id,obj.version,obj.iterations,obj.encrypted_data)==state
-    analysis=DecodeQR.analyze_bytedata_payload(raw)
-    assert (QRType.SEED__COMPACTSEEDQR in analysis.candidate_types)==(len(raw) in (16,20,24,28,32))
-    assert (QRType.SEED__ENCRYPTEDQR in analysis.candidate_types)==bool(expected)
-    if number%16==0:gc.collect()
-print('@@PASS original-QR-format-probes-cpython',len(cases))
-for text in ('','0','00','0123','000123','ABCDEF'):
-    raw=base43.base43_decode(text)
-    assert base43.base43_decode(base43.base43_encode(raw))==raw
+cases = [
+    (b'', None, None),
+    (b'\x00', None, None),
+    (b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00', None, None),
+    (b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f', None, None),
+    (b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13', None, None),
+    (
+        b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17',
+        None,
+        None,
+    ),
+    (
+        b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b',
+        None,
+        None,
+    ),
+    (
+        b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f',
+        None,
+        None,
+    ),
+    (b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n', None, None),
+    (b'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x00', None, None),
+    (
+        b'\x00\x00\x00\x00\nBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-ECB v1\nPBKDF2 iter.: 100000',
+        (b'', 0, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'0000280D*TSJD7I/ZS*STLYX2Z48H',
+        'Encrypted QR Code:\nID: \nVersion: AES-ECB v1\nPBKDF2 iter.: 100000',
+        (b'', 0, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x00\x00\x00\x00\nBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x06public\x00\x00\x00\nBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-ECB v1\nPBKDF2 iter.: 100000',
+        (b'public', 0, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'MJKVU-NLT8QA3H8/IFR6T$PU20IS2IQ6M8WJH.V',
+        'Encrypted QR Code:\nID: public\nVersion: AES-ECB v1\nPBKDF2 iter.: 100000',
+        (b'public', 0, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x06public\x00\x00\x00\nBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x01\xff\x00\x00\x00\nBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB v1\nPBKDF2 iter.: 100000",
+        (b'\xff', 0, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'1U:MK1$T$M$:.7CT+ILQUSRW5U0QEM1/',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB v1\nPBKDF2 iter.: 100000",
+        (b'\xff', 0, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x01\xff\x00\x00\x00\nBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x00\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-CBC v1\nPBKDF2 iter.: 100000',
+        (b'', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'09P39TH-+KMTW-V+EL:C*E9I/NOV4IU$:O5BR9M6NB.A:785JCE03',
+        'Encrypted QR Code:\nID: \nVersion: AES-CBC v1\nPBKDF2 iter.: 100000',
+        (b'', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x00\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x06public\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CBC v1\nPBKDF2 iter.: 100000',
+        (b'public', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'4XWBPYR+JU3.FE3BN:HF+IWS8B8PMG-*I32XA-LKX45$HI*XFKDPMRPMA.:PMTG',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CBC v1\nPBKDF2 iter.: 100000',
+        (b'public', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x06public\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x01\xff\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC v1\nPBKDF2 iter.: 100000",
+        (b'\xff', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'FX0EY/7.BAM2Z:9EHRRUT$64.EHG2NEU2PJY9E9A3X28RPBP.J+ZO$D',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC v1\nPBKDF2 iter.: 100000",
+        (b'\xff', 1, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x01\xff\x01\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x00\x05\x00\x00\nBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-ECB\nPBKDF2 iter.: 100000',
+        (b'', 5, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'0PSGODMUD+5/Y:1Z7Z9UK7OI2:U7C8A:Z9',
+        'Encrypted QR Code:\nID: \nVersion: AES-ECB\nPBKDF2 iter.: 100000',
+        (b'', 5, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x00\x05\x00\x00\nBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x06public\x05\x00\x00\nBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-ECB\nPBKDF2 iter.: 100000',
+        (b'public', 5, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'2O7.YQ3PCCY429EI8R9XH4BCV67Q2-YEL610L7BV6AAQ',
+        'Encrypted QR Code:\nID: public\nVersion: AES-ECB\nPBKDF2 iter.: 100000',
+        (b'public', 5, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x06public\x05\x00\x00\nBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x01\xff\x05\x00\x00\nBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB\nPBKDF2 iter.: 100000",
+        (b'\xff', 5, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'8J4HKR+JY1WIW.AR*FGJ7.-J1HTG-6XD+E8W',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB\nPBKDF2 iter.: 100000",
+        (b'\xff', 5, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x01\xff\x05\x00\x00\nBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x00\x06\x00\x00\nBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-ECB +p\nPBKDF2 iter.: 100000',
+        (b'', 6, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'06BY.QU:VVND15+PR6:F7UKPP01OG.',
+        'Encrypted QR Code:\nID: \nVersion: AES-ECB +p\nPBKDF2 iter.: 100000',
+        (b'', 6, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x00\x06\x00\x00\nBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x06public\x06\x00\x00\nBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-ECB +p\nPBKDF2 iter.: 100000',
+        (b'public', 6, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'MJKVU-NLT8WL+EXLHXL0EIII8SW/M.R5D0TS+6B',
+        'Encrypted QR Code:\nID: public\nVersion: AES-ECB +p\nPBKDF2 iter.: 100000',
+        (b'public', 6, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x06public\x06\x00\x00\nBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x01\xff\x06\x00\x00\nBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB +p\nPBKDF2 iter.: 100000",
+        (b'\xff', 6, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'1U:SV$YBGMB$XY*MQP6/166X4KZNN:AL',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB +p\nPBKDF2 iter.: 100000",
+        (b'\xff', 6, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x01\xff\x06\x00\x00\nBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x00\x07\x00\x00\nBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-ECB +c\nPBKDF2 iter.: 100000',
+        (b'', 7, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'07DXP*/:RNF3CJ0X-28W.1/+GL36B8',
+        'Encrypted QR Code:\nID: \nVersion: AES-ECB +c\nPBKDF2 iter.: 100000',
+        (b'', 7, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x00\x07\x00\x00\nBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x06public\x07\x00\x00\nBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-ECB +c\nPBKDF2 iter.: 100000',
+        (b'public', 7, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'MJKVU-NLT8XN*01WHTCZ4TVNG.S7.T/QPZ7UK0M',
+        'Encrypted QR Code:\nID: public\nVersion: AES-ECB +c\nPBKDF2 iter.: 100000',
+        (b'public', 7, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x06public\x07\x00\x00\nBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x01\xff\x07\x00\x00\nBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 7, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'1U:TXZJMRM7SPP5ZVXI$AN-4PXR1PO4W',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-ECB +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 7, 100000, b'BBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x01\xff\x07\x00\x00\nBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x00\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-CBC\nPBKDF2 iter.: 100000',
+        (b'', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'01M4X+7H$*GP9SEVWCC:C46V5U6XZ3YFW.5$2186:$IGJ.-T7U75UOL5+NFY',
+        'Encrypted QR Code:\nID: \nVersion: AES-CBC\nPBKDF2 iter.: 100000',
+        (b'', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x00\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x06public\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CBC\nPBKDF2 iter.: 100000',
+        (b'public', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'3AY6.S3Z2ISVM$3*5H7GSME05BY2ZRKZ83/H-E7DVKXDSD034ENU8UF+2$81R5F8OH69R',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CBC\nPBKDF2 iter.: 100000',
+        (b'public', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x06public\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x01\xff\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC\nPBKDF2 iter.: 100000",
+        (b'\xff', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'AUT+UGM-OKUAE23JDL7PRPCGCF1U3UVJLJWZ8-C1EOE/84$IQ23-$C35YCV8M',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC\nPBKDF2 iter.: 100000",
+        (b'\xff', 10, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x01\xff\n\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x00\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-CBC +p\nPBKDF2 iter.: 100000',
+        (b'', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'02JHZF*AWNKNUJQQPLN:BGOXZT-FUSN$FUBKQCWZO891HQ+P:71A4D',
+        'Encrypted QR Code:\nID: \nVersion: AES-CBC +p\nPBKDF2 iter.: 100000',
+        (b'', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x00\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x06public\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CBC +p\nPBKDF2 iter.: 100000',
+        (b'public', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'4XWBPYR+JU67839JGZ2F-JJF2/FRMFJ4:JY61-2P+P$NWXNDS*/MQYAASYUEIXQ',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CBC +p\nPBKDF2 iter.: 100000',
+        (b'public', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x06public\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x01\xff\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC +p\nPBKDF2 iter.: 100000",
+        (b'\xff', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'FX2ORUE54372$:-1CEYWTYSFLV5V$M+Z847LOS*XH7U5VV-EFDQOK.N',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC +p\nPBKDF2 iter.: 100000",
+        (b'\xff', 11, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x01\xff\x0b\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x00\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-CBC +c\nPBKDF2 iter.: 100000',
+        (b'', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'02S:+P3RADGA-5GUFQO7*1P$BOJJ4ZBJUXEM6BDSD2HEV87E*A4IDE',
+        'Encrypted QR Code:\nID: \nVersion: AES-CBC +c\nPBKDF2 iter.: 100000',
+        (b'', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x00\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x06public\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CBC +c\nPBKDF2 iter.: 100000',
+        (b'public', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'4XWBPYR+JU6GX6ISXCZBQS556VKRU/461+ST5D9DL.-QYDL*LQZU.4YMHTXHQ:R',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CBC +c\nPBKDF2 iter.: 100000',
+        (b'public', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x06public\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x01\xff\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'FX2Y9XNEKN-/O8OYG4-W+HDGO70B-.2MYJAOQ8$E9-OE22KQ48TRT6O',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CBC +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 12, 100000, b'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (b'\x01\xff\x0c\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', None, None),
+    (
+        b'\x00\x0f\x00\x00\nBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-CTR\nPBKDF2 iter.: 100000',
+        (b'', 15, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'01X:6TJ5J*L39OKL/WYXG8E2N*1TH7ZX:TW',
+        'Encrypted QR Code:\nID: \nVersion: AES-CTR\nPBKDF2 iter.: 100000',
+        (b'', 15, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x00\x0f\x00\x00\nBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-CTR\nPBKDF2 iter.: 100000',
+        (b'', 15, 100000, b'BBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x06public\x0f\x00\x00\nBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CTR\nPBKDF2 iter.: 100000',
+        (b'public', 15, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'2O7.YQ3PCCZCF:JNYGXGEF0Y8CWPQPMK:BZ2KH7FTA56',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CTR\nPBKDF2 iter.: 100000',
+        (b'public', 15, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x06public\x0f\x00\x00\nBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CTR\nPBKDF2 iter.: 100000',
+        (b'public', 15, 100000, b'BBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x01\xff\x0f\x00\x00\nBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR\nPBKDF2 iter.: 100000",
+        (b'\xff', 15, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'8J5PYI0PGYD1U806EL/IVQRPMNKI+GS/IE3C',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR\nPBKDF2 iter.: 100000",
+        (b'\xff', 15, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x01\xff\x0f\x00\x00\nBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR\nPBKDF2 iter.: 100000",
+        (b'\xff', 15, 100000, b'BBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x00\x10\x00\x00\nBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-CTR +c\nPBKDF2 iter.: 100000',
+        (b'', 16, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'01-4ZYB3VVAX21-$+58.1*AHOI.P0/YAL7U',
+        'Encrypted QR Code:\nID: \nVersion: AES-CTR +c\nPBKDF2 iter.: 100000',
+        (b'', 16, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x00\x10\x00\x00\nBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-CTR +c\nPBKDF2 iter.: 100000',
+        (b'', 16, 100000, b'BBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x06public\x10\x00\x00\nBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000',
+        (b'public', 16, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'2O7.YQ3PCCZHLSOFWSR617LAN94:XB8HECG/G0/E5VQ4',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000',
+        (b'public', 16, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x06public\x10\x00\x00\nBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000',
+        (b'public', 16, 100000, b'BBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x01\xff\x10\x00\x00\nBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 16, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'8J5U.45HF36YH0KPTIDZ+CDL*O2EY0J-*ZOA',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 16, 100000, b'BBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x01\xff\x10\x00\x00\nBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-CTR +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 16, 100000, b'BBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x00\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-GCM\nPBKDF2 iter.: 100000',
+        (b'', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'01QVV2NQXBTOWKRBZNNKP7ZK/VKINTF6R4J4:G.MM',
+        'Encrypted QR Code:\nID: \nVersion: AES-GCM\nPBKDF2 iter.: 100000',
+        (b'', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x00\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-GCM\nPBKDF2 iter.: 100000',
+        (b'', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x06public\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-GCM\nPBKDF2 iter.: 100000',
+        (b'public', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'1V*5+--$2T1FDPDA8R7AYHFSV-NN:K+V++:PA8G/GO7-MHMBJ$',
+        'Encrypted QR Code:\nID: public\nVersion: AES-GCM\nPBKDF2 iter.: 100000',
+        (b'public', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x06public\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-GCM\nPBKDF2 iter.: 100000',
+        (b'public', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x01\xff\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM\nPBKDF2 iter.: 100000",
+        (b'\xff', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'5VVNB02R89:0X5774CI*KRZ5$3EUCNRP2FT9EYCP:3',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM\nPBKDF2 iter.: 100000",
+        (b'\xff', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x01\xff\x14\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM\nPBKDF2 iter.: 100000",
+        (b'\xff', 20, 100000, b'BBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x00\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-GCM +c\nPBKDF2 iter.: 100000',
+        (b'', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'01U9SDH:NA36XQK/.90*9.SZTGYLF0B*J6TLX48AX',
+        'Encrypted QR Code:\nID: \nVersion: AES-GCM +c\nPBKDF2 iter.: 100000',
+        (b'', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x00\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: \nVersion: AES-GCM +c\nPBKDF2 iter.: 100000',
+        (b'', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x06public\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000',
+        (b'public', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'1V*5+--$2T1IYMO4OH5RGILMJ191G5SPAQR-C:U+4GA6-89M84',
+        'Encrypted QR Code:\nID: public\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000',
+        (b'public', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x06public\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB',
+        'Encrypted QR Code:\nID: public\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000',
+        (b'public', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x01\xff\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'5VVQV.DLN:.HF6D0YH4E*CO:7Y01FE/LX7VJVO:$UE',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+    (
+        b'\x01\xff\x15\x00\x00\nBBBBBBBBBBBBBBBBBBBBBB',
+        "Encrypted QR Code:\nID: b'\\xff'\nVersion: AES-GCM +c\nPBKDF2 iter.: 100000",
+        (b'\xff', 21, 100000, b'BBBBBBBBBBBBBBBBBBBBBB'),
+    ),
+]
+for number, (raw, expected, state) in enumerate(cases):
+    obj, public = DecodeQR.parse_encrypted_qr(raw)
+    assert public == expected
+    if state is None:
+        assert obj is None
+    else:
+        assert (obj.mnemonic_id, obj.version, obj.iterations, obj.encrypted_data) == state
+    analysis = DecodeQR.analyze_bytedata_payload(raw)
+    assert (QRType.SEED__COMPACTSEEDQR in analysis.candidate_types) == (
+        len(raw) in (16, 20, 24, 28, 32)
+    )
+    assert (QRType.SEED__ENCRYPTEDQR in analysis.candidate_types) == bool(expected)
+    if number % 16 == 0:
+        gc.collect()
+print('@@PASS original-QR-format-probes-cpython', len(cases))
+for text in ('', '0', '00', '0123', '000123', 'ABCDEF'):
+    raw = base43.base43_decode(text)
+    assert base43.base43_decode(base43.base43_encode(raw)) == raw
 print('@@PASS original-base43-leading-zeroes')
-bip38=[('6NhBg9tu5ubwBqY369RJUPWuUWpkizTz37eLkNJwXaKnHEaGnu1yvn3aVD', False, b'\x00\x01\x02\x03', b'\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13', b'\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#'), ('6NpCiTyirgEhqZLkiwYd4yFnpSmtR6yRWr3j39SM8QU7dxSVVQvSyACRJN', True, b'\x00\x01\x02\x03', b'\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13', b'\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#')]
-for text,compressed,address,a,b in bip38:
-    obj=BIP38Key(text)
-    assert (obj.compressed,obj.address_hash,obj.encrypted_half1,obj.encrypted_half2)==(compressed,address,a,b)
-    try:obj.decrypt('PUBLIC TEST');assert False
-    except FeatureUnavailable:pass
-for text in ('not-bip38','6Pinvalid',''):
-    try:BIP38Key(text);assert False
-    except InvalidSeedException:pass
-for action in (lambda:kef.Cipher('PUBLIC','public',1).encrypt(b'PUBLIC',20),lambda:EncryptedQRCode().create('PUBLIC','public','PUBLIC'),lambda:EncryptedQRCode().decrypt('PUBLIC')):
-    try:action();assert False
-    except FeatureUnavailable:pass
+bip38 = [
+    (
+        '6NhBg9tu5ubwBqY369RJUPWuUWpkizTz37eLkNJwXaKnHEaGnu1yvn3aVD',
+        False,
+        b'\x00\x01\x02\x03',
+        b'\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13',
+        b'\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#',
+    ),
+    (
+        '6NpCiTyirgEhqZLkiwYd4yFnpSmtR6yRWr3j39SM8QU7dxSVVQvSyACRJN',
+        True,
+        b'\x00\x01\x02\x03',
+        b'\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13',
+        b'\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#',
+    ),
+]
+for text, compressed, address, a, b in bip38:
+    obj = BIP38Key(text)
+    assert (obj.compressed, obj.address_hash, obj.encrypted_half1, obj.encrypted_half2) == (
+        compressed,
+        address,
+        a,
+        b,
+    )
+    try:
+        obj.decrypt('PUBLIC TEST')
+        assert False
+    except FeatureUnavailable:
+        pass
+for text in ('not-bip38', '6Pinvalid', ''):
+    try:
+        BIP38Key(text)
+        assert False
+    except InvalidSeedException:
+        pass
+for action in (
+    lambda: kef.Cipher('PUBLIC', 'public', 1).encrypt(b'PUBLIC', 20),
+    lambda: EncryptedQRCode().create('PUBLIC', 'public', 'PUBLIC'),
+    lambda: EncryptedQRCode().decrypt('PUBLIC'),
+):
+    try:
+        action()
+        assert False
+    except FeatureUnavailable:
+        pass
 print('@@PASS original-bip38-format-crypto-explicitly-unavailable')
-assert c.storage.num_seeds()==0 and c.storage.get_pending_seed() is None
+assert c.storage.num_seeds() == 0 and c.storage.get_pending_seed() is None

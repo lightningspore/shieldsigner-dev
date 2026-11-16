@@ -1,11 +1,17 @@
 # SPDX-License-Identifier: MIT
 """Public original passphrase flows; native keys drive actual widget editing."""
+
+import pyformat  # noqa: F401  (formats generated Python on write)
 from pathlib import Path
-from embit import bip39,bip32
-root=Path(__file__).resolve().parents[1]
-words='abandon '*11+'about'
-fp={text:bip32.HDKey.from_seed(bip39.mnemonic_to_seed(words,text)).my_fingerprint.hex() for text in ('','k','kl')}
-code='''# SPDX-License-Identifier: MIT
+from embit import bip39, bip32
+
+root = Path(__file__).resolve().parents[1]
+words = 'abandon ' * 11 + 'about'
+fp = {
+    text: bip32.HDKey.from_seed(bip39.mnemonic_to_seed(words, text)).my_fingerprint.hex()
+    for text in ('', 'k', 'kl')
+}
+code = '''# SPDX-License-Identifier: MIT
 # Generated PUBLIC fixtures. Native key pulses, original Views and real roots.
 from seedsigner_port.controller import Controller,StopFlowBasedTest
 from seedsigner_port.renderer import Renderer
@@ -15,7 +21,10 @@ from seedsigner_port.navigation import Destination
 from seedsigner_port.native_ui import ScreenSession
 import ui,json,hashlib,gc
 '''
-code+='expected='+repr(fp)+'''\nui.init()
+code += (
+    'expected='
+    + repr(fp)
+    + '''\nui.init()
 session=ScreenSession()
 def pulse(key):ui.key(key,True);ui.key(key,False)
 for text in ('', ' public  ', 'é🙂', 'a\\0b\\\\c', 'x'*255, 'é'*127):
@@ -108,4 +117,5 @@ Renderer._instance=None;renderer=Renderer.get_instance();ui.overlays(0,0)
 renderer.session.show_screen('MainMenuScreen',{'title':'Home','button_data':['Scan','Seeds','Tools','Settings']})
 gc.collect()
 '''
-(root/'micropython/passphrase_flow_gate.py').write_text(code)
+)
+(root / 'micropython/passphrase_flow_gate.py').write_text(code)

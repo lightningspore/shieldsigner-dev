@@ -77,6 +77,11 @@ locks it, and the generators assert the commit.
 - If a feature has no real provider, it fails with `FeatureUnavailable` or is
   left out of its menu. Do not add placeholder successes.
 - Frozen modules are listed in `micropython/manifest.py`.
+- Python is formatted with `ruff format` (`baremetal/ruff.toml`, ruff 0.17.5).
+  Generators import `tools/pyformat.py`, which formats generated `.py` files on
+  write, so rerunning a generator reproduces the committed file. Vendored
+  upstream libraries are excluded and keep their upstream form.
+  `mise run baremetal:check` fails on unformatted code.
 
 ## Optical test rig
 

@@ -14,7 +14,7 @@
     "Slip39Seed": "eb4dec9999a434aefd32f6e694f47db1b7fb295f7213e602a1db1cb5c733ad1e",
     "XprvSeed": "886b3acf6dc22d48d3cb3c7926ee1afdb209ba2a0a0151616e160a757560baa4"
   },
-  "outputSha256": "d61a6254d8864b287819431acc89aba0868651b1bcd96905f3f02dfeaace3949",
+  "outputSha256": "87f5ce32f7191f03539e08ec8eec642abbdb10a4a36cae1381a7bbb05ca7fadd",
   "transformations": [
     "Remove type annotations",
     "Defer actual imports; unavailable dependencies propagate before broad parse handlers",

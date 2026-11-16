@@ -34,6 +34,7 @@ gate. From a recovered REPL, restart with:
 
 ```python
 from seedsigner_port.boot import run
+
 run()
 ```
 

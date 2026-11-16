@@ -6,17 +6,25 @@ import hashlib
 import hmac
 from seedsigner_port.settings_schema import SettingsConstants
 from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
-from seedsigner_port.secure_delete import wipe_bytes,wipe_string,wipe_list
+from seedsigner_port.secure_delete import wipe_bytes, wipe_string, wipe_list
 from seedsigner_port.passphrase import normalize_passphrase as _normalize_passphrase
+
+
 class InvalidSeedException(Exception):
     pass
+
 
 class SeedWordsUnavailableException(Exception):
     pass
 
-class Seed:
 
-    def __init__(self, mnemonic=None, passphrase='', wordlist_language_code=SettingsConstants.WORDLIST_LANGUAGE__ENGLISH):
+class Seed:
+    def __init__(
+        self,
+        mnemonic=None,
+        passphrase='',
+        wordlist_language_code=SettingsConstants.WORDLIST_LANGUAGE__ENGLISH,
+    ):
         self._wordlist_language_code = wordlist_language_code
         if not mnemonic:
             raise Exception('Must initialize a Seed with a mnemonic List[str]')
@@ -36,7 +44,9 @@ class Seed:
 
     def _generate_seed(self):
         try:
-            self.seed_bytes = _dependency('embit', 'bip39').mnemonic_to_seed(self.mnemonic_str, password=self._passphrase, wordlist=self.wordlist)
+            self.seed_bytes = _dependency('embit', 'bip39').mnemonic_to_seed(
+                self.mnemonic_str, password=self._passphrase, wordlist=self.wordlist
+            )
         except FeatureUnavailable:
             raise
         except Exception as e:
@@ -92,14 +102,28 @@ class Seed:
         return None
 
     def get_root(self, network=SettingsConstants.MAINNET):
-        return _dependency('embit', 'bip32').HDKey.from_seed(self.seed_bytes, version=_dependency('embit.networks', 'NETWORKS')[SettingsConstants.map_network_to_embit(network)]['xprv'])
+        return _dependency('embit', 'bip32').HDKey.from_seed(
+            self.seed_bytes,
+            version=_dependency('embit.networks', 'NETWORKS')[
+                SettingsConstants.map_network_to_embit(network)
+            ]['xprv'],
+        )
 
     def derivation_override(self, sig_type=SettingsConstants.SINGLE_SIG):
         return None
 
-    def detect_version(self, derivation_path, network=SettingsConstants.MAINNET, sig_type=SettingsConstants.SINGLE_SIG):
-        embit_network = _dependency('embit.networks', 'NETWORKS')[SettingsConstants.map_network_to_embit(network)]
-        return _dependency('embit', 'bip32').detect_version(derivation_path, default='xpub', network=embit_network)
+    def detect_version(
+        self,
+        derivation_path,
+        network=SettingsConstants.MAINNET,
+        sig_type=SettingsConstants.SINGLE_SIG,
+    ):
+        embit_network = _dependency('embit.networks', 'NETWORKS')[
+            SettingsConstants.map_network_to_embit(network)
+        ]
+        return _dependency('embit', 'bip32').detect_version(
+            derivation_path, default='xpub', network=embit_network
+        )
 
     @property
     def passphrase_label(self):
@@ -121,7 +145,9 @@ class Seed:
         root = self.get_root(network)
         return root.derive(wallet_path).to_public()
 
-    def get_bip85_child_mnemonic(self, bip85_index, bip85_num_words, network=SettingsConstants.MAINNET):
+    def get_bip85_child_mnemonic(
+        self, bip85_index, bip85_num_words, network=SettingsConstants.MAINNET
+    ):
         """Derives the seed's nth BIP-85 child mnemonic"""
         root = self.get_root(network)
         return _dependency('embit', 'bip85').derive_mnemonic(root, bip85_num_words, bip85_index)
@@ -146,13 +172,15 @@ class Seed:
             return self.seed_bytes == other.seed_bytes
         return False
 
-class AezeedSeed(Seed):
 
+class AezeedSeed(Seed):
     def _generate_seed(self):
         words = self._mnemonic
         word_to_index = {word: idx for idx, word in enumerate(self.wordlist)}
         try:
-            deciphered = _dependency('seedsigner.models', 'aezeed').decode_mnemonic(words, self._passphrase, word_to_index)
+            deciphered = _dependency('seedsigner.models', 'aezeed').decode_mnemonic(
+                words, self._passphrase, word_to_index
+            )
         except FeatureUnavailable:
             raise
         except _dependency('seedsigner.models', 'aezeed').InvalidPassphraseError as e:
@@ -181,20 +209,27 @@ class AezeedSeed(Seed):
     def seedqr_supported(self):
         return False
 
-class ElectrumSeed(Seed):
 
+class ElectrumSeed(Seed):
     def _generate_seed(self):
         if len(self._mnemonic) != 12:
             raise InvalidSeedException(f'Unsupported Electrum seed length: {len(self._mnemonic)}')
         s = hmac.digest(b'Seed version', self.mnemonic_str.encode('utf8'), hashlib.sha512).hex()
         prefix = s[0:3]
         if SettingsConstants.ELECTRUM_SEED_SEGWIT == prefix:
-            self.seed_bytes = hashlib.pbkdf2_hmac('sha512', self.mnemonic_str.encode('utf-8'), b'electrum' + self._passphrase.encode('utf-8'), iterations=SettingsConstants.ELECTRUM_PBKDF2_ROUNDS)
+            self.seed_bytes = hashlib.pbkdf2_hmac(
+                'sha512',
+                self.mnemonic_str.encode('utf-8'),
+                b'electrum' + self._passphrase.encode('utf-8'),
+                iterations=SettingsConstants.ELECTRUM_PBKDF2_ROUNDS,
+            )
         else:
             raise InvalidSeedException(f'Unsupported Electrum seed format: {prefix}')
 
     def set_passphrase(self, passphrase, regenerate_seed=True):
-        self._passphrase = ElectrumSeed.normalize_electrum_passphrase(_normalize_passphrase(passphrase))
+        self._passphrase = ElectrumSeed.normalize_electrum_passphrase(
+            _normalize_passphrase(passphrase)
+        )
         if regenerate_seed:
             self._generate_seed()
 
@@ -202,7 +237,7 @@ class ElectrumSeed(Seed):
     def normalize_electrum_passphrase(passphrase):
         passphrase = unicodedata.normalize('NFKD', passphrase)
         passphrase = passphrase.lower()
-        passphrase = u' '.join(passphrase.split())
+        passphrase = ' '.join(passphrase.split())
         return passphrase
 
     @property
@@ -212,9 +247,20 @@ class ElectrumSeed(Seed):
     def derivation_override(self, sig_type=SettingsConstants.SINGLE_SIG):
         return 'm/0h' if sig_type == SettingsConstants.SINGLE_SIG else 'm/1h'
 
-    def detect_version(self, derivation_path, network=SettingsConstants.MAINNET, sig_type=SettingsConstants.SINGLE_SIG):
-        embit_network = _dependency('embit.networks', 'NETWORKS')[SettingsConstants.map_network_to_embit(network)]
-        return embit_network['zpub'] if sig_type == SettingsConstants.SINGLE_SIG else embit_network['Zpub']
+    def detect_version(
+        self,
+        derivation_path,
+        network=SettingsConstants.MAINNET,
+        sig_type=SettingsConstants.SINGLE_SIG,
+    ):
+        embit_network = _dependency('embit.networks', 'NETWORKS')[
+            SettingsConstants.map_network_to_embit(network)
+        ]
+        return (
+            embit_network['zpub']
+            if sig_type == SettingsConstants.SINGLE_SIG
+            else embit_network['Zpub']
+        )
 
     @property
     def passphrase_label(self):
@@ -228,6 +274,7 @@ class ElectrumSeed(Seed):
     def bip85_supported(self):
         return True
 
+
 class Slip39Seed(Seed):
     """Seed derived from SLIP-39 mnemonic shares."""
 
@@ -240,7 +287,9 @@ class Slip39Seed(Seed):
         self.extendable = first_share.extendable
         self._member_threshold = first_share.member_threshold
         self._group_threshold = first_share.group_threshold
-        self._slip39_passphrase = unicodedata.normalize('NFKD', slip39_passphrase) if slip39_passphrase else ''
+        self._slip39_passphrase = (
+            unicodedata.normalize('NFKD', slip39_passphrase) if slip39_passphrase else ''
+        )
         self.seed_bytes = None
         self.master_secret = None
         self._initial_master_secret = None
@@ -254,7 +303,9 @@ class Slip39Seed(Seed):
         self.loading_screen.start()
         try:
             try:
-                secret = _dependency('shamir_mnemonic', None).combine_mnemonics(self._shares, self._slip39_passphrase.encode('utf-8'))
+                secret = _dependency('shamir_mnemonic', None).combine_mnemonics(
+                    self._shares, self._slip39_passphrase.encode('utf-8')
+                )
             except FeatureUnavailable:
                 raise
             except Exception as e:
@@ -266,12 +317,16 @@ class Slip39Seed(Seed):
                     grp = groups.setdefault(s.group_index, [])
                     if len(grp) < self._member_threshold:
                         grp.append(share)
-                    if len(groups) >= self._group_threshold and all((len(v) >= self._member_threshold for v in groups.values())):
+                    if len(groups) >= self._group_threshold and all(
+                        (len(v) >= self._member_threshold for v in groups.values())
+                    ):
                         break
                 combine_list = []
-                for grp_index in sorted(groups.keys())[:self._group_threshold]:
-                    combine_list.extend(groups[grp_index][:self._member_threshold])
-                secret = _dependency('shamir_mnemonic', None).combine_mnemonics(combine_list, self._slip39_passphrase.encode('utf-8'))
+                for grp_index in sorted(groups.keys())[: self._group_threshold]:
+                    combine_list.extend(groups[grp_index][: self._member_threshold])
+                secret = _dependency('shamir_mnemonic', None).combine_mnemonics(
+                    combine_list, self._slip39_passphrase.encode('utf-8')
+                )
             self.master_secret = secret
             if self._initial_master_secret is None:
                 self._initial_master_secret = secret
@@ -342,18 +397,29 @@ class Slip39Seed(Seed):
         if not self.extendable:
             raise InvalidSeedException('This SLIP-39 seed is not extendable')
         if threshold > num_shares:
-            raise InvalidSeedException('The requested threshold must not exceed the number of shares.')
+            raise InvalidSeedException(
+                'The requested threshold must not exceed the number of shares.'
+            )
         if threshold == 1 and num_shares > 1:
-            raise InvalidSeedException('Multi-Share with threshold of 1 is not allowed, create 1-1 instead.')
+            raise InvalidSeedException(
+                'Multi-Share with threshold of 1 is not allowed, create 1-1 instead.'
+            )
         first_share = _dependency('shamir_mnemonic', None).Share.from_mnemonic(self._shares[0])
-        new_groups = _dependency('shamir_mnemonic', None).generate_mnemonics(self._group_threshold, [(threshold, num_shares)], self._initial_master_secret, passphrase=self._creation_passphrase.encode('utf-8'), extendable=True, iteration_exponent=first_share.iteration_exponent)
+        new_groups = _dependency('shamir_mnemonic', None).generate_mnemonics(
+            self._group_threshold,
+            [(threshold, num_shares)],
+            self._initial_master_secret,
+            passphrase=self._creation_passphrase.encode('utf-8'),
+            extendable=True,
+            iteration_exponent=first_share.iteration_exponent,
+        )
         shares = new_groups[0]
         self._shares = shares
         self._member_threshold = threshold
         return shares
 
-class XprvSeed(Seed):
 
+class XprvSeed(Seed):
     def __init__(self, xprv):
         normalized = unicodedata.normalize('NFKD', xprv.strip())
         try:
@@ -405,8 +471,12 @@ class XprvSeed(Seed):
     def bip85_supported(self):
         return True
 
-    def get_bip85_child_mnemonic(self, bip85_index, bip85_num_words, network=SettingsConstants.MAINNET):
-        return _dependency('embit', 'bip85').derive_mnemonic(self.get_root(network), bip85_num_words, bip85_index)
+    def get_bip85_child_mnemonic(
+        self, bip85_index, bip85_num_words, network=SettingsConstants.MAINNET
+    ):
+        return _dependency('embit', 'bip85').derive_mnemonic(
+            self.get_root(network), bip85_num_words, bip85_index
+        )
 
     def wipe(self):
         """Securely clear xprv-specific fields, then delegate to parent."""

@@ -1,7 +1,8 @@
 # Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner
 from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
-class EncryptedQRStorage:
 
+
+class EncryptedQRStorage:
     def __init__(self):
         self._encryptedqr = None
 

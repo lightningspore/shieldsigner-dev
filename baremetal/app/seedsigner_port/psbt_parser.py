@@ -1,7 +1,9 @@
 # Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner
 # Generated original full policy; unported providers fail on use.
-from seedsigner_port.decode_platform import dependency as _dependency,FeatureUnavailable
-from seedsigner_port.psbt_errors import RejectCode,InvalidPSBTError
+from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
+from seedsigner_port.psbt_errors import RejectCode, InvalidPSBTError
+
+
 class OPCODES:
     OP_RETURN = 106
     OP_PUSHDATA1 = 76
@@ -9,6 +11,8 @@ class OPCODES:
     OP_PUSHDATA4 = 78
     OP_CHECKLOCKTIMEVERIFY = 177
     OP_CHECKSEQUENCEVERIFY = 178
+
+
 MAX_MONEY = 21000000 * 100000000
 DUST_THRESHOLD = 546
 HIGH_FEE_NUMERATOR = 1
@@ -23,11 +27,13 @@ FAR_FUTURE_LOCKTIME_SECONDS = 2 * 365 * 24 * 60 * 60
 SIGHASH_DEFAULT = 0
 SIGHASH_ALL = 1
 
+
 class RiskWarning:
     """
     Conditions worth showing the user before they approve. Unlike RejectCode
     these do not block signing; they are surfaced for review.
     """
+
     HIGH_FEE = 'HIGH_FEE'
     HIGH_FEE_RATE = 'HIGH_FEE_RATE'
     DUST_OUTPUT = 'DUST_OUTPUT'
@@ -38,6 +44,7 @@ class RiskWarning:
     RBF = 'RBF'
     UNVERIFIED_INPUT_AMOUNTS = 'UNVERIFIED_INPUT_AMOUNTS'
     INFORMATIONAL = frozenset({RBF})
+
 
 class PSBTParser:
     """
@@ -78,22 +85,43 @@ class PSBTParser:
     constructions that have no honest explanation, and RiskWarning for the ones that
     do and are surfaced for review instead.
     """
+
     MAX_CACHED_DERIVATIONS = 1000
     HIGH_FEES_WARNING_THRESHOLD = 25
 
-    def __init__(self, p, seed=None, *, root=None, root_path=None, master_fingerprint=None, network=_dependency('seedsigner.models.settings', 'SettingsConstants').MAINNET, change_index_lookahead=None, reference_time=None, max_fee_rate=None, block_anchor=None, multisig_descriptor=None):
+    def __init__(
+        self,
+        p,
+        seed=None,
+        *,
+        root=None,
+        root_path=None,
+        master_fingerprint=None,
+        network=_dependency('seedsigner.models.settings', 'SettingsConstants').MAINNET,
+        change_index_lookahead=None,
+        reference_time=None,
+        max_fee_rate=None,
+        block_anchor=None,
+        multisig_descriptor=None,
+    ):
         self.psbt = p
         self.seed = seed
         self.network = network
         self.root = root
         self.root_path = root_path or []
-        self.root_path_str = _dependency('embit', 'bip32').path_to_str(self.root_path) if self.root_path else 'm'
+        self.root_path_str = (
+            _dependency('embit', 'bip32').path_to_str(self.root_path) if self.root_path else 'm'
+        )
         self.master_fingerprint = master_fingerprint
         self.reference_time = reference_time
         self.block_anchor = block_anchor
         self.multisig_descriptor = multisig_descriptor
         self.unidentified_change_outputs = []
-        self.change_index_lookahead = change_index_lookahead if change_index_lookahead is not None else PSBTParser._configured_change_index_lookahead()
+        self.change_index_lookahead = (
+            change_index_lookahead
+            if change_index_lookahead is not None
+            else PSBTParser._configured_change_index_lookahead()
+        )
         self.policy = None
         self.spend_amount = 0
         self.change_amount = 0
@@ -110,7 +138,9 @@ class PSBTParser:
         self.op_return_amount = 0
         self.risk_warnings = set()
         self.fee_rate = 0.0
-        self.max_fee_rate = max_fee_rate if max_fee_rate is not None else PSBTParser._configured_max_fee_rate()
+        self.max_fee_rate = (
+            max_fee_rate if max_fee_rate is not None else PSBTParser._configured_max_fee_rate()
+        )
         self.locktime_is_enforced = False
         self.locktime = 0
         self.is_high_fee = False
@@ -126,7 +156,15 @@ class PSBTParser:
         (the parser is usable standalone, e.g. from tests and scripts).
         """
         try:
-            return _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings', 'SettingsConstants').SETTING__CHANGE_INDEX_LOOKAHEAD)
+            return (
+                _dependency('seedsigner.models.settings', 'Settings')
+                .get_instance()
+                .get_value(
+                    _dependency(
+                        'seedsigner.models.settings', 'SettingsConstants'
+                    ).SETTING__CHANGE_INDEX_LOOKAHEAD
+                )
+            )
         except FeatureUnavailable:
             raise
         except Exception as e:
@@ -144,7 +182,7 @@ class PSBTParser:
     @property
     def is_multisig(self):
         """
-            Multisig psbts will have "m" and "n" defined in policy
+        Multisig psbts will have "m" and "n" defined in policy
         """
         return isinstance(self.policy, dict) and 'm' in self.policy
 
@@ -324,13 +362,28 @@ class PSBTParser:
         resources/latest-block.json. 0 means the check is off.
         """
         try:
-            configured = _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings_definition', 'SettingsConstants').SETTING__MAX_FEE_RATE)
+            configured = (
+                _dependency('seedsigner.models.settings', 'Settings')
+                .get_instance()
+                .get_value(
+                    _dependency(
+                        'seedsigner.models.settings_definition', 'SettingsConstants'
+                    ).SETTING__MAX_FEE_RATE
+                )
+            )
         except FeatureUnavailable:
             raise
         except Exception as e:
             pass
-            configured = _dependency('seedsigner.models.settings_definition', 'SettingsConstants').DEFAULT_MAX_FEE_RATE
-        if configured != _dependency('seedsigner.models.settings_definition', 'SettingsConstants').MAX_FEE_RATE__AUTO:
+            configured = _dependency(
+                'seedsigner.models.settings_definition', 'SettingsConstants'
+            ).DEFAULT_MAX_FEE_RATE
+        if (
+            configured
+            != _dependency(
+                'seedsigner.models.settings_definition', 'SettingsConstants'
+            ).MAX_FEE_RATE__AUTO
+        ):
             return configured
         try:
             rate = _dependency('seedsigner.controller', 'Controller').RECENT_MAX_FEE_RATE
@@ -340,7 +393,9 @@ class PSBTParser:
             raise
         except Exception as e:
             pass
-        return _dependency('seedsigner.models.settings_definition', 'SettingsConstants').FALLBACK_MAX_FEE_RATE
+        return _dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).FALLBACK_MAX_FEE_RATE
 
     def _check_far_future_locktime(self, locktime):
         """
@@ -454,7 +509,19 @@ class PSBTParser:
         vsize = 8.0
         vsize += PSBTParser._varint_size(len(tx.vin))
         vsize += PSBTParser._varint_size(len(tx.vout))
-        has_witness = any((PSBTParser._is_witness_program((inp.witness_utxo or (inp.non_witness_utxo.vout[inp.vout] if inp.non_witness_utxo else None)).script_pubkey) if inp.witness_utxo or inp.non_witness_utxo else False for inp in self.psbt.inputs))
+        has_witness = any(
+            (
+                PSBTParser._is_witness_program(
+                    (
+                        inp.witness_utxo
+                        or (inp.non_witness_utxo.vout[inp.vout] if inp.non_witness_utxo else None)
+                    ).script_pubkey
+                )
+                if inp.witness_utxo or inp.non_witness_utxo
+                else False
+                for inp in self.psbt.inputs
+            )
+        )
         if has_witness:
             vsize += 0.5
         for inp in self.psbt.inputs:
@@ -492,7 +559,10 @@ class PSBTParser:
         version = getattr(self.psbt, 'version', None)
         if version in (None, 0, 2):
             return
-        raise InvalidPSBTError('PSBT version {0} is not supported.'.format(version), code=RejectCode.UNSUPPORTED_PSBT_VERSION)
+        raise InvalidPSBTError(
+            'PSBT version {0} is not supported.'.format(version),
+            code=RejectCode.UNSUPPORTED_PSBT_VERSION,
+        )
 
     def _check_tx_modifiable(self):
         """
@@ -518,7 +588,10 @@ class PSBTParser:
         if value is None:
             return
         if int.from_bytes(value, 'little') & 3:
-            raise InvalidPSBTError('Modifiable (TX_MODIFIABLE): inputs or outputs can change after you sign.', code=RejectCode.TX_MODIFIABLE)
+            raise InvalidPSBTError(
+                'Modifiable (TX_MODIFIABLE): inputs or outputs can change after you sign.',
+                code=RejectCode.TX_MODIFIABLE,
+            )
 
     def _assert_v2_complete(self):
         """
@@ -541,15 +614,22 @@ class PSBTParser:
             return
         for i, inp in enumerate(self.psbt.inputs):
             if inp.txid is None or inp.vout is None:
-                raise InvalidPSBTError('Input {0} has no previous output (txid/vout).'.format(i), code=RejectCode.MISSING_UTXO)
+                raise InvalidPSBTError(
+                    'Input {0} has no previous output (txid/vout).'.format(i),
+                    code=RejectCode.MISSING_UTXO,
+                )
         vout = self.psbt.tx.vout
         for i, out in enumerate(vout):
             value = out.value
             if value is None or not 0 <= value <= MAX_MONEY:
-                raise InvalidPSBTError('Output {0} has no valid amount.'.format(i), code=RejectCode.AMOUNT_OUT_OF_RANGE)
+                raise InvalidPSBTError(
+                    'Output {0} has no valid amount.'.format(i), code=RejectCode.AMOUNT_OUT_OF_RANGE
+                )
             script = out.script_pubkey
             if script is None or len(script.data) == 0:
-                raise InvalidPSBTError('Output {0} has no script.'.format(i), code=RejectCode.UNDISPLAYABLE_OUTPUT)
+                raise InvalidPSBTError(
+                    'Output {0} has no script.'.format(i), code=RejectCode.UNDISPLAYABLE_OUTPUT
+                )
 
     def _check_tx_structure(self):
         """
@@ -565,16 +645,23 @@ class PSBTParser:
           v0 too; _assert_v2_complete covers the v2 fields being absent.)
         """
         if not self.psbt.inputs:
-            raise InvalidPSBTError('The transaction has no inputs.', code=RejectCode.INVALID_TRANSACTION)
+            raise InvalidPSBTError(
+                'The transaction has no inputs.', code=RejectCode.INVALID_TRANSACTION
+            )
         seen = set()
         for i, inp in enumerate(self.psbt.inputs):
             outpoint = (inp.txid, inp.vout)
             if outpoint in seen:
-                raise InvalidPSBTError('Input {0} spends the same output as an earlier input.'.format(i), code=RejectCode.INVALID_TRANSACTION)
+                raise InvalidPSBTError(
+                    'Input {0} spends the same output as an earlier input.'.format(i),
+                    code=RejectCode.INVALID_TRANSACTION,
+                )
             seen.add(outpoint)
         for i, out in enumerate(self.psbt.tx.vout):
             if out.script_pubkey is None or len(out.script_pubkey.data) == 0:
-                raise InvalidPSBTError('Output {0} has no script.'.format(i), code=RejectCode.UNDISPLAYABLE_OUTPUT)
+                raise InvalidPSBTError(
+                    'Output {0} has no script.'.format(i), code=RejectCode.UNDISPLAYABLE_OUTPUT
+                )
 
     @staticmethod
     def _validate_input(index, inp):
@@ -590,45 +677,90 @@ class PSBTParser:
         witness_utxo = inp.witness_utxo
         non_witness_utxo = inp.non_witness_utxo
         if witness_utxo is None and non_witness_utxo is None:
-            raise InvalidPSBTError('Input {0} has no utxo'.format(index), code=RejectCode.MISSING_UTXO)
+            raise InvalidPSBTError(
+                'Input {0} has no utxo'.format(index), code=RejectCode.MISSING_UTXO
+            )
         if non_witness_utxo is not None:
             if non_witness_utxo.txid() != inp.txid:
-                raise InvalidPSBTError('Input {0} previous tx does not match the txid it spends.'.format(index), code=RejectCode.UTXO_MISMATCH)
+                raise InvalidPSBTError(
+                    'Input {0} previous tx does not match the txid it spends.'.format(index),
+                    code=RejectCode.UTXO_MISMATCH,
+                )
             if inp.vout is None or not 0 <= inp.vout < len(non_witness_utxo.vout):
-                raise InvalidPSBTError('Input {0} spends an output its previous tx does not have.'.format(index), code=RejectCode.UTXO_MISMATCH)
+                raise InvalidPSBTError(
+                    'Input {0} spends an output its previous tx does not have.'.format(index),
+                    code=RejectCode.UTXO_MISMATCH,
+                )
         if witness_utxo is not None and non_witness_utxo is not None:
             real = non_witness_utxo.vout[inp.vout]
-            if witness_utxo.value != real.value or witness_utxo.script_pubkey.data != real.script_pubkey.data:
-                raise InvalidPSBTError('Input {0} utxo does not match the previous tx.'.format(index), code=RejectCode.UTXO_MISMATCH)
+            if (
+                witness_utxo.value != real.value
+                or witness_utxo.script_pubkey.data != real.script_pubkey.data
+            ):
+                raise InvalidPSBTError(
+                    'Input {0} utxo does not match the previous tx.'.format(index),
+                    code=RejectCode.UTXO_MISMATCH,
+                )
         utxo = witness_utxo if witness_utxo is not None else non_witness_utxo.vout[inp.vout]
         if not 0 <= utxo.value <= MAX_MONEY:
-            raise InvalidPSBTError('Input {0} amount out of range: {1}'.format(index, utxo.value), code=RejectCode.AMOUNT_OUT_OF_RANGE)
+            raise InvalidPSBTError(
+                'Input {0} amount out of range: {1}'.format(index, utxo.value),
+                code=RejectCode.AMOUNT_OUT_OF_RANGE,
+            )
         script_pubkey = utxo.script_pubkey
         script_type = script_pubkey.script_type()
         allowed_sighash = (None, SIGHASH_ALL)
         if script_type == 'p2tr':
             allowed_sighash += (SIGHASH_DEFAULT,)
         if inp.sighash_type not in allowed_sighash:
-            raise InvalidPSBTError('Input {0} needs sighash {1:#04x}, not SIGHASH_ALL.'.format(index, inp.sighash_type), code=RejectCode.UNSUPPORTED_SIGHASH)
-        if witness_utxo is not None and (not (PSBTParser._is_witness_program(script_pubkey) or script_type == 'p2sh')):
-            raise InvalidPSBTError('Input {0} utxo declares a {1} script.'.format(index, script_type), code=RejectCode.INVALID_WITNESS_UTXO)
+            raise InvalidPSBTError(
+                'Input {0} needs sighash {1:#04x}, not SIGHASH_ALL.'.format(
+                    index, inp.sighash_type
+                ),
+                code=RejectCode.UNSUPPORTED_SIGHASH,
+            )
+        if witness_utxo is not None and (
+            not (PSBTParser._is_witness_program(script_pubkey) or script_type == 'p2sh')
+        ):
+            raise InvalidPSBTError(
+                'Input {0} utxo declares a {1} script.'.format(index, script_type),
+                code=RejectCode.INVALID_WITNESS_UTXO,
+            )
         effective_type = script_type
         if script_type == 'p2sh':
             if inp.redeem_script is None:
-                raise InvalidPSBTError('Input {0} is p2sh with no redeem_script.'.format(index), code=RejectCode.SCRIPT_HASH_MISMATCH)
+                raise InvalidPSBTError(
+                    'Input {0} is p2sh with no redeem_script.'.format(index),
+                    code=RejectCode.SCRIPT_HASH_MISMATCH,
+                )
             if _dependency('embit', 'script').p2sh(inp.redeem_script).data != script_pubkey.data:
-                raise InvalidPSBTError('Input {0} redeem_script does not match.'.format(index), code=RejectCode.SCRIPT_HASH_MISMATCH)
+                raise InvalidPSBTError(
+                    'Input {0} redeem_script does not match.'.format(index),
+                    code=RejectCode.SCRIPT_HASH_MISMATCH,
+                )
             effective_type = inp.redeem_script.script_type()
             if non_witness_utxo is None and effective_type not in ('p2wpkh', 'p2wsh'):
-                raise InvalidPSBTError('Input {0} is legacy p2sh with no previous tx.'.format(index), code=RejectCode.INVALID_WITNESS_UTXO)
+                raise InvalidPSBTError(
+                    'Input {0} is legacy p2sh with no previous tx.'.format(index),
+                    code=RejectCode.INVALID_WITNESS_UTXO,
+                )
         if effective_type == 'p2wsh':
             if inp.witness_script is None:
-                raise InvalidPSBTError('Input {0} is p2wsh with no witness_script.'.format(index), code=RejectCode.SCRIPT_HASH_MISMATCH)
+                raise InvalidPSBTError(
+                    'Input {0} is p2wsh with no witness_script.'.format(index),
+                    code=RejectCode.SCRIPT_HASH_MISMATCH,
+                )
             expected = inp.redeem_script if script_type == 'p2sh' else script_pubkey
             if _dependency('embit', 'script').p2wsh(inp.witness_script).data != expected.data:
-                raise InvalidPSBTError('Input {0} witness_script does not match.'.format(index), code=RejectCode.SCRIPT_HASH_MISMATCH)
+                raise InvalidPSBTError(
+                    'Input {0} witness_script does not match.'.format(index),
+                    code=RejectCode.SCRIPT_HASH_MISMATCH,
+                )
         elif inp.witness_script is not None:
-            raise InvalidPSBTError('Input {0} has a stray witness_script.'.format(index), code=RejectCode.EXTRANEOUS_WITNESS_SCRIPT)
+            raise InvalidPSBTError(
+                'Input {0} has a stray witness_script.'.format(index),
+                code=RejectCode.EXTRANEOUS_WITNESS_SCRIPT,
+            )
 
     def _parse_inputs(self, child_key_derivation_cache):
         self.input_amount = 0
@@ -641,24 +773,39 @@ class PSBTParser:
                 for public_key, derivation, is_taproot in self._scope_keyed_derivations(inp):
                     if not derivation:
                         continue
-                    if not self._verify_derivation(inp, public_key, derivation, child_key_derivation_cache, is_taproot=is_taproot):
+                    if not self._verify_derivation(
+                        inp,
+                        public_key,
+                        derivation,
+                        child_key_derivation_cache,
+                        is_taproot=is_taproot,
+                    ):
                         continue
                     if len(derivation) >= 2:
                         self.verified_input_prefixes.add(tuple(derivation[:-2]))
-                    self.verified_max_input_index = max(self.verified_max_input_index, derivation[-1] & 2147483647)
+                    self.verified_max_input_index = max(
+                        self.verified_max_input_index, derivation[-1] & 2147483647
+                    )
             if inp.witness_utxo:
                 self.input_amount += inp.witness_utxo.value
                 script_pubkey = inp.witness_utxo.script_pubkey
             elif inp.non_witness_utxo:
                 self.input_amount += inp.utxo.value
                 script_pubkey = inp.script_pubkey
-            inp_policy = PSBTParser._get_policy(inp, script_pubkey, self.psbt.xpubs, child_key_derivation_cache)
+            inp_policy = PSBTParser._get_policy(
+                inp, script_pubkey, self.psbt.xpubs, child_key_derivation_cache
+            )
             if self.policy == None:
                 self.policy = inp_policy
             elif self.policy != inp_policy:
-                raise InvalidPSBTError('Mixed inputs in the transaction', code=RejectCode.MIXED_INPUTS)
+                raise InvalidPSBTError(
+                    'Mixed inputs in the transaction', code=RejectCode.MIXED_INPUTS
+                )
         if self.input_amount > MAX_MONEY:
-            raise InvalidPSBTError('Inputs total {0} sats, more than can exist.'.format(self.input_amount), code=RejectCode.AMOUNT_OUT_OF_RANGE)
+            raise InvalidPSBTError(
+                'Inputs total {0} sats, more than can exist.'.format(self.input_amount),
+                code=RejectCode.AMOUNT_OUT_OF_RANGE,
+            )
 
     @staticmethod
     def is_reachable_derivation(derivation, input_prefixes):
@@ -728,7 +875,9 @@ class PSBTParser:
         have to be compared differently -- see seed_owns_pubkey.
         """
         triples = [(pub, d.derivation, False) for pub, d in scope.bip32_derivations.items()]
-        triples += [(pub, d.derivation, True) for pub, (_, d) in scope.taproot_bip32_derivations.items()]
+        triples += [
+            (pub, d.derivation, True) for pub, (_, d) in scope.taproot_bip32_derivations.items()
+        ]
         return triples
 
     @staticmethod
@@ -741,7 +890,9 @@ class PSBTParser:
         matched path/pubkey pair from somewhere else in our own tree. Only the
         prevout's script says which key really unlocks these coins.
         """
-        utxo = inp.witness_utxo or (inp.non_witness_utxo.vout[inp.vout] if inp.non_witness_utxo else None)
+        utxo = inp.witness_utxo or (
+            inp.non_witness_utxo.vout[inp.vout] if inp.non_witness_utxo else None
+        )
         if utxo is None:
             return False
         script_pubkey = utxo.script_pubkey
@@ -764,7 +915,9 @@ class PSBTParser:
             return sec in script_pubkey.data
         return False
 
-    def _verify_derivation(self, inp, public_key, derivation, child_key_derivation_cache=None, is_taproot=False):
+    def _verify_derivation(
+        self, inp, public_key, derivation, child_key_derivation_cache=None, is_taproot=False
+    ):
         """
         Whether this seed really does produce `public_key` at `derivation`, *and*
         whether the utxo being spent actually commits to that key.
@@ -782,9 +935,18 @@ class PSBTParser:
         if not self.can_verify_derivations:
             return False
         try:
-            if not PSBTParser.seed_owns_pubkey(self.root, derivation, public_key, child_key_derivation_cache, is_taproot=is_taproot, root_path=self.root_path):
+            if not PSBTParser.seed_owns_pubkey(
+                self.root,
+                derivation,
+                public_key,
+                child_key_derivation_cache,
+                is_taproot=is_taproot,
+                root_path=self.root_path,
+            ):
                 return False
-            derived = PSBTParser._derive_with_cache_via_indices(self.root, derivation[len(self.root_path):], child_key_derivation_cache)
+            derived = PSBTParser._derive_with_cache_via_indices(
+                self.root, derivation[len(self.root_path) :], child_key_derivation_cache
+            )
         except FeatureUnavailable:
             raise
         except Exception as e:
@@ -817,12 +979,19 @@ class PSBTParser:
         self.destination_amounts = []
         vout = self.psbt.tx.vout
         if not vout:
-            raise InvalidPSBTError('The transaction has no outputs.', code=RejectCode.INVALID_TRANSACTION)
+            raise InvalidPSBTError(
+                'The transaction has no outputs.', code=RejectCode.INVALID_TRANSACTION
+            )
         for i, out in enumerate(self.psbt.outputs):
             value = vout[i].value
             if not 0 <= value <= MAX_MONEY:
-                raise InvalidPSBTError('Output {0} amount out of range: {1}'.format(i, value), code=RejectCode.AMOUNT_OUT_OF_RANGE)
-            out_policy = PSBTParser._get_policy(out, vout[i].script_pubkey, self.psbt.xpubs, child_key_derivation_cache)
+                raise InvalidPSBTError(
+                    'Output {0} amount out of range: {1}'.format(i, value),
+                    code=RejectCode.AMOUNT_OUT_OF_RANGE,
+                )
+            out_policy = PSBTParser._get_policy(
+                out, vout[i].script_pubkey, self.psbt.xpubs, child_key_derivation_cache
+            )
             is_presumed_change = False
             if PSBTParser._policy_shape_matches(out_policy, self.policy):
                 singlesig_derivation_path = None
@@ -833,17 +1002,29 @@ class PSBTParser:
                     rebuilt_script_pubkey = _dependency('embit', 'script').p2wsh(multisig_script)
                 elif self.policy['type'] == 'p2sh-p2wsh':
                     multisig_script = out.witness_script
-                    rebuilt_script_pubkey = _dependency('embit', 'script').p2sh(_dependency('embit', 'script').p2wsh(multisig_script))
+                    rebuilt_script_pubkey = _dependency('embit', 'script').p2sh(
+                        _dependency('embit', 'script').p2wsh(multisig_script)
+                    )
                 elif self.policy['type'] == 'p2sh':
                     multisig_script = out.redeem_script
                     rebuilt_script_pubkey = _dependency('embit', 'script').p2sh(multisig_script)
                 elif self.policy['type'] in ('p2pkh', 'p2sh-p2wpkh', 'p2wpkh'):
                     if len(out.bip32_derivations) > 1:
-                        raise InvalidPSBTError('Output {0} names more than one key for a single-key script.'.format(i), code=RejectCode.SURPLUS_DERIVATIONS)
+                        raise InvalidPSBTError(
+                            'Output {0} names more than one key for a single-key script.'.format(i),
+                            code=RejectCode.SURPLUS_DERIVATIONS,
+                        )
                     if len(out.bip32_derivations.values()) == 1 and self.can_verify_derivations:
                         singlesig_derivation_path = list(out.bip32_derivations.values())[0]
-                        seed_public_key = PSBTParser._derive_with_cache_via_derivation_path(self.root, singlesig_derivation_path, child_key_derivation_cache, root_path=self.root_path).get_public_key()
-                        rebuilt_script_pubkey = PSBTParser._build_singlesig_script(self.policy['type'], seed_public_key)
+                        seed_public_key = PSBTParser._derive_with_cache_via_derivation_path(
+                            self.root,
+                            singlesig_derivation_path,
+                            child_key_derivation_cache,
+                            root_path=self.root_path,
+                        ).get_public_key()
+                        rebuilt_script_pubkey = PSBTParser._build_singlesig_script(
+                            self.policy['type'], seed_public_key
+                        )
                     else:
                         pass
                 elif self.policy['type'] == 'p2tr':
@@ -851,93 +1032,225 @@ class PSBTParser:
                     if len(taproot_entries) == 0:
                         pass
                     else:
-                        internal_key_claims = sum((1 for leaf_hashes, _ in taproot_entries if not leaf_hashes))
+                        internal_key_claims = sum(
+                            (1 for leaf_hashes, _ in taproot_entries if not leaf_hashes)
+                        )
                         if internal_key_claims > 1:
-                            raise InvalidPSBTError('Output {0} names more than one taproot internal key.'.format(i), code=RejectCode.SURPLUS_DERIVATIONS)
-                        if len(taproot_entries) == 1 and internal_key_claims == 1 and self.can_verify_derivations:
+                            raise InvalidPSBTError(
+                                'Output {0} names more than one taproot internal key.'.format(i),
+                                code=RejectCode.SURPLUS_DERIVATIONS,
+                            )
+                        if (
+                            len(taproot_entries) == 1
+                            and internal_key_claims == 1
+                            and self.can_verify_derivations
+                        ):
                             leaf_hashes, singlesig_derivation_path = taproot_entries[0]
-                            seed_public_key = PSBTParser._derive_with_cache_via_derivation_path(self.root, singlesig_derivation_path, child_key_derivation_cache, root_path=self.root_path).get_public_key()
-                            rebuilt_script_pubkey = PSBTParser._build_singlesig_script(self.policy['type'], seed_public_key)
+                            seed_public_key = PSBTParser._derive_with_cache_via_derivation_path(
+                                self.root,
+                                singlesig_derivation_path,
+                                child_key_derivation_cache,
+                                root_path=self.root_path,
+                            ).get_public_key()
+                            rebuilt_script_pubkey = PSBTParser._build_singlesig_script(
+                                self.policy['type'], seed_public_key
+                            )
                         else:
                             pass
                 else:
-                    raise InvalidPSBTError('Unsupported script type: {0}'.format(self.policy['type']), code=RejectCode.UNDISPLAYABLE_OUTPUT)
-                verified_derivation_paths = self.verified_output_derivation_paths[i] if self.can_verify_derivations else []
+                    raise InvalidPSBTError(
+                        'Unsupported script type: {0}'.format(self.policy['type']),
+                        code=RejectCode.UNDISPLAYABLE_OUTPUT,
+                    )
+                verified_derivation_paths = (
+                    self.verified_output_derivation_paths[i] if self.can_verify_derivations else []
+                )
                 if rebuilt_script_pubkey.data == vout[i].script_pubkey.data:
                     if singlesig_derivation_path is not None:
                         if verified_derivation_paths == []:
-                            raise InvalidPSBTError('Output {0} pays this seed at {1} but does not claim it there.'.format(i, _dependency('embit', 'bip32').path_to_str(singlesig_derivation_path.derivation)), code=RejectCode.MISLABELED_OUTPUT_OWNERSHIP)
+                            raise InvalidPSBTError(
+                                'Output {0} pays this seed at {1} but does not claim it there.'.format(
+                                    i,
+                                    _dependency('embit', 'bip32').path_to_str(
+                                        singlesig_derivation_path.derivation
+                                    ),
+                                ),
+                                code=RejectCode.MISLABELED_OUTPUT_OWNERSHIP,
+                            )
                         if verified_derivation_paths != [singlesig_derivation_path]:
-                            raise RuntimeError('Output {0} verified at a path it does not pay'.format(i))
+                            raise RuntimeError(
+                                'Output {0} verified at a path it does not pay'.format(i)
+                            )
                         is_presumed_change = True
                     elif multisig_script is not None:
                         if not self.can_verify_derivations:
-                            if self.multisig_descriptor is not None and self._descriptor_owns_output(self.multisig_descriptor, i):
+                            if (
+                                self.multisig_descriptor is not None
+                                and self._descriptor_owns_output(self.multisig_descriptor, i)
+                            ):
                                 is_presumed_change = True
                             else:
                                 self.unidentified_change_outputs.append(i)
                         elif verified_derivation_paths == []:
                             for derivation_path_obj in out.bip32_derivations.values():
-                                seed_public_key = PSBTParser._derive_with_cache_via_derivation_path(self.root, derivation_path_obj, child_key_derivation_cache, root_path=self.root_path).get_public_key()
-                                if PSBTParser._multisig_script_contains_key(multisig_script, seed_public_key):
-                                    raise InvalidPSBTError("Output {0} commits to this seed's key at {1} but claims another fingerprint and/or key there.".format(i, _dependency('embit', 'bip32').path_to_str(derivation_path_obj.derivation)), code=RejectCode.MISLABELED_OUTPUT_OWNERSHIP)
+                                seed_public_key = PSBTParser._derive_with_cache_via_derivation_path(
+                                    self.root,
+                                    derivation_path_obj,
+                                    child_key_derivation_cache,
+                                    root_path=self.root_path,
+                                ).get_public_key()
+                                if PSBTParser._multisig_script_contains_key(
+                                    multisig_script, seed_public_key
+                                ):
+                                    raise InvalidPSBTError(
+                                        "Output {0} commits to this seed's key at {1} but claims another fingerprint and/or key there.".format(
+                                            i,
+                                            _dependency('embit', 'bip32').path_to_str(
+                                                derivation_path_obj.derivation
+                                            ),
+                                        ),
+                                        code=RejectCode.MISLABELED_OUTPUT_OWNERSHIP,
+                                    )
                             pass
                         else:
                             for verified_derivation_path in verified_derivation_paths:
-                                seed_public_key = PSBTParser._derive_with_cache_via_derivation_path(self.root, verified_derivation_path, child_key_derivation_cache, root_path=self.root_path).get_public_key()
-                                if not PSBTParser._multisig_script_contains_key(multisig_script, seed_public_key):
-                                    raise InvalidPSBTError('Output {0} claims this seed at {1} but its committed script does not hold that key.'.format(i, _dependency('embit', 'bip32').path_to_str(verified_derivation_path.derivation)), code=RejectCode.FORGED_OUTPUT_OWNERSHIP)
+                                seed_public_key = PSBTParser._derive_with_cache_via_derivation_path(
+                                    self.root,
+                                    verified_derivation_path,
+                                    child_key_derivation_cache,
+                                    root_path=self.root_path,
+                                ).get_public_key()
+                                if not PSBTParser._multisig_script_contains_key(
+                                    multisig_script, seed_public_key
+                                ):
+                                    raise InvalidPSBTError(
+                                        'Output {0} claims this seed at {1} but its committed script does not hold that key.'.format(
+                                            i,
+                                            _dependency('embit', 'bip32').path_to_str(
+                                                verified_derivation_path.derivation
+                                            ),
+                                        ),
+                                        code=RejectCode.FORGED_OUTPUT_OWNERSHIP,
+                                    )
                             if len(out.bip32_derivations) > self.policy['n']:
-                                raise InvalidPSBTError('Output {0} claims more keys than its script uses.'.format(i), code=RejectCode.SURPLUS_DERIVATIONS)
+                                raise InvalidPSBTError(
+                                    'Output {0} claims more keys than its script uses.'.format(i),
+                                    code=RejectCode.SURPLUS_DERIVATIONS,
+                                )
                             is_presumed_change = True
                             input_cosigners = self.policy.get('cosigners')
                             output_cosigners = out_policy.get('cosigners')
                             if input_cosigners is not None and input_cosigners != output_cosigners:
                                 is_presumed_change = False
                             if is_presumed_change and 'cosigners' not in self.policy:
-                                if self.multisig_descriptor is None or not self._descriptor_owns_output(self.multisig_descriptor, i):
+                                if (
+                                    self.multisig_descriptor is None
+                                    or not self._descriptor_owns_output(self.multisig_descriptor, i)
+                                ):
                                     is_presumed_change = False
                                     self.unidentified_change_outputs.append(i)
                 elif verified_derivation_paths != [] and self.policy['type'] != 'p2tr':
-                    raise InvalidPSBTError('Output {0} claims this seed at {1} but its committed script contradicts that.'.format(i, _dependency('embit', 'bip32').path_to_str(verified_derivation_paths[0].derivation)), code=RejectCode.FORGED_OUTPUT_OWNERSHIP)
+                    raise InvalidPSBTError(
+                        'Output {0} claims this seed at {1} but its committed script contradicts that.'.format(
+                            i,
+                            _dependency('embit', 'bip32').path_to_str(
+                                verified_derivation_paths[0].derivation
+                            ),
+                        ),
+                        code=RejectCode.FORGED_OUTPUT_OWNERSHIP,
+                    )
             if is_presumed_change:
                 derivations = self._scope_derivations(out)
-                unreachable = [d for d in derivations if not PSBTParser.is_reachable_derivation(d, self.verified_input_prefixes if self.can_verify_derivations else None)]
+                unreachable = [
+                    d
+                    for d in derivations
+                    if not PSBTParser.is_reachable_derivation(
+                        d, self.verified_input_prefixes if self.can_verify_derivations else None
+                    )
+                ]
                 if unreachable:
-                    raise InvalidPSBTError('Change path {0} is outside this wallet.'.format(_dependency('embit', 'bip32').path_to_str(unreachable[0])), code=RejectCode.UNREACHABLE_CHANGE_PATH)
+                    raise InvalidPSBTError(
+                        'Change path {0} is outside this wallet.'.format(
+                            _dependency('embit', 'bip32').path_to_str(unreachable[0])
+                        ),
+                        code=RejectCode.UNREACHABLE_CHANGE_PATH,
+                    )
                 if self.change_index_lookahead > 0 and self.verified_max_input_index >= 0:
                     ceiling = self.verified_max_input_index + self.change_index_lookahead
                     for derivation in derivations:
                         index = derivation[-1] & 2147483647
                         if index > ceiling:
-                            raise InvalidPSBTError('Change index {0} past gap limit (inputs {1}).'.format(index, self.verified_max_input_index), code=RejectCode.CHANGE_INDEX_TOO_FAR)
+                            raise InvalidPSBTError(
+                                'Change index {0} past gap limit (inputs {1}).'.format(
+                                    index, self.verified_max_input_index
+                                ),
+                                code=RejectCode.CHANGE_INDEX_TOO_FAR,
+                            )
             if vout[i].script_pubkey.data[0] == OPCODES.OP_RETURN:
                 payload = PSBTParser._op_return_payload(vout[i].script_pubkey.data)
                 if payload is None:
-                    raise InvalidPSBTError('Output {0} OP_RETURN data is malformed.'.format(i), code=RejectCode.UNDISPLAYABLE_OUTPUT)
+                    raise InvalidPSBTError(
+                        'Output {0} OP_RETURN data is malformed.'.format(i),
+                        code=RejectCode.UNDISPLAYABLE_OUTPUT,
+                    )
                 self.op_return_payloads.append(payload)
                 self.op_return_amount += vout[i].value
                 if vout[i].value > 0:
-                    raise InvalidPSBTError('Output {0} burns {1} sats in an OP_RETURN.'.format(i, vout[i].value), code=RejectCode.NONZERO_OP_RETURN)
+                    raise InvalidPSBTError(
+                        'Output {0} burns {1} sats in an OP_RETURN.'.format(i, vout[i].value),
+                        code=RejectCode.NONZERO_OP_RETURN,
+                    )
             elif is_presumed_change:
-                addr = vout[i].script_pubkey.address(_dependency('embit.networks', 'NETWORKS')[_dependency('seedsigner.models.settings', 'SettingsConstants').map_network_to_embit(self.network)])
-                verified_path = self.verified_output_derivation_paths[i][0].derivation if self.can_verify_derivations else PSBTParser._first_claimed_derivation_path(out)
-                self.change_data.append({'output_index': i, 'address': addr, 'amount': vout[i].value, 'verified_derivation_path': verified_path})
+                addr = vout[i].script_pubkey.address(
+                    _dependency('embit.networks', 'NETWORKS')[
+                        _dependency(
+                            'seedsigner.models.settings', 'SettingsConstants'
+                        ).map_network_to_embit(self.network)
+                    ]
+                )
+                verified_path = (
+                    self.verified_output_derivation_paths[i][0].derivation
+                    if self.can_verify_derivations
+                    else PSBTParser._first_claimed_derivation_path(out)
+                )
+                self.change_data.append(
+                    {
+                        'output_index': i,
+                        'address': addr,
+                        'amount': vout[i].value,
+                        'verified_derivation_path': verified_path,
+                    }
+                )
                 self.change_amount += vout[i].value
             else:
                 try:
-                    addr = vout[i].script_pubkey.address(_dependency('embit.networks', 'NETWORKS')[_dependency('seedsigner.models.settings', 'SettingsConstants').map_network_to_embit(self.network)])
+                    addr = vout[i].script_pubkey.address(
+                        _dependency('embit.networks', 'NETWORKS')[
+                            _dependency(
+                                'seedsigner.models.settings', 'SettingsConstants'
+                            ).map_network_to_embit(self.network)
+                        ]
+                    )
                 except (ValueError, _dependency('embit.base', 'EmbitError')) as e:
-                    raise InvalidPSBTError('Output {0} script cannot be shown as an address.'.format(i), code=RejectCode.UNDISPLAYABLE_OUTPUT) from e
+                    raise InvalidPSBTError(
+                        'Output {0} script cannot be shown as an address.'.format(i),
+                        code=RejectCode.UNDISPLAYABLE_OUTPUT,
+                    ) from e
                 self.destination_addresses.append(addr)
                 self.destination_amounts.append(vout[i].value)
                 self.spend_amount += vout[i].value
         self.fee_amount = self.psbt.fee()
         if self.fee_amount < 0:
-            raise InvalidPSBTError('Outputs exceed inputs by {0} sats'.format(-self.fee_amount), code=RejectCode.NEGATIVE_FEE)
+            raise InvalidPSBTError(
+                'Outputs exceed inputs by {0} sats'.format(-self.fee_amount),
+                code=RejectCode.NEGATIVE_FEE,
+            )
         accounted = self.spend_amount + self.change_amount + self.op_return_amount + self.fee_amount
         if accounted != self.input_amount:
-            raise InvalidPSBTError('Amounts do not add up: {0} vs {1} in.'.format(accounted, self.input_amount), code=RejectCode.AMOUNT_OUT_OF_RANGE)
+            raise InvalidPSBTError(
+                'Amounts do not add up: {0} vs {1} in.'.format(accounted, self.input_amount),
+                code=RejectCode.AMOUNT_OUT_OF_RANGE,
+            )
         self._collect_risk_warnings()
         return True
 
@@ -961,10 +1274,15 @@ class PSBTParser:
         Flag the things a user would want to know before approving, none of
         which make the transaction invalid.
         """
-        if self.input_amount > 0 and self.fee_amount * HIGH_FEE_DENOMINATOR >= self.input_amount * HIGH_FEE_NUMERATOR:
+        if (
+            self.input_amount > 0
+            and self.fee_amount * HIGH_FEE_DENOMINATOR >= self.input_amount * HIGH_FEE_NUMERATOR
+        ):
             self.risk_warnings.add(RiskWarning.HIGH_FEE)
         self._check_fee_rate()
-        if len(self.psbt.inputs) >= 2 and any((PSBTParser._amount_is_unproven(inp) for inp in self.psbt.inputs)):
+        if len(self.psbt.inputs) >= 2 and any(
+            (PSBTParser._amount_is_unproven(inp) for inp in self.psbt.inputs)
+        ):
             self.risk_warnings.add(RiskWarning.UNVERIFIED_INPUT_AMOUNTS)
         for vout in self.psbt.tx.vout:
             if vout.script_pubkey.data and vout.script_pubkey.data[0] == OPCODES.OP_RETURN:
@@ -972,10 +1290,16 @@ class PSBTParser:
             if vout.value < DUST_THRESHOLD:
                 self.risk_warnings.add(RiskWarning.DUST_OUTPUT)
                 break
-        self.locktime_is_enforced = any((vin.sequence != SEQUENCE_FINAL for vin in self.psbt.tx.vin))
+        self.locktime_is_enforced = any(
+            (vin.sequence != SEQUENCE_FINAL for vin in self.psbt.tx.vin)
+        )
         locktime = self.psbt.tx.locktime or 0
         self.locktime = locktime
-        if self.locktime_is_enforced and locktime >= LOCKTIME_TIMESTAMP_THRESHOLD and (locktime > _dependency('seedsigner_port.psbt_clock', None).time()):
+        if (
+            self.locktime_is_enforced
+            and locktime >= LOCKTIME_TIMESTAMP_THRESHOLD
+            and (locktime > _dependency('seedsigner_port.psbt_clock', None).time())
+        ):
             self.risk_warnings.add(RiskWarning.FUTURE_LOCKTIME)
         for vin in self.psbt.tx.vin:
             if vin.sequence < RBF_SEQUENCE_CEILING:
@@ -1001,9 +1325,18 @@ class PSBTParser:
         """The supplied witness or redeem script this output is provably locked by, if any."""
         if out.witness_script is not None:
             wsh = _dependency('embit', 'script').p2wsh(out.witness_script).data
-            if wsh == script_pubkey.data or _dependency('embit', 'script').p2sh(_dependency('embit', 'script').Script(wsh)).data == script_pubkey.data:
+            if (
+                wsh == script_pubkey.data
+                or _dependency('embit', 'script')
+                .p2sh(_dependency('embit', 'script').Script(wsh))
+                .data
+                == script_pubkey.data
+            ):
                 return out.witness_script
-        if out.redeem_script is not None and _dependency('embit', 'script').p2sh(out.redeem_script).data == script_pubkey.data:
+        if (
+            out.redeem_script is not None
+            and _dependency('embit', 'script').p2sh(out.redeem_script).data == script_pubkey.data
+        ):
             return out.redeem_script
         return None
 
@@ -1021,15 +1354,15 @@ class PSBTParser:
             if 1 <= op <= 75:
                 length = op
             elif op == OPCODES.OP_PUSHDATA1:
-                length, pos = (int.from_bytes(data[pos:pos + 1], 'little'), pos + 1)
+                length, pos = (int.from_bytes(data[pos : pos + 1], 'little'), pos + 1)
             elif op == OPCODES.OP_PUSHDATA2:
-                length, pos = (int.from_bytes(data[pos:pos + 2], 'little'), pos + 2)
+                length, pos = (int.from_bytes(data[pos : pos + 2], 'little'), pos + 2)
             elif op == OPCODES.OP_PUSHDATA4:
-                length, pos = (int.from_bytes(data[pos:pos + 4], 'little'), pos + 4)
+                length, pos = (int.from_bytes(data[pos : pos + 4], 'little'), pos + 4)
             else:
                 yield (op, None)
                 continue
-            yield (op, data[pos:pos + length])
+            yield (op, data[pos : pos + length])
             pos += length
 
     @staticmethod
@@ -1039,7 +1372,12 @@ class PSBTParser:
         Walks the opcodes rather than searching the bytes, so a push that happens
         to contain 0xb1 or 0xb2 is not mistaken for one.
         """
-        return any((op in (OPCODES.OP_CHECKLOCKTIMEVERIFY, OPCODES.OP_CHECKSEQUENCEVERIFY) for op, _pushed in PSBTParser._script_ops(sc.data)))
+        return any(
+            (
+                op in (OPCODES.OP_CHECKLOCKTIMEVERIFY, OPCODES.OP_CHECKSEQUENCEVERIFY)
+                for op, _pushed in PSBTParser._script_ops(sc.data)
+            )
+        )
 
     @staticmethod
     def _op_return_payload(data):
@@ -1064,16 +1402,18 @@ class PSBTParser:
             if op <= 75:
                 length = op
             elif op in (OPCODES.OP_PUSHDATA1, OPCODES.OP_PUSHDATA2, OPCODES.OP_PUSHDATA4):
-                width = {OPCODES.OP_PUSHDATA1: 1, OPCODES.OP_PUSHDATA2: 2, OPCODES.OP_PUSHDATA4: 4}[op]
+                width = {OPCODES.OP_PUSHDATA1: 1, OPCODES.OP_PUSHDATA2: 2, OPCODES.OP_PUSHDATA4: 4}[
+                    op
+                ]
                 if pos + width > len(body):
                     return None
-                length = int.from_bytes(body[pos:pos + width], 'little')
+                length = int.from_bytes(body[pos : pos + width], 'little')
                 pos += width
             else:
                 return None
             if pos + length > len(body):
                 return None
-            payload += body[pos:pos + length]
+            payload += body[pos : pos + length]
             pos += length
         return payload
 
@@ -1120,7 +1460,9 @@ class PSBTParser:
                     pass
                     return policy
                 try:
-                    cosigners = PSBTParser._get_cosigners(pubkeys, scope.bip32_derivations, xpubs, child_key_derivation_cache)
+                    cosigners = PSBTParser._get_cosigners(
+                        pubkeys, scope.bip32_derivations, xpubs, child_key_derivation_cache
+                    )
                     policy.update({'m': m, 'n': n, 'cosigners': cosigners})
                 except FeatureUnavailable:
                     raise
@@ -1155,7 +1497,9 @@ class PSBTParser:
         if policy_type == 'p2pkh':
             return _dependency('embit', 'script').p2pkh(public_key)
         if policy_type == 'p2sh-p2wpkh':
-            return _dependency('embit', 'script').p2sh(_dependency('embit', 'script').p2wpkh(public_key))
+            return _dependency('embit', 'script').p2sh(
+                _dependency('embit', 'script').p2wpkh(public_key)
+            )
         if policy_type == 'p2wpkh':
             return _dependency('embit', 'script').p2wpkh(public_key)
         if policy_type == 'p2tr':
@@ -1194,7 +1538,9 @@ class PSBTParser:
         return any((pubkey.sec() == public_key.sec() for pubkey in pubkeys))
 
     @staticmethod
-    def _derive_with_cache_via_indices(parent_key, derivation_path, child_key_derivation_cache=None):
+    def _derive_with_cache_via_indices(
+        parent_key, derivation_path, child_key_derivation_cache=None
+    ):
         """
         Derives the key that sits at the given derivation path below parent_key, reusing
         any levels along the way that have already been derived during this parse.
@@ -1238,7 +1584,9 @@ class PSBTParser:
         return derived_key
 
     @staticmethod
-    def _derive_with_cache_via_derivation_path(parent_key, derivation_path, child_key_derivation_cache=None, root_path=None):
+    def _derive_with_cache_via_derivation_path(
+        parent_key, derivation_path, child_key_derivation_cache=None, root_path=None
+    ):
         """
         _derive_with_cache_via_indices for a psbt entry: derives at the entry's full
         derivation path below parent_key.
@@ -1253,8 +1601,10 @@ class PSBTParser:
         """
         indices = derivation_path.derivation
         if root_path:
-            indices = indices[len(root_path):]
-        return PSBTParser._derive_with_cache_via_indices(parent_key, indices, child_key_derivation_cache)
+            indices = indices[len(root_path) :]
+        return PSBTParser._derive_with_cache_via_indices(
+            parent_key, indices, child_key_derivation_cache
+        )
 
     @staticmethod
     def _get_cosigners(pubkeys, derivations, xpubs, child_key_derivation_cache):
@@ -1302,7 +1652,9 @@ class PSBTParser:
             for xpub in xpubs:
                 origin_der = xpubs[xpub]
                 if origin_der.derivation == der.derivation[:-2]:
-                    derived_key = PSBTParser._derive_with_cache_via_indices(xpub, der.derivation[-2:], child_key_derivation_cache)
+                    derived_key = PSBTParser._derive_with_cache_via_indices(
+                        xpub, der.derivation[-2:], child_key_derivation_cache
+                    )
                     if derived_key.key == pubkey:
                         cosigners.append(xpub.to_base58())
                         break
@@ -1313,40 +1665,44 @@ class PSBTParser:
     @staticmethod
     def get_input_fingerprints(psbt):
         """
-            Exctracts the fingerprint from each input's derivation path.
+        Exctracts the fingerprint from each input's derivation path.
 
-            TODO: It's unclear if these derivations/fingerprints would ever be missing.
-            Research on PSBT standard and known wallet coordinator implementations
-            needed.
+        TODO: It's unclear if these derivations/fingerprints would ever be missing.
+        Research on PSBT standard and known wallet coordinator implementations
+        needed.
         """
         fingerprints = set()
         for input in psbt.inputs:
             for pub, derivation_path in input.bip32_derivations.items():
-                fingerprints.add(_dependency('binascii', 'hexlify')(derivation_path.fingerprint).decode())
+                fingerprints.add(
+                    _dependency('binascii', 'hexlify')(derivation_path.fingerprint).decode()
+                )
             for pub, (leaf_hashes, derivation_path) in input.taproot_bip32_derivations.items():
                 if len(leaf_hashes) > 0:
                     raise Exception('Signing script path spends is not yet implemented')
-                fingerprints.add(_dependency('binascii', 'hexlify')(derivation_path.fingerprint).decode())
+                fingerprints.add(
+                    _dependency('binascii', 'hexlify')(derivation_path.fingerprint).decode()
+                )
         return list(fingerprints)
 
     @staticmethod
     def wif_can_sign_any_input(psbt, wif_key):
         """
-            Returns True if a raw private key controls any input of this psbt.
+        Returns True if a raw private key controls any input of this psbt.
 
-            A WIF has no BIP32 tree, so the fingerprint routing that steers seeds finds
-            nothing to match -- and the psbt an Electrum watch-only single-address wallet
-            exports carries no derivation fields at all, so there is nothing to match
-            against either. Both facts made ``has_matching_input_fingerprint`` answer
-            False for keys that sign the transaction perfectly well.
+        A WIF has no BIP32 tree, so the fingerprint routing that steers seeds finds
+        nothing to match -- and the psbt an Electrum watch-only single-address wallet
+        exports carries no derivation fields at all, so there is nothing to match
+        against either. Both facts made ``has_matching_input_fingerprint`` answer
+        False for keys that sign the transaction perfectly well.
 
-            The test applied here is the one embit's ``PSBT.sign_with`` itself uses: the
-            key's pubkey, or its hash160, appearing in the input's script. Taproot is
-            checked against the input's declared internal key, since a p2tr scriptPubkey
-            holds the *tweaked* output key rather than the one we hold.
+        The test applied here is the one embit's ``PSBT.sign_with`` itself uses: the
+        key's pubkey, or its hash160, appearing in the input's script. Taproot is
+        checked against the input's declared internal key, since a p2tr scriptPubkey
+        holds the *tweaked* output key rather than the one we hold.
 
-            Like has_matching_input_fingerprint this is only a routing hint. It verifies
-            nothing; real verification happens once the key reaches a PSBTParser.
+        Like has_matching_input_fingerprint this is only a routing hint. It verifies
+        nothing; real verification happens once the key reaches a PSBTParser.
         """
         try:
             pub = wif_key.privkey.get_public_key()
@@ -1387,26 +1743,37 @@ class PSBTParser:
         return False
 
     @staticmethod
-    def has_matching_input_fingerprint(psbt, seed=None, network=_dependency('seedsigner.models.settings', 'SettingsConstants').MAINNET, *, root=None):
+    def has_matching_input_fingerprint(
+        psbt,
+        seed=None,
+        network=_dependency('seedsigner.models.settings', 'SettingsConstants').MAINNET,
+        *,
+        root=None,
+    ):
         """
-            Extracts the claimed fingerprint from each psbt input. Returns True if any
-            match the provided seed.
+        Extracts the claimed fingerprint from each psbt input. Returns True if any
+        match the provided seed.
 
-            This is merely a routing hint to help the user select a seed that looks like
-            it should be able to sign the psbt; it verifies nothing. Actual verification
-            only begins once a seed has been selected and passed into a PSBTParser
-            instance.
+        This is merely a routing hint to help the user select a seed that looks like
+        it should be able to sign the psbt; it verifies nothing. Actual verification
+        only begins once a seed has been selected and passed into a PSBTParser
+        instance.
         """
         if seed is not None:
             seed_fingerprint = seed.get_fingerprint(network)
         elif root is not None:
-            seed_fingerprint = _dependency('binascii', 'hexlify')(root.child(0).fingerprint).decode()
+            seed_fingerprint = _dependency('binascii', 'hexlify')(
+                root.child(0).fingerprint
+            ).decode()
         else:
             return False
 
         def check_fingerprint_match(public_key, derivation_path_obj, is_taproot):
             """Check fingerprint match with missing fingerprint fallback"""
-            if _dependency('binascii', 'hexlify')(derivation_path_obj.fingerprint).decode() == seed_fingerprint:
+            if (
+                _dependency('binascii', 'hexlify')(derivation_path_obj.fingerprint).decode()
+                == seed_fingerprint
+            ):
                 return True
             if derivation_path_obj.fingerprint == b'\x00\x00\x00\x00':
                 try:
@@ -1415,24 +1782,48 @@ class PSBTParser:
                     elif hasattr(seed, 'get_root'):
                         fallback_root = seed.get_root(network)
                     else:
-                        fallback_root = _dependency('embit', 'bip32').HDKey.from_seed(seed.seed_bytes, version=_dependency('embit.networks', 'NETWORKS')[_dependency('seedsigner.models.settings', 'SettingsConstants').map_network_to_embit(network)]['xprv'])
-                    return PSBTParser.seed_owns_pubkey(fallback_root, derivation_path_obj.derivation, public_key, child_key_derivation_cache=None, is_taproot=is_taproot)
+                        fallback_root = _dependency('embit', 'bip32').HDKey.from_seed(
+                            seed.seed_bytes,
+                            version=_dependency('embit.networks', 'NETWORKS')[
+                                _dependency(
+                                    'seedsigner.models.settings', 'SettingsConstants'
+                                ).map_network_to_embit(network)
+                            ]['xprv'],
+                        )
+                    return PSBTParser.seed_owns_pubkey(
+                        fallback_root,
+                        derivation_path_obj.derivation,
+                        public_key,
+                        child_key_derivation_cache=None,
+                        is_taproot=is_taproot,
+                    )
                 except FeatureUnavailable:
                     raise
                 except Exception as e:
                     pass
             return False
+
         for input in psbt.inputs:
             for public_key, derivation_path_obj in input.bip32_derivations.items():
                 if check_fingerprint_match(public_key, derivation_path_obj, is_taproot=False):
                     return True
-            for public_key, (leaf_hashes, derivation_path_obj) in input.taproot_bip32_derivations.items():
+            for public_key, (
+                leaf_hashes,
+                derivation_path_obj,
+            ) in input.taproot_bip32_derivations.items():
                 if check_fingerprint_match(public_key, derivation_path_obj, is_taproot=True):
                     return True
         return False
 
     @staticmethod
-    def seed_owns_pubkey(root, claimed_derivation_path, public_key, child_key_derivation_cache, is_taproot=False, root_path=None):
+    def seed_owns_pubkey(
+        root,
+        claimed_derivation_path,
+        public_key,
+        child_key_derivation_cache,
+        is_taproot=False,
+        root_path=None,
+    ):
         """
         Returns True if the signing seed (root) really does derive public_key at
         claimed_derivation_path.
@@ -1448,16 +1839,20 @@ class PSBTParser:
         levels are dropped before deriving. See PSBTParser.root_path.
         """
         if root_path:
-            if list(claimed_derivation_path[:len(root_path)]) != list(root_path):
+            if list(claimed_derivation_path[: len(root_path)]) != list(root_path):
                 return False
-            claimed_derivation_path = claimed_derivation_path[len(root_path):]
-        derived_public_key = PSBTParser._derive_with_cache_via_indices(root, claimed_derivation_path, child_key_derivation_cache).get_public_key()
+            claimed_derivation_path = claimed_derivation_path[len(root_path) :]
+        derived_public_key = PSBTParser._derive_with_cache_via_indices(
+            root, claimed_derivation_path, child_key_derivation_cache
+        ).get_public_key()
         if is_taproot:
             return derived_public_key.xonly() == public_key.xonly()
         return derived_public_key == public_key
 
     @staticmethod
-    def _get_seed_derivation_paths(scope, root, child_key_derivation_cache, seed_fingerprint, root_path=None):
+    def _get_seed_derivation_paths(
+        scope, root, child_key_derivation_cache, seed_fingerprint, root_path=None
+    ):
         """
         Scans the derivation path(s) in the provided input or output scope to determine
         which, if any, are provably derived from the signing seed (for multisig a path is
@@ -1497,13 +1892,33 @@ class PSBTParser:
         def _check_claim(public_key, derivation_path_obj, is_taproot):
             if derivation_path_obj.fingerprint != seed_fingerprint:
                 return
-            if not PSBTParser.seed_owns_pubkey(root, derivation_path_obj.derivation, public_key, child_key_derivation_cache, is_taproot=is_taproot, root_path=root_path):
-                code = RejectCode.FORGED_INPUT_OWNERSHIP if isinstance(scope, _dependency('embit.psbt', 'InputScope')) else RejectCode.FORGED_OUTPUT_OWNERSHIP
-                raise InvalidPSBTError("Key at {0} claims this seed's fingerprint but does not derive from it".format(_dependency('embit', 'bip32').path_to_str(derivation_path_obj.derivation)), code=code)
+            if not PSBTParser.seed_owns_pubkey(
+                root,
+                derivation_path_obj.derivation,
+                public_key,
+                child_key_derivation_cache,
+                is_taproot=is_taproot,
+                root_path=root_path,
+            ):
+                code = (
+                    RejectCode.FORGED_INPUT_OWNERSHIP
+                    if isinstance(scope, _dependency('embit.psbt', 'InputScope'))
+                    else RejectCode.FORGED_OUTPUT_OWNERSHIP
+                )
+                raise InvalidPSBTError(
+                    "Key at {0} claims this seed's fingerprint but does not derive from it".format(
+                        _dependency('embit', 'bip32').path_to_str(derivation_path_obj.derivation)
+                    ),
+                    code=code,
+                )
             verified_derivation_paths.append(derivation_path_obj)
+
         for public_key, derivation_path_obj in scope.bip32_derivations.items():
             _check_claim(public_key, derivation_path_obj, is_taproot=False)
-        for public_key, (leaf_hashes, derivation_path_obj) in scope.taproot_bip32_derivations.items():
+        for public_key, (
+            leaf_hashes,
+            derivation_path_obj,
+        ) in scope.taproot_bip32_derivations.items():
             _check_claim(public_key, derivation_path_obj, is_taproot=True)
         return verified_derivation_paths
 
@@ -1532,8 +1947,18 @@ class PSBTParser:
         if not self.can_verify_derivations:
             return
         seed_fingerprint = self.master_fingerprint or self.root.my_fingerprint
-        self.verified_output_derivation_paths = [PSBTParser._get_seed_derivation_paths(out, self.root, child_key_derivation_cache, seed_fingerprint, self.root_path) for out in self.psbt.outputs]
-        self.verified_input_derivation_paths = [PSBTParser._get_seed_derivation_paths(inp, self.root, child_key_derivation_cache, seed_fingerprint, self.root_path) for inp in self.psbt.inputs]
+        self.verified_output_derivation_paths = [
+            PSBTParser._get_seed_derivation_paths(
+                out, self.root, child_key_derivation_cache, seed_fingerprint, self.root_path
+            )
+            for out in self.psbt.outputs
+        ]
+        self.verified_input_derivation_paths = [
+            PSBTParser._get_seed_derivation_paths(
+                inp, self.root, child_key_derivation_cache, seed_fingerprint, self.root_path
+            )
+            for inp in self.psbt.inputs
+        ]
 
     def _reject_if_seed_cannot_sign(self):
         """
@@ -1561,7 +1986,10 @@ class PSBTParser:
         for verified_derivation_paths in self.verified_input_derivation_paths:
             if len(verified_derivation_paths) > 0:
                 return
-        raise InvalidPSBTError('None of the inputs in this transaction are controlled by this seed.', code=RejectCode.SEED_CANNOT_SIGN)
+        raise InvalidPSBTError(
+            'None of the inputs in this transaction are controlled by this seed.',
+            code=RejectCode.SEED_CANNOT_SIGN,
+        )
 
     @staticmethod
     def is_change_branch(derivation_path):
@@ -1577,8 +2005,14 @@ class PSBTParser:
         Taproot entries are (pubkey, leaf_hashes).
         """
         seed_fingerprint = self.master_fingerprint or self.root.my_fingerprint
-        ecdsa = [pub for pub, d in scope.bip32_derivations.items() if d.fingerprint == seed_fingerprint]
-        taproot = [(pub, leaf_hashes) for pub, (leaf_hashes, d) in scope.taproot_bip32_derivations.items() if d.fingerprint == seed_fingerprint]
+        ecdsa = [
+            pub for pub, d in scope.bip32_derivations.items() if d.fingerprint == seed_fingerprint
+        ]
+        taproot = [
+            (pub, leaf_hashes)
+            for pub, (leaf_hashes, d) in scope.taproot_bip32_derivations.items()
+            if d.fingerprint == seed_fingerprint
+        ]
         return (ecdsa, taproot)
 
     def _verify_claim_shapes(self):
@@ -1604,14 +2038,28 @@ class PSBTParser:
         for scope, script_pubkey in scopes:
             ecdsa, taproot = self._seed_claims(scope)
             if ecdsa and taproot:
-                raise InvalidPSBTError('A transaction entry names this seed as both an ecdsa and a taproot key.', code=RejectCode.MIXED_DERIVATION_MAPS)
+                raise InvalidPSBTError(
+                    'A transaction entry names this seed as both an ecdsa and a taproot key.',
+                    code=RejectCode.MIXED_DERIVATION_MAPS,
+                )
             if script_pubkey is None:
                 continue
             script_type = script_pubkey.script_type()
-            is_single_key = script_type in ('p2pkh', 'p2wpkh') or (script_type == 'p2sh' and scope.redeem_script is not None and (scope.redeem_script.script_type() == 'p2wpkh'))
+            is_single_key = script_type in ('p2pkh', 'p2wpkh') or (
+                script_type == 'p2sh'
+                and scope.redeem_script is not None
+                and (scope.redeem_script.script_type() == 'p2wpkh')
+            )
             key_path_claims = [pub for pub, leaf_hashes in taproot if not leaf_hashes]
-            if is_single_key and len(ecdsa) > 1 or (script_type == 'p2tr' and len(key_path_claims) > 1):
-                raise InvalidPSBTError("A single-key output names more than one of this seed's keys.", code=RejectCode.SURPLUS_DERIVATIONS)
+            if (
+                is_single_key
+                and len(ecdsa) > 1
+                or (script_type == 'p2tr' and len(key_path_claims) > 1)
+            ):
+                raise InvalidPSBTError(
+                    "A single-key output names more than one of this seed's keys.",
+                    code=RejectCode.SURPLUS_DERIVATIONS,
+                )
 
     @staticmethod
     def _output_commits_to_key(out, script_pubkey, public_key):
@@ -1631,9 +2079,17 @@ class PSBTParser:
         if script_type == 'p2wsh':
             if out.witness_script is None:
                 return None
-            return _dependency('embit', 'script').p2wsh(out.witness_script).data == script_pubkey.data and sec in out.witness_script.data
+            return (
+                _dependency('embit', 'script').p2wsh(out.witness_script).data == script_pubkey.data
+                and sec in out.witness_script.data
+            )
         if script_type == 'p2sh':
-            if _dependency('embit', 'script').p2sh(_dependency('embit', 'script').p2wpkh(public_key)).data == script_pubkey.data:
+            if (
+                _dependency('embit', 'script')
+                .p2sh(_dependency('embit', 'script').p2wpkh(public_key))
+                .data
+                == script_pubkey.data
+            ):
                 return True
             redeem = out.redeem_script
             if redeem is None:
@@ -1642,7 +2098,11 @@ class PSBTParser:
                 return False
             if redeem.script_type() == 'p2wsh':
                 witness = out.witness_script
-                return witness is not None and _dependency('embit', 'script').p2wsh(witness).data == redeem.data and (sec in witness.data)
+                return (
+                    witness is not None
+                    and _dependency('embit', 'script').p2wsh(witness).data == redeem.data
+                    and (sec in witness.data)
+                )
             if redeem.script_type() == 'p2wpkh':
                 return False
             return sec in redeem.data
@@ -1670,8 +2130,16 @@ class PSBTParser:
         for i, out in enumerate(self.psbt.outputs):
             ecdsa, _taproot = self._seed_claims(out)
             for public_key in ecdsa:
-                if PSBTParser._output_commits_to_key(out, vout[i].script_pubkey, public_key) is False:
-                    raise InvalidPSBTError("Output {0} is annotated with one of this seed's keys, but its script pays a different key.".format(i), code=RejectCode.FORGED_OUTPUT_OWNERSHIP)
+                if (
+                    PSBTParser._output_commits_to_key(out, vout[i].script_pubkey, public_key)
+                    is False
+                ):
+                    raise InvalidPSBTError(
+                        "Output {0} is annotated with one of this seed's keys, but its script pays a different key.".format(
+                            i
+                        ),
+                        code=RejectCode.FORGED_OUTPUT_OWNERSHIP,
+                    )
 
     def _reject_mislabeled_outputs(self, child_key_derivation_cache):
         """
@@ -1696,14 +2164,24 @@ class PSBTParser:
                 if derivation_path_obj.fingerprint == seed_fingerprint:
                     continue
                 try:
-                    ours = PSBTParser.seed_owns_pubkey(self.root, derivation_path_obj.derivation, public_key, child_key_derivation_cache, is_taproot=is_taproot, root_path=self.root_path)
+                    ours = PSBTParser.seed_owns_pubkey(
+                        self.root,
+                        derivation_path_obj.derivation,
+                        public_key,
+                        child_key_derivation_cache,
+                        is_taproot=is_taproot,
+                        root_path=self.root_path,
+                    )
                 except FeatureUnavailable:
                     raise
                 except Exception as e:
                     pass
                     ours = False
                 if ours:
-                    raise InvalidPSBTError("Output {0} pays this seed but is labelled as another wallet's.".format(i), code=RejectCode.MISLABELED_OUTPUT_OWNERSHIP)
+                    raise InvalidPSBTError(
+                        "Output {0} pays this seed but is labelled as another wallet's.".format(i),
+                        code=RejectCode.MISLABELED_OUTPUT_OWNERSHIP,
+                    )
 
     def _reject_inconsistent_fingerprints(self, child_key_derivation_cache):
         """
@@ -1722,18 +2200,26 @@ class PSBTParser:
                     continue
                 path = derivation_path_obj.derivation
                 for xpub, origin in self.psbt.xpubs.items():
-                    if origin.fingerprint == zero or origin.fingerprint == derivation_path_obj.fingerprint:
+                    if (
+                        origin.fingerprint == zero
+                        or origin.fingerprint == derivation_path_obj.fingerprint
+                    ):
                         continue
                     if len(path) < 2 or list(origin.derivation) != list(path[:-2]):
                         continue
                     try:
-                        derived = PSBTParser._derive_with_cache_via_indices(xpub, path[-2:], child_key_derivation_cache)
+                        derived = PSBTParser._derive_with_cache_via_indices(
+                            xpub, path[-2:], child_key_derivation_cache
+                        )
                     except FeatureUnavailable:
                         raise
                     except Exception:
                         continue
                     if derived.key == public_key:
-                        raise InvalidPSBTError("A key's fingerprint disagrees with the xpub that derives it.", code=RejectCode.INCONSISTENT_FINGERPRINTS)
+                        raise InvalidPSBTError(
+                            "A key's fingerprint disagrees with the xpub that derives it.",
+                            code=RejectCode.INCONSISTENT_FINGERPRINTS,
+                        )
 
     def verify_multisig_output(self, descriptor, change_num):
         """
@@ -1745,7 +2231,9 @@ class PSBTParser:
         every entry that names a descriptor key has to derive this output's script,
         and has to be one of the keys that script actually contains.
         """
-        return self._descriptor_owns_output(descriptor, self.get_change_data(change_num)['output_index'])
+        return self._descriptor_owns_output(
+            descriptor, self.get_change_data(change_num)['output_index']
+        )
 
     def _descriptor_owns_output(self, descriptor, i):
         """See verify_multisig_output; takes an output index rather than a change number."""
@@ -1796,19 +2284,37 @@ class PSBTParser:
             def _get_updated_fingerprint(public_key, derivation_path_obj, is_taproot):
                 if derivation_path_obj.fingerprint != b'\x00\x00\x00\x00':
                     return None
-                if PSBTParser.seed_owns_pubkey(self.root, derivation_path_obj.derivation, public_key, child_key_derivation_cache, is_taproot=is_taproot, root_path=self.root_path):
-                    return _dependency('embit.psbt', 'DerivationPath')(self.master_fingerprint or self.root.my_fingerprint, derivation_path_obj.derivation)
+                if PSBTParser.seed_owns_pubkey(
+                    self.root,
+                    derivation_path_obj.derivation,
+                    public_key,
+                    child_key_derivation_cache,
+                    is_taproot=is_taproot,
+                    root_path=self.root_path,
+                ):
+                    return _dependency('embit.psbt', 'DerivationPath')(
+                        self.master_fingerprint or self.root.my_fingerprint,
+                        derivation_path_obj.derivation,
+                    )
                 return None
+
             for public_key, derivation_path_obj in list(scope.bip32_derivations.items()):
-                new_derivation = _get_updated_fingerprint(public_key, derivation_path_obj, is_taproot=False)
+                new_derivation = _get_updated_fingerprint(
+                    public_key, derivation_path_obj, is_taproot=False
+                )
                 if new_derivation:
                     scope.bip32_derivations[public_key] = new_derivation
                     pass
-            for public_key, (leaf_hashes, derivation_path_obj) in list(scope.taproot_bip32_derivations.items()):
-                new_derivation = _get_updated_fingerprint(public_key, derivation_path_obj, is_taproot=True)
+            for public_key, (leaf_hashes, derivation_path_obj) in list(
+                scope.taproot_bip32_derivations.items()
+            ):
+                new_derivation = _get_updated_fingerprint(
+                    public_key, derivation_path_obj, is_taproot=True
+                )
                 if new_derivation:
                     scope.taproot_bip32_derivations[public_key] = (leaf_hashes, new_derivation)
                     pass
+
         for inp in self.psbt.inputs:
             _fill_scope(inp)
         for out in self.psbt.outputs:
@@ -1816,32 +2322,41 @@ class PSBTParser:
 
     def get_total_output_value(self, include_change=False):
         """
-            Returns the sum of all outputs (fee not included).
+        Returns the sum of all outputs (fee not included).
 
-            `change_data` holds every output that comes back to this seed, which is two
-            different things: change, and self-transfers to one of our own receive
-            addresses. With `include_change=False` only the change is subtracted;
-            self-transfers stay in the total, since the user chose to send funds there
-            just as they did for any external recipient. The two are told apart the way
-            the views do it, by `is_change_branch` on the derivation path the parse
-            proved this seed owns.
+        `change_data` holds every output that comes back to this seed, which is two
+        different things: change, and self-transfers to one of our own receive
+        addresses. With `include_change=False` only the change is subtracted;
+        self-transfers stay in the total, since the user chose to send funds there
+        just as they did for any external recipient. The two are told apart the way
+        the views do it, by `is_change_branch` on the derivation path the parse
+        proved this seed owns.
 
-            Used to decide whether the fee is high relative to what is actually being
-            sent, and whether to warn.
+        Used to decide whether the fee is high relative to what is actually being
+        sent, and whether to warn.
         """
         total = sum((out.value for out in self.psbt.tx.vout))
         if include_change:
             return total
-        true_change = sum((entry['amount'] for entry in self.change_data if PSBTParser.is_change_branch(entry['verified_derivation_path'])))
+        true_change = sum(
+            (
+                entry['amount']
+                for entry in self.change_data
+                if PSBTParser.is_change_branch(entry['verified_derivation_path'])
+            )
+        )
         return total - true_change
 
     def has_high_fee(self):
         """
-            Returns True if the fee is high.
-            i.e. fee amount > <HIGH_FEES_WARNING_THRESHOLD>% of total outputs excluding change
+        Returns True if the fee is high.
+        i.e. fee amount > <HIGH_FEES_WARNING_THRESHOLD>% of total outputs excluding change
         """
         total_output_value_excluding_change = self.get_total_output_value()
         if total_output_value_excluding_change <= 0:
             return False
         else:
-            return self.fee_amount > self.HIGH_FEES_WARNING_THRESHOLD / 100 * total_output_value_excluding_change
+            return (
+                self.fee_amount
+                > self.HIGH_FEES_WARNING_THRESHOLD / 100 * total_output_value_excluding_change
+            )

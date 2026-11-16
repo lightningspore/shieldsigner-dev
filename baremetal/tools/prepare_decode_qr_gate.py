@@ -1,15 +1,22 @@
 # SPDX-License-Identifier: MIT
 """Public native pixel→original DecodeQR model fixtures."""
+
+import pyformat  # noqa: F401  (formats generated Python on write)
 import base64
 from pathlib import Path
 import qrcode
-root=Path(__file__).resolve().parents[1]
-payload=b'settings::v1 name=public lang=en'
-q=qrcode.QRCode(border=4,error_correction=qrcode.constants.ERROR_CORRECT_M);q.add_data(payload,optimize=0);q.make(fit=True)
-rows=tuple(''.join('1' if v else '0' for v in row) for row in q.get_matrix())
-q2=qrcode.QRCode(border=4,error_correction=qrcode.constants.ERROR_CORRECT_M);q2.add_data(b'ur:bytes/abcd',optimize=0);q2.make(fit=True)
-error_rows=tuple(''.join('1' if v else '0' for v in row) for row in q2.get_matrix())
-code='''# SPDX-License-Identifier: MIT
+
+root = Path(__file__).resolve().parents[1]
+payload = b'settings::v1 name=public lang=en'
+q = qrcode.QRCode(border=4, error_correction=qrcode.constants.ERROR_CORRECT_M)
+q.add_data(payload, optimize=0)
+q.make(fit=True)
+rows = tuple(''.join('1' if v else '0' for v in row) for row in q.get_matrix())
+q2 = qrcode.QRCode(border=4, error_correction=qrcode.constants.ERROR_CORRECT_M)
+q2.add_data(b'ur:bytes/abcd', optimize=0)
+q2.make(fit=True)
+error_rows = tuple(''.join('1' if v else '0' for v in row) for row in q2.get_matrix())
+code = '''# SPDX-License-Identifier: MIT
 # Generated public fixtures; source model is unchanged except documented boundaries.
 from seedsigner_port.decode_qr import DecodeQR,DecodeQRStatus
 from seedsigner_port.decode_platform import FeatureUnavailable
@@ -51,10 +58,13 @@ for payload in ['ur:bytes/abcd','cHNidP8=']:
     except FeatureUnavailable:pass
     else:raise AssertionError('missing model dependency hidden')
 '''
-for value in [b'',b'f',b'foobar',bytes(range(32))]:
- code+='assert base64.b64encode('+repr(value)+')=='+repr(base64.b64encode(value))+'\n'
- code+='assert base64.b64decode('+repr(base64.b64encode(value))+')=='+repr(value)+'\n'
-code+='rows='+repr(rows)+'''\nimage=bytearray(bytes([255])*(640*480))
+for value in [b'', b'f', b'foobar', bytes(range(32))]:
+    code += 'assert base64.b64encode(' + repr(value) + ')==' + repr(base64.b64encode(value)) + '\n'
+    code += 'assert base64.b64decode(' + repr(base64.b64encode(value)) + ')==' + repr(value) + '\n'
+code += (
+    'rows='
+    + repr(rows)
+    + '''\nimage=bytearray(bytes([255])*(640*480))
 width=len(rows)*6
 left=(640-width)//2
 top=(480-width)//2
@@ -73,7 +83,11 @@ for i in range(5):
     gc.collect()
 print('@@PASS original-decode-qr-native-pixels')
 '''
-code+='error_rows='+repr(error_rows)+'''\nerror_image=bytearray(bytes([255])*(640*480))
+)
+code += (
+    'error_rows='
+    + repr(error_rows)
+    + '''\nerror_image=bytearray(bytes([255])*(640*480))
 error_width=len(error_rows)*6
 for y,row in enumerate(error_rows):
     line=b''.join(bytes([0 if bit=='1' else 255])*6 for bit in row)
@@ -121,4 +135,5 @@ for mode in ('complete','back','dependency-error'):
     assert camera.settings()['rust_heap_bytes']==baseline
 print('@@PASS original-scan-loop-native-qr-complete-back-error')
 '''
-(root/'micropython/decode_qr_gate.py').write_text(code)
+)
+(root / 'micropython/decode_qr_gate.py').write_text(code)

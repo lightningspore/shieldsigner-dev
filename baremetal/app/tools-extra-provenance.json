@@ -15,7 +15,7 @@
     "diceware_words.py": {
       "source": "resources/diceware/*.txt",
       "sourceSha256": "378ceb2f8cf579444758cfc1cd62a5f198213f980896261e98123edc40be5304",
-      "outputSha256": "645cf131135434b3d689bf1553a640806a17c7e1c922e98b76641e9b1d59384b",
+      "outputSha256": "349c5df9d17e93ab58b7a03ef1e446d9261e1e3a97e668e7245f3fd35c3e7cd4",
       "changes": [
         "Words only, ordered by dice key; key order asserted at generation"
       ]
@@ -23,7 +23,7 @@
     "password_generation.py": {
       "source": "helpers/password_generation.py",
       "sourceSha256": "447f925fcf97ef9ac2750ad853a00343e8987a21a8622f0a5c825704ba3b002b",
-      "outputSha256": "d878597b7d03be9fbccab4560b7388d2530f6267c145c39a4a5b86d6161b9e90",
+      "outputSha256": "54f62995921ad2a1f6643b136185dc3e7db1eac75b66bef059f02838dc87849e",
       "changes": [
         "Cryptodome SHAKE256 -> seedsigner_port.shake (FIPS 202, vector-checked)",
         "base64.b85encode -> password_support (CPython algorithm)"
@@ -35,7 +35,7 @@
         "views/tools_views.py": "62ec90fcc848fce567a8b5ae3ff3ab8deb22fb7525a92cdf950954f682872d99",
         "views/password_generator_views.py": "bbc0bba9e2181215d9af68ff1d0f8762a018ed32eb7c3761c95cb7817fcb1a92"
       },
-      "outputSha256": "292a83eebc051cb14b9b79dbc54b4c0b17827ab4ca99b3fd47dc798c0912c46f",
+      "outputSha256": "3a9d3b4124a8a6b76b6dfea3c44ed3de333b243bd8ae01957c53d4ebda4b8480",
       "classes": [
         "ToolsTextQRTextEntryView",
         "ToolsTextQRTextEntryExitDialogView",

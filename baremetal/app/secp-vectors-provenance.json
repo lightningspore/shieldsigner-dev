@@ -14,5 +14,5 @@
   "bip340Rows": 19,
   "bip39FingerprintCases": 24,
   "ecdsaReference": "CPython embit0.8.0 embit.util.ctypes_secp256k1, public inputs",
-  "generatedSha256": "3d693bdb3d4f9fbc538f425a04bcc063b86909247f76285f39b498dbcef228d8"
+  "generatedSha256": "444bec7bc7a8d966669df7d168450c2968ce1cad23c33ade1b313bcc1d17049f"
 }

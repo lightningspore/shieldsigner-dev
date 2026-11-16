@@ -1,7 +1,8 @@
 # Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner
 from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
-class SeedStorage:
 
+
+class SeedStorage:
     def __init__(self):
         self.seeds = []
         self.pending_seed = None
@@ -70,7 +71,13 @@ class SeedStorage:
             return self._pending_mnemonic[index]
         return None
 
-    def get_pending_mnemonic_fingerprint(self, network=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').MAINNET, wordlist_language_code=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').WORDLIST_LANGUAGE__ENGLISH):
+    def get_pending_mnemonic_fingerprint(
+        self,
+        network=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').MAINNET,
+        wordlist_language_code=_dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).WORDLIST_LANGUAGE__ENGLISH,
+    ):
         try:
             if self._pending_is_electrum:
                 seed = _dependency('seedsigner.models.seed', 'ElectrumSeed')(self._pending_mnemonic)
@@ -79,18 +86,31 @@ class SeedStorage:
                 if seed.seed_bytes is None:
                     return None
             else:
-                seed = _dependency('seedsigner.models.seed', 'Seed')(self._pending_mnemonic, wordlist_language_code=wordlist_language_code)
+                seed = _dependency('seedsigner.models.seed', 'Seed')(
+                    self._pending_mnemonic, wordlist_language_code=wordlist_language_code
+                )
             return seed.get_fingerprint(network)
         except _dependency('seedsigner.models.seed', 'InvalidSeedException'):
             return None
 
-    def convert_pending_mnemonic_to_pending_seed(self, wordlist_language_code=_dependency('seedsigner.models.settings_definition', 'SettingsConstants').WORDLIST_LANGUAGE__ENGLISH):
+    def convert_pending_mnemonic_to_pending_seed(
+        self,
+        wordlist_language_code=_dependency(
+            'seedsigner.models.settings_definition', 'SettingsConstants'
+        ).WORDLIST_LANGUAGE__ENGLISH,
+    ):
         if self._pending_is_electrum:
-            self.pending_seed = _dependency('seedsigner.models.seed', 'ElectrumSeed')(self._pending_mnemonic)
+            self.pending_seed = _dependency('seedsigner.models.seed', 'ElectrumSeed')(
+                self._pending_mnemonic
+            )
         elif self._pending_is_aezeed:
-            self.pending_seed = _dependency('seedsigner.models.seed', 'AezeedSeed')(self._pending_mnemonic)
+            self.pending_seed = _dependency('seedsigner.models.seed', 'AezeedSeed')(
+                self._pending_mnemonic
+            )
         else:
-            self.pending_seed = _dependency('seedsigner.models.seed', 'Seed')(self._pending_mnemonic, wordlist_language_code=wordlist_language_code)
+            self.pending_seed = _dependency('seedsigner.models.seed', 'Seed')(
+                self._pending_mnemonic, wordlist_language_code=wordlist_language_code
+            )
         self.discard_pending_mnemonic()
 
     @property
@@ -102,6 +122,7 @@ class SeedStorage:
         self._pending_mnemonic = []
         self._pending_is_electrum = False
         self._pending_is_aezeed = False
+
     'Slip39 share handling'
 
     def init_pending_slip39_share(self, num_words=None):
@@ -134,7 +155,9 @@ class SeedStorage:
             raise
         except Exception:
             self._pending_slip39_share = []
-            raise _dependency('seedsigner.models.seed', 'InvalidSeedException')('Invalid SLIP-39 share')
+            raise _dependency('seedsigner.models.seed', 'InvalidSeedException')(
+                'Invalid SLIP-39 share'
+            )
         if self._slip39_first_share is None:
             self._slip39_first_share = share_obj
         self._pending_slip39_shares.append(list(self._pending_slip39_share))
@@ -148,7 +171,9 @@ class SeedStorage:
         except FeatureUnavailable:
             raise
         except Exception:
-            raise _dependency('seedsigner.models.seed', 'InvalidSeedException')('Invalid SLIP-39 share')
+            raise _dependency('seedsigner.models.seed', 'InvalidSeedException')(
+                'Invalid SLIP-39 share'
+            )
         if self._slip39_first_share is None:
             self._slip39_first_share = share_obj
         self._pending_slip39_shares.append([''.join(w) for w in mnemonic.split()])
@@ -157,7 +182,9 @@ class SeedStorage:
 
     def convert_pending_slip39_shares_to_pending_seed(self, passphrase=''):
         mnemonics = [' '.join(share) for share in self._pending_slip39_shares]
-        self.pending_seed = _dependency('seedsigner.models.seed', 'Slip39Seed')(mnemonics=mnemonics, slip39_passphrase=passphrase)
+        self.pending_seed = _dependency('seedsigner.models.seed', 'Slip39Seed')(
+            mnemonics=mnemonics, slip39_passphrase=passphrase
+        )
         self.discard_pending_slip39_shares()
 
     def discard_pending_slip39_shares(self):

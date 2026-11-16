@@ -1,17 +1,26 @@
 # SPDX-License-Identifier: MIT
 """Public native paged-review flows; independent CPython BIP39 fingerprints."""
-import hashlib,unicodedata
+
+import pyformat  # noqa: F401  (formats generated Python on write)
+import hashlib, unicodedata
 from pathlib import Path
 from embit import bip32
-root=Path(__file__).resolve().parents[1]
-words='abandon '*11+'about'
-values=['0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'*5,'  Café🙂\0\\finish\n  ','🙂'*63]
-fixtures=[]
+
+root = Path(__file__).resolve().parents[1]
+words = 'abandon ' * 11 + 'about'
+values = ['0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' * 5, '  Café🙂\0\\finish\n  ', '🙂' * 63]
+fixtures = []
 for value in values:
- normalized=unicodedata.normalize('NFKD',value)
- seed=hashlib.pbkdf2_hmac('sha512',words.encode(),('mnemonic'+normalized).encode(),2048)
- fixtures.append((value,unicodedata.normalize('NFC',normalized),bip32.HDKey.from_seed(seed).my_fingerprint.hex()))
-code='''# SPDX-License-Identifier: MIT
+    normalized = unicodedata.normalize('NFKD', value)
+    seed = hashlib.pbkdf2_hmac('sha512', words.encode(), ('mnemonic' + normalized).encode(), 2048)
+    fixtures.append(
+        (
+            value,
+            unicodedata.normalize('NFC', normalized),
+            bip32.HDKey.from_seed(seed).my_fingerprint.hex(),
+        )
+    )
+code = '''# SPDX-License-Identifier: MIT
 # PUBLIC fixtures. Real original View, native pages/buttons, actual seed roots.
 from seedsigner_port.controller import Controller,StopFlowBasedTest
 from seedsigner_port.renderer import Renderer
@@ -23,7 +32,10 @@ from seedsigner_port.settings_store import Settings,SettingsConstants as C
 from seedsigner_port import clock
 import ui,json,hashlib,gc
 '''
-code+='fixtures='+repr(fixtures)+'''\ndef pulse(key):ui.key(key,True);ui.key(key,False)
+code += (
+    'fixtures='
+    + repr(fixtures)
+    + '''\ndef pulse(key):ui.key(key,True);ui.key(key,False)
 def forward():
     for i in range(18):pulse(18)
     pulse(10)
@@ -111,4 +123,5 @@ Renderer._instance=None;renderer=Renderer.get_instance();ui.overlays(0,0)
 renderer.session.show_screen('MainMenuScreen',{'title':'Home','button_data':['Scan','Seeds','Tools','Settings']})
 gc.collect()
 '''
-(root/'micropython/review_pages_gate.py').write_text(code)
+)
+(root / 'micropython/review_pages_gate.py').write_text(code)

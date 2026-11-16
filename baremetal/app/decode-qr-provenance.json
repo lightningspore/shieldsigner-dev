@@ -42,7 +42,7 @@
     "Base43 uses reversed(v) and a list reverse buffer; original byte algorithm unchanged",
     "Replace legacy image probes/extraction with existing native ZXing API"
   ],
-  "outputSha256": "9d99488b4c95d5865bcbb7019497a2947c2284b4631b08f3556ae328fa04f9f5",
+  "outputSha256": "ecdb9c184de26aa02df2997d75e26049a989be6224ef27f647fb2b512a569bcb",
   "base64": {
     "source": "micropython-lib/python-stdlib/base64/base64.py",
     "sourceSha256": "7db45610392bf27d506b2159279c40d3fd5e5f04b6b3bcced7acaf2f9edd3852",

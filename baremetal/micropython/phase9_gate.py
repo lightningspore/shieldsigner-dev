@@ -1,6 +1,7 @@
 # Hardware gate: wired DUT0 only, through its UART or USB REPL.
 from machine import Pin, I2C, SPI
 import machine
+
 # DUT1 buttons use GPIO52: never run the fixture output/loopback test there.
 assert machine.console_status()["usb_only"] == 0
 import time
@@ -57,7 +58,7 @@ settings = camera.settings()
 assert len(second) == 460800
 assert settings["ae_target"] == 48 and settings["exposure_seed"] == 160
 assert settings["rust_heap_bytes"] == baseline
-registers = i2c.readfrom_mem(0x30, 0x3e00, 3, addrsize=16)
+registers = i2c.readfrom_mem(0x30, 0x3E00, 3, addrsize=16)
 actual = ((registers[0] & 15) << 12) | (registers[1] << 4) | (registers[2] >> 4)
 assert actual == settings["exposure_lines"]
 print("@@CAMERA_SETTINGS", settings)

@@ -4,7 +4,18 @@ class ButtonOption:
     Note: The babel config in setup.cfg will extract the `button_label` string for translation
     """
 
-    def __init__(self, button_label, icon_name=None, icon_color=None, right_icon_name=None, button_label_color=None, return_data=None, active_button_label=None, font_name=None, font_size=None):
+    def __init__(
+        self,
+        button_label,
+        icon_name=None,
+        icon_color=None,
+        right_icon_name=None,
+        button_label_color=None,
+        return_data=None,
+        active_button_label=None,
+        font_name=None,
+        font_size=None,
+    ):
         self.button_label = button_label
         self.icon_name = icon_name
         self.icon_color = icon_color
@@ -16,7 +27,19 @@ class ButtonOption:
         self.font_size = font_size
 
     def __eq__(self, other):
-        return type(self) is type(other) and self.button_label == other.button_label and (self.icon_name == other.icon_name) and (self.icon_color == other.icon_color) and (self.right_icon_name == other.right_icon_name) and (self.button_label_color == other.button_label_color) and (self.return_data == other.return_data) and (self.active_button_label == other.active_button_label) and (self.font_name == other.font_name) and (self.font_size == other.font_size)
+        return (
+            type(self) is type(other)
+            and self.button_label == other.button_label
+            and (self.icon_name == other.icon_name)
+            and (self.icon_color == other.icon_color)
+            and (self.right_icon_name == other.right_icon_name)
+            and (self.button_label_color == other.button_label_color)
+            and (self.return_data == other.return_data)
+            and (self.active_button_label == other.active_button_label)
+            and (self.font_name == other.font_name)
+            and (self.font_size == other.font_size)
+        )
+
 
 class ButtonOptionWithoutTranslation(ButtonOption):
     """

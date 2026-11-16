@@ -1,6 +1,7 @@
-assert 6*7 == 42
+assert 6 * 7 == 42
 assert "R" == chr(82)
 import gc
+
 data = [bytearray(257) for _ in range(128)]
 data = None
 gc.collect()

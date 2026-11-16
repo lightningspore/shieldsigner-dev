@@ -1,12 +1,16 @@
 # SPDX-License-Identifier: MIT
 """Public numeric SeedQR pixels through actual original Controller/Views/LVGL."""
+
+import pyformat  # noqa: F401  (formats generated Python on write)
 from pathlib import Path
 import qrcode
-root=Path(__file__).resolve().parents[1]
-q=qrcode.QRCode(border=4,error_correction=qrcode.constants.ERROR_CORRECT_M)
-q.add_data('0000'*11+'0003',optimize=0);q.make(fit=True)
-rows=tuple(''.join('1' if value else '0' for value in row) for row in q.get_matrix())
-code='''# SPDX-License-Identifier: MIT
+
+root = Path(__file__).resolve().parents[1]
+q = qrcode.QRCode(border=4, error_correction=qrcode.constants.ERROR_CORRECT_M)
+q.add_data('0000' * 11 + '0003', optimize=0)
+q.make(fit=True)
+rows = tuple(''.join('1' if value else '0' for value in row) for row in q.get_matrix())
+code = '''# SPDX-License-Identifier: MIT
 # Generated public numeric SeedQR. Optical acquisition is not claimed by this gate.
 from seedsigner_port.controller import Controller,StopFlowBasedTest
 from seedsigner_port.renderer import Renderer
@@ -16,7 +20,10 @@ from seedsigner_port.view_seed import SeedFinalizeView,SeedOptionsView
 from seedsigner_port.navigation import Destination
 import ui,json,hashlib,gc
 '''
-code+='rows='+repr(rows)+'''\nimage=bytearray(bytes([255])*(640*480*3//2))
+code += (
+    'rows='
+    + repr(rows)
+    + '''\nimage=bytearray(bytes([255])*(640*480*3//2))
 width=len(rows)*6
 left=(640-width)//2;top=(480-width)//2
 for y,row in enumerate(rows):
@@ -93,4 +100,5 @@ ui.overlays(0,0)
 renderer.session.show_screen('MainMenuScreen',{'title':'Home','button_data':['Scan','Seeds','Tools','Settings']})
 gc.collect()
 '''
-(root/'micropython/view_flow_gate.py').write_text(code)
+)
+(root / 'micropython/view_flow_gate.py').write_text(code)

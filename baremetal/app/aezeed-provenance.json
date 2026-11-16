@@ -4,7 +4,7 @@
     "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
   },
   "sourceSha256": "895f7b283216114cdf7e8cd8b08df8f87b2df0532e3b687a87985f7966165eef",
-  "outputSha256": "b82300958183bc6dabcc0c5ba2514e07fb135a0a0e523939afd3b64642d6140d",
+  "outputSha256": "a06ff1b11fcc8a1579c99b7f9e44c11e1648e34d42595988434e338b91110704",
   "scope": "Whole original module; checksum supported, actual Blake2B/scrypt providers required for decryption",
   "transformations": [
     "Remove annotations",

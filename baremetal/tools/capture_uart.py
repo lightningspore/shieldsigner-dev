@@ -1,4 +1,5 @@
 """REF-side bounded UART capture; base64-framed stdout survives the REF ADB PTY."""
+
 import base64
 import os
 import select
@@ -22,9 +23,9 @@ print('@@CAPTURE_READY', flush=True)
 end = time.monotonic() + duration
 try:
     while time.monotonic() < end:
-        if select.select([fd], [], [], min(0.1, max(0, end-time.monotonic())))[0]:
+        if select.select([fd], [], [], min(0.1, max(0, end - time.monotonic())))[0]:
             data = os.read(fd, 4096)
             if data:
-                print('@@DATA '+base64.b64encode(data).decode('ascii'), flush=True)
+                print('@@DATA ' + base64.b64encode(data).decode('ascii'), flush=True)
 finally:
     os.close(fd)

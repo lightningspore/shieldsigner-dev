@@ -12,5 +12,5 @@
     "Wrap-safe native elapsed clock supplies time.time; source timing arithmetic unchanged",
     "DecodeQRStatus import points at generated original native model"
   ],
-  "outputSha256": "87c4775bb55c1464f6c433d6408d18dfa874c1d9d972ae6cebde8fc7c844645d"
+  "outputSha256": "780d9d05ddb50b16123e275db5416f5a9f643bfb2cc9ab1308361e933b3a5c9d"
 }

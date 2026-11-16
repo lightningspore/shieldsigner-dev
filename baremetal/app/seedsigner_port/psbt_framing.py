@@ -1,11 +1,15 @@
 # Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner
 from seedsigner_port.decode_platform import FeatureUnavailable
+
+
 def _stream_length(stream):
-    pos=stream.tell()
-    stream.seek(0,2)
-    size=stream.tell()
+    pos = stream.tell()
+    stream.seek(0, 2)
+    size = stream.tell()
     stream.seek(pos)
     return size
+
+
 """
 Strict byte-level checks on a serialized psbt, run before embit builds its model.
 
@@ -39,14 +43,28 @@ from io import BytesIO
 from embit.psbt import PSBT
 from embit.transaction import Transaction
 from seedsigner_port.psbt_errors import InvalidPSBTError, RejectCode
+
 MAGIC = b'psbt\xff'
 PSBT_GLOBAL_UNSIGNED_TX = 0
 PSBT_GLOBAL_VERSION = 251
 PSBT_GLOBAL_INPUT_COUNT = 4
 PSBT_GLOBAL_OUTPUT_COUNT = 5
-V2_ONLY_GLOBAL = {2: 'PSBT_GLOBAL_TX_VERSION', 3: 'PSBT_GLOBAL_FALLBACK_LOCKTIME', 4: 'PSBT_GLOBAL_INPUT_COUNT', 5: 'PSBT_GLOBAL_OUTPUT_COUNT', 6: 'PSBT_GLOBAL_TX_MODIFIABLE'}
-V2_ONLY_INPUT = {14: 'PSBT_IN_PREVIOUS_TXID', 15: 'PSBT_IN_OUTPUT_INDEX', 16: 'PSBT_IN_SEQUENCE', 17: 'PSBT_IN_REQUIRED_TIME_LOCKTIME', 18: 'PSBT_IN_REQUIRED_HEIGHT_LOCKTIME'}
+V2_ONLY_GLOBAL = {
+    2: 'PSBT_GLOBAL_TX_VERSION',
+    3: 'PSBT_GLOBAL_FALLBACK_LOCKTIME',
+    4: 'PSBT_GLOBAL_INPUT_COUNT',
+    5: 'PSBT_GLOBAL_OUTPUT_COUNT',
+    6: 'PSBT_GLOBAL_TX_MODIFIABLE',
+}
+V2_ONLY_INPUT = {
+    14: 'PSBT_IN_PREVIOUS_TXID',
+    15: 'PSBT_IN_OUTPUT_INDEX',
+    16: 'PSBT_IN_SEQUENCE',
+    17: 'PSBT_IN_REQUIRED_TIME_LOCKTIME',
+    18: 'PSBT_IN_REQUIRED_HEIGHT_LOCKTIME',
+}
 V2_ONLY_OUTPUT = {3: 'PSBT_OUT_AMOUNT', 4: 'PSBT_OUT_SCRIPT'}
+
 
 class _Unreadable(Exception):
     """
@@ -55,8 +73,10 @@ class _Unreadable(Exception):
     garbage keeps producing the same "could not be read" outcome it always has.
     """
 
+
 class _NonMinimal(Exception):
     pass
+
 
 def _read_compact(stream):
     first = stream.read(1)
@@ -74,14 +94,17 @@ def _read_compact(stream):
         raise _NonMinimal()
     return value
 
+
 def _read_exact(stream, n):
     data = stream.read(n)
     if len(data) != n:
         raise _Unreadable()
     return data
 
+
 def _malformed(message):
     return InvalidPSBTError(message, code=RejectCode.MALFORMED_ENCODING)
+
 
 def _read_map(stream, where):
     """
@@ -109,10 +132,15 @@ def _read_map(stream, where):
             raise _malformed(f'{where}: key type 0x{key_type:02x} appears twice.')
         entries[key] = (key_type, value)
 
+
 def _reject_foreign_fields(entries, forbidden, where, version):
     for key_type, _value in entries.values():
         if key_type in forbidden:
-            raise InvalidPSBTError(f'{where}: {forbidden[key_type]} is not allowed in a v{version} psbt.', code=RejectCode.WRONG_VERSION_FIELD)
+            raise InvalidPSBTError(
+                f'{where}: {forbidden[key_type]} is not allowed in a v{version} psbt.',
+                code=RejectCode.WRONG_VERSION_FIELD,
+            )
+
 
 def check_psbt_framing(raw):
     """
@@ -124,6 +152,7 @@ def check_psbt_framing(raw):
         _check(BytesIO(raw))
     except _Unreadable:
         return
+
 
 def _check(stream):
     if stream.read(len(MAGIC)) != MAGIC:
@@ -147,7 +176,10 @@ def _check(stream):
         num_inputs, num_outputs = (len(tx.vin), len(tx.vout))
     elif version == 2:
         if PSBT_GLOBAL_UNSIGNED_TX in by_type:
-            raise InvalidPSBTError('Global map: PSBT_GLOBAL_UNSIGNED_TX is not allowed in a v2 psbt.', code=RejectCode.WRONG_VERSION_FIELD)
+            raise InvalidPSBTError(
+                'Global map: PSBT_GLOBAL_UNSIGNED_TX is not allowed in a v2 psbt.',
+                code=RejectCode.WRONG_VERSION_FIELD,
+            )
         counts = []
         for key_type in (PSBT_GLOBAL_INPUT_COUNT, PSBT_GLOBAL_OUTPUT_COUNT):
             if key_type not in by_type:
@@ -156,13 +188,17 @@ def _check(stream):
             try:
                 counts.append(_read_compact(count_stream))
             except _NonMinimal:
-                raise _malformed(f'Global map: {V2_ONLY_GLOBAL[key_type]} is not minimally encoded.')
+                raise _malformed(
+                    f'Global map: {V2_ONLY_GLOBAL[key_type]} is not minimally encoded.'
+                )
             if count_stream.read(1):
                 raise _malformed(f'Global map: {V2_ONLY_GLOBAL[key_type]} has trailing bytes.')
         num_inputs, num_outputs = counts
         remaining = _stream_length(stream) - stream.tell()
         if num_inputs + num_outputs > remaining:
-            raise _malformed(f'Global map: declares {num_inputs} inputs and {num_outputs} outputs; only {remaining} bytes follow.')
+            raise _malformed(
+                f'Global map: declares {num_inputs} inputs and {num_outputs} outputs; only {remaining} bytes follow.'
+            )
     else:
         return
     for i in range(num_inputs):
@@ -175,6 +211,7 @@ def _check(stream):
             _reject_foreign_fields(entries, V2_ONLY_OUTPUT, f'Output {i}', version)
     if stream.read(1):
         raise _malformed(f"Data follows the last of the transaction's {num_outputs} outputs.")
+
 
 def parse_psbt(raw):
     """

@@ -4,7 +4,7 @@
     "commit": "efdd1cfd14e80a076a7e1ae91e9f2270ecbcd44f"
   },
   "sourceSha256": "96b9aae86f0503806c785c77e754b8f0b1278e7b8bbfee72a0960a96f013bd0f",
-  "outputSha256": "c69d9c732482b51d047d28de624e60364cbe5708876ca0d2e3e19f6a7ee6616b",
+  "outputSha256": "5c422bb755125ebc721d51f0283ea7c52ac810cd09d5bdb975c684aee9412774",
   "classes": [
     "PSBTSelectSeedView",
     "PSBTWIFEntryView",
@@ -46,7 +46,7 @@
   "psbt_formatting.py": {
     "source": "firmware/lvgl-app/python/formatting.py",
     "sourceSha256": "eb1879fa111010a48947736e9017090d68286706c6a9d8d2e919ae675b0732e6",
-    "outputSha256": "db246484f41cb48f25fe837dbbe3356a2fe0c0a2ec4f3f22da4f0ae0d1e5b6c4",
+    "outputSha256": "fb3a0c79e80a02750db26fe23c7a6d6ac187f103348de0629c10b2ae488cd1c0",
     "changes": [
       "Actual lazy native settings/localization/formatter imports."
     ]
@@ -54,7 +54,7 @@
   "psbt_contracts.py": {
     "source": "firmware/lvgl-app/python/psbt_contracts.py",
     "sourceSha256": "e89dff9150f9b53b53d734e97d0aa94b2e65268754ed12c7f90c19aabd52e470",
-    "outputSha256": "8aef58432e904b5b395e0a2c0f745c0f3ea965aeb31d88cd33cde3749a4bce78",
+    "outputSha256": "24c86ea16969cfdc92dca9a2e59f234192136cdf42a61c373ce9bf88cd45086e",
     "changes": [
       "Actual lazy native settings/localization/formatter imports.",
       "Strict UTF8 decode uses default strict native spelling; native Unicode checks enabled."
@@ -62,7 +62,7 @@
   },
   "screens": {
     "sourceSha256": "5c094b46ac8e9ea4d2f6ff1dd9642bef1d77cbeb279fb5f73bc543966184e470",
-    "outputSha256": "b9ec5253c75765264bee7a72732b48b6ce11df3b1bba49639d177acacdc419e1",
+    "outputSha256": "02bb5bd894415ca3231d31a075fd779ed0c067e7976175002033c7b33bb31dfa",
     "classes": [
       "PSBTOverviewScreen",
       "PSBTMathScreen",

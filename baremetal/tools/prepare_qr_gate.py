@@ -1,10 +1,17 @@
 # SPDX-License-Identifier: MIT
 """Generate public QR fixtures for the real MicroPython/ZXing DUT gate."""
+
+import pyformat  # noqa: F401  (formats generated Python on write)
 from pathlib import Path
 import qrcode
-root=Path(__file__).resolve().parents[1]
-cases=[b'shieldsigner baremetal public QR test',bytes(range(128)),b'\x00\xff\x80binary\x00payload']
-code='''# SPDX-License-Identifier: MIT
+
+root = Path(__file__).resolve().parents[1]
+cases = [
+    b'shieldsigner baremetal public QR test',
+    bytes(range(128)),
+    b'\x00\xff\x80binary\x00payload',
+]
+code = '''# SPDX-License-Identifier: MIT
 # Generated public fixtures; no wallet secrets. See tools/prepare_qr_gate.py.
 import qr
 import camera
@@ -31,12 +38,14 @@ def check(rows,payload,rotate=False,invert=False):
     if steady is None:steady=after
     else:assert after==steady
 '''
-for i,data in enumerate(cases):
- q=qrcode.QRCode(border=4,error_correction=qrcode.constants.ERROR_CORRECT_M);q.add_data(data,optimize=0);q.make(fit=True)
- rows=tuple(''.join('1' if x else '0' for x in row) for row in q.get_matrix())
- code+='rows='+repr(rows)+'\npayload='+repr(data)+'\n'
- code+='check(rows,payload)\ncheck(rows,payload,True)\ncheck(rows,payload,False,True)\n'
-code+='''baseline=camera.settings()['rust_heap_bytes']
+for i, data in enumerate(cases):
+    q = qrcode.QRCode(border=4, error_correction=qrcode.constants.ERROR_CORRECT_M)
+    q.add_data(data, optimize=0)
+    q.make(fit=True)
+    rows = tuple(''.join('1' if x else '0' for x in row) for row in q.get_matrix())
+    code += 'rows=' + repr(rows) + '\npayload=' + repr(data) + '\n'
+    code += 'check(rows,payload)\ncheck(rows,payload,True)\ncheck(rows,payload,False,True)\n'
+code += '''baseline=camera.settings()['rust_heap_bytes']
 for i in range(10):
     check(rows,payload)
     assert camera.settings()['rust_heap_bytes']==baseline
@@ -49,4 +58,4 @@ gc.collect()
 assert camera.settings()['rust_heap_bytes']==baseline
 print('@@PASS native-zxing-qr')
 '''
-(root/'micropython/qr_gate.py').write_text(code)
+(root / 'micropython/qr_gate.py').write_text(code)

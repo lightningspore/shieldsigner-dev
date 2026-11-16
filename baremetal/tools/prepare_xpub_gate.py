@@ -1,32 +1,60 @@
 # SPDX-License-Identifier: MIT
 """Independent original-helper/CPython embit public xpub and address oracle."""
-import ast,hashlib,json,sys
+
+import pyformat  # noqa: F401  (formats generated Python on write)
+import ast, hashlib, json, sys
 from pathlib import Path
-from embit import bip39,bip32,networks
-root=Path(__file__).resolve().parents[1];sys.path.insert(0,str(root/'app'))
+from embit import bip39, bip32, script, networks  # script: used as embit.script
+
+root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(root / 'app'))
 from seedsigner_port.settings_schema import SettingsConstants as C
-path=root.parent/'dist/firmware/sources/lvgl/application/src/seedsigner/helpers/embit_utils.py'
-names={'get_standard_derivation_path','get_single_sig_address'}
-tree=ast.parse(path.read_text());nodes=ast.parse('from __future__ import annotations').body+[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in names]
-ns={'SettingsConstants':C,'embit':__import__('embit'),'bip32':bip32,'NETWORKS':networks.NETWORKS}
-exec(compile(ast.Module(body=nodes,type_ignores=[]),str(path),'exec'),ns)
-words=bip39.mnemonic_from_bytes(bytes(range(16))).split();cases=[]
-for network in (C.MAINNET,C.TESTNET,C.REGTEST):
- net=C.map_network_to_embit(network)
- for sig in (C.SINGLE_SIG,C.MULTISIG):
-  for kind in (C.LEGACY_P2PKH,C.NESTED_SEGWIT,C.NATIVE_SEGWIT,C.TAPROOT):
-   if sig==C.MULTISIG and kind==C.TAPROOT:continue
-   for account in (0,7):
-    derivation=ns['get_standard_derivation_path'](network,sig,kind,account)
-    rootkey=bip32.HDKey.from_seed(bip39.mnemonic_to_seed(' '.join(words),password='PUBLIC'))
-    xpub=rootkey.derive(derivation).to_public();version=bip32.detect_version(derivation,default='xpub',network=networks.NETWORKS[net]);key=xpub.to_string(version)
-    payload='['+rootkey.child(0).fingerprint.hex()+derivation[1:]+']'+key
-    addresses=[]
-    if sig==C.SINGLE_SIG:
-     for change,index in ((False,0),(True,7)):
-      addresses.append((index,change,ns['get_single_sig_address'](xpub,kind,index,change,net)))
-    cases.append((network,sig,kind,account,derivation,key,payload,addresses))
-code='''# SPDX-License-Identifier: MIT
+
+path = root.parent / 'dist/firmware/sources/lvgl/application/src/seedsigner/helpers/embit_utils.py'
+names = {'get_standard_derivation_path', 'get_single_sig_address'}
+tree = ast.parse(path.read_text())
+nodes = ast.parse('from __future__ import annotations').body + [
+    n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in names
+]
+ns = {
+    'SettingsConstants': C,
+    'embit': __import__('embit'),
+    'bip32': bip32,
+    'NETWORKS': networks.NETWORKS,
+}
+exec(compile(ast.Module(body=nodes, type_ignores=[]), str(path), 'exec'), ns)
+words = bip39.mnemonic_from_bytes(bytes(range(16))).split()
+cases = []
+for network in (C.MAINNET, C.TESTNET, C.REGTEST):
+    net = C.map_network_to_embit(network)
+    for sig in (C.SINGLE_SIG, C.MULTISIG):
+        for kind in (C.LEGACY_P2PKH, C.NESTED_SEGWIT, C.NATIVE_SEGWIT, C.TAPROOT):
+            if sig == C.MULTISIG and kind == C.TAPROOT:
+                continue
+            for account in (0, 7):
+                derivation = ns['get_standard_derivation_path'](network, sig, kind, account)
+                rootkey = bip32.HDKey.from_seed(
+                    bip39.mnemonic_to_seed(' '.join(words), password='PUBLIC')
+                )
+                xpub = rootkey.derive(derivation).to_public()
+                version = bip32.detect_version(
+                    derivation, default='xpub', network=networks.NETWORKS[net]
+                )
+                key = xpub.to_string(version)
+                payload = '[' + rootkey.child(0).fingerprint.hex() + derivation[1:] + ']' + key
+                addresses = []
+                if sig == C.SINGLE_SIG:
+                    for change, index in ((False, 0), (True, 7)):
+                        addresses.append(
+                            (
+                                index,
+                                change,
+                                ns['get_single_sig_address'](xpub, kind, index, change, net),
+                            )
+                        )
+                cases.append((network, sig, kind, account, derivation, key, payload, addresses))
+code = (
+    '''# SPDX-License-Identifier: MIT
 # PUBLIC known mnemonic/passphrase and independent CPython results only.
 from seedsigner_port.seed import Seed
 from seedsigner_port import embit_utils
@@ -38,8 +66,12 @@ record=machine.last_reset()
 print('@@XPUB_RESET_BEFORE',record)
 assert record is None or record['reason']==2
 machine.clear_reset_record();machine.set_reset_marker(0x58505542)
-words='''+repr(words)+'''
-cases='''+repr(cases)+'''
+words='''
+    + repr(words)
+    + '''
+cases='''
+    + repr(cases)
+    + '''
 seed=Seed(words,passphrase='PUBLIC');started=time.ticks_ms()
 for number,(network,sig,kind,account,path,expected,payload,addresses) in enumerate(cases):
     assert embit_utils.get_standard_derivation_path(network,sig,kind,account)==path
@@ -60,12 +92,43 @@ seed.wipe()
 assert machine.last_reset() is None
 print('@@XPUB_CORE_MS',time.ticks_ms()-started)
 '''
-(root/'micropython/xpub_core_gate.py').write_text(code)
-(root/'app/xpub-public-oracle.json').write_text(json.dumps({'provider':'CPython embit0.8.0 plus original derivation/address helper bodies','cases':len(cases),'sourceSha256':hashlib.sha256(path.read_bytes()).hexdigest(),'gateSha256':hashlib.sha256(code.encode()).hexdigest(),'scope':'Public mnemonic, PUBLIC passphrase, accounts0/7,3networks,7supported script/signature combinations; no signing/security qualification.'},indent=2)+'\n')
-print('Prepared',len(cases),'public xpub cases')
+)
+(root / 'micropython/xpub_core_gate.py').write_text(code)
+(root / 'app/xpub-public-oracle.json').write_text(
+    json.dumps(
+        {
+            'provider': 'CPython embit0.8.0 plus original derivation/address helper bodies',
+            'cases': len(cases),
+            'sourceSha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+            'gateSha256': hashlib.sha256(
+                (root / 'micropython/xpub_core_gate.py').read_bytes()
+            ).hexdigest(),
+            'scope': 'Public mnemonic, PUBLIC passphrase, accounts0/7,3networks,7supported script/signature combinations; no signing/security qualification.',
+        },
+        indent=2,
+    )
+    + '\n'
+)
+print('Prepared', len(cases), 'public xpub cases')
 import re
-p=root/'micropython/xpub_flow_gate.py';text=p.read_text()
-selected=[case for case in cases if case[0] in (C.MAINNET,C.TESTNET) and case[2]==C.NATIVE_SEGWIT and case[3]==0]
-text=re.sub(r'^fixtures = .+$',lambda _: 'fixtures = '+repr(selected)+' # PUBLIC CPython oracle.',text,flags=re.M)
-text=re.sub(r'^words = .+$',lambda _: 'words = '+repr(words)+' # PUBLIC prepared mnemonic.',text,flags=re.M)
+
+p = root / 'micropython/xpub_flow_gate.py'
+text = p.read_text()
+selected = [
+    case
+    for case in cases
+    if case[0] in (C.MAINNET, C.TESTNET) and case[2] == C.NATIVE_SEGWIT and case[3] == 0
+]
+text = pyformat.sub_assignment(
+    'fixtures',
+    lambda _: 'fixtures = ' + repr(selected) + ' # PUBLIC CPython oracle.',
+    text,
+    flags=re.M,
+)
+text = pyformat.sub_assignment(
+    'words',
+    lambda _: 'words = ' + repr(words) + ' # PUBLIC prepared mnemonic.',
+    text,
+    flags=re.M,
+)
 p.write_text(text)

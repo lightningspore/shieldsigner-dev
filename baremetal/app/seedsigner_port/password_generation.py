@@ -1,9 +1,12 @@
 # Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner
 # Generated original password generation helpers.
 import math
-from seedsigner_port.decode_platform import dependency as _dependency,FeatureUnavailable
+from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
+
+
 def shake_stream(seed):
     return _dependency('seedsigner_port.shake', None).new(seed)
+
 
 def random_string_from_charset(seed, length, charset):
     if length <= 0:
@@ -24,6 +27,7 @@ def random_string_from_charset(seed, length, charset):
                 break
     return ''.join(result)
 
+
 def hex_password_from_seed(seed, length):
     if length <= 0:
         raise ValueError('Length must be positive')
@@ -31,14 +35,21 @@ def hex_password_from_seed(seed, length):
     data = shake_stream(seed).read(num_bytes)
     return data.hex()[:length]
 
+
 def base64_password_from_seed(seed, length):
     if length <= 0:
         raise ValueError('Length must be positive')
     num_bytes = _dependency('math', None).ceil(length / 4 * 3)
     num_bytes = num_bytes + (3 - num_bytes % 3) % 3
     data = shake_stream(seed).read(num_bytes)
-    encoded = _dependency('seedsigner_port.password_support', None).b64encode(data).decode('ascii').replace('=', '')
+    encoded = (
+        _dependency('seedsigner_port.password_support', None)
+        .b64encode(data)
+        .decode('ascii')
+        .replace('=', '')
+    )
     return encoded[:length]
+
 
 def base85_password_from_seed(seed, length):
     if length <= 0:
@@ -48,6 +59,7 @@ def base85_password_from_seed(seed, length):
     encoded = _dependency('seedsigner_port.password_support', None).b85encode(data).decode('ascii')
     return encoded[:length]
 
+
 def bip85_hex_password(entropy, num_bytes):
     if len(entropy) != 64:
         raise ValueError('Entropy must be exactly 64 bytes')
@@ -55,29 +67,41 @@ def bip85_hex_password(entropy, num_bytes):
         raise ValueError('num_bytes must be in [16, 64]')
     return entropy[:num_bytes].hex()
 
+
 def bip85_base64_password(entropy, length):
     if len(entropy) != 64:
         raise ValueError('Entropy must be exactly 64 bytes')
     if length < 20 or length > 86:
         raise ValueError('length must be in [20, 86]')
-    encoded = _dependency('seedsigner_port.password_support', None).b64encode(entropy).decode('ascii').replace('=', '')
+    encoded = (
+        _dependency('seedsigner_port.password_support', None)
+        .b64encode(entropy)
+        .decode('ascii')
+        .replace('=', '')
+    )
     return encoded[:length]
+
 
 def bip85_base85_password(entropy, length):
     if len(entropy) != 64:
         raise ValueError('Entropy must be exactly 64 bytes')
     if length < 10 or length > 80:
         raise ValueError('length must be in [10, 80]')
-    encoded = _dependency('seedsigner_port.password_support', None).b85encode(entropy).decode('ascii')
+    encoded = (
+        _dependency('seedsigner_port.password_support', None).b85encode(entropy).decode('ascii')
+    )
     return encoded[:length]
+
 
 def dice_roll_entropy_bits(roll_count):
     return roll_count * _dependency('math', None).log2(6)
+
 
 def length_from_entropy(entropy_bits, alphabet_size):
     if alphabet_size <= 1:
         raise ValueError('Alphabet size must be > 1')
     return int(entropy_bits // _dependency('math', None).log2(alphabet_size))
+
 
 def dice_roll_values_from_seed(seed, sides, roll_count, base=1):
     """Generate ``roll_count`` unbiased rolls from a seed using rejection sampling."""
@@ -97,6 +121,7 @@ def dice_roll_values_from_seed(seed, sides, roll_count, base=1):
             continue
         rolls.append(value + base)
     return rolls
+
 
 def dice_rolls_from_seed(seed, sides, roll_count, base=1):
     """Generate ``roll_count`` unbiased rolls and concatenate them as a string."""

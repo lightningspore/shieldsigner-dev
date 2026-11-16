@@ -1,6 +1,7 @@
 # Verify the5Hz LED heartbeat through native status and real pad readbacks.
 import machine
 import time
+
 start = machine.led_status()
 assert start["enabled"] and start["hz"] == 5
 states = []

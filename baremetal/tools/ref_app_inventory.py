@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Host-only AST inventory of a read-only REF source snapshot; never run the app."""
+
 import ast
 import hashlib
 import argparse
@@ -30,10 +31,27 @@ for path in sorted(root.rglob('*.py')):
         elif isinstance(node, ast.AsyncFunctionDef):
             features['asyncFunctions'] += 1
         elif isinstance(node, ast.ClassDef):
-            features['dataclassDecorators'] += sum(isinstance(d, ast.Name) and d.id == 'dataclass' for d in node.decorator_list)
+            features['dataclassDecorators'] += sum(
+                isinstance(d, ast.Name) and d.id == 'dataclass' for d in node.decorator_list
+            )
     imports.update(modules)
-    files.append({'path': str(path.relative_to(root)), 'bytes': len(source),
-                  'sha256': hashlib.sha256(source).hexdigest(), 'imports': sorted(modules)})
-print('@@APP_INVENTORY ' + json.dumps({'scope': 'Read-only AST inventory, no app imports, user settings or seed files read',
-    'version': json.loads((root/'seedsigner/version.json').read_text()),
-    'sourceFiles': files, 'allImports': sorted(imports), 'syntaxCounts': features}))
+    files.append(
+        {
+            'path': str(path.relative_to(root)),
+            'bytes': len(source),
+            'sha256': hashlib.sha256(source).hexdigest(),
+            'imports': sorted(modules),
+        }
+    )
+print(
+    '@@APP_INVENTORY '
+    + json.dumps(
+        {
+            'scope': 'Read-only AST inventory, no app imports, user settings or seed files read',
+            'version': json.loads((root / 'seedsigner/version.json').read_text()),
+            'sourceFiles': files,
+            'allImports': sorted(imports),
+            'syntaxCounts': features,
+        }
+    )
+)

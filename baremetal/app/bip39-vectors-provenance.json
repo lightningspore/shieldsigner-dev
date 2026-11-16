@@ -3,5 +3,5 @@
   "sha256": "fa3b937b7cff9c9b8ecd3aa011faeb8d6dd67993174b72326e83f4de8fdb30f8",
   "englishPublishedVectors": 24,
   "additionalReference": "CPython hashlib + NFKD public Unicode strings",
-  "generatedSha256": "5eade25ff63b5a803dad330c59d33aa43cfe9cbd394ca4fd6905f4a7b293df08"
+  "generatedSha256": "9db023f8541c25be67a80f7f8cd849052a566bf003f6c88133a0ef151e2c776b"
 }

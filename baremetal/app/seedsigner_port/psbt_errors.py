@@ -1,5 +1,7 @@
 # Copyright2021 SeedSigner; MIT, see ../LICENSE.SeedSigner
 from seedsigner_port.decode_platform import FeatureUnavailable
+
+
 class RejectCode:
     """
     Why a psbt was refused. See `InvalidPSBTError`.
@@ -10,6 +12,7 @@ class RejectCode:
     that an honest coordinator might legitimately produce, belong in
     `RiskWarning` instead, where they are shown but do not block.
     """
+
     MIXED_INPUTS = 'MIXED_INPUTS'
     MISSING_UTXO = 'MISSING_UTXO'
     NEGATIVE_FEE = 'NEGATIVE_FEE'
@@ -35,6 +38,7 @@ class RejectCode:
     MISLABELED_OUTPUT_OWNERSHIP = 'MISLABELED_OUTPUT_OWNERSHIP'
     INCONSISTENT_FINGERPRINTS = 'INCONSISTENT_FINGERPRINTS'
     SEED_CANNOT_SIGN = 'SEED_CANNOT_SIGN'
+
 
 class InvalidPSBTError(Exception):
     """

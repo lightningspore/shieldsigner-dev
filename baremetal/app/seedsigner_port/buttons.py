@@ -5,14 +5,17 @@ Key names and10/225/250ms timings follow the installed SeedSigner hardware
 contract. No OS threads/GPIO handles; inject a mask reader and clock for tests.
 Buttons already held at construction or reset are ignored until released.
 """
+
 import time
 
-NAMES = ('KEY_UP','KEY_DOWN','KEY_LEFT','KEY_RIGHT','KEY_PRESS','KEY1','KEY2','KEY3')
+NAMES = ('KEY_UP', 'KEY_DOWN', 'KEY_LEFT', 'KEY_RIGHT', 'KEY_PRESS', 'KEY1', 'KEY2', 'KEY3')
+
 
 class ButtonInput:
     def __init__(self, read_mask=None, clock=None, service=None):
         if read_mask is None:
             import display
+
             read_mask = display.buttons
         self._read = read_mask
         self._clock = clock if clock is not None else time.ticks_ms
@@ -32,7 +35,7 @@ class ButtonInput:
 
     @staticmethod
     def _elapsed(now, before):
-        return (now - before) & 0xffffffff
+        return (now - before) & 0xFFFFFFFF
 
     def _update(self):
         now = self._clock()

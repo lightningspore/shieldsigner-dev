@@ -2,8 +2,9 @@
 # Copyright2021 SeedSigner; upstream notice: ../LICENSE.SeedSigner
 class QRType:
     """
-        Used with DecodeQR and EncodeQR to communicate qr encoding type
+    Used with DecodeQR and EncodeQR to communicate qr encoding type
     """
+
     PSBT__BASE64 = "psbt__base64"
     PSBT__SPECTER = "psbt__specter"
     PSBT__BASE43 = "psbt__base43"

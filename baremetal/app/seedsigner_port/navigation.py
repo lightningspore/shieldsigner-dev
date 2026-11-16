@@ -4,8 +4,8 @@
 # Upstream notice: ../LICENSE.SeedSigner. Do not hand-edit.
 class Destination:
     """
-        Basic struct to pass back to the Controller to tell it which View the user should
-        be presented with next.
+    Basic struct to pass back to the Controller to tell it which View the user should
+    be presented with next.
     """
 
     def __init__(self, View_cls, view_args=None, skip_current_view=False, clear_history=False):
@@ -13,7 +13,25 @@ class Destination:
         self.view_args = view_args
         self.skip_current_view = skip_current_view
         self.clear_history = clear_history
-    _SENSITIVE_ARG_NAMES = {'password', 'passphrase', 'mnemonic', 'seed', 'seed_bytes', 'secret', 'secret_list', 'private_key', 'pin', 'encryption_key', 'text', 'roll_data', 'entropy', 'entropy_bytes', 'entropy_bytes_override', 'coin_flips'}
+
+    _SENSITIVE_ARG_NAMES = {
+        'password',
+        'passphrase',
+        'mnemonic',
+        'seed',
+        'seed_bytes',
+        'secret',
+        'secret_list',
+        'private_key',
+        'pin',
+        'encryption_key',
+        'text',
+        'roll_data',
+        'entropy',
+        'entropy_bytes',
+        'entropy_bytes_override',
+        'coin_flips',
+    }
 
     @classmethod
     def _redact_for_repr(cls, value, key=None):
@@ -61,21 +79,25 @@ class Destination:
 
     def __eq__(self, obj):
         """
-            Equality test IGNORES the skip_current_view and clear_history options.
+        Equality test IGNORES the skip_current_view and clear_history options.
 
-            `view_args` of None and {} mean the same thing -- "no args" -- and must
-            compare equal: `_instantiate_view()` rewrites None to {} in place, so a
-            Destination that has already been run would otherwise stop matching the
-            equivalent Destination a View returns later. The Controller relies on
-            this comparison to spot a Destination it has been to before.
+        `view_args` of None and {} mean the same thing -- "no args" -- and must
+        compare equal: `_instantiate_view()` rewrites None to {} in place, so a
+        Destination that has already been run would otherwise stop matching the
+        equivalent Destination a View returns later. The Controller relies on
+        this comparison to spot a Destination it has been to before.
         """
-        return isinstance(obj, Destination) and obj.View_cls == self.View_cls and ((obj.view_args or {}) == (self.view_args or {}))
+        return (
+            isinstance(obj, Destination)
+            and obj.View_cls == self.View_cls
+            and ((obj.view_args or {}) == (self.view_args or {}))
+        )
 
     def __ne__(self, obj):
         return not obj == self
 
-class BackStack(list):
 
+class BackStack(list):
     def __repr__(self):
         if len(self) == 0:
             return '[]'

@@ -1,7 +1,7 @@
 {
   "provider": "CPython hashlib + embit0.8.0 + Pillow grayscale pixels at exact rational centers",
   "pillowVersion": "13.0.0",
-  "gateSha256": "c266db2d332856cb628d4e3693f136734728a3eb737b86283482278c483acff1",
+  "gateSha256": "53d6f2a137d863a58457a426b4882cec893ad82da2e5ddca90ae9e4a01a3ef76",
   "cameraCases": 5,
   "diceCases": 5,
   "scope": "Deterministic public synthetic NV12/ASCII rolls; no physical entropy/security qualification."

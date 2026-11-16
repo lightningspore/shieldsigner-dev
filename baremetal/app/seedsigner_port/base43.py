@@ -1,11 +1,13 @@
 # Original SeedSigner/Krux source; see LICENSE.SeedSigner and LICENSE.Krux-QR
 # Generated format providers; unavailable crypto remains explicit.
-from seedsigner_port.decode_platform import dependency as _dependency,FeatureUnavailable
+from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
+
 try:
     UnicodeDecodeError
 except NameError:
-    UnicodeDecodeError=UnicodeError
+    UnicodeDecodeError = UnicodeError
 BASE43_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$*+-./:'
+
 
 def base43_encode(data):
     count = 0
@@ -22,6 +24,7 @@ def base43_encode(data):
         num, mod = divmod(num, 43)
         result = BASE43_ALPHABET[mod] + result
     return BASE43_ALPHABET[0] * count + result
+
 
 def base43_decode(s):
     num = 0

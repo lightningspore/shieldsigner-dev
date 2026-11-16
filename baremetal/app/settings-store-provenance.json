@@ -20,5 +20,5 @@
     "update preflights native actions and uses native defaults in missing/empty backfill",
     "Native singleton uses object.__new__(cls): inherited __new__ is not exposed by MicroPython; no file reads/timers, explicit RAM-only save and locale capability"
   ],
-  "outputSha256": "0b940b7be9fd3b2db493218cfcd7932390988a4097f59df06df48d16786bfea7"
+  "outputSha256": "576a979b92b035a866614220bbaa24652f87ae74ac8efe22c354f6247bf52524"
 }

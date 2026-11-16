@@ -2,7 +2,8 @@
 # Copyright (c) 2021 SeedSigner; MIT, see ../LICENSE.SeedSigner.
 # Formatting adapted from kdmukAI-bot/seedsigner fd9ba8fc766f715668bc37fbb5485499def9e52f.
 # Source-backed native contract; upstream source/notice pinned in provenance.
-from seedsigner_port.decode_platform import dependency as _dependency,FeatureUnavailable
+from seedsigner_port.decode_platform import dependency as _dependency, FeatureUnavailable
+
 """
 MicroPython-safe builder functions for the reusable LVGL screen-config sub-objects
 (``top_nav``, ``btc_amount``) plus the integer-only amount formatters that feed them.
@@ -31,6 +32,7 @@ _BTC_FORCE_SATS = 10000000000
 _SATS_SMALL_FONT_SATS = 1000000000
 _LVGL_NAMED_COLORS = {'red': '#ff0000', 'blue': '#0000ff'}
 
+
 def _lvgl_color(color):
     """Map a PIL color name/hex to the 6-digit hex the native screens require.
 
@@ -41,6 +43,7 @@ def _lvgl_color(color):
     if color.startswith('#'):
         return color
     return _LVGL_NAMED_COLORS.get(color.lower(), color)
+
 
 def top_nav(title=None, show_back_button=None, show_power_button=None, icon=None, icon_color=None):
     """Build the native ``top_nav`` cfg sub-object from the flat top-nav attrs.
@@ -61,6 +64,7 @@ def top_nav(title=None, show_back_button=None, show_power_button=None, icon=None
         cfg['icon_color'] = _lvgl_color(icon_color)
     return cfg
 
+
 def btc_amount(primary, unit, secondary=None, network='mainnet', primary_small=False):
     """Build a native ``btc_amount`` cfg sub-object from already-formatted pieces.
 
@@ -77,6 +81,7 @@ def btc_amount(primary, unit, secondary=None, network='mainnet', primary_small=F
         cfg['primary_small'] = True
     return cfg
 
+
 def _group_thousands(value):
     """Comma-group an integer's digits: 1234567 -> "1,234,567". Integer/string math only
     (MicroPython's format mini-language has no "," grouping option)."""
@@ -90,9 +95,11 @@ def _group_thousands(value):
     grouped = ','.join(reversed(groups))
     return '-' + grouped if negative else grouped
 
+
 def format_sats(total_sats):
     """Format a satoshi amount as comma-grouped digits: 841234 -> "841,234"."""
     return _group_thousands(total_sats)
+
 
 def format_btc(total_sats):
     """Format a satoshi amount as a full 8-decimal BTC string with the whole part
@@ -101,6 +108,7 @@ def format_btc(total_sats):
     whole = total_sats // SATS_PER_BTC
     frac = total_sats % SATS_PER_BTC
     return '{}.{:08d}'.format(_group_thousands(whole), frac)
+
 
 def btc_amount_from_sats(total_sats, denomination=None, network=None):
     """Build a ``btc_amount`` cfg from a raw satoshi amount, per the user's
@@ -111,9 +119,23 @@ def btc_amount_from_sats(total_sats, denomination=None, network=None):
     ``secondary`` / ``unit`` strings the pure-renderer native component draws. No float.
     """
     if denomination is None:
-        denomination = _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings', 'SettingsConstants').SETTING__BTC_DENOMINATION)
+        denomination = (
+            _dependency('seedsigner.models.settings', 'Settings')
+            .get_instance()
+            .get_value(
+                _dependency(
+                    'seedsigner.models.settings', 'SettingsConstants'
+                ).SETTING__BTC_DENOMINATION
+            )
+        )
     if network is None:
-        network = _dependency('seedsigner.models.settings', 'Settings').get_instance().get_value(_dependency('seedsigner.models.settings', 'SettingsConstants').SETTING__NETWORK)
+        network = (
+            _dependency('seedsigner.models.settings', 'Settings')
+            .get_instance()
+            .get_value(
+                _dependency('seedsigner.models.settings', 'SettingsConstants').SETTING__NETWORK
+            )
+        )
     if network == _dependency('seedsigner.models.settings', 'SettingsConstants').MAINNET:
         btc_unit = _dependency('gettext', 'gettext')('btc')
         sats_unit = _dependency('gettext', 'gettext')('sats')
@@ -121,7 +143,26 @@ def btc_amount_from_sats(total_sats, denomination=None, network=None):
         btc_unit = _dependency('gettext', 'gettext')('tBtc')
         sats_unit = _dependency('gettext', 'gettext')('tSats')
     s = str(total_sats)
-    show_btc = denomination == _dependency('seedsigner.models.settings', 'SettingsConstants').BTC_DENOMINATION__BTC or (denomination == _dependency('seedsigner.models.settings', 'SettingsConstants').BTC_DENOMINATION__THRESHOLD and total_sats >= _BTC_THRESHOLD_SATS) or (denomination == _dependency('seedsigner.models.settings', 'SettingsConstants').BTC_DENOMINATION__BTCSATSHYBRID and total_sats >= _BTC_THRESHOLD_SATS and (s[-6:] == '000000')) or (total_sats > _BTC_FORCE_SATS)
+    show_btc = (
+        denomination
+        == _dependency('seedsigner.models.settings', 'SettingsConstants').BTC_DENOMINATION__BTC
+        or (
+            denomination
+            == _dependency(
+                'seedsigner.models.settings', 'SettingsConstants'
+            ).BTC_DENOMINATION__THRESHOLD
+            and total_sats >= _BTC_THRESHOLD_SATS
+        )
+        or (
+            denomination
+            == _dependency(
+                'seedsigner.models.settings', 'SettingsConstants'
+            ).BTC_DENOMINATION__BTCSATSHYBRID
+            and total_sats >= _BTC_THRESHOLD_SATS
+            and (s[-6:] == '000000')
+        )
+        or (total_sats > _BTC_FORCE_SATS)
+    )
     if show_btc:
         whole = total_sats // SATS_PER_BTC
         frac8 = '{:08d}'.format(total_sats % SATS_PER_BTC)
@@ -137,12 +178,29 @@ def btc_amount_from_sats(total_sats, denomination=None, network=None):
             frac_part = text.split('.')[-1]
             text = int_part + '.' + frac_part[:2] + '...'
         return btc_amount(primary=text, unit=btc_unit, network=network)
-    if denomination == _dependency('seedsigner.models.settings', 'SettingsConstants').BTC_DENOMINATION__BTCSATSHYBRID and total_sats >= _BTC_THRESHOLD_SATS:
+    if (
+        denomination
+        == _dependency(
+            'seedsigner.models.settings', 'SettingsConstants'
+        ).BTC_DENOMINATION__BTCSATSHYBRID
+        and total_sats >= _BTC_THRESHOLD_SATS
+    ):
         whole = total_sats // SATS_PER_BTC
         frac8 = '{:08d}'.format(total_sats % SATS_PER_BTC)
         primary = '{}.{}'.format(_group_thousands(whole), frac8[:2])
         secondary = _group_thousands(total_sats)[-7:]
         while secondary and secondary[0] == '0':
             secondary = secondary[1:]
-        return btc_amount(primary=primary, unit=sats_unit, secondary=secondary, network=network, primary_small=True)
-    return btc_amount(primary=_group_thousands(total_sats), unit=sats_unit, network=network, primary_small=total_sats > _SATS_SMALL_FONT_SATS)
+        return btc_amount(
+            primary=primary,
+            unit=sats_unit,
+            secondary=secondary,
+            network=network,
+            primary_small=True,
+        )
+    return btc_amount(
+        primary=_group_thousands(total_sats),
+        unit=sats_unit,
+        network=network,
+        primary_small=total_sats > _SATS_SMALL_FONT_SATS,
+    )

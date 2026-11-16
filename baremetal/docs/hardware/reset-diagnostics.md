@@ -6,8 +6,9 @@ known software reset/fatal paths. After RAM reload, inspect:
 
 ```python
 import machine
-machine.last_reset()                 # dict, or None if no valid record
-machine.clear_reset_record()         # preserve evidence on host before clearing
+
+machine.last_reset()  # dict, or None if no valid record
+machine.clear_reset_record()  # preserve evidence on host before clearing
 machine.set_reset_marker(0x50414745)  # optional nonnegative run identifier
 ```
 

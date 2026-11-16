@@ -7,7 +7,7 @@
     "view_core.py": {
       "source": "views/view.py",
       "sourceSha256": "45810f6d4fbf4bf9e35fac3dd123ba4fc500dbec1413890f18cc99c7a829baeb",
-      "outputSha256": "502a1976fb9b99cbdade16c726dcb71fe814c96787569e6752f4a83b58d8a3d5",
+      "outputSha256": "01d1c66562fa932c66aead49a14cfb85f4a4dc7d806093b6215beecb96c30177",
       "classes": [
         "BackStackView",
         "View",
@@ -28,7 +28,7 @@
     "view_scan.py": {
       "source": "views/scan_views.py",
       "sourceSha256": "ad151a5b572c5cc5564f94163a3060e6f9abc5bcc63ab7a0ae69eac069ef7f0c",
-      "outputSha256": "0a0cbfdb6acc13e783b78a91e85d462d06bb1779c6f030d95152c5c969a7b1e6",
+      "outputSha256": "63b41f29556ef3a696ebaf405f55c9c56f534f6c6b3ed8f45c78687568be271b",
       "classes": [
         "ScanView",
         "ScanPSBTView",
@@ -53,7 +53,7 @@
     "view_seed.py": {
       "source": "views/seed_views.py",
       "sourceSha256": "1784b3294ffc2c927d63244da80ac7b605144822f3ed28e72af0ded8abcbbd06",
-      "outputSha256": "3d0ee22dea299a0d8e3e43f5698f1b9b0ae7562c3c245f528de4e5c62904b7fa",
+      "outputSha256": "0e4f9c2e05b92817de4150e3b547693cad12ab9a58ea71b0ad0177c3444e47d0",
       "classes": [
         "SeedsMenuView",
         "SeedSelectSeedView",
@@ -151,7 +151,7 @@
     "view_splash.py": {
       "source": "views/screensaver.py",
       "sourceSha256": "125168031f45e23dcc9c3eba31e3e73b3c083f451901a5d8dbeef87267302a02",
-      "outputSha256": "2022a4a4a63a33153d2bcdd6473ab0750d8304b05a7bfb38af8336b0c3b450db",
+      "outputSha256": "26f94cdc88a12347eb3294f30dd2e88e572a2274b1a7ec718909e62613dd6c25",
       "classes": [
         "OpeningSplashView"
       ]
@@ -159,7 +159,7 @@
     "view_development.py": {
       "source": "views/developer_os_warning.py",
       "sourceSha256": "240b88b948b766a2de1d12ea824fbfcef8724fdbe3324f5bbef0aec679aad27c",
-      "outputSha256": "8297c371f566c10e9c54a246a184e71b8debf9e667c9245d870c6ff9c784a5f1",
+      "outputSha256": "8c680889af1fa8e05514bbd3d59e7be244f2de1236bd9c7e2892b7ca4793dbfe",
       "classes": [
         "DeveloperOSWarningView"
       ]

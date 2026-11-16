@@ -19,5 +19,5 @@
     "Frozen English-only detected languages, no filesystem emulation",
     "Strip annotations and replace SettingsEntry dataclass init/eq/repr explicitly"
   ],
-  "outputSha256": "264a8be8d43281741ff5b2e36c11b258e44634e8c0b29f893448c2d24b4f189d"
+  "outputSha256": "dbd9e8f17da49d9fde598b07afe15142306f043f241f725815181c035dca5602"
 }

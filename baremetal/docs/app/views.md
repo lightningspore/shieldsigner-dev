@@ -49,6 +49,7 @@ Production entry from the USB Python prompt is:
 
 ```python
 from seedsigner_port.controller import Controller
+
 Controller.get_instance().start()
 ```
 

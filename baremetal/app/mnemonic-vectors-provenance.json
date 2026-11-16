@@ -9,5 +9,5 @@
   ],
   "aezeedCrcReferenceCases": 35,
   "aezeedFixtures": "Public deterministic checksum-only and ambiguous BIP39+Aezeed; not decryption vectors",
-  "generatedSha256": "5b09e1faf09684ee0f82dc162a5bd567947fb63dc101bfadc8a7e07f8cc693e1"
+  "generatedSha256": "acbd0cf8737a5576bdc56f71fc9be660e76f687ff1bf9a8174505d41898411b0"
 }

@@ -20,5 +20,5 @@
     "Explicit dataclass-equivalent Destination constructor",
     "BackStack generic base list[Destination] becomes list"
   ],
-  "outputSha256": "3ac70bfa688c04fcde59ea1f43d49af9c9f365b2ec5e27338be0653a578a7a86"
+  "outputSha256": "34ab625acbd4efcd78c60b1d45aa33eecaf48ea8d55663bf9a04817c3b06a2e5"
 }

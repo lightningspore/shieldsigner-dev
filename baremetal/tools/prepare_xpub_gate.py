@@ -2,7 +2,7 @@
 """Independent original-helper/CPython embit public xpub and address oracle."""
 import ast,hashlib,json,sys
 from pathlib import Path
-from embit import bip39,bip32,script,networks
+from embit import bip39,bip32,networks
 root=Path(__file__).resolve().parents[1];sys.path.insert(0,str(root/'app'))
 from seedsigner_port.settings_schema import SettingsConstants as C
 path=root.parent/'dist/firmware/sources/lvgl/application/src/seedsigner/helpers/embit_utils.py'

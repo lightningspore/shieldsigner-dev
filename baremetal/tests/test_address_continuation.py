@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Original continuation destinations and gate navigation assumptions."""
-import ast,copy,sys,types,unittest
+import ast,copy,sys,unittest
 from pathlib import Path
 root=Path(__file__).resolve().parents[1];sys.path.append(str(root/'app'))
 from seedsigner_port.navigation import Destination

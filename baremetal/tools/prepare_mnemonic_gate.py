@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Public source-reference SLIP39/Aezeed/BIP39 classifier fixtures, no private data."""
-import ast,hashlib,json,random,sys,types
+import hashlib,json,random,sys,types
 from pathlib import Path
 from embit import bip39
 root=Path(__file__).resolve().parents[1]

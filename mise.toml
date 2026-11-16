@@ -1181,7 +1181,7 @@ description = "Build the long-exposure high-gain raw-camera diagnostic for darkn
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features camera-low-light"
 
 [tasks."baremetal:isp:build"]
-description = "Build bounded offline ISP diagnostic; does not satisfy the Phase8 3A gate"
+description = "Build bounded offline ISP diagnostic; does not satisfy the Phase 8 3A gate"
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features isp-test"
 
 [tasks."baremetal:isp:stats:build"]
@@ -1189,15 +1189,15 @@ description = "Build ISP measurement/IRQ diagnostic using the existing no_std Ru
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features isp-stats-test"
 
 [tasks."baremetal:3a:check"]
-description = "Cross-check existing calibrated Rust3A sessions without std and run their host regression tests"
+description = "Cross-check existing calibrated Rust 3A sessions without std and run their host regression tests"
 run = ["mise exec rust@1.93.1 -- cargo check --manifest-path baremetal/Cargo.toml --release --features isp-3a-test --target armv7a-none-eabi", "mise exec rust@1.93.1 -- cargo test --locked --manifest-path firmware/rkaiq-rs/Cargo.toml --lib"]
 
 [tasks."baremetal:isp:3a:build"]
-description = "Build calibrated Rust3A decision diagnostic; physical feedback remains a separate gate"
+description = "Build calibrated Rust 3A decision diagnostic; physical feedback remains a separate gate"
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features isp-3a-test"
 
 [tasks."baremetal:isp:map:check"]
-description = "Compare original AWB register encoding with81 independently observed REF writes"
+description = "Compare original AWB register encoding with 81 independently observed REF writes"
 run = ["mise exec rust@1.93.1 -- rustc --edition 2021 --test baremetal/src/isp_awb.rs -o baremetal/build/isp-awb-map-tests", "baremetal/build/isp-awb-map-tests"]
 
 [tasks."baremetal:runtime:build"]
@@ -1209,7 +1209,7 @@ description = "Build MicroPython UART REPL with Rust GPIO/I2C/SPI/ISP camera bin
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features runtime-board"
 
 [tasks."baremetal:runtime:gate"]
-description = "Run the Phase9 peripheral/camera/GC script on an already loaded DUT UART REPL"
+description = "Run the Phase 9 peripheral/camera/GC script on an already loaded DUT UART REPL"
 run = "uv run --python 3.13 python baremetal/tools/console.py baremetal/micropython/phase9_gate.py --timeout 50"
 
 [tasks."baremetal:runtime:boot:gate"]
@@ -1237,7 +1237,7 @@ description = "Capture a warm SD boot without USB download; start from running D
 run = "uv run --python 3.13 python baremetal/tools/sd_boot_gate.py"
 
 [tasks."baremetal:led:gate"]
-description = "Verify5Hz onboard LED transitions and pad readbacks on running DUT"
+description = "Verify 5Hz onboard LED transitions and pad readbacks on running DUT"
 run = "uv run --python 3.13 python baremetal/tools/console.py baremetal/micropython/led_gate.py --timeout 5"
 
 
@@ -1274,7 +1274,7 @@ description = "Load only DUT1 at configured location and prove USB-only console/
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_only_gate.py"
 
 [tasks."baremetal:app:bench:build"]
-description = "Build the user-confirmed Mini PCB LCD/button USB-only target for DUT1"
+description = "Build the Mini PCB LCD/button USB-only target for DUT1"
 run = "uv run --python 3.13 python baremetal/tools/build_hello.py --features mini-pcb-ui --usb-serial rv1103-dut1"
 
 [tasks."baremetal:usb:dut1:reset"]
@@ -1430,7 +1430,7 @@ description = "Interrupt one-million-round native PBKDF2 over USB and verify int
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/hash_interrupt_gate.py"
 
 [tasks."baremetal:unicode:prepare"]
-description = "Fetch hash-pinned Unicode15 corpus and verify saved REF normalization oracle"
+description = "Fetch hash-pinned Unicode 15 corpus and verify saved REF normalization oracle"
 run = "uv run --python 3.13 python baremetal/tools/prepare_unicode.py"
 
 [tasks."baremetal:unicode:gate"]
@@ -1438,7 +1438,7 @@ description = "Check native Unicode API against the saved REF oracle on wired DU
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py baremetal/micropython/unicode_gate.py --serial rv1103-dev-001 --timeout 30"
 
 [tasks."baremetal:unicode:conformance"]
-description = "Check all published Unicode15 normalization row relations on wired DUT0"
+description = "Check all published Unicode 15 normalization row relations on wired DUT0"
 run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/unicode_conformance_gate.py"
 
 [tasks."baremetal:unicode:identity"]

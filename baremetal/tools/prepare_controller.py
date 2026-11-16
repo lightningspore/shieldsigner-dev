@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Preserve original foreground Controller loop with explicit native OS boundaries."""
 import ast,hashlib,json,copy
-from pathlib import Path
 from prepare_views import LazyPort,root,source,lock
 path=source/'src/seedsigner/controller.py';raw=path.read_bytes();tree=ast.parse(raw)
 controller=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='Controller')

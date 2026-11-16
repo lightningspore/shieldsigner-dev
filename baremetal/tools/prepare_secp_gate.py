@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT
 """Published BIP32/BIP340 and CPython embit ECDSA/ECDH fixtures for real native C."""
-import csv,hashlib,io,json,re,urllib.request
+import csv,hashlib,io,json,urllib.request
 from pathlib import Path
-from embit import bip32,bip39,ec
+from embit import bip32,ec
 assert ec.secp256k1.ecdsa_sign.__module__=='embit.util.ctypes_secp256k1'
 root=Path(__file__).resolve().parents[1];cache=root/'.tools/secp-vectors';cache.mkdir(parents=True,exist_ok=True)
 sources={'bip32.mediawiki':('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0032.mediawiki','e5e00a8289db2f681052cf24a745320afc225e66b25d1e489a7c884d2fc7f11f'),'bip340.csv':('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0340/test-vectors.csv','34c9d1d9c3a88d524bc80778540dc43f8306ec249a7485293063c376db851c2d')}

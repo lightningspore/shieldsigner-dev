@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Reproducible public native gate preparation; no hardware executed."""
-import json,sys,unittest
+import json,unittest
 from pathlib import Path
 root=Path(__file__).resolve().parents[1]
 class PSBTFlowGateSourceTest(unittest.TestCase):

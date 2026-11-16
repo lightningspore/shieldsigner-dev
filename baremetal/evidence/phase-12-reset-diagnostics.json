@@ -103,7 +103,7 @@
         "available": true,
         "record": null
       },
-      "nativeEvidence": "/Users/samkorn/Documents/repos/shieldsigner-dev/baremetal/logs/phase-11/usb-20261115T015553.574066Z"
+      "nativeEvidence": "baremetal/logs/phase-11/usb-20261115T015553.574066Z"
     },
     {
       "path": "logs/phase-12/review-pages-20261115T015903.539569Z/result.json",
@@ -141,7 +141,7 @@
         "available": true,
         "record": null
       },
-      "nativeEvidence": "/Users/samkorn/Documents/repos/shieldsigner-dev/baremetal/logs/phase-11/usb-20261115T015904.047802Z"
+      "nativeEvidence": "baremetal/logs/phase-11/usb-20261115T015904.047802Z"
     }
   ],
   "regressions": {

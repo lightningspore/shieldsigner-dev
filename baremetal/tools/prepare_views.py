@@ -2,7 +2,6 @@
 """Freeze original View bodies behind lazy actual imports, without dummy features."""
 import ast,hashlib,json,subprocess,copy
 from pathlib import Path
-from source_port import Port,Bound
 root=Path(__file__).resolve().parents[1];repo=root.parent
 source=repo/'dist/firmware/sources/lvgl/application'
 lock=json.loads((repo/'firmware/lvgl-app/sources.lock.json').read_text())['application']

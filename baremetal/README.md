@@ -1,46 +1,98 @@
-# Luckfox Mini bare-metal bring-up
+# ShieldSigner bare-metal runtime
 
-This folder contains the independent bare-metal bring-up of a Luckfox Pico Mini A/RV1103. The existing Linux camera implementation in `../firmware/rkaiq-rs/` remains the reference; its algorithm library already uses `#![no_std]` with Linux diagnostics behind a feature.
+A Linux-free firmware for the Luckfox Pico Mini (Rockchip RV1103, one Cortex-A7,
+64 MB in-package DDR2) that runs the SeedSigner application on MicroPython. The
+Rust base boots directly from the ROM loader, drives the SC3336 camera, ISP and
+3A, the bench LCD and buttons, and a USB CDC console. The SeedSigner app is the
+pinned upstream Python source, ported to MicroPython by reviewed generators
+rather than hand-copied.
 
-Start with [NOTES.md](NOTES.md) for the live state, [HISTORY.md](HISTORY.md) for chronological evidence, and [PLAN.txt](PLAN.txt) for the user-provided mission and phase gates.
+> **Status: development build. Not for real funds.** The firmware has not had
+> an independent security review, and the device has no hardware random number
+> generator driver. Use public test seeds only. See [docs/status.md](docs/status.md).
 
-- Base: plain `no_std` Rust with native MicroPython and UART/USB debugging.
-- REF: known-good Linux board with SC3336 camera, reached by explicitly selected ADB serial.
-- DUT: now boots the user-authorized spare4GB microSD; remove it for RAM-only maskrom downloads.
-- REF boot partitions remain untouched. Only the user-provided spare DUT card was authorized and written; USB downloads remain RAM-only.
-- Phase success requires real-device evidence; compilation alone never closes a gate.
+## What works today
 
-All new source, helper tools, decisions and evidence for this effort belong here. `logs/phase-N/`, `ref-dumps/` and `.tools/` are ignored local artifacts. Tool downloads retain their original licenses. The new driver implementation will use original code; existing GPL drivers may be studied but are not copied into the permissive implementation. Closed DDR/USB blobs are used as supplied, without disassembly.
+Verified on the bench device (DUT1: Pico Mini, 240×240 SPI LCD, five-way joystick plus three keys,
+SC3336 camera), using gates that drive the real UI and check results against
+host-computed oracles:
 
-Run the read-only Phase 0 inventory with `mise run baremetal:doctor`. It saves fresh evidence under `logs/phase-0/`. It never loads code, flashes storage or changes REF settings.
+- **Boot**: standalone microSD boot straight into the app; RAM loading over
+  USB maskrom for development.
+- **Navigation**: main menu, Seeds, Tools, Settings, power/restart/flash-mode routes.
+- **Camera and scanning**: live preview; static and animated (UR) QR codes read
+  off a monitor through the original `ScanView`, including SeedQR, addresses
+  and multi-part PSBTs.
+- **Seeds**: camera and dice entropy, 12/24-word generation, final-word
+  calculation, word backup and verification, SeedQR transcription, passphrases.
+- **Bitcoin workflows**: xpub export, address explorer, address verification,
+  PSBT review, signing and animated QR export.
+- **Tools**: Text QR Code (encode/decode) and Password Generator (dice and
+  BIP85 sources).
 
-Run `mise run baremetal:check` for host-only serial transport verification. It exercises the actual capture helper through a local pseudo-terminal; it does not contact REF or DUT and is not a hardware gate.
+Not included: smartcards (by decision), SLIP39 seed *creation* (needs an RNG),
+settings persistence and file-based backups (no filesystem service), and
+anything needing a wall clock. The full matrix is in [docs/status.md](docs/status.md).
 
-Build the original Rust RAM payload with `mise run baremetal:build`. The build uses the pinned rkbin checkout described in `stock-loader.json`, its unmodified DDR binary, and a Linux container for the supplied boot_merger. The resulting `build/hello-download.bin` replaces the USB plug stage with our code; the packager's other loader entries are not written to storage by `db`.
+## Repository layout
 
-`tools/harness.py` captures UART before loading, optionally runs a build argv, and records raw bytes plus a JSON result under `logs/phase-N/`. REF's ADB requires a PTY, so the REF helper base64-frames serial bytes. The verified loader baud is **115,200**, superseding the plan's provisional 1,500,000.
+| Path | Contents |
+| --- | --- |
+| `src/` | Rust `no_std` runtime: boot, MMU/caches, UART, GPIO, I²C, SPI, USB (DWC3 CDC), camera receiver, ISP and 3A glue, LCD, watchdog, reset records. |
+| `micropython/` | MicroPython port (C), frozen-module manifest, and on-device gate scripts (`*_gate.py`). |
+| `app/` | Frozen Python: `seedsigner_port/` (generated and reviewed app modules), pinned third-party libraries (embit, shamir-mnemonic, qrcode, UR2, urtypes), provenance receipts (`*-provenance.json`) and licences. |
+| `ui/` | Build glue for the upstream SeedSigner LVGL screen library. |
+| `hash-core/`, `secp/`, `qr/`, `unicode/` | Native crypto, QR decoding and Unicode components with their upstream notices. |
+| `tools/` | Host tooling: builders, `prepare_*.py` source-port generators, gate runners, USB console, image packaging, optical scan rig. |
+| `tests/` | Host test suite (`mise run baremetal:check`). |
+| `evidence/` | Committed JSON receipts from passed hardware gates. |
+| `docs/` | Documentation; start at [docs/README.md](docs/README.md). |
 
-The minimal payload accepts `R` on UART2 to trigger a warm reset back to maskrom. `tools/hello_gate.py` exercises ten consecutive hello/download/reset cycles. While the stock USB plug runs, `rkdeveloptool rd 3` also returns DUT to maskrom. These are software resets; a hung CPU may still need physical power cycling, and no controllable USB power hub is currently connected.
+Local, ignored: `logs/` (raw gate logs), `build/`, `target/`, `.tools/`
+(toolchains and vendor checkouts), `ref-dumps/`.
 
-Completed phase receipts (including serial output and GPIO observations) are retained in `evidence/` for review in the repository. Full command logs and downloaded tools remain ignored local artifacts. Commit after each completed phase gate, as requested by the user.
+## Quick start
 
-Phase7 development captures raw SC3336 frames on DUT using original Rust sensor and receiver drivers. `mise run baremetal:camera:build` builds the real-camera diagnostic at unity gain/8192 exposure lines; `baremetal:camera:low-light:build` retains the long-exposure/high-gain night profile, and `baremetal:camera:pattern:build` enables the sensor's internal pattern. These overwrite the same download image: check the manifest before loading. Two4MB DMA slots at48/52MB are mapped normal noncacheable for this feature. Ten-frame status and a192×108 RGB preview return over UART; `tools/decode_camera_preview.py` converts a complete serial preview to PNG using Pillow through uv. See [CAMERA-REGISTERS.md](CAMERA-REGISTERS.md) for the driver structure, coverage and limitations.
+Requirements: macOS or Linux, [mise](https://mise.jdx.dev), [uv](https://docs.astral.sh/uv/),
+Docker (for the vendor `boot_merger`), and a Pico Mini reachable in maskrom over USB.
+All commands run from the repository root.
 
-**Phase7 passed** on the real DUT: a recognizable printed target, ten consecutive clean frames, sensor-control readback and selected REF register comparisons. The timestamped replay has been replaced in the normal build with named sensor/receiver operations. See [evidence/phase-7.json](evidence/phase-7.json) and [PHASE-7-STATUS.md](PHASE-7-STATUS.md). The bounded linear ISP/3A and MicroPython API gates also passed; standalone runtime SD boot now passes as described below.
+```sh
+mise run baremetal:check                 # host tests; touches no hardware
+mise run baremetal:ui:dut1:build         # build the app runtime for the bench device
+mise run baremetal:usb:dut1:reset        # put a running DUT1 back into maskrom
+uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_only_gate.py
+                                         # load the build into RAM (nothing is written to storage)
+uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_console.py \
+    baremetal/micropython/view_flow_gate.py --serial rv1103-dut1 --timeout 120
+                                         # run an on-device gate over the USB console
+```
 
-Range snapshots cover complete CRU, GRF, PMU, D-PHY, CSI0, VICAP and ISP resources at idle and during raw streaming. IOC's readable prefix is retained with an explicit gap: the declared resource faults at0xff570000, and its remaining tail is unverified. Text dumps are generated locally as `ref-dumps/idle.txt` and `streaming.txt`; manifests/CRCs/checksums preserve coverage. REF capture passed after releasing the temporary clock references. Selected DUT readbacks match32 REF configuration registers with explicit masks and DMA/polling differences. See `compare_camera_readbacks.py` for the comparison scope; this is not full-state equivalence or Phase7 completion.
+To produce a microSD image (a regular file; nothing is flashed):
 
-**Phase8 passed for the bounded SC3336 linear profile:**32 ISP/3A feedback frames,31 frame-IRQ parameter updates,186 gain readbacks,80 selected fixed-register matches and an inspected Linux/DUT colour comparison. See [PHASE-8-STATUS.md](PHASE-8-STATUS.md) and [evidence/phase-8.json](evidence/phase-8.json) for exact scope, convergence and limitations. Phase9 now passes the bounded MicroPython hardware/API gate, including two camera captures, GC and five RAM boots; see [PHASE-9-RUNTIME.md](PHASE-9-RUNTIME.md) and [evidence/phase-9.json](evidence/phase-9.json). Unbounded streaming and arbitrary ISP tuning are not qualified. Remaining work is tracked in [PROJECT-MILESTONES.md](PROJECT-MILESTONES.md).
+```sh
+mise run baremetal:app:autostart:dut1:build
+mise run baremetal:app:sd:prepare        # -> baremetal/build/app-sd.img (~4 MiB)
+```
 
-Phase10 preparation is recorded in [PHASE-10-BOOT.md](PHASE-10-BOOT.md). **Power-on to a usable SeedSigner app has not been measured for the replacement runtime; the app is not ported yet.** The user reports at least about30s for the current boot/app path. A separate internal measurement is about13.1ms from bare-metal payload entry to initialized MicroPython, excluding ROM, DDR, storage loading and the app. It does not establish an end-to-end speedup. The2MiB image now boots the spare microSD and passes the real API/camera gate, with a5Hz onboard LED heartbeat. See [evidence/phase-10-sd-boot.json](evidence/phase-10-sd-boot.json). Cold power-on and first-frame timing remain open. The installed app reference inventory is in [APP-REFERENCE-INVENTORY.md](APP-REFERENCE-INVENTORY.md).
+See [docs/development.md](docs/development.md) for the full workflow, gate
+catalogue, hardware safety rules and the optical test rig.
 
-USB CDC debugging now passes on the wired DUT0 and additional DUT1, with
-script upload, Ctrl-C, reopening and software reset. DUT1 releases its UART
-pads for the attached bench LCD/buttons. See [USB-CONSOLE.md](USB-CONSOLE.md)
-and [evidence/phase-11-usb.json](evidence/phase-11-usb.json).
+## Design principles
 
-The partial [app I/O checkpoint](PHASE-12-APP-IO.md) adds a frozen cooperative
-button adapter, core Python features/large integers and bounded bench display
-writes/readbacks. **Visible LCD output and the complete SeedSigner app remain
-unverified.** The user is away; keep the3-device setup intact and continue
-software work using USB recovery. Exact cold-power benchmarking is deferred.
+- **Upstream code, not rewrites.** App behaviour comes from the pinned SeedSigner
+  source. `tools/prepare_*.py` port it mechanically and record every reviewed
+  change in a provenance receipt. Generated files are not edited by hand.
+- **No placeholder success.** Features without a real provider fail explicitly
+  or are omitted from menus. Nothing fakes randomness, time or storage.
+- **Hardware evidence.** A feature counts as working only when a gate passes on
+  the device. Compilation and host tests are prerequisites, not proof.
+- **Licensing.** Original Rust drivers are written from register documentation;
+  GPL kernel sources were studied, not copied. Rockchip DDR/loader blobs are
+  used unmodified. Third-party licences are kept beside the code they cover.
+
+## Licence
+
+Project code is MIT. Bundled components keep their own licences (see the
+`LICENSE.*`, `COPYING` and `COPYRIGHT` files in `app/`, `secp/`, `unicode/`
+and `hash-core/`).

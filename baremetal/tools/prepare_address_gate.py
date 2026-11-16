@@ -17,7 +17,7 @@ def case(name,network,kind,index,change=False,mode='success',scanned_kind=None,a
  q=qrcode.QRCode(border=4,error_correction=qrcode.constants.ERROR_CORRECT_L);q.add_data(target);q.make(fit=True)
  rows=tuple(''.join('1' if b else '0' for b in row) for row in q.get_matrix())
  if mode=='no-match':
-  key=master.derive(path(network,kind)).to_public()
+  master.derive(path(network,kind)).to_public()  # path must derive
   for i in range(1000):
    for change_ in (False,True):assert address(network,kind,i,change_)!=target
  return (name,network,kind,path(network,kind),target,index,change,mode,rows)

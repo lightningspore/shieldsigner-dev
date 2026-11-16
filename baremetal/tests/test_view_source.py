@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-import ast,hashlib,importlib.util,json,sys,unittest
+import ast,hashlib,json,sys,unittest
 from pathlib import Path
 root=Path(__file__).resolve().parents[1]
 sys.path.append(str(root/'tools'))

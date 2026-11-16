@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Original settings View bodies with reviewed native screen/scroll boundaries."""
-import ast,copy,hashlib,json,subprocess
+import ast,hashlib,json,subprocess
 from pathlib import Path
 from view_source_port import LazyPort
 root=Path(__file__).resolve().parents[1];repo=root.parent

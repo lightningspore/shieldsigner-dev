@@ -9,7 +9,6 @@ sys.path.insert(0,str(source))
 from ur2.ur import UR
 from ur2.ur_encoder import UREncoder
 from urtypes.bytes import Bytes
-from urtypes.crypto import PSBT
 cases=[]
 for data in (b'PUBLIC-UR-fixture',bytes(range(256)),b'\0PUBLIC\xff'*24):
  for density in (10,30,120):

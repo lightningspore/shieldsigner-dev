@@ -6,7 +6,6 @@ reset/interrupt/other legacy-version stores are NOT covered; no complete ISP
 bus-trace claim is made. It does not patch or access either board.
 """
 import json
-from pathlib import Path
 from live_trace_sites import ROOT,MODULES,read_module,generate_header
 ISP_SHA256='e74ecc37c0db9c05b0a37f2eb03adeb7ab479a4e863f23ee7ce6d1961fad4f2c'
 SITES={0x836a:'rkisp_write',0x8416:'rkisp_idx_write',0x86a6:'rkisp_update_regs',0x86dc:'rkisp_update_regs',

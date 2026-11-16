@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """PUBLIC independent oracle for the native capture/word-page UI gate."""
-import hashlib,json
+import hashlib
 from pathlib import Path
 from PIL import Image
 from embit import bip39,bip32

@@ -23,7 +23,7 @@
     "port": "/dev/cu.usbmodemrv1103_dut11",
     "usbSerial": "rv1103-dut1",
     "location": "1-1",
-    "script": "/Users/samkorn/Documents/repos/shieldsigner-dev/baremetal/micropython/app_autostart_gate.py",
+    "script": "baremetal/micropython/app_autostart_gate.py",
     "scriptSha256": "13eb2fa7034e7d5ad408f5ab41c516592b9360e073016652030bada56f33ae99",
     "completed": true,
     "traceback": false

@@ -4,7 +4,7 @@ import ast,collections,hashlib,json,math,sys,types,unittest
 from pathlib import Path
 root=Path(__file__).resolve().parents[1]
 sys.path.append(str(root/'app'))
-from seedsigner_port.camera_entropy import CameraFrame,CameraSample,CameraPool,FRAME_BYTES,WIDTH,HEIGHT,SAMPLE_SIDE,SAMPLE_BYTES,derive_camera_entropy_bytes,clear_images
+from seedsigner_port.camera_entropy import CameraFrame,CameraPool,FRAME_BYTES,WIDTH,HEIGHT,derive_camera_entropy_bytes,clear_images
 from seedsigner_port.camera_entropy_screens import ToolsImageEntropyLivePreviewScreen,ToolsImageEntropyFinalImageScreen
 from seedsigner_port.camera_entropy_mnemonic import _shannon_entropy,byte_entropy_is_sufficient
 

@@ -4,7 +4,7 @@
 Uses actual CPython embit0.8.0 before adding the native app directory. Native
 firmware gate output is generated, never run by this host-only preparation tool.
 """
-import ast,base64,dataclasses,hashlib,importlib.metadata,io,json,logging,os,sys,time,types,typing
+import ast,base64,dataclasses,hashlib,importlib.metadata,io,json,logging,os,sys,types,typing
 from pathlib import Path
 from embit import bip32,bip39,psbt,script,ec,hashes
 from embit.base import EmbitError

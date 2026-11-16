@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Capture one owned native camera snapshot in checksummed, bounded USB row chunks."""
-import argparse,datetime,json,re,subprocess,sys
+import argparse,datetime,json,subprocess,sys
 from pathlib import Path
 from decode_camera_luma import decode_snapshot
 ROOT=Path(__file__).resolve().parents[1]

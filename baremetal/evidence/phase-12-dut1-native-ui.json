@@ -91,7 +91,7 @@
       "phase": 12,
       "scope": "RAM-only db; no storage commands",
       "build": null,
-      "image": "/Users/samkorn/Documents/repos/shieldsigner-dev/baremetal/build/hello-download.bin",
+      "image": "baremetal/build/hello-download.bin",
       "sha256": "188d39f9d872fd6db43dd5cb2f0167416626a4a75f1ce9c879b9741f001a876d",
       "buildManifestSha256": "1fe8409d1f271d9f8c9ac065801bd212dd4212b876f7a258377a6701726eef30",
       "error": "DUT1/app pin profile rejected by wired DUT0 harness; build native-ui or use the explicit DUT1 loader"

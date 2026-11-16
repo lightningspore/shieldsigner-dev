@@ -5,7 +5,7 @@ RAM-only console use: streams downsampled luma (320x240) and the device's own
 full-frame qr.decode() result over USB CDC; serves http://127.0.0.1:8765/.
 Ctrl-C stops (sends ^C to the device, which stops the preview cleanly).
 """
-import signal,argparse,binascii,glob,http.server,io,json,threading,time,zlib,struct
+import signal,argparse,binascii,glob,http.server,json,threading,time,zlib,struct
 import serial
 DEVICE=r'''
 import camera,qr,ubinascii,time

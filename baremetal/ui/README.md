@@ -1,15 +1,15 @@
 # Native screen runtime
 
 The genuine locked SeedSigner LVGL Home screen runs on wired DUT0 behind
-`native-ui`, using a headless framebuffer. DUT1 now runs `app-ui`, which
-submits the same native pixels to the explicit bench LCD backend. Its visible
-panel output remains unconfirmed.
-The C ABI bridge now registers all43 locked native screen builders; `ui.screens()`
+`native-ui`, using a headless framebuffer. DUT1 runs `app-ui`, which
+submits the same native pixels to the bench LCD (verified visually and by
+framebuffer QR decoding in the app gates).
+The C ABI bridge now registers all 43 locked native screen builders; `ui.screens()`
 returns their names. Unknown names fail explicitly. Registration does not qualify
 each screen/configuration or its wallet workflow. There is no replacement wallet flow.
 
 Run `mise run baremetal:cxx:setup`, then `mise run baremetal:ui:library:build`.
-The complete official Arm14.3.rel1 Darwin arm64 toolchain is checksum-pinned in
+The complete official Arm 14.3.rel1 Darwin arm64 toolchain is checksum-pinned in
 `../cxx-toolchain.json` and extracted into ignored `.tools/`; it does not replace
 system compilers or the existing MicroPython C toolchain. Other host architectures
 need a separately pinned official bundle.
@@ -37,17 +37,17 @@ now catches malformed JSON/missing-title errors and continues rendering.
 
 `mise run baremetal:ui:build` builds the wired target. `baremetal:ui:gate`
 checks real Home rendering, read-only framebuffer, Scan and Seeds selection
-callbacks and error recovery, then exports the240x240 RGB565 frame. Decode it
+callbacks and error recovery, then exports the 240x240 RGB565 frame. Decode it
 with `uv run --with pillow==11.3.0 python baremetal/tools/decode_ui_frame.py
 <serial.bin> <output.png>`. `baremetal:ui:stress:gate` checks20 error/render/GC
 cycles. All passed on DUT0, followed by the full GPIO/I2C/SPI/two-camera gate.
 The inspected framebuffer has the real Home grid, icons, labels and selection.
 Receipt: [../evidence/phase-12-native-ui.json](../evidence/phase-12-native-ui.json).
 
-The1,486,708-byte raw image and BSS end0x00177618 stay below the4MiB Rust heap.
-Native UI moves SVC/IRQ stacks to27–28/29–30MiB with unmapped26/28MiB guard
-sections. Rust heap4–16MiB, Python GC16–24MiB and camera/USB DMA48–64MiB
-remain unchanged. The115200-byte shadow frame starts at32MiB. Baseline builds
+The 1,486,708-byte raw image and BSS end0x00177618 stay below the 4MiB Rust heap.
+Native UI moves SVC/IRQ stacks to 27–28/29–30MiB with unmapped 26/28MiB guard
+sections. Rust heap 4–16MiB, Python GC16–24MiB and camera/USB DMA48–64MiB
+remain unchanged. The115200-byte shadow frame starts at 32MiB. Baseline builds
 retain their original linker/stack layout. IRQ handlers do not allocate.
 
 `ui` provides init/render/key/tick/event/status and a read-only framebuffer view.
@@ -92,11 +92,11 @@ image runs on wired DUT0; DUT1 remains on its prior Home-only `app-ui` image.
 `baremetal:ui:registry:gate` verifies actual list Down/Enter, top-nav Back,
 2-tile grid Right/Enter and repeated transitions back to Home. Native font caches
 warm on the first cycle; five subsequent identical cycles must preserve one
-fixed absolute heap baseline. The final gate stabilizes at53300bytes after the
+fixed absolute heap baseline. The final gate stabilizes at53300 bytes after the
 text-widget checks. This does not qualify every registered screen or workflow.
 
 `baremetal:ui:text:gate` drives the actual passphrase keyboard with PUBLIC test
-strings:255ASCII bytes and127 two-byte accented characters return exactly;
+strings:255ASCII bytes and 127 two-byte accented characters return exactly;
 256-byte results raise instead of silently truncating. Consumed event text is
 cleared through volatile writes. The current255-byte event-text bound remains
 an explicit port limitation, and the single pending-event slot, long-hold,
@@ -111,7 +111,7 @@ Receipt: [../evidence/phase-12-navigation-registry.json](../evidence/phase-12-na
 
 The higher-level frozen adapter now maps three reviewed original app screen
 classes (Home, ordinary lists and large-button grids) to native configurations
-using extracted original defaults. This is narrower than the43 native builders;
+using extracted original defaults. This is narrower than the 43 native builders;
 unknown specialized Screen contracts and configured hold/styling semantics reject
 explicitly. The new hardware gate takes class-style arguments and ButtonOption
 objects through the real renderer and returns validated choice/back codes. See

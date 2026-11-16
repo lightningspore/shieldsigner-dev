@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Generate native framing checks against the complete locked original checker."""
-import ast,hashlib,json,types
+import ast,hashlib,json
 from pathlib import Path
 from io import BytesIO
 from embit.psbt import PSBT

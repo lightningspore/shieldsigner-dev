@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Freeze all original QR model classes, changing platform boundaries explicitly."""
-import ast,copy,hashlib,json,subprocess
+import ast,hashlib,json,subprocess
 from pathlib import Path
 from source_port import Bound
 root=Path(__file__).resolve().parents[1];repo=root.parent

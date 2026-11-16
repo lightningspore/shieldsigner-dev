@@ -3,8 +3,8 @@
   "boardAuthority": {
     "authority": "User identified this PCB as the connected LCD/button assembly",
     "sources": {
-      "/Users/samkorn/Documents/repos/seedsigner-luckfox-pico/hardware-kicad/pcb/seedsigner-luckfox-pico-mini/seedsigner-luckfox-pico-mini.kicad_pcb": "dfecf4313d26f009780517d6799dc424b449fb1d1759658e32b08d903d5e00cc",
-      "/Users/samkorn/Documents/repos/seedsigner-luckfox-pico/hardware-kicad/pcb/seedsigner-luckfox-pico-mini/seedsigner-luckfox-pico-mini.kicad_sch": "8fe799cb50c4c9c573efefe70ec0b0f8b8ee865c61928381f0994fc6dca5830b"
+      "../seedsigner-luckfox-pico/hardware-kicad/pcb/seedsigner-luckfox-pico-mini/seedsigner-luckfox-pico-mini.kicad_pcb": "dfecf4313d26f009780517d6799dc424b449fb1d1759658e32b08d903d5e00cc",
+      "../seedsigner-luckfox-pico/hardware-kicad/pcb/seedsigner-luckfox-pico-mini/seedsigner-luckfox-pico-mini.kicad_sch": "8fe799cb50c4c9c573efefe70ec0b0f8b8ee865c61928381f0994fc6dca5830b"
     },
     "lcd": {
       "cs": 48,

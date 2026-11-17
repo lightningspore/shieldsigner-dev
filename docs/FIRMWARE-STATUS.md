@@ -35,6 +35,14 @@ animated QR assembly to the application. This is ZXing-C++, not a Rust QR decode
 The Rust camera path does not link or call the vendor RKAIQ userspace library.
 It still uses Linux drivers and the Luckfox/Rockchip SDK build. This is not a
 Linux-free image or a claim to reproduce every RKAIQ feature, sensor or ISP mode.
+
+A separate, experimental **Linux-free** path lives in
+[`baremetal/`](../baremetal/README.md). It runs the same pinned application and
+LVGL screen library on MicroPython over a Rust `no_std` runtime, reusing this
+image's Rust 3A code and ZXing-C++ decoder, and boots from a ~4 MiB microSD
+image. It omits smartcards and anything needing an RNG, wall clock or
+filesystem; its [status page](../baremetal/docs/status.md) lists what is
+verified on the same 240×240 bench board.
 Pillow remains for still-image/entropy work and other retained consumers; moving
 screen drawing to LVGL does not remove all Python image dependencies.
 

@@ -1,12 +1,12 @@
 # ShieldSigner guides
 
-The current board is the **four-layer, eight-pin display carrier**, revision 0.0.12-dev. Start with the [repository overview](../README.md), [hardware overview](../hardware/README.md), or [KiCad workflow](../KICAD.md).
+The current board is the **four-layer, eight-pin display carrier**, revision 0.0.13-dev. Start with the [repository overview](../README.md), [hardware overview](../hardware/README.md), or [KiCad workflow](../KICAD.md).
 
 | Topic | Guides |
 |---|---|
 | Build and order | [Build overview](BUILD-OVERVIEW.md), [order readiness](PCB-ORDER-READINESS.md), [factory kit](../hardware/manufacturing/README.md), [assembly](MODULAR-ASSEMBLY.md) |
 | Circuit and wiring | [Main carrier](LCD-MODULE-VARIANT.md), [module pinouts](MODULE-PINOUT-AUDIT.md), [firmware compatibility](PCB-SOFTWARE-COMPATIBILITY.md), [Luckfox pinout](LUCKFOX-PINOUT.md) |
-| Firmware | [Artifacts and verified images](FIRMWARE-ARTIFACTS.md), [LVGL application](../firmware/lvgl-app/README.md), [OS compilation](OS-BUILD.md) |
+| Firmware | [Current firmware status](FIRMWARE-STATUS.md), [artifacts and verified images](FIRMWARE-ARTIFACTS.md), [LVGL application](../firmware/lvgl-app/README.md), [OS compilation](OS-BUILD.md), [experimental bare-metal runtime](../baremetal/README.md) |
 | Mechanical | [Enclosure](ENCLOSURE.md), [fit model](../hardware/FIT-MODEL.md), [mechanical substitutions](MECHANICAL-SUBSTITUTIONS.md) |
 | Validation | [Schematic review](SCHEMATIC-REVIEW.md), [Display/buttons](DISPLAY-BUTTON-REVIEW.md), [bring-up](BRINGUP.md), [results template](BRINGUP-RESULTS.md) |
 | Parts | [Datasheets](../datasheets/README.md), [main BOM](../hardware/manufacturing/BOM.md), [self-assembly](SELF-ASSEMBLY.md) |

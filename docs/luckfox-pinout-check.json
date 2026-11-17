@@ -2,7 +2,7 @@
   "reviewed": "2026-10-31",
   "boards": {
     "released": {
-      "sha256": "5a874247461a4dcaff97fbb4b9023068d565e46f8a7cc002c987ccaeaaf6ab08",
+      "sha256": "bc8b42ec8e41e1f4e304ecc353cf0fca7ea2862945dd5a4ea3e10726124d1523",
       "physicalPins": 22,
       "padInstancesChecked": 44
     },

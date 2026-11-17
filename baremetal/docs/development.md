@@ -88,6 +88,8 @@ locks it, and the generators assert the commit.
 A second monitor shows QR codes, and the device camera reads them through the
 real `ScanView`:
 
+![QR demo page showing an animated testnet PSBT](images/qr-demo-page.png)
+
 ```sh
 uv run --python 3.13 --with segno --with urtypes --with embit \
     python baremetal/tools/qr_screen.py serve         # control page on 127.0.0.1:8766

@@ -8,6 +8,22 @@ An open-hardware smartcard signing device built around the Luckfox Pico Mini, a 
 
 The **main PCB is the four-layer, eight-pin display carrier in [`kicad/`](kicad/)**. Open [the KiCad project](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro) to edit its schematic or layout. Its previews, assembly data, sourcing information and review reports live in [`hardware/`](hardware/README.md).
 
+## How the pieces fit
+
+ShieldSigner is an offline Bitcoin signer: a wallet on another machine prepares a
+transaction, the signer reviews and signs it, and the result travels back by QR
+code. The project has three parts:
+
+| Part | What it is | State |
+|---|---|---|
+| **Hardware** | The carrier PCB in [`kicad/`](kicad/) and the printed [enclosure](docs/ENCLOSURE.md). A 240×240 display/button bench board is used for firmware development. | First-article design; digital checks pass, physical bring-up open |
+| **Linux firmware** | SeedSigner OS (Buildroot) running the [LVGL frontend](firmware/lvgl-app/README.md) over the pinned ShieldSigner Python app, with the Rust camera stack in [`firmware/rkaiq-rs`](firmware/rkaiq-rs/). | Current development image, bench-tested; see [firmware status](docs/FIRMWARE-STATUS.md) |
+| **Bare-metal firmware** | The same pinned app and LVGL screens on MicroPython over a Rust `no_std` runtime, with no Linux. Boots straight into the app from a ~4 MiB microSD image. | Experimental; most workflows verified on the bench board, see [`baremetal/`](baremetal/README.md) |
+
+Both firmware paths share the application source pin, the LVGL screen library, the
+Rust 3A code and the ZXing QR decoder, and both are so far qualified only on the
+240×240 bench board, not on the carrier PCB.
+
 ## Current hardware
 
 **0.0.13-dev** is a 160 × 70 mm capsule with two inner ground planes, an independently regulated display supply, eight buttons, a SEC1210 smartcard interface, and eight M2.5 mounting holes. The regulator and reader electronics are on the back. Nine factory-assembled Keystone loops provide service access, including a **GND — +5 V — GND** power clip row at 15 mm pitch.
@@ -56,6 +72,7 @@ Outputs are written to `dist/lcd-module-2.8/`; this retained output name keeps e
 | Understand the circuit and pinout | [Hardware guide](docs/LCD-MODULE-VARIANT.md), [pinout and firmware compatibility](docs/PCB-SOFTWARE-COMPATIBILITY.md) |
 | Source parts and assemble | [Factory kit](hardware/manufacturing/README.md), [assembly steps](docs/MODULAR-ASSEMBLY.md), [self-assembly option](docs/SELF-ASSEMBLY.md) |
 | Find or build firmware | [Verified artifacts](docs/FIRMWARE-ARTIFACTS.md), [LVGL application](firmware/lvgl-app/README.md), [OS build](docs/OS-BUILD.md) |
+| Try the Linux-free firmware | [Bare-metal runtime](baremetal/README.md) (experimental, bench board) |
 | Print and fit the enclosure | [Enclosure guide](docs/ENCLOSURE.md), [CAD import and fit model](hardware/FIT-MODEL.md) |
 | Review first-article behavior | [Display and button review](docs/DISPLAY-BUTTON-REVIEW.md), [bring-up](docs/BRINGUP.md) |
 | Find component documentation | [Datasheets](datasheets/README.md) |
@@ -71,6 +88,7 @@ Use the **carrier firmware profile** before powering this PCB. The older bench p
 | [`datasheets/`](datasheets/README.md) | Component PDFs, provenance and BOM coverage |
 | [`docs/`](docs/README.md) | Build, electrical, firmware and validation guides |
 | [`firmware/`](firmware/) | Application, display, camera and image tooling |
+| [`baremetal/`](baremetal/README.md) | Experimental Linux-free runtime: Rust drivers, MicroPython and the ported app |
 | [`enclosure/`](enclosure/) | Printable enclosure and mechanical checks |
 | [`scripts/`](scripts/) | Reproducible generation, export and verification tools |
 | [`src/`](src/) | Experimental tscircuit projects and native reference preview |

@@ -1,7 +1,10 @@
 # ShieldSigner bare-metal runtime
 
-A Linux-free firmware for the Luckfox Pico Mini (Rockchip RV1103, one Cortex-A7,
-64 MB in-package DDR2) that runs the SeedSigner application on MicroPython. The
+The experimental, Linux-free firmware path of [ShieldSigner](../README.md#how-the-pieces-fit).
+The current firmware is a Linux (SeedSigner OS) image with an LVGL frontend; see
+[firmware status](../docs/FIRMWARE-STATUS.md). This runtime runs the same pinned
+application and LVGL screens on the Luckfox Pico Mini (Rockchip RV1103, one Cortex-A7,
+64 MB in-package DDR2), but on MicroPython instead of Linux. The
 Rust base boots directly from the ROM loader, drives the SC3336 camera, ISP and
 3A, the bench LCD and buttons, and a USB CDC console. The SeedSigner app is the
 pinned upstream Python source, ported to MicroPython by reviewed generators

@@ -12,6 +12,7 @@ This site documents a **prototype Luckfox Mini build** with a 2.8-inch eight-pin
 | ShieldSigner application fork, `3rdIteration/seedsigner` | Adds smartcards and other tools to SeedSigner | Application pinned by our build wrapper |
 | `3rdIteration/seedsigner-os` | Operating system and platform integration | Our pinned Luckfox Mini microSD build, using the vendor SDK/Buildroot path |
 | `lightningspore/shieldsigner-dev`, this repository | Carrier PCB, enclosure, reproducible build wrappers and this website | Current eight-pin pill carrier files and guides |
+| `baremetal/` in this repository | Experimental Linux-free runtime running the same pinned application | Optional; bench board only, see its [status](../baremetal/docs/status.md) |
 | Older `seedsigner-luckfox-pico` work | Earlier hardware and porting history | Background; do not mix its board, display or image instructions into this carrier |
 
 A Raspberry Pi image is not a Luckfox image. Luckfox models and flash targets also differ. Follow [Buildroot & firmware](OS-BUILD.md) and the [flash workflow](/build/flash/) for the selected Mini/microSD target and UR2 reader.

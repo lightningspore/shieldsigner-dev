@@ -1,5 +1,5 @@
 {
-  "boardSha256": "bc8b42ec8e41e1f4e304ecc353cf0fca7ea2862945dd5a4ea3e10726124d1523",
+  "boardSha256": "97d7f7ce1195ef1f7f2c5627406e77c04e2a30ab841648ff4773f6e354a02377",
   "qualification": "Development layout; not manufacturing or mechanical sign-off",
   "checks": {
     "erc": {

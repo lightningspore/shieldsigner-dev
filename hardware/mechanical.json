@@ -100,5 +100,48 @@
     "headerRotationDeg": 180,
     "matingDirection": "Pins face left/inward; mating board slides right",
     "insertionPathQualified": false
+  },
+  "alternateDisplay": {
+    "part": "14-pin 2.8-inch ILI9341 SPI TFT (LCDwiki MSP2806/MSP2807 outline)",
+    "connector": "J702 (DNP by default; fitted instead of J701)",
+    "outline": [
+      86,
+      50
+    ],
+    "moduleBounds": [
+      93.04,
+      64.579,
+      179.04,
+      114.579
+    ],
+    "headerX": 95.04,
+    "pin1Y": 73.07,
+    "holePitch": [
+      76.08,
+      44.0
+    ],
+    "moduleHoleDiameter": 3.2,
+    "slottedMounts": {
+      "H702": [
+        176.04,
+        67.579
+      ],
+      "H704": [
+        176.04,
+        111.579
+      ]
+    },
+    "unsupportedHoles": [
+      [
+        99.96,
+        67.579
+      ],
+      [
+        99.96,
+        111.579
+      ]
+    ],
+    "unsupportedReason": "Header-side holes land on the Luckfox outline and USB power parts; the 14-pin header carries that side.",
+    "source": "https://www.lcdwiki.com/res/MSP2807/MSP2806_Size.pdf"
   }
 }

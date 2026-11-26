@@ -81,16 +81,29 @@ for e in edges:
 x0,y0,x1,y1=mechanical['display']['moduleBounds']
 for ref in [f'SW{i}' for i in range(501,509)]:
  x,y=map(float,one(fps[ref],'at')[1:3]);assert x+3.5<x0 or x-3.5>x1,f'{ref} collides with display board'
+alternate=mechanical['alternateDisplay'];slots=alternate['slottedMounts']
+ax0,ay0,ax1,ay1=alternate['moduleBounds']
+for ref in [f'SW{i}' for i in range(501,509)]:
+ x,y=map(float,one(fps[ref],'at')[1:3]);assert x+3.5<ax0 or x-3.5>ax1,f'{ref} collides with the alternate display board'
 for ref,xy in zip(['H701','H702','H703','H704'],mechanical['display']['mountingCenters']):
- f=fps[ref];near(one(f,'at')[1:3],xy);assert 'board_only' in one(f,'attr');p=children(f,'pad')[0];near(one(p,'drill')[1:],[2.7])
- # Reserve a 5 mm hardware body plus 0.25 mm clearance on both board sides.
- for other_ref,other in fps.items():
-  if other_ref.startswith('H70'):continue
-  at=one(other,'at');fx,fy=map(float,at[1:3]);angle=math.radians(float(at[3]) if len(at)>3 else 0)
-  for pad in children(other,'pad'):
-   dx,dy=map(float,one(pad,'at')[1:3]);px=fx+math.cos(angle)*dx+math.sin(angle)*dy;py=fy-math.sin(angle)*dx+math.cos(angle)*dy
-   w,h=map(float,one(pad,'size')[1:3]);distance=math.hypot(px-xy[0],py-xy[1])-math.hypot(w,h)/2
-   assert distance>=2.75,f'{other_ref} pad {pad[1]} intrudes into {ref} hardware clearance'
+ f=fps[ref];near(one(f,'at')[1:3],xy);assert 'board_only' in one(f,'attr');p=children(f,'pad')[0]
+ centers=[xy]
+ if ref in slots:
+  # Slot from the HOTHMI hole to the alternate ILI9341 module's hole.
+  alt=slots[ref];length=math.hypot(alt[0]-xy[0],alt[1]-xy[1]);centers.append(alt)
+  drill=one(p,'drill');assert drill[1]=='oval' and p[3]=='oval';near(drill[2:4],[2.7+length,2.7],.001)
+  near(one(p,'at')[1:3],[(alt[0]-xy[0])/2,(alt[1]-xy[1])/2],.001)
+ else:near(one(p,'drill')[1:],[2.7])
+ # Reserve a 5 mm hardware body plus 0.25 mm clearance on both board sides, at
+ # every position a standoff can occupy.
+ for center in centers:
+  for other_ref,other in fps.items():
+   if other_ref.startswith('H70'):continue
+   at=one(other,'at');fx,fy=map(float,at[1:3]);angle=math.radians(float(at[3]) if len(at)>3 else 0)
+   for pad in children(other,'pad'):
+    dx,dy=map(float,one(pad,'at')[1:3]);px=fx+math.cos(angle)*dx+math.sin(angle)*dy;py=fy-math.sin(angle)*dx+math.cos(angle)*dy
+    w,h=map(float,one(pad,'size')[1:3]);distance=math.hypot(px-center[0],py-center[1])-math.hypot(w,h)/2
+    assert distance>=2.75,f'{other_ref} pad {pad[1]} intrudes into {ref} hardware clearance at {center}'
 keepouts=[z for z in children(tree,'zone') if one(z,'keepout')]
 assert len(keepouts)==8,'Four LCD supports and four bracket mounts require keepouts'
 for zone in keepouts:

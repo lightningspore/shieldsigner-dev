@@ -58,7 +58,9 @@
     "JP202",
     "JP201",
     "JP204",
+    "JP702",
     "JP205",
+    "JP701",
     "JP206"
   ],
   "landPatterns": "C&K, GCT, Amphenol, Microchip and Diodes recommended land dimensions asserted",

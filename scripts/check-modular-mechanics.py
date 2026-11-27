@@ -102,7 +102,11 @@ for ref,xy in zip(['H701','H702','H703','H704'],mechanical['display']['mountingC
    at=one(other,'at');fx,fy=map(float,at[1:3]);angle=math.radians(float(at[3]) if len(at)>3 else 0)
    for pad in children(other,'pad'):
     dx,dy=map(float,one(pad,'at')[1:3]);px=fx+math.cos(angle)*dx+math.sin(angle)*dy;py=fy-math.sin(angle)*dx+math.cos(angle)*dy
-    w,h=map(float,one(pad,'size')[1:3]);distance=math.hypot(px-center[0],py-center[1])-math.hypot(w,h)/2
+    w,h=map(float,one(pad,'size')[1:3])
+    # Closest point on the complete slot travel, including its interior.
+    a,z=centers[0],centers[-1];vx,vy=z[0]-a[0],z[1]-a[1];den=vx*vx+vy*vy
+    t=0 if den==0 else max(0,min(1,((px-a[0])*vx+(py-a[1])*vy)/den))
+    distance=math.hypot(px-a[0]-t*vx,py-a[1]-t*vy)-math.hypot(w,h)/2
     assert distance>=2.75,f'{other_ref} pad {pad[1]} intrudes into {ref} hardware clearance at {center}'
 keepouts=[z for z in children(tree,'zone') if one(z,'keepout')]
 assert len(keepouts)==8,'Four LCD supports and four bracket mounts require keepouts'
@@ -124,7 +128,7 @@ socket=next(m for m in children(fps['J701'],'model') if 'PinSocket_1x08' in m[1]
 male=next(m for m in children(fps['J701'],'model') if 'PinHeader_1x08' in m[1]);near(one(one(male,'offset'),'xyz')[1:],[0,0,12]);near(one(one(male,'rotate'),'xyz')[1:],[180,0,0])
 regulator=children(fps['U701'],'model')[0];near(one(one(regulator,'offset'),'xyz')[1:],[0,0,.15])
 host=next(m for m in children(fps['U202'],'model') if 'Luckfox-Pico-Mini' in m[1]);near(one(one(host,'offset'),'xyz')[1:],mechanical['luckfox']['moduleModelOffset'])
-report={'modelsVerified':len(provenance),'assembledReferencesWithModels':modeled,'copperOnlyJumpers':copper_jumpers,'landPatterns':'C&K, GCT, Amphenol, Microchip and Diodes recommended land dimensions asserted','boardShape':'160 x 70 mm capsule; no rectangular bay or module cutout','displayMounts':'Four M2.5 clearance holes match HOTHMI manufacturer drawing','modelLimitations':['LCD, card socket, switch and USB are dimensional envelopes, not detailed manufacturer CAD','Standoff model omits threads','Physical first-article header/module fit remains to be confirmed']}
+report={'modelsVerified':len(provenance),'assembledReferencesWithModels':modeled,'copperOnlyJumpers':copper_jumpers,'landPatterns':'C&K, GCT, Amphenol, Microchip and Diodes recommended land dimensions asserted','boardShape':'160 x 70 mm capsule; no rectangular bay or module cutout','displayMounts':'Two round holes and two slots accept the HOTHMI pattern; slots also accept the alternate ILI9341 right-side mounts','modelLimitations':['LCD, card socket, switch and USB are dimensional envelopes, not detailed manufacturer CAD','Standoff model omits threads','Physical first-article header/module fit remains to be confirmed']}
 (V/'mechanical-check-results.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 
 # Independently assert the factory points and all custom bracket hardware clearances.
@@ -144,6 +148,6 @@ for entry in service['bracketMounts']:
   for pad in children(other,'pad'):
    dx,dy=map(float,one(pad,'at')[1:3]);px=fx+math.cos(angle)*dx+math.sin(angle)*dy;py=fy-math.sin(angle)*dx+math.cos(angle)*dy
    w,h=map(float,one(pad,'size')[1:3]);assert math.hypot(px-entry['xy'][0],py-entry['xy'][1])-math.hypot(w,h)/2>=2.75,(entry['ref'],ref,pad[1])
-report.update(factoryKeystonePoints=8,independentBracketMounts=service['bracketMounts'],bracketSpacingMm=service['mountSpacingMm'])
+report.update(factoryKeystonePoints=len(service['testpoints']),independentBracketMounts=service['bracketMounts'],bracketSpacingMm=service['mountSpacingMm'])
 (V/'mechanical-check-results.json').write_text(json.dumps(report,indent=2)+'\n')
 print('Verified nine factory Keystone points and four independent M2.5 bracket mounts.')

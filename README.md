@@ -6,7 +6,7 @@ An open-hardware smartcard signing device built around the Luckfox Pico Mini, a 
 
 ![ShieldSigner assembly](hardware/assembly-front.png)
 
-The **main PCB is the four-layer, eight-pin display carrier in [`kicad/`](kicad/)**. Open [the KiCad project](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro) to edit its schematic or layout. Its previews, assembly data, sourcing information and review reports live in [`hardware/`](hardware/README.md).
+The **main PCB is the four-layer, eight-pin display carrier with an alternate 14-pin socket in [`kicad/`](kicad/)**. Open [the KiCad project](kicad/SeedSigner-Plus-smartcard-pico.kicad_pro) to edit its schematic or layout. Its previews, assembly data, sourcing information and review reports live in [`hardware/`](hardware/README.md).
 
 ## How the pieces fit
 

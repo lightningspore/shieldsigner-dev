@@ -36,6 +36,14 @@ def correct(rows, parts):
         if (proof.get('passed') is not True or proof['boardSha256'] != config['boardSha256']
                 or proof.get('correctedComponentsUnchanged') != ['J301', 'J601', 'U601']):
             raise ValueError('Corrected component placement changed in service revision')
+    if 'ili9341Socket' in config:
+        evidence = config['ili9341Socket']
+        proof_path = VARIANT / evidence['audit']
+        if hashlib.sha256(proof_path.read_bytes()).hexdigest() != evidence['auditSha256']:
+            raise ValueError('Alternate socket evidence changed; rerun hardware:check')
+        proof = json.loads(proof_path.read_text())
+        if proof.get('passed') is not True or proof['boardSha256'] != config['boardSha256']:
+            raise ValueError('Alternate socket proof does not match the PCB')
     result = copy.deepcopy(rows)
     found = set()
     for row in result:

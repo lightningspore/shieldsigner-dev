@@ -166,8 +166,9 @@ def main():
                            **xy([fx,fy]),'pins':pins,'pads':pads})
     components.sort(key=lambda c:c['name'])
     net_names = {n:f'N{i+1}' for i,n in enumerate(sorted(nets))}
+    layer_names = {'F.Cu':'top','In1.Cu':'inner1','In2.Cu':'inner2','B.Cu':'bottom'}
     segments = [{'net':one(s,'net')[-1],'start':xy(point(s,'start')),'end':xy(point(s,'end')),
-                 'width':float(one(s,'width')[1]),'layer':'top' if one(s,'layer')[1]=='F.Cu' else 'bottom'} for s in children(pcb,'segment')]
+                 'width':float(one(s,'width')[1]),'layer':layer_names[one(s,'layer')[1]]} for s in children(pcb,'segment')]
     vias = [{'net':one(v,'net')[-1], **xy(point(v,'at')), 'outerDiameter':float(one(v,'size')[1]),
              'holeDiameter':float(one(v,'drill')[1])} for v in children(pcb,'via')]
     layer_names = {'F.Cu':'top','In1.Cu':'inner1','In2.Cu':'inner2','B.Cu':'bottom'}

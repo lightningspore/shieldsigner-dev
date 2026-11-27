@@ -58,7 +58,7 @@ ROUTES = [
     # USB +5V up to the Luckfox feed, now passing below J702 pin 14; the diagonal
     # keeps the rear GND pour open around D301's GND pad.
     ('+5V', B, [(97.41, 109.66), (96.5, 108.75), (96.5, 107.6), (94.9, 107.6),
-                (91.31095, 104.01), (91.31095, 103.563)]),
+                (91.31095, 104.01095), (91.31095, 103.563)]),
     ('LCD_ALT_VCC', B, [(98.95, 63.6), (98.95, 70.6), (96.48, 73.07), (95.04, 73.07)]),
     ('LCD_3V3', B, [(100.25, 63.6), (100.25, 61.5), (108.0, 61.5)]),
     ('+5V', B, [(100.25, 67.6), (103.36, 67.6), (104.96, 66.0)]),
@@ -113,6 +113,7 @@ def main():
         v.SetDrill(p.FromMM(0.3))
         v.SetNetCode(board.FindNet(name).GetNetCode())
         board.Add(v)
+    p.ZONE_FILLER(board).Fill(board.Zones())
     board.Save(str(PCB))
     print('Added %d track segments and %d vias' % (count, len(VIAS)))
 

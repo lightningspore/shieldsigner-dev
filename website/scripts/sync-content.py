@@ -130,6 +130,7 @@ for slug, name, *_ in GUIDES:
     source = ROOT / name
     def link(match):
         label, dest = match.groups()
+        label = re.sub(r"\[([^\[\]]+)\]\(([^)]+)\)", link, label)
         if re.match(r"^(?:https?://|mailto:|#|/)", dest): return match.group(0)
         dest_path, sep, anchor = dest.partition("#")
         resolved = str((source.parent / dest_path).resolve())
@@ -139,7 +140,7 @@ for slug, name, *_ in GUIDES:
             except ValueError: return f"[{label}](https://github.com/lightningspore/shieldsigner-dev)"
             url = repo_url + relative
         return f"[{label}]({url}{'#' + anchor if sep else ''})"
-    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", link, source.read_text())
+    text = re.sub(r"\[((?:!\[[^\]]*\]\([^)]*\)|[^\[\]])+)\]\(([^)]+)\)", link, source.read_text())
     # Local operator/server details do not belong on the public project site.
     text = re.sub(r"(?:192\.168\.\d+\.\d+|100\.(?:\d+\.){2}\d+)", "private-host", text)
     text = re.sub(r"[a-zA-Z0-9-]+\.tail[a-zA-Z0-9]+\.ts\.net", "private-tailnet-host", text)
@@ -179,7 +180,7 @@ with (variant/'manufacturing/bom-jlcpcb.csv').open() as file:
             'mpn':part['componentModelEn'], 'manufacturer':part['componentBrandEn'],
             'package':row['Footprint'], 'source':part['url'], 'checkedAt':part['checkedAt'][:10],
             'library':'Basic' if part['componentLibraryType']=='base' else 'Extended'})
-assert len(modular_rows)==18 and sum(p['qty'] for p in modular_rows)==43
+assert len(modular_rows)==18 and sum(p['qty'] for p in modular_rows)==44
 (content/'modular-carrier-parts.json').write_text(json.dumps(modular_rows,indent=2)+'\n')
 shutil.copyfile(variant/'system-parts.json', content/'modular-system-parts.json')
 mechanics = json.loads((variant/'mechanical.json').read_text())
@@ -188,7 +189,16 @@ mechanics = json.loads((variant/'mechanical.json').read_text())
     'boardSha256':modular_manifest['boardSha256']},indent=2)+'\n')
 readiness = json.loads((ROOT/'manufacturing/jlcpcb/readiness.json').read_text())
 board_sha = hashlib.sha256((ROOT/'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest()
-assert readiness['boardSha256']==board_sha, 'BOM/CPL readiness belongs to another board revision'
+# The historical release predates the vendored 3D-model path migration.
+# Prove byte-for-byte identity apart from that single model URI before reusing
+# its fabrication kit; geometry, model transforms and all other settings match.
+with ZipFile(public/'shieldsigner-luckfox-kicad.zip') as archive:
+    released_board=archive.read('kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb')
+assert hashlib.sha256(released_board).hexdigest()==readiness['boardSha256'], 'Historical release/readiness mismatch'
+current_board=(ROOT/'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()
+model_uri=rb'(?m)^(\s*\(model )"[^"\n]*Luckfox(?: Pico Mini|\-Pico\-Mini)\.step"'
+assert len(re.findall(model_uri,released_board))==len(re.findall(model_uri,current_board))==1
+assert re.sub(model_uri,rb'\1"Luckfox-Pico-Mini.step"',released_board)==re.sub(model_uri,rb'\1"Luckfox-Pico-Mini.step"',current_board), 'Historical fabrication geometry changed; publish a matching kit'
 geometry=json.loads((ROOT/'src/generated/reference-board.json').read_text())
 assert geometry['source']['sha256']==board_sha, 'Regenerate geometry before publishing'
 (content/'pcb-spec.json').write_text(json.dumps({'width':round(geometry['width'],2),'height':round(geometry['height'],2),'thickness':1.6,'layers':2,'boardSha256':board_sha},indent=2)+'\n')

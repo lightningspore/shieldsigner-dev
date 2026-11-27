@@ -21,7 +21,9 @@
     "7": "2",
     "8": "1"
   },
-  "dnp": [],
+  "dnp": [
+    "J702"
+  ],
   "removedFromPcb": [
     "C401",
     "J401",
@@ -42,12 +44,14 @@
     "closed": [
       "JP201",
       "JP203",
-      "JP205"
+      "JP205",
+      "JP701"
     ],
     "open": [
       "JP202",
       "JP204",
-      "JP206"
+      "JP206",
+      "JP702"
     ]
   },
   "backlight": "Always on by default; host CS/default firmware does not promise independent PWM",
@@ -66,5 +70,26 @@
     "factoryAssembly": false,
     "requirement": "Regulated 5V output; no bare cell or simultaneous USB input; module and battery dimensions not yet selected",
     "matingDirection": "Pins left/inward; mating board slides right beneath LCD"
+  },
+  "alternateDisplay": {
+    "reference": "J702",
+    "pins": [
+      "LCD_ALT_VCC",
+      "GND",
+      "RPI_SPI_CS",
+      "LCD_RST",
+      "LCD_DC",
+      "LCD_MOSI",
+      "LCD_SCLK",
+      "RPI_BACKLIGHT",
+      "NC",
+      "NC",
+      "NC",
+      "NC",
+      "NC",
+      "NC"
+    ],
+    "population": "Fit instead of J701; DNP in default build",
+    "supply": "JP701 closed: LCD_3V3; JP702 open: optional +5V. Never close both."
   }
 }

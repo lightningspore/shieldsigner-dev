@@ -4,7 +4,7 @@ import collections,csv,datetime,hashlib,json,math,re,runpy,subprocess,sys
 from pathlib import Path
 from zipfile import ZipFile,ZIP_DEFLATED
 ROOT=Path(__file__).resolve().parents[1];V=ROOT/'hardware';K=V/'kicad';PCB=K/'SeedSigner-Plus-smartcard-pico.kicad_pcb';OUT=ROOT/'dist/lcd-module-2.8';FAB=OUT/'fabrication';M=V/'manufacturing'
-for script in ['check-lcd-module-variant.py','check-modular-mechanics.py']:subprocess.run([sys.executable,str(ROOT/'scripts'/script)],check=True)
+for script in ['check-lcd-module-variant.py','check-modular-mechanics.py','audit-angle-header.py','audit-module-pinouts.py']:subprocess.run([sys.executable,str(ROOT/'scripts'/script)],check=True)
 cli=runpy.run_path(str(ROOT/'scripts/kicad.py'))['cli']();sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));one=sx['one'];children=sx['children'];tree=sx['parse'](PCB.read_text());values=runpy.run_path(str(ROOT/'scripts/part-values.py'))
 assert list(map(float,one(one(tree,'setup'),'aux_axis_origin')[1:]))==[50,130],'Manufacturing origin changed'
 selection=json.loads((ROOT/'docs/bom-selection.json').read_text());selection.update(json.loads((V/'bom-selection-extra.json').read_text()));catalog={p['code']:p for p in json.loads((V/'jlc-catalog.json').read_text())['parts']}
@@ -23,7 +23,7 @@ for f in children(tree,'footprint'):
    assert normalize(values['nominal'](row['value'],[ref]))==normalize(attributes[key]),f'{ref} value/catalog mismatch'
   groups[row['lcsc']].append(row);expected.add(ref)
 assert len(expected)==44 and len(groups)==18,(len(expected),len(groups))
-assert len(parts)==73,len(parts)
+assert len(parts)==76,len(parts)
 M.mkdir(exist_ok=True,parents=True);OUT.mkdir(exist_ok=True,parents=True);FAB.mkdir(exist_ok=True,parents=True)
 with (M/'bom-jlcpcb.csv').open('w',newline='') as file:
  writer=csv.writer(file,lineterminator='\n');writer.writerow(['Comment','Designator','Footprint','LCSC Part #'])
@@ -65,7 +65,7 @@ manifest={'variant':'modular-lcd-2.8','boardSha256':hashlib.sha256(PCB.read_byte
 with ZipFile(OUT/'shieldsigner-modular-gerbers.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(FAB.iterdir()):z.write(p,p.name)
 for p in [OUT/'shieldsigner-modular-gerbers.zip',M/'bom-jlcpcb.csv',M/'cpl-jlcpcb.csv',M/'population.csv']:manifest['files'][p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
-manifest['compatibilityProof']={'file':'angle-header-audit.json','sha256':hashlib.sha256((V/'angle-header-audit.json').read_bytes()).hexdigest(),'scope':'All prior footprints/pad nets and signal endpoints retained; 45-degree conversion, documented GND via clearance edits and customer 5V header independently audited'}
+manifest['compatibilityProof']={'file':'angle-header-audit.json','sha256':hashlib.sha256((V/'angle-header-audit.json').read_bytes()).hexdigest(),'scope':'Chained routing/header and alternate ILI9341 socket audits; existing functional circuitry and corrected supplier placements preserved'}
 manifest['historicalSupplierEvidence']='history/0.0.7-preview/'
 manifest['testPoints']={'factoryKeystone5015':9,'copperOnly':12,'factoryPasteApertures':9,'assemblyPlacements':9,'map':'serviceability.json','barePadMap':'testpoints.json'}
 manifest['supplierPlacementCompensation']={'file':'placement-review/cpl-corrections.json','references':['J301','J601','U601'],'uploadedCsvPreviewChecked':json.loads((V/'jlc-placement-corrections.json').read_text()).get('uploadedCsvPreviewChecked',False),'assemblerQualified':False}

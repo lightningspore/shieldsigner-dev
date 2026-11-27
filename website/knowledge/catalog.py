@@ -18,7 +18,7 @@ GUIDES = [
 ("useful-sources", "docs/USEFUL-SOURCES.md", "Sources", "Useful upstream sources", "Reviewed primary sources for hardware profiles, QR formats, smartcards and recovery."),
 ("enclosure", "docs/ENCLOSURE.md", "Build", "Print and assemble the enclosure", "Flat prints, camera fit, button mechanisms, fasteners and exploded 3D assembly."),
 ("modular-assembly", "docs/MODULAR-ASSEMBLY.md", "Build", "Assemble the modular carrier", "JLC quote, through-hole headers, mounting and staged bring-up."),
-("modular-bom", "variants/lcd-module-2.8/manufacturing/BOM.md", "Build", "Modular carrier BOM", "43 SMT placements / 18 SKUs with values, ratings and dated JLC sourcing."),
+("modular-bom", "variants/lcd-module-2.8/manufacturing/BOM.md", "Build", "Modular carrier BOM", "44 SMT placements / 18 SKUs with values, ratings and dated JLC sourcing."),
 ("self-assembly", "docs/SELF-ASSEMBLY.md", "Build", "Optional DigiKey self-assembly", "Separate commodity substitutions and purchase CSV; JLC remains the primary assembly path."),
 ("digikey-bom", "variants/lcd-module-2.8/self-assembly/BOM-DIGIKEY.md", "Build", "DigiKey self-assembly BOM", "Exact order codes for all 35 SMT pieces; shared JLC/DigiKey switches and USB-C."),
 ("lcd-module", "docs/LCD-MODULE-VARIANT.md", "Hardware", "Eight-pin 2.8-inch pill carrier", "Pill layout, reference eight-pin interface, dedicated LCD power and simple header assembly."),

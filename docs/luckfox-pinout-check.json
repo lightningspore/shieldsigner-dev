@@ -2,7 +2,7 @@
   "reviewed": "2026-10-31",
   "boards": {
     "released": {
-      "sha256": "bc8b42ec8e41e1f4e304ecc353cf0fca7ea2862945dd5a4ea3e10726124d1523",
+      "sha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
       "physicalPins": 22,
       "padInstancesChecked": 44
     },
@@ -24,7 +24,7 @@
     },
     {
       "kind": "documentation_correction",
-      "detail": "Current service carrier LCD_3V3 has five endpoints including TP803 and TP905; the separate PWM candidate retains four."
+      "detail": "Current service carrier LCD_3V3 has six endpoints including TP803, TP905 and the alternate display strap JP701; the separate PWM candidate retains four."
     }
   ],
   "remaining": [

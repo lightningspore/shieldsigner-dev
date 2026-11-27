@@ -110,6 +110,7 @@ def record():
         'movedTexts': {k: fingerprint(newt[k]) for k in d['text']['changed']},
         'addedFootprints': {r: fingerprint(strip_uuid(newf[r])) for r in d['footprints']['added']},
         'modifiedFootprints': {r: fingerprint(strip_uuid(newf[r])) for r in d['footprints']['changed']},
+        'filledZones': {k: fingerprint(z) for k, z in nodes(b, 'zone').items()},
     }
     RECORD.write_text(json.dumps(data, indent=2) + '\n')
     print('Recorded', RECORD.relative_to(ROOT), {k: len(v) for k, v in data.items()
@@ -135,6 +136,18 @@ def verify():
     assert hashlib.sha256(before).hexdigest() == rec['baselineBoardSha256'], 'Baseline moved'
     a, b, d = diff(before, PCB.read_text())
     segs, vias, newt, newf, oldf = nodes(b, 'segment'), nodes(b, 'via'), texts(b), fps(b), fps(a)
+    # Everything outside the recorded item families must remain identical,
+    # including stackup, design rules, board outline, keepouts and ground fills.
+    assert norm(without(a, {'footprint', 'segment', 'via', 'gr_text', 'zone'})) == norm(
+        without(b, {'footprint', 'segment', 'via', 'gr_text', 'zone'})), 'Unrecorded board change'
+    oldzones, newzones = nodes(a, 'zone'), nodes(b, 'zone')
+    assert set(oldzones) == set(newzones), 'Zone added or removed'
+    for key in oldzones:
+        assert norm(without(oldzones[key], {'filled_polygon'})) == norm(
+            without(newzones[key], {'filled_polygon'})), 'Zone rules or boundary changed'
+    assert {k: fingerprint(z) for k, z in newzones.items()} == rec['filledZones'], 'Unrecorded zone fill'
+    assert git('kicad/' + PCB.with_suffix('.kicad_pro').name) == PCB.with_suffix('.kicad_pro').read_bytes(), 'Project rules changed'
+
 
     assert d['segment']['changed'] == [] and d['via']['changed'] == [], 'Unrecorded route change'
     assert d['via']['removed'] == [], 'Unrecorded via removal'

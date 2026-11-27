@@ -1,11 +1,11 @@
 {
   "passed": true,
   "revision": "0.0.13-dev",
-  "boardSha256": "bc8b42ec8e41e1f4e304ecc353cf0fca7ea2862945dd5a4ea3e10726124d1523",
+  "boardSha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
   "baselineCommit": "8245461",
   "replacedSegments": 172,
   "removedZeroLengthSegments": 15,
-  "tracksChecked": 905,
+  "tracksChecked": 943,
   "allowedAnglesDegrees": [
     0,
     45,
@@ -72,5 +72,10 @@
   "factoryPlacements": 44,
   "catalogLines": 18,
   "supplierPlacementReviewRequired": true,
-  "qualification": "Source geometry and netlist checks; run native ERC/DRC separately. Battery module, cable fit, source isolation and powered operation are not qualified."
+  "qualification": "Source geometry and netlist checks; run native ERC/DRC separately. Battery module, cable fit, source isolation and powered operation are not qualified.",
+  "historicalChecksApplyTo": "86d702b",
+  "auditChain": {
+    "intermediateCommit": "86d702b",
+    "currentRevisionAudit": "ili9341-socket-audit.json"
+  }
 }

@@ -133,7 +133,7 @@ with sync_playwright() as p:
         download.value.save_as(target)
         with ZipFile(target) as archive:
             bom = list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
-            assert len(bom)==18 and sum(len(row['Designator'].split(',')) for row in bom)==43
+            assert len(bom)==18 and sum(len(row['Designator'].split(',')) for row in bom)==44
         assert not errors, errors
         context.close()
     context = browser.new_context(java_script_enabled=False,viewport={'width':390,'height':844})

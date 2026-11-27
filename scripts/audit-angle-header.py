@@ -7,7 +7,12 @@ sx=runpy.run_path(str(ROOT/'scripts/kicad-sexpr.py'));c,o,parse=sx['children'],s
 record=json.loads((ROOT/'docs/pcb-angle-header-edits.json').read_text())
 before=subprocess.check_output(['git','show',record['baselineCommit']+':kicad/'+PCB.name],cwd=ROOT)
 assert hashlib.sha256(before).hexdigest()==record['baselineBoardSha256']
-a,b=parse(before.decode()),parse(PCB.read_text())
+# Verify the later edit first, then audit the pinned intermediate revision.
+# This preserves both exact-change audits instead of widening their allowlists.
+ili=runpy.run_path(str(ROOT/'scripts/audit-ili9341-socket.py'))
+ili['verify']()
+intermediate=ili['BASELINE']
+a,b=parse(before.decode()),parse(ili['git']('kicad/'+PCB.name).decode())
 def norm(n):
  if isinstance(n,list):return [norm(x) for x in n]
  try:return float(n)
@@ -74,13 +79,18 @@ assert all(o(n,'drill')[1:] == ['1'] and o(n,'size')[1:]==['1.7','1.7'] for n in
 out=ROOT/'dist/lcd-module-2.8/angle-header-review';base=out/'baseline';base.mkdir(parents=True,exist_ok=True)
 for path in K.glob('*.kicad_sch'):(base/path.name).write_bytes(subprocess.check_output(['git','show',record['baselineCommit']+':kicad/'+path.name],cwd=ROOT))
 cli=runpy.run_path(str(ROOT/'scripts/kicad.py'))['cli']()
-for label,folder in [('before',base),('after',K)]:subprocess.run([str(cli),'sch','export','netlist','--format','kicadxml','--output',str(out/(label+'.xml')),str(folder/PCB.with_suffix('.kicad_sch').name)],check=True,stdout=subprocess.DEVNULL)
+after=out/'intermediate';after.mkdir(parents=True,exist_ok=True)
+for path in K.glob('*.kicad_sch'):(after/path.name).write_bytes(ili['git']('kicad/'+path.name))
+for label,folder in [('before',base),('after',after)]:subprocess.run([str(cli),'sch','export','netlist','--format','kicadxml','--output',str(out/(label+'.xml')),str(folder/PCB.with_suffix('.kicad_sch').name)],check=True,stdout=subprocess.DEVNULL)
 def electrical(path):
  t=E.parse(path);parts={n.attrib['ref']:(n.findtext('value'),n.findtext('footprint')) for n in t.findall('./components/comp') if n.attrib['ref']!='J302'}
  nets=sorted(sorted((n.attrib['ref'],n.attrib['pin']) for n in net.findall('node') if n.attrib['ref']!='J302') for net in t.findall('./nets/net'))
  return parts,[n for n in nets if n]
 assert electrical(out/'before.xml')==electrical(out/'after.xml'),'Existing schematic circuitry changed'
 report={'passed':True,'revision':record['revision'],'boardSha256':hashlib.sha256(PCB.read_bytes()).hexdigest(),'baselineCommit':record['baselineCommit'],'replacedSegments':len(record['changedSegments']),'removedZeroLengthSegments':len(record['removedZeroLengthSegmentIds']),'tracksChecked':len(current),'allowedAnglesDegrees':[0,45,90,135,180,225,270,315],'coordinateToleranceNm':2,'existingFootprintsAndPadNetsUnchanged':True,'smartcardIcAndSocketUnchanged':True,'correctedComponentsUnchanged':['J301','J601','U601'],'signalTrackEndpointsNetsWidthsLayersPreserved':True,'groundViaClearanceChanges':{'removedStandalone':record['removedStandaloneGroundViaIds'],'moved':record['movedGroundVia']},'existingSignalViasUnchanged':True,'projectAndBoardRulesUnchanged':True,'schematicProjectedPinPartitionsUnchanged':True,'header':record['header'],'factoryPlacements':44,'catalogLines':18,'supplierPlacementReviewRequired':True,'qualification':'Source geometry and netlist checks; run native ERC/DRC separately. Battery module, cable fit, source isolation and powered operation are not qualified.'}
+report['historicalChecksApplyTo']=intermediate
+report['auditChain']={'intermediateCommit':intermediate,'currentRevisionAudit':'ili9341-socket-audit.json'}
+report['tracksChecked']=len(c(parse(PCB.read_text()),'segment'))
 (V/'angle-header-audit.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 
 config=V/'jlc-placement-corrections.json';d=json.loads(config.read_text());d['previousBoardSha256']=record['baselineBoardSha256'];d['boardSha256']=report['boardSha256'];d['serviceCompatibility']={'audit':'angle-header-audit.json','auditSha256':hashlib.sha256((V/'angle-header-audit.json').read_bytes()).hexdigest()};d['reviewed']='2026-11-11';d['qualification']='0.0.13 routing/header revision; all original footprints and pad nets unchanged, including corrected USB, socket and reader. Fresh supplier placement/DFM review required.';d['uploadedCsvPreviewChecked']=False;d['reviewStatus']='review_required';config.write_text(json.dumps(d,indent=2)+'\n')

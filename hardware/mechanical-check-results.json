@@ -65,13 +65,13 @@
   ],
   "landPatterns": "C&K, GCT, Amphenol, Microchip and Diodes recommended land dimensions asserted",
   "boardShape": "160 x 70 mm capsule; no rectangular bay or module cutout",
-  "displayMounts": "Four M2.5 clearance holes match HOTHMI manufacturer drawing",
+  "displayMounts": "Two round holes and two slots accept the HOTHMI pattern; slots also accept the alternate ILI9341 right-side mounts",
   "modelLimitations": [
     "LCD, card socket, switch and USB are dimensional envelopes, not detailed manufacturer CAD",
     "Standoff model omits threads",
     "Physical first-article header/module fit remains to be confirmed"
   ],
-  "factoryKeystonePoints": 8,
+  "factoryKeystonePoints": 9,
   "independentBracketMounts": [
     {
       "ref": "H705",

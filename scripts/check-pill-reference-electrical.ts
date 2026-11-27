@@ -20,6 +20,19 @@ function nativeReason(e:any):string|undefined {
       (Math.abs(p.x)>45 ? 35-Math.hypot(Math.abs(p.x)-45,p.y) : 35-Math.abs(p.y))>=0.2))
       return 'Inner GND polygon passes exact capsule-edge clearance at every vertex; the proxy flattened-outline distance is approximate. Native refilled DRC remains mandatory.'
   }
+  if(e.type==='pcb_footprint_overlap_error' && e.message==='J701 overlaps J702: 8 footprint overlaps. Move the components apart.') {
+    const primary=reference.components.find(p=>p.name==='J701')
+    const alternate=reference.components.find(p=>p.name==='J702')
+    // Mutually exclusive display sockets: the unused J702 is explicitly DNP.
+    // Retain only the exact native courtyard-to-alternate-land diagnostics.
+    const expected=new Set(Array.from({length:8},(_,i)=>`J702.pad_${i+4}_${i+4}`))
+    if(primary?.pads.length===8 && alternate?.pads.length===14 && alternate.dnp &&
+      e.related_errors?.length===8 && e.related_errors.every((r:any)=> {
+        const match=r.message?.match(/^pcb_courtyard_outline unnamed courtyard outline overlaps with pcb_plated_hole (J702\.pad_\d+_\d+)$/)
+        return match && expected.delete(match[1])
+      }) && expected.size===0)
+      return 'Native mutually exclusive display sockets: J702 is DNP in the default J701 build. Fit one display only; native zero-exclusion DRC and exact socket audit remain mandatory.'
+  }
   if(e.type==='pcb_component_missing_courtyard_warning' && /^(TP80[1-9]|TP81[0-2]|U202) has no courtyard$/.test(e.message))
     return 'Native bare probe pad or customer module has no conventional courtyard; no factory body is inferred.'
   if(e.type==='pcb_component_outside_board_error' && /^Component J301 extends outside board boundaries by 0\.33mm\./.test(e.message))

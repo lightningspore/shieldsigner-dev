@@ -1647,3 +1647,7 @@ run = "uv run --python 3.13 --with pyserial==3.5 python baremetal/tools/usb_cons
 [tasks."baremetal:app:sd:prepare"]
 description = "Package current DUT1 app-autostart as a regular-file ROM microSD image"
 run = "uv run --python 3.13 python baremetal/tools/sd_image.py --profile app"
+
+[tasks."hardware:downloads"]
+description = "Pin the matching local PCB review bundle for the website and next hardware release"
+run = "uv run python scripts/prepare-hardware-downloads.py"

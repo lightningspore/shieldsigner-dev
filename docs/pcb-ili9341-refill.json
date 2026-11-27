@@ -1,0 +1,5 @@
+{
+  "description": "Persist ground pours after alternate ILI9341 socket routing; no placement or track edits",
+  "expectedBeforeSha256": "c3f981abc5a00e0cf948204320cec592a63966e80a9b339ee706dbfff2489e33",
+  "edits": []
+}

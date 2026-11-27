@@ -1,50 +1,50 @@
 {
-  "version": "0.0.3-dev",
-  "boardSha256": "2f949d76b53bf75e4b6f56e5e68623900b1f3e9c2403770409e647953aabc93d",
+  "version": "0.0.4-dev",
+  "boardSha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
   "scadSha256": "cee8d4db187d5d045a72791ef1a13cca657f7d937ecb13df1cda83031f2760af",
-  "sourceStepSha256": "1301b06ea45cfa50c5863ab5930db1708bf777059c852923d82655b87f612933",
+  "sourceStepSha256": "22e79fafbbb9461f1e33f844134be33d4b74df71d12a6f625d43e0a44af0fbe2",
   "assets": [
     {
       "name": "printable-fit-check.json",
       "size": 939,
-      "sha256": "1fc8c715ff27e1e0f563708e6b4e4e01aaf8dd607e8ed2f9413c7577d082a9f7",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.3-dev/printable-fit-check.json"
+      "sha256": "19d6689ff35da6188763bf53f75defe3ba27337071ee4852a5405f63215a504a",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.4-dev/printable-fit-check.json"
     },
     {
       "name": "shieldsigner-bare-pcb-mm.stl",
-      "size": 242484,
-      "sha256": "5e521f7b6c76ee6b240d43c5ce38294234f47a4eeb54e7b6a51962dbd7de99b8",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.3-dev/shieldsigner-bare-pcb-mm.stl"
+      "size": 323484,
+      "sha256": "0465133dead432a36c720002fd6f01133987351d03a02807ddf4eb3f09e5c052",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.4-dev/shieldsigner-bare-pcb-mm.stl"
     },
     {
       "name": "shieldsigner-case-fit.glb",
-      "size": 5570728,
-      "sha256": "ae0db72259cde102931bffad08181835e1d48c026cedfe18551135c6c5be0aac",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.3-dev/shieldsigner-case-fit.glb"
+      "size": 5624536,
+      "sha256": "a87ca862d50d51a82f67d74bf7cf5cffb82987becec11d124a6c6d2c1bd8c3b0",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.4-dev/shieldsigner-case-fit.glb"
     },
     {
       "name": "shieldsigner-fit-kit.zip",
-      "size": 25460190,
-      "sha256": "580bd69835616ecbdf9c72cb5c476d3154d6e17cf28bb83134ea0f01982cf75a",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.3-dev/shieldsigner-fit-kit.zip"
+      "size": 25543258,
+      "sha256": "0de6817957ee6f14347dc2f0b2bf03037eb00d81dbc66c72cd1c56a02cbe45c7",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.4-dev/shieldsigner-fit-kit.zip"
     },
     {
       "name": "shieldsigner-pcb-fit.glb",
-      "size": 4768028,
-      "sha256": "8a0472c49dc6159d8b503934bb53536855937743a628c1891289720f151a5c19",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.3-dev/shieldsigner-pcb-fit.glb"
+      "size": 4821836,
+      "sha256": "202bf450c6f016109ead78fdcaa95db3095e48094bbb8987f8be2929f3a7d3ae",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.4-dev/shieldsigner-pcb-fit.glb"
     },
     {
       "name": "shieldsigner-pcb-fit.step",
-      "size": 134729299,
-      "sha256": "cf47440234efe98c062a15aa3dd653587055989e9a8f0864e52111c288dfcc5d",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.3-dev/shieldsigner-pcb-fit.step"
+      "size": 135089025,
+      "sha256": "6d213ba2b8b0c9b5e805df0d1d171d62a2d48a794a7474430be3e6b50bdf0f93",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.4-dev/shieldsigner-pcb-fit.step"
     },
     {
       "name": "shieldsigner-printable-fit-mm.stl",
-      "size": 1030984,
-      "sha256": "e62e47420edadfc4adbe0885e3e4563377e9caa011fedc54e3f52b2a9537c60b",
-      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.3-dev/shieldsigner-printable-fit-mm.stl"
+      "size": 1147684,
+      "sha256": "b0a50846c3a8985799cf9c86a72085433b3bda5a0f714c97015203a9a3d5e0e2",
+      "url": "https://github.com/lightningspore/shieldsigner-dev/releases/download/fit-preview-0.0.4-dev/shieldsigner-printable-fit-mm.stl"
     }
   ]
 }

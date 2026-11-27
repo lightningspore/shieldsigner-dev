@@ -1,8 +1,9 @@
 {
-  "boardSha256": "bc8b42ec8e41e1f4e304ecc353cf0fca7ea2862945dd5a4ea3e10726124d1523",
+  "boardSha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
   "scope": "Manufacturer pin mapping and default electrical topology; not physical qualification",
   "hostPinsChecked": 22,
   "lcdPinsChecked": 8,
+  "alternateLcdPinsChecked": 14,
   "buttonsChecked": 8,
   "buttons": [
     {

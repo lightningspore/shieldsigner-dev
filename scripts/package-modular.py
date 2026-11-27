@@ -44,6 +44,8 @@ with ZipFile(OUT / 'shieldsigner-modular-order.zip', 'w', ZIP_DEFLATED) as archi
     archive.write(VARIANT/'testpoints.json','testpoints.json')
     archive.write(VARIANT/'serviceability-audit.json','serviceability-audit.json')
     archive.write(VARIANT/'angle-header-audit.json','angle-header-audit.json')
+    archive.write(VARIANT/'ili9341-socket-audit.json','ili9341-socket-audit.json')
+    archive.write(ROOT/'docs/pcb-ili9341-edits.json','pcb-ili9341-edits.json')
     archive.write(ROOT/'docs/PCB-ANGLE-HEADER-REVISION.md','PCB-ANGLE-HEADER-REVISION.md')
     archive.write(VARIANT/'schematic-once-over-audit.json','schematic-once-over-audit.json')
     archive.write(ROOT/'docs/SCHEMATIC-REVIEW.md','SCHEMATIC-REVIEW.md')

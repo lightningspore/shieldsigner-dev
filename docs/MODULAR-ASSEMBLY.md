@@ -17,6 +17,14 @@ The immediate target is **one working first article**, with perhaps three finish
 
 A passing first article supports the next small build; it does not establish mass-production yield. Acceptance limits must come from the exact module/component specifications and intended operating conditions. Record those limits alongside measurements before declaring a pass.
 
+## Alternate ILI9341 display
+
+The working PCB also provides **J702, a 14-pin alternate socket, DNP in the default build**. Fit either J701 or J702 and one display. J702 pins 1–8 are VCC, GND, CS, RESET, DC, MOSI, SCK and LED; pins 9–14 (MISO/touch) are unconnected. The default HOTHMI display and assembly BOM remain unchanged.
+
+JP701 is factory-bridged copper feeding J702 from LCD_3V3. JP702 is open and offers +5V for a module whose onboard regulator requires it. To select +5V, open JP701 before bridging JP702; never close both. Verify the exact purchased module's voltage requirements and connector orientation before power. Firmware must select an ILI9341 driver; the HOTHMI carrier profile alone does not establish compatibility.
+
+The alternate module uses the two right-hand slotted supports at H702/H704; its header supports the left side. The header-side module holes have no matching carrier supports. Module fit, support strength, enclosure compatibility and powered behavior remain unverified. The default assembled 3D view shows the HOTHMI module and does not model the alternate assembly.
+
 ## Customer shopping list
 
 | Item | Qty | Specification |

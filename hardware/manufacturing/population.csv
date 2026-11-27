@@ -24,12 +24,15 @@ J301,USB4125-GF-A-0190,ShieldSigner:GCT_USB4125_GF_A,B.Cu,JLCPCB SMT assembly,C5
 J302,5V_MODULE,ShieldSigner:Battery5VHeader_1x02_P2.54mm_Horizontal,F.Cu,customer optional regulated 5V module header,,
 J601,7312P0225A13LF,ShieldSigner:Amphenol_7312P0225A13LF_reflow,B.Cu,JLCPCB SMT assembly,C5417011,7312P0225A13LF
 J701,LCD SPI 8-pin,ShieldSigner:LCD_SPI_8_Pill,F.Cu,customer 1x8 display socket/header,,
+J702,ILI9341 SPI 14-pin,ShieldSigner:LCD_SPI_14_ILI9341,F.Cu,DNP,,
 JP201,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
 JP202,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
 JP203,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
 JP204,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
 JP205,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
 JP206,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
+JP701,Jumper_2_Small_Bridged,Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
+JP702,Jumper_2_Small_Open,Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm,B.Cu,PCB copper jumper,,
 R301,5K1,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C27834,0805W8F5101T5E
 R302,5K1,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C27834,0805W8F5101T5E
 R303,560R,Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,B.Cu,JLCPCB SMT assembly,C28636,0805W8F5600T5E

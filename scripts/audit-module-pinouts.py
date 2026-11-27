@@ -39,8 +39,15 @@ for ref in ('JP201', 'JP203', 'JP205'):
     assert 'Bridged' in fps[ref][1], ref
 for ref in ('JP202', 'JP204', 'JP206'):
     assert '_Open_' in fps[ref][1], ref
+alternate = ['LCD_ALT_VCC', 'GND', 'RPI_SPI_CS', 'LCD_RST', 'LCD_DC', 'LCD_MOSI', 'LCD_SCLK', 'RPI_BACKLIGHT']
+assert [pins['J702'][str(i)] for i in range(1, 9)] == alternate
+assert all(pins['J702'][str(i)].startswith('unconnected-') for i in range(9, 15))
+assert pins['JP701'] == {'1': 'LCD_3V3', '2': 'LCD_ALT_VCC'}
+assert pins['JP702'] == {'1': '+5V', '2': 'LCD_ALT_VCC'}
+assert 'Bridged' in fps['JP701'][1] and '_Open_' in fps['JP702'][1]
+assert 'dnp' in one(fps['J702'], 'attr')
 graph = collections.defaultdict(set)
-for ref in ('JP201', 'JP203', 'JP205'):
+for ref in ('JP201', 'JP203', 'JP205', 'JP701'):
     a, b = pins[ref]['1'], pins[ref]['2']
     graph[a].add(b)
     graph[b].add(a)
@@ -56,9 +63,11 @@ def connected(a, b):
     return False
 assert connected(pins['U202']['6'], pins['J701']['4'])
 assert connected('+3.3V', pins['J701']['1'])
+assert connected('LCD_ALT_VCC', 'LCD_3V3')
+assert not connected('LCD_ALT_VCC', '+5V')
 assert not connected('+3.3V', 'LCD_3V3')
 assert not connected('RPI_SPI_CS', 'GND')
-assert nets['LCD_3V3'] == {'J701.8', 'U701.5', 'C702.1', 'TP803.1', 'TP905.1'}
+assert nets['LCD_3V3'] == {'J701.8', 'U701.5', 'C702.1', 'TP803.1', 'TP905.1', 'JP701.1'}
 assert nets['+3.3V'] == {'U202.3', 'JP201.1', 'TP802.1', 'TP903.1'}
 for p, n in {'1': '+5V', '2': 'GND', '3': '+5V', '5': 'LCD_3V3'}.items():
     assert pins['U701'][p] == n
@@ -153,7 +162,7 @@ with tempfile.TemporaryDirectory() as tmp:
 report = {
     'boardSha256': hashlib.sha256(board.read_bytes()).hexdigest(),
     'scope': 'Manufacturer pin mapping and default electrical topology; not physical qualification',
-    'hostPinsChecked': 22, 'lcdPinsChecked': 8, 'buttonsChecked': 8,
+    'hostPinsChecked': 22, 'lcdPinsChecked': 8, 'alternateLcdPinsChecked': 14, 'buttonsChecked': 8,
     'buttons': [{'key':key,'reference':ref,'hostPin':p,'net':net,
                  'gpioBank':bank,'runtimeDeviceAlias':f'/dev/gpiochip-bank{bank}',
                  'line':line,'domainV':volts,

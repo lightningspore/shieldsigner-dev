@@ -1,6 +1,6 @@
 # Native reference and experimental tscircuit status
 
-The default repository preview follows the main **0.0.13-dev, four-layer KiCad board** in `kicad/` through `src/PillCarrierReference.tsx`. Current assembly data and audits live in `hardware/`; the main board has 73 footprints, 44 factory placements and nine Keystone service loops. Its native ERC/DRC/connectivity/parity checks permit zero exclusions. The independent source-authored tscircuit experiment below remains a separate layout; its explicit `tscircuit:pill:*` commands do not replace the fabrication reference. The historical FPC snapshot now reads `variants/standard-fpc/kicad/`.
+The default repository preview follows the main **0.0.13-dev, four-layer KiCad board** in `kicad/` through `src/PillCarrierReference.tsx`. Current assembly data and audits live in `hardware/`; the main board has 76 footprints, 44 factory placements and nine Keystone service loops. Its native ERC/DRC/connectivity/parity checks permit zero exclusions. The independent source-authored tscircuit experiment below remains a separate layout; its explicit `tscircuit:pill:*` commands do not replace the fabrication reference. The historical FPC snapshot now reads `variants/standard-fpc/kicad/`.
 
 The native KiCad project is the preferred design. The original tscircuit version is an experimental port of the standard FPC native board, with a recorded source SHA-256 and stale-source checks. The historical FPC board has recorded zero ERC errors/warnings, zero active DRC errors/warnings and zero unconnected/parity issues, with its two explicit DNP strap courtyard exceptions. See [native check details](../KICAD.md). Neither design is fabrication-approved.
 
@@ -171,16 +171,16 @@ pass with zero exclusions. The separate standard board retains its two documente
 DNP exceptions.
 
 Additional tscircuit checks cover netlist, schematic placement, compiled PCB
-placement and default Gerber-derived shorts analysis on both copper layers. Use
+placement and default Gerber-derived shorts analysis on all four copper layers. Use
 the locally bundled analyzer to avoid an unnecessary CDN download:
 
 ```sh
 TSCI_TEST_MODE=true mise exec -- bunx tsci check shorts dist/pill-tscircuit/shieldsigner-plus.circuit.json
 ```
 
-The tscircuit PCB style audit flags ten inherited long tracks at non-45-degree
-angles. Their exact endpoints are preserved and tested against native geometry.
-Native DRC reports no clearance/connectivity violations for these tracks.
+The current reference passes the tscircuit PCB style audit with no findings.
+The historical routing/header edit and the later alternate-socket edit are
+checked as an exact audit chain; straight tracks use 45-degree increments.
 
 The tscircuit schematic remains a generic-symbol connectivity view; the native
 hierarchical sheets are preserved separately, with their original symbols and
@@ -210,3 +210,9 @@ The separately source-authored experimental layout remains the older two-layer
 ## 0.0.13 native routing/header update
 
 The main native carrier now has 73 footprints and a customer-fitted right-angle J302 under the LCD. All straight tracks use 45-degree increments; the SEC1210/socket and all existing pad nets remain unchanged. See [revision details and battery-module limits](PCB-ANGLE-HEADER-REVISION.md). The independent source-authored experiment remains historical.
+
+## Alternate ILI9341 socket working update
+
+The native board includes J702 (14 pins, DNP by default), JP701 (closed 3.3 V feed) and JP702 (open 5 V alternative). Fit one display only and never bridge both supply straps. The reference preview retains all 76 footprints and four closed copper bridges; the factory SMT population remains 44 placements / 18 SKUs. H702/H704 are slotted for alternate right-side mounting positions. See [assembly instructions](MODULAR-ASSEMBLY.md#alternate-ili9341-display). Native edit audits verify the historical routing/header revision followed by the recorded socket changes. Physical and powered qualification remain open.
+
+Local validation passes `hardware:check`, `generate`, `build`, `check` and `tscircuit:pill:reference:check`; `hardware:fab`, `hardware:review` and `hardware:package` regenerate matching local review outputs. The reference geometry audit checks 217 lands at 0.005 mm tolerance. The persisted native pours and reference copper preserve In2.Cu routing as inner2. Gerber-derived shorts and PCB style checks pass with no findings. Compiled electrical checks report zero netlist, schematic-placement or actionable PCB-placement issues; the exact J701 courtyard/J702 land overlap is retained for the mutually exclusive sockets with J702 DNP. Website checks pass for the matched PCB, enclosure and fit manifests. Physical fit and powered operation remain unqualified.

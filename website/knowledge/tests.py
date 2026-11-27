@@ -135,7 +135,7 @@ class StaticSiteTests(unittest.TestCase):
     def test_both_order_bundles_match_native_populations(self):
         for name, count, lines, bom_name, cpl_name in [
             ('shieldsigner-jlcpcb-order.zip',43,21,'bom-carrier-jlcpcb.csv','cpl-carrier-jlcpcb.csv'),
-            ('shieldsigner-modular-order.zip',43,18,'bom-jlcpcb.csv','cpl-jlcpcb.csv')]:
+            ('shieldsigner-modular-order.zip',44,18,'bom-jlcpcb.csv','cpl-jlcpcb.csv')]:
             with ZipFile(DIST/'files'/name) as archive:
                 bom=list(csv.DictReader(io.StringIO(archive.read(bom_name).decode())))
                 cpl=list(csv.DictReader(io.StringIO(archive.read(cpl_name).decode())))

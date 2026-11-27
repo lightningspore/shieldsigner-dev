@@ -14,15 +14,17 @@ for (const layer of ['inner1','inner2']) {
  const planes=reference.fills.filter(f=>f.layer===layer)
  assert(planes.length>0 && planes.every(f=>f.net==='GND'))
 }
+assert(reference.segments.some(s=>s.layer==='inner2'), 'Retain alternate display routing on In2.Cu')
+assert(!reference.segments.some(s=>s.layer==='inner1'), 'Keep In1.Cu as an unbroken ground plane')
 assert.equal(reference.width, 160)
 assert.equal(reference.height, 70)
-assert.equal(reference.components.length, 73)
-assert.deepEqual(reference.components.filter(p=>p.dnp).map(p=>p.name), [])
+assert.equal(reference.components.length, 76)
+assert.deepEqual(reference.components.filter(p=>p.dnp).map(p=>p.name), ['J702'])
 const header = reference.components.find(p=>p.name === 'J701')!
 const expected = ['RPI_BACKLIGHT','LCD_RST','LCD_DC','RPI_SPI_CS','LCD_SCLK','LCD_MOSI','GND','LCD_3V3']
 assert.equal(header.pads.length, 8)
 for (const pad of header.pads) assert.equal(pad.net, expected[Number(pad.number)-1])
-assert.deepEqual(reference.bridges.map(b=>b.reference).sort(), ['JP201','JP203','JP205'])
+assert.deepEqual(reference.bridges.map(b=>b.reference).sort(), ['JP201','JP203','JP205','JP701'])
 const batteryHeader=reference.components.find(p=>p.name==='J302')!
 assert.equal(batteryHeader.pads.length,2)
 for(const pad of batteryHeader.pads) assert.equal(pad.net,pad.number==='1'?'+5V':'GND')

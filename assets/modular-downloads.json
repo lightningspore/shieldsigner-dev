@@ -2,7 +2,7 @@
   "release": "pill-assembly-0.0.13-ili9341-r1",
   "boardRevision": "0.0.13-dev",
   "status": "stock_review_required",
-  "publicationStatus": "prepared_review_release",
+  "publicationStatus": "published_review_release",
   "boardSha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
   "assets": [
     {

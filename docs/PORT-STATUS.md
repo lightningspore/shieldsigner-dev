@@ -216,3 +216,10 @@ The main native carrier now has 73 footprints and a customer-fitted right-angle 
 The native board includes J702 (14 pins, DNP by default), JP701 (closed 3.3 V feed) and JP702 (open 5 V alternative). Fit one display only and never bridge both supply straps. The reference preview retains all 76 footprints and four closed copper bridges; the factory SMT population remains 44 placements / 18 SKUs. H702/H704 are slotted for alternate right-side mounting positions. See [assembly instructions](MODULAR-ASSEMBLY.md#alternate-ili9341-display). Native edit audits verify the historical routing/header revision followed by the recorded socket changes. Physical and powered qualification remain open.
 
 Local validation passes `hardware:check`, `generate`, `build`, `check` and `tscircuit:pill:reference:check`; `hardware:fab`, `hardware:review` and `hardware:package` regenerate matching local review outputs. The reference geometry audit checks 217 lands at 0.005 mm tolerance. The persisted native pours and reference copper preserve In2.Cu routing as inner2. Gerber-derived shorts and PCB style checks pass with no findings. Compiled electrical checks report zero netlist, schematic-placement or actionable PCB-placement issues; the exact J701 courtyard/J702 land overlap is retained for the mutually exclusive sockets with J702 DNP. Website checks pass for the matched PCB, enclosure and fit manifests. Physical fit and powered operation remain unqualified.
+
+The matched review downloads are published as `pill-assembly-0.0.13-ili9341-r1`,
+`enclosure-preview-0.0.7-dev` and `fit-preview-0.0.4-dev`. All 17 uploaded assets
+were downloaded and SHA-256-verified against the committed manifests. Desktop/mobile
+website flows and enclosure viewer tests pass, as do desktop/tablet/mobile pinout
+tests. These prereleases remain digital review artifacts, with the qualification
+limits above.

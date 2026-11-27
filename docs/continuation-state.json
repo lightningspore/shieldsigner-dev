@@ -1,8 +1,8 @@
 {
   "date": "2026-11-26",
   "objective": "Finish alternate ILI9341 PCB validation and publish matching PCB, enclosure and fit downloads on the custom website.",
-  "checkpointCommit": "5c146bd (all inherited work committed before follow-up work)",
-  "pendingChanges": "Validation complete; ready to commit and publish matched assets.",
+  "checkpointCommit": "5c288a9",
+  "pendingChanges": "Published manifest status ready to commit; production deployment remains.",
   "boardSha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
   "completed": [
     "Read README.md, KICAD.md, docs/PORT-STATUS.md and contributor guide.",
@@ -21,12 +21,13 @@
     "Electrical audit passes zero netlist, schematic-placement and actionable PCB-placement findings; exact mutually exclusive J701/J702 DNP courtyard diagnostics retained.",
     "Native kicad:check passes zero ERC/DRC/connectivity/parity findings or exclusions.",
     "Website check passes all nine tests after updating placement counts, current revision labels, linked Markdown images and exact historical FPC model-URI compatibility verification.",
-    "Desktop/mobile ui:test and ui:enclosure pass; ui:pinout passes desktop/tablet/mobile."
+    "Desktop/mobile ui:test and ui:enclosure pass; ui:pinout passes desktop/tablet/mobile.",
+    "hardware:check passes after final review.",
+    "Committed and pushed validation as 5c288a9.",
+    "Published three new GitHub prereleases; downloaded and SHA-256-verified all 17 assets against manifests."
   ],
   "remaining": [
-    "Commit validated source and matched manifests.",
-    "Create new GitHub prereleases for all three manifest tags, verify every uploaded hash, then set modular publicationStatus to published_review_release.",
-    "Commit publication status and updated continuation state; deploy from clean committed tree with website mise deploy task.",
-    "Verify live health/source revision and downloads. Physical and powered qualification remain open."
+    "Commit published manifest status, deploy from clean committed tree with website mise deploy task.",
+    "Verify production health/source revision and matching downloads. Physical and powered qualification remain open."
   ]
 }

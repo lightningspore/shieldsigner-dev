@@ -1,33 +1,36 @@
 {
   "date": "2026-11-26",
-  "objective": "Finish alternate ILI9341 PCB validation and publish matching PCB, enclosure and fit downloads on the custom website.",
-  "checkpointCommit": "5c288a9",
-  "pendingChanges": "Published manifest status ready to commit; production deployment remains.",
+  "status": "complete",
+  "objective": "Finish alternate ILI9341 PCB validation and publish the website with matching PCB, enclosure and fit downloads.",
+  "checkpointCommit": "5c146bd",
+  "validatedSourceCommit": "5c288a9",
+  "publishedSourceCommit": "1bbf885",
   "boardSha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
   "completed": [
-    "Read README.md, KICAD.md, docs/PORT-STATUS.md and contributor guide.",
-    "Integrated exact ILI9341 audit with historical angle/header audit; protected rules, outline, zones and original circuitry.",
-    "Corrected 0.95 micrometre off-45-degree +5V corner; no pinout or placement changes.",
-    "Persisted native ground pours with mise run kicad:edit docs/pcb-ili9341-refill.json. Original pours were stale despite DRC passing its transient refill.",
-    "Fixed generator mapping of In2.Cu tracks (previously incorrectly mapped to bottom); added layer assertions.",
-    "Updated pinout, DNP J702, JP701/JP702 supply topology, population and assembly instructions.",
-    "Native hardware:fab, hardware:review, hardware:package, hardware:faces completed on final board; outputs under dist/lcd-module-2.8.",
-    "Native ERC/DRC/parity/connectivity zero violations; factory population unchanged at 44 placements/18 SKUs.",
-    "build, check, tscircuit:pill:reference:check pass after layer-map fix; 217 lands and both silkscreens match.",
-    "enclosure:hardware, enclosure:fit, enclosure:verify pass on final exports; new enclosure-preview-0.0.7-dev manifest prepared.",
-    "hardware:fit-model and hardware:printable-fit completed; fit-preview-0.0.4-dev manifest prepared.",
-    "hardware:downloads pins six PCB downloads for pill-assembly-0.0.13-ili9341-r1; no new releases uploaded or website deployed.",
-    "Regenerated reference passes Gerber-derived shorts and PCB style with zero findings.",
-    "Electrical audit passes zero netlist, schematic-placement and actionable PCB-placement findings; exact mutually exclusive J701/J702 DNP courtyard diagnostics retained.",
-    "Native kicad:check passes zero ERC/DRC/connectivity/parity findings or exclusions.",
-    "Website check passes all nine tests after updating placement counts, current revision labels, linked Markdown images and exact historical FPC model-URI compatibility verification.",
-    "Desktop/mobile ui:test and ui:enclosure pass; ui:pinout passes desktop/tablet/mobile.",
-    "hardware:check passes after final review.",
-    "Committed and pushed validation as 5c288a9.",
-    "Published three new GitHub prereleases; downloaded and SHA-256-verified all 17 assets against manifests."
+    "Persisted native ground pours and corrected the sub-micrometre non-45-degree corner; original circuitry, pinouts, rules and placement remain protected by chained exact-change audits.",
+    "Fixed native In2.Cu extraction to inner2 and regenerated the reference; 217 lands and both silkscreens match native geometry.",
+    "Updated J702 DNP, supply strap, population and assembly documentation; factory population remains 44 placements / 18 SKUs.",
+    "Native kicad:check and hardware:check pass with zero ERC/DRC/connectivity/parity violations or exclusions.",
+    "Build, check and tscircuit:pill:reference:check pass. Final Gerber-derived shorts and PCB style checks have no findings.",
+    "Compiled electrical audit has zero netlist, schematic-placement and actionable placement findings; the exact mutually exclusive J701/J702 courtyard diagnostic is retained with J702 DNP.",
+    "Regenerated matched native fabrication, review, package and PCB-face assets, enclosure and printable fit outputs.",
+    "Website check passes all nine tests; desktop/mobile ui:test and ui:enclosure pass; ui:pinout passes desktop/tablet/mobile.",
+    "Corrected stale public revision/population labels, linked Markdown images and historical FPC compatibility checks. Historical FPC board bytes are checked against its pinned release apart from the single vendored model URI.",
+    "Published three new prereleases without overwriting older releases. Verified all 17 uploaded hashes by downloading both GitHub assets and production website downloads.",
+    "Deployed the custom static-site image through the existing project helper. Temporary Docker and Kubernetes configurations were removed automatically; no private configuration was committed.",
+    "Verified live health revision, current PCB labels and all 17 production asset checksums."
   ],
-  "remaining": [
-    "Commit published manifest status, deploy from clean committed tree with website mise deploy task.",
-    "Verify production health/source revision and matching downloads. Physical and powered qualification remain open."
-  ]
+  "releases": {
+    "pcb": "pill-assembly-0.0.13-ili9341-r1",
+    "enclosure": "enclosure-preview-0.0.7-dev",
+    "fit": "fit-preview-0.0.4-dev"
+  },
+  "deployment": {
+    "url": "https://shieldsigner.dev/",
+    "sourceRevision": "1bbf885",
+    "imageTag": "d6c1e9490df82307",
+    "status": "deployed_and_public_hashes_verified"
+  },
+  "remaining": [],
+  "qualification": "Digital review artifacts only. Default HOTHMI assembled CAD was checked; physical first fit, alternate ILI9341 supports and enclosure compatibility, supplier sourcing/DFM, thermal and powered firmware remain unqualified."
 }

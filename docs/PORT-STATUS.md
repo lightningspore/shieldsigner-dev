@@ -223,3 +223,23 @@ were downloaded and SHA-256-verified against the committed manifests. Desktop/mo
 website flows and enclosure viewer tests pass, as do desktop/tablet/mobile pinout
 tests. These prereleases remain digital review artifacts, with the qualification
 limits above.
+
+## Front orbital field guide working artwork
+
+The working native front now has a board-wide **Front / Orbital field guide**
+silkscreen group: the existing shield/lightning mark, paired orbital paths,
+QR input/review/sign/export flow, control markings and display-supply reminders.
+The center is covered when the display is installed. The artwork is editable
+native geometry; the SVG plate and regeneration instructions are in
+[`assets/branding/`](../assets/branding/README.md#front-orbital-field-guide).
+
+The new exact artwork audit is a third link after the routing/header and
+alternate-socket edits. It protects every previous object and all non-artwork
+data, including the rear attribution, pours and original labels. Candidate native
+DRC reports zero violations/unconnected items. `hardware:check`, `build`, `check`,
+`tscircuit:pill:reference:check`, compiled electrical checks, Gerber-derived shorts
+and PCB style all pass. Both silkscreens match the native plot with zero unmatched
+pixels under the existing raster tolerance. The ten artwork-audit tests also pass.
+Matched local fabrication/review packages and front/assembly renders were regenerated.
+The published prereleases above remain snapshots of the preceding revision; they
+do not contain this working art.

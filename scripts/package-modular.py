@@ -46,6 +46,9 @@ with ZipFile(OUT / 'shieldsigner-modular-order.zip', 'w', ZIP_DEFLATED) as archi
     archive.write(VARIANT/'angle-header-audit.json','angle-header-audit.json')
     archive.write(VARIANT/'ili9341-socket-audit.json','ili9341-socket-audit.json')
     archive.write(ROOT/'docs/pcb-ili9341-edits.json','pcb-ili9341-edits.json')
+    if (ROOT/'docs/pcb-front-artwork.json').exists():
+        archive.write(VARIANT/'front-artwork-audit.json','front-artwork-audit.json')
+        archive.write(ROOT/'docs/pcb-front-artwork.json','pcb-front-artwork.json')
     archive.write(ROOT/'docs/PCB-ANGLE-HEADER-REVISION.md','PCB-ANGLE-HEADER-REVISION.md')
     archive.write(VARIANT/'schematic-once-over-audit.json','schematic-once-over-audit.json')
     archive.write(ROOT/'docs/SCHEMATIC-REVIEW.md','SCHEMATIC-REVIEW.md')

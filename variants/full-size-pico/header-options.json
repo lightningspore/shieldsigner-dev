@@ -1,0 +1,259 @@
+{
+  "note": "Public catalog snapshot, not a stock reservation or confirmed assembly quote. Raw stock field names retained deliberately.",
+  "parts": [
+    {
+      "componentModelEn": "X6511WVS-20H-C60D48R2",
+      "componentBrandEn": "XKB Connection",
+      "componentSpecificationEn": "SMD,P=2.54mm(Staggered pins)",
+      "describe": "-40℃~+105℃ 1 1x20P 2.54mm 2.54mm 2.5mm 20P 250V 3A Black Brass Gold Pin Header SMD,P=2.54mm(交错脚) Pin Headers ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 73,
+      "overseasStockCount": 88,
+      "preMinPurchaseNum": 20,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 0.5671,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2110100430_XKB-Connection-X6511WVS-20H-C60D48R2_C2883777.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C2883777",
+          "attribute_value_name": "-40℃~+105℃"
+        },
+        {
+          "attribute_name_en": "Number of Rows",
+          "component_code": "C2883777",
+          "attribute_value_name": "1"
+        },
+        {
+          "attribute_name_en": "Voltage Rating (Max)",
+          "component_code": "C2883777",
+          "attribute_value_name": "250V"
+        },
+        {
+          "attribute_name_en": "Insulation Height",
+          "component_code": "C2883777",
+          "attribute_value_name": "2.5mm"
+        },
+        {
+          "attribute_name_en": "Color",
+          "component_code": "C2883777",
+          "attribute_value_name": "Black"
+        },
+        {
+          "attribute_name_en": "Current Rating",
+          "component_code": "C2883777",
+          "attribute_value_name": "3A"
+        },
+        {
+          "attribute_name_en": "Row Spacing",
+          "component_code": "C2883777",
+          "attribute_value_name": "2.54mm"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C2883777",
+          "attribute_value_name": "Surface Mount,Vertical"
+        },
+        {
+          "attribute_name_en": "Contact Plating",
+          "component_code": "C2883777",
+          "attribute_value_name": "Gold"
+        },
+        {
+          "attribute_name_en": "Number of Pins",
+          "component_code": "C2883777",
+          "attribute_value_name": "20P"
+        },
+        {
+          "attribute_name_en": "Pitch",
+          "component_code": "C2883777",
+          "attribute_value_name": "2.54mm"
+        },
+        {
+          "attribute_name_en": "Contact Material",
+          "component_code": "C2883777",
+          "attribute_value_name": "Brass"
+        },
+        {
+          "attribute_name_en": "Pin Structure",
+          "component_code": "C2883777",
+          "attribute_value_name": "1x20P"
+        },
+        {
+          "attribute_name_en": "Length of Mating Pin",
+          "component_code": "C2883777",
+          "attribute_value_name": "6mm"
+        },
+        {
+          "attribute_name_en": "Circluar Pins/Square Pins",
+          "component_code": "C2883777",
+          "attribute_value_name": "Square pin"
+        }
+      ],
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 0.5671
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 29,
+          "productPrice": 0.4589
+        },
+        {
+          "startNumber": 30,
+          "endNumber": 299,
+          "productPrice": 0.4048
+        },
+        {
+          "startNumber": 300,
+          "endNumber": 599,
+          "productPrice": 0.3508
+        },
+        {
+          "startNumber": 600,
+          "endNumber": 899,
+          "productPrice": 0.3196
+        },
+        {
+          "startNumber": 900,
+          "endNumber": -1,
+          "productPrice": 0.3032
+        }
+      ],
+      "code": "C2883777",
+      "url": "https://jlcpcb.com/partdetail/C2883777",
+      "checkedAt": "2026-11-27T23:44:47.499149+00:00",
+      "htmlSha256": "eb045de7a0354345280db04a238f9221ad5674bbd0518770366bedb1b0c8be01",
+      "status": "public_catalog_snapshot"
+    },
+    {
+      "componentModelEn": "M20-7812045",
+      "componentBrandEn": "Harwin",
+      "componentSpecificationEn": "SMD,P=2.54mm",
+      "describe": "-40℃~+105℃ 2 2.54mm 2.54mm 2x20P 3.55mm 3A 40P Gold Phosphor Bronze Square Hole Surface Mount, Right Angle Top SMD,P=2.54mm Female Headers ROHS",
+      "componentLibraryType": "expand",
+      "assemblyMode": "smtWeld",
+      "canPresaleNumber": 66,
+      "overseasStockCount": 73,
+      "preMinPurchaseNum": 2,
+      "leastPatchNumber": 0,
+      "lossNumber": 0,
+      "initialPrice": 8.2237,
+      "needAuditFlag": false,
+      "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2412121100_Harwin-M20-7812045_C42411761.pdf",
+      "noBuyReason": null,
+      "isBuyComponent": "1",
+      "attributes": [
+        {
+          "attribute_name_en": "Circular Hole / Square Hole",
+          "component_code": "C42411761",
+          "attribute_value_name": "Square Hole"
+        },
+        {
+          "attribute_name_en": "Holes Structure",
+          "component_code": "C42411761",
+          "attribute_value_name": "2x20P"
+        },
+        {
+          "attribute_name_en": "Operating Temperature",
+          "component_code": "C42411761",
+          "attribute_value_name": "-40℃~+105℃"
+        },
+        {
+          "attribute_name_en": "Number of Rows",
+          "component_code": "C42411761",
+          "attribute_value_name": "2"
+        },
+        {
+          "attribute_name_en": "Insulation Height",
+          "component_code": "C42411761",
+          "attribute_value_name": "3.55mm"
+        },
+        {
+          "attribute_name_en": "Number of Positions",
+          "component_code": "C42411761",
+          "attribute_value_name": "40P"
+        },
+        {
+          "attribute_name_en": "Contact Plating",
+          "component_code": "C42411761",
+          "attribute_value_name": "Gold"
+        },
+        {
+          "attribute_name_en": "Pitch",
+          "component_code": "C42411761",
+          "attribute_value_name": "2.54mm"
+        },
+        {
+          "attribute_name_en": "Current Rating",
+          "component_code": "C42411761",
+          "attribute_value_name": "3A"
+        },
+        {
+          "attribute_name_en": "Contact Material",
+          "component_code": "C42411761",
+          "attribute_value_name": "Phosphor Bronze"
+        },
+        {
+          "attribute_name_en": "Row Spacing",
+          "component_code": "C42411761",
+          "attribute_value_name": "2.54mm"
+        },
+        {
+          "attribute_name_en": "Holes Direction",
+          "component_code": "C42411761",
+          "attribute_value_name": "Top"
+        },
+        {
+          "attribute_name_en": "Mounting Type",
+          "component_code": "C42411761",
+          "attribute_value_name": "Surface Mount, Right Angle"
+        }
+      ],
+      "priceTiers": [
+        {
+          "startNumber": 1,
+          "endNumber": 9,
+          "productPrice": 8.2237
+        },
+        {
+          "startNumber": 10,
+          "endNumber": 32,
+          "productPrice": 7.0667
+        },
+        {
+          "startNumber": 33,
+          "endNumber": 98,
+          "productPrice": 6.362
+        },
+        {
+          "startNumber": 99,
+          "endNumber": 100,
+          "productPrice": 5.7704
+        },
+        {
+          "startNumber": 101,
+          "endNumber": 102,
+          "productPrice": 5.7704
+        },
+        {
+          "startNumber": 103,
+          "endNumber": -1,
+          "productPrice": 5.7704
+        }
+      ],
+      "code": "C42411761",
+      "url": "https://jlcpcb.com/partdetail/C42411761",
+      "checkedAt": "2026-11-27T23:43:23.255178+00:00",
+      "htmlSha256": "a03a5abd458a301e40e09cfcaeddd358e5b4d9ab7a14949c1f243388989bce3e",
+      "status": "public_catalog_snapshot"
+    }
+  ]
+}

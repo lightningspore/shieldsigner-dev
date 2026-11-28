@@ -1,0 +1,11 @@
+{
+  "C5417011": {
+    "mpn": "7312P0225A13LF",
+    "quantityPreordered": 10,
+    "source": "User report, 2026-11-27",
+    "destination": "JLCPCB parts library (confirmed by user)",
+    "usableAssemblyInventoryVerified": false,
+    "additionalPurchaseRequested": 0,
+    "note": "Existing user pre-order into JLCPCB parts library. Do not duplicate. Verify arrival and final assembly attrition requirement."
+  }
+}

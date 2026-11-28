@@ -4,8 +4,12 @@
   <p class="eyebrow">FILES FOR THE NEXT STEP</p>
   <h1 class="page-title">Downloads.</h1>
   <p class="lede">Choose the matching set for your carrier. Modular and standard FPC files describe different PCBs; do not mix their BOMs, placement files or Gerbers.</p>
-  <div class="actions"><a class="button" href="/files/shieldsigner-modular-order.zip">Eight-pin pill order kit ↓</a><a href="/guides/modular-assembly/">Header & module assembly →</a></div>
-  <h2>Eight-pin pill · {{ modular_version }}</h2>
+  <h2>Current ordered prototype · full-size Pico</h2>
+  <p>Ten carriers ordered, 46 placements / 19 SKUs. <a href="/guides/full-size-pico/">Full-size Pico assembly and checked files →</a> · <a href="/guides/full-size-pico-pinout/">40-pin and LCD maps / retained datasheets →</a>. Physical bring-up and enclosure fit remain open.</p>
+  <p><a href="/files/variants/full-size-pico/manufacturing/shieldsigner-full-pico-schematic.pdf">Full-size Pico schematic PDF ↓</a></p>
+  <h2>Earlier Mini review release</h2>
+  <div class="actions"><a class="button" href="/files/shieldsigner-modular-order.zip">Earlier Mini order kit ↓</a><a href="/guides/modular-assembly/">Header & module assembly →</a></div>
+  <h2>Earlier Mini · {{ modular_version }}</h2>
   <p>160 × 70 mm capsule, 44 SMT placements / 18 SKUs, four copper layers, an eight-pin LCD header and alternate DNP 14-pin ILI9341 socket. Matched prototype quote files, native KiCad, schematic PDF and 3D assemblies. Fit one display only; never bridge both display supply straps. Alternate ILI9341 supports, enclosure fit and powered operation remain unqualified.</p>
   <p><strong>Order review required:</strong> the 0.0.13 four-layer revision includes nine factory Keystone points, M2.5 bracket mounts and an alternate display socket; exact switch, socket and UR2 reader sourcing still needs confirmation. Read <a href="/guides/pcb-order-readiness/">current sourcing and supplier gates</a> and the <a href="/guides/pcb-software-compatibility/">carrier firmware requirements</a> before ordering or powering modules.</p>
   <div class="downloads">{% for file in modular_files %}<a href="/files/{{ file.name }}?v={{ file.sha256[:12] }}"><strong>{{ file.name }}</strong><span>{{ file.size|filesizeformat }} ↓</span></a>{% endfor %}</div>

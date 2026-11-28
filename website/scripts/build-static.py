@@ -41,10 +41,12 @@ enclosure = dict(enclosure_files=[{**a,'href':f"/files/{a['name']}?v={a['sha256'
 fit=workflows.load('fit-assets')
 enclosure['fit_files']=[{**a,'href':f"/files/{a['name']}?v={a['sha256'][:12]}"} for a in fit['assets']]
 enclosure['fit_models']={a['name']:f"/files/{a['name']}?v={a['sha256'][:12]}" for a in fit['assets']}
+full_pinout=json.loads((SITE/'public/variants/full-size-pico/web-pinout.json').read_text())
 pinout=json.loads((SITE/'public/docs/luckfox-mini-pinout.json').read_text())
 (OUT/'static/pinouts').mkdir(exist_ok=True)
 for revision in ['released','candidate']:
     (OUT/f'static/pinouts/luckfox-mini-{revision}.svg').write_text(env.get_template('knowledge/luckfox-pinout.svg').render(pinout=pinout,revision=revision))
+(OUT/'static/pinouts/luckfox-full-size.svg').write_text(env.get_template('knowledge/full-pico-pinout.svg').render(full_pinout=full_pinout))
 guides = []
 search = {}
 for slug, source, category, title, description in GUIDES:
@@ -77,6 +79,9 @@ for guide in guides:
     if guide['slug']=='luckfox-pinout':
         lead, section=html.split('<h2',1)
         context.update(lead=Markup(lead),body=Markup('<h2'+section),pinout=pinout)
+    if guide['slug']=='full-size-pico-pinout':
+        lead,section=html.split('<h2',1)
+        context.update(lead=Markup(lead),body=Markup('<h2'+section),full_pinout=full_pinout)
     if guide['slug']=='enclosure':
         lead, section=html.split('<h2',1)
         context.update(lead=Markup(lead), body=Markup('<h2'+section), **enclosure)

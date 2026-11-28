@@ -1,7 +1,7 @@
 {
   "passed": true,
   "revision": "0.0.13-dev + alternate ILI9341 socket",
-  "boardSha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
+  "boardSha256": "cffc937c4ef9a99235d404857bc63240f49aa6c78caabf841b0965e0e3b028ef",
   "baselineCommit": "86d702b",
   "addedFootprints": [
     "J702",
@@ -17,5 +17,9 @@
   "addedSegments": 47,
   "addedVias": 2,
   "innerLayerUse": "In2.Cu only; In1.Cu untouched",
-  "qualification": "Source geometry, netlist and recorded-edit checks; run native ERC/DRC separately. ILI9341 module fit and powered operation are not qualified."
+  "qualification": "Source geometry, netlist and recorded-edit checks; run native ERC/DRC separately. ILI9341 module fit and powered operation are not qualified.",
+  "auditChain": {
+    "socketChecksApplyTo": "10ad10f",
+    "currentRevisionAudit": "front-artwork-audit.json"
+  }
 }

@@ -24,6 +24,10 @@ function mount(root) {
     const light = new THREE.DirectionalLight(0xffffff, intensity)
     light.position.set(...position); scene.add(light)
   }
+  if (root.hasAttribute('data-full-pico')) {
+    const rearLight = new THREE.DirectionalLight(0xffffff, 3)
+    rearLight.position.set(100,-100,-250); scene.add(rearLight)
+  }
   const loader = new GLTFLoader()
   let model, size, sequence = 0
   function reset() {
@@ -34,8 +38,10 @@ function mount(root) {
     controls.target.copy(centre)
     const vertical = THREE.MathUtils.degToRad(camera.fov)
     const horizontal = 2*Math.atan(Math.tan(vertical/2)*camera.aspect)
-    const distance = (size/2)/Math.sin(Math.min(vertical,horizontal)/2)*1.1
-    camera.position.copy(centre).add(new THREE.Vector3(0.65,-0.95,0.9).normalize().multiplyScalar(distance))
+    const fullPico = root.hasAttribute('data-full-pico')
+    const extent = bounds.getSize(new THREE.Vector3())
+    const distance = fullPico ? Math.max(extent.x/(2*Math.tan(horizontal/2)),extent.y/(2*Math.tan(vertical/2)))*1.3 : (size/2)/Math.sin(Math.min(vertical,horizontal)/2)*1.1
+    camera.position.copy(centre).add(new THREE.Vector3(...(fullPico ? [0,-0.15,-1] : [0.65,-0.95,0.9])).normalize().multiplyScalar(distance))
     camera.near = size/1000; camera.far = size*15
     camera.updateProjectionMatrix(); controls.update()
   }
@@ -56,6 +62,7 @@ function mount(root) {
         model.traverse(o => { o.geometry?.dispose(); if (o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose()) })
       }
       model = gltf.scene
+      if (root.hasAttribute('data-full-pico')) model.rotation.x = Math.PI / 2
       const fitMode = mode === 'pcb' || mode === 'fit'
       if (fitMode) model.scale.setScalar(1000)
       if (mode === 'fit') model.traverse(o => {
@@ -69,6 +76,7 @@ function mount(root) {
       if (fitMode) layers()
       status.textContent = mode === 'pcb' ? 'Full PCB assembly loaded: display, Luckfox, mating headers and spacers. Drag to rotate.' : mode === 'fit' ? 'Case fit loaded. Transparent shell; hide display or Luckfox bodies to inspect the headers.' : mode === 'exploded' ? 'Exploded assembly loaded. Drag to rotate; scroll to zoom.' : 'Assembled case loaded. Drag to rotate; scroll to zoom.'
       root.dataset.loaded = mode
+      if (root.hasAttribute('data-full-pico')) status.textContent = 'Full-size Pico assembly loaded. Drag to rotate; scroll to zoom. Physical fit remains to verify.'
       root.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)))
     } catch { root.dataset.failed='true'; status.textContent = 'Could not load the 3D preview. Download the GLB model below.' }
   }

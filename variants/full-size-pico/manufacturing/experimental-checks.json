@@ -1,0 +1,14 @@
+{
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "circuitJsonSha256": "1256754770731bb1e90f36af9ddc769bf0e8fd7541c9e907d49ac05c4bdd4fe7",
+  "checks": {
+    "shorts": {
+      "exitCode": 0,
+      "outputSha256": "48e89c6f8b73c9f3f2f8f2c8d2d03803d32db86f24f2ba4c9c97ca707eeaaab2"
+    },
+    "pcb-style": {
+      "exitCode": 0,
+      "outputSha256": "550b6d441e5690d42155c3fa867f68b897161955e0a4bffc3049a1ed171c6b75"
+    }
+  }
+}

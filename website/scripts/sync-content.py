@@ -76,11 +76,11 @@ for source in (ROOT/'kicad').rglob('*'):
 # Release-pinned modular outputs remain reproducible in a fresh public checkout.
 modular_manifest = json.loads((ROOT / "assets/modular-downloads.json").read_text())
 board = ROOT / "variants/lcd-module-2.8/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb"
-if hashlib.sha256(board.read_bytes()).hexdigest() != modular_manifest["boardSha256"]:
-    raise RuntimeError("Modular hardware changed; rebuild and publish matching quote/review assets first")
+# Mini downloads are a frozen, checksum-pinned earlier release. The current
+# full-size prototype has its own board-bound allowlist below.
 for artifact in modular_manifest["assets"]:
     source = ROOT / "dist/lcd-module-2.8" / artifact["name"]
-    if not source.exists():
+    if not source.exists() or hashlib.sha256(source.read_bytes()).hexdigest()!=artifact["sha256"]:
         source = ROOT / ".tools/website-downloads" / artifact["sha256"] / artifact["name"]
         if not source.exists():
             source.parent.mkdir(parents=True, exist_ok=True)
@@ -90,9 +90,43 @@ for artifact in modular_manifest["assets"]:
             source.write_bytes(payload)
     if hashlib.sha256(source.read_bytes()).hexdigest()!=artifact["sha256"]: raise ValueError("Modular asset changed: "+artifact["name"])
     shutil.copyfile(source, public / artifact["name"])
+# Earlier Mini native files must match the same frozen release as its order kit.
+with ZipFile(public/'shieldsigner-modular-kicad.zip') as archive:
+    native_name='kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
+    assert hashlib.sha256(archive.read(native_name)).hexdigest()==modular_manifest['boardSha256']
+    for name in archive.namelist():
+        if not name.startswith('kicad/') or name.endswith('/') or '..' in Path(name).parts:continue
+        if Path(name).suffix not in {'.kicad_pcb','.kicad_sch','.kicad_pro','.kicad_mod','.kicad_sym'} and Path(name).name not in {'fp-lib-table','sym-lib-table'}:continue
+        for destination in [public/name,public/'variants/lcd-module-2.8'/name]:
+            destination.parent.mkdir(parents=True,exist_ok=True);destination.write_bytes(archive.read(name))
+# Full-size Pico: explicit public assets only, bound to the actual ordered PCB.
+full=ROOT/'variants/full-size-pico'
+full_files=['README.md','PINOUT-REVIEW.md','pinout-review.json','web-pinout.json','source.json','audit.json',
+    'assembly.glb','assembly-back.png','assembly-plus.png','board-top.png','board-bottom.png','pcb-top.svg','pcb-bottom.svg',
+    'reference/pinout.jpg','reference/plus-pinout.jpg','reference/Luckfox-Pico.pdf','reference/Luckfox-Pico-Plus.pdf',
+    'reference/Waveshare-2inch-LCD-Module-Schematic.pdf','reference/Waveshare-2inch-LCD-Module-Dimensions.jpg',
+    'reference/Waveshare-2inch-LCD-Module-Rear.jpg','reference/Waveshare-2inch-LCD-Module-Sources.json',
+    'manufacturing/ORDER.md','reference/XKB-X6511WVS-series.pdf','reference/Harwin-M20-782.pdf',
+    'manufacturing/bom-jlcpcb.csv','manufacturing/cpl-jlcpcb.csv','manufacturing/shieldsigner-full-pico-schematic.pdf']
+full_sha=hashlib.sha256((full/'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb').read_bytes()).hexdigest()
+for report in ['audit.json','pinout-review.json','web-pinout.json','manufacturing/manifest.json']:
+    assert json.loads((full/report).read_text())['boardSha256']==full_sha,'Stale full-size Pico review: '+report
+web_manifest=json.loads((full/'web-assets.json').read_text())
+assert web_manifest['boardSha256']==full_sha
+for name in full_files:
+    source=full/name
+    assert hashlib.sha256(source.read_bytes()).hexdigest()==web_manifest['files'][name],name
+    destination=public/'variants/full-size-pico'/name
+    destination.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,destination)
+    url_map[str(source.resolve())]='/files/variants/full-size-pico/'+name
+kit=full/'manufacturing/shieldsigner-full-pico-prototype-10.zip'
+assert hashlib.sha256(kit.read_bytes()).hexdigest()==web_manifest['files']['manufacturing/'+kit.name]
+with ZipFile(kit) as archive:
+    assert json.loads(archive.read('provenance/audit.json'))['boardSha256']==full_sha
+shutil.copyfile(kit,public/kit.name)
 # Enclosure and carrier are versioned separately; their manifests must target the same PCB.
 enclosure_manifest=json.loads((ROOT/'assets/enclosure-downloads.json').read_text())
-assert hashlib.sha256(board.read_bytes()).hexdigest()==enclosure_manifest['boardSha256'],'Case targets another board'
+assert modular_manifest['boardSha256']==enclosure_manifest['boardSha256'],'Earlier Mini case targets another release'
 assert hashlib.sha256((ROOT/'enclosure/case.scad').read_bytes()).hexdigest()==enclosure_manifest['scadSha256'],'Rebuild case release after changing geometry'
 for artifact in enclosure_manifest['assets']:
     source=ROOT/'dist/enclosure'/artifact['name']

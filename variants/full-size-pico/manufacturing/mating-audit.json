@@ -1,0 +1,85 @@
+{
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "nativeGlbSha256": "6efa4274d82f9d5cb76a55049468720d71d17a36e71ce63e5781e2b7e6c26747",
+  "carrierHeader": "XKB X6511WVS-20H-C60D48R2 / C2883777",
+  "moduleSocket": "Harwin M20-7822042",
+  "nativeTransformedRows": [
+    {
+      "contactCenterXmm": 85.3475,
+      "firstNativeYmm": 57.319,
+      "lastNativeYmm": 105.579,
+      "contacts": 20,
+      "matingPinProjectionMm": 6,
+      "insulatorTopMm": 3.14,
+      "baseDatumOffsetMm": 0.085
+    },
+    {
+      "contactCenterXmm": 103.1275,
+      "firstNativeYmm": 57.319,
+      "lastNativeYmm": 105.579,
+      "contacts": 20,
+      "matingPinProjectionMm": 6,
+      "insulatorTopMm": 3.14,
+      "baseDatumOffsetMm": 0.085
+    }
+  ],
+  "rowSpacingMm": 17.78,
+  "socketHeightMm": 8.5,
+  "nominalModuleUndersideMm": 11.64,
+  "nominalModuleComponentFaceMm": 12.64,
+  "nominalPinBeyondSocketContactMm": 2.59,
+  "housingHeightMinusPinLengthMm": 2.5,
+  "moduleSocketTailMm": 3,
+  "modulePcbNominalThicknessMm": 1,
+  "scope": "Nominal drawing geometry and native model transforms; housing height is not usable internal socket depth. Not a supplier mating qualification or physical fit test.",
+  "module": "Pico",
+  "manufacturerPinCornersVerified": [
+    {
+      "modulePin": 1,
+      "nativeContactMm": [
+        103.1275,
+        57.319
+      ]
+    },
+    {
+      "modulePin": 40,
+      "nativeContactMm": [
+        85.3475,
+        57.319
+      ]
+    },
+    {
+      "modulePin": 20,
+      "nativeContactMm": [
+        103.1275,
+        105.579
+      ]
+    },
+    {
+      "modulePin": 21,
+      "nativeContactMm": [
+        85.3475,
+        105.579
+      ]
+    }
+  ],
+  "manufacturerModuleBoundsMm": [
+    [
+      83.72903751768598,
+      -16.825000085237246,
+      54.63709706084058
+    ],
+    [
+      104.74597373556105,
+      -11.725001999999996,
+      106.95762798
+    ]
+  ],
+  "nativeAxes": [
+    "carrier X",
+    "negative rear height including 0.085mm render surface offset",
+    "carrier Y"
+  ],
+  "envelopeBeyondNativeYMinMm": 0,
+  "envelopeBeyondNativeYMaxMm": 0
+}

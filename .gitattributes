@@ -10,3 +10,10 @@ scripts/image-licenses/** -whitespace
 
 # Source-owned reusable tscircuit CAD assets.
 src/pill/models/*.glb filter=lfs diff=lfs merge=lfs -text
+
+# Native full-size Pico web assembly.
+variants/full-size-pico/assembly.glb filter=lfs diff=lfs merge=lfs -text
+variants/full-size-pico/manufacturing/shieldsigner-full-pico-prototype-10.zip filter=lfs diff=lfs merge=lfs -text
+# Preserve native KiCad serializer whitespace and reviewed source bytes.
+variants/full-size-pico/kicad/*.kicad_sch -whitespace
+variants/full-size-pico/kicad/*.kicad_sym -whitespace

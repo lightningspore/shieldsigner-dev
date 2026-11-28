@@ -21,7 +21,7 @@
     {% if task.slug in ['compile', 'flash', 'use'] %}<p class="task-notice">Current bench firmware: LVGL + Rust camera, tested on the standard 240×240 display/button board. <a href="/guides/firmware-status/">Read the exact image, memory measurements and acceptance limits →</a></p>{% endif %}
     {% if task.notice %}<div class="task-notice">{{ task.notice }}</div>{% endif %}
     {% if task.slug == 'parts' %}{% include 'knowledge/parts.html' %}{% endif %}
-    {% if task.slug == 'pcb' %}<div class="order-launch"><a class="button" href="/files/shieldsigner-modular-order.zip">Download JLC order files ↓</a><a href="https://jlcpcb.com/" target="_blank" rel="noopener">Open JLCPCB quote ↗</a><span>Pill Gerbers + BOM + CPL · {{ pcb_spec.layers }} layers · {{ pcb_spec.thickness }} mm · {{ pcb_spec.width }} × {{ pcb_spec.height }} mm</span></div>{% endif %}
+    {% if task.slug == 'pcb' %}<div class="order-launch"><a class="button" href="/files/shieldsigner-full-pico-prototype-10.zip">Download JLC order files ↓</a><a href="https://jlcpcb.com/" target="_blank" rel="noopener">Open JLCPCB quote ↗</a><span>Pill Gerbers + BOM + CPL · {{ pcb_spec.layers }} layers · {{ pcb_spec.thickness }} mm · {{ pcb_spec.width }} × {{ pcb_spec.height }} mm</span></div>{% endif %}
     {% if task.slug == 'pcb' %}{% include "knowledge/pcb-faces.html" %}{% endif %}
     <nav class="step-jump" aria-label="Steps on this page">{% for step in task.steps %}<a href="#step-{{ loop.index }}">{{ loop.index }}. {{ step.title }}</a>{% endfor %}</nav>
     <div class="steps">

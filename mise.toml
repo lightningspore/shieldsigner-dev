@@ -252,7 +252,39 @@ run = "uv run --python 3.12 --with pillow==11.3.0 --with numpy==2.2.6 --with ope
 
 [tasks."pcb:artwork:test"]
 description = "Verify the artwork-only audit rejects changes to electrical and mechanical PCB data"
-run = "uv run python -m unittest discover -s scripts/tests -p test_pcb_artwork_audit.py"
+run = "uv run python -m unittest discover -s scripts/tests -p 'test_*artwork_audit.py'"
+
+[tasks."pcb:front-artwork"]
+description = "Build or apply the native Orbital field guide front silkscreen with protected-tree and clearance guards"
+run = "uv run --python 3.13 --with shapely==2.1.2 --with svgpathtools==1.7.2 python scripts/front-artwork.py"
+
+[tasks."variant:pico-full:prepare"]
+description = "Bootstrap the historical full-size interface study; refuses existing files"
+run = "uv run --python 3.13 python scripts/full-pico-swap.py prepare"
+
+[tasks."variant:pico-full:check"]
+description = "Run native ERC, DRC, parity and connectivity on the full-size Pico candidate"
+run = ["uv run python scripts/kicad.py check --pico-full", "mise run variant:pico-full:generate", "uv run python scripts/audit-full-pico.py"]
+
+[tasks."variant:pico-full:open"]
+description = "Open the isolated full-size Pico SMT-socket candidate in KiCad"
+run = "uv run python scripts/kicad.py open --pico-full"
+
+[tasks."variant:pico-full:generate"]
+description = "Extract the isolated full-size candidate without replacing the main preview"
+run = "uv run scripts/generate-reference.py --variant pill --source variants/full-size-pico/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb --output variants/full-size-pico/reference-board.json"
+
+[tasks."variant:pico-full:build"]
+description = "Compile the isolated full-size reference without changing the main preview"
+run = ["mise run variant:pico-full:generate", "bun scripts/build-full-pico.tsx"]
+
+[tasks."variant:pico-full:stock"]
+description = "Refresh the full-size prototype's isolated JLCPCB catalog snapshot"
+run = "uv run python scripts/refresh-jlc.py --pico-full"
+
+[tasks."variant:pico-full:fab"]
+description = "Validate, export, independently review and package the ten-board JLCPCB prototype kit"
+run = "uv run python scripts/review-full-pico.py"
 
 [tasks."hardware:stack"]
 description = "Measure exported header mating alignment, insertion and module stack geometry"

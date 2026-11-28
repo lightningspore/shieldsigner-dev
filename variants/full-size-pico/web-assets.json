@@ -1,0 +1,33 @@
+{
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "files": {
+    "README.md": "e04832db3bdce64e9bc45a4f0c564b227aa2676b9e36f8dfafb9bd3d1f38c2c2",
+    "PINOUT-REVIEW.md": "adc1f4ef2a7a0bd98c724359fc7f638a842b04a53abe94dae29f51609dfb578d",
+    "pinout-review.json": "648571a30aee5d8034d171fa2d6c4efb92684c2704155df71b66c8931f0208e9",
+    "web-pinout.json": "538ec3a6e3a7bcffaacf0192910a2c9e5ad6275c15433a0aadb5046b4d8fea97",
+    "source.json": "25a193b983f032f13139d39fe119238f2fe36fbee829732c065ef3190f739af3",
+    "audit.json": "26d7c82db0e7d9a5ca14e72bc71e3b1f1d228f4a3548dad58253d307a86f4de4",
+    "assembly.glb": "b747216e51b56f6871fc81b4af2b062357e0274ca189b1f9b871e5483b0c6398",
+    "assembly-back.png": "f7521baaf30aa51745595f851e6392fecb60187d04a112e301646e672b98ceea",
+    "assembly-plus.png": "6d67ef4b4a6aa721f733ddaa52f770e3c3eee69fb6c5aa5a326c28a256254f94",
+    "board-top.png": "2c97b34c709dfe938bcd3fe2972eccb276aed47fcf6bd097873906b3193c588d",
+    "board-bottom.png": "213396be1c44e7ea705cf2471be95605297a3d2316729b695137492ddb88d06f",
+    "pcb-top.svg": "25759ca42d55fb124cd4f2dc5cb19eeef211d4037a21580794244955577db0a0",
+    "pcb-bottom.svg": "508ac6f4145d078bfd6ef5baafb46e382467e6b4ab61ca1fc62517418dd6f351",
+    "reference/pinout.jpg": "0a8316ecd94568e6ab70e6d694f733d3e1c0722f20f5c0b52f17ccdb35aee7d6",
+    "reference/plus-pinout.jpg": "44b9ea091c142f2e75007bef1467ecbca848b5a139f727b37b5b8373545fb818",
+    "reference/Luckfox-Pico.pdf": "f38b3a6ec13bc8fc6793494bde3e8cc3004e004802ce7500fbf36aed79f6a254",
+    "reference/Luckfox-Pico-Plus.pdf": "d8ba5f69360d764fbcc8a6c7d8005ccba2c72ef406ea4ee70683ac728ec573a6",
+    "reference/Waveshare-2inch-LCD-Module-Schematic.pdf": "9d18b8eeec61bbc9294a075ce96fbf7bf4f800caebc73ca384b2de1cd36d2d00",
+    "reference/Waveshare-2inch-LCD-Module-Dimensions.jpg": "178c0c1718142f3a97aa53805124cc9644272be234248689fe00df08a71cc755",
+    "reference/Waveshare-2inch-LCD-Module-Rear.jpg": "57ff131a15199cd2bbae0e3ac5aa81f67df69841914e27bb3e5965849b13f4fa",
+    "reference/Waveshare-2inch-LCD-Module-Sources.json": "ccf3e001a25603a7c97c88325f3ba49ea14ee605b331ff0b75e649da40ef1b7b",
+    "manufacturing/bom-jlcpcb.csv": "57ea0d43618892d163cbb2a724f212ebb80eb3e1b155566a2a5aebadef3bde2a",
+    "manufacturing/cpl-jlcpcb.csv": "1b715e2cbce6d1ebbf655368c8b2ecc5aa5e92a94d8fdcac7ba26fdd0edccafb",
+    "manufacturing/shieldsigner-full-pico-schematic.pdf": "f0f1ce6de43c51a2735b022c68cdcdabc79194ad18a927a0128f37091b62f9d1",
+    "manufacturing/ORDER.md": "f5f905fecd073dc35ce22d0df86715d68184634ea04b61bef1383e4cb177bc3a",
+    "reference/XKB-X6511WVS-series.pdf": "1efbd566c16d7c8adaa1b97f4e4d00c6660ea30b6cbc41a5702999c0dc3bba5d",
+    "reference/Harwin-M20-782.pdf": "dc63950fd4db62272f85d19d3c48739909c6909ae21502f38542ba9acfd2fcf5",
+    "manufacturing/shieldsigner-full-pico-prototype-10.zip": "d0606185fd61c274aa13f88e0cf076eb09f1b023730e05268205ed88ced893c1"
+  }
+}

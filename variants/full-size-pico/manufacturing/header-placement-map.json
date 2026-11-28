@@ -1,0 +1,73 @@
+{
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "logicalReference": "U202",
+  "physicalPlacements": [
+    {
+      "ref": "J203",
+      "nativeX": 85.3475,
+      "nativeY": 81.449,
+      "fullPins": [
+        40,
+        39,
+        38,
+        37,
+        36,
+        35,
+        34,
+        33,
+        32,
+        31,
+        30,
+        29,
+        28,
+        27,
+        26,
+        25,
+        24,
+        23,
+        22,
+        21
+      ],
+      "headerPin1NativeMm": [
+        85.3475,
+        105.579
+      ],
+      "headerNativeRotationDeg": 90
+    },
+    {
+      "ref": "J204",
+      "nativeX": 103.1275,
+      "nativeY": 81.449,
+      "fullPins": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "headerPin1NativeMm": [
+        103.1275,
+        105.579
+      ],
+      "headerNativeRotationDeg": 90
+    }
+  ],
+  "mpn": "X6511WVS-20H-C60D48R2",
+  "lcsc": "C2883777",
+  "catalogRotationApproved": false
+}

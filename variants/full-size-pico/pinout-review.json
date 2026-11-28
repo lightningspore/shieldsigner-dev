@@ -1,0 +1,119 @@
+{
+  "checkedAtUtc": "2026-11-28T02:39:01.727886+00:00",
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "hostPhysicalPinsChecked": 40,
+  "hostConnectedPins": {
+    "1": "UART_TX",
+    "2": "UART_RX",
+    "3": "GND",
+    "4": "JoystickDown",
+    "5": "JoystickPress",
+    "6": "Key3",
+    "7": "LCD_DC",
+    "8": "GND",
+    "9": "I2C-SDA",
+    "10": "I2C-SCL",
+    "12": "Net-(JP203-B)",
+    "13": "GND",
+    "14": "LCD_SCLK",
+    "15": "LCD_MOSI",
+    "16": "LCD_RST",
+    "17": "JoystickRight",
+    "18": "GND",
+    "19": "JoystickLeft",
+    "20": "JoystickUp",
+    "23": "GND",
+    "28": "GND",
+    "31": "Key1",
+    "32": "Key2",
+    "33": "GND",
+    "36": "+3.3V",
+    "38": "GND",
+    "40": "+5V"
+  },
+  "hostIntentionallyUnusedPins": [
+    11,
+    21,
+    22,
+    24,
+    25,
+    26,
+    27,
+    29,
+    30,
+    34,
+    35,
+    37,
+    39
+  ],
+  "J701": [
+    "RPI_BACKLIGHT",
+    "LCD_RST",
+    "LCD_DC",
+    "RPI_SPI_CS",
+    "LCD_SCLK",
+    "LCD_MOSI",
+    "GND",
+    "LCD_3V3"
+  ],
+  "J702firstEight": [
+    "LCD_ALT_VCC",
+    "GND",
+    "RPI_SPI_CS",
+    "LCD_RST",
+    "LCD_DC",
+    "LCD_MOSI",
+    "LCD_SCLK",
+    "RPI_BACKLIGHT"
+  ],
+  "J702remainingSix": "Intentionally unconnected; no touch or readback",
+  "defaultStraps": "JP201/203/205/701 bridged; JP202/204/206/702 open",
+  "hothmiSource": "reference/pdfs/HOTHMI-HTM-TFT028A16-SPI.pdf pages 5-6; manufacturer J1 numbering reversed from carrier J701",
+  "picoSources": [
+    "reference/pinout.jpg",
+    "reference/plus-pinout.jpg",
+    "reference/Luckfox-Pico.pdf",
+    "reference/Luckfox-Pico-Plus.pdf"
+  ],
+  "ili9341Source": "https://www.lcdwiki.com/2.8inch_SPI_Module_ILI9341_SKU:MSP2807",
+  "ili9341Scope": "MSP2807/MSP2806 header mapping; exact purchased revision, supply and mounting unqualified",
+  "waveshareScope": "Exact Waveshare 2inch LCD Module, SKU17344: all eight J1 functions match carrier J701 with reversed numbering; use 3.3V supply/logic. PH2.0 cable and 2.54mm row are distinct. 58x35mm module, 53x30mm mounting centers do not match HOTHMI mounts; physical fit and powered operation unqualified.",
+  "firmware": "Full-size Pico/Plus BSP and physical operation remain unqualified. Display RESET reuses SPI MISO pin as GPIO; disable MISO pinmux. HOTHMI requires 10MHz profile and correct panel initializer.",
+  "result": "PASS for reviewed native pin assignments/default straps; no physical continuity or powered qualification.",
+  "waveshareSources": {
+    "manufacturer": "Waveshare",
+    "model": "2inch LCD Module",
+    "sku": "17344",
+    "productUrl": "https://www.waveshare.com/2inch-lcd-module.htm",
+    "wikiUrl": "https://www.waveshare.com/wiki/2inch_LCD_Module",
+    "retrievedAtUtc": "2026-11-28T02:42:24.610225+00:00",
+    "documents": [
+      {
+        "file": "Waveshare-2inch-LCD-Module-Schematic.pdf",
+        "sourceUrl": "https://files.waveshare.com/upload/e/ee/2inch_LCD_Module_SchDoc.pdf",
+        "sha256": "9d18b8eeec61bbc9294a075ce96fbf7bf4f800caebc73ca384b2de1cd36d2d00"
+      },
+      {
+        "file": "Waveshare-2inch-LCD-Module-Dimensions.jpg",
+        "sourceUrl": "https://www.waveshare.com/img/devkit/LCD/2inch-LCD-Module/2inch-LCD-Module-size_960.jpg",
+        "sha256": "178c0c1718142f3a97aa53805124cc9644272be234248689fe00df08a71cc755"
+      },
+      {
+        "file": "Waveshare-2inch-LCD-Module-Rear.jpg",
+        "sourceUrl": "https://www.waveshare.com/media/catalog/product/2/i/2inch-lcd-module-3.jpg",
+        "sha256": "57ff131a15199cd2bbae0e3ac5aa81f67df69841914e27bb3e5965849b13f4fa"
+      }
+    ],
+    "scope": "Official module schematic (2 pages), dimension drawing and rear photograph. The schematic is not a full LCD-controller datasheet. Manufacturer copyright and attribution retained."
+  },
+  "waveshareJ1ToCarrierJ701": {
+    "1": 8,
+    "2": 7,
+    "3": 6,
+    "4": 5,
+    "5": 4,
+    "6": 3,
+    "7": 2,
+    "8": 1
+  }
+}

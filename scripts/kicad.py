@@ -50,11 +50,16 @@ def report_summary():
     return summary
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('action',choices=['setup','open','check','export','fabricate']);parser.add_argument('--standard-fpc',action='store_true',help='Use the historical 40-pin FPC reference');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('action',choices=['setup','open','check','export','fabricate']);parser.add_argument('--standard-fpc',action='store_true',help='Use the historical 40-pin FPC reference');parser.add_argument('--pico-full',action='store_true',help='Review the isolated full-size Pico SMT-socket candidate');args=parser.parse_args()
+    if args.pico_full and (args.standard_fpc or args.action not in {'open','check'}):
+        parser.error('--pico-full supports open/check only and cannot be combined with --standard-fpc')
     global PROJECT,PCB,SCH,OUT
     if args.standard_fpc:
         PROJECT=ROOT/'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pro'
         PCB=PROJECT.with_suffix('.kicad_pcb');SCH=PROJECT.with_suffix('.kicad_sch');OUT=ROOT/'dist/standard-fpc'
+    if args.pico_full:
+        PROJECT=ROOT/'variants/full-size-pico/kicad/SeedSigner-Plus-smartcard-pico.kicad_pro'
+        PCB=PROJECT.with_suffix('.kicad_pcb');SCH=PROJECT.with_suffix('.kicad_sch');OUT=ROOT/'dist/full-size-pico'
     os.chdir(ROOT);command=cli(setup=args.action=='setup');OUT.mkdir(parents=True,exist_ok=True)
     env=os.environ.copy();support=command.parent.parent/'SharedSupport'
     for version in ['9','10']:env[f'KICAD{version}_3DMODEL_DIR']=str(support/'3dmodels')

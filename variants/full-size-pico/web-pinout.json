@@ -1,0 +1,287 @@
+{
+  "title": "Full-size Luckfox Pico / Pico Plus",
+  "orientation": "Component side, USB at top; pins 1\u201320 down left and 40\u201321 down right.",
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "pins": [
+    {
+      "pin": 1,
+      "name": "GPIO1_B2 / UART2 TX",
+      "net": "UART_TX",
+      "use": "Reader UART transmit",
+      "function": "GPIO"
+    },
+    {
+      "pin": 2,
+      "name": "GPIO1_B3 / UART2 RX",
+      "net": "UART_RX",
+      "use": "Reader UART receive",
+      "function": "GPIO"
+    },
+    {
+      "pin": 3,
+      "name": "GND",
+      "net": "GND",
+      "use": "Common ground",
+      "function": "POWER"
+    },
+    {
+      "pin": 4,
+      "name": "GPIO1_C7",
+      "net": "JoystickDown",
+      "use": "Down button",
+      "function": "GPIO"
+    },
+    {
+      "pin": 5,
+      "name": "GPIO1_C6",
+      "net": "JoystickPress",
+      "use": "Press / OK button",
+      "function": "GPIO"
+    },
+    {
+      "pin": 6,
+      "name": "GPIO1_C5",
+      "net": "Key3",
+      "use": "Key 3 button",
+      "function": "GPIO"
+    },
+    {
+      "pin": 7,
+      "name": "GPIO1_C4",
+      "net": "LCD_DC",
+      "use": "LCD data / command",
+      "function": "GPIO"
+    },
+    {
+      "pin": 8,
+      "name": "GND",
+      "net": "GND",
+      "use": "Common ground",
+      "function": "POWER"
+    },
+    {
+      "pin": 9,
+      "name": "GPIO1_D2 / I2C3 SDA",
+      "net": "I2C-SDA",
+      "use": "Unused I2C SDA",
+      "function": "GPIO"
+    },
+    {
+      "pin": 10,
+      "name": "GPIO1_D3 / I2C3 SCL",
+      "net": "I2C-SCL",
+      "use": "Unused I2C SCL",
+      "function": "GPIO"
+    },
+    {
+      "pin": 11,
+      "name": "GPIO1_A2",
+      "net": "unconnected-(U202B-GPIO1_A2-Pad11)",
+      "use": "Not connected on carrier",
+      "function": "GPIO"
+    },
+    {
+      "pin": 12,
+      "name": "GPIO1_C0 / SPI0 CS0",
+      "net": "Net-(JP203-B)",
+      "use": "LCD chip select through straps",
+      "function": "GPIO"
+    },
+    {
+      "pin": 13,
+      "name": "GND",
+      "net": "GND",
+      "use": "Common ground",
+      "function": "POWER"
+    },
+    {
+      "pin": 14,
+      "name": "GPIO1_C1 / SPI0 CLK",
+      "net": "LCD_SCLK",
+      "use": "LCD SPI clock",
+      "function": "GPIO"
+    },
+    {
+      "pin": 15,
+      "name": "GPIO1_C2 / SPI0 MOSI",
+      "net": "LCD_MOSI",
+      "use": "LCD SPI data",
+      "function": "GPIO"
+    },
+    {
+      "pin": 16,
+      "name": "GPIO1_C3 / SPI0 MISO",
+      "net": "LCD_RST",
+      "use": "LCD reset \u00b7 GPIO, not MISO",
+      "function": "GPIO"
+    },
+    {
+      "pin": 17,
+      "name": "GPIO0_A4",
+      "net": "JoystickRight",
+      "use": "Right button",
+      "function": "GPIO"
+    },
+    {
+      "pin": 18,
+      "name": "GND",
+      "net": "GND",
+      "use": "Common ground",
+      "function": "POWER"
+    },
+    {
+      "pin": 19,
+      "name": "GPIO1_D0",
+      "net": "JoystickLeft",
+      "use": "Left button",
+      "function": "GPIO"
+    },
+    {
+      "pin": 20,
+      "name": "GPIO1_D1",
+      "net": "JoystickUp",
+      "use": "Up button",
+      "function": "GPIO"
+    },
+    {
+      "pin": 21,
+      "name": "GPIO4_B1 / Plus GPIO3_A6",
+      "net": "unconnected-(U202B-IO4_B1_(Pico)_{slash}_IO3_A6_(Plus)-Pad21)",
+      "use": "Not connected on carrier",
+      "function": "GPIO"
+    },
+    {
+      "pin": 22,
+      "name": "GPIO4_B0 / Plus GPIO3_A7",
+      "net": "unconnected-(U202B-IO4_B0_(Pico)_{slash}_IO3_A7_(Plus)-Pad22)",
+      "use": "Not connected on carrier",
+      "function": "GPIO"
+    },
+    {
+      "pin": 23,
+      "name": "GND",
+      "net": "GND",
+      "use": "Common ground",
+      "function": "POWER"
+    },
+    {
+      "pin": 24,
+      "name": "GPIO4_A6 / Plus GPIO3_A5",
+      "net": "unconnected-(U202B-IO4_A6_(Pico)_{slash}_IO3_A5_(Plus)-Pad24)",
+      "use": "Not connected on carrier",
+      "function": "GPIO"
+    },
+    {
+      "pin": 25,
+      "name": "GPIO4_A2 / Plus GPIO3_A4",
+      "net": "unconnected-(U202B-IO4_A2_(Pico)_{slash}_IO3_A4_(Plus)-Pad25)",
+      "use": "Not connected on carrier",
+      "function": "GPIO"
+    },
+    {
+      "pin": 26,
+      "name": "GPIO4_A3 / Plus GPIO3_A2",
+      "net": "unconnected-(U202B-IO4_A3_(Pico)_{slash}_IO3_A2_(Plus)-Pad26)",
+      "use": "Not connected on carrier",
+      "function": "GPIO"
+    },
+    {
+      "pin": 27,
+      "name": "GPIO4_A4 / Plus GPIO3_A3",
+      "net": "unconnected-(U202B-IO4_A4_(Pico)_{slash}_IO3_A3_(Plus)-Pad27)",
+      "use": "Not connected on carrier",
+      "function": "GPIO"
+    },
+    {
+      "pin": 28,
+      "name": "GND",
+      "net": "GND",
+      "use": "Common ground",
+      "function": "POWER"
+    },
+    {
+      "pin": 29,
+      "name": "NC / Plus GPIO3_A1",
+      "net": "unconnected-(U202B-NC_(Pico)_{slash}_IO3_A1_(Plus)-Pad29)",
+      "use": "Not connected on carrier",
+      "function": "GPIO"
+    },
+    {
+      "pin": 30,
+      "name": "NC",
+      "net": "unconnected-(U202B-NC-Pad30)",
+      "use": "Not connected on carrier",
+      "function": "NC"
+    },
+    {
+      "pin": 31,
+      "name": "GPIO4_C0 / ADC0",
+      "net": "Key1",
+      "use": "Key 1 button",
+      "function": "GPIO"
+    },
+    {
+      "pin": 32,
+      "name": "GPIO4_C1 / ADC1",
+      "net": "Key2",
+      "use": "Key 2 button",
+      "function": "GPIO"
+    },
+    {
+      "pin": 33,
+      "name": "GND",
+      "net": "GND",
+      "use": "Common ground",
+      "function": "POWER"
+    },
+    {
+      "pin": 34,
+      "name": "NC",
+      "net": "unconnected-(U202B-NC-Pad34)",
+      "use": "Not connected on carrier",
+      "function": "NC"
+    },
+    {
+      "pin": 35,
+      "name": "NC",
+      "net": "unconnected-(U202B-NC-Pad35)",
+      "use": "Not connected on carrier",
+      "function": "NC"
+    },
+    {
+      "pin": 36,
+      "name": "3V3 OUT",
+      "net": "+3.3V",
+      "use": "Backlight enable supply",
+      "function": "POWER"
+    },
+    {
+      "pin": 37,
+      "name": "3V3 EN",
+      "net": "unconnected-(U202B-3V3_EN-Pad37)",
+      "use": "Not connected on carrier",
+      "function": "POWER"
+    },
+    {
+      "pin": 38,
+      "name": "GND",
+      "net": "GND",
+      "use": "Common ground",
+      "function": "POWER"
+    },
+    {
+      "pin": 39,
+      "name": "VSYS",
+      "net": "unconnected-(U202B-VSYS-Pad39)",
+      "use": "Not connected on carrier",
+      "function": "POWER"
+    },
+    {
+      "pin": 40,
+      "name": "VBUS",
+      "net": "+5V",
+      "use": "Carrier 5V input",
+      "function": "POWER"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 
 <section class="enclosure-preview" id="3d-model" aria-label="Enclosure 3D assembly">
-  <h2>Interactive 3D model</h2>
+  <h2>Earlier Mini enclosure · 3D reference</h2>
+  <p><strong>This enclosure model is for the earlier Mini carrier.</strong> It is not qualified for the current full-size Pico/Plus stack. <a href="/guides/full-size-pico/">Current ordered prototype →</a></p>
   <div data-enclosure-viewer data-pcb="{{ fit_models['shieldsigner-pcb-fit.glb'] }}" data-fit="{{ fit_models['shieldsigner-case-fit.glb'] }}" data-assembled="{{ enclosure_models.assembled }}" data-exploded="{{ enclosure_models.exploded }}" data-viewer-script="/static/enclosure-viewer.js?v={{ site_revision }}">
     <div class="actions"><button type="button" class="button" data-mode="assembled" aria-pressed="true">Assembled</button><button type="button" class="button" data-mode="exploded" aria-pressed="false">Exploded</button><button type="button" class="button" data-mode="pcb" aria-pressed="false">PCB assembly</button><button type="button" class="button" data-mode="fit" aria-pressed="false">Case fit</button><button type="button" data-reset>Reset view</button></div>
     <p data-fit-controls hidden><label><input type="checkbox" data-layer="display_module" checked> Display body</label> · <label><input type="checkbox" data-layer="luckfox_module" checked> Luckfox body</label> · <label><input type="checkbox" data-layer="case_" checked> Case shell</label><br><span class="caption">Hide module bodies to inspect their mating headers. Drag to rotate; scroll or pinch to zoom.</span></p>

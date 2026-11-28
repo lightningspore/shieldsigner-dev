@@ -1,0 +1,28 @@
+Drill report for SeedSigner-Plus-smartcard-pico.kicad_pcb
+Created on 2026-11-27T17:20:25
+
+Copper Layer Stackup:
+    =============================================================
+    L1 :  F.Cu                      front
+    L2 :  In1.Cu                    in1
+    L3 :  In2.Cu                    in2
+    L4 :  B.Cu                      back
+
+
+Drill file 'SeedSigner-Plus-smartcard-pico-PTH.drl' contains
+    plated through holes:
+    =============================================================
+    T1  0.300mm  0.0118"  (296 holes))
+    T2  0.600mm  0.0236"  (4 holes)  (with 4 slots)
+    T3  1.000mm  0.0394"  (24 holes))
+
+    Total plated holes count 324
+
+
+Drill file 'SeedSigner-Plus-smartcard-pico-NPTH.drl' contains
+    unplated through holes:
+    =============================================================
+    T1  2.200mm  0.0866"  (2 holes))
+    T2  2.700mm  0.1063"  (8 holes)  (with 2 slots)
+
+    Total unplated holes count 10

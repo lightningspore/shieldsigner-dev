@@ -10,7 +10,7 @@ import standardReference from "../src/generated/reference-board.json"
  * All electrical components, ports, footprints and net connections are rendered
  * by native TSX. Copper is mapped onto the rendered IDs and checked below.
  */
-export async function compileBoard(options: {writeReport?: boolean, data?: ReferenceBoard, outputDir?: string, allowedOutside?: string[]} = {}) {
+export async function compileBoard(options: {writeReport?: boolean, data?: ReferenceBoard, outputDir?: string, allowedOutside?: string[], attachNativeDetails?: boolean} = {}) {
   const reference: ReferenceBoard = options.data ?? standardReference
   const outputDir = options.outputDir ?? "dist"
   if (createHash("sha256").update(readFileSync(reference.source.path)).digest("hex") !== reference.source.sha256) throw new Error(`KiCad changed: run mise run ${options.data?.bridges ? "tscircuit:pill:generate" : "generate"}`)
@@ -107,7 +107,7 @@ export async function compileBoard(options: {writeReport?: boolean, data?: Refer
     if (e.type === "pcb_hole" && e.pcb_component_id === null) delete e.pcb_component_id
     if (e.type === "pcb_plated_hole" && e.shape === "circular_hole_with_rect_pad") { e.hole_ccw_rotation = 0; e.ccw_rotation = 0; e.hole_shape = "circle"; e.pad_shape = "rect" }
   }
-  const details = reference.bridges ? attachPillDetails(circuit) : undefined
+  const details = reference.bridges && options.attachNativeDetails !== false ? attachPillDetails(circuit) : undefined
   if (options.writeReport) {
     mkdirSync(outputDir, {recursive:true})
     writeFileSync(`${outputDir}/validation-report.json`, JSON.stringify({

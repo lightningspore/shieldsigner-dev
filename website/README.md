@@ -9,7 +9,7 @@ ECR repository and Cloudflare/Traefik route stay in place; routine releases do n
 
 Run the commands below from `website/`. From the repository root, use `website:build`, `website:check` or `website:dev` instead; root `build`/`check`/`dev` are the tscircuit workflows.
 
-The build requires the current PCB and local downloads to match the published manifests in `assets/`. A “Modular hardware changed” or asset checksum error means matching hardware/review releases must be prepared and the manifests updated first. The build deliberately stops rather than publishing a mixed kit.
+The full-size Pico graphics, pinout and prototype kit are checked against `variants/full-size-pico/web-assets.json` and the native PCB. Earlier Mini downloads stay pinned to their published release manifests in `assets/`; the builder verifies their archived native board rather than substituting a newer working board. Asset checksum errors require matching reviewed files and manifests before publishing.
 
 ```sh
 mise run setup
@@ -133,4 +133,4 @@ enclosure suite loads both actual GLBs and exercises controls and static fallbac
 Website checks do not qualify the physical hardware; the existing first-article limitations
 remain part of the documentation.
 
-The homepage and PCB ordering task share `knowledge/pcb-faces.html`: large, stacked top/bottom PCB views with full-size PNG and native SVG links. Regenerate the unobstructed 2800 px images with `mise run hardware:faces` from the repository root after a PCB change. This uses a temporary model-free rendering copy and asserts that the native board bytes are unchanged. `mise run ui:test` checks both images and the full-size link on desktop/mobile.
+The homepage and PCB ordering task share `knowledge/pcb-faces.html`: large, stacked full-size Pico top/bottom PCB views with PNG and native SVG links. Regenerate the unobstructed 2800 px images with `mise exec -- uv run python scripts/render-board-faces.py --pico-full` from the repository root after a PCB change. This uses a temporary model-free rendering copy and asserts that the native board bytes are unchanged. `scripts/prepare-full-pico-web.py` extracts the 40 native carrier nets and copies reviewed SVG faces. Review regenerated assets and refresh their SHA256 receipts in `web-assets.json` before publishing. `mise run ui:test` checks both images and the full-size link on desktop/mobile.

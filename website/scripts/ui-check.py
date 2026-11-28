@@ -48,7 +48,8 @@ with sync_playwright() as p:
         download.value.save_as(target)
         with ZipFile(target) as archive:
             bom = list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
-            assert len(bom)==18
+            assert len(bom)==19
+            assert sum(len(row["Designator"].split(",")) for row in bom)==46
         for slug in slugs:
             page.goto(base+f'/build/{slug}/')
             page.locator('h1').wait_for()
@@ -128,7 +129,7 @@ with sync_playwright() as p:
         page.screenshot(path=str(artifacts/f'modular-{width}.png'), full_page=True)
         page.goto(base+'/downloads/')
         with page.expect_download() as download:
-            page.get_by_role('link', name='Eight-pin pill order kit').click()
+            page.get_by_role('link', name='Earlier Mini order kit').click()
         target = artifacts/f'modular-order-{width}.zip'
         download.value.save_as(target)
         with ZipFile(target) as archive:

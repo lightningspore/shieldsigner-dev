@@ -1,0 +1,26 @@
+{
+  "manufacturer": "Waveshare",
+  "model": "2inch LCD Module",
+  "sku": "17344",
+  "productUrl": "https://www.waveshare.com/2inch-lcd-module.htm",
+  "wikiUrl": "https://www.waveshare.com/wiki/2inch_LCD_Module",
+  "retrievedAtUtc": "2026-11-28T02:42:24.610225+00:00",
+  "documents": [
+    {
+      "file": "Waveshare-2inch-LCD-Module-Schematic.pdf",
+      "sourceUrl": "https://files.waveshare.com/upload/e/ee/2inch_LCD_Module_SchDoc.pdf",
+      "sha256": "9d18b8eeec61bbc9294a075ce96fbf7bf4f800caebc73ca384b2de1cd36d2d00"
+    },
+    {
+      "file": "Waveshare-2inch-LCD-Module-Dimensions.jpg",
+      "sourceUrl": "https://www.waveshare.com/img/devkit/LCD/2inch-LCD-Module/2inch-LCD-Module-size_960.jpg",
+      "sha256": "178c0c1718142f3a97aa53805124cc9644272be234248689fe00df08a71cc755"
+    },
+    {
+      "file": "Waveshare-2inch-LCD-Module-Rear.jpg",
+      "sourceUrl": "https://www.waveshare.com/media/catalog/product/2/i/2inch-lcd-module-3.jpg",
+      "sha256": "57ff131a15199cd2bbae0e3ac5aa81f67df69841914e27bb3e5965849b13f4fa"
+    }
+  ],
+  "scope": "Official module schematic (2 pages), dimension drawing and rear photograph. The schematic is not a full LCD-controller datasheet. Manufacturer copyright and attribution retained."
+}

@@ -1,0 +1,12 @@
+<section class="pinout-tool" data-full-pinout aria-label="Full-size Pico 40-pin explorer">
+  <p><strong>Current ordered prototype: full-size Pico / Pico Plus.</strong> The earlier Mini has a different 22-pin map. <a href="/guides/luckfox-pinout/">Earlier Mini reference →</a></p>
+  <div class="pinout-toolbar"><label>Inspect contact <select data-full-pick disabled>{% for pin in full_pinout.pins %}<option value="{{ pin.pin }}">{{ pin.pin }} · {{ pin.name }}</option>{% endfor %}</select></label></div>
+  <p class="caption">Component side, USB at top. Scroll the diagram horizontally on a small screen, or open the full-size SVG.</p>
+  <div class="pinout-frame" tabindex="0" role="region" aria-label="Scrollable full-size Pico pinout">{% include 'knowledge/full-pico-pinout.svg' %}</div>
+  <p><a href="/static/pinouts/luckfox-full-size.svg?v={{ site_revision }}" target="_blank" rel="noopener">Open 40-pin diagram full-size ↗</a> · <a href="/files/variants/full-size-pico/reference/pinout.jpg">Official Pico diagram ↗</a> · <a href="/files/variants/full-size-pico/reference/plus-pinout.jpg">Official Plus diagram ↗</a></p>
+  <p class="pinout-selection" data-full-selection hidden aria-live="polite"></p>
+  <noscript><p>Every pin remains readable in the diagram and table below; interactive selection needs JavaScript.</p></noscript>
+  <table class="pinout-table"><thead><tr><th>Physical contact</th><th>Manufacturer signal</th><th>Carrier function</th></tr></thead><tbody>{% for pin in full_pinout.pins %}<tr id="full-pin-{{ pin.pin }}"><td>{{ pin.pin }}</td><td>{{ pin.name }}</td><td>{{ pin.use }}</td></tr>{% endfor %}</tbody></table>
+  <script type="application/json" data-full-pinout-json>{{ full_pinout|tojson }}</script>
+</section>
+<script src="/static/js/full-pico-pinout.js?v={{ site_revision }}" defer></script>

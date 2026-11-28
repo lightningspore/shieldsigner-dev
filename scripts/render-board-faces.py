@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Render unobstructed, orthographic PCB faces without changing native hardware."""
+import argparse
 import hashlib
 import runpy
 import subprocess
@@ -8,7 +9,10 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VARIANT = ROOT / 'hardware'
+parser=argparse.ArgumentParser()
+parser.add_argument('--pico-full',action='store_true')
+args=parser.parse_args()
+VARIANT = ROOT / ('variants/full-size-pico' if args.pico_full else 'hardware')
 board = VARIANT / 'kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb'
 original = board.read_bytes()
 sx = runpy.run_path(str(ROOT / 'scripts/kicad-sexpr.py'))

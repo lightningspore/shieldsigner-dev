@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "passed": true,
+  "boardSha256": "cffc937c4ef9a99235d404857bc63240f49aa6c78caabf841b0965e0e3b028ef",
+  "baselineCommit": "10ad10f",
+  "baselineBoardSha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
+  "protectedTreeSha256": "7e40fdefc6310d149d55cd63072e9517e7f6e1f25c95a22452eac8824f0d776e",
+  "addedFrontGraphics": 1177,
+  "group": "Front / Orbital field guide",
+  "scope": "Top-level front silkscreen additions only. All existing labels, rear artwork, footprints, copper, masks, holes, outlines, rules, fills and schematic remain unchanged.",
+  "minimumStrokeMm": 0.15,
+  "maskClearanceMm": 0.35,
+  "qualification": "Exact artwork-only source comparison and recorded clearance constraints; native DRC, print-process review and physical hardware qualification remain separate."
+}

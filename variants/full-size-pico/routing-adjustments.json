@@ -1,0 +1,101 @@
+{
+  "beforeSha256": "12e23bb888c6737ea531cdec1fb58e93cfa8c51c52f1eb4a1138c5a8c149044a",
+  "afterSha256": "67175754de923213e644e31c79eab5da23ed19bf1aff43396f8a6f3f3c3888ae",
+  "edits": [
+    {
+      "net": "LCD_DC",
+      "layer": "In2.Cu",
+      "verticesBeforeMm": [
+        [
+          109.394307,
+          81.509692
+        ],
+        [
+          109.394307,
+          78.941807
+        ]
+      ],
+      "deltaMm": [
+        0.055693,
+        0
+      ],
+      "changedEndpoints": 4
+    },
+    {
+      "net": "UART_TX",
+      "layer": "In2.Cu",
+      "verticesBeforeMm": [
+        [
+          114.051398,
+          68.593601
+        ],
+        [
+          114.051398,
+          78.84674
+        ]
+      ],
+      "deltaMm": [
+        0.078602,
+        0
+      ],
+      "changedEndpoints": 4
+    },
+    {
+      "net": "RPI_SPI_CS",
+      "layer": "In2.Cu",
+      "verticesBeforeMm": [
+        [
+          94.255479,
+          86.916728
+        ],
+        [
+          96.068126,
+          86.916728
+        ]
+      ],
+      "deltaMm": [
+        0,
+        0.063272
+      ],
+      "changedEndpoints": 4
+    },
+    {
+      "net": "UART_TX",
+      "layer": "B.Cu",
+      "verticesBeforeMm": [
+        [
+          109.40654,
+          81.354273
+        ],
+        [
+          105.292854,
+          81.354273
+        ]
+      ],
+      "deltaMm": [
+        0,
+        -0.054273
+      ],
+      "changedEndpoints": 4
+    },
+    {
+      "net": "LCD_DC",
+      "layer": "In2.Cu",
+      "verticesBeforeMm": [
+        [
+          108.698259,
+          78.245759
+        ],
+        [
+          108.698259,
+          74.01674
+        ]
+      ],
+      "deltaMm": [
+        -0.068259,
+        0
+      ],
+      "changedEndpoints": 4
+    }
+  ]
+}

@@ -7,10 +7,15 @@ parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--only',nargs='+',help='Refresh only these LCSC codes, preserving other existing records')
 parser.add_argument('--output',type=Path,help='Override the selected board catalog path')
 parser.add_argument('--standard-fpc',action='store_true',help='Use historical FPC identities and catalog instead of the main board')
+parser.add_argument('--pico-full',action='store_true',help='Use the full-size prototype BOM and its isolated catalog')
 parser.add_argument('--dry-run',action='store_true',help='Print codes and output path without network requests or writes')
 args=parser.parse_args()
+assert not (args.pico_full and args.standard_fpc),'Select one board catalog'
 if args.only:
  ids=set(args.only)
+elif args.pico_full:
+ with (ROOT/'variants/full-size-pico/manufacturing/bom-jlcpcb.csv').open(newline='') as file:
+  ids={r['LCSC Part #'] for r in csv.DictReader(file)}
 elif args.standard_fpc:
  board=json.loads((ROOT/'src/generated/reference-board.json').read_text())
  ids={c['lcsc'] for c in board['components'] if c.get('lcsc')}
@@ -18,7 +23,7 @@ elif args.standard_fpc:
 else:
  with (ROOT/'hardware/manufacturing/bom-jlcpcb.csv').open(newline='') as file:
   ids={r['LCSC Part #'] for r in csv.DictReader(file)}
-args.output=args.output or ROOT/('docs/jlc-catalog.json' if args.standard_fpc else 'hardware/jlc-catalog.json')
+args.output=args.output or ROOT/('variants/full-size-pico/jlc-catalog.json' if args.pico_full else 'docs/jlc-catalog.json' if args.standard_fpc else 'hardware/jlc-catalog.json')
 assert ids and all(re.fullmatch(r'C[0-9]+',code) for code in ids),'Expected LCSC codes such as C633309'
 if args.dry_run:
  print(json.dumps({'codes':sorted(ids),'output':str(args.output)},indent=2))

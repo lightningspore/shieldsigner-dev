@@ -37,6 +37,13 @@ Run `mise run datasheets:check` to validate the collection, or
 
 These are additional references, not automatic substitutes for the selected parts.
 
+- Waveshare **2inch LCD Module / SKU 17344**:
+  [retained official module schematic](../variants/full-size-pico/reference/Waveshare-2inch-LCD-Module-Schematic.pdf),
+  [dimension drawing](../variants/full-size-pico/reference/Waveshare-2inch-LCD-Module-Dimensions.jpg),
+  [source URLs and hashes](../variants/full-size-pico/reference/Waveshare-2inch-LCD-Module-Sources.json),
+  and [carrier pin mapping / physical-fit limits](../variants/full-size-pico/PINOUT-REVIEW.md#waveshare-2inch-lcd-module--sku-17344).
+  The retained PDF is a module schematic, not a full controller datasheet.
+
 - [AO3400A.pdf](AO3400A.pdf)
 - [C19077498.pdf](C19077498.pdf)
 - [C2931360.pdf](C2931360.pdf)

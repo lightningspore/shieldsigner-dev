@@ -1,0 +1,380 @@
+[
+  {
+    "code": "C107115",
+    "mpn": "CC0805JRNPO9BN330",
+    "refs": [
+      "C605",
+      "C606"
+    ],
+    "perBoard": 2,
+    "installedForTen": 20,
+    "provisionalProcurementQuantity": 20,
+    "standardAssemblyStock": 884626,
+    "overseasStockSeparate": 942907,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 1736,
+    "supplierLossNumber": 12,
+    "checkedAt": "2026-11-28T00:20:16.485487+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C149504",
+    "mpn": "0805W8F1003T5E",
+    "refs": [
+      "R601",
+      "R606"
+    ],
+    "perBoard": 2,
+    "installedForTen": 20,
+    "provisionalProcurementQuantity": 20,
+    "standardAssemblyStock": 2074516,
+    "overseasStockSeparate": 2603166,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 3223,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:15.896276+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C15850",
+    "mpn": "CL21A106KAYNNNE",
+    "refs": [
+      "C201",
+      "C302",
+      "C701",
+      "C702"
+    ],
+    "perBoard": 4,
+    "installedForTen": 40,
+    "provisionalProcurementQuantity": 40,
+    "standardAssemblyStock": 7322899,
+    "overseasStockSeparate": 9301167,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 396,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:16.153953+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C17408",
+    "mpn": "0805W8F1000T5E",
+    "refs": [
+      "R602",
+      "R603"
+    ],
+    "perBoard": 2,
+    "installedForTen": 20,
+    "provisionalProcurementQuantity": 20,
+    "standardAssemblyStock": 5213198,
+    "overseasStockSeparate": 5911264,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 3923,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:18.573797+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C17414",
+    "mpn": "0805W8F1002T5E",
+    "refs": [
+      "R605",
+      "R607"
+    ],
+    "perBoard": 2,
+    "installedForTen": 20,
+    "provisionalProcurementQuantity": 20,
+    "standardAssemblyStock": 40027694,
+    "overseasStockSeparate": 43187528,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 3760,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:16.378995+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C17714",
+    "mpn": "0805W8F470JT5E",
+    "refs": [
+      "R604"
+    ],
+    "perBoard": 1,
+    "installedForTen": 10,
+    "provisionalProcurementQuantity": 10,
+    "standardAssemblyStock": 615803,
+    "overseasStockSeparate": 735735,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 4512,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:19.078435+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C19077498",
+    "mpn": "SMF5.0CA",
+    "refs": [
+      "D301"
+    ],
+    "perBoard": 1,
+    "installedForTen": 10,
+    "provisionalProcurementQuantity": 10,
+    "standardAssemblyStock": 1164387,
+    "overseasStockSeparate": 1339713,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 376,
+    "supplierLossNumber": 4,
+    "checkedAt": "2026-11-28T00:20:17.302450+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C2297",
+    "mpn": "KT-0805G",
+    "refs": [
+      "D302"
+    ],
+    "perBoard": 1,
+    "installedForTen": 10,
+    "provisionalProcurementQuantity": 10,
+    "standardAssemblyStock": 2589490,
+    "overseasStockSeparate": 2833013,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 705,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:17.684472+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C2689642",
+    "mpn": "PTS636SK25SMTRLFS",
+    "refs": [
+      "SW501",
+      "SW502",
+      "SW503",
+      "SW504",
+      "SW505",
+      "SW506",
+      "SW507",
+      "SW508"
+    ],
+    "perBoard": 8,
+    "installedForTen": 80,
+    "provisionalProcurementQuantity": 80,
+    "standardAssemblyStock": 10107,
+    "overseasStockSeparate": 12874,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 26,
+    "supplierLossNumber": 1,
+    "checkedAt": "2026-11-28T00:20:18.333959+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C27834",
+    "mpn": "0805W8F5101T5E",
+    "refs": [
+      "R301",
+      "R302"
+    ],
+    "perBoard": 2,
+    "installedForTen": 20,
+    "provisionalProcurementQuantity": 20,
+    "standardAssemblyStock": 1837603,
+    "overseasStockSeparate": 2319021,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 4512,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:17.898947+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C28323",
+    "mpn": "CL21B105KBFNNNE",
+    "refs": [
+      "C602",
+      "C603",
+      "C604"
+    ],
+    "perBoard": 3,
+    "installedForTen": 30,
+    "provisionalProcurementQuantity": 30,
+    "standardAssemblyStock": 2963740,
+    "overseasStockSeparate": 3997826,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 513,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:18.708723+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C28636",
+    "mpn": "0805W8F5600T5E",
+    "refs": [
+      "R303"
+    ],
+    "perBoard": 1,
+    "installedForTen": 10,
+    "provisionalProcurementQuantity": 10,
+    "standardAssemblyStock": 326876,
+    "overseasStockSeparate": 395551,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 4512,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:21.269773+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C2906768",
+    "mpn": "5015",
+    "refs": [
+      "TP901",
+      "TP902",
+      "TP903",
+      "TP904",
+      "TP905",
+      "TP906",
+      "TP907",
+      "TP908",
+      "TP909"
+    ],
+    "perBoard": 9,
+    "installedForTen": 90,
+    "provisionalProcurementQuantity": 90,
+    "standardAssemblyStock": 46825,
+    "overseasStockSeparate": 49696,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 37,
+    "supplierLossNumber": 2,
+    "checkedAt": "2026-11-28T00:20:19.387128+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C49678",
+    "mpn": "CC0805KRX7R9BB104",
+    "refs": [
+      "C301",
+      "C601"
+    ],
+    "perBoard": 2,
+    "installedForTen": 20,
+    "provisionalProcurementQuantity": 20,
+    "standardAssemblyStock": 15772515,
+    "overseasStockSeparate": 19550013,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 1308,
+    "supplierLossNumber": 10,
+    "checkedAt": "2026-11-28T00:20:19.597484+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C51118",
+    "mpn": "AP2112K-3.3TRG1",
+    "refs": [
+      "U701"
+    ],
+    "perBoard": 1,
+    "installedForTen": 10,
+    "provisionalProcurementQuantity": 10,
+    "standardAssemblyStock": 32926,
+    "overseasStockSeparate": 36040,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 70,
+    "supplierLossNumber": 0,
+    "checkedAt": "2026-11-28T00:20:19.781543+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C5246813",
+    "mpn": "USB4125-GF-A-0190",
+    "refs": [
+      "J301"
+    ],
+    "perBoard": 1,
+    "installedForTen": 10,
+    "provisionalProcurementQuantity": 10,
+    "standardAssemblyStock": 1050,
+    "overseasStockSeparate": 1444,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 13,
+    "supplierLossNumber": 0,
+    "checkedAt": "2026-11-28T00:20:20.131220+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C5417011",
+    "mpn": "7312P0225A13LF",
+    "refs": [
+      "J601"
+    ],
+    "perBoard": 1,
+    "installedForTen": 10,
+    "provisionalProcurementQuantity": 12,
+    "standardAssemblyStock": 1,
+    "overseasStockSeparate": 9,
+    "shortfallInstalled": 9,
+    "shortfallProposed": 11,
+    "minimumPurchase": 3,
+    "supplierLossNumber": 0,
+    "checkedAt": "2026-11-28T00:20:20.512309+00:00",
+    "reserved": false,
+    "customerPreorder": {
+      "mpn": "7312P0225A13LF",
+      "quantityPreordered": 10,
+      "source": "User report, 2026-11-27",
+      "destination": "JLCPCB parts library (confirmed by user)",
+      "usableAssemblyInventoryVerified": false,
+      "additionalPurchaseRequested": 0,
+      "note": "Existing user pre-order into JLCPCB parts library. Do not duplicate. Verify arrival and final assembly attrition requirement."
+    }
+  },
+  {
+    "code": "C633309",
+    "mpn": "SEC1210/PV-UR2",
+    "refs": [
+      "U601"
+    ],
+    "perBoard": 1,
+    "installedForTen": 10,
+    "provisionalProcurementQuantity": 10,
+    "standardAssemblyStock": 72,
+    "overseasStockSeparate": 85,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 2,
+    "supplierLossNumber": 0,
+    "checkedAt": "2026-11-28T00:20:20.343624+00:00",
+    "reserved": false
+  },
+  {
+    "code": "C2883777",
+    "mpn": "X6511WVS-20H-C60D48R2",
+    "refs": [
+      "J203",
+      "J204"
+    ],
+    "perBoard": 2,
+    "installedForTen": 20,
+    "provisionalProcurementQuantity": 26,
+    "standardAssemblyStock": 73,
+    "overseasStockSeparate": 88,
+    "shortfallInstalled": 0,
+    "shortfallProposed": 0,
+    "minimumPurchase": 20,
+    "supplierLossNumber": 0,
+    "checkedAt": "2026-11-28T00:20:19.411600+00:00",
+    "reserved": false
+  }
+]

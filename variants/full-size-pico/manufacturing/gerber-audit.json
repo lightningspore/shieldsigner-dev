@@ -1,0 +1,43 @@
+{
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "parser": "gerbonara 1.6.3",
+  "graphicLayers": 11,
+  "perimeterStrokeWidthMm": 0.05,
+  "boardOutlineMm": [
+    160,
+    70
+  ],
+  "allNativeDrillObjectsMatched": 334,
+  "platedObjects": 324,
+  "nonplatedObjects": 10,
+  "headerApertures": {
+    "copper": {
+      "count": 40,
+      "sizeMm": [
+        2.200000000000003,
+        1.2700000000000102
+      ]
+    },
+    "paste": {
+      "count": 40,
+      "sizeMm": [
+        2.200000000000003,
+        1.2700000000000102
+      ]
+    },
+    "mask": {
+      "count": 40,
+      "sizeMm": [
+        2.2759999999999962,
+        1.3460000000000036
+      ]
+    }
+  },
+  "drillCoordinateToleranceMm": 0.0015,
+  "parserWarnings": [
+    "Aperture definition using macro HorizOval has more parameters than the macro uses.",
+    "Aperture definition using macro RoundRect has more parameters than the macro uses.",
+    "G90 header statement found after end of header"
+  ],
+  "scope": "Independent export/datum/land/drill checks and render; factory DFM, stock reservation and placement preview approval remain separate."
+}

@@ -73,6 +73,29 @@ class StaticSiteTests(unittest.TestCase):
         for private_marker in ['/Users/', 'tools/telegram/private/', '.session', 'api_hash', 'bot_token']:
             self.assertNotIn(private_marker,html,'Private integration material must not be published in the talk')
 
+    def test_current_full_size_pico_graphics_and_pinout_are_board_bound(self):
+        home=page('/')
+        self.assertIn('FULL-SIZE LUCKFOX PICO',home)
+        self.assertIn('/files/variants/full-size-pico/assembly-back.png',home)
+        self.assertIn('data-full-pico',home)
+        self.assertNotIn('/files/variants/lcd-module-2.8/assembly-front.png',home)
+        pinout=page('/guides/full-size-pico-pinout/')
+        self.assertEqual(pinout.count('data-full-pin="'),40)
+        data=json.loads((DIST/'files/variants/full-size-pico/web-pinout.json').read_text())
+        audit=json.loads((DIST/'files/variants/full-size-pico/pinout-review.json').read_text())
+        self.assertEqual(data['boardSha256'],audit['boardSha256'])
+        self.assertEqual([p['pin'] for p in data['pins']],list(range(1,41)))
+        self.assertEqual(data['pins'][39]['net'],'+5V')
+        self.assertEqual(data['pins'][35]['net'],'+3.3V')
+        self.assertEqual(data['pins'][15]['net'],'LCD_RST')
+        self.assertIn('Earlier Mini enclosure',page('/guides/enclosure/'))
+        with ZipFile(DIST/'files/shieldsigner-full-pico-prototype-10.zip') as archive:
+            manifest=json.loads(archive.read('manifest.json'))
+            self.assertEqual(manifest['boardSha256'],data['boardSha256'])
+            bom=list(csv.DictReader(io.StringIO(archive.read('bom-jlcpcb.csv').decode())))
+            self.assertEqual(len(bom),19)
+            self.assertEqual(sum(len(r['Designator'].split(',')) for r in bom),46)
+
     def test_firmware_status_separates_bench_hardware_and_evidence(self):
         status=page('/guides/firmware-status/')
         for text in ['lvgl-dev.cb6170a37a5a', '240×240', '2.8-inch',

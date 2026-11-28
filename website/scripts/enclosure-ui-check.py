@@ -16,11 +16,12 @@ with sync_playwright() as p:
         page.get_by_role('link',name='View 3D model').click()
         page.wait_for_function("document.querySelector('[data-enclosure-viewer]')?.dataset.loaded==='assembled'",timeout=60000)
         home_viewer=page.locator('[data-enclosure-viewer]')
-        home_viewer.get_by_role('button',name='Exploded',exact=True).click()
-        page.wait_for_function("document.querySelector('[data-enclosure-viewer]').dataset.loaded==='exploded'",timeout=60000)
+        assert home_viewer.get_attribute('data-full-pico') is not None
+        assert 'full-size-pico/assembly.glb' in home_viewer.get_attribute('data-assembled')
+        assert 'Full-size Pico' in home_viewer.locator('[role=status]').inner_text()
         home_viewer.locator('canvas').screenshot(path=str(artifacts/f'home-3d-{width}.png'))
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),'Homepage 3D model overflows'
-        page.get_by_role('link',name='Print the case & inspect it in 3D').click()
+        page.get_by_role('link',name='Earlier Mini case reference').click()
         page.wait_for_url('**/guides/enclosure/')
         viewer=page.locator('[data-enclosure-viewer]')
         page.wait_for_function("document.querySelector('[data-enclosure-viewer]')?.dataset.loaded==='assembled'",timeout=60000)

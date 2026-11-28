@@ -1,0 +1,29 @@
+{
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "mainBoardUnchanged": true,
+  "preservedOtherFootprints": 75,
+  "documentedOtherPlacementChanges": [
+    "C701",
+    "JP701",
+    "JP702",
+    "TP905"
+  ],
+  "fullSizeSocketContacts": 40,
+  "nativeChecks": {
+    "erc": {
+      "bySeverity": {},
+      "excluded": 0,
+      "byType": {},
+      "unconnectedItems": 0,
+      "schematicParityIssues": 0
+    },
+    "drc": {
+      "bySeverity": {},
+      "excluded": 0,
+      "byType": {},
+      "unconnectedItems": 0,
+      "schematicParityIssues": 0
+    }
+  },
+  "qualification": "Digital audit only; physical assembly and powered operation unqualified."
+}

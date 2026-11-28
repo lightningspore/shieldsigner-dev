@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1510" role="img" aria-labelledby="full-title full-desc" class="mini-pinout">
+<title id="full-title">Full-size Luckfox Pico / Pico Plus · 40-pin carrier map</title>
+<desc id="full-desc">Component-side view, USB at top. Pins 1 through 20 down left; 40 through 21 down right. microSD faces outward. Each row shows the manufacturer signal and ordered carrier connection. Unused Pico/Plus GPIO differences are labelled.</desc>
+<style>.mini-pinout{font-family:Arial,sans-serif}.mini-pinout text{fill:#203529}.mini-pinout .wire{stroke:#9aa68d;stroke-width:2}.mini-pinout .row:focus .outline,.mini-pinout .row:hover .outline,.mini-pinout .row.selected .outline{fill:#e6edce;stroke:#3d6636;stroke-width:2}.mini-pinout .outline{fill:transparent;stroke:transparent}.mini-pinout a{cursor:pointer}.mini-pinout .muted{fill:#526452}</style>
+<rect width="1600" height="1510" rx="20" fill="#fafaf5"/>
+<text x="32" y="42" font-size="27" font-weight="700">Full-size Luckfox Pico / Pico Plus</text>
+<text x="32" y="72" font-size="17">Ordered carrier · 40 contacts · component-side view · USB at top · illustration not to scale</text>
+<rect x="710" y="140" width="180" height="1245" rx="14" fill="#29553f" stroke="#183723" stroke-width="4"/>
+<rect x="757" y="111" width="86" height="65" rx="6" fill="#c8cdc6" stroke="#677a68"/>
+<text x="800" y="151" text-anchor="middle" font-size="17">USB</text>
+<rect x="733" y="410" width="134" height="160" rx="8" fill="#c8cfc7"/>
+<text x="800" y="475" text-anchor="middle" font-size="16">microSD</text><text x="800" y="502" text-anchor="middle" font-size="13">faces outward</text>
+<rect x="736" y="710" width="128" height="128" fill="#1a2920"/>
+<text x="800" y="767" text-anchor="middle" font-size="19" style="fill:#edf3dc">RV1103</text><text x="800" y="797" text-anchor="middle" font-size="14" style="fill:#edf3dc">40 contacts</text>
+<rect x="735" y="1250" width="130" height="44" fill="#182c21"/><text x="800" y="1278" text-anchor="middle" font-size="13" style="fill:#edf3dc">CAMERA FPC</text>
+{% for pin in full_pinout.pins %}
+{% set left=pin.pin<=20 %}{% set row=pin.pin-1 if left else 40-pin.pin %}{% set y=190+row*59 %}{% set x=30 if left else 945 %}{% set pad=710 if left else 890 %}
+<a href="#full-pin-{{ pin.pin }}" class="row" data-full-pin="{{ pin.pin }}" aria-label="Pin {{ pin.pin }}: {{ pin.name }}; {{ pin.use }}">
+<rect class="outline" x="{{ 20 if left else 930 }}" y="{{ y-27 }}" width="650" height="54" rx="8"/>
+<path class="wire" d="M {{ 680 if left else 920 }} {{ y }} H {{ pad }}"/>
+<circle cx="{{ pad }}" cy="{{ y }}" r="17" fill="{{ '#e8b9a4' if pin.pin in [36,37,39,40] else '#d9c890' }}" stroke="#fff5dc" stroke-width="2"/>
+<text x="{{ pad }}" y="{{ y+6 }}" text-anchor="middle" font-size="17" font-weight="700">{{ pin.pin }}</text>
+<text x="{{ x }}" y="{{ y-7 }}" font-size="20" font-weight="700">{{ pin.name }}</text>
+<text x="{{ x }}" y="{{ y+18 }}" font-size="18" class="muted">{{ pin.use }}</text>
+</a>
+{% endfor %}
+<text x="800" y="1415" text-anchor="middle" font-size="17">VBUS 40 → carrier 5V · 3V3 OUT 36 → backlight enable · separate LCD regulator</text>
+<text x="800" y="1448" text-anchor="middle" font-size="16">GPIO alternatives require firmware pinmux. Pin 16 is LCD reset; SPI MISO must stay disabled.</text>
+<text x="800" y="1480" text-anchor="middle" font-size="15">Pico Plus differences shown only on unused contacts · physical fit and powered firmware remain unqualified</text>
+</svg>

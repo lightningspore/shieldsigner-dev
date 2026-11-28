@@ -1,0 +1,43 @@
+{
+  "C701": {
+    "before": [
+      106.0,
+      66.0
+    ],
+    "after": [
+      110,
+      62
+    ]
+  },
+  "JP702": {
+    "before": [
+      99.6,
+      67.6
+    ],
+    "after": [
+      98.1,
+      67.6
+    ]
+  },
+  "JP701": {
+    "before": [
+      99.6,
+      63.6
+    ],
+    "after": [
+      98.1,
+      63.6
+    ]
+  },
+  "TP905": {
+    "before": [
+      108,
+      59.5
+    ],
+    "after": [
+      108.8,
+      59.5
+    ],
+    "reason": "Clear the wider XKB SMT header courtyard; same-net copper stays inside pad."
+  }
+}

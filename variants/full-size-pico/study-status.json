@@ -1,0 +1,104 @@
+{
+  "status": "prototype_files_prepared_jlc_procurement_and_approval_pending",
+  "quantity": 10,
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "mainBoardUnchanged": true,
+  "nativeChecks": {
+    "erc": {
+      "bySeverity": {},
+      "excluded": 0,
+      "byType": {},
+      "unconnectedItems": 0,
+      "schematicParityIssues": 0
+    },
+    "drc": {
+      "bySeverity": {},
+      "excluded": 0,
+      "byType": {},
+      "unconnectedItems": 0,
+      "schematicParityIssues": 0
+    }
+  },
+  "mounting": "Two XKB X6511WVS-20H-C60D48R2 SMT male strips directly on carrier; two Harwin M20-7822042 female sockets on Pico; no adapter",
+  "mechanicalChanges": {
+    "C701": {
+      "before": [
+        106.0,
+        66.0
+      ],
+      "after": [
+        110,
+        62
+      ]
+    },
+    "JP702": {
+      "before": [
+        99.6,
+        67.6
+      ],
+      "after": [
+        98.1,
+        67.6
+      ]
+    },
+    "JP701": {
+      "before": [
+        99.6,
+        63.6
+      ],
+      "after": [
+        98.1,
+        63.6
+      ]
+    },
+    "TP905": {
+      "before": [
+        108,
+        59.5
+      ],
+      "after": [
+        108.8,
+        59.5
+      ],
+      "reason": "Clear the wider XKB SMT header courtyard; same-net copper stays inside pad."
+    }
+  },
+  "newHeaderStandardStock": 73,
+  "newHeadersInstalled": 20,
+  "stockBlockers": [
+    {
+      "code": "C5417011",
+      "mpn": "7312P0225A13LF",
+      "refs": [
+        "J601"
+      ],
+      "perBoard": 1,
+      "installedForTen": 10,
+      "provisionalProcurementQuantity": 12,
+      "standardAssemblyStock": 1,
+      "overseasStockSeparate": 9,
+      "shortfallInstalled": 9,
+      "shortfallProposed": 11,
+      "minimumPurchase": 3,
+      "supplierLossNumber": 0,
+      "checkedAt": "2026-11-28T00:20:20.512309+00:00",
+      "reserved": false,
+      "customerPreorder": {
+        "mpn": "7312P0225A13LF",
+        "quantityPreordered": 10,
+        "source": "User report, 2026-11-27",
+        "destination": "JLCPCB parts library (confirmed by user)",
+        "usableAssemblyInventoryVerified": false,
+        "additionalPurchaseRequested": 0,
+        "note": "Existing user pre-order into JLCPCB parts library. Do not duplicate. Verify arrival and final assembly attrition requirement."
+      }
+    }
+  ],
+  "nominalModuleUndersideMm": 11.64,
+  "plusEnvelopeBeyondEdgeMm": 4.388,
+  "factoryPlacementPreviewApproved": false,
+  "factoryPanelAndDfmApproved": false,
+  "assemblyCheckoutReady": false,
+  "qualification": "Digital prototype review only; physical mating, enclosure/cables, assembly process and powered firmware are unqualified.",
+  "customerProcurement": "Ten C5417011 sockets already pre-ordered into JLCPCB parts library; arrival and final attrition requirement unverified. No duplicate purchase requested."
+}

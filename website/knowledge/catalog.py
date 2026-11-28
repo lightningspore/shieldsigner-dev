@@ -1,5 +1,7 @@
 # Explicit public-content allowlist. Never crawl the repo or Telegram caches.
 GUIDES = [
+("full-size-pico", "variants/full-size-pico/README.md", "Hardware", "Current prototype · full-size Pico / Pico Plus", "Ordered ten-board prototype, SMT module headers, outward microSD and Ethernet access."),
+("full-size-pico-pinout", "variants/full-size-pico/PINOUT-REVIEW.md", "Hardware", "Full-size Pico · 40-pin host and LCD maps", "All 40 module contacts, HOTHMI, Waveshare 2-inch and ILI9341 electrical mappings and mounting limits."),
 ("display-button-review", "docs/DISPLAY-BUTTON-REVIEW.md", "Hardware", "Display, buttons & first-article electrical checks", "HOTHMI initialization, all eight button paths, image readback and pending powered measurements."),
 ("datasheets", "datasheets/README.md", "Sources", "All hardware datasheets", "Local PDFs for all 18 factory BOM SKUs, display and host modules."),
 ("pcb-order-readiness", "docs/PCB-ORDER-READINESS.md", "Build", "PCB order readiness & current gates", "Four-layer main carrier, factory service points, native checks, matched files and first-article assembly limits."),
@@ -7,7 +9,7 @@ GUIDES = [
 ("firmware-artifacts", "docs/FIRMWARE-ARTIFACTS.md", "Software", "Firmware images, staging & verification", "One canonical image location, immutable named staging, preserved caches and image identity checks."),
 ("firmware-status", "docs/FIRMWARE-STATUS.md", "Software", "Current LVGL firmware & test status", "Linux, Python, LVGL and Rust camera responsibilities; scoped memory measurements and the tested bench image."),
 ("memory-threads", "docs/MEMORY-THREADS.md", "Software", "Memory, Python and threads", "Measured RAM use, shared Python imports, camera workers, LCD buffers and compressed RAM swap."),
-("luckfox-pinout", "docs/LUCKFOX-PINOUT.md", "Hardware", "Luckfox Mini pinout & signal map", "All 22 pins, voltage domains, SPI/I2C/UART/PWM alternatives and checked carrier connections."),
+("luckfox-pinout", "docs/LUCKFOX-PINOUT.md", "Hardware", "Earlier Mini carrier · 22-pin signal map", "Earlier Mini/PWM variants only; current full-size Pico has a separate 40-pin map."),
 ("mechanical-substitutions", "docs/MECHANICAL-SUBSTITUTIONS.md", "Build", "Switch & USB-C revision", "Manufacturer drawings, shared-supplier parts, new lands and measured-height buttons."),
 ("start-here", "docs/START-HERE.md", "Start here", "Start here: projects, versions & build paths", "How SeedSigner, ShieldSigner, Luckfox firmware and this prototype fit together."),
 ("software-features", "docs/SOFTWARE-FEATURES.md", "Use", "Software features & defaults", "Signing, smartcards, optional tools and what the pinned image actually enables."),

@@ -1,6 +1,6 @@
 {
   "variant": "modular-lcd-2.8",
-  "boardSha256": "45f28bbfcf4099a6d512e9cc8dbf73b67a4cb39fba47443068fa4b424abf5109",
+  "boardSha256": "cffc937c4ef9a99235d404857bc63240f49aa6c78caabf841b0965e0e3b028ef",
   "fittedSmtPieces": 44,
   "catalogLines": 18,
   "bomCplRefsMatch": true,
@@ -63,14 +63,14 @@
     "Supplier preview/quote status recorded in supplierPlacementCompensation; final assembler DFM and placement confirmation pending"
   ],
   "files": {
-    "shieldsigner-modular-gerbers.zip": "41f9d5abab8dafa738345df04b1de7d493823168ae2b001ee41374ed68e39c3a",
+    "shieldsigner-modular-gerbers.zip": "e88eb8ccb1185e8f11bcd45741726ebad7425c8a0c5d14870cf61e1e0fd7b3b6",
     "bom-jlcpcb.csv": "604f2dbe2b9a9b82fd4e8532b6e821c0ff57dcd6210d191ed406c1260dd8251b",
     "cpl-jlcpcb.csv": "fb1d144f17b9673545678ac17599f20c1b258e8f674fa7ad19c1adc992405afb",
     "population.csv": "7862c01ae048db77dfa10661db9abbebf5cf8f1685b4c2088f2fffbe65f7ab5e"
   },
   "compatibilityProof": {
     "file": "angle-header-audit.json",
-    "sha256": "cfc9f062b6d562075d03e3b2d8222af25bfa5e66f309197bf1ceba9de88ce525",
+    "sha256": "11fbb4db9362f8216c916a1c3fe63a14d0f012e0b9d805dd11ded7ab223da4fd",
     "scope": "Chained routing/header and alternate ILI9341 socket audits; existing functional circuitry and corrected supplier placements preserved"
   },
   "historicalSupplierEvidence": "history/0.0.7-preview/",

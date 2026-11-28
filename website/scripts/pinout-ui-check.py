@@ -44,6 +44,20 @@ with sync_playwright() as p:
   for revision in ['released','candidate']:
    response=page.request.get(base+f'/static/pinouts/luckfox-mini-{revision}.svg')
    assert response.ok and '<svg' in response.text()
+  page.goto(base+'/guides/full-size-pico-pinout/')
+  full=page.locator('[data-full-pinout]')
+  page.wait_for_function("document.querySelector('[data-full-pinout]').dataset.selectedPin==='1'")
+  assert full.locator('svg [data-full-pin]').count()==40
+  assert full.locator('.pinout-table tbody tr').count()==40
+  full.locator('[data-full-pick]').select_option('40')
+  assert 'Carrier 5V input' in full.locator('[data-full-selection]').inner_text()
+  full.locator('[data-full-pin="16"]').focus();page.keyboard.press('Enter')
+  assert full.get_attribute('data-selected-pin')=='16'
+  assert 'GPIO, not MISO' in full.locator('[data-full-selection]').inner_text()
+  assert full.locator('svg text').evaluate_all('(texts)=>texts.every(t=>{let b=t.getBBox();return b.x>=0&&b.x+b.width<=1600})')
+  assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+  full.locator('.pinout-frame').screenshot(path=str(out/f'full-pico-pinout-{width}.png'))
+  assert page.request.get(base+'/static/pinouts/luckfox-full-size.svg').ok
   assert not errors,errors
   context.close()
  context=browser.new_context(java_script_enabled=False,viewport={'width':390,'height':844})
@@ -53,5 +67,8 @@ with sync_playwright() as p:
  assert '1.8 V only' in page.locator('#pin-19').inner_text()
  assert 'LCD_PWM' in page.locator('#pin-14').inner_text() and 'R703' in page.locator('#pin-14').inner_text()
  assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+ page.goto(base+'/guides/full-size-pico-pinout/')
+ assert page.locator('[data-full-pinout] .pinout-table tbody tr').count()==40
+ assert page.locator('[data-full-pick]').is_disabled()
  context.close();browser.close()
 print('Pinout UI passed: desktop/tablet/mobile, 22 pins, keyboard, filters, revisions, SVG downloads and no-JS fallback')

@@ -59,8 +59,14 @@ def arc_points(node, steps=36):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--variant', choices=['standard', 'pill'], default='standard')
+    parser.add_argument('--source', type=Path, help='Extract an isolated native board instead of the default variant')
+    parser.add_argument('--output', type=Path, help='Write an isolated reference snapshot')
     args = parser.parse_args()
     source = ROOT / ('kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb' if args.variant == 'pill' else 'variants/standard-fpc/kicad/SeedSigner-Plus-smartcard-pico.kicad_pcb')
+    if args.source:
+        if not args.output:
+            parser.error('--source requires --output to protect the main generated snapshot')
+        source = args.source.resolve()
     source_bytes = source.read_bytes()
     pcb = parse(source_bytes.decode())
     edges, circles = [], []
@@ -194,6 +200,8 @@ def main():
         data['copperLayers'] = [layer_names[n[1]] for n in one(pcb,'layers')[1:] if isinstance(n,list) and n[1] in layer_names]
     (ROOT/'src/generated').mkdir(parents=True,exist_ok=True)
     target = ROOT/'src/generated'/('pill-board.json' if args.variant == 'pill' else 'reference-board.json')
+    if args.output:
+        target = args.output.resolve()
     target.write_text(json.dumps(data,indent=2)+'\n')
     print(f'Extracted {len(components)} components, {len(nets)} nets, {len(segments)} tracks, {len(vias)} vias, {len(fills)} filled polygons.')
 

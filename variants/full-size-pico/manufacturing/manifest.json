@@ -1,0 +1,131 @@
+{
+  "variant": "full-size-pico-smt-male",
+  "quantity": 10,
+  "boardSha256": "63e3f328641556eaf5764374b12a20466f621becbb02965a3414836f66003d2b",
+  "fittedSmtPieces": 46,
+  "catalogLines": 19,
+  "topPlacements": 11,
+  "bottomPlacements": 35,
+  "layers": 4,
+  "thicknessMm": 1.6,
+  "outlineMm": [
+    160,
+    70
+  ],
+  "originMm": [
+    50,
+    130
+  ],
+  "cplDatum": "X = native X - 50; Y = 130 - native Y; bottom X not mirrored",
+  "measurements": {
+    "minimumTrackMm": 0.15,
+    "minimumViaDrillMm": 0.3,
+    "minimumViaAnnulusMm": 0.15,
+    "platedSlots": [
+      {
+        "ref": "H702",
+        "pad": "",
+        "drillMm": [
+          "4.757692",
+          "2.7"
+        ]
+      },
+      {
+        "ref": "H704",
+        "pad": "",
+        "drillMm": [
+          "4.757692",
+          "2.7"
+        ]
+      },
+      {
+        "ref": "J301",
+        "pad": "S1",
+        "drillMm": [
+          "0.6",
+          "1.2"
+        ]
+      },
+      {
+        "ref": "J301",
+        "pad": "S1",
+        "drillMm": [
+          "0.6",
+          "1.2"
+        ]
+      },
+      {
+        "ref": "J301",
+        "pad": "S1",
+        "drillMm": [
+          "0.6",
+          "1.2"
+        ]
+      },
+      {
+        "ref": "J301",
+        "pad": "S1",
+        "drillMm": [
+          "0.6",
+          "1.2"
+        ]
+      }
+    ]
+  },
+  "headers": {
+    "code": "C2883777",
+    "requiredInstalled": 20,
+    "proposedWithSpares": 26,
+    "standardStock": 73
+  },
+  "stockBlockers": [
+    {
+      "code": "C5417011",
+      "mpn": "7312P0225A13LF",
+      "refs": [
+        "J601"
+      ],
+      "perBoard": 1,
+      "installedForTen": 10,
+      "provisionalProcurementQuantity": 12,
+      "standardAssemblyStock": 1,
+      "overseasStockSeparate": 9,
+      "shortfallInstalled": 9,
+      "shortfallProposed": 11,
+      "minimumPurchase": 3,
+      "supplierLossNumber": 0,
+      "checkedAt": "2026-11-28T00:20:20.512309+00:00",
+      "reserved": false,
+      "customerPreorder": {
+        "mpn": "7312P0225A13LF",
+        "quantityPreordered": 10,
+        "source": "User report, 2026-11-27",
+        "destination": "JLCPCB parts library (confirmed by user)",
+        "usableAssemblyInventoryVerified": false,
+        "additionalPurchaseRequested": 0,
+        "note": "Existing user pre-order into JLCPCB parts library. Do not duplicate. Verify arrival and final assembly attrition requirement."
+      }
+    }
+  ],
+  "stockReserved": false,
+  "uploadedPlacementPreviewApproved": false,
+  "factoryPanelAndDfmApproved": false,
+  "status": "prototype_quote_ready_procurement_and_supplier_review_pending",
+  "files": {
+    "SeedSigner-Plus-smartcard-pico-B_Mask.gbs": "89ca478ef194816a8159cb477d61e03532bc9498473a9087ef9b6c5291750fc7",
+    "SeedSigner-Plus-smartcard-pico-F_Cu.gtl": "e76a31e04e35d009c7b22fd4b851dd866f72c559413f7fc06ed3501a93736a90",
+    "SeedSigner-Plus-smartcard-pico-NPTH.drl": "c3e699c37beae23927c769b7beb35be05a9edbd9f5e81da42221acd66aa72fda",
+    "SeedSigner-Plus-smartcard-pico-B_Paste.gbp": "d0faabe637cb231458a503cb385ecbfc81b0d28ca572a6530243da48fef20c40",
+    "SeedSigner-Plus-smartcard-pico-B_Cu.gbl": "3e22d8fcb4ef23316b3646cf9bec92171e96237f713a49cacac81a7213815e6c",
+    "SeedSigner-Plus-smartcard-pico-B_Silkscreen.gbo": "c0b8a69df7197b8d21cd41f7d34a1593e0be805daa570347548d06949329679f",
+    "SeedSigner-Plus-smartcard-pico-In2_Cu.g2": "fe7ea021fe7a930a2c8c2c3cbeb3eb1b7cfb14a9ebad7a506ed04a2aa2571007",
+    "SeedSigner-Plus-smartcard-pico-F_Silkscreen.gto": "2ec4b063ba3dc3d3c84df22290a8942855c0c44028e17787d99ed3dc7d04d30a",
+    "SeedSigner-Plus-smartcard-pico-F_Mask.gts": "dc9430aeb78eb05faa701c44e0beacc0c66a5da89e6982b922a6dfebf57bf53e",
+    "SeedSigner-Plus-smartcard-pico-Edge_Cuts.gm1": "0428faaeea80108ff4246369abe5fe428f61fcf1003e8da82800cc25702b2e3d",
+    "SeedSigner-Plus-smartcard-pico-In1_Cu.g1": "c212cc538cea45f64ab9cd242de1c088ca7e79aa37b4ec2520cc7baabc7b5a11",
+    "SeedSigner-Plus-smartcard-pico-job.gbrjob": "e29abac02a7f13fe242f69b585a4f06fbeb52254b22f0c267ae9a89f801d52af",
+    "SeedSigner-Plus-smartcard-pico-F_Paste.gtp": "6850096b4b1882364374c64372c0681f1a6a7bd69cd15d7792a2df29e1df4df6",
+    "SeedSigner-Plus-smartcard-pico-PTH.drl": "a697824d8e444ebc216fd8118d224172ea04f964cda8501cc87554c41150575c"
+  },
+  "customerProcurement": "Ten C5417011 sockets already pre-ordered into JLCPCB parts library; arrival and final attrition requirement unverified. No duplicate purchase requested."
+}

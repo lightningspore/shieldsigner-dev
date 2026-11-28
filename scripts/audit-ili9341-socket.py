@@ -134,7 +134,12 @@ def verify():
     rec = json.loads(RECORD.read_text())
     before = git('kicad/' + PCB.name)
     assert hashlib.sha256(before).hexdigest() == rec['baselineBoardSha256'], 'Baseline moved'
-    a, b, d = diff(before, PCB.read_text())
+    comparison = PCB.read_text()
+    if (ROOT/'docs/pcb-front-artwork.json').exists():
+        # Verify the later artwork first, then run the unchanged exact socket
+        # audit against its pinned predecessor. Hardware remains fully guarded.
+        comparison = runpy.run_path(str(ROOT/'scripts/audit-front-artwork.py'))['verify']().decode()
+    a, b, d = diff(before, comparison)
     segs, vias, newt, newf, oldf = nodes(b, 'segment'), nodes(b, 'via'), texts(b), fps(b), fps(a)
     # Everything outside the recorded item families must remain identical,
     # including stackup, design rules, board outline, keepouts and ground fills.
@@ -219,6 +224,9 @@ def verify():
                          'ERC/DRC separately. ILI9341 module fit and powered operation are '
                          'not qualified.',
     }
+    if (ROOT/'docs/pcb-front-artwork.json').exists():
+        front=json.loads((ROOT/'docs/pcb-front-artwork.json').read_text())
+        report['auditChain']={'socketChecksApplyTo':front['baselineCommit'],'currentRevisionAudit':'front-artwork-audit.json'}
     (V / 'ili9341-socket-audit.json').write_text(json.dumps(report, indent=2) + '\n')
     config = V / 'jlc-placement-corrections.json'
     cfg = json.loads(config.read_text())
